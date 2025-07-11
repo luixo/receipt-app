@@ -65,7 +65,7 @@ describe("currency.top", () => {
 				currencyCodes.map((currencyCode) =>
 					insertDebt(ctx, accountId, otherUserId, {
 						currencyCode,
-						timestamp: substract(getNow(), { months: 1 }),
+						timestamp: substract.plainDate(getNow.plainDate(), { months: 1 }),
 					}),
 				),
 			);
@@ -104,7 +104,7 @@ describe("currency.top", () => {
 				accountId,
 				{
 					currencyCode: "EUR",
-					issued: substract(getNow(), { months: 1 }),
+					issued: substract.plainDate(getNow.plainDate(), { months: 1 }),
 				},
 			);
 			await insertReceiptParticipant(ctx, selfOutdatedReceiptId, userId);
@@ -127,7 +127,7 @@ describe("currency.top", () => {
 				otherAccountId,
 				{
 					currencyCode: "AMD",
-					issued: substract(getNow(), { months: 1 }),
+					issued: substract.plainDate(getNow.plainDate(), { months: 1 }),
 				},
 			);
 			await insertReceiptParticipant(

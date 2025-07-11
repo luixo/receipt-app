@@ -12,7 +12,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { compare } from "~utils/date";
+import { compare, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -89,8 +89,8 @@ describe("debt-intenions.getAll", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
-						timestamp: new Date("2020-04-01"),
-						createdAt: new Date("2020-05-01"),
+						timestamp: parsers.plainDate("2020-04-01"),
+						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -102,7 +102,7 @@ describe("debt-intenions.getAll", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: new Date("2020-05-01"),
+					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
 				},
 			);
 
@@ -136,7 +136,7 @@ describe("debt-intenions.getAll", () => {
 						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
-				].sort((a, b) => compare(b.updatedAt, a.updatedAt)),
+				].sort((a, b) => compare.zonedDateTime(b.updatedAt, a.updatedAt)),
 			);
 		});
 	});

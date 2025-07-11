@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import Sharp from "sharp";
 
 import { avatarFormSchema } from "~app/utils/validation";
-import { getNow } from "~utils/date";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
 import { authProcedure } from "~web/handlers/trpc";
 import { getS3Client } from "~web/providers/s3";
@@ -69,7 +68,8 @@ export const procedure = authProcedure
 		await s3Client.putObject(avatarKey, validatedImage);
 		const url = `${[s3Client.endpoint, s3Client.bucket, avatarKey].join(
 			"/",
-		)}?lastModified=${getNow().valueOf()}`;
+			// eslint-disable-next-line no-restricted-syntax
+		)}?lastModified=${Date.now()}`;
 		await database
 			.updateTable("accounts")
 			.set({ avatarUrl: url })

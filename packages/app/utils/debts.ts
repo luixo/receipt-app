@@ -10,7 +10,7 @@ type DebtPartial = Pick<
 export const areDebtsSynced = (debt: DebtPartial, theirDebt: DebtPartial) =>
 	debt.amount === theirDebt.amount &&
 	debt.currencyCode === theirDebt.currencyCode &&
-	areEqual(debt.timestamp, theirDebt.timestamp);
+	areEqual.plainDate(debt.timestamp, theirDebt.timestamp);
 
 export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<
@@ -25,5 +25,5 @@ export const isDebtInSyncWithReceipt = (
 ) =>
 	receiptDebt.currencyCode === debt.currencyCode &&
 	receiptDebt.participantSum === debt.amount &&
-	areEqual(receiptDebt.issued, debt.timestamp) &&
+	areEqual.plainDate(receiptDebt.issued, debt.timestamp) &&
 	receiptDebt.id === debt.receiptId;

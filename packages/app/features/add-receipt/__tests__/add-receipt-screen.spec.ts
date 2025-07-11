@@ -37,7 +37,7 @@ test("On load", async ({
 	});
 	await expect(page).toHaveTitle("RA - Add receipt");
 	await expect(addButton).toBeDisabled();
-	await expectDate(dateInput, getNow());
+	await expectDate(dateInput, getNow.plainDate());
 	await expectCurrency(currencyInput, topCurrency.currencyCode);
 });
 
@@ -87,7 +87,7 @@ test("'receipts.add' mutation", async ({
 
 	await page.goto("/receipts/add");
 	await nameInput.fill(receiptName);
-	await fillDate(dateInput, add(getNow(), { months: 1 }));
+	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 
 	await snapshotQueries(
@@ -105,7 +105,7 @@ test("'receipts.add' mutation", async ({
 		await createPause.promise;
 		return {
 			id: receiptId,
-			createdAt: getNow(),
+			createdAt: getNow.zonedDateTime(),
 			participants: [],
 			items: [],
 			payers: [],

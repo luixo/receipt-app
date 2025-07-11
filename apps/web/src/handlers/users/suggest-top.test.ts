@@ -268,7 +268,9 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: oldDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: newDebtsUserId } = await insertUser(ctx, accountId);
-				const twoMonthAgo = substract(getNow(), { months: 2 });
+				const twoMonthAgo = substract.plainDate(getNow.plainDate(), {
+					months: 2,
+				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
 					timestamp: twoMonthAgo,
 				});
@@ -398,7 +400,7 @@ describe("users.suggestTop", () => {
 					accountId,
 					otherAccountId,
 				]);
-				const monthAgo = substract(getNow(), { months: 1 });
+				const monthAgo = substract.plainDate(getNow.plainDate(), { months: 1 });
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
 					timestamp: monthAgo,
 				});
@@ -567,7 +569,7 @@ describe("users.suggestTop", () => {
 					userId: selfUserId,
 				} = await insertAccountWithSession(ctx);
 
-				const monthAgo = substract(getNow(), { months: 1 });
+				const monthAgo = substract.plainDate(getNow.plainDate(), { months: 1 });
 				const { id: oldReceiptsUserId } = await insertUser(ctx, accountId);
 				const { id: firstOldReceiptId } = await insertReceipt(ctx, accountId, {
 					issued: monthAgo,

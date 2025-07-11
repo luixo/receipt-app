@@ -3,6 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import type { Temporal } from "~utils/date";
 import { getNow, substract } from "~utils/date";
 
 import type { GenerateUsers } from "./users";
@@ -13,14 +14,14 @@ export type GenerateReceiptBase = GeneratorFnWithFaker<{
 	id: ReceiptsId;
 	name: string;
 	currencyCode: CurrencyCode;
-	issued: Date;
+	issued: Temporal.PlainDate;
 }>;
 
 export const defaultGenerateReceiptBase: GenerateReceiptBase = ({ faker }) => ({
 	id: faker.string.uuid(),
 	name: faker.lorem.words(),
 	currencyCode: generateCurrencyCode(faker),
-	issued: getNow(),
+	issued: getNow.plainDate(),
 	role: "owner",
 });
 
@@ -30,7 +31,7 @@ export type GenerateReceiptItems = GeneratorFnWithFaker<
 		price: number;
 		quantity: number;
 		name: string;
-		createdAt: Date;
+		createdAt: Temporal.ZonedDateTime;
 	}[]
 >;
 
@@ -40,9 +41,9 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		price: Number(faker.finance.amount()),
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
-		createdAt: faker.date.between({
-			from: substract(getNow(), { months: 1 }),
-			to: getNow(),
+		createdAt: faker.temporal.between.zonedDateTime({
+			from: substract.zonedDateTime(getNow.zonedDateTime(), { months: 1 }),
+			to: getNow.zonedDateTime(),
 		}),
 	}));
 
@@ -61,13 +62,19 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			...users.map((user) => ({
 				userId: user.id,
 				role: "editor" as const,
-				createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
+				createdAt: faker.temporal.recent.zonedDateTime({
+					days: 5,
+					refDate: getNow.zonedDateTime(),
+				}),
 			})),
 			addSelf
 				? {
 						userId: selfUserId,
 						role: "owner" as const,
-						createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
+						createdAt: faker.temporal.recent.zonedDateTime({
+							days: 5,
+							refDate: getNow.zonedDateTime(),
+						}),
 					}
 				: undefined,
 		].filter(isNonNullish);
@@ -91,13 +98,19 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 		...users.map((user) => ({
 			userId: user.id,
 			part: 1,
-			createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
+			createdAt: faker.temporal.recent.zonedDateTime({
+				days: 5,
+				refDate: getNow.zonedDateTime(),
+			}),
 		})),
 		addSelf
 			? {
 					userId: selfUserId,
 					part: 1,
-					createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
+					createdAt: faker.temporal.recent.zonedDateTime({
+						days: 5,
+						refDate: getNow.zonedDateTime(),
+					}),
 				}
 			: undefined,
 	].filter(isNonNullish);
@@ -119,9 +132,9 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant) => ({
-				createdAt: faker.date.between({
+				createdAt: faker.temporal.between.zonedDateTime({
 					from: item.createdAt,
-					to: getNow(),
+					to: getNow.zonedDateTime(),
 				}),
 				userId: participant.userId,
 				part: faker.number.int({ min: 1, max: 3 }),
@@ -148,7 +161,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptPayers,
 }) => ({
 	id: receiptBase.id,
-	createdAt: getNow(),
+	createdAt: getNow.zonedDateTime(),
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,

@@ -20,7 +20,7 @@ export const options: UseContextedMutationOptions<
 						controller.addPayer(receiptId, {
 							userId: variables.userId,
 							part: variables.part,
-							createdAt: getNow(),
+							createdAt: getNow.zonedDateTime(),
 						}),
 					getPaged: undefined,
 				});
@@ -32,7 +32,7 @@ export const options: UseContextedMutationOptions<
 						variables.itemId,
 						variables.userId,
 						variables.part,
-						getNow(),
+						getNow.zonedDateTime(),
 					),
 				getPaged: undefined,
 			});

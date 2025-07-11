@@ -9,5 +9,5 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		.deleteFrom("sessions")
 		.where("sessionId", "=", ctx.authToken)
 		.executeTakeFirst();
-	setCookie(ctx, AUTH_COOKIE, "", { expires: getNow() });
+	setCookie(ctx, AUTH_COOKIE, "", { expires: getNow.zonedDateTime() });
 });

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import type { AccountsId } from "~db/models";
+import type { Temporal } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -128,7 +129,7 @@ export const acceptNewIntentions = async (
 const queueAcceptIntention = queueCallFactory<
 	AuthorizedContext,
 	Input,
-	{ updatedAt: Date }
+	{ updatedAt: Temporal.ZonedDateTime }
 >((ctx) => async (inputs) => {
 	const intentions = await fetchIntentions(ctx, inputs);
 	const intentionsOrErrors = inputs.map((input) => {

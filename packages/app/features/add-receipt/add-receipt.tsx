@@ -20,7 +20,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import type { AccountsId, UsersId } from "~db/models";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
-import { getNow, getToday } from "~utils/date";
+import { getNow } from "~utils/date";
 
 import { useActionsHooks, useAddReceiptContext } from "./hooks";
 import type { Form, Item, Participant } from "./state";
@@ -53,7 +53,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 
 	const defaultValues = {
 		name: "",
-		issued: getToday(),
+		issued: getNow.plainDate(),
 	} satisfies Partial<Form>;
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
@@ -92,7 +92,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 
 	const { participants } = useParticipants({
 		id: receiptId,
-		createdAt: getNow(),
+		createdAt: getNow.zonedDateTime(),
 		issued: formValues.issued,
 		currencyCode: formValues.currencyCode ?? "???",
 		participants: rawParticipants,

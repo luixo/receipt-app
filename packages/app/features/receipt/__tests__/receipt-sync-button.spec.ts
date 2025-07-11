@@ -169,7 +169,7 @@ test.describe("Mutations", () => {
 			id:
 				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
-			updatedAt: getNow(),
+			updatedAt: getNow.zonedDateTime(),
 			reverseAccepted:
 				addedDebt.userId
 					.split("")
@@ -178,7 +178,7 @@ test.describe("Mutations", () => {
 				0,
 		}));
 		api.mockFirst("debts.update", ({ input: updatedDebt }) => ({
-			updatedAt: getNow(),
+			updatedAt: getNow.zonedDateTime(),
 			reverseUpdated:
 				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
 					2 ===

@@ -9,7 +9,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
 import { t } from "~web/handlers/trpc";
 
@@ -207,7 +206,10 @@ describe("account.changeAvatar", () => {
 				ctx.s3Options.mock.endpoint,
 				ctx.s3Options.mock.bucket,
 				key,
-			].join("/")}?lastModified=${getNow().valueOf()}`;
+			].join(
+				"/",
+				// eslint-disable-next-line no-restricted-syntax
+			)}?lastModified=${Date.now()}`;
 			expect(result).toEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
 			const message = ctx.s3Options.mock.getMessages()[0];

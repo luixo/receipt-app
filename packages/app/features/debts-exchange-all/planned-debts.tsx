@@ -172,7 +172,7 @@ export const PlannedDebts: React.FC<Props> = ({
 						currencyCode,
 						userId,
 						amount: debt.amount,
-						timestamp: getNow(),
+						timestamp: getNow.plainDate(),
 					};
 					addMutation.mutate(mutationVars);
 					return [...acc, hashKey([mutationVars])];

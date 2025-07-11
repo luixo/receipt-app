@@ -16,6 +16,7 @@ import { Button } from "~components/button";
 import { SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
+import { parsers } from "~utils/date";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -91,7 +92,9 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 			amount: sum,
 			currencyCode: receipt.currencyCode,
 			timestamp: receipt.issued,
-			updatedAt: currentDebt?.updatedAt ?? new Date(0),
+			updatedAt:
+				currentDebt?.updatedAt ??
+				parsers.zonedDateTime("1900-01-01T00:00:00.000Z"),
 		}),
 		[currentDebt?.updatedAt, receipt.currencyCode, receipt.issued, sum],
 	);

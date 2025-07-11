@@ -26,7 +26,7 @@ type InnerProps = {
 
 export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const { t } = useTranslation("receipts");
-	const { formatDate } = useFormat();
+	const { formatPlainDate } = useFormat();
 	const locale = useLocale();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const emptyItems = receipt.items.filter(
@@ -57,7 +57,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 				{isOwner ? <KeyIcon size={12} /> : null}
 			</View>
 			<Text className="text-default-400 text-xs">
-				{formatDate(receipt.issued)}
+				{formatPlainDate(receipt.issued)}
 			</Text>
 		</Link>
 	);

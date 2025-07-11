@@ -326,7 +326,7 @@ describe("receiptItemConsumers.add", () => {
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
@@ -433,12 +433,12 @@ describe("receiptItemConsumers.add", () => {
 				]),
 			);
 			expect(results).toStrictEqual<typeof results>([
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
 			]);
 		});
 	});

@@ -30,7 +30,7 @@ test("Form", async ({
 	await expect(page.locator("h1")).toHaveText("Add receipt");
 	await expectScreenshotWithSchemes("empty.png");
 	await nameInput.fill("Receipt name");
-	await fillDate(dateInput, add(getNow(), { months: 1 }));
+	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 	await expectScreenshotWithSchemes("filled.png");
 });
@@ -83,14 +83,14 @@ test("'receipts.add' mutation", async ({
 
 	await page.goto("/receipts/add");
 	await nameInput.fill(faker.lorem.words());
-	await fillDate(dateInput, add(getNow(), { months: 1 }));
+	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 	const createPause = api.createPause();
 	api.mockFirst("receipts.add", async () => {
 		await createPause.promise;
 		return {
 			id: "anything",
-			createdAt: getNow(),
+			createdAt: getNow.zonedDateTime(),
 			items: [],
 			participants: [],
 			payers: [],

@@ -3,7 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UsersId } from "~db/models";
-import { getNow } from "~utils/date";
+import { add, getNow } from "~utils/date";
 
 import type {
 	GenerateReceiptBase,
@@ -27,15 +27,15 @@ export const defaultGenerateDebts = ({
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
 		currencyCode: generateCurrencyCode(faker),
-		createdAt: getNow(),
-		timestamp: faker.date.recent({
+		createdAt: getNow.zonedDateTime(),
+		timestamp: faker.temporal.recent.plainDate({
 			days: 30,
-			refDate: getNow(),
+			refDate: getNow.plainDate(),
 		}),
 		note: faker.lorem.words(4),
 		receiptId: undefined,
 		amount: faker.number.float({ min: -10000, max: 10000, precision: 0.01 }),
-		updatedAt: getNow(),
+		updatedAt: getNow.zonedDateTime(),
 		their: undefined,
 		userId,
 	}));
@@ -88,9 +88,9 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
 				amount: sum,
-				updatedAt: getNow(),
+				updatedAt: getNow.zonedDateTime(),
 				their: {
-					updatedAt: getNow(),
+					updatedAt: getNow.zonedDateTime(),
 					currencyCode: receiptBase.currencyCode,
 					timestamp: receiptBase.issued,
 					amount: sum,
@@ -135,7 +135,7 @@ export const theirNonExistent: MapDebt = (debt) => ({
 export const theirSynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
+		updatedAt: add.zonedDateTime(debt.updatedAt, { seconds: 1 }),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount,
@@ -145,7 +145,7 @@ export const theirSynced: MapDebt = (debt) => ({
 export const theirDesynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
+		updatedAt: add.zonedDateTime(debt.updatedAt, { seconds: 1 }),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount + 1,

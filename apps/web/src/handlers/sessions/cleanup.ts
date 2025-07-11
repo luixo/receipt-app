@@ -5,7 +5,7 @@ export const procedure = unauthProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;
 	const result = await database
 		.deleteFrom("sessions")
-		.where("expirationTimestamp", "<", getNow())
+		.where("expirationTimestamp", "<", getNow.zonedDateTime())
 		.executeTakeFirstOrThrow();
 	return Number(result.numDeletedRows);
 });

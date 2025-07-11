@@ -22,7 +22,7 @@ type IntentionsQuery = TRPCQuerySuccessResult<"debtIntentions.getAll">;
 
 const getLatestIntention = (intentions: IntentionsQuery["data"]) =>
 	intentions.toSorted((intentionA, intentionB) =>
-		compare(intentionB.timestamp, intentionA.timestamp),
+		compare.plainDate(intentionB.timestamp, intentionA.timestamp),
 	)[0];
 
 type Props = {
@@ -43,7 +43,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		return entries(
 			mapValues(intentionsByUser, (intentions) =>
 				intentions.sort((intentionA, intentionB) =>
-					compare(intentionA.timestamp, intentionB.timestamp),
+					compare.plainDate(intentionA.timestamp, intentionB.timestamp),
 				),
 			),
 		).sort(([, groupedIntentionsA], [, groupedIntentionsB]) => {
@@ -55,7 +55,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 			if (!latestB) {
 				return 1;
 			}
-			return compare(latestA.timestamp, latestB.timestamp);
+			return compare.plainDate(latestA.timestamp, latestB.timestamp);
 		});
 	}, [data]);
 	if (data.length === 0) {

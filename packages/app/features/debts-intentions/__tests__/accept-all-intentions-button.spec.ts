@@ -60,7 +60,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		.map((debt) => debt.id);
 	api.mockFirst("debtIntentions.accept", async ({ input }) => {
 		if (!acceptedDebtsIds.includes(input.id)) {
-			return { updatedAt: getNow() };
+			return { updatedAt: getNow.zonedDateTime() };
 		}
 		await acceptIntentionLaterPause.promise;
 		throw new TRPCError({
@@ -106,7 +106,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		{ name: "error" },
 	);
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: getNow() });
+	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
 
 	await snapshotQueries(
 		async () => {

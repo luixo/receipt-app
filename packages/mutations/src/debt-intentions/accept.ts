@@ -33,7 +33,7 @@ export const options: UseContextedMutationOptions<
 				getUsersPaged: (controller) => controller.update(intention.userId),
 				getByUserPaged: undefined,
 				get: (controller) => {
-					const updatedAt = getNow();
+					const updatedAt = getNow.zonedDateTime();
 					if (intention.current) {
 						return controller.update(
 							intention.id,

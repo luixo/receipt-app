@@ -12,6 +12,7 @@ import type {
 } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
+import type { Temporal } from "~utils/date";
 import { add, getNow } from "~utils/date";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
@@ -74,7 +75,7 @@ type AccountData = {
 	password?: string;
 	confirmation?: {
 		token?: string;
-		timestamp?: Date;
+		timestamp?: Temporal.ZonedDateTime;
 	};
 	settings?: AccountSettingsData;
 	user?: Pick<UserData, "name">;
@@ -108,7 +109,7 @@ export const insertAccount = async (
 				? data.confirmation.token || ctx.getTestUuid()
 				: undefined,
 			confirmationTokenTimestamp: data.confirmation
-				? data.confirmation.timestamp || getNow()
+				? data.confirmation.timestamp || getNow.zonedDateTime()
 				: undefined,
 			avatarUrl:
 				data.avatarUrl === null
@@ -219,7 +220,7 @@ export const insertConnectedUsers = async (
 
 type SessionData = {
 	id?: SessionsSessionId;
-	expirationTimestamp?: Date;
+	expirationTimestamp?: Temporal.ZonedDateTime;
 };
 
 export const insertSession = async (
@@ -234,7 +235,8 @@ export const insertSession = async (
 			sessionId: data.id || ctx.getTestUuid(),
 			accountId,
 			expirationTimestamp:
-				data.expirationTimestamp || add(getNow(), { years: 1 }),
+				data.expirationTimestamp ||
+				add.zonedDateTime(getNow.zonedDateTime(), { years: 1 }),
 		})
 		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();
@@ -243,7 +245,7 @@ export const insertSession = async (
 
 type ResetPasswordIntentionData = {
 	id?: SessionsSessionId;
-	expiresTimestamp?: Date;
+	expiresTimestamp?: Temporal.ZonedDateTime;
 	token?: string;
 };
 
@@ -257,7 +259,9 @@ export const insertResetPasswordIntention = async (
 		.insertInto("resetPasswordIntentions")
 		.values({
 			accountId,
-			expiresTimestamp: data.expiresTimestamp || add(getNow(), { years: 1 }),
+			expiresTimestamp:
+				data.expiresTimestamp ||
+				add.zonedDateTime(getNow.zonedDateTime(), { years: 1 }),
 			token: data.token || ctx.getTestUuid(),
 		})
 		.returning(["expiresTimestamp", "token"])
@@ -269,8 +273,8 @@ type DebtData = {
 	id?: DebtsId;
 	currencyCode?: CurrencyCode;
 	amount?: number;
-	timestamp?: Date;
-	createdAt?: Date;
+	timestamp?: Temporal.PlainDate;
+	createdAt?: Temporal.ZonedDateTime;
 	note?: string;
 	receiptId?: ReceiptsId;
 };
@@ -301,8 +305,8 @@ export const insertDebt = async (
 			amount:
 				data.amount?.toString() ??
 				(faker.datatype.boolean() ? "" : "-") + faker.finance.amount(),
-			timestamp: data.timestamp ?? getNow(),
-			createdAt: data.createdAt ?? getNow(),
+			timestamp: data.timestamp ?? getNow.plainDate(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 			note: data.note ?? faker.lorem.sentence(),
 			receiptId: data.receiptId ?? null,
 		})
@@ -423,8 +427,8 @@ type ReceiptData = {
 	id?: ReceiptsId;
 	currencyCode?: CurrencyCode;
 	name?: string;
-	createdAt?: Date;
-	issued?: Date;
+	createdAt?: Temporal.ZonedDateTime;
+	issued?: Temporal.PlainDate;
 };
 
 export const insertReceipt = async (
@@ -440,8 +444,8 @@ export const insertReceipt = async (
 			ownerAccountId,
 			name: data.name ?? faker.lorem.words(2),
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			createdAt: data.createdAt ?? getNow(),
-			issued: data.issued ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			issued: data.issued ?? getNow.plainDate(),
 		})
 		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
@@ -467,7 +471,7 @@ export const insertReceipt = async (
 
 type ReceiptParticipantData = {
 	role?: Exclude<Role, "owner">;
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 };
 
 export const insertReceiptParticipant = async (
@@ -490,7 +494,7 @@ export const insertReceiptParticipant = async (
 			receiptId,
 			userId,
 			role: userId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
-			createdAt: data.createdAt ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 		})
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
@@ -499,7 +503,7 @@ export const insertReceiptParticipant = async (
 
 type ReceiptPayerData = {
 	part?: number;
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 };
 
 export const insertReceiptPayer = async (
@@ -515,7 +519,7 @@ export const insertReceiptPayer = async (
 			itemId: receiptId as ReceiptItemsId,
 			userId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 		})
 		.returning(["createdAt", "part"])
 		.executeTakeFirstOrThrow();
@@ -527,7 +531,7 @@ type ReceiptItemData = {
 	name?: string;
 	price?: number;
 	quantity?: number;
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 };
 
 export const insertReceiptItem = async (
@@ -555,7 +559,7 @@ export const insertReceiptItem = async (
 			quantity: (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
-			createdAt: data.createdAt ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 		})
 		.returning(["id", "name", "price", "quantity", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -564,7 +568,7 @@ export const insertReceiptItem = async (
 
 type ReceiptItemConsumerData = {
 	part?: number;
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 };
 
 export const insertReceiptItemConsumer = async (
@@ -586,7 +590,7 @@ export const insertReceiptItemConsumer = async (
 			userId,
 			itemId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -594,7 +598,7 @@ export const insertReceiptItemConsumer = async (
 };
 
 type AccountConnectionIntentionData = {
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 };
 
 export const insertAccountConnectionIntention = async (
@@ -611,7 +615,7 @@ export const insertAccountConnectionIntention = async (
 			accountId,
 			targetAccountId,
 			userId,
-			createdAt: data.createdAt ?? getNow(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
 		})
 		.executeTakeFirstOrThrow();
 };

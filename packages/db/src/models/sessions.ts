@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { AccountsId } from "./accounts";
 
 /** Identifier type for "sessions" table */
@@ -13,9 +15,9 @@ export default interface Sessions {
 	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
 
-	expirationTimestamp: Date;
+	expirationTimestamp: Temporal.ZonedDateTime;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 }
 
 export interface SessionsInitializer {
@@ -25,10 +27,10 @@ export interface SessionsInitializer {
 	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
 
-	expirationTimestamp: Date;
+	expirationTimestamp: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 }
 
 export interface SessionsMutator {
@@ -38,7 +40,7 @@ export interface SessionsMutator {
 	/** Index: sessions:accountId:index */
 	accountId?: AccountsId;
 
-	expirationTimestamp?: Date;
+	expirationTimestamp?: Temporal.ZonedDateTime;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 }

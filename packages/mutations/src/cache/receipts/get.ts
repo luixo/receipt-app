@@ -2,6 +2,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
+import type { Temporal } from "~utils/date";
 
 import type {
 	ControllerContext,
@@ -448,7 +449,7 @@ export const getRevertController = ({
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 			part: number,
-			createdAt: Date,
+			createdAt: Temporal.ZonedDateTime,
 		) =>
 			applyWithRevert(
 				() =>

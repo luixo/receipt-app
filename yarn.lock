@@ -7829,6 +7829,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/db@workspace:packages/db"
   dependencies:
+    "@ra/utils": "workspace:*"
     "@ra/vitest": "workspace:*"
     extract-pg-schema: "npm:^4.1.0"
     kanel: "npm:^3.14.1"

@@ -11,6 +11,8 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import type { Temporal } from "~utils/date";
+import { parsers } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -117,7 +119,10 @@ export const verifyCurrencyCode = <T>(
 };
 
 export const verifyTimestamp = <T>(
-	runProcedure: (context: UnauthorizedContext, timestamp: Date) => Promise<T>,
+	runProcedure: (
+		context: UnauthorizedContext,
+		timestamp: Temporal.PlainDate,
+	) => Promise<T>,
 	prefix: string,
 ) => {
 	describe("timestamp", () => {
@@ -125,9 +130,10 @@ export const verifyTimestamp = <T>(
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
-				() => runProcedure(context, new Date("not a date")),
+				// @ts-expect-error We test an error here
+				() => runProcedure(context, parsers.plainDate("not a date")),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}timestamp": Invalid input: expected date, received Date`,
+				`Zod error\n\nAt "${prefix}timestamp.value": Invalid input: expected date, received Date`,
 			);
 		});
 	});

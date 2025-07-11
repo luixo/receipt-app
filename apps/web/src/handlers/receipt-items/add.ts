@@ -8,6 +8,7 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import type { ReceiptItemsId } from "~db/models";
+import type { Temporal } from "~utils/date";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -23,7 +24,7 @@ export const addItemSchema = z.strictObject({
 
 export type ItemOutput = {
 	id: ReceiptItemsId;
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 };
 
 const getData = async (

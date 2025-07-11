@@ -46,7 +46,8 @@ export const ReceiptItems: React.FC = () => {
 		{},
 	);
 	const sortedItems = React.useMemo(
-		() => items.toSorted((a, b) => compare(a.createdAt, b.createdAt)),
+		() =>
+			items.toSorted((a, b) => compare.zonedDateTime(a.createdAt, b.createdAt)),
 		[items],
 	);
 	if (items.length === 0) {

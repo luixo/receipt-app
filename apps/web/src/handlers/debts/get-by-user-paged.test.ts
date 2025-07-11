@@ -249,7 +249,7 @@ describe("debts.getByUserPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: debts
 					.sort((a, b) => {
-						const timestampSort = compare(a.timestamp, b.timestamp);
+						const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -307,7 +307,7 @@ describe("debts.getByUserPaged", () => {
 				cursor: 0,
 				items: nonResolvedDebts
 					.sort((a, b) => {
-						const timestampSort = compare(b.timestamp, a.timestamp);
+						const timestampSort = compare.plainDate(b.timestamp, a.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -341,7 +341,7 @@ describe("debts.getByUserPaged", () => {
 				cursor: 0,
 				items: allDebts
 					.sort((a, b) => {
-						const timestampSort = compare(b.timestamp, a.timestamp);
+						const timestampSort = compare.plainDate(b.timestamp, a.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -403,7 +403,7 @@ describe("debts.getByUserPaged", () => {
 				cursor,
 				items: userDebts
 					.sort((a, b) => {
-						const timestampSort = compare(a.timestamp, b.timestamp);
+						const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}

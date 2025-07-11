@@ -16,7 +16,7 @@ const createDebt = (
 	{ id, updatedAt, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtSnapshot => {
-	const timestamp = updateObject.timestamp || getNow();
+	const timestamp = updateObject.timestamp || getNow.plainDate();
 	return {
 		id,
 		amount: updateObject.amount,

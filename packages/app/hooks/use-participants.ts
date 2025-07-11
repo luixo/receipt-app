@@ -33,7 +33,7 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 		return 1;
 	}
 	// Sort everyone else by createdAt timestamp
-	return compare(a.createdAt, b.createdAt);
+	return compare.zonedDateTime(a.createdAt, b.createdAt);
 };
 
 export const useParticipants = (

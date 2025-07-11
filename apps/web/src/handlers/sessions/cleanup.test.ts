@@ -20,19 +20,19 @@ describe("sessions.cleanup", () => {
 		test("sessions are removed", async ({ ctx }) => {
 			// Verifying other sessions are not affected
 			await insertAccountWithSession(ctx);
-			const now = getNow();
+			const now = getNow.zonedDateTime();
 			const { id: accountId } = await insertAccount(ctx);
 			await insertSession(ctx, accountId, {
 				// non-expired session
-				expirationTimestamp: add(now, { minutes: 1 }),
+				expirationTimestamp: add.zonedDateTime(now, { minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// just expired session
-				expirationTimestamp: substract(now, { minutes: 1 }),
+				expirationTimestamp: substract.zonedDateTime(now, { minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// long expired session
-				expirationTimestamp: substract(now, { years: 1 }),
+				expirationTimestamp: substract.zonedDateTime(now, { years: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

@@ -20,7 +20,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
+import { getNow, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 import { UUID_REGEX } from "~web/handlers/validation";
@@ -152,7 +152,7 @@ describe("debts.add", () => {
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
 				id: results[0].id,
-				updatedAt: getNow(),
+				updatedAt: getNow.zonedDateTime(),
 				reverseAccepted: undefined,
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
@@ -177,7 +177,7 @@ describe("debts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				updatedAt: getNow(),
+				updatedAt: getNow.zonedDateTime(),
 				reverseAccepted: undefined,
 			});
 		});
@@ -196,13 +196,13 @@ describe("debts.add", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					...getValidDebt(userId),
-					timestamp: new Date("2021-01-01"),
+					timestamp: parsers.plainDate("2021-01-01"),
 				}),
 			);
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				updatedAt: getNow(),
+				updatedAt: getNow.zonedDateTime(),
 				reverseAccepted: undefined,
 			});
 		});
@@ -255,7 +255,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }, index) => ({
 						id,
-						updatedAt: getNow(),
+						updatedAt: getNow.zonedDateTime(),
 						// see Promise.all - accepting users are 0, 1 and 2 indexes
 						reverseAccepted: index <= 2,
 					})) as typeof results,
@@ -293,7 +293,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,
-						updatedAt: getNow(),
+						updatedAt: getNow.zonedDateTime(),
 						// see Promise.all - all users are accepting
 						reverseAccepted: true,
 					})) as typeof results,
@@ -343,7 +343,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,
-						updatedAt: getNow(),
+						updatedAt: getNow.zonedDateTime(),
 						// see Promise.all - all users are accepting
 						reverseAccepted: true,
 					})) as typeof results,
@@ -370,7 +370,7 @@ describe("debts.add", () => {
 				expect(results[0].id).toMatch(UUID_REGEX);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					id: results[0].id,
-					updatedAt: getNow(),
+					updatedAt: getNow.zonedDateTime(),
 					reverseAccepted: true,
 				});
 				expect(results[1]).toBeInstanceOf(Error);
@@ -406,7 +406,7 @@ describe("debts.add", () => {
 				expect(result.id).toMatch(UUID_REGEX);
 				expect(result).toStrictEqual<typeof result>({
 					id: result.id,
-					updatedAt: getNow(),
+					updatedAt: getNow.zonedDateTime(),
 					reverseAccepted: true,
 				});
 			});
@@ -442,7 +442,7 @@ describe("debts.add", () => {
 				expect(result.id).toMatch(UUID_REGEX);
 				expect(result).toStrictEqual<typeof result>({
 					id: result.id,
-					updatedAt: getNow(),
+					updatedAt: getNow.zonedDateTime(),
 					reverseAccepted: true,
 				});
 				expect(result.id).toEqual(counterpartyId);

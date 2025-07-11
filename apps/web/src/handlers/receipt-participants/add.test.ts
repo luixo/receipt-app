@@ -247,7 +247,7 @@ describe("receiptParticipants.add", () => {
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
@@ -317,11 +317,11 @@ describe("receiptParticipants.add", () => {
 				]),
 			);
 			expect(result).toStrictEqual<typeof result>([
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
-				{ createdAt: getNow() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
+				{ createdAt: getNow.zonedDateTime() },
 			]);
 		});
 	});

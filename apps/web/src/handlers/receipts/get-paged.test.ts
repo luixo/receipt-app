@@ -20,7 +20,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { compare } from "~utils/date";
+import { compare, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-paged";
@@ -42,7 +42,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Self receipt
 	const selfReceipt = await insertReceipt(ctx, accountId, {
-		issued: new Date("2020-01-06"),
+		issued: parsers.plainDate("2020-01-06"),
 	});
 	// Self receipt: participants
 	await Promise.all([
@@ -57,7 +57,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Other self receipt
 	const otherSelfReceipt = await insertReceipt(ctx, accountId, {
-		issued: new Date("2020-02-06"),
+		issued: parsers.plainDate("2020-02-06"),
 	});
 	const user = await insertUser(ctx, accountId);
 	// Other self receipt: participants
@@ -72,7 +72,7 @@ const mockData = async (ctx: TestContext) => {
 		accountId,
 	]);
 	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
-		issued: new Date("2020-03-06"),
+		issued: parsers.plainDate("2020-03-06"),
 	});
 	// Foreign receipt: participants
 	await Promise.all([
@@ -88,7 +88,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Other foreign receipt
 	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
-		issued: new Date("2020-04-06"),
+		issued: parsers.plainDate("2020-04-06"),
 	});
 	// Other foreign receipt: participants
 	await Promise.all([
@@ -138,7 +138,7 @@ const runFunctionalTest = async (
 		}),
 	);
 	const items = modifyItems(
-		receipts.sort((a, b) => compare(b.issued, a.issued)),
+		receipts.sort((a, b) => compare.plainDate(b.issued, a.issued)),
 		accountId,
 	).map(({ id }) => id);
 	expect(items.length).toBeGreaterThan(0);
@@ -330,7 +330,8 @@ describe("receipts.getPaged", () => {
 			await runFunctionalTest(
 				ctx,
 				(input) => ({ ...input, orderBy: "date-asc" }),
-				(receipts) => receipts.sort((a, b) => compare(a.issued, b.issued)),
+				(receipts) =>
+					receipts.sort((a, b) => compare.plainDate(a.issued, b.issued)),
 			);
 		});
 

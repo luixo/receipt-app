@@ -30,7 +30,9 @@ export const procedure = authProcedure
 			.array(),
 	)
 	.query(async ({ input, ctx }) => {
-		const minimalTimestamp = substract(getNow(), { months: 1 });
+		const minimalTimestamp = substract.plainDate(getNow.plainDate(), {
+			months: 1,
+		});
 		switch (input.options.type) {
 			case "debts": {
 				const topCurrenciesResult = await ctx.database

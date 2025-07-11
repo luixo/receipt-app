@@ -1,5 +1,6 @@
 import type { CurrencyCode } from "~app/utils/currency";
 import type { Debts, DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { Temporal } from "~utils/date";
 import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 
@@ -8,14 +9,14 @@ type InboundIntention = {
 	userId: UsersId;
 	currencyCode: CurrencyCode;
 	amount: number;
-	timestamp: Date;
-	updatedAt: Date;
+	timestamp: Temporal.PlainDate;
+	updatedAt: Temporal.ZonedDateTime;
 	note: string;
 	receiptId?: ReceiptsId;
 	current?: {
 		amount: number;
 		currencyCode: CurrencyCode;
-		timestamp: Date;
+		timestamp: Temporal.PlainDate;
 	};
 };
 

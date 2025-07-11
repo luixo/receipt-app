@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { AccountsId } from "./accounts";
 
 /** Identifier type for "users" table */
@@ -23,9 +25,9 @@ export default interface Users {
 
 	connectedAccountId: AccountsId | null;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface UsersInitializer {
@@ -48,10 +50,10 @@ export interface UsersInitializer {
 	connectedAccountId?: AccountsId | null;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface UsersMutator {
@@ -71,7 +73,7 @@ export interface UsersMutator {
 
 	connectedAccountId?: AccountsId | null;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

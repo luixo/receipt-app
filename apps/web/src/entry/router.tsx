@@ -79,7 +79,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			initialLanguage,
 			i18n: i18nInstance,
 			queryClient,
-			nowTimestamp: getNow().valueOf(),
+			nowTimestamp: getNow.zonedDateTime(),
 		},
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: ErrorComponent,

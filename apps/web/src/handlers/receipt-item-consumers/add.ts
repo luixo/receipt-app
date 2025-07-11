@@ -3,6 +3,7 @@ import { unique } from "remeda";
 import { z } from "zod/v4";
 
 import { partSchema } from "~app/utils/validation";
+import type { Temporal } from "~utils/date";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -14,7 +15,7 @@ import {
 } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
-export type ConsumerOutput = { createdAt: Date };
+export type ConsumerOutput = { createdAt: Temporal.ZonedDateTime };
 
 export const addItemConsumerSchema = z.strictObject({
 	itemId: receiptItemIdSchema,

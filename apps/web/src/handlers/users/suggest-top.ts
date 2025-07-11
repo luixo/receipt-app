@@ -33,7 +33,7 @@ export const procedure = authProcedure
 			...(input.filterIds || []),
 			ctx.auth.accountId as UsersId,
 		];
-		const monthAgo = substract(getNow(), { months: 1 });
+		const monthAgo = substract.plainDate(getNow.plainDate(), { months: 1 });
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
 			const { receiptId } = options;

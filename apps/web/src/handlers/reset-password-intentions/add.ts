@@ -28,7 +28,9 @@ export const procedure = unauthProcedure
 			});
 		}
 		const uuid: string = ctx.getUuid();
-		const expirationDate = add(getNow(), { days: 1 });
+		const expirationDate = add.zonedDateTime(getNow.zonedDateTime(), {
+			days: 1,
+		});
 		if (!ctx.emailOptions.active) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
@@ -41,7 +43,7 @@ export const procedure = unauthProcedure
 				eb("resetPasswordIntentions.accountId", "=", account.id).and(
 					"expiresTimestamp",
 					">",
-					getNow(),
+					getNow.zonedDateTime(),
 				),
 			)
 			.select("expiresTimestamp")

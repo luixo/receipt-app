@@ -106,6 +106,22 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		selector: "ExportAllDeclaration",
 		message: "Do not use barrel export, prefer named export",
 	},
+	{
+		selector: "NewExpression[callee.name='Date']",
+		message:
+			"Using `new Date()` is forbidden, use '~utils/date' `parse` object.",
+	},
+	{
+		selector:
+			"CallExpression[callee.object.name='Date'][callee.property.name='now']",
+		message:
+			"Using `Date.now()` is forbidden, use '~utils/date' `getNow` object.",
+	},
+	{
+		selector: "TSTypeReference[typeName.name='Date']",
+		message:
+			"Using `Date` type is forbidden, use '~utils/date' Temporal types.",
+	},
 ] as const;
 
 const getNoRestrictedSyntax = (...omittedTags: string[]) =>

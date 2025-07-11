@@ -4,6 +4,8 @@ import { z } from "zod/v4";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { SimpleUpdateObject } from "~db/types";
+import type { Temporal } from "~utils/date";
+import { temporalSchemas } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -20,7 +22,7 @@ const updateDebtSchema = z.strictObject({
 	update: z
 		.strictObject({
 			amount: debtAmountSchema,
-			timestamp: z.date(),
+			timestamp: temporalSchemas.plainDate,
 			note: debtNoteSchema,
 			currencyCode: currencyCodeSchema,
 			receiptId: receiptIdSchema.optional(),
@@ -236,7 +238,7 @@ const queueUpdateDebt = queueCallFactory<
 	AuthorizedContext,
 	z.infer<typeof updateDebtSchema>,
 	{
-		updatedAt: Date;
+		updatedAt: Temporal.ZonedDateTime;
 		// `undefined` signifies that user is local
 		reverseUpdated: boolean | undefined;
 	}

@@ -58,7 +58,9 @@ export const procedure = unauthProcedure
 				passwordHash: passwordData.hash,
 				passwordSalt: passwordData.salt,
 				confirmationToken: emailServiceActive ? confirmationToken : null,
-				confirmationTokenTimestamp: emailServiceActive ? getNow() : null,
+				confirmationTokenTimestamp: emailServiceActive
+					? getNow.zonedDateTime()
+					: null,
 			})
 			.execute();
 		await database

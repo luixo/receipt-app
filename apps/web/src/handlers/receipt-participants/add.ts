@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import type { Temporal } from "~utils/date";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -19,7 +20,7 @@ export const addParticipantSchema = z.strictObject({
 });
 
 export type ParticipantOutput = {
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 };
 
 const getData = async (

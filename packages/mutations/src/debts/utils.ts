@@ -1,7 +1,7 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
-import { getNow } from "~utils/date";
+import { type Temporal, getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -12,9 +12,9 @@ export type CurrentDebt = {
 	amount: number;
 	currencyCode: CurrencyCode;
 	receiptId?: ReceiptsId;
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 	their?: {
-		updatedAt: Date;
+		updatedAt: Temporal.ZonedDateTime;
 	};
 };
 
@@ -56,7 +56,7 @@ export const applyUpdate =
 		}
 		const updateSyncable = isUpdateSyncable(update);
 		if (updateSyncable) {
-			nextDebt.updatedAt = getNow();
+			nextDebt.updatedAt = getNow.zonedDateTime();
 		}
 		return nextDebt;
 	};
@@ -123,7 +123,7 @@ export const updateReceiptWithOutcomingDebtId = (
 export const updateUpdatedAt = (
 	controllerContext: ControllerContext,
 	debtId: DebtsId,
-	updatedAt: Date | undefined,
+	updatedAt: Temporal.ZonedDateTime | undefined,
 	reverseUpdated: boolean | undefined,
 ) => {
 	updateDebts(controllerContext, {

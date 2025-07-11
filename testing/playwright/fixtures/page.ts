@@ -16,6 +16,7 @@ const getProxyUrl = (url: string, api: ExtractFixture<typeof test>["api"]) => {
 };
 
 const fakeBrowserDate = async (page: OriginalPage) => {
+	// eslint-disable-next-line no-restricted-syntax
 	const localMockedTimestamp = new Date().valueOf();
 	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {

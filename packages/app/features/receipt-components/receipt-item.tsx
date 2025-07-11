@@ -33,7 +33,7 @@ import type { Item } from "./state";
 type ItemConsumer = Item["consumers"][number];
 
 const SORT_CONSUMERS = (a: ItemConsumer, b: ItemConsumer) => {
-	const delta = compare(a.createdAt, b.createdAt);
+	const delta = compare.zonedDateTime(a.createdAt, b.createdAt);
 	if (delta === 0) {
 		return a.userId.localeCompare(b.userId);
 	}

@@ -29,7 +29,7 @@ import {
 import { Button } from "~components/button";
 import { BackLink } from "~components/link";
 import { options as debtsAddOptions } from "~mutations/debts/add";
-import { getToday } from "~utils/date";
+import { getNow, temporalSchemas } from "~utils/date";
 
 const formSchema = z.object({
 	amount: debtAmountSchema,
@@ -37,7 +37,7 @@ const formSchema = z.object({
 	currencyCode: currencyCodeSchema,
 	userId: userIdSchema,
 	note: debtNoteSchema,
-	timestamp: z.date(),
+	timestamp: temporalSchemas.plainDate,
 });
 
 type Form = z.infer<typeof formSchema>;
@@ -61,7 +61,7 @@ export const AddDebtScreen: React.FC<{
 	const defaultValues: Partial<Form> = {
 		note: "",
 		direction: "+",
-		timestamp: getToday(),
+		timestamp: getNow.plainDate(),
 		userId: undefined,
 	};
 

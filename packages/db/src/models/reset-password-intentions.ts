@@ -1,45 +1,47 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { AccountsId } from "./accounts";
 
 export default interface ResetPasswordIntentions {
 	/** Index: resetPasswordIntentions:accountId:index */
 	accountId: AccountsId;
 
-	expiresTimestamp: Date;
+	expiresTimestamp: Temporal.ZonedDateTime;
 
 	token: string;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface ResetPasswordIntentionsInitializer {
 	/** Index: resetPasswordIntentions:accountId:index */
 	accountId: AccountsId;
 
-	expiresTimestamp: Date;
+	expiresTimestamp: Temporal.ZonedDateTime;
 
 	token: string;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface ResetPasswordIntentionsMutator {
 	/** Index: resetPasswordIntentions:accountId:index */
 	accountId?: AccountsId;
 
-	expiresTimestamp?: Date;
+	expiresTimestamp?: Temporal.ZonedDateTime;
 
 	token?: string;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

@@ -4,6 +4,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import type { OnSelectHandler } from "react-day-picker";
 import { DayPicker } from "react-day-picker";
 
+import type { Temporal } from "~utils/date";
+import { createTemporal, getOffsettedDate } from "~utils/date";
+
 const classNames: NonNullable<DayPickerProps["classNames"]> = {
 	root: "flex max-w-full max-h-full bg-background p-4 rounded-large items-center h-80",
 	button_previous: "flex p-2",
@@ -24,8 +27,8 @@ const classNames: NonNullable<DayPickerProps["classNames"]> = {
 type DayPickerProps = React.ComponentProps<typeof DayPicker>;
 
 type Props = {
-	value?: Date;
-	onChange: (nextDate: Date) => void;
+	value?: Temporal.PlainDate;
+	onChange: (nextDate: Temporal.PlainDate) => void;
 	children: React.ReactElement;
 	disabled?: boolean;
 };
@@ -37,12 +40,13 @@ export const Calendar: React.FC<Props> = ({
 	disabled,
 }) => {
 	const [open, setOpen] = React.useState(false);
+	// eslint-disable-next-line no-restricted-syntax
 	const onDateChange = React.useCallback<OnSelectHandler<Date | undefined>>(
 		(date) => {
 			if (!date) {
 				return;
 			}
-			onChange(new Date(date.valueOf() - date.getTimezoneOffset() * 60 * 1000));
+			onChange(createTemporal("plainDate", getOffsettedDate(date)));
 			setOpen(false);
 		},
 		[onChange, setOpen],
@@ -56,7 +60,7 @@ export const Calendar: React.FC<Props> = ({
 			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
 				<DayPicker
 					mode="single"
-					selected={value}
+					selected={value ? value.value : undefined}
 					onSelect={onDateChange}
 					classNames={classNames}
 					showOutsideDays

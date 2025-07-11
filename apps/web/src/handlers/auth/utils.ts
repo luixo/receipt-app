@@ -15,7 +15,7 @@ export const SESSION_REFRESH_DURATION = parseDuration(
 );
 
 export const getExpirationDate = () =>
-	add(getNow(), SESSION_EXPIRATION_DURATION);
+	add.zonedDateTime(getNow.zonedDateTime(), SESSION_EXPIRATION_DURATION);
 
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,

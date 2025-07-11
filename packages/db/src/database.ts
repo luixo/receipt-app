@@ -11,6 +11,8 @@ import { Pool, types } from "pg";
 import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
+import { deserialize, isTemporalObject, serialize } from "~utils/date";
+
 import type { ReceiptsDatabase } from "./types";
 
 const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
@@ -27,16 +29,6 @@ const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 	}
 };
 
-const dbTemporalRegexes = {
-	plainDate: /^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/,
-	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
-	plainDateTime:
-		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
-	zonedTime:
-		/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
-	zonedDateTime:
-		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
-};
 const dbParsers: Record<
 	(typeof types.builtins)[number],
 	(input: string) => unknown
@@ -50,7 +42,12 @@ const dbParsers: Record<
 	[types.builtins.BOOL]: (value) => (value === "t" ? "true" : "false"),
 	/* c8 ignore stop */
 };
-const serializer: Serializer = (input) => defaultSerializer(input);
+const serializer: Serializer = (input) => {
+	if (isTemporalObject(input)) {
+		return serialize(input);
+	}
+	return defaultSerializer(input);
+};
 const deserializer: Deserializer = (input) => {
 	if (input === null) {
 		return null;
@@ -59,11 +56,9 @@ const deserializer: Deserializer = (input) => {
 		return input.map((element) => deserializer(element));
 	}
 	if (typeof input === "string") {
-		const regexTypeMatch = entries(dbTemporalRegexes).find(([, regex]) =>
-			regex.test(input),
-		);
-		if (regexTypeMatch) {
-			return new Date(input);
+		const deserializedValue = deserialize(input);
+		if (deserializedValue) {
+			return deserializedValue;
 		}
 	}
 	if (isPlainObject(input)) {

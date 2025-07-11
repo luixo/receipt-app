@@ -25,6 +25,7 @@ const addLockedTimestampColumn = async (db: Database) => {
 				.then(CURRENT_TIMESTAMP)
 				.else(null)
 				.end()
+				// eslint-disable-next-line no-restricted-syntax
 				.$castTo<Date>(),
 		})
 		.execute();

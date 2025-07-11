@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { AccountsId } from "./accounts";
 
 export default interface AccountSettings {
@@ -8,7 +10,7 @@ export default interface AccountSettings {
 
 	manualAcceptDebts: boolean;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface AccountSettingsInitializer {
@@ -17,7 +19,7 @@ export interface AccountSettingsInitializer {
 	manualAcceptDebts: boolean;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface AccountSettingsMutator {
@@ -25,5 +27,5 @@ export interface AccountSettingsMutator {
 
 	manualAcceptDebts?: boolean;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

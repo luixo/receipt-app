@@ -16,10 +16,11 @@ import {
 } from "~db/migration/consts";
 import { isTestEnv } from "~db/migration/utils";
 import type { Database } from "~db/types";
+import { parsers } from "~utils/date";
 
 const updateColumn = "updatedAt";
 // Project inception date
-const defaultCreatedDate = new Date("04/12/2020, 07:10:00 UTC");
+const defaultCreatedDate = parsers.zonedDateTime("2020-12-04T07:10:00.000Z");
 
 const createUpdateFunction = async (db: Database) => {
 	await sql`

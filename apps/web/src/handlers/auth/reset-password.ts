@@ -24,7 +24,7 @@ export const procedure = unauthProcedure
 				eb("token", "=", input.token).and(
 					"resetPasswordIntentions.expiresTimestamp",
 					">",
-					getNow(),
+					getNow.zonedDateTime(),
 				),
 			)
 			.innerJoin("accounts", (qb) =>

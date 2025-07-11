@@ -4,7 +4,8 @@ import { z } from "zod/v4";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { DebtsId } from "~db/models";
-import { getNow } from "~utils/date";
+import type { Temporal } from "~utils/date";
+import { getNow, temporalSchemas } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -21,7 +22,7 @@ const addDebtSchema = z.strictObject({
 	currencyCode: currencyCodeSchema,
 	userId: userIdSchema,
 	amount: debtAmountSchema,
-	timestamp: z.date().optional(),
+	timestamp: temporalSchemas.plainDate.optional(),
 	receiptId: receiptIdSchema.optional(),
 });
 
@@ -118,7 +119,7 @@ const addAutoAcceptingDebts = async (
 					id: generatedId,
 					note: debt.note,
 					currencyCode: debt.currencyCode,
-					timestamp: debt.timestamp || getNow(),
+					timestamp: debt.timestamp || getNow.plainDate(),
 					receiptId: debt.receiptId,
 					ownerAccountId: user.foreignAccountId,
 					userId: user.theirUserId,
@@ -190,7 +191,7 @@ const addDebts = async (
 					id: reverseIdMap[getDebtUserReceiptTupleId(debt)] || generatedId,
 					note: debt.note,
 					currencyCode: debt.currencyCode,
-					timestamp: debt.timestamp || getNow(),
+					timestamp: debt.timestamp || getNow.plainDate(),
 					receiptId: debt.receiptId,
 					ownerAccountId: ctx.auth.accountId,
 					userId: debt.userId,
@@ -214,7 +215,7 @@ const queueAddDebt = queueCallFactory<
 	z.infer<typeof addDebtSchema>,
 	{
 		id: DebtsId;
-		updatedAt: Date;
+		updatedAt: Temporal.ZonedDateTime;
 		// `undefined` signifies that user is local
 		reverseAccepted: boolean | undefined;
 	}

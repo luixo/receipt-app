@@ -18,7 +18,7 @@ type Props = {
 };
 
 export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
-	const { formatDate, formatDateTime } = useFormat();
+	const { formatPlainDate, formatZonedDateTime } = useFormat();
 	const locale = useLocale();
 	const intentionDataComponent = (
 		<View className="flex-row gap-2">
@@ -29,7 +29,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 					Math.abs(intention.amount),
 				)}
 			</Text>
-			<Text>{formatDate(intention.timestamp)}</Text>
+			<Text>{formatPlainDate(intention.timestamp)}</Text>
 		</View>
 	);
 	return (
@@ -49,7 +49,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 									Math.abs(intention.current.amount),
 								)}
 							</Text>
-							<Text>{formatDate(intention.current.timestamp)}</Text>
+							<Text>{formatPlainDate(intention.current.timestamp)}</Text>
 						</View>
 						<ArrowIcon size={24} />
 						{intentionDataComponent}
@@ -75,7 +75,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 				<View className="flex-row justify-between">
 					<View className="flex-row gap-1">
 						<SyncIcon size={24} />
-						<Text>{formatDateTime(intention.updatedAt)}</Text>
+						<Text>{formatZonedDateTime(intention.updatedAt)}</Text>
 					</View>
 					<View className="max-md:hidden">{children}</View>
 				</View>

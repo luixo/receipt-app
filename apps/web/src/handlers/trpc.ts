@@ -99,7 +99,7 @@ const queueSession = queueCallFactory<
 					eb("sessions.sessionId", "in", authTokens).and(
 						"sessions.expirationTimestamp",
 						">",
-						getNow(),
+						getNow.zonedDateTime(),
 					),
 				)
 				.execute(),
@@ -154,11 +154,16 @@ const queueSession = queueCallFactory<
 				if (!matchedSession) {
 					return;
 				}
-				const refreshSessionTimestamp = substract(
+				const refreshSessionTimestamp = substract.zonedDateTime(
 					matchedSession.expirationTimestamp,
 					SESSION_REFRESH_DURATION,
 				);
-				if (isFirstEarlier(getNow(), refreshSessionTimestamp)) {
+				if (
+					isFirstEarlier.zonedDateTime(
+						getNow.zonedDateTime(),
+						refreshSessionTimestamp,
+					)
+				) {
 					return;
 				}
 				return {

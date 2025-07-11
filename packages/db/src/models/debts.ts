@@ -2,6 +2,7 @@
 // Automatically generated. Don't change this file manually.
 
 import type { CurrencyCode } from "~app/utils/currency";
+import type { Temporal } from "~utils/date";
 
 import type { AccountsId } from "./accounts";
 import type { ReceiptsId } from "./receipts";
@@ -31,16 +32,16 @@ export default interface Debts {
 
 	amount: string;
 
-	timestamp: Date;
+	timestamp: Temporal.PlainDate;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
 	note: string;
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId: ReceiptsId | null;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface DebtsInitializer {
@@ -64,10 +65,10 @@ export interface DebtsInitializer {
 
 	amount: string;
 
-	timestamp: Date;
+	timestamp: Temporal.PlainDate;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	note: string;
 
@@ -75,7 +76,7 @@ export interface DebtsInitializer {
 	receiptId?: ReceiptsId | null;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface DebtsMutator {
@@ -99,14 +100,14 @@ export interface DebtsMutator {
 
 	amount?: string;
 
-	timestamp?: Date;
+	timestamp?: Temporal.PlainDate;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	note?: string;
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

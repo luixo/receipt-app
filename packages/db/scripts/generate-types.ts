@@ -7,6 +7,14 @@ const { generateIndexFile, processDatabase } = (
 	kanel as unknown as { default: typeof kanel }
 ).default;
 
+const customTypeMap = {
+	"pg_catalog.date": "Temporal.PlainDate",
+	"pg_catalog.time": "Temporal.PlainTime",
+	"pg_catalog.timetz": "Temporal.ZonedTime",
+	"pg_catalog.timestamp": "Temporal.PlainDateTime",
+	"pg_catalog.timestamptz": "Temporal.ZonedDateTime",
+};
+
 const run = async () => {
 	console.log(`\n> Generating types...`);
 	try {
@@ -18,6 +26,7 @@ const run = async () => {
 			connection: process.env.DATABASE_URL,
 			outputPath,
 			preDeleteOutputFolder: true,
+			customTypeMap,
 			getMetadata: (details, generateFor) => ({
 				name: capitalize(
 					toCamelCase(
@@ -75,7 +84,7 @@ const run = async () => {
 						"",
 					];
 					if (
-						lines.some((line) => line.includes(": CurrencyCode")) &&
+						lines.some((line) => line.includes(": CurrencyCode;")) &&
 						!lines.some((line) => line.includes("type CurrencyCode"))
 					) {
 						prepended.push(
@@ -83,10 +92,13 @@ const run = async () => {
 						);
 					}
 					if (
-						lines.some((line) => line.includes(": DebtsId")) &&
+						lines.some((line) => line.includes(": DebtsId;")) &&
 						!lines.some((line) => line.includes("type DebtsId"))
 					) {
 						prepended.push("import type { DebtsId } from './debts';");
+					}
+					if (lines.some((line) => line.includes(": Temporal"))) {
+						prepended.push(`import type { Temporal } from '~utils/date';`);
 					}
 					return [...prepended, ...lines];
 				},

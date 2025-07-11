@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import { receiptNameSchema } from "~app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import { temporalSchemas } from "~utils/date";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
 import {
@@ -40,7 +41,7 @@ export const addReceiptSchema = z.strictObject({
 		)
 		.optional(),
 	payers: z.array(addItemConsumerSchema.omit({ itemId: true })).optional(),
-	issued: z.date(),
+	issued: temporalSchemas.plainDate,
 });
 
 type InsertedParticipants = {

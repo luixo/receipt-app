@@ -14,7 +14,7 @@ import {
 } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
 import { tv } from "~components/utils";
-import { isFirstEarlier } from "~utils/date";
+import { compare } from "~utils/date";
 
 const wrapper = tv({
 	base: "flex-row",
@@ -40,7 +40,7 @@ const getContent = (
 	if (synced) {
 		return t("components.debtSyncStatus.inSync");
 	}
-	return isFirstEarlier(theirDebt.updatedAt, debt.updatedAt)
+	return compare.zonedDateTime(debt.updatedAt, theirDebt.updatedAt)
 		? t("components.debtSyncStatus.outOfSyncWe")
 		: t("components.debtSyncStatus.outOfSyncThey");
 };
@@ -85,7 +85,7 @@ export const DebtSyncStatus: React.FC<Props> = ({
 					} top-0`}
 				>
 					{synced ? null : theirDebt?.updatedAt &&
-					  isFirstEarlier(debt.updatedAt, theirDebt.updatedAt) ? (
+					  compare.zonedDateTime(theirDebt.updatedAt, debt.updatedAt) > 0 ? (
 						<IncomingIcon size={pixelSize} />
 					) : (
 						<OutcomingIcon size={pixelSize} />

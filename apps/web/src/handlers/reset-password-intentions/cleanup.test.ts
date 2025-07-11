@@ -18,18 +18,18 @@ describe("resetPasswordIntentions.cleanup", () => {
 	describe("functionality", () => {
 		test("reset password intentions are removed", async ({ ctx }) => {
 			const { id: accountId } = await insertAccount(ctx);
-			const now = getNow();
+			const now = getNow.zonedDateTime();
 			await insertResetPasswordIntention(ctx, accountId, {
 				// non-expired intention
-				expiresTimestamp: add(now, { minutes: 1 }),
+				expiresTimestamp: add.zonedDateTime(now, { minutes: 1 }),
 			});
 			await insertResetPasswordIntention(ctx, accountId, {
 				// just expired intention
-				expiresTimestamp: substract(now, { minutes: 1 }),
+				expiresTimestamp: substract.zonedDateTime(now, { minutes: 1 }),
 			});
 			await insertResetPasswordIntention(ctx, accountId, {
 				// long expired intention
-				expiresTimestamp: substract(now, { years: 1 }),
+				expiresTimestamp: substract.zonedDateTime(now, { years: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

@@ -170,9 +170,14 @@ const handleCall = async <K extends TRPCKey>(
 				? e
 				: new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
-						message: "Internal server error",
+						message: `Internal server error: ${String(e)}`,
 						cause: e,
 					});
+		if (!(e instanceof TRPCError)) {
+			// Unexpected error logging in Playwright helps debugging
+			// eslint-disable-next-line no-console
+			console.error("Internal server error", e);
+		}
 		return {
 			error: transformer.serialize({
 				code: TRPC_ERROR_CODES_BY_KEY[trpcError.code],
@@ -180,7 +185,10 @@ const handleCall = async <K extends TRPCKey>(
 					code: trpcError.code,
 					httpStatus: getHTTPStatusCodeFromError(trpcError),
 					path: name,
-					stack: trpcError.stack,
+					stack:
+						e instanceof TRPCError || e instanceof Error
+							? e.stack
+							: trpcError.stack,
 				},
 				message: trpcError.message,
 			}) as unknown as TRPCErrorShape,

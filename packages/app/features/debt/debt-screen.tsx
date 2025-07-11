@@ -44,6 +44,7 @@ import { Spinner } from "~components/spinner";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
+import type { Temporal } from "~utils/date";
 import { areEqual } from "~utils/date";
 
 import { DebtControlButtons } from "./debt-control-buttons";
@@ -210,8 +211,8 @@ const DebtDateInput: React.FC<DateProps> = ({
 	);
 
 	const saveDate = React.useCallback(
-		(nextDate: Date) => {
-			if (areEqual(nextDate, debt.timestamp)) {
+		(nextDate: Temporal.PlainDate) => {
+			if (areEqual.plainDate(nextDate, debt.timestamp)) {
 				return;
 			}
 			updateMutation.mutate({

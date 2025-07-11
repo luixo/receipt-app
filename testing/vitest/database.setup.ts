@@ -60,6 +60,7 @@ beforeAll(
 );
 
 beforeEach(async ({ task }) => {
+	// eslint-disable-next-line no-restricted-syntax
 	timekeeper.freeze(new Date("2020-01-01"));
 	return async () => {
 		timekeeper.reset();

@@ -38,7 +38,7 @@ const useAddItem = (setItems: SetItems) =>
 						price,
 						quantity,
 						consumers: [],
-						createdAt: getNow(),
+						createdAt: getNow.zonedDateTime(),
 					},
 				],
 				options,
@@ -120,7 +120,7 @@ const useAddItemConsumer = (setItems: SetItems) => {
 						...(prevItem.consumers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
-						{ userId, part, createdAt: getNow() },
+						{ userId, part, createdAt: getNow.zonedDateTime() },
 					],
 				}),
 				options,
@@ -182,7 +182,7 @@ const useAddPayer = (setPayers: SetPayers) =>
 				(prevPayers) => [
 					// Remove accidentally added double participants
 					...prevPayers.filter((payer) => payer.userId !== userId),
-					{ createdAt: getNow(), userId, part },
+					{ createdAt: getNow.zonedDateTime(), userId, part },
 				],
 				options,
 			),
@@ -244,7 +244,7 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 					...prevParticipants.filter(
 						(participant) => participant.userId !== userId,
 					),
-					{ createdAt: getNow(), role, userId },
+					{ createdAt: getNow.zonedDateTime(), role, userId },
 				],
 				options,
 			),

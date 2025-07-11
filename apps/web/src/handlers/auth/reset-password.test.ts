@@ -87,7 +87,9 @@ describe("auth.resetPassword", () => {
 		test("intention expires", async ({ ctx }) => {
 			const { accountId } = await insertAccountWithSession(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: substract(getNow(), { minutes: 1 }),
+				expiresTimestamp: substract.zonedDateTime(getNow.zonedDateTime(), {
+					minutes: 1,
+				}),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectTRPCError(
@@ -112,7 +114,9 @@ describe("auth.resetPassword", () => {
 			// Verifying other intentions of the same user are removed
 			await insertResetPasswordIntention(ctx, accountId);
 			await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: substract(getNow(), { minutes: 1 }),
+				expiresTimestamp: substract.zonedDateTime(getNow.zonedDateTime(), {
+					minutes: 1,
+				}),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const context = await createContext(ctx);

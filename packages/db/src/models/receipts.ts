@@ -2,6 +2,7 @@
 // Automatically generated. Don't change this file manually.
 
 import type { CurrencyCode } from "~app/utils/currency";
+import type { Temporal } from "~utils/date";
 
 import type { AccountsId } from "./accounts";
 
@@ -16,14 +17,14 @@ export default interface Receipts {
 
 	currencyCode: CurrencyCode;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
-	issued: Date;
+	issued: Temporal.PlainDate;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptsInitializer {
@@ -35,15 +36,15 @@ export interface ReceiptsInitializer {
 	currencyCode: CurrencyCode;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
-	issued: Date;
+	issued: Temporal.PlainDate;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptsMutator {
@@ -54,12 +55,12 @@ export interface ReceiptsMutator {
 
 	currencyCode?: CurrencyCode;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId?: AccountsId;
 
-	issued?: Date;
+	issued?: Temporal.PlainDate;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

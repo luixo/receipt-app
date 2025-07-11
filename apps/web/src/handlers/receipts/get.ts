@@ -190,18 +190,15 @@ const mapReceipt = (
 		...receiptRest,
 		items: regularItems.map((item) => ({
 			...item,
-			createdAt: new Date(item.createdAt),
 			price: Number(item.price),
 			quantity: Number(item.quantity),
-			consumers: item.consumers.map(({ part, createdAt, ...consumer }) => ({
+			consumers: item.consumers.map(({ part, ...consumer }) => ({
 				...consumer,
-				createdAt: new Date(createdAt),
 				part: Number(part),
 			})),
 		})),
 		participants: participants.map((participant) => ({
 			...participant,
-			createdAt: new Date(participant.createdAt),
 			role: participant.role as Role,
 		})),
 		debt: getReceiptDebt(
@@ -212,9 +209,8 @@ const mapReceipt = (
 		),
 		payers:
 			payersItem?.consumers.map((payer) => ({
-				userId: payer.userId,
+				...payer,
 				part: Number(payer.part),
-				createdAt: new Date(payer.createdAt),
 				// This can't happen as payers item always exists
 				/* c8 ignore next */
 			})) ?? [],

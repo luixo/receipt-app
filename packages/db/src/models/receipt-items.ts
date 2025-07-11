@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { ReceiptsId } from "./receipts";
 
 /** Identifier type for "receiptItems" table */
@@ -19,9 +21,9 @@ export default interface ReceiptItems {
 	/** Index: receiptItems:receiptId:index */
 	receiptId: ReceiptsId;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptItemsInitializer {
@@ -38,10 +40,10 @@ export interface ReceiptItemsInitializer {
 	receiptId: ReceiptsId;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptItemsMutator {
@@ -57,7 +59,7 @@ export interface ReceiptItemsMutator {
 	/** Index: receiptItems:receiptId:index */
 	receiptId?: ReceiptsId;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

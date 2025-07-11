@@ -134,7 +134,7 @@ describe("receiptItems.add", () => {
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
 				id: results[0].id,
-				createdAt: getNow(),
+				createdAt: getNow.zonedDateTime(),
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -179,15 +179,15 @@ describe("receiptItems.add", () => {
 			expect(results).toStrictEqual<typeof results>([
 				{
 					id: results[0].id,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				},
 				{
 					id: results[1].id,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				},
 				{
 					id: results[2].id,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				},
 			]);
 		});

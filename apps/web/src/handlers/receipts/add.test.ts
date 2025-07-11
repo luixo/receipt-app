@@ -252,7 +252,7 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow(),
+				createdAt: getNow.zonedDateTime(),
 				participants: [],
 				items: [],
 				payers: [],
@@ -284,8 +284,10 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow(),
-				participants: participants.map(() => ({ createdAt: getNow() })),
+				createdAt: getNow.zonedDateTime(),
+				participants: participants.map(() => ({
+					createdAt: getNow.zonedDateTime(),
+				})),
 				items: [],
 				payers: [],
 			});
@@ -316,12 +318,12 @@ describe("receipts.add", () => {
 			});
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow(),
+				createdAt: getNow.zonedDateTime(),
 				participants: [],
 				items: receiptItems.map((_item, index) => ({
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					id: result.items[index]!.id,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 					consumers: undefined,
 				})),
 				payers: [],
@@ -372,15 +374,17 @@ describe("receipts.add", () => {
 			});
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow(),
-				participants: participants.map(() => ({ createdAt: getNow() })),
+				createdAt: getNow.zonedDateTime(),
+				participants: participants.map(() => ({
+					createdAt: getNow.zonedDateTime(),
+				})),
 				items: receiptItems.map((item, index) => ({
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					id: result.items[index]!.id,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 					consumers: item.consumers?.map((consumer) => ({
 						userId: consumer.userId,
-						createdAt: getNow(),
+						createdAt: getNow.zonedDateTime(),
 					})),
 				})),
 				payers: [],
@@ -419,12 +423,12 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow(),
-				participants: payers.map(() => ({ createdAt: getNow() })),
+				createdAt: getNow.zonedDateTime(),
+				participants: payers.map(() => ({ createdAt: getNow.zonedDateTime() })),
 				items: [],
 				payers: payers.map((payer) => ({
 					userId: payer.userId,
-					createdAt: getNow(),
+					createdAt: getNow.zonedDateTime(),
 				})),
 			});
 		});

@@ -9,10 +9,11 @@ import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
+import { type Temporal, parsers } from "~utils/date";
 
 type Props = {
-	value: Date | undefined;
-	onValueChange: (date: Date) => void;
+	value: Temporal.PlainDate | undefined;
+	onValueChange: (date: Temporal.PlainDate) => void;
 	mutation?: MutationsProp;
 	label?: string;
 } & Omit<React.ComponentProps<typeof Input>, "value" | "onValueChange">;
@@ -25,20 +26,22 @@ export const DateInput: React.FC<Props> = ({
 	...props
 }) => {
 	const { t } = useTranslation("default");
-	const { formatDate } = useFormat();
+	const { formatPlainDate } = useFormat();
 	return (
 		<Calendar
 			value={value}
-			onChange={onValueChange}
+			onChange={(nextValue) => onValueChange(nextValue)}
 			disabled={getMutationLoading(mutation) || props.isDisabled}
 		>
 			<View>
 				<Input
-					value={value ? formatDate(value) : ""}
+					value={value ? formatPlainDate(value) : ""}
 					onValueChange={(nextValue) => {
 						// Manual update - or by automation tool
-						const updatedDate = new Date(nextValue);
-						if (Number.isNaN(updatedDate)) {
+						const updatedDate = parsers.plainDate(
+							nextValue as Parameters<typeof parsers.plainDate>[0],
+						);
+						if (Number.isNaN(updatedDate.value)) {
 							return;
 						}
 						onValueChange(updatedDate);

@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { AccountsId } from "./accounts";
 import type { UsersId } from "./users";
 
@@ -21,9 +23,9 @@ export default interface AccountConnectionsIntentions {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId: UsersId;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface AccountConnectionsIntentionsInitializer {
@@ -44,10 +46,10 @@ export interface AccountConnectionsIntentionsInitializer {
 	userId: UsersId;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface AccountConnectionsIntentionsMutator {
@@ -67,7 +69,7 @@ export interface AccountConnectionsIntentionsMutator {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId?: UsersId;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

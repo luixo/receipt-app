@@ -1,6 +1,7 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
 /** Identifier type for "accounts" table */
 export type AccountsId = string & { __flavor?: "accounts" };
 
@@ -20,15 +21,15 @@ export default interface Accounts {
 
 	confirmationToken: string | null;
 
-	confirmationTokenTimestamp: Date | null;
+	confirmationTokenTimestamp: Temporal.ZonedDateTime | null;
 
 	avatarUrl: string | null;
 
 	role: string | null;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface AccountsInitializer {
@@ -47,17 +48,17 @@ export interface AccountsInitializer {
 
 	confirmationToken?: string | null;
 
-	confirmationTokenTimestamp?: Date | null;
+	confirmationTokenTimestamp?: Temporal.ZonedDateTime | null;
 
 	avatarUrl?: string | null;
 
 	role?: string | null;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface AccountsMutator {
@@ -76,13 +77,13 @@ export interface AccountsMutator {
 
 	confirmationToken?: string | null;
 
-	confirmationTokenTimestamp?: Date | null;
+	confirmationTokenTimestamp?: Temporal.ZonedDateTime | null;
 
 	avatarUrl?: string | null;
 
 	role?: string | null;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

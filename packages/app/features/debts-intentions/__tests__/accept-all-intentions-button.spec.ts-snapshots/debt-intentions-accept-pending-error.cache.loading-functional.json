@@ -7,12 +7,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "BSD",
 					"amount": -3591.26,
-					"timestamp": "2019-12-09T08:22:09.776Z",
+					"timestamp": "2019-12-09",
 					"note": "modi quae blanditiis repellendus",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-09T08:22:09.776Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-09",
 						"amount": -3591.26,
 						"currencyCode": "BSD"
 					},
@@ -33,12 +33,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "BDT",
 					"amount": -8515.4,
-					"timestamp": "2019-12-08T19:47:03.357Z",
+					"timestamp": "2019-12-08",
 					"note": "debitis nobis sed labore",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-08T19:47:03.357Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-08",
 						"amount": -8515.4,
 						"currencyCode": "BDT"
 					},
@@ -59,12 +59,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "PYG",
 					"amount": 4806.72,
-					"timestamp": "2019-12-18T19:22:28.143Z",
+					"timestamp": "2019-12-18",
 					"note": "alias vitae sit magnam",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-18T19:22:28.143Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-18",
 						"amount": 4806.72,
 						"currencyCode": "PYG"
 					},
@@ -85,12 +85,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "MVR",
 					"amount": -837.35,
-					"timestamp": "2019-12-13T12:32:53.021Z",
+					"timestamp": "2019-12-13",
 					"note": "qui architecto facilis ad",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-13T12:32:53.021Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-13",
 						"amount": -837.35,
 						"currencyCode": "MVR"
 					},
@@ -111,12 +111,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "TND",
 					"amount": -3979.7,
-					"timestamp": "2019-12-06T02:12:53.741Z",
+					"timestamp": "2019-12-06",
 					"note": "dicta laboriosam repellat nihil",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-06T02:12:53.741Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-06",
 						"amount": -3979.7,
 						"currencyCode": "TND"
 					},
@@ -137,12 +137,12 @@
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
 					"currencyCode": "DOP",
 					"amount": 248.23,
-					"timestamp": "2019-12-02T16:35:16.249Z",
+					"timestamp": "2019-12-02",
 					"note": "fugiat esse deleniti ipsam",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01 00:00:00.000Z",
 					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-02T16:35:16.249Z",
+						"updatedAt": "2020-01-01 00:00:00.000Z",
+						"timestamp": "2019-12-02",
 						"amount": 248.23,
 						"currencyCode": "DOP"
 					},
@@ -182,7 +182,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2020-01-01T00:00:00.000Z"
+						"updatedAt": "2020-01-01 00:00:00.000Z"
 					},
 					"error": null,
 					"isPaused": false,
@@ -195,7 +195,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2020-01-01T00:00:00.000Z"
+						"updatedAt": "2020-01-01 00:00:00.000Z"
 					},
 					"error": null,
 					"isPaused": false,
@@ -208,7 +208,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2020-01-01T00:00:00.000Z"
+						"updatedAt": "2020-01-01 00:00:00.000Z"
 					},
 					"error": null,
 					"isPaused": false,
@@ -221,7 +221,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2020-01-01T00:00:00.000Z"
+						"updatedAt": "2020-01-01 00:00:00.000Z"
 					},
 					"error": null,
 					"isPaused": false,

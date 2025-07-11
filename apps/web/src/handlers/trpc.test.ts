@@ -125,9 +125,11 @@ describe("procedures", () => {
 		test("session is not auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: add(getNow(), SESSION_REFRESH_DURATION, {
-						seconds: 1,
-					}),
+					expirationTimestamp: add.zonedDateTime(
+						getNow.zonedDateTime(),
+						SESSION_REFRESH_DURATION,
+						{ seconds: 1 },
+					),
 				},
 			});
 
@@ -141,8 +143,8 @@ describe("procedures", () => {
 		test("session is auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: substract(
-						add(getNow(), SESSION_REFRESH_DURATION),
+					expirationTimestamp: substract.zonedDateTime(
+						add.zonedDateTime(getNow.zonedDateTime(), SESSION_REFRESH_DURATION),
 						{ seconds: 1 },
 					),
 				},

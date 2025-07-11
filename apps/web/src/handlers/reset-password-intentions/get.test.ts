@@ -43,7 +43,9 @@ describe("resetPasswordIntentions.get", () => {
 			const caller = createCaller(await createContext(ctx));
 			const { id: accountId } = await insertAccount(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: substract(getNow(), { minutes: 1 }),
+				expiresTimestamp: substract.zonedDateTime(getNow.zonedDateTime(), {
+					minutes: 1,
+				}),
 			});
 			await expectTRPCError(
 				() => caller.procedure({ token }),

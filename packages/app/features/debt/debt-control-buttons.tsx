@@ -68,7 +68,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 
 	return (
 		<>
-			{intention && isFirstEarlier(debt.updatedAt, intention.updatedAt) ? (
+			{intention &&
+			isFirstEarlier.zonedDateTime(debt.updatedAt, intention.updatedAt) ? (
 				<ConfirmModal
 					onConfirm={acceptSyncIntention}
 					title={t("debt.acceptIntention.title")}

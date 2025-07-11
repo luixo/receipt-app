@@ -17,10 +17,10 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 			message: `Account "${ctx.auth.email}" is already verified.`,
 		});
 	}
-	const retryTimestamp = add(account.confirmationTokenTimestamp, {
+	const retryTimestamp = add.zonedDateTime(account.confirmationTokenTimestamp, {
 		hours: 1,
 	});
-	if (isFirstEarlier(getNow(), retryTimestamp)) {
+	if (isFirstEarlier.zonedDateTime(getNow.zonedDateTime(), retryTimestamp)) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Verification email to "${ctx.auth.email}" was sent less than an hour ago. Please try again later.`,
@@ -32,7 +32,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		.updateTable("accounts")
 		.set({
 			confirmationToken: token,
-			confirmationTokenTimestamp: getNow(),
+			confirmationTokenTimestamp: getNow.zonedDateTime(),
 		})
 		.where("id", "=", ctx.auth.accountId)
 		.execute();

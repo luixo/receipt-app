@@ -3,6 +3,7 @@ import { setCookie as setRawCookie } from "@tanstack/react-start/server";
 import type { SerializeOptions } from "cookie";
 import { parse } from "cookie";
 
+import type { Temporal } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export const getCookie = (
@@ -21,10 +22,16 @@ export const setCookie = serverOnly(
 		{ event }: UnauthorizedContext,
 		cookieName: string,
 		cookieValue: string,
-		opts: SerializeOptions = {},
+		{
+			expires,
+			...opts
+		}: Omit<SerializeOptions, "expires"> & {
+			expires: Temporal.ZonedDateTime;
+		},
 	) => {
 		setRawCookie(event, cookieName, cookieValue, {
 			...DEFAULT_SET_COOKIE_OPTIONS,
+			expires: expires.value,
 			...opts,
 		});
 	},

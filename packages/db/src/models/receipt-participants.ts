@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { Temporal } from "~utils/date";
+
 import type { ReceiptsId } from "./receipts";
 import type { UsersId } from "./users";
 
@@ -13,9 +15,9 @@ export default interface ReceiptParticipants {
 
 	role: string;
 
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 
-	updatedAt: Date;
+	updatedAt: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptParticipantsInitializer {
@@ -28,10 +30,10 @@ export interface ReceiptParticipantsInitializer {
 	role: string;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
 	/** Default value: CURRENT_TIMESTAMP */
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }
 
 export interface ReceiptParticipantsMutator {
@@ -43,7 +45,7 @@ export interface ReceiptParticipantsMutator {
 
 	role?: string;
 
-	createdAt?: Date;
+	createdAt?: Temporal.ZonedDateTime;
 
-	updatedAt?: Date;
+	updatedAt?: Temporal.ZonedDateTime;
 }

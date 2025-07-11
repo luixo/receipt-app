@@ -3,6 +3,7 @@ import { z } from "zod/v4";
 
 import { receiptNameSchema } from "~app/utils/validation";
 import type { SimpleUpdateObject } from "~db/types";
+import { temporalSchemas } from "~utils/date";
 import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema, receiptIdSchema } from "~web/handlers/validation";
 
@@ -17,7 +18,10 @@ export const procedure = authProcedure
 					type: z.literal("name"),
 					name: receiptNameSchema,
 				}),
-				z.strictObject({ type: z.literal("issued"), issued: z.date() }),
+				z.strictObject({
+					type: z.literal("issued"),
+					issued: temporalSchemas.plainDate,
+				}),
 				z.strictObject({
 					type: z.literal("currencyCode"),
 					currencyCode: currencyCodeSchema,

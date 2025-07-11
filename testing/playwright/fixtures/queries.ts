@@ -10,6 +10,7 @@ import {
 	entries,
 	fromEntries,
 	isNonNullish,
+	isObjectType,
 	mapValues,
 	omit,
 	omitBy,
@@ -26,6 +27,7 @@ import type {
 	TRPCSplitMutationKey,
 	TRPCSplitQueryKey,
 } from "~app/trpc";
+import { isTemporalObject, serialize } from "~utils/date";
 import type { DeepPartial } from "~utils/types";
 import { router } from "~web/handlers";
 
@@ -384,6 +386,19 @@ const getCountFactory = (prevCache: QueryCache, nextCache: QueryCache) => ({
 	},
 });
 
+const serializeData = (input: unknown): unknown => {
+	if (Array.isArray(input)) {
+		return input.map((element) => serializeData(element));
+	}
+	if (isTemporalObject(input)) {
+		return serialize(input);
+	}
+	if (isObjectType(input)) {
+		return mapValues(input, (value) => serializeData(value));
+	}
+	return input;
+};
+
 type QueryCache = Awaited<ReturnType<typeof getQueryCache>>;
 const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 	const diff = objectDiff(prevCache, nextCache) as DeepPartial<QueryCache>;
@@ -404,6 +419,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 							state: omitBy(
 								{
 									...query.state,
+									data: serializeData(query.state.data),
 									dataUpdateCount: getQueryCount(queryKey, "dataUpdateCount"),
 									errorUpdateCount: getQueryCount(queryKey, "errorUpdateCount"),
 									fetchFailureCount: getQueryCount(
@@ -431,6 +447,8 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 								state: omitBy(
 									{
 										...mutation.state,
+										variables: serializeData(mutation.state.variables),
+										data: serializeData(mutation.state.data),
 										failureCount: getMutationCount(
 											mutationKey,
 											Number(index),

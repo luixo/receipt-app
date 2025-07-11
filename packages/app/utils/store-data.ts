@@ -20,16 +20,16 @@ import {
 } from "~app/utils/store/pretend-user";
 import { SETTINGS_STORE_NAME, settingsSchema } from "~app/utils/store/settings";
 import {
-	TZ_OFFSET_STORE_NAME,
-	getTimezoneOffset,
-	timezoneOffsetSchema,
-} from "~app/utils/store/tz-offset";
+	TIMEZONE_STORE_NAME,
+	getTimezone,
+	timezoneSchema,
+} from "~app/utils/store/timezone";
 
 export type SerializedValues = Partial<Record<string, string>>;
 
 export const schemas = {
 	// Syncing timezone on SSR and CSR
-	[TZ_OFFSET_STORE_NAME]: timezoneOffsetSchema,
+	[TIMEZONE_STORE_NAME]: timezoneSchema,
 	// Syncing locale on SSR and CSR
 	[LOCALE_STORE_NAME]: localeSchema,
 	// Local settings for a user
@@ -49,7 +49,7 @@ export type StoreValues = {
 export const defaultGetters: Partial<{
 	[K in keyof StoreValues]: () => StoreValues[K];
 }> = {
-	[TZ_OFFSET_STORE_NAME]: getTimezoneOffset,
+	[TIMEZONE_STORE_NAME]: getTimezone,
 	[LOCALE_STORE_NAME]: getLocale,
 };
 

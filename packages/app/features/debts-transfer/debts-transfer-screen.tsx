@@ -121,7 +121,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 						currencyCode,
 						userId: fromUser.id,
 						amount: -amount,
-						timestamp: getNow(),
+						timestamp: getNow.plainDate(),
 					};
 					addMutation.mutate(fromMutationVars);
 					const toMutationVars = {
@@ -131,7 +131,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 						currencyCode,
 						userId: toUser.id,
 						amount,
-						timestamp: getNow(),
+						timestamp: getNow.plainDate(),
 					};
 					addMutation.mutate(toMutationVars);
 					return [

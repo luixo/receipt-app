@@ -1,4 +1,5 @@
 import type { ReceiptItemsId, UsersId } from "~db/models";
+import type { Temporal } from "~utils/date";
 
 export type { Participant } from "~app/hooks/use-participants";
 
@@ -10,9 +11,9 @@ export type Item = {
 	consumers: {
 		part: number;
 		userId: UsersId;
-		createdAt: Date;
+		createdAt: Temporal.ZonedDateTime;
 	}[];
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 };
 
 export type Payer = Item["consumers"][number];

@@ -44,7 +44,9 @@ describe("account.resendEmail", () => {
 				account: {
 					confirmation: {
 						// Simulating an email sent 55 minutes ago
-						timestamp: substract(getNow(), { minutes: 55 }),
+						timestamp: substract.zonedDateTime(getNow.zonedDateTime(), {
+							minutes: 55,
+						}),
 					},
 				},
 			});
@@ -67,7 +69,10 @@ describe("account.resendEmail", () => {
 					email: faker.internet.email(),
 					confirmation: {
 						// Simulating an email sent 65 minutes ago
-						timestamp: substract(getNow(), { minutes: 5, hours: 1 }),
+						timestamp: substract.zonedDateTime(getNow.zonedDateTime(), {
+							minutes: 5,
+							hours: 1,
+						}),
 					},
 				},
 			});

@@ -2,6 +2,7 @@ import { entries, fromEntries, mapValues, values } from "remeda";
 
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { rotate } from "~utils/array";
+import type { Temporal } from "~utils/date";
 import { compare } from "~utils/date";
 import { getIndexByString } from "~utils/hash";
 
@@ -15,7 +16,7 @@ type ReceiptItem = {
 	}[];
 };
 type ReceiptParticipant = {
-	createdAt: Date;
+	createdAt: Temporal.ZonedDateTime;
 	userId: UsersId;
 };
 
@@ -252,7 +253,7 @@ export const getParticipantSums = <
 			const leftoverB = reimbursedShortages[b.userId]?.notReimbursed ?? 0;
 			const leftoverDelta = leftoverB - leftoverA;
 			if (leftoverDelta === 0) {
-				const createdDelta = compare(a.createdAt, b.createdAt);
+				const createdDelta = compare.zonedDateTime(a.createdAt, b.createdAt);
 				if (createdDelta === 0) {
 					return a.userId.localeCompare(b.userId);
 				}

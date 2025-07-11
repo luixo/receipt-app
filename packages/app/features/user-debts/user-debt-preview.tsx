@@ -58,7 +58,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query, resolved }) => {
 	const trpc = useTRPC();
 	const debt = query.data;
 	const locale = useLocale();
-	const { formatDate } = useFormat();
+	const { formatPlainDate } = useFormat();
 	const userQuery = useQuery(trpc.users.get.queryOptions({ id: debt.userId }));
 	return (
 		<Link to="/debts/$id" params={{ id: debt.id }}>
@@ -72,7 +72,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query, resolved }) => {
 						{formatCurrency(locale, debt.currencyCode, Math.abs(debt.amount))}
 					</Text>
 				}
-				timestamp={<Text>{formatDate(debt.timestamp)}</Text>}
+				timestamp={<Text>{formatPlainDate(debt.timestamp)}</Text>}
 				synced={
 					userQuery.status === "success" && userQuery.data.connectedAccount ? (
 						<DebtSyncStatus debt={debt} theirDebt={debt.their} />

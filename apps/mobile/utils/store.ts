@@ -17,7 +17,7 @@ const getValues = async () => {
 
 export const storeContext: StoreContextType = {
 	getInitialItems: () => ({
-		nowTimestamp: getNow().valueOf(),
+		nowTimestamp: getNow.zonedDateTime(),
 		values: getValues(),
 	}),
 	setItem: async (key, value) => {
