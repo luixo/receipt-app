@@ -31,20 +31,18 @@ export const DateInput: React.FC<Props> = ({
 		<Calendar
 			value={value}
 			onChange={(nextValue) => onValueChange(nextValue)}
-			disabled={getMutationLoading(mutation) || props.isDisabled}
+			isDisabled={getMutationLoading(mutation) || props.isDisabled}
 		>
 			<View>
 				<Input
 					value={value ? formatPlainDate(value) : ""}
 					onValueChange={(nextValue) => {
 						// Manual update - or by automation tool
-						const updatedDate = parsers.plainDate(
-							nextValue as Parameters<typeof parsers.plainDate>[0],
+						onValueChange(
+							parsers.plainDate(
+								nextValue as Parameters<typeof parsers.plainDate>[0],
+							),
 						);
-						if (Number.isNaN(updatedDate.value)) {
-							return;
-						}
-						onValueChange(updatedDate);
 					}}
 					aria-label={label || t("components.dateInput.label")}
 					label={label}

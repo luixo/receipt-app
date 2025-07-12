@@ -1,6 +1,27 @@
-import type { DateTimeDuration } from "@internationalized/date";
-import { entries, isObjectType, mapValues } from "remeda";
-import type { $brand } from "zod/v4";
+import type {
+	DateDuration,
+	DateTimeDuration,
+	TimeDuration,
+} from "@internationalized/date";
+import {
+	CalendarDate,
+	CalendarDateTime,
+	DateFormatter,
+	Time,
+	ZonedDateTime,
+	fromDate as fromDateRaw,
+	getLocalTimeZone,
+	now,
+	parseDate,
+	parseDateTime,
+	parseTime,
+	parseZonedDateTime,
+	toCalendarDate,
+	toCalendarDateTime,
+	toTime,
+	today,
+} from "@internationalized/date";
+import { identity, mapValues, values } from "remeda";
 import { z } from "zod/v4";
 
 import type { Locale } from "~app/utils/locale";
@@ -15,86 +36,88 @@ type TMilliseconds = `${number}${number}${number}`;
 type TPlainTime = `${THours}:${TMinutes}:${TSeconds}.${TMilliseconds}`;
 type TPlainDate = `${TYear}-${TMonth}-${TDay}`;
 type TPlainDateTime = `${TPlainDate}T${TPlainTime}`;
-type TZonedTime = `${TPlainTime}[${string}]`;
 type TZonedDateTime = `${TPlainDateTime}[${string}]`;
 
-/* eslint-disable no-restricted-syntax */
-const getTemporalSchema = <T extends TemporalType>(type: T) =>
-	z.object({ type: z.literal(type), value: z.date() });
-type GenericSchema<T extends string> = Partial<$brand<T>> & {
-	type: T;
-	value: Date;
+export const temporalClasses = {
+	plainTime: Time,
+	plainDate: CalendarDate,
+	plainDateTime: CalendarDateTime,
+	zonedDateTime: ZonedDateTime,
 };
-export const temporalSchemas = {
-	plainTime: z
-		.custom<GenericSchema<"plainTime">>()
-		.pipe(getTemporalSchema("plainTime")),
-	plainDate: z
-		.custom<GenericSchema<"plainDate">>()
-		.pipe(getTemporalSchema("plainDate")),
-	plainDateTime: z
-		.custom<GenericSchema<"plainDateTime">>()
-		.pipe(getTemporalSchema("plainDateTime")),
-	zonedTime: z
-		.custom<GenericSchema<"zonedTime">>()
-		.pipe(getTemporalSchema("zonedTime")),
-	zonedDateTime: z
-		.custom<GenericSchema<"zonedDateTime">>()
-		.pipe(getTemporalSchema("zonedDateTime")),
-} satisfies Record<TemporalType, z.ZodType>;
+const temporalClassNames = {
+	plainTime: "Time",
+	plainDate: "CalendarDate",
+	plainDateTime: "CalendarDateTime",
+	zonedDateTime: "ZonedDateTime",
+} satisfies Record<TemporalType, string>;
+export const temporalSchemas = mapValues(temporalClasses, (value, key) =>
+	z.instanceof(value, {
+		message: `Input not instance of ${temporalClassNames[key]}`,
+	}),
+) as {
+	[K in TemporalType]: z.ZodCustom<
+		InstanceType<(typeof temporalClasses)[K]>,
+		InstanceType<(typeof temporalClasses)[K]>
+	>;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Temporal {
-	export type PlainTime = z.infer<typeof temporalSchemas.plainTime>;
-	export type PlainDate = z.infer<typeof temporalSchemas.plainDate>;
-	export type PlainDateTime = z.infer<typeof temporalSchemas.plainDateTime>;
-	export type ZonedTime = z.infer<typeof temporalSchemas.zonedTime>;
-	export type ZonedDateTime = z.infer<typeof temporalSchemas.zonedDateTime>;
+	export type PlainTime = InstanceType<(typeof temporalClasses)["plainTime"]>;
+	export type PlainDate = InstanceType<(typeof temporalClasses)["plainDate"]>;
+	export type PlainDateTime = InstanceType<
+		(typeof temporalClasses)["plainDateTime"]
+	>;
+	export type ZonedDateTime = InstanceType<
+		(typeof temporalClasses)["zonedDateTime"]
+	>;
 }
 export type TemporalMapping = {
 	plainTime: Temporal.PlainTime;
 	plainDate: Temporal.PlainDate;
 	plainDateTime: Temporal.PlainDateTime;
-	zonedTime: Temporal.ZonedTime;
 	zonedDateTime: Temporal.ZonedDateTime;
 };
+export type TemporalType = keyof TemporalMapping;
 export const isTemporalObject = <T extends TemporalType>(
 	input: unknown,
 ): input is TemporalMapping[T] =>
-	Boolean(
-		isObjectType(input) &&
-			"type" in input &&
-			typeof input.type === "string" &&
-			input.type in temporalSchemas,
-	);
-export type TemporalType = keyof TemporalMapping;
+	values(temporalClasses).some((Class) => input instanceof Class);
 
 export type TemporalInputMapping = {
 	plainTime: TPlainTime;
 	plainDate: TPlainDate;
 	plainDateTime: TPlainDateTime;
-	zonedTime: TZonedTime;
 	zonedDateTime: TZonedDateTime;
 };
 
-const MockTemporal = {};
-export const createTemporal = <T extends TemporalType>(
-	type: T,
-	value: Date,
-): TemporalMapping[T] => {
-	const obj = Object.create(MockTemporal);
-	obj.type = type;
-	obj.value = value;
-	return obj as unknown as TemporalMapping[T];
-};
-
-export const getOffsettedDate = (date: Date) =>
-	new Date(date.valueOf() - date.getTimezoneOffset() * 1000 * 60);
-export const getNow = mapValues(
-	temporalSchemas,
-	(_value, key) => () => createTemporal(key, new Date()),
-) as {
+export const localTimeZone = getLocalTimeZone();
+export const getNow = {
+	plainTime: () => toTime(now(localTimeZone)),
+	plainDate: () => today(localTimeZone),
+	plainDateTime: () => toCalendarDateTime(now(localTimeZone)),
+	zonedDateTime: () => now(localTimeZone),
+} as {
 	[K in TemporalType]: () => TemporalMapping[K];
+};
+export const fromDate = {
+	plainTime: (date) => toTime(fromDateRaw(date, localTimeZone)),
+	plainDate: (date) => toCalendarDate(fromDateRaw(date, localTimeZone)),
+	plainDateTime: (date) => toCalendarDateTime(fromDateRaw(date, localTimeZone)),
+	zonedDateTime: (date) => fromDateRaw(date, localTimeZone),
+} as {
+	// eslint-disable-next-line no-restricted-syntax
+	[K in TemporalType]: (input: Date) => TemporalMapping[K];
+};
+export const toDate = {
+	plainTime: (input) =>
+		toCalendarDateTime(now(localTimeZone), input).toDate(localTimeZone),
+	plainDate: (input) => input.toDate(localTimeZone),
+	plainDateTime: (input) => input.toDate(localTimeZone),
+	zonedDateTime: (input) => input.toDate(),
+} as {
+	// eslint-disable-next-line no-restricted-syntax
+	[K in TemporalType]: (input: TemporalMapping[K]) => Date;
 };
 type ZonedProperties = "timeZone" | "timeZoneName";
 type TimeProperies =
@@ -117,7 +140,6 @@ type FormatOptions = {
 	plainTime: Omit<Intl.DateTimeFormatOptions, ZonedProperties | DateProperies>;
 	plainDate: Omit<Intl.DateTimeFormatOptions, ZonedProperties | TimeProperies>;
 	plainDateTime: Omit<Intl.DateTimeFormatOptions, ZonedProperties>;
-	zonedTime: Omit<Intl.DateTimeFormatOptions, DateProperies>;
 	zonedDateTime: Intl.DateTimeFormatOptions;
 };
 export const formatters: {
@@ -128,90 +150,64 @@ export const formatters: {
 	) => string;
 } = {
 	plainTime: (input, locale, options) =>
-		input.value.toLocaleTimeString(locale, options),
+		new DateFormatter(locale, {
+			timeStyle: "short",
+			...options,
+		}).format(toDate.plainTime(input)),
 	plainDate: (input, locale, options) =>
-		input.value.toLocaleDateString(locale, options),
+		new DateFormatter(locale, {
+			dateStyle: "medium",
+			...options,
+		}).format(toDate.plainDate(input)),
 	plainDateTime: (input, locale, options) =>
-		input.value.toLocaleString(locale, options),
-	zonedTime: (input, locale, options) =>
-		input.value.toLocaleTimeString(locale, options),
+		new DateFormatter(locale, {
+			dateStyle: "medium",
+			timeStyle: "short",
+			...options,
+		}).format(toDate.plainDateTime(input)),
 	zonedDateTime: (input, locale, options) =>
-		input.value.toLocaleString(locale, options),
+		new DateFormatter(locale, {
+			dateStyle: "medium",
+			timeStyle: "short",
+			...options,
+		}).format(toDate.zonedDateTime(input)),
 };
-export const parsers = mapValues(
-	temporalSchemas,
-	(_value, key) => (input: TemporalInputMapping[typeof key]) =>
-		createTemporal<typeof key>(key, new Date(input.replace(/\[.*\]/, "Z"))),
-) as {
+export const parsers = {
+	plainTime: (input) => parseTime(input),
+	plainDate: (input) => parseDate(input),
+	plainDateTime: (input) => parseDateTime(input),
+	zonedDateTime: (input) => parseZonedDateTime(input),
+} as {
 	[K in TemporalType]: (input: TemporalInputMapping[K]) => TemporalMapping[K];
 };
-const deserializeRegexes = {
-	plainDate: /^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/,
-	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
-	plainDateTime:
-		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
-	zonedTime:
-		/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
-	zonedDateTime:
-		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
-} satisfies Record<TemporalType, RegExp>;
 export const deserialize = <K extends TemporalType>(
 	input: string,
-): TemporalMapping[K] | undefined => {
-	const regexTypeMatch = entries(deserializeRegexes).find(([, regex]) =>
-		regex.test(input),
-	);
-	if (regexTypeMatch) {
-		return parsers[regexTypeMatch[0] as K](input as TemporalInputMapping[K]);
-	}
-};
-const getOffset = (date: Date) => {
-	const offset = date.getTimezoneOffset();
-	const absOffset = Math.abs(offset);
-	const hoursOffset = Math.floor(absOffset / 60)
-		.toString()
-		.padStart(2, "0");
-	const minutesOffset = (absOffset % 60).toString().padStart(2, "0");
-	if (offset === 0) {
-		return "Z";
-	}
-	return `${offset >= 0 ? "+" : "-"}${hoursOffset}:${minutesOffset}`;
-};
-export const serializers: {
-	[K in TemporalType]: (input: TemporalMapping[K]) => TemporalInputMapping[K];
-} = {
-	plainTime: (input) =>
-		input.value
-			.toISOString()
-			.slice(11, 23) as TemporalInputMapping["plainTime"],
-	plainDate: (input) =>
-		input.value.toISOString().slice(0, 10) as TemporalInputMapping["plainDate"],
-	plainDateTime: (input) =>
-		input.value
-			.toISOString()
-			.replace("T", " ") as TemporalInputMapping["plainDateTime"],
-	zonedTime: (input) =>
-		(input.value.toISOString().slice(11, 23).replace("Z", "") +
-			getOffset(input.value)) as TemporalInputMapping["zonedTime"],
-	zonedDateTime: (input) =>
-		(input.value.toISOString().replace("T", " ").replace("Z", "") +
-			getOffset(input.value)) as TemporalInputMapping["zonedDateTime"],
-};
-export const serialize = <K extends TemporalType>(
-	input: TemporalMapping[K],
-): TemporalInputMapping[K] =>
-	serializers[input.type](input as never) as TemporalInputMapping[K];
+	converter: (input: string) => string = identity(),
+): TemporalMapping[K] | undefined =>
+	values(parsers)
+		.map((parser) => {
+			try {
+				// @ts-expect-error Union type is too cumbersome to fix
+				return parser(converter(input));
+			} catch {
+				// eslint-disable-next-line no-useless-return
+				return;
+			}
+		})
+		.find((value) => value) as TemporalMapping[K] | undefined;
+export const serialize = <K extends TemporalType>(input: TemporalMapping[K]) =>
+	input.toString() as TemporalInputMapping[K];
 
 export const compare = mapValues(
-	temporalSchemas,
+	temporalClasses,
 	() =>
 		<T extends TemporalType>(a: TemporalMapping[T], b: TemporalMapping[T]) =>
-			a.value.valueOf() - b.value.valueOf(),
+			a.compare(b as never),
 ) as {
 	[K in TemporalType]: (a: TemporalMapping[K], b: TemporalMapping[K]) => number;
 };
 export const isFirstEarlier = mapValues(
-	temporalSchemas,
+	temporalClasses,
 	(_value, key) =>
 		<T extends TemporalType>(a: TemporalMapping[T], b: TemporalMapping[T]) =>
 			compare[key](a as never, b as never) < 0,
@@ -222,7 +218,7 @@ export const isFirstEarlier = mapValues(
 	) => boolean;
 };
 export const areEqual = mapValues(
-	temporalSchemas,
+	temporalClasses,
 	(_value, key) =>
 		<T extends TemporalType>(a: TemporalMapping[T], b: TemporalMapping[T]) =>
 			compare[key](a as never, b as never) === 0,
@@ -233,7 +229,6 @@ export const areEqual = mapValues(
 	) => boolean;
 };
 
-type TemporalDuration = DateTimeDuration;
 // Very sloppy, but will do for some time
 const SECOND = 1000;
 const MINUTE = 60 * SECOND;
@@ -242,18 +237,24 @@ const DAY = 24 * HOUR;
 const WEEK = 7 * DAY;
 const MONTH = 30.5 * DAY;
 const YEAR = 365 * DAY;
-export const serializeDuration = (duration: TemporalDuration): number =>
-	(duration.years || 0) * YEAR +
-	(duration.months || 0) * MONTH +
-	(duration.weeks || 0) * WEEK +
-	(duration.days || 0) * DAY +
-	(duration.hours || 0) * HOUR +
-	(duration.minutes || 0) * MINUTE +
-	(duration.seconds || 0) * SECOND +
-	(duration.milliseconds || 0);
+export const serializeDuration = (
+	duration: DateDuration | TimeDuration | DateTimeDuration,
+): number =>
+	("years" in duration && duration.years ? duration.years : 0) * YEAR +
+	("months" in duration && duration.months ? duration.months : 0) * MONTH +
+	("weeks" in duration && duration.weeks ? duration.weeks : 0) * WEEK +
+	("days" in duration && duration.days ? duration.days : 0) * DAY +
+	("hours" in duration && duration.hours ? duration.hours : 0) * HOUR +
+	("minutes" in duration && duration.minutes ? duration.minutes : 0) * MINUTE +
+	("seconds" in duration && duration.seconds ? duration.seconds : 0) * SECOND +
+	("milliseconds" in duration && duration.milliseconds
+		? duration.milliseconds
+		: 0);
 const dets = (input: number, limiter: number) =>
 	[Math.floor(input / limiter), input % limiter] as const;
-export const parseDuration = (duration: number): TemporalDuration => {
+export const parseDuration = (
+	duration: number,
+): DateDuration | TimeDuration | DateTimeDuration => {
 	const [years, restYears] = dets(duration, YEAR);
 	const [months, restMonths] = dets(restYears, MONTH);
 	const [weeks, restWeeks] = dets(restMonths, WEEK);
@@ -263,38 +264,43 @@ export const parseDuration = (duration: number): TemporalDuration => {
 	const [seconds, milliseconds] = dets(restMinutes, SECOND);
 	return { years, months, weeks, days, hours, minutes, seconds, milliseconds };
 };
-const valueMapper = <T extends TemporalType>(
-	date: TemporalMapping[T],
-	mapper: (input: number) => number,
-): TemporalMapping[T] =>
-	createTemporal<T>(date.type as T, new Date(mapper(date.value.valueOf())));
-const reduceDurations = (...durations: TemporalDuration[]) =>
-	durations.reduce((acc, duration) => acc + serializeDuration(duration), 0);
+type DurationMapping = {
+	plainTime: TimeDuration;
+	plainDate: DateDuration;
+	plainDateTime: DateTimeDuration;
+	zonedDateTime: DateTimeDuration;
+};
 export const add = mapValues(
-	temporalSchemas,
+	temporalClasses,
 	() =>
 		<T extends TemporalType>(
 			date: TemporalMapping[T],
-			...durations: TemporalDuration[]
+			...durations: DurationMapping[T][]
 		) =>
-			valueMapper(date, (value) => value + reduceDurations(...durations)),
+			durations.reduce(
+				(acc, duration) => acc.add(duration) as TemporalMapping[T],
+				date,
+			),
 ) as {
 	[K in TemporalType]: (
 		date: TemporalMapping[K],
-		...durations: TemporalDuration[]
+		...durations: DurationMapping[K][]
 	) => TemporalMapping[K];
 };
 export const substract = mapValues(
-	temporalSchemas,
+	temporalClasses,
 	() =>
 		<T extends TemporalType>(
 			date: TemporalMapping[T],
-			...durations: TemporalDuration[]
+			...durations: DurationMapping[T][]
 		) =>
-			valueMapper(date, (value) => value - reduceDurations(...durations)),
+			durations.reduce(
+				(acc, duration) => acc.subtract(duration) as TemporalMapping[T],
+				date,
+			),
 ) as {
 	[K in TemporalType]: (
 		date: TemporalMapping[K],
-		...durations: TemporalDuration[]
+		...durations: DurationMapping[K][]
 	) => TemporalMapping[K];
 };

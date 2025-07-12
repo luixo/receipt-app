@@ -9,9 +9,9 @@
 					"amount": -3591.26,
 					"timestamp": "2019-12-09",
 					"note": "modi quae blanditiis repellendus",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-09",
 						"amount": -3591.26,
 						"currencyCode": "BSD"
@@ -35,9 +35,9 @@
 					"amount": -8515.4,
 					"timestamp": "2019-12-08",
 					"note": "debitis nobis sed labore",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-08",
 						"amount": -8515.4,
 						"currencyCode": "BDT"
@@ -61,9 +61,9 @@
 					"amount": 4806.72,
 					"timestamp": "2019-12-18",
 					"note": "alias vitae sit magnam",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-18",
 						"amount": 4806.72,
 						"currencyCode": "PYG"
@@ -87,9 +87,9 @@
 					"amount": -837.35,
 					"timestamp": "2019-12-13",
 					"note": "qui architecto facilis ad",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-13",
 						"amount": -837.35,
 						"currencyCode": "MVR"
@@ -113,9 +113,9 @@
 					"amount": -3979.7,
 					"timestamp": "2019-12-06",
 					"note": "dicta laboriosam repellat nihil",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-06",
 						"amount": -3979.7,
 						"currencyCode": "TND"
@@ -139,9 +139,9 @@
 					"amount": 248.23,
 					"timestamp": "2019-12-02",
 					"note": "fugiat esse deleniti ipsam",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-02",
 						"amount": 248.23,
 						"currencyCode": "DOP"
@@ -182,7 +182,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2019-12-31 16:00:00.000Z"
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
 					},
 					"error": null,
 					"isPaused": false,
@@ -195,7 +195,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2019-12-31 16:00:00.000Z"
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
 					},
 					"error": null,
 					"isPaused": false,
@@ -208,7 +208,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2019-12-31 16:00:00.000Z"
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
 					},
 					"error": null,
 					"isPaused": false,
@@ -221,7 +221,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2019-12-31 16:00:00.000Z"
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
 					},
 					"error": null,
 					"isPaused": false,

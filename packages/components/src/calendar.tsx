@@ -1,71 +1,43 @@
 import React from "react";
 
+import { Calendar as RawCalendar } from "@heroui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
-import type { OnSelectHandler } from "react-day-picker";
-import { DayPicker } from "react-day-picker";
 
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { Temporal } from "~utils/date";
-import { createTemporal, getOffsettedDate } from "~utils/date";
 
-const classNames: NonNullable<DayPickerProps["classNames"]> = {
-	root: "flex max-w-full max-h-full bg-background p-4 rounded-large items-center h-80",
-	button_previous: "flex p-2",
-	button_next: "flex p-2",
-	month_caption: "flex flex-row font-medium text-lg gap-2 justify-between px-2",
-	months: "flex-1 h-full",
-	month: "flex flex-col gap-2 justify-between",
-	weekday: "px-2",
-	nav: "flex gap-2 justify-end",
-	day_button: "px-3 py-2 rounded-full hover:bg-secondary-100",
-	outside: "opacity-30",
-	selected: "bg-success",
-	today: "text-secondary",
-	day: "text-center rounded-full",
-	chevron: "fill-current",
-};
-
-type DayPickerProps = React.ComponentProps<typeof DayPicker>;
-
-type Props = {
-	value?: Temporal.PlainDate;
-	onChange: (nextDate: Temporal.PlainDate) => void;
-	children: React.ReactElement;
-	disabled?: boolean;
-};
+type Props = React.ComponentProps<typeof RawCalendar<Temporal.PlainDate>>;
 
 export const Calendar: React.FC<Props> = ({
-	value,
-	onChange,
 	children,
-	disabled,
+	onChange: onChangeRaw,
+	...props
 }) => {
-	const [open, setOpen] = React.useState(false);
-	// eslint-disable-next-line no-restricted-syntax
-	const onDateChange = React.useCallback<OnSelectHandler<Date | undefined>>(
+	const [open, { setTrue: setOpen, setFalse: setClose }] =
+		useBooleanState(false);
+	const onChange = React.useCallback<
+		NonNullable<
+			React.ComponentProps<typeof RawCalendar<Temporal.PlainDate>>["onChange"]
+		>
+	>(
 		(date) => {
-			if (!date) {
-				return;
-			}
-			onChange(createTemporal("plainDate", getOffsettedDate(date)));
-			setOpen(false);
+			onChangeRaw?.(date);
+			setClose();
 		},
-		[onChange, setOpen],
+		[onChangeRaw, setClose],
 	);
-	if (disabled) {
-		return children;
-	}
 	return (
-		<Popover isOpen={open} onOpenChange={setOpen}>
+		<Popover
+			isOpen={open}
+			onOpenChange={setOpen}
+			isTriggerDisabled={props.isDisabled}
+		>
 			<PopoverTrigger>{children}</PopoverTrigger>
 			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
-				<DayPicker
-					mode="single"
-					selected={value ? value.value : undefined}
-					timeZone="GMT"
-					onSelect={onDateChange}
-					classNames={classNames}
-					showOutsideDays
-					required={false}
+				<RawCalendar<Temporal.PlainDate>
+					onChange={onChange}
+					showMonthAndYearPickers
+					{...props}
 				/>
 			</PopoverContent>
 		</Popover>

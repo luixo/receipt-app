@@ -12,7 +12,6 @@ import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import type { Temporal } from "~utils/date";
-import { parsers } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -131,9 +130,10 @@ export const verifyTimestamp = <T>(
 			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				// @ts-expect-error We test an error here
-				() => runProcedure(context, parsers.plainDate("not a date")),
+				// eslint-disable-next-line no-restricted-syntax
+				() => runProcedure(context, new Date()),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}timestamp.value": Invalid input: expected date, received Date`,
+				`Zod error\n\nAt "${prefix}timestamp": Input not instance of CalendarDate`,
 			);
 		});
 	});

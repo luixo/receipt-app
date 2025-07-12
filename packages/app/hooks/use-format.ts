@@ -27,11 +27,6 @@ export const useFormat = () => {
 				formatters.plainTime(date, locale, options),
 			formatPlainDateTime: (date, options) =>
 				formatters.plainDateTime(date, locale, options),
-			formatZonedTime: (date, options) =>
-				formatters.zonedTime(date, locale, {
-					timeZone: effectiveTimezone,
-					...options,
-				}),
 			formatZonedDateTime: (date, options) =>
 				formatters.zonedDateTime(date, locale, {
 					timeZone: effectiveTimezone,

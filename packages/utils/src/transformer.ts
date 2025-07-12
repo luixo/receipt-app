@@ -4,8 +4,8 @@ import { SuperJSON } from "superjson";
 import type { TemporalMapping } from "~utils/date";
 import {
 	deserialize as deserializeDate,
-	isTemporalObject,
 	serialize as serializeDate,
+	temporalClasses,
 	temporalSchemas,
 } from "~utils/date";
 
@@ -17,7 +17,7 @@ keys(temporalSchemas).forEach((key) => {
 	>(
 		{
 			isApplicable: (input): input is TemporalMapping[typeof key] =>
-				isTemporalObject(input) && input.type === key,
+				input instanceof temporalClasses[key],
 			serialize: serializeDate,
 			deserialize: (input) => {
 				const deserializedData = deserializeDate(input);

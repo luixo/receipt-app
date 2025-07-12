@@ -30,7 +30,7 @@ import {
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
-import { getNow, serializers } from "~utils/date";
+import { getNow, serialize } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
 import { HydrationBoundary } from "~web/utils/ssr";
@@ -85,7 +85,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			initialLanguage,
 			i18n: i18nInstance,
 			queryClient,
-			nowTimestamp: serializers.zonedDateTime(getNow.zonedDateTime()),
+			nowTimestamp: serialize<"zonedDateTime">(getNow.zonedDateTime()),
 		},
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: ErrorComponent,

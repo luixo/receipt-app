@@ -6,7 +6,7 @@ import timekeeper from "timekeeper";
 
 import { setSeed } from "~tests/utils/faker";
 import type { TemporalMapping, TemporalType } from "~utils/date";
-import { createTemporal, temporalSchemas } from "~utils/date";
+import { fromDate, temporalSchemas, toDate } from "~utils/date";
 
 class TemporalModule {
 	constructor(faker: Faker) {
@@ -23,11 +23,10 @@ class TemporalModule {
 				from: TemporalMapping[K];
 				to: TemporalMapping[K];
 			}) =>
-				createTemporal(
-					key,
+				fromDate[key](
 					this.faker.date.between({
-						from: from.value,
-						to: to.value,
+						from: toDate[key](from as never),
+						to: toDate[key](to as never),
 					}),
 				),
 	) as {
@@ -47,11 +46,10 @@ class TemporalModule {
 				days?: number;
 				refDate?: TemporalMapping[K];
 			} = {}) =>
-				createTemporal(
-					key,
+				fromDate[key](
 					this.faker.date.recent({
 						days,
-						refDate: refDate && refDate.value,
+						refDate: refDate && toDate[key](refDate as never),
 					}),
 				),
 	) as {

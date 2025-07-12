@@ -31,7 +31,7 @@ export const setCookie = serverOnly(
 	) => {
 		setRawCookie(event, cookieName, cookieValue, {
 			...DEFAULT_SET_COOKIE_OPTIONS,
-			expires: expires.value,
+			expires: expires.toDate(),
 			...opts,
 		});
 	},

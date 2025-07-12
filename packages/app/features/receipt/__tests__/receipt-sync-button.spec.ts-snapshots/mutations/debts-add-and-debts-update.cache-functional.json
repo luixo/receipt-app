@@ -17,7 +17,7 @@
 					"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d",
 					"timestamp": "2020-01-01",
 					"note": "Receipt \"exercitationem alias porro\"",
-					"updatedAt": "2019-12-31 16:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": "<undefined>",
 					"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"
 				},
@@ -48,7 +48,7 @@
 				"state": {
 					"data": {
 						"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": false
 					},
 					"error": null,
@@ -69,7 +69,7 @@
 			{
 				"state": {
 					"data": {
-						"updatedAt": "2019-12-31 16:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseUpdated": false
 					},
 					"error": null,

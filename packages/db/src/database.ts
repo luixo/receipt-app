@@ -9,9 +9,15 @@ import {
 import type { PoolConfig } from "pg";
 import { Pool, types } from "pg";
 import type { Logger } from "pino";
-import { isPlainObject, mapValues } from "remeda";
+import { entries, isPlainObject, mapValues } from "remeda";
 
-import { deserialize, isTemporalObject, serialize } from "~utils/date";
+import type { TemporalType } from "~utils/date";
+import {
+	isTemporalObject,
+	localTimeZone,
+	parsers,
+	serialize,
+} from "~utils/date";
 
 import type { ReceiptsDatabase } from "./types";
 
@@ -42,26 +48,42 @@ type TemporalBuiltinType =
 	| typeof types.builtins.TIMESTAMPTZ
 	| typeof types.builtins.TIME
 	| typeof types.builtins.TIMETZ;
-export const temporalParsers: Record<
-	TemporalBuiltinType,
-	(input: string) => unknown
-> = {
-	[types.builtins.DATE]: (input) => input,
-	[types.builtins.TIMESTAMP]: (input) => input,
-	[types.builtins.TIMESTAMPTZ]: (input) => input,
-	[types.builtins.TIME]: (input) => input,
-	[types.builtins.TIMETZ]: (input) => input,
-};
+const temporalMapping = {
+	[types.builtins.DATE]: "plainDate",
+	[types.builtins.TIMESTAMP]: "plainDateTime",
+	[types.builtins.TIMESTAMPTZ]: "zonedDateTime",
+	[types.builtins.TIME]: "plainDate",
+	// This is incorrect, but we don't use timetz type
+	[types.builtins.TIMETZ]: "plainTime",
+} satisfies Record<TemporalBuiltinType, TemporalType>;
+export const temporalParsers = mapValues(
+	temporalMapping,
+	() => (input: string) => input,
+);
 const dbParsers: Partial<Record<BuiltinType, TypeParser>> = {
 	...temporalParsers,
 	[types.builtins.BOOL]: (value) => (value === "t" ? "true" : "false"),
 	/* c8 ignore stop */
 };
+const calendarISOToDatabaseISO = (input: string) =>
+	input.replace("T", " ").replace(/\[.*\]$/, "");
 const serializer: Serializer = (input) => {
 	if (isTemporalObject(input)) {
-		return serialize(input);
+		return calendarISOToDatabaseISO(serialize(input));
 	}
 	return defaultSerializer(input);
+};
+const deserializeRegexes = {
+	plainDate: /^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/,
+	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+	plainDateTime:
+		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+	zonedDateTime:
+		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
+} satisfies Record<TemporalType, RegExp>;
+const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
+	const separatedInput = input.replace(" ", "T");
+	return addTimezone ? `${separatedInput}[${localTimeZone}]` : separatedInput;
 };
 const deserializer: Deserializer = (input) => {
 	if (input === null) {
@@ -71,9 +93,15 @@ const deserializer: Deserializer = (input) => {
 		return input.map((element) => deserializer(element));
 	}
 	if (typeof input === "string") {
-		const deserializedValue = deserialize(input);
-		if (deserializedValue) {
-			return deserializedValue;
+		const regexTypeMatch = entries(deserializeRegexes).find(([, regex]) =>
+			regex.test(input),
+		);
+		if (regexTypeMatch) {
+			const type = regexTypeMatch[0];
+			return parsers[type](
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				databaseISOToCalendarISO(input, type.startsWith("zoned")) as any,
+			);
 		}
 	}
 	if (isPlainObject(input)) {

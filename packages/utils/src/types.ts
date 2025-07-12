@@ -169,3 +169,6 @@ export type AssertAllEqual<T extends unknown[]> = AssertTrue<
 	AllEqual<T>,
 	T extends (infer U)[] ? U : never
 >;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Constructor<T> = new (...args: any[]) => T;

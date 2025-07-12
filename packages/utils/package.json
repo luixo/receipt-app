@@ -5,6 +5,7 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"dependencies": {
+		"@internationalized/date": "^3.7.0",
 		"find-free-ports": "^3.1.1",
 		"superjson": "^2.2.2"
 	}
