@@ -22,20 +22,11 @@ export const useFormat = () => {
 	}>(
 		() => ({
 			formatPlainDate: (date, options) =>
-				formatters.plainDate(date, locale, {
-					timeZone: effectiveTimezone,
-					...options,
-				}),
+				formatters.plainDate(date, locale, options),
 			formatPlainTime: (date, options) =>
-				formatters.plainTime(date, locale, {
-					timeZone: effectiveTimezone,
-					...options,
-				}),
+				formatters.plainTime(date, locale, options),
 			formatPlainDateTime: (date, options) =>
-				formatters.plainDateTime(date, locale, {
-					timeZone: effectiveTimezone,
-					...options,
-				}),
+				formatters.plainDateTime(date, locale, options),
 			formatZonedTime: (date, options) =>
 				formatters.zonedTime(date, locale, {
 					timeZone: effectiveTimezone,

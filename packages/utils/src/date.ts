@@ -96,11 +96,35 @@ export const getNow = mapValues(
 ) as {
 	[K in TemporalType]: () => TemporalMapping[K];
 };
+type ZonedProperties = "timeZone" | "timeZoneName";
+type TimeProperies =
+	| "timeStyle"
+	| "fractionalSecondDigits"
+	| "hourCycle"
+	| "hour"
+	| "minute"
+	| "second"
+	| "hour12";
+type DateProperies =
+	| "dateStyle"
+	| "dayPeriod"
+	| "weekday"
+	| "era"
+	| "year"
+	| "month"
+	| "day";
+type FormatOptions = {
+	plainTime: Omit<Intl.DateTimeFormatOptions, ZonedProperties | DateProperies>;
+	plainDate: Omit<Intl.DateTimeFormatOptions, ZonedProperties | TimeProperies>;
+	plainDateTime: Omit<Intl.DateTimeFormatOptions, ZonedProperties>;
+	zonedTime: Omit<Intl.DateTimeFormatOptions, DateProperies>;
+	zonedDateTime: Intl.DateTimeFormatOptions;
+};
 export const formatters: {
 	[K in TemporalType]: (
 		input: TemporalMapping[K],
 		locale: Locale,
-		options?: Intl.DateTimeFormatOptions,
+		options?: FormatOptions[K],
 	) => string;
 } = {
 	plainTime: (input, locale, options) =>
