@@ -431,6 +431,7 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 			account: selfAccount,
 			user: { name: selfUser.name },
 		});
+		api.mockLast("accountSettings.get", { manualAcceptDebts: false });
 		api.mockLast("users.get", ({ input, next }) =>
 			selfUser.id === input.id ? selfUser : next(),
 		);

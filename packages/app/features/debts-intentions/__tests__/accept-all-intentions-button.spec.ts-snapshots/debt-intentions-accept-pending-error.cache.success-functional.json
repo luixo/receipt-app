@@ -21,7 +21,7 @@
 	},
 	"mutations": {
 		"debtIntentions.accept": {
-			"6": {
+			"4": {
 				"state": {
 					"data": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
@@ -34,7 +34,7 @@
 					}
 				}
 			},
-			"7": {
+			"5": {
 				"state": {
 					"data": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"

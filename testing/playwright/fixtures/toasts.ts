@@ -21,9 +21,16 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 		await use(
 			async (textOrTexts = [], timeout = DEFAULT_WAIT_TOAST_TIMEOUT) => {
 				await expect(async () => {
-					const expectedTexts = (
-						Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]
-					).sort((a, b) => a.localeCompare(b));
+					const textsArray = Array.isArray(textOrTexts)
+						? textOrTexts
+						: [textOrTexts];
+
+					if (textsArray.length > 4) {
+						throw new Error(
+							"Currently, only 4 toasts are visible at the moment, please create a test with less toasts",
+						);
+					}
+					const expectedTexts = textsArray.sort((a, b) => a.localeCompare(b));
 					const actualTexts = await toast
 						.locator(`.${DESCRIPTION_CLASSNAME}`)
 						.allInnerTexts();

@@ -1,11 +1,13 @@
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockDebts: (options: { generateDebts?: GenerateDebts }) => {
 		debts: ReturnType<GenerateDebts>;
+		debtUser: ReturnType<GenerateUsers>[number];
 	};
 	openDebtIntentions: () => Promise<void>;
 };
@@ -34,7 +36,7 @@ export const test = originalTest.extend<Fixtures>({
 					note: debt.note,
 				})),
 			);
-			return { debts };
+			return { debts, debtUser };
 		}),
 
 	openDebtIntentions: ({ page, awaitCacheKey }, use) =>

@@ -47,9 +47,9 @@ test("'debtIntentions.accept' pending / error", async ({
 	page,
 }) => {
 	await api.mockUtils.authPage({ page });
-	const debtsAmount = 6;
+	const debtsAmount = 4;
 	const acceptedDebtsAmount = 2;
-	const { debts } = mockDebts({
+	const { debts, debtUser } = mockDebts({
 		generateDebts: (opts) =>
 			defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 	});
@@ -107,6 +107,12 @@ test("'debtIntentions.accept' pending / error", async ({
 	);
 
 	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debts.getAll", []);
+	api.mockFirst("debts.getUsersPaged", {
+		count: 1,
+		cursor: 0,
+		items: [debtUser.id],
+	});
 
 	await snapshotQueries(
 		async () => {
@@ -120,6 +126,7 @@ test("'debtIntentions.accept' pending / error", async ({
 					.fill(null)
 					.map(() => "Debt accepted successfully"),
 			);
+			await expect(page).toHaveURL("/debts");
 		},
 		{
 			name: "success",
@@ -131,6 +138,4 @@ test("'debtIntentions.accept' pending / error", async ({
 			],
 		},
 	);
-
-	await expect(page).toHaveURL("/debts");
 });
