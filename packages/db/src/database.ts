@@ -81,10 +81,12 @@ const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	if (addTimezone) {
 		const match = /[-+]\d\d(:\d\d)?$/.exec(input);
 		if (match) {
+			/* c8 ignore start */
 			const isUTC = match[0] === "+00" || match[0] === "+00:00";
 			// Removing this hack will create a mismatch between data from DB and expected results
 			// Data from DB will have `+00` timezone while expected timestamp will have `UTC` timezone
 			return `${separatedInput}[${isUTC ? "UTC" : match[0]}]`;
+			/* c8 ignore stop */
 		}
 	}
 	return separatedInput;

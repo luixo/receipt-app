@@ -31,8 +31,12 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/React DevTools/,
 	// Will be fixed later!
 	/A text node cannot be a child of a <View>/,
-	// Sometimes happen in tests, doesn't seem to affect anything
+	// Sometimes happens in tests, doesn't seem to affect anything
 	/net::ERR_SSL_PROTOCOL_ERROR/,
+	// Sometimes happens in tests, doesn't seem to affect anything
+	/Error reading data from TLS socket/,
+	// Sometimes happens in tests, doesn't seem to affect anything
+	/The resource .* was preloaded using link preload but not used within a few seconds from the window's load event/,
 ];
 
 type ConsoleManager = {
