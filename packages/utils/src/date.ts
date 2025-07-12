@@ -69,7 +69,7 @@ export const isTemporalObject = <T extends TemporalType>(
 	);
 export type TemporalType = keyof TemporalMapping;
 
-type TemporalInputMapping = {
+export type TemporalInputMapping = {
 	plainTime: TPlainTime;
 	plainDate: TPlainDate;
 	plainDateTime: TPlainDateTime;
@@ -153,7 +153,7 @@ const getOffset = (date: Date) => {
 	}
 	return `${offset >= 0 ? "+" : "-"}${hoursOffset}:${minutesOffset}`;
 };
-const serializers: {
+export const serializers: {
 	[K in TemporalType]: (input: TemporalMapping[K]) => TemporalInputMapping[K];
 } = {
 	plainTime: (input) =>

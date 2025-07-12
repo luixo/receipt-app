@@ -4,7 +4,7 @@
 			"state": {
 				"data": {
 					"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
-					"createdAt": "2020-01-01 00:00:00.000Z",
+					"createdAt": "2019-12-31 16:00:00.000Z",
 					"name": "tempora reprehenderit quam",
 					"issued": "2020-01-31",
 					"currencyCode": "USD",
@@ -33,7 +33,7 @@
 				"state": {
 					"data": {
 						"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
-						"createdAt": "2020-01-01 00:00:00.000Z",
+						"createdAt": "2019-12-31 16:00:00.000Z",
 						"participants": [],
 						"items": [],
 						"payers": []

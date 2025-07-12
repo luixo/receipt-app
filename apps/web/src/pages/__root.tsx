@@ -32,7 +32,8 @@ import {
 	SELECTED_COLOR_MODE_STORE_NAME,
 } from "~app/utils/store/color-modes";
 import type { StoreValues } from "~app/utils/store-data";
-import type { Temporal } from "~utils/date";
+import type { TemporalInputMapping } from "~utils/date";
+import { parsers } from "~utils/date";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useI18nHelper } from "~web/hooks/use-i18-helper";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
@@ -132,7 +133,12 @@ const RootComponent = () => {
 		[baseLinksContext.url, data.baseUrl, initialSearchParams, data.request],
 	);
 	const storeContext = React.useMemo(
-		() => getStoreContext(serialize, data.nowTimestamp, data.initialValues),
+		() =>
+			getStoreContext(
+				serialize,
+				parsers.zonedDateTime(data.nowTimestamp),
+				data.initialValues,
+			),
 		[data.initialValues, data.nowTimestamp],
 	);
 	const colorMode =
@@ -170,7 +176,7 @@ const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 
 export type RouterContext = {
 	baseUrl: string;
-	nowTimestamp: Temporal.ZonedDateTime;
+	nowTimestamp: TemporalInputMapping["zonedDateTime"];
 	initialValues: StoreValues;
 	initialLanguage: Language;
 	request: Request | null;

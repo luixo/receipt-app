@@ -30,7 +30,7 @@ import {
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
-import { getNow } from "~utils/date";
+import { getNow, serializers } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
 import { HydrationBoundary } from "~web/utils/ssr";
@@ -55,9 +55,15 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 	if (typeof window === "undefined") {
 		return queryClient;
 	}
-	const dehydratedState = dehydrate(queryClient);
+	const dehydratedState = dehydrate(queryClient, {
+		serializeData: transformer.serialize,
+	});
 	const hydratedClient = getQueryClient();
-	hydrate(hydratedClient, dehydratedState);
+	hydrate(hydratedClient, dehydratedState, {
+		defaultOptions: {
+			deserializeData: transformer.deserialize,
+		},
+	});
 	return hydratedClient;
 };
 
@@ -79,7 +85,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			initialLanguage,
 			i18n: i18nInstance,
 			queryClient,
-			nowTimestamp: getNow.zonedDateTime(),
+			nowTimestamp: serializers.zonedDateTime(getNow.zonedDateTime()),
 		},
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: ErrorComponent,
