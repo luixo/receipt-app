@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";

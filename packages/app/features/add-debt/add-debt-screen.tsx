@@ -3,7 +3,7 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
 import {

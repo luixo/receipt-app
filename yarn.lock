@@ -7760,7 +7760,7 @@ __metadata:
     react-easy-crop: "npm:^5.4.2"
     tailwind-variants: "npm:^0.2.1"
     uuid: "npm:^9.0.0"
-    zod-form-data: "npm:^2.0.2"
+    zod-form-data: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -7947,7 +7947,6 @@ __metadata:
     vite-plugin-inspect: "npm:^11.3.0"
     vite-plugin-react-native-web: "npm:^2.1.1"
     zod-error: "npm:^1.5.0"
-    zod-form-data: "npm:^3.0.0"
   languageName: unknown
   linkType: soft
 
@@ -26697,7 +26696,7 @@ __metadata:
     typescript-eslint: "npm:^8.32.0"
     vite-tsconfig-paths: "npm:^5.1.4"
     vitest: "npm:^3.2.2"
-    zod: "npm:^3.25.56"
+    zod: "npm:^4.0.5"
   languageName: unknown
   linkType: soft
 
@@ -32061,15 +32060,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod-form-data@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "zod-form-data@npm:2.0.2"
-  peerDependencies:
-    zod: ">= 3.11.0"
-  checksum: 10/35acc6fac24f58ca67bc59fb0b372ec2b9efbf463b28752785694c914501c86ea13315f589e0abb5503f1be1b45e1780bdf8da9af317aa898f1c048d04314064
-  languageName: node
-  linkType: hard
-
 "zod-form-data@npm:^3.0.0":
   version: 3.0.0
   resolution: "zod-form-data@npm:3.0.0"
@@ -32090,7 +32080,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.20.2, zod@npm:^3.23.8, zod@npm:^3.24.2, zod@npm:^3.25.56":
+"zod@npm:^3.20.2, zod@npm:^3.23.8, zod@npm:^3.24.2":
   version: 3.25.56
   resolution: "zod@npm:3.25.56"
   checksum: 10/f2faf9f9bf1e1e487697caf09f65f6c67282e55e801a697eebde99063ca313fae3706d2ebb886bf2f48173cdcff76b3fa14968eea43d3cd47a79f7a0c7594f6a
@@ -32101,5 +32091,12 @@ __metadata:
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "zod@npm:4.0.5"
+  checksum: 10/f057f46e685e91ea280039ecda026c91facabdcbf869b3bae482ed13d34dce2efe9ee1f513fb1c8c0fde3b32e5904391f5ca015ec50b0924abf83a2b6f9dba65
   languageName: node
   linkType: hard

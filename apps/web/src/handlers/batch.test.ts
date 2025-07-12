@@ -1,7 +1,7 @@
 import { TRPCClientError } from "@trpc/client";
 import { isNonNullish } from "remeda";
 import { assert, describe, expect } from "vitest";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { test } from "~tests/backend/utils/test";
 import type { UnauthorizedContext } from "~web/handlers/context";

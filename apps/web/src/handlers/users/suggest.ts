@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import {
 	MAX_SUGGEST_LENGTH,

@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { limitSchema, offsetSchema } from "~app/utils/validation";
 import type { UsersId } from "~db/models";

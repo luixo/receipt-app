@@ -4,7 +4,7 @@ import type { AnyTRPCProcedure, inferProcedureInput } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { entries, pick } from "remeda";
 import { beforeEach, describe, expect, vi } from "vitest";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { test } from "~tests/backend/utils/test";
 import { transformer } from "~utils/transformer";

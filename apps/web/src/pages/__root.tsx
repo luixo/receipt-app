@@ -8,12 +8,13 @@ import {
 	Outlet,
 	Scripts,
 	createRootRouteWithContext,
+	stripSearchParams,
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { serialize } from "cookie";
 import type { i18n as i18nType } from "i18next";
 import { fromEntries, keys, omit } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
@@ -42,6 +43,7 @@ import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
+import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
 
 applyRemaps();
@@ -186,14 +188,21 @@ export type RouterContext = {
 
 export type ExternalRouterContext = Pick<RouterContext, "initialValues">;
 
-export const rootSearchParamsSchema = z
-	.object({
-		proxyPort: z.coerce.number().catch(0),
-		controllerId: z.uuid().catch(""),
-		debug: z.coerce.boolean().catch(false),
-		redirect: z.string().catch(""),
-	})
-	.partial();
+export const [rootSearchParamsSchema, rootSearchParamsDefaults] =
+	searchParamsWithDefaults(
+		z.object({
+			proxyPort: z.coerce.number(),
+			controllerId: z.uuid(),
+			debug: z.coerce.boolean(),
+			redirect: z.string(),
+		}),
+		{
+			proxyPort: 0,
+			controllerId: "",
+			debug: false,
+			redirect: "",
+		},
+	);
 
 const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 	createRootRouteWithContext,
@@ -206,6 +215,7 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 		await loadNamespaces(ctx.context, "default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
+	search: { middlewares: [stripSearchParams(rootSearchParamsDefaults)] },
 	validateSearch: zodValidator(rootSearchParamsSchema),
 	head: ({ match }) => {
 		const t = getServerSideT(match.context, "default");

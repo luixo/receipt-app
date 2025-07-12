@@ -1,5 +1,5 @@
 import { mapValues } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const searchParamsWithDefaults = <S extends Record<string, z.ZodType>>(
 	schema: z.ZodObject<S>,

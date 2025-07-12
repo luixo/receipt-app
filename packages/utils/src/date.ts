@@ -22,7 +22,7 @@ import {
 	today,
 } from "@internationalized/date";
 import { identity, mapValues, values } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { Locale } from "~app/utils/locale";
 

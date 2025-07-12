@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { add, getNow } from "~utils/date";
 import { generateResetPasswordEmail } from "~web/email/utils";

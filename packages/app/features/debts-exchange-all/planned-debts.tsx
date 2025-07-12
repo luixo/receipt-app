@@ -6,7 +6,7 @@ import { hashKey, useMutation, useQuery } from "@tanstack/react-query";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, unique } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { useLocale } from "~app/hooks/use-locale";

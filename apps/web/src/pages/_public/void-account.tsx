@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
 import { getTitle, loadNamespaces } from "~app/utils/i18n";

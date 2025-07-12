@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { keys } from "remeda";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { getDatabase, temporalParsers } from "~db/database";
 import { migrate } from "~db/migration/index";

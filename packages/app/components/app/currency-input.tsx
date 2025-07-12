@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import type { z } from "zod/v4";
+import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";

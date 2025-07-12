@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { AccountsId, DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";

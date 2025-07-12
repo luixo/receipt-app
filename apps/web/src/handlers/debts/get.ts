@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { Debts, DebtsId } from "~db/models";
 import type { MappedNullableObject } from "~utils/types";

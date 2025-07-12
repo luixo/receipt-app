@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";

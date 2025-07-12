@@ -1,6 +1,6 @@
 import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import z from "zod/v4";
+import z from "zod";
 
 import { DebtsScreen } from "~app/features/debts/debts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";

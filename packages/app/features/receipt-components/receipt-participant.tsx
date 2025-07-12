@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";

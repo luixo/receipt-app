@@ -2,7 +2,7 @@ import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";

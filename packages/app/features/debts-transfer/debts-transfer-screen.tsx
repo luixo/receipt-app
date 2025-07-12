@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, pullObject } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { UsersSuggest } from "~app/components/app/users-suggest";

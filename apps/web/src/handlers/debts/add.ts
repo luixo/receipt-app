@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { isNonNullish, unique } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { DebtsId } from "~db/models";

@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";

@@ -6,7 +6,7 @@ import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { UserAvatar } from "~app/components/app/user-avatar";
 import { ConfirmModal } from "~app/components/confirm-modal";

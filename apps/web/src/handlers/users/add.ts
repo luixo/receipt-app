@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { isNonNullish } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
 import type { UsersId, UsersInitializer } from "~db/models";

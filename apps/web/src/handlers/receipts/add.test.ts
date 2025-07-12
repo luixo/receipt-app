@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { omit } from "remeda";
 import { describe, expect } from "vitest";
-import type { z } from "zod/v4";
+import type { z } from "zod";
 
 import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";

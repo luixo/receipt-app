@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useAppForm } from "~app/utils/forms";

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { acceptNewIntentions } from "~web/handlers/debt-intentions/accept";
 import { authProcedure } from "~web/handlers/trpc";

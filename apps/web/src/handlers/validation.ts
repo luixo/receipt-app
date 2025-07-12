@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { accountIdSchema, flavored, userIdSchema } from "~app/utils/validation";
 import type {

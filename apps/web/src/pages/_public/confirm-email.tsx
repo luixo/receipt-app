@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { ConfirmEmailScreen } from "~app/features/confirm-email/confirm-email-screen";
 import { getTitle } from "~app/utils/i18n";

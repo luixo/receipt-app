@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { unique } from "remeda";
-import z from "zod/v4";
+import z from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import { queueCallFactory } from "~web/handlers/batch";

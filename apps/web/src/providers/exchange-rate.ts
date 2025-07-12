@@ -2,7 +2,7 @@ import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import fetch from "isomorphic-fetch";
 import { entries } from "remeda";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UnauthorizedContext } from "~web/handlers/context";

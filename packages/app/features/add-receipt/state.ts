@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { TRPCMutationInput } from "~app/trpc";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";

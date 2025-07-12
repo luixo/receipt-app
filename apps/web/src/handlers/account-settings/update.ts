@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import type { SimpleUpdateObject } from "~db/types";
 import { authProcedure } from "~web/handlers/trpc";

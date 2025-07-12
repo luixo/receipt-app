@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";

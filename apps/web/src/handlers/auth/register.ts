@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";

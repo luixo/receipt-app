@@ -1,11 +1,15 @@
-import type { Primitive } from "zod";
-
 export type DeepPartial<T> = T extends object
 	? { [P in keyof T]?: DeepPartial<T[P]> }
 	: T;
 
 export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
-	| Primitive
+	| string
+	| number
+	| symbol
+	| bigint
+	| boolean
+	| null
+	| undefined
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 	| Function
 	| TerminalVaue

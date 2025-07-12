@@ -1,6 +1,6 @@
 import type { TRPCError } from "@trpc/server";
-import type { z } from "zod/v4";
-import { ZodError } from "zod/v4";
+import type { z } from "zod";
+import { ZodError } from "zod";
 
 const formatZodErrors = (error: z.ZodError) =>
 	`Zod error${error.issues.length <= 1 ? "" : "s"}\n\n${error.issues
