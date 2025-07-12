@@ -873,7 +873,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.27.4, @babel/core@npm:^7.27.7":
+"@babel/core@npm:^7.24.4, @babel/core@npm:^7.27.4, @babel/core@npm:^7.27.7":
   version: 7.28.0
   resolution: "@babel/core@npm:7.28.0"
   dependencies:
@@ -1617,6 +1617,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/parser@npm:^7.24.4, @babel/parser@npm:^7.28.0":
+  version: 7.28.0
+  resolution: "@babel/parser@npm:7.28.0"
+  dependencies:
+    "@babel/types": "npm:^7.28.0"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: 10/2c14a0d2600bae9ab81924df0a85bbd34e427caa099c260743f7c6c12b2042e743e776043a0d1a2573229ae648f7e66a80cfb26fc27e2a9eb59b55932d44c817
+  languageName: node
+  linkType: hard
+
 "@babel/parser@npm:^7.25.4":
   version: 7.27.1
   resolution: "@babel/parser@npm:7.27.1"
@@ -1625,17 +1636,6 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 10/20d0e612a5c9903f172c8957043923fe73f8d40a130838dade27e6af0291b6c72974f11c99f112443fc5193e519c241f8cc034e28eca6e958949627f902464ef
-  languageName: node
-  linkType: hard
-
-"@babel/parser@npm:^7.28.0":
-  version: 7.28.0
-  resolution: "@babel/parser@npm:7.28.0"
-  dependencies:
-    "@babel/types": "npm:^7.28.0"
-  bin:
-    parser: ./bin/babel-parser.js
-  checksum: 10/2c14a0d2600bae9ab81924df0a85bbd34e427caa099c260743f7c6c12b2042e743e776043a0d1a2573229ae648f7e66a80cfb26fc27e2a9eb59b55932d44c817
   languageName: node
   linkType: hard
 
@@ -2709,6 +2709,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/plugin-transform-private-methods@npm:^7.24.4":
+  version: 7.27.1
+  resolution: "@babel/plugin-transform-private-methods@npm:7.27.1"
+  dependencies:
+    "@babel/helper-create-class-features-plugin": "npm:^7.27.1"
+    "@babel/helper-plugin-utils": "npm:^7.27.1"
+  peerDependencies:
+    "@babel/core": ^7.0.0-0
+  checksum: 10/c76f8f6056946466116e67eb9d8014a2d748ade2062636ab82045c1dac9c233aff10e597777bc5af6f26428beb845ceb41b95007abef7d0484da95789da56662
+  languageName: node
+  linkType: hard
+
 "@babel/plugin-transform-private-property-in-object@npm:^7.22.11":
   version: 7.23.4
   resolution: "@babel/plugin-transform-private-property-in-object@npm:7.23.4"
@@ -3512,7 +3524,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.27.6, @babel/types@npm:^7.27.7, @babel/types@npm:^7.28.0":
+"@babel/types@npm:^7.26.0, @babel/types@npm:^7.27.6, @babel/types@npm:^7.27.7, @babel/types@npm:^7.28.0":
   version: 7.28.0
   resolution: "@babel/types@npm:7.28.0"
   dependencies:
@@ -7913,6 +7925,7 @@ __metadata:
     "@upstash/redis": "npm:^1.22.0"
     "@vitejs/plugin-react": "npm:^4.6.0"
     autoprefixer: "npm:^10.4.16"
+    babel-plugin-react-compiler: "npm:^19.1.0-rc.2"
     dataloader: "npm:^2.2.2"
     fetch-to-node: "npm:^2.1.0"
     isomorphic-fetch: "npm:^3.0.0"
@@ -13784,6 +13797,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-react-compiler@npm:^19.1.0-rc.2":
+  version: 19.1.0-rc.2
+  resolution: "babel-plugin-react-compiler@npm:19.1.0-rc.2"
+  dependencies:
+    "@babel/types": "npm:^7.26.0"
+  checksum: 10/4904021f1e47a8e7f9eb251b48b4c9c9cc3c9c91ff6ab4c8969ac5b6d0b34d91f3137770ba3e4d267a5ee2c113d938b99615f0e3ea3aa9a0948b87085710ef28
+  languageName: node
+  linkType: hard
+
 "babel-plugin-react-native-web@npm:~0.18.10":
   version: 0.18.12
   resolution: "babel-plugin-react-native-web@npm:0.18.12"
@@ -17663,12 +17685,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "eslint-plugin-react-hooks@npm:5.2.0"
+"eslint-plugin-react-hooks@npm:^6.0.0-rc.1":
+  version: 6.0.0-rc1
+  resolution: "eslint-plugin-react-hooks@npm:6.0.0-rc1"
+  dependencies:
+    "@babel/core": "npm:^7.24.4"
+    "@babel/parser": "npm:^7.24.4"
+    "@babel/plugin-transform-private-methods": "npm:^7.24.4"
+    hermes-parser: "npm:^0.25.1"
+    zod: "npm:^3.22.4"
+    zod-validation-error: "npm:^3.0.3"
   peerDependencies:
     eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0 || ^9.0.0
-  checksum: 10/ebb79e9cf69ae06e3a7876536653c5e556b5fd8cd9dc49577f10a6e728360e7b6f5ce91f4339b33e93b26e3bb23805418f8b5e75db80baddd617b1dffe73bed1
+  checksum: 10/20255e47955a7624f25e981e750de50ac11342d4aff1e9c62be66acd16612ecf63f187df4125fe22ba635e2875fa3f991fefb82d30f2bbb9bdc553d0e9f99251
   languageName: node
   linkType: hard
 
@@ -19899,7 +19928,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hermes-parser@npm:0.25.1":
+"hermes-parser@npm:0.25.1, hermes-parser@npm:^0.25.1":
   version: 0.25.1
   resolution: "hermes-parser@npm:0.25.1"
   dependencies:
@@ -26639,7 +26668,7 @@ __metadata:
     eslint-plugin-package-json: "npm:^0.31.0"
     eslint-plugin-playwright: "npm:^2.2.0"
     eslint-plugin-react: "npm:^7.37.5"
-    eslint-plugin-react-hooks: "npm:^5.2.0"
+    eslint-plugin-react-hooks: "npm:^6.0.0-rc.1"
     eslint-plugin-tailwindcss: "npm:^3.18.0"
     eslint-plugin-vitest: "npm:^0.5.4"
     expo-router: "npm:^3.4.7"
@@ -32052,9 +32081,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"zod-validation-error@npm:^3.0.3":
+  version: 3.5.3
+  resolution: "zod-validation-error@npm:3.5.3"
+  peerDependencies:
+    zod: ^3.25.0 || ^4.0.0
+  checksum: 10/f550565ffb2a0a1733616d856302184dbe2080ec649ff9361125467065c3dfa02aeb5bf399605cdb61fe640f79ff1fe8ad0805f6e0c8144fa34764cad58f4401
+  languageName: node
+  linkType: hard
+
 "zod@npm:^3.20.2, zod@npm:^3.23.8, zod@npm:^3.24.2, zod@npm:^3.25.56":
   version: 3.25.56
   resolution: "zod@npm:3.25.56"
   checksum: 10/f2faf9f9bf1e1e487697caf09f65f6c67282e55e801a697eebde99063ca313fae3706d2ebb886bf2f48173cdcff76b3fa14968eea43d3cd47a79f7a0c7594f6a
+  languageName: node
+  linkType: hard
+
+"zod@npm:^3.22.4":
+  version: 3.25.76
+  resolution: "zod@npm:3.25.76"
+  checksum: 10/f0c963ec40cd96858451d1690404d603d36507c1fc9682f2dae59ab38b578687d542708a7fdbf645f77926f78c9ed558f57c3d3aa226c285f798df0c4da16995
   languageName: node
   linkType: hard

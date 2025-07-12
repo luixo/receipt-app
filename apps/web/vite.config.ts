@@ -84,6 +84,7 @@ const config = defineConfig({
 				jsxImportSource: "nativewind",
 				babel: {
 					presets: ["nativewind/babel"],
+					plugins: [["babel-plugin-react-compiler", {}]],
 				},
 			},
 		}),

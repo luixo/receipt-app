@@ -48,6 +48,7 @@
 		"@types/uuid": "^9.0.2",
 		"@vitejs/plugin-react": "^4.6.0",
 		"autoprefixer": "^10.4.16",
+		"babel-plugin-react-compiler": "^19.1.0-rc.2",
 		"module-alias": "^2.2.3",
 		"vite": "^6.3.5",
 		"vite-bundle-analyzer": "^0.22.2",
