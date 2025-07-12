@@ -51,7 +51,7 @@ React.startTransition(() => {
 		import.meta.env.MODE === "test" ? (
 			client
 		) : (
-			<React.StrictMode>{client},</React.StrictMode>
+			<React.StrictMode>{client}</React.StrictMode>
 		),
 	);
 });
