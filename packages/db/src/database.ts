@@ -12,12 +12,7 @@ import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
 import type { TemporalType } from "~utils/date";
-import {
-	isTemporalObject,
-	localTimeZone,
-	parsers,
-	serialize,
-} from "~utils/date";
+import { isTemporalObject, parsers, serialize } from "~utils/date";
 
 import type { ReceiptsDatabase } from "./types";
 
@@ -83,7 +78,16 @@ const deserializeRegexes = {
 } satisfies Record<TemporalType, RegExp>;
 const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	const separatedInput = input.replace(" ", "T");
-	return addTimezone ? `${separatedInput}[${localTimeZone}]` : separatedInput;
+	if (addTimezone) {
+		const match = /[-+]\d\d(:\d\d)?$/.exec(input);
+		if (match) {
+			const isUTC = match[0] === "+00" || match[0] === "+00:00";
+			// Removing this hack will create a mismatch between data from DB and expected results
+			// Data from DB will have `+00` timezone while expected timestamp will have `UTC` timezone
+			return `${separatedInput}[${isUTC ? "UTC" : match[0]}]`;
+		}
+	}
+	return separatedInput;
 };
 const deserializer: Deserializer = (input) => {
 	if (input === null) {

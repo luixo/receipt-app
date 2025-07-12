@@ -46,6 +46,10 @@ export default defineConfig({
 		},
 		workspace: ["apps/*/vitest.config.ts", "packages/*/vitest.config.ts"],
 		pool: "vmThreads",
+		env: {
+			// This regulates timezone with which expected dates are creates in tests
+			TZ: "UTC",
+		},
 		watch: false,
 		retry: process.env.CI ? 2 : 0,
 	},
