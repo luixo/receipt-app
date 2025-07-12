@@ -17,7 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow, substract } from "~utils/date";
+import { getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./suggest-top";
@@ -268,7 +268,7 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: oldDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: newDebtsUserId } = await insertUser(ctx, accountId);
-				const twoMonthAgo = substract.plainDate(getNow.plainDate(), {
+				const twoMonthAgo = subtract.plainDate(getNow.plainDate(), {
 					months: 2,
 				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
@@ -400,7 +400,7 @@ describe("users.suggestTop", () => {
 					accountId,
 					otherAccountId,
 				]);
-				const monthAgo = substract.plainDate(getNow.plainDate(), { months: 1 });
+				const monthAgo = subtract.plainDate(getNow.plainDate(), { months: 1 });
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
 					timestamp: monthAgo,
 				});
@@ -569,7 +569,7 @@ describe("users.suggestTop", () => {
 					userId: selfUserId,
 				} = await insertAccountWithSession(ctx);
 
-				const monthAgo = substract.plainDate(getNow.plainDate(), { months: 1 });
+				const monthAgo = subtract.plainDate(getNow.plainDate(), { months: 1 });
 				const { id: oldReceiptsUserId } = await insertUser(ctx, accountId);
 				const { id: firstOldReceiptId } = await insertReceipt(ctx, accountId, {
 					issued: monthAgo,

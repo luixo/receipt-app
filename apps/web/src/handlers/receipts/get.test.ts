@@ -20,7 +20,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { compare, getNow, substract } from "~utils/date";
+import { compare, getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
@@ -486,12 +486,12 @@ describe("receipts.get", () => {
 					role: "viewer",
 				}),
 				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId, {
-					createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 10,
 					}),
 				}),
 				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id, {
-					createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 20,
 					}),
 				}),
@@ -500,7 +500,7 @@ describe("receipts.get", () => {
 			const [foreignPayer, connectedPayer, ownerPayer] = await Promise.all([
 				insertReceiptPayer(ctx, receipt.id, foreignPayerUser.id),
 				insertReceiptPayer(ctx, receipt.id, foreignConnectedUser.id, {
-					createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 20,
 					}),
 				}),
@@ -509,13 +509,13 @@ describe("receipts.get", () => {
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
 				insertReceiptItem(ctx, receipt.id, {
-					createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 20,
 					}),
 				}),
 				// item with 1 participant
 				insertReceiptItem(ctx, receipt.id, {
-					createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 10,
 					}),
 				}),
@@ -539,7 +539,7 @@ describe("receipts.get", () => {
 					receiptItems[0].id,
 					connectedParticipant.userId,
 					{
-						createdAt: substract.zonedDateTime(getNow.zonedDateTime(), {
+						createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 							milliseconds: 20,
 						}),
 					},

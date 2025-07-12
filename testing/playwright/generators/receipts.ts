@@ -4,7 +4,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import type { Temporal } from "~utils/date";
-import { getNow, substract } from "~utils/date";
+import { getNow, subtract } from "~utils/date";
 
 import type { GenerateUsers } from "./users";
 import type { GeneratorFnWithFaker } from "./utils";
@@ -42,7 +42,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
 		createdAt: faker.temporal.between.zonedDateTime({
-			from: substract.zonedDateTime(getNow.zonedDateTime(), { months: 1 }),
+			from: subtract.zonedDateTime(getNow.zonedDateTime(), { months: 1 }),
 			to: getNow.zonedDateTime(),
 		}),
 	}));

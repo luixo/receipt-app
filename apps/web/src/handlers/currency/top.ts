@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { getNow, substract } from "~utils/date";
+import { getNow, subtract } from "~utils/date";
 import {
 	getOwnReceipts,
 	getParticipantsReceipts,
@@ -30,7 +30,7 @@ export const procedure = authProcedure
 			.array(),
 	)
 	.query(async ({ input, ctx }) => {
-		const minimalTimestamp = substract.plainDate(getNow.plainDate(), {
+		const minimalTimestamp = subtract.plainDate(getNow.plainDate(), {
 			months: 1,
 		});
 		switch (input.options.type) {

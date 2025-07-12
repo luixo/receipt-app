@@ -12,7 +12,7 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, substract } from "~utils/date";
+import { add, getNow, subtract } from "~utils/date";
 import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
 import { getResHeaders } from "~web/utils/headers";
@@ -143,7 +143,7 @@ describe("procedures", () => {
 		test("session is auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: substract.zonedDateTime(
+					expirationTimestamp: subtract.zonedDateTime(
 						add.zonedDateTime(getNow.zonedDateTime(), SESSION_REFRESH_DURATION),
 						{ seconds: 1 },
 					),

@@ -287,7 +287,7 @@ export const add = mapValues(
 		...durations: DurationMapping[K][]
 	) => TemporalMapping[K];
 };
-export const substract = mapValues(
+export const subtract = mapValues(
 	temporalClasses,
 	() =>
 		<T extends TemporalType>(

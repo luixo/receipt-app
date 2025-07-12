@@ -8,7 +8,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, substract } from "~utils/date";
+import { add, getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
@@ -28,11 +28,11 @@ describe("sessions.cleanup", () => {
 			});
 			await insertSession(ctx, accountId, {
 				// just expired session
-				expirationTimestamp: substract.zonedDateTime(now, { minutes: 1 }),
+				expirationTimestamp: subtract.zonedDateTime(now, { minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// long expired session
-				expirationTimestamp: substract.zonedDateTime(now, { years: 1 }),
+				expirationTimestamp: subtract.zonedDateTime(now, { years: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

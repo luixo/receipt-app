@@ -8,7 +8,7 @@ import {
 	pretendUserSchema,
 } from "~app/utils/store/pretend-user";
 import type { AccountsId } from "~db/models";
-import { getNow, isFirstEarlier, substract } from "~utils/date";
+import { getNow, isFirstEarlier, subtract } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import {
 	SESSION_REFRESH_DURATION,
@@ -154,7 +154,7 @@ const queueSession = queueCallFactory<
 				if (!matchedSession) {
 					return;
 				}
-				const refreshSessionTimestamp = substract.zonedDateTime(
+				const refreshSessionTimestamp = subtract.zonedDateTime(
 					matchedSession.expirationTimestamp,
 					SESSION_REFRESH_DURATION,
 				);
