@@ -46,7 +46,6 @@
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
 		"@tanstack/react-query@^5.80.6": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
 		"h3@npm:1.13.0": "^1.13.0",
-		"vinxi@npm:0.5.3": "patch:vinxi@npm%3A0.5.7#~/patches/vinxi-npm-0.5.7.patch",
 		"vite@npm:6.1.4": "^6.0.0"
 	},
 	"dependencies": {

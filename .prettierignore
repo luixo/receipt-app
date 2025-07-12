@@ -5,4 +5,3 @@ android/
 **/*-snapshots/**/*.json
 *.gen.ts
 .output/
-.vinxi/
