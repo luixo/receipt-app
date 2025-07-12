@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"auth.confirmEmail": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"token": "1d036e59-2ea6-45e8-8c96-4ad1e1062121"
+					}
+				}
+			}
+		]
+	}
+}

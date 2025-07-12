@@ -1,8 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { AUTH_COOKIE } from "~app/utils/auth";
 import { confirmEmailTokenSchema } from "~app/utils/validation";
+import { createAuthorizationSession } from "~web/handlers/auth/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
+import { setCookie } from "~web/utils/cookies";
 
 export const procedure = unauthProcedure
 	.input(
@@ -29,6 +32,11 @@ export const procedure = unauthProcedure
 			.set({ confirmationToken: null, confirmationTokenTimestamp: null })
 			.where("accounts.id", "=", account.id)
 			.executeTakeFirst();
+		const { authToken, expirationDate } = await createAuthorizationSession(
+			ctx,
+			account.id,
+		);
+		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
 			email: account.email,
 		};

@@ -45,10 +45,13 @@ if (sentryDsn) {
 }
 
 React.startTransition(() => {
+	const client = <StartClient router={router} />;
 	hydrateRoot(
 		document,
-		<React.StrictMode>
-			<StartClient router={router} />
-		</React.StrictMode>,
+		import.meta.env.MODE === "test" ? (
+			client
+		) : (
+			<React.StrictMode>{client},</React.StrictMode>
+		),
 	);
 });

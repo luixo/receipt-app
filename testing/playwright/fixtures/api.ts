@@ -8,6 +8,7 @@ import {
 	TRPC_ERROR_CODES_BY_KEY,
 } from "@trpc/server/rpc";
 import http from "node:http";
+import { fromEntries } from "remeda";
 import { v4 } from "uuid";
 
 import type {
@@ -52,6 +53,7 @@ type QueryOrMutationOutput<K extends TRPCKey> = K extends TRPCQueryKey
 type QueryOrMutationHandlerOptions<K extends TRPCKey> = {
 	input: QueryOrMutationInput<K>;
 	calls: number;
+	headers: Headers;
 	next: () => MaybePromise<QueryOrMutationOutput<K>>;
 };
 
@@ -111,6 +113,7 @@ const API_PREFIX = "/api/trpc/";
 
 const getHandlersResponse = <K extends TRPCKey>(
 	key: K,
+	headers: Headers,
 	handlers: NonNullable<Handlers[K]>,
 	input: QueryOrMutationInput<K>,
 	calls: number,
@@ -126,6 +129,7 @@ const getHandlersResponse = <K extends TRPCKey>(
 			return handler({
 				input,
 				calls,
+				headers,
 				next: () => {
 					if (index === 0) {
 						throw new Error(
@@ -143,6 +147,7 @@ const getHandlersResponse = <K extends TRPCKey>(
 
 const handleCall = async <K extends TRPCKey>(
 	controller: Controller,
+	headers: Headers,
 	type: CallType,
 	name: K,
 	input: TransformerResult | undefined,
@@ -155,6 +160,7 @@ const handleCall = async <K extends TRPCKey>(
 		const handlers = controller.handlers[name] || [];
 		const response = await getHandlersResponse(
 			name,
+			headers,
 			handlers,
 			deserializedInput,
 			controller.calls.get(name) || 0,
@@ -202,6 +208,7 @@ type MaybeArray<T> = T | T[];
 
 const handleRequest = async (
 	controller: Controller,
+	headers: Headers,
 	type: CallType,
 	isBatch: boolean,
 	url: URL,
@@ -221,12 +228,14 @@ const handleRequest = async (
 		return Promise.all(
 			names
 				.map((name, index) => ({ name, input: inputs[index] }))
-				.map(({ name, input }) => handleCall(controller, type, name, input)),
+				.map(({ name, input }) =>
+					handleCall(controller, headers, type, name, input),
+				),
 		);
 	}
 	const input = JSON.parse(decodeURIComponent(source)) as TransformerResult;
 	const name = cleanPathname as TRPCKey;
-	return handleCall(controller, type, name, input);
+	return handleCall(controller, headers, type, name, input);
 };
 
 const createWorkerManager = async (port: number): Promise<WorkerManager> => {
@@ -255,15 +264,20 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 		if (!controller) {
 			throw new Error(`Expected to have controller for id "${controllerId}"`);
 		}
+		const headers = new Headers();
 		try {
 			const response = await handleRequest(
 				controller,
+				headers,
 				"server",
 				url.searchParams.has("batch"),
 				url,
 				req.method || "GET",
 				() => jsonPromise,
 			);
+			if (!res.headersSent) {
+				res.setHeaders(headers);
+			}
 			res.end(JSON.stringify(response));
 		} catch (e) {
 			if (e === CLEANUP_MARK) {
@@ -322,17 +336,22 @@ const createApiManager = async (
 	const { controller, cleanup } = globalManager.createController(controllerId);
 	await context.route(`${API_PREFIX}**/*`, async (route) => {
 		const request = route.request();
+		const headers = new Headers();
 		const url = new URL(request.url());
 		try {
 			const response = await handleRequest(
 				controller,
+				headers,
 				"client",
 				url.searchParams.has("batch"),
 				url,
 				request.method(),
 				async () => request.postData() || "{}",
 			);
-			await route.fulfill({ json: response });
+			await route.fulfill({
+				json: response,
+				headers: fromEntries([...headers.entries()]),
+			});
 		} catch (e) {
 			if (e === CLEANUP_MARK) {
 				await route.abort();

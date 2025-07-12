@@ -1,26 +1,61 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { EmptyCard } from "~app/components/empty-card";
+import { ErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCMutationResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Link } from "~components/link";
+import { Spinner } from "~components/spinner";
 import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
 
-import { ConfirmEmail } from "./confirm-email";
+export const ConfirmEmail: React.FC<{
+	confirmMutation: TRPCMutationResult<"auth.confirmEmail">;
+	token: string;
+}> = ({ confirmMutation, token }) => {
+	const { t } = useTranslation("register");
+	switch (confirmMutation.status) {
+		case "pending":
+			return <Spinner size="lg" />;
+		case "error":
+			return (
+				<ErrorMessage
+					message={confirmMutation.error.message}
+					button={{
+						text: t("confirm.retryButton"),
+						onPress: () => confirmMutation.mutate({ token }),
+					}}
+				/>
+			);
+		case "idle":
+			return null;
+		case "success":
+			return (
+				<>
+					<Header>{confirmMutation.data.email}</Header>
+					<Header size="sm">{t("confirm.success.header")}</Header>
+					<Link to="/">
+						<Button color="primary">{t("confirm.success.home")}</Button>
+					</Link>
+				</>
+			);
+	}
+};
 
 export const ConfirmEmailScreen: React.FC<{
 	token?: string;
 }> = ({ token }) => {
+	const { t } = useTranslation("register");
 	const trpc = useTRPC();
-	const navigate = useNavigate();
 	const confirmEmailMutation = useMutation(
 		trpc.auth.confirmEmail.mutationOptions(
-			useTrpcMutationOptions(authConfirmEmailOptions, {
-				onSuccess: () => navigate({ to: "/", replace: true }),
-			}),
+			useTrpcMutationOptions(authConfirmEmailOptions),
 		),
 	);
 	const confirmEmail = React.useCallback(() => {
@@ -33,12 +68,12 @@ export const ConfirmEmailScreen: React.FC<{
 
 	return (
 		<>
-			<PageHeader>Confirm email</PageHeader>
+			<PageHeader>{t("confirm.header")}</PageHeader>
 			{token ? (
-				<ConfirmEmail confirmMutation={confirmEmailMutation} />
+				<ConfirmEmail confirmMutation={confirmEmailMutation} token={token} />
 			) : (
-				<EmptyCard title="Something went wrong">
-					Please verify you got confirm link right
+				<EmptyCard title={t("confirm.error.title")}>
+					{t("confirm.error.description")}
 				</EmptyCard>
 			)}
 		</>

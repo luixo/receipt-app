@@ -2,6 +2,16 @@
 
 exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
 {
+  "added": {
+    "sessions": {
+      "sessionId:5b49e84c-9810-4438-bb55-38168762a8da": {
+        "accountId": "0e58efec-192a-4235-979f-90e9cc0e2035",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
+        "sessionId": "5b49e84c-9810-4438-bb55-38168762a8da",
+      },
+    },
+  },
   "updated": {
     "accounts": {
       "id:0e58efec-192a-4235-979f-90e9cc0e2035": {

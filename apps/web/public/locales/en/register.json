@@ -15,5 +15,17 @@
 			"label": "Retype new password"
 		},
 		"submit": "Register"
+	},
+	"confirm": {
+		"header": "Confirm email",
+		"error": {
+			"title": "Something went wrong",
+			"description": "Please verify you got confirm link right"
+		},
+		"success": {
+			"header": "Email verification successful!",
+			"home": "To home page"
+		},
+		"retryButton": "Retry"
 	}
 }

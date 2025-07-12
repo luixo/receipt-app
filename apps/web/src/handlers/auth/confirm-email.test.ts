@@ -10,6 +10,7 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./confirm-email";
 
@@ -62,6 +63,23 @@ describe("auth.confirmEmail", () => {
 				caller.procedure({ token: confirmationToken }),
 			);
 			expect(result).toEqual<typeof result>({ email });
+			const responseHeaders = getResHeaders(context);
+			const setCookieTuple = responseHeaders.find(
+				([key]) => key === "set-cookie",
+			);
+			assert(
+				setCookieTuple,
+				"Header 'set-cookie' has to be set in the response",
+			);
+			const tokenMatch = /authToken=([^;]+)/.exec(setCookieTuple[1].toString());
+			assert(tokenMatch, "Cookie 'authToken' should be present");
+			const token = tokenMatch[1];
+			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+				[
+					"set-cookie",
+					`authToken=${token}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
+				],
+			]);
 		});
 	});
 });

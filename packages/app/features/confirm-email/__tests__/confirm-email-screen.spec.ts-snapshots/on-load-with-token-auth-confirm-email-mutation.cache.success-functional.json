@@ -1,0 +1,19 @@
+{
+	"mutations": {
+		"auth.confirmEmail": {
+			"1": {
+				"state": {
+					"data": {
+						"email": "Lafayette_Daniel29@yahoo.com"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"token": "1d036e59-2ea6-45e8-8c96-4ad1e1062121"
+					}
+				}
+			}
+		}
+	}
+}
