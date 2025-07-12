@@ -41,6 +41,7 @@ import { Input } from "~components/input";
 import { BackLink, ButtonLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
@@ -467,7 +468,7 @@ export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
 						aria-label="Debt amount"
 						isDisabled
 						variant="bordered"
-						endContent="$"
+						endContent={<Text>$</Text>}
 					/>
 					<SkeletonDateInput />
 					<Input

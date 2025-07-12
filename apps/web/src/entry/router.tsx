@@ -38,7 +38,11 @@ import { getHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
 
-const NotFoundComponent: NotFoundRouteComponent = () => <View>Not found!</View>;
+const NotFoundComponent: NotFoundRouteComponent = () => (
+	<View>
+		<Text>Not found!</Text>
+	</View>
+);
 
 const ErrorComponent: ErrorRouteComponent = ({ error }) => {
 	React.useEffect(() => {
