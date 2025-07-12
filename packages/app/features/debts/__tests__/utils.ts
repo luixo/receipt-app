@@ -77,7 +77,6 @@ export const test = originalTest.extend<Fixtures>({
 	openUserDebtsScreen: ({ page, awaitCacheKey }, use) =>
 		use(async (userId, { awaitCache = true, awaitDebts = 0 } = {}) => {
 			await page.goto(`/debts/user/${userId}/`);
-			await page.pause();
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
 				await awaitCacheKey("debts.getAllUser");

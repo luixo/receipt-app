@@ -554,6 +554,7 @@ export default ts.config(
 			"**/.output/",
 			"**/.vercel/",
 			"**/.tanstack/",
+			"**/.nitro/",
 			"**/.expo/",
 			"**/coverage/",
 			"**/playwright-report/",

@@ -20,9 +20,9 @@
 		"frontend:test": "yarn workspace @ra/playwright test",
 		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
 		"ios:publish": "yarn workspace @ra/mobile ios:publish",
-		"lint": "eslint",
+		"lint": "eslint --max-warnings=0",
 		"lint-staged": "lint-staged",
-		"lint:fix": "eslint --fix",
+		"lint:fix": "eslint --max-warnings=0 --fix",
 		"native:dev": "yarn workspace @ra/mobile dev",
 		"typecheck": "tsc --noEmit",
 		"web:build": "yarn workspace @ra/web build",
@@ -36,7 +36,7 @@
 	"lint-staged": {
 		"*.{j,t}s{,x}": [
 			"prettier --write",
-			"eslint --fix"
+			"eslint --max-warnings=0 --fix"
 		]
 	},
 	"resolutions": {
