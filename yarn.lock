@@ -6131,6 +6131,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroui/toast@patch:@heroui/toast@npm%3A2.0.12#~/patches/@heroui-toast-npm-2.0.12.patch":
+  version: 2.0.12
+  resolution: "@heroui/toast@patch:@heroui/toast@npm%3A2.0.12#~/patches/@heroui-toast-npm-2.0.12.patch::version=2.0.12&hash=f0ef8b"
+  dependencies:
+    "@heroui/react-utils": "npm:2.1.11"
+    "@heroui/shared-icons": "npm:2.1.9"
+    "@heroui/shared-utils": "npm:2.1.9"
+    "@heroui/spinner": "npm:2.2.19"
+    "@heroui/use-is-mobile": "npm:2.2.10"
+    "@react-aria/interactions": "npm:3.25.3"
+    "@react-aria/toast": "npm:3.0.5"
+    "@react-aria/utils": "npm:3.29.1"
+    "@react-stately/toast": "npm:3.1.1"
+  peerDependencies:
+    "@heroui/system": ">=2.4.17"
+    "@heroui/theme": ">=2.4.12"
+    framer-motion: ">=11.5.6 || >=12.0.0-alpha.1"
+    react: ">=18 || >=19.0.0-rc.0"
+    react-dom: ">=18 || >=19.0.0-rc.0"
+  checksum: 10/96967127ddbb1e48fb0196cff37a75dd005d1c3920b0d6924a7223846ff841debbb291256e002a2ddab4b2cd567c012c7fd2682a63ad1b2de72f610fa013a975
+  languageName: node
+  linkType: hard
+
 "@heroui/tooltip@npm:2.2.19":
   version: 2.2.19
   resolution: "@heroui/tooltip@npm:2.2.19"
@@ -7723,7 +7746,6 @@ __metadata:
     nativewind: "npm:^4.1.23"
     react-date-picker: "npm:^10.3.0"
     react-easy-crop: "npm:^5.4.2"
-    react-hot-toast: "npm:^2.5.2"
     tailwind-variants: "npm:^0.2.1"
     uuid: "npm:^9.0.0"
     zod-form-data: "npm:^2.0.2"
@@ -15581,7 +15603,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.1.0, csstype@npm:^3.1.3":
+"csstype@npm:^3.1.0":
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 10/f593cce41ff5ade23f44e77521e3a1bcc2c64107041e1bf6c3c32adc5187d0d60983292fda326154d20b01079e24931aa5b08e4467cc488b60bb1e7f6d478ade
@@ -26149,19 +26171,6 @@ __metadata:
     react: ^16.6.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.6.0 || ^17.0.0 || ^18.0.0
   checksum: 10/73d6383dd5d5794cad3837cf6b71d7e23afa6f3ba745e50a9d0d6bf42ff0ab175e4292f250ffe757f4bd782e64c37c4583fb884340cd63891deb33e144628661
-  languageName: node
-  linkType: hard
-
-"react-hot-toast@npm:^2.5.2":
-  version: 2.5.2
-  resolution: "react-hot-toast@npm:2.5.2"
-  dependencies:
-    csstype: "npm:^3.1.3"
-    goober: "npm:^2.1.16"
-  peerDependencies:
-    react: ">=16"
-    react-dom: ">=16"
-  checksum: 10/fde6aaa26d85a8de6fbc2b62c66fd71da555b389e8276b0b1e3636f0bf2956e57f40d7692959f2fb0ee91000ae44cad2ab5add779ef0e9b7fc9eb148203dca54
   languageName: node
   linkType: hard
 

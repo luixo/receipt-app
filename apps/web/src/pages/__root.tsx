@@ -15,7 +15,6 @@ import type { i18n as i18nType } from "i18next";
 import { fromEntries, keys, omit } from "remeda";
 import { z } from "zod/v4";
 
-import { Toaster } from "~app/components/toaster";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import globalCss from "~app/global.css?url";
@@ -32,12 +31,14 @@ import {
 	SELECTED_COLOR_MODE_STORE_NAME,
 } from "~app/utils/store/color-modes";
 import type { StoreValues } from "~app/utils/store-data";
+import { ToastProvider, defaultToastProps } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
 import { parsers } from "~utils/date";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useI18nHelper } from "~web/hooks/use-i18-helper";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
+import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
@@ -66,6 +67,7 @@ const useTestSearchParams = () => {
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
+	useToastHelper();
 	useQueryClientHelper();
 	useI18nHelper();
 	useHydratedMark();
@@ -156,7 +158,7 @@ const RootComponent = () => {
 						<DevToolsProvider>
 							<Outlet />
 							<GlobalHooksComponent />
-							<Toaster />
+							<ToastProvider toastProps={defaultToastProps} />
 						</DevToolsProvider>
 					</NavigationProvider>
 				</ThemeProvider>

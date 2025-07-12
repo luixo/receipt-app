@@ -1,9 +1,12 @@
+import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-const TOAST_SELECTOR = ".toaster > div";
+import { DESCRIPTION_CLASSNAME } from "~utils/toast";
+
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 
 type ToastsFixtures = {
+	toast: Locator;
 	verifyToastTexts: (
 		textOrTexts?: string | string[],
 		timeout?: number,
@@ -12,7 +15,8 @@ type ToastsFixtures = {
 };
 
 export const toastsFixtures = test.extend<ToastsFixtures>({
-	verifyToastTexts: async ({ page, clearToasts }, use) => {
+	toast: ({ page }, use) => use(page.getByRole("alertdialog")),
+	verifyToastTexts: async ({ clearToasts, toast }, use) => {
 		// Every toast is shown for at least 1 second
 		await use(
 			async (textOrTexts = [], timeout = DEFAULT_WAIT_TOAST_TIMEOUT) => {
@@ -20,15 +24,9 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 					const expectedTexts = (
 						Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]
 					).sort((a, b) => a.localeCompare(b));
-					const actualTexts = await page.evaluate(
-						([selector]) =>
-							Array.from(document.querySelectorAll(selector))
-								.map((toast) =>
-									toast instanceof HTMLDivElement ? toast.innerText : "unknown",
-								)
-								.sort(),
-						[TOAST_SELECTOR] as const,
-					);
+					const actualTexts = await toast
+						.locator(`.${DESCRIPTION_CLASSNAME}`)
+						.allInnerTexts();
 					expect(actualTexts, {
 						message: `Expected to have length of ${
 							expectedTexts.length
@@ -49,7 +47,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 			},
 		);
 	},
-	clearToasts: async ({ page }, use) => {
+	clearToasts: async ({ page, toast }, use) => {
 		await use(() =>
 			expect
 				.poll(async () => {
@@ -59,7 +57,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 						}
 						window.removeToasts();
 					});
-					return page.locator(TOAST_SELECTOR).count();
+					return toast.count();
 				})
 				.toBe(0),
 		);

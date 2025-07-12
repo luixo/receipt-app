@@ -1,10 +1,10 @@
 import React from "react";
 
 import { skipToken, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 
 import type { TRPCMutationKey } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
+import { addToast, getToastQueue } from "~components/toast";
 import type {
 	InternalContext,
 	TRPCMutationOptions,
@@ -97,7 +97,11 @@ export const useTrpcMutationOptions = <
 							)
 						: mutateToastOptions;
 				if (toastOptions) {
-					toastId = toast.loading(toastOptions.text);
+					toastId = addToast({
+						title: "Loading..",
+						description: toastOptions.text,
+						timeout: Infinity,
+					});
 				}
 				await onMutate?.(...args);
 				const lifecycleContextWithUpdateFns = await onMutateTrpc?.(
@@ -126,7 +130,14 @@ export const useTrpcMutationOptions = <
 								lifecycleContext,
 							)
 						: errorToastOptions;
-				toast.error(toastOptions.text, { id: toastId });
+				if (toastId) {
+					getToastQueue().close(toastId);
+				}
+				addToast({
+					title: "Error",
+					description: toastOptions.text,
+					color: "danger",
+				});
 				onError?.(error, vars, lifecycleContext);
 				revertFn?.();
 				return onErrorTrpc?.(...getTrpcArgs(sureInternalContext))(
@@ -152,10 +163,15 @@ export const useTrpcMutationOptions = <
 								sureLifecycleContext,
 							)
 						: successToastOptions;
+				if (toastId) {
+					getToastQueue().close(toastId);
+				}
 				if (toastOptions) {
-					toast.success(toastOptions.text, { id: toastId });
-				} else {
-					toast.dismiss(toastId);
+					addToast({
+						title: "Success",
+						description: toastOptions.text,
+						color: "success",
+					});
 				}
 				onSuccess?.(result, vars, sureLifecycleContext);
 				finalizeFn?.();
