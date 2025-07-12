@@ -4,8 +4,8 @@
 	"type": "module",
 	"main": "index.ts",
 	"dependencies": {
-		"@heroui/react": "^2.7.5",
-		"@heroui/use-infinite-scroll": "^2.2.7",
+		"@heroui/react": "^2.7.11",
+		"@heroui/use-infinite-scroll": "^2.2.9",
 		"@ra/components": "workspace:*",
 		"@ra/mutations": "workspace:*",
 		"@ra/utils": "workspace:*",

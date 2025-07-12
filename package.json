@@ -40,7 +40,6 @@
 		]
 	},
 	"resolutions": {
-		"@internationalized/date@^3.7.0": "patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch",
 		"@react-aria/utils": "^3.28.1",
 		"@react-types/shared": "^3.28.0",
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
