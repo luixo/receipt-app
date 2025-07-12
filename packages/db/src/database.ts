@@ -9,7 +9,7 @@ import {
 import type { PoolConfig } from "pg";
 import { Pool, types } from "pg";
 import type { Logger } from "pino";
-import { entries, isPlainObject, mapValues } from "remeda";
+import { isPlainObject, mapValues } from "remeda";
 
 import { deserialize, isTemporalObject, serialize } from "~utils/date";
 
@@ -29,16 +29,31 @@ const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 	}
 };
 
-const dbParsers: Record<
-	(typeof types.builtins)[number],
+/* c8 ignore start */
+
+type BuiltinType = Exclude<
+	(typeof types.builtins)[keyof typeof types.builtins],
+	string
+>;
+type TypeParser = (input: string) => unknown;
+type TemporalBuiltinType =
+	| typeof types.builtins.DATE
+	| typeof types.builtins.TIMESTAMP
+	| typeof types.builtins.TIMESTAMPTZ
+	| typeof types.builtins.TIME
+	| typeof types.builtins.TIMETZ;
+export const temporalParsers: Record<
+	TemporalBuiltinType,
 	(input: string) => unknown
 > = {
-	/* c8 ignore start */
 	[types.builtins.DATE]: (input) => input,
 	[types.builtins.TIMESTAMP]: (input) => input,
 	[types.builtins.TIMESTAMPTZ]: (input) => input,
 	[types.builtins.TIME]: (input) => input,
 	[types.builtins.TIMETZ]: (input) => input,
+};
+const dbParsers: Partial<Record<BuiltinType, TypeParser>> = {
+	...temporalParsers,
 	[types.builtins.BOOL]: (value) => (value === "t" ? "true" : "false"),
 	/* c8 ignore stop */
 };
@@ -71,39 +86,60 @@ type DatabaseOptions = {
 	logger?: Logger;
 	connectionString: string;
 	sharedKey?: string;
-	skipSerialization?: boolean;
+	getTypeParser?: GetTypeParser;
+	serialization?: {
+		serialize?: Serializer;
+		deserialize?: Deserializer;
+	} | null;
 } & Omit<PoolConfig, "connectionString">;
-let typeParsersApplied = false;
+type GetTypeParser = (oid: BuiltinType) => undefined | TypeParser;
+const getCustomTypes = (getTypeParser: GetTypeParser): typeof types => ({
+	// @ts-expect-error Complicated function override types
+	getTypeParser: (oid, format) => {
+		const parser = getTypeParser(oid);
+		return parser || types.getTypeParser(oid, format as "text");
+	},
+});
+const customizedTypes: typeof types = getCustomTypes((oid) => dbParsers[oid]);
 const sharedPools: Partial<Record<string, Pool>> = {};
 export const getDatabase = ({
 	logger,
 	connectionString,
 	sharedKey,
-	skipSerialization,
+	getTypeParser: customGetTypeParser,
+	serialization,
 	...props
 }: DatabaseOptions) => {
 	const pool =
 		(sharedKey && sharedPools[sharedKey]) ||
-		new Pool({ connectionString, ...props });
+		new Pool({
+			connectionString,
+			/* c8 ignore start */
+			types: customGetTypeParser
+				? getCustomTypes(customGetTypeParser)
+				: customizedTypes,
+			/* c8 ignore stop */
+			...props,
+		});
 	if (sharedKey) {
 		sharedPools[sharedKey] = pool;
 	}
 	pool.on("remove", () => {
 		delete sharedPools[connectionString];
 	});
-	if (!typeParsersApplied) {
-		entries(dbParsers).forEach(([type, parser]) =>
-			types.setTypeParser<ReturnType<typeof parser>>(Number(type), parser),
-		);
-		typeParsersApplied = true;
-	}
 	return new Kysely<ReceiptsDatabase>({
 		dialect: new PostgresDialect({ pool }),
 		log: logger && getLogger(logger),
 		/* c8 ignore start */
-		plugins: skipSerialization
-			? undefined
-			: /* c8 ignore stop */
-				[new SerializePlugin({ serializer, deserializer })],
+		plugins:
+			serialization === null
+				? undefined
+				: [
+						new SerializePlugin({
+							serializer: serialization?.serialize || serializer,
+							deserializer: serialization?.serialize || deserializer,
+						}),
+					],
+		/* c8 ignore stop */
 	});
 };

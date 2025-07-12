@@ -5,7 +5,7 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 import { z } from "zod/v4";
 
-import { getDatabase } from "~db/database";
+import { getDatabase, temporalParsers } from "~db/database";
 import { migrate } from "~db/migration/index";
 import type { ReceiptsDatabase } from "~db/types";
 import { transformer } from "~utils/transformer";
@@ -155,7 +155,12 @@ export const appRouter = router({
 					input.databaseName,
 				),
 				// We want raw data in the snapshots
-				skipSerialization: true,
+				serialization: null,
+				getTypeParser: (oid) => {
+					if (oid in temporalParsers) {
+						return (localInput) => localInput.toString();
+					}
+				},
 			});
 			const dump = await Promise.all(
 				keys(ORDERS).map(async (tableName) => {

@@ -27,10 +27,10 @@ exports[`auth.register > functionality > email sent if active 1`] = `
     },
     "users": {
       "id:d3e851e7-a827-44d1-9a44-49c2ad7fe2fa": {
-        "acceptReceipts": "true",
+        "acceptReceipts": true,
         "connectedAccountId": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
         "createdAt": "2020-01-01 00:00:00+00",
-        "exposeReceipts": "true",
+        "exposeReceipts": true,
         "id": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
         "name": "Hillary",
         "ownerAccountId": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
@@ -84,10 +84,10 @@ exports[`auth.register > functionality > register successful 1`] = `
     },
     "users": {
       "id:cede701c-1498-4975-903f-c38d3105a43d": {
-        "acceptReceipts": "true",
+        "acceptReceipts": true,
         "connectedAccountId": "cede701c-1498-4975-903f-c38d3105a43d",
         "createdAt": "2020-01-01 00:00:00+00",
-        "exposeReceipts": "true",
+        "exposeReceipts": true,
         "id": "cede701c-1498-4975-903f-c38d3105a43d",
         "name": "Destinee",
         "ownerAccountId": "cede701c-1498-4975-903f-c38d3105a43d",
