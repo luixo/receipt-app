@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import pluginRouter from "@tanstack/eslint-plugin-router";
 import type { Linter } from "eslint";
 import * as airbnbPlugin from "eslint-config-airbnb-extended";
 import prettierConfig from "eslint-config-prettier";
@@ -380,6 +381,7 @@ export default ts.config(
 			],
 		},
 	},
+	...pluginRouter.configs["flat/recommended"],
 	/* Typescript section */
 	ts.configs.strictTypeChecked,
 	ts.configs.stylisticTypeChecked,

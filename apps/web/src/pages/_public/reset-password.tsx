@@ -13,14 +13,14 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_public/reset-password")({
 	component: Wrapper,
-	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "reset-password");
-	},
 	validateSearch: zodValidator(
 		z.object({
 			token: resetPasswordTokenSchema.optional(),
 		}),
 	),
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "reset-password");
+	},
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context, "resetPassword") }],
 	}),

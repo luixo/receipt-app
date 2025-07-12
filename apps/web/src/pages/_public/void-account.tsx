@@ -13,12 +13,12 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_public/void-account")({
 	component: Wrapper,
-	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "void-account");
-	},
 	validateSearch: zodValidator(
 		z.object({ token: voidAccountTokenSchema.optional() }),
 	),
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "void-account");
+	},
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context, "voidAccount") }],
 	}),

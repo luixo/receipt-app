@@ -22,11 +22,11 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/debts/add")({
 	component: Wrapper,
+	validateSearch: zodValidator({ schema, output: "input" }),
+	search: { middlewares: [stripSearchParams(defaults)] },
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "debts");
 	},
-	validateSearch: zodValidator({ schema, output: "input" }),
-	search: { middlewares: [stripSearchParams(defaults)] },
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context, "addDebt") }],
 	}),

@@ -46,6 +46,8 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: Wrapper,
 	staleTime: Infinity,
+	validateSearch: zodValidator(schema),
+	search: { middlewares: [stripSearchParams(defaults)] },
 	loaderDeps: ({ search: { offset, limit, filters, sort } }) => ({
 		offset,
 		limit,
@@ -66,8 +68,6 @@ export const Route = createFileRoute("/_protected/receipts/")({
 		await loadNamespaces(ctx.context, "receipts");
 		return { prefetched };
 	},
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context, "receipts") }],
 	}),
