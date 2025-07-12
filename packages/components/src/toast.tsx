@@ -19,4 +19,5 @@ export const defaultToastProps: React.ComponentProps<
 	classNames: {
 		description: DESCRIPTION_CLASSNAME,
 	},
+	disableAnimation: import.meta.env.MODE === "test",
 };

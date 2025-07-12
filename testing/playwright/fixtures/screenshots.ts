@@ -244,6 +244,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 					...restScreenshotOptions
 				} = {},
 			) => {
+				await page.evaluate(() => document.fonts.ready);
 				const stickyMenu = page.getByTestId("sticky-menu");
 				const stickyMenuBoundingBox = await stickyMenu.boundingBox();
 				const masks = mask.map((maskElement) => {

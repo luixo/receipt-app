@@ -14,6 +14,8 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 			navigate={(_href, options) => router.navigate(options!)}
 			useHref={(href) => router.buildLocation({ to: href }).href}
 			validationBehavior="native"
+			disableAnimation={import.meta.env.MODE === "test"}
+			disableRipple={import.meta.env.MODE === "test"}
 		>
 			{children}
 		</HeroUIProvider>

@@ -179,7 +179,7 @@ const handleCall = async <K extends TRPCKey>(
 						message: `Internal server error: ${String(e)}`,
 						cause: e,
 					});
-		if (!(e instanceof TRPCError)) {
+		if (!(e instanceof TRPCError) && e !== CLEANUP_MARK) {
 			// Unexpected error logging in Playwright helps debugging
 			// eslint-disable-next-line no-console
 			console.error("Internal server error", e);

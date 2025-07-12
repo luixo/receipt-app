@@ -42,7 +42,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	},
 	loader: ({ page }, use) => use(page.locator('[aria-label="Loading"]')),
 	skeleton: ({ page }, use) =>
-		use(page.locator(".before\\:animate-\\[shimmer_2s_infinite\\]")),
+		use(page.locator(".group-data-\\[loaded\\=true\\]\\:opacity-100")),
 	user: ({ page }, use) => use(page.getByTestId("user")),
 	emptyCard: async ({ page }, use) => {
 		await use((message) => {
