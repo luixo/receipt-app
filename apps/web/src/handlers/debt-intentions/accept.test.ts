@@ -77,7 +77,7 @@ describe("debtIntentions.accept", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 					receiptId: foreignReceiptId,
 				},
 			);
@@ -114,7 +114,7 @@ describe("debtIntentions.accept", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 					receiptId: foreignReceiptId,
 				},
 			);
@@ -159,7 +159,7 @@ describe("debtIntentions.accept", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
 						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -207,7 +207,7 @@ describe("debtIntentions.accept", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
 						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -249,7 +249,7 @@ describe("debtIntentions.accept", () => {
 				ctx,
 				foreignAccountId,
 				foreignToSelfUserId,
-				{ createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z") },
+				{ createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]") },
 			);
 			// A connected with our updatedAt ahead
 			const [updatedDebtAhead] = await insertSyncedDebts(
@@ -263,7 +263,7 @@ describe("debtIntentions.accept", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
 						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -280,7 +280,7 @@ describe("debtIntentions.accept", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
 						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000Z"),
+						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
 						note: faker.lorem.words(),
 					}),
 					ahead: "their",

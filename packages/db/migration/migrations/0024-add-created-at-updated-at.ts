@@ -20,7 +20,9 @@ import { parsers } from "~utils/date";
 
 const updateColumn = "updatedAt";
 // Project inception date
-const defaultCreatedDate = parsers.zonedDateTime("2020-12-04T07:10:00.000Z");
+const defaultCreatedDate = parsers.zonedDateTime(
+	"2020-12-04T07:10:00.000[GMT]",
+);
 
 const createUpdateFunction = async (db: Database) => {
 	await sql`

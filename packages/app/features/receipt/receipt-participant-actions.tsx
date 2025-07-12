@@ -94,7 +94,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 			timestamp: receipt.issued,
 			updatedAt:
 				currentDebt?.updatedAt ??
-				parsers.zonedDateTime("1900-01-01T00:00:00.000Z"),
+				parsers.zonedDateTime("1900-01-01T00:00:00.000[GMT]"),
 		}),
 		[currentDebt?.updatedAt, receipt.currencyCode, receipt.issued, sum],
 	);

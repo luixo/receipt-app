@@ -15,8 +15,8 @@ type TMilliseconds = `${number}${number}${number}`;
 type TPlainTime = `${THours}:${TMinutes}:${TSeconds}.${TMilliseconds}`;
 type TPlainDate = `${TYear}-${TMonth}-${TDay}`;
 type TPlainDateTime = `${TPlainDate}T${TPlainTime}`;
-type TZonedTime = `${TPlainTime}Z`;
-type TZonedDateTime = `${TPlainDateTime}Z`;
+type TZonedTime = `${TPlainTime}[${string}]`;
+type TZonedDateTime = `${TPlainDateTime}[${string}]`;
 
 /* eslint-disable no-restricted-syntax */
 const getTemporalSchema = <T extends TemporalType>(type: T) =>
@@ -117,7 +117,7 @@ export const formatters: {
 export const parsers = mapValues(
 	temporalSchemas,
 	(_value, key) => (input: TemporalInputMapping[typeof key]) =>
-		createTemporal<typeof key>(key, new Date(input)),
+		createTemporal<typeof key>(key, new Date(input.replace(/\[.*\]/, "Z"))),
 ) as {
 	[K in TemporalType]: (input: TemporalInputMapping[K]) => TemporalMapping[K];
 };
