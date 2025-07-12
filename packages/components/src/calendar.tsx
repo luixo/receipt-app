@@ -61,6 +61,7 @@ export const Calendar: React.FC<Props> = ({
 				<DayPicker
 					mode="single"
 					selected={value ? value.value : undefined}
+					timeZone="GMT"
 					onSelect={onDateChange}
 					classNames={classNames}
 					showOutsideDays

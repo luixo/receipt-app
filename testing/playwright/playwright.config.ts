@@ -10,16 +10,11 @@ import {
 	urlSettings,
 } from "~tests/frontend/consts";
 
-const COMMON_USE = {
-	timezoneId: "GMT",
-} as const;
-
 const visualProjectsMatch = /.*\.visual\.spec\.ts/;
 const visualProjects: Project[] = [
 	{
 		name: "1440-chrome",
 		use: {
-			...COMMON_USE,
 			...devices["Desktop Chrome"],
 			viewport: { width: 1440, height: 1000 },
 		},
@@ -29,7 +24,6 @@ const visualProjects: Project[] = [
 	{
 		name: "1280-firefox",
 		use: {
-			...COMMON_USE,
 			...devices["Desktop Firefox"],
 			viewport: { width: 1280, height: 800 },
 		},
@@ -39,7 +33,6 @@ const visualProjects: Project[] = [
 	{
 		name: "834-webkit",
 		use: {
-			...COMMON_USE,
 			...devices["Desktop Safari"],
 			viewport: { width: 834, height: 600 },
 		},
@@ -50,7 +43,6 @@ const visualProjects: Project[] = [
 	{
 		name: "600-chrome",
 		use: {
-			...COMMON_USE,
 			...devices["Pixel 5"],
 			viewport: { width: 600, height: 900 },
 		},
@@ -59,7 +51,6 @@ const visualProjects: Project[] = [
 	{
 		name: "320-safari",
 		use: {
-			...COMMON_USE,
 			...devices["iPhone 12"],
 			viewport: { width: 320, height: 500 },
 			// @see https://github.com/microsoft/playwright/issues/11812#issuecomment-1462829766
@@ -71,10 +62,7 @@ const visualProjects: Project[] = [
 
 const functionalProject: Project = {
 	name: "functional",
-	use: {
-		...COMMON_USE,
-		...devices["Desktop Chrome"],
-	},
+	use: devices["Desktop Chrome"],
 	testMatch: /.*(?<!visual|utils)\.spec\.ts/,
 };
 

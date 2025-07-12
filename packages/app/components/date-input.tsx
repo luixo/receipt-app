@@ -35,7 +35,7 @@ export const DateInput: React.FC<Props> = ({
 		>
 			<View>
 				<Input
-					value={value ? formatPlainDate(value) : ""}
+					value={value ? formatPlainDate(value, { timeZone: "GMT" }) : ""}
 					onValueChange={(nextValue) => {
 						// Manual update - or by automation tool
 						const updatedDate = parsers.plainDate(

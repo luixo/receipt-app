@@ -1,4 +1,5 @@
 export const serverSettings = {
+	// Changing timezone here, change it in `playwright/package.json` as well
 	timezone: "UTC",
 	locale: "ru-RU",
 };

@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"scripts": {
-		"test": "playwright test -c playwright.config.ts"
+		"test": "TZ=UTC playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
