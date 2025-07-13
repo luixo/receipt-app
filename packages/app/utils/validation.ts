@@ -150,7 +150,10 @@ export const debtAmountSchema = createNumberSchema("Debt amount", {
 	},
 });
 
-export const currencyCodeSchema = z.string().transform<CurrencyCode>(flavored);
+export const currencyCodeSchema = z
+	.string()
+	.transform<CurrencyCode>(flavored)
+	.transform((currencyCode) => currencyCode.toUpperCase());
 
 export const currencySchema = z.object({
 	code: currencyCodeSchema,

@@ -79,7 +79,7 @@ test("'receipts.add' mutation", async ({
 	fillDate,
 	fillCurrency,
 }) => {
-	await mockBase();
+	const { user: selfUser } = await mockBase();
 	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
@@ -89,11 +89,13 @@ test("'receipts.add' mutation", async ({
 
 	const receiptName = faker.lorem.words();
 	const receiptId = faker.string.uuid();
+	const receiptDate = add.plainDate(getNow.plainDate(), { months: 1 });
+	const receiptCurrencyCode = "USD";
 
 	await page.goto("/receipts/add");
 	await nameInput.fill(receiptName);
-	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));
-	await fillCurrency(currencyInput, "USD");
+	await fillDate(dateInput, receiptDate);
+	await fillCurrency(currencyInput, receiptCurrencyCode);
 
 	await snapshotQueries(
 		async () => {
@@ -133,6 +135,19 @@ test("'receipts.add' mutation", async ({
 		await expect(input).toBeDisabled();
 	}
 
+	api.mockFirst("receipts.get", async () => ({
+		id: receiptId,
+		debts: { direction: "outcoming", debts: [] },
+		name: receiptName,
+		currencyCode: receiptCurrencyCode,
+		issued: receiptDate,
+		createdAt: getNow.zonedDateTime(),
+		participants: [],
+		items: [],
+		payers: [],
+		ownerUserId: selfUser.id,
+		selfUserId: selfUser.id,
+	}));
 	await snapshotQueries(
 		async () => {
 			createPause.resolve();

@@ -6,11 +6,18 @@ import {
 	generateAmount,
 	generateCurrencyCode,
 } from "~tests/frontend/generators/utils";
+import type { ExtractFixture } from "~tests/frontend/types";
 
 type Fixtures = {
-	mockBase: () => Promise<{
-		topCurrencies: TRPCQueryOutput<"currency.top">;
-	}>;
+	mockBase: () => Promise<
+		{
+			topCurrencies: TRPCQueryOutput<"currency.top">;
+		} & Awaited<
+			ReturnType<
+				ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
+			>
+		>
+	>;
 	addButton: Locator;
 	nameInput: Locator;
 	nameInputWrapper: Locator;
@@ -20,13 +27,13 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker, page }, use) =>
 		use(async () => {
-			await api.mockUtils.authPage({ page });
+			const auth = await api.mockUtils.authPage({ page });
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),
 			}));
 			api.mockFirst("currency.top", topCurrencies);
-			return { topCurrencies };
+			return { topCurrencies, ...auth };
 		}),
 
 	addButton: ({ page }, use) =>

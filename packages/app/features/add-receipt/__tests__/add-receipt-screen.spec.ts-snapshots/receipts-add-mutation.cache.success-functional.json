@@ -13,9 +13,9 @@
 					"payers": [],
 					"ownerUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
 					"selfUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
-					"debt": {
+					"debts": {
 						"direction": "outcoming",
-						"ids": []
+						"debts": []
 					}
 				},
 				"dataUpdateCount": 1,

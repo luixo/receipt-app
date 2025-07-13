@@ -14,7 +14,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input, SkeletonInput } from "~components/input";
-import { Skeleton } from "~components/skeleton";
 import type { UsersId } from "~db/models";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
 import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
@@ -25,12 +24,11 @@ export const SkeletonInboundConnectionIntention = () => {
 		<View className="gap-2">
 			<View className="flex flex-row justify-between">
 				<SkeletonInput
-					isReadOnly
 					className="max-w-xs"
 					size="sm"
 					label={t("intentions.form.email.label")}
 					variant="bordered"
-					startContent={<Skeleton className="h-4 w-48 rounded-md" />}
+					skeletonClassName="w-48"
 				/>
 				<Button color="warning" variant="bordered" isDisabled>
 					{t("intentions.form.rejectButton")}

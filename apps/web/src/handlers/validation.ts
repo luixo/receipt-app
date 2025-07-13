@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { CurrencyCode } from "~app/utils/currency";
 import { accountIdSchema, flavored, userIdSchema } from "~app/utils/validation";
 import type {
 	DebtsId,
@@ -18,7 +19,8 @@ export const currencyCodeSchema = z
 	.overwrite((code) => code.toUpperCase())
 	.refine((code) => CURRENCY_CODES.includes(code), {
 		error: `Currency does not exist in currency list`,
-	});
+	})
+	.transform<CurrencyCode>(flavored);
 
 export const receiptIdSchema = z.uuid().transform<ReceiptsId>(flavored);
 export const receiptItemIdSchema = z.uuid().transform<ReceiptItemsId>(flavored);

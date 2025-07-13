@@ -13,6 +13,21 @@ import { useReceiptContext } from "./context";
 import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem, ReceiptItemSkeleton } from "./receipt-item";
 
+export const SkeletonAddReceiptItemController = () => {
+	const { t } = useTranslation("receipts");
+	return (
+		<Button color="primary" variant="bordered" className="w-full" isDisabled>
+			<Trans
+				t={t}
+				i18nKey="add.addItemButton"
+				components={{
+					icon: <AddIcon size={24} />,
+				}}
+			/>
+		</Button>
+	);
+};
+
 const AddReceiptItemController: React.FC = () => {
 	const { t } = useTranslation("receipts");
 	const { receiptDisabled } = useReceiptContext();
@@ -27,7 +42,7 @@ const AddReceiptItemController: React.FC = () => {
 			variant="bordered"
 			onPress={openForm}
 			className="w-full"
-			disabled={receiptDisabled}
+			isDisabled={receiptDisabled}
 		>
 			<Trans
 				t={t}

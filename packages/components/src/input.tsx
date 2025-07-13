@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { Input as InputRaw, Textarea } from "@heroui/input";
 
 import { EyeIcon, EyeSlashIcon } from "~components/icons";
+import { Skeleton } from "~components/skeleton";
 
 import { Button } from "./button";
 import type { FieldError, MutationsProp } from "./utils";
@@ -12,10 +13,24 @@ import { cn, getErrorState, getMutationLoading } from "./utils";
 export const SkeletonInput: React.FC<
 	Omit<React.ComponentProps<typeof InputRaw | typeof Textarea>, "ref"> & {
 		multiline?: boolean;
+		skeletonClassName?: string;
 	}
-> = ({ multiline, ...props }) => {
+> = ({ multiline, startContent, skeletonClassName, ...props }) => {
 	const Component = multiline ? Textarea : InputRaw;
-	return <Component {...props} isDisabled isReadOnly />;
+	return (
+		<Component
+			{...props}
+			isDisabled
+			isReadOnly
+			startContent={
+				startContent === undefined ? (
+					<Skeleton className={cn("h-4 w-32 rounded-md", skeletonClassName)} />
+				) : (
+					startContent
+				)
+			}
+		/>
+	);
 };
 
 type Props = Omit<
