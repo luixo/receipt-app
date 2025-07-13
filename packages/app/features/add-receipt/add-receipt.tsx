@@ -90,7 +90,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 	const receiptId = React.useId();
 	const selfUserId = selfAccountId as UsersId;
 
-	const { participants } = useParticipants({
+	const participants = useParticipants({
 		id: receiptId,
 		createdAt: getNow.zonedDateTime(),
 		issued: formValues.issued,
@@ -100,9 +100,9 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 		ownerUserId: selfUserId,
 		selfUserId,
 		payers,
-		debt: {
+		debts: {
 			direction: "outcoming",
-			ids: [],
+			debts: [],
 		},
 	});
 	const actionsHooks = useActionsHooks(setItems, setRawParticipants, setPayers);

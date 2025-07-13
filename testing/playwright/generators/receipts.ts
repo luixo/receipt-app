@@ -167,9 +167,9 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	issued: receiptBase.issued,
 	ownerUserId: selfUserId,
 	selfUserId,
-	debt: {
+	debts: {
 		direction: "outcoming",
-		ids: [],
+		debts: [],
 	},
 	items: receiptItemsConsumers,
 	participants: receiptParticipants,

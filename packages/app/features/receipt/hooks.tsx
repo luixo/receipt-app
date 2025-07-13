@@ -315,7 +315,7 @@ export type ReceiptContext = {
 	payers: Payer[];
 
 	renderParticipantActions: (
-		participant: ReturnType<typeof useParticipants>["participants"][number],
+		participant: ReturnType<typeof useParticipants>[number],
 	) => React.ReactNode;
 	getUsersSuggestOptions: () => TRPCQueryInput<"users.suggest">["options"];
 	emptyReceiptElement: React.ReactNode;
@@ -327,7 +327,7 @@ export const useGetReceiptContext = (
 	renderParticipantActions: ReceiptContext["renderParticipantActions"],
 ): ReceiptContext => {
 	const { t } = useTranslation("receipts");
-	const { participants } = useParticipants(receipt);
+	const participants = useParticipants(receipt);
 	return {
 		receiptId: receipt.id,
 		selfUserId: receipt.selfUserId,

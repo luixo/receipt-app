@@ -17,7 +17,7 @@ import { round } from "~utils/math";
 
 import {
 	ReceiptPreviewSyncIcon,
-	ReceiptPreviewSyncIconSkeleton,
+	skeletonReceiptPreviewSyncIcon,
 } from "./receipt-preview-sync-icon";
 
 type InnerProps = {
@@ -112,7 +112,7 @@ export const ReceiptPreviewSkeleton = () => {
 					{sumComponent}
 				</View>
 				<View className="flex-1 flex-row items-center justify-start p-2 sm:justify-center">
-					<ReceiptPreviewSyncIconSkeleton />
+					{skeletonReceiptPreviewSyncIcon}
 				</View>
 			</View>
 		</View>

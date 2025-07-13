@@ -12,11 +12,6 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		console.log(
-			"req",
-			ctx.event.node.req.headers["x-source"],
-			JSON.stringify(input),
-		);
 		const { database } = ctx;
 		const accountUsers = database.selectFrom("users").where((eb) =>
 			eb("users.ownerAccountId", "=", ctx.auth.accountId).and(

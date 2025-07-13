@@ -83,7 +83,7 @@ export const options: UseContextedMutationOptions<
 							}) ?? [],
 						ownerUserId: selfUserId,
 						selfUserId,
-						debt: { direction: "outcoming", ids: [] },
+						debts: { direction: "outcoming", debts: [] },
 					});
 				},
 			});

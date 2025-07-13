@@ -92,6 +92,12 @@
 				"postfix": " / {{parts}}"
 			},
 			"addPayerButton": "+ плательщик"
+		},
+		"errors": {
+			"noOurs": "Долг не был отправлен",
+			"desyncedOurs": "Сумма долга с нашей стороны \"{{actual}}\", а должна быть \"{{expected}}\" согласно чеку.",
+			"noTheir": "Они пока не приняли долги",
+			"desyncedTheir": "Их сумма долга \"{{actual}}\", а должны быть \"{{expected}}\"."
 		}
 	},
 	"item": {

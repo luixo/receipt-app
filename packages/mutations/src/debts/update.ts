@@ -61,6 +61,7 @@ export const options: UseContextedMutationOptions<
 				updateReceiptWithOutcomingDebtId(
 					controllerContext,
 					currDebt.receiptId,
+					currDebt.userId,
 					updateObject.id,
 				);
 			}

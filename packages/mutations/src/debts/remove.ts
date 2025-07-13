@@ -42,17 +42,17 @@ export const options: UseContextedMutationOptions<
 			updateReceipts(controllerContext, {
 				get: (controller) =>
 					controller.updateAll((receipt) => {
-						if (receipt.debt.direction === "incoming") {
-							if (!receipt.debt.id) {
+						if (receipt.debts.direction === "incoming") {
+							if (!receipt.debts.id) {
 								return receipt;
 							}
-							if (receipt.debt.id === updateObject.id) {
+							if (receipt.debts.id === updateObject.id) {
 								return {
 									...receipt,
-									debt: receipt.debt.hasForeign
-										? { ...receipt.debt, hasForeign: true, hasMine: false }
+									debts: receipt.debts.hasForeign
+										? { ...receipt.debts, hasForeign: true, hasMine: false }
 										: {
-												...receipt.debt,
+												...receipt.debts,
 												hasForeign: false,
 												hasMine: false,
 												id: undefined,
@@ -61,11 +61,16 @@ export const options: UseContextedMutationOptions<
 							}
 							return receipt;
 						}
-						if (receipt.debt.ids.includes(updateObject.id)) {
-							const nextIds = receipt.debt.ids.filter(
-								(id) => id !== updateObject.id,
+						if (
+							receipt.debts.debts.some((debt) => debt.id === updateObject.id)
+						) {
+							const nextDebts = receipt.debts.debts.filter(
+								({ id }) => id !== updateObject.id,
 							);
-							return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
+							return {
+								...receipt,
+								debts: { ...receipt.debts, debts: nextDebts },
+							};
 						}
 						return receipt;
 					}),
