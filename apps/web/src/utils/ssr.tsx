@@ -13,7 +13,7 @@ import type { RouterContext } from "~web/pages/__root";
 // see https://github.com/TanStack/router/issues/4084
 const ERROR_TAG = "__error__";
 
-export const prefetch = (
+export const prefetchQueries = (
 	ctx: { context: RouterContext },
 	...optionsSet: ReturnType<TRPCQueryOptions<ResolverDef>>[]
 ) => {

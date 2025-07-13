@@ -13,7 +13,7 @@ import {
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetch } from "~web/utils/ssr";
+import { prefetchQueries } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
@@ -56,7 +56,7 @@ export const Route = createFileRoute("/_protected/receipts/")({
 	}),
 	loader: async (ctx) => {
 		const trpc = getLoaderTrpcClient(ctx.context);
-		const prefetched = prefetch(
+		const prefetched = prefetchQueries(
 			ctx,
 			trpc.receipts.getPaged.queryOptions({
 				limit: ctx.deps.limit,
