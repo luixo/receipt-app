@@ -1,12 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useQueries } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
-import { QueryErrorMessage } from "~app/components/error-message";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
@@ -15,14 +13,12 @@ import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import type { TRPCQueryErrorResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
@@ -41,37 +37,6 @@ const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 			</View>
 			<Divider className="max-sm:hidden" />
 			{children}
-		</>
-	);
-};
-
-const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
-	const trpc = useTRPC();
-	const receiptQueries = useQueries({
-		queries: ids.map((id) => trpc.receipts.get.queryOptions({ id })),
-	});
-	if (receiptQueries.every((query) => query.status === "error")) {
-		return (
-			<QueryErrorMessage
-				query={receiptQueries[0] as TRPCQueryErrorResult<"receipts.get">}
-			/>
-		);
-	}
-
-	return (
-		<>
-			{receiptQueries.map((receiptQuery, index) => (
-				<React.Fragment key={ids[index]}>
-					<Divider className="sm:hidden" />
-					{receiptQuery.status === "pending" ? (
-						<ReceiptPreviewSkeleton />
-					) : receiptQuery.status === "error" ? (
-						<QueryErrorMessage query={receiptQuery} />
-					) : (
-						<ReceiptPreview receipt={receiptQuery.data} />
-					)}
-				</React.Fragment>
-			))}
 		</>
 	);
 };
@@ -135,7 +100,12 @@ export const Receipts = suspendedFallback<Props>(
 				isPending={isPending}
 			>
 				<ReceiptsWrapper>
-					<ReceiptPreviews ids={data.items} />
+					{data.items.map((id) => (
+						<React.Fragment key={id}>
+							<Divider className="sm:hidden" />
+							<ReceiptPreview id={id} />
+						</React.Fragment>
+					))}
 				</ReceiptsWrapper>
 			</PaginationOverlay>
 		);

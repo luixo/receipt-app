@@ -13,7 +13,7 @@ import {
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetchQueries } from "~web/utils/ssr";
+import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
@@ -55,17 +55,21 @@ export const Route = createFileRoute("/_protected/receipts/")({
 		sort,
 	}),
 	loader: async (ctx) => {
-		const trpc = getLoaderTrpcClient(ctx.context);
-		const prefetched = prefetchQueries(
-			ctx,
-			trpc.receipts.getPaged.queryOptions({
-				limit: ctx.deps.limit,
-				orderBy: ctx.deps.sort,
-				filters: ctx.deps.filters,
-				cursor: ctx.deps.offset,
-			}),
-		);
 		await loadNamespaces(ctx.context, "receipts");
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const prefetched = await prefetchQueriesWith(
+			ctx,
+			() =>
+				ctx.context.queryClient.fetchQuery(
+					trpc.receipts.getPaged.queryOptions({
+						limit: ctx.deps.limit,
+						orderBy: ctx.deps.sort,
+						filters: ctx.deps.filters,
+						cursor: ctx.deps.offset,
+					}),
+				),
+			(list) => list.items.map((id) => trpc.receipts.get.queryOptions({ id })),
+		);
 		return { prefetched };
 	},
 	head: ({ match }) => ({
