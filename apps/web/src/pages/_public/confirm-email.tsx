@@ -8,9 +8,7 @@ import { confirmEmailTokenSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		token: confirmEmailTokenSchema,
-	}),
+	z.object({ token: confirmEmailTokenSchema }),
 	{ token: "" },
 );
 

@@ -9,9 +9,7 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		token: resetPasswordTokenSchema.optional(),
-	}),
+	z.object({ token: resetPasswordTokenSchema }),
 	{ token: "" },
 );
 
