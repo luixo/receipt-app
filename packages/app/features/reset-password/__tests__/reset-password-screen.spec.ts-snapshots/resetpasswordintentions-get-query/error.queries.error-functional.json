@@ -1,0 +1,6 @@
+{
+	"resetPasswordIntentions.get": {
+		"serverCalls": 1,
+		"clientCalls": 1
+	}
+}

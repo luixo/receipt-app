@@ -1,0 +1,17 @@
+{
+	"queries": {
+		"resetPasswordIntentions.get:[{\"token\":\"c74a6827-c12f-4511-98a9-4fef1b967eaf\"}]": {
+			"state": {
+				"data": {
+					"email": "Rae_Jerde7@yahoo.com"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

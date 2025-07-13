@@ -1,0 +1,17 @@
+{
+	"queries": {
+		"resetPasswordIntentions.get:[{\"token\":\"\"}]": {
+			"state": {
+				"data": {
+					"email": "Jailyn_Wunsch@yahoo.com"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

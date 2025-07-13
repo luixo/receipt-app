@@ -1,0 +1,18 @@
+{
+	"queries": {
+		"resetPasswordIntentions.get:[{\"token\":\"be1c51e1-aeb6-410c-94fa-6c53ad4cac58\"}]": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock 'resetPasswordIntentions.get' error"
+				},
+				"errorUpdateCount": 1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

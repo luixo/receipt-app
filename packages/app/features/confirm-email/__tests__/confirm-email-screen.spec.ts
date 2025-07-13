@@ -15,56 +15,87 @@ test("On load without token", async ({ page, api, snapshotQueries }) => {
 	);
 });
 
-test("On load with token / 'auth.confirmEmail' mutation", async ({
-	page,
-	api,
-	snapshotQueries,
-	verifyToastTexts,
-	faker,
-	errorMessage,
-	loader,
-}) => {
-	api.mockUtils.noAuthPage();
-	const token = faker.string.uuid();
-	const confirmPause = api.createPause();
-	const rawErrorMessage = "Mock 'auth.confirmEmail' error";
-	api.mockFirst("auth.confirmEmail", async () => {
-		await confirmPause.promise;
-		throw new TRPCError({
-			code: "BAD_REQUEST",
-			message: rawErrorMessage,
+test.describe("'auth.confirmEmail' mutation", () => {
+	test("loading", async ({
+		page,
+		api,
+		snapshotQueries,
+		verifyToastTexts,
+		faker,
+		loader,
+	}) => {
+		api.mockUtils.noAuthPage();
+		const token = faker.string.uuid();
+		const confirmPause = api.createPause();
+		api.mockFirst("auth.confirmEmail", async ({ next }) => {
+			await confirmPause.promise;
+			return next();
 		});
+		await snapshotQueries(
+			async () => {
+				await page.goto(`/confirm-email?token=${token}`);
+				await expect(loader).toBeVisible();
+				await verifyToastTexts("Confirming email..");
+			},
+			{ name: "loading" },
+		);
+		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
 	});
-	await snapshotQueries(
-		async () => {
-			await page.goto(`/confirm-email?token=${token}`);
-			await expect(loader).toBeVisible();
-			await verifyToastTexts("Confirming email..");
-		},
-		{ name: "loading" },
-	);
-	confirmPause.resolve();
-	await snapshotQueries(
-		async () => {
-			await expect(errorMessage(rawErrorMessage)).toBeVisible();
-			await verifyToastTexts(`Error confirming email: ${rawErrorMessage}`);
-		},
-		{ name: "error" },
-	);
-	const confirmedEmail = faker.internet.email();
-	api.mockFirst("auth.confirmEmail", { email: confirmedEmail });
-	await api.mockUtils.authPage({ page });
-	api.mockLast("receipts.getPaged", { count: 0, cursor: 0, items: [] });
-	await snapshotQueries(
-		async () => {
-			await page.locator("button", { hasText: "Retry" }).click();
-			await verifyToastTexts(`Email "${confirmedEmail}" confirmed!`);
-		},
-		{ name: "success", blacklistKeys: ["receipts.getPaged"] },
-	);
-	await expect(page.locator("h3")).toHaveText(confirmedEmail);
-	await expect(page.locator("h4")).toHaveText("Email verification successful!");
-	await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+
+	test("error", async ({
+		page,
+		api,
+		snapshotQueries,
+		verifyToastTexts,
+		faker,
+		errorMessage,
+	}) => {
+		api.mockUtils.noAuthPage();
+		const token = faker.string.uuid();
+		const rawErrorMessage = "Mock 'auth.confirmEmail' error";
+		api.mockFirst("auth.confirmEmail", async () => {
+			throw new TRPCError({
+				code: "BAD_REQUEST",
+				message: rawErrorMessage,
+			});
+		});
+		await snapshotQueries(
+			async () => {
+				await page.goto(`/confirm-email?token=${token}`);
+				await expect(errorMessage(rawErrorMessage)).toBeVisible();
+				await verifyToastTexts(`Error confirming email: ${rawErrorMessage}`);
+			},
+			{ name: "error" },
+		);
+		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+	});
+
+	test("success", async ({
+		page,
+		api,
+		snapshotQueries,
+		verifyToastTexts,
+		faker,
+	}) => {
+		api.mockUtils.noAuthPage();
+		const token = faker.string.uuid();
+		const confirmedEmail = faker.internet.email();
+		api.mockFirst("auth.confirmEmail", { email: confirmedEmail });
+		api.mockLast("receipts.getPaged", { count: 0, cursor: 0, items: [] });
+		await snapshotQueries(
+			async () => {
+				await page.goto(`/confirm-email?token=${token}`);
+				await api.mockUtils.authPage({ page });
+				await verifyToastTexts(`Email "${confirmedEmail}" confirmed!`);
+			},
+			{ name: "success", blacklistKeys: ["receipts.getPaged"] },
+		);
+		await expect(page.locator("h3")).toHaveText(confirmedEmail);
+		await expect(page.locator("h4")).toHaveText(
+			"Email verification successful!",
+		);
+		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+	});
 });
 
 test("Nagivating back to the home page", async ({ page, api, faker }) => {

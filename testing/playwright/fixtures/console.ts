@@ -71,7 +71,11 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 		});
 	},
 	autoVerifyNoConsoleMessages: [
-		async ({ page, consoleManager }, use) => {
+		async ({ page, consoleManager }, use, testInfo) => {
+			if (testInfo.project.name !== "functional") {
+				await use();
+				return;
+			}
 			page.on("console", consoleManager.onMessage);
 			await use();
 			expect.soft(consoleManager.getMessages()).toStrictEqual([]);

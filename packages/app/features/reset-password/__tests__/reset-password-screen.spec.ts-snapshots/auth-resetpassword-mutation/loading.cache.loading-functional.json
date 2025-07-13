@@ -1,0 +1,17 @@
+{
+	"mutations": {
+		"auth.resetPassword": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"password": "strong-password",
+						"token": "12bcb990-817f-4332-a480-a62190bb4cca"
+					}
+				}
+			}
+		]
+	}
+}

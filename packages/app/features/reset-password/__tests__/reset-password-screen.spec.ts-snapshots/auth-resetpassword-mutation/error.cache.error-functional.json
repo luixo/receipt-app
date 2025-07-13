@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"auth.resetPassword": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock 'auth.resetPassword' error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"password": "strong-password",
+						"token": "835f650a-97a1-447c-8382-15b1b5bec87c"
+					}
+				}
+			}
+		]
+	}
+}
