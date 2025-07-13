@@ -1,16 +1,20 @@
 {
 	"mutations": {
-		"auth.confirmEmail": {
-			"0": {
+		"auth.confirmEmail": [
+			{
 				"state": {
 					"error": {
 						"type": "TRPCClientError",
 						"message": "Mock 'auth.confirmEmail' error"
 					},
 					"failureCount": 1,
-					"status": "error"
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"token": "5628c3ea-a867-496b-a1ea-2ffe9b35e989"
+					}
 				}
 			}
-		}
+		]
 	}
 }
