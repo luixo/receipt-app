@@ -9,14 +9,13 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { UnlinkIcon } from "~components/icons";
 import { Input, SkeletonInput } from "~components/input";
-import { Skeleton } from "~components/skeleton";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {
 	const { t } = useTranslation("users");
 	return (
 		<SkeletonInput
-			startContent={<Skeleton className="h-4 w-48 rounded-md" />}
+			skeletonClassName="w-48"
 			endContent={
 				<Button
 					title={t("intentions.unlinkUserButton")}

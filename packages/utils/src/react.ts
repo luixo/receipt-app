@@ -5,3 +5,5 @@ export const updateSetStateAction = <T>(
 	typeof setStateAction === "function"
 		? (setStateAction as (prevState: T) => T)(prevValue)
 		: setStateAction;
+
+export type UseStateReturn<T> = [T, React.Dispatch<React.SetStateAction<T>>];

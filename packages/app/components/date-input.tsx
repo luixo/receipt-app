@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { useFormat } from "~app/hooks/use-format";
 import { Calendar } from "~components/calendar";
-import { Input } from "~components/input";
-import { Spinner } from "~components/spinner";
+import { Input, SkeletonInput } from "~components/input";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
 import { type Temporal, parsers } from "~utils/date";
@@ -44,8 +43,7 @@ export const DateInput: React.FC<Props> = ({
 							),
 						);
 					}}
-					aria-label={label || t("components.dateInput.label")}
-					label={label}
+					label={label || t("components.dateInput.label")}
 					mutation={mutation}
 					type="text"
 					{...props}
@@ -61,12 +59,9 @@ export const SkeletonDateInput: React.FC<
 	const { t } = useTranslation("default");
 	return (
 		<View>
-			<Input
-				startContent={<Spinner size="sm" />}
-				aria-label={label || t("components.dateInput.label")}
-				label={label}
-				type="text"
-				isDisabled
+			<SkeletonInput
+				skeletonClassName="w-32"
+				label={label || t("components.dateInput.label")}
 				{...props}
 			/>
 		</View>

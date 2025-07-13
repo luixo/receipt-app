@@ -10,8 +10,13 @@ import { getCurrencyDescription } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
+import { Input, SkeletonInput } from "~components/input";
 import { type MutationsProp, getMutationLoading } from "~components/utils";
+
+export const SkeletonCurrencyInput = () => {
+	const { t } = useTranslation("default");
+	return <SkeletonInput label={t("components.currencyInput.currency")} />;
+};
 
 type InnerProps = {
 	value: CurrencyCode;
