@@ -1,13 +1,11 @@
 import type React from "react";
 
-import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
@@ -20,8 +18,6 @@ export const DebtsScreen: React.FC<{
 	offsetState: SearchParamState<"/debts", "offset">;
 }> = ({ limitState, offsetState }) => {
 	const { t } = useTranslation("debts");
-	const trpc = useTRPC();
-	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
 	const inboundDebtsAmount = useDebtsIntentions();
 	const intentionsButton = (
 		<ButtonLink
@@ -61,9 +57,7 @@ export const DebtsScreen: React.FC<{
 							<AddIcon size={24} />
 						</ButtonLink>
 						{inboundDebtsAmount === 0 ? (
-							settingsQuery.data?.manualAcceptDebts ? (
-								intentionsButton
-							) : null
+							intentionsButton
 						) : (
 							<Badge
 								content={inboundDebtsAmount}
