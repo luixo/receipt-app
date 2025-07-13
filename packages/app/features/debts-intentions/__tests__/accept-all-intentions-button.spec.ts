@@ -107,6 +107,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	);
 
 	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debts.getAllUser", []);
 	api.mockFirst("debts.getAll", []);
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,
@@ -117,16 +118,16 @@ test("'debtIntentions.accept' pending / error", async ({
 	await snapshotQueries(
 		async () => {
 			await acceptAllIntentionButton.click();
-			await awaitCacheKey("debtIntentions.accept", {
-				succeed: debtsAmount,
-				total: true,
-			});
 			await verifyToastTexts(
 				new Array(acceptedDebtsAmount)
 					.fill(null)
 					.map(() => "Debt accepted successfully"),
 			);
 			await expect(page).toHaveURL("/debts");
+			await awaitCacheKey("debtIntentions.accept", {
+				succeed: debtsAmount,
+				total: true,
+			});
 		},
 		{
 			name: "success",

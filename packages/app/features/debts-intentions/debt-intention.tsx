@@ -8,7 +8,32 @@ import { formatCurrency } from "~app/utils/currency";
 import { Card, CardBody } from "~components/card";
 import { ArrowIcon, ReceiptIcon, SyncIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
+import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+
+export const SkeletonDebtIntention: React.FC<React.PropsWithChildren> = ({
+	children,
+}) => (
+	<Card>
+		<CardBody className="gap-4">
+			<View className="flex-row gap-2">
+				<Skeleton className="h-6 w-20 rounded-md" />
+				<Skeleton className="h-6 w-28 rounded-md" />
+			</View>
+			<View className="flex-row items-center gap-2">
+				<Skeleton className="h-6 w-20 rounded-md" />
+			</View>
+			<View className="flex-row justify-between">
+				<View className="flex-row gap-1">
+					<SyncIcon size={24} />
+					<Skeleton className="h-6 w-32 rounded-md" />
+				</View>
+				<View className="max-md:hidden">{children}</View>
+			</View>
+			<View className="self-end md:hidden">{children}</View>
+		</CardBody>
+	</Card>
+);
 
 type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
 
@@ -67,7 +92,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 							isIconOnly
 							size="sm"
 						>
-							<ReceiptIcon size={12} />
+							<ReceiptIcon size={20} />
 						</ButtonLink>
 					) : null}
 					<Text>{intention.note}</Text>

@@ -12,7 +12,24 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
-import { DebtIntention } from "./debt-intention";
+import { DebtIntention, SkeletonDebtIntention } from "./debt-intention";
+
+export const SkeletonInboundDebtIntention = () => {
+	const { t } = useTranslation("debts");
+	return (
+		<SkeletonDebtIntention>
+			<ButtonGroup className="self-end" color="primary">
+				<Button isDisabled>{t("intentions.buttons.accept")}</Button>
+				<Button variant="bordered" isDisabled>
+					{t("intentions.buttons.acceptAndEdit")}
+				</Button>
+				<Button isDisabled variant="bordered">
+					{t("intentions.buttons.reject")}
+				</Button>
+			</ButtonGroup>
+		</SkeletonDebtIntention>
+	);
+};
 
 type Props = {
 	intention: TRPCQueryOutput<"debtIntentions.getAll">[number];
