@@ -12,7 +12,7 @@ import {
 	offsetSchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetchQueries } from "~web/utils/ssr";
+import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
@@ -47,20 +47,33 @@ export const Route = createFileRoute("/_protected/debts/user/$id/")({
 		limit,
 	}),
 	loader: async (ctx) => {
-		const trpc = getLoaderTrpcClient(ctx.context);
-		const prefetched = prefetchQueries(
-			ctx,
-			trpc.debts.getByUserPaged.queryOptions({
-				userId: ctx.params.id,
-				limit: ctx.deps.limit,
-				cursor: ctx.deps.offset,
-				filters: {
-					showResolved:
-						ctx.context.initialValues[SETTINGS_STORE_NAME].showResolvedDebts,
-				},
-			}),
-		);
 		await loadNamespaces(ctx.context, "debts");
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const prefetched = await prefetchQueriesWith(
+			ctx,
+			async () => {
+				const [userPaged] = await Promise.all([
+					ctx.context.queryClient.fetchQuery(
+						trpc.debts.getByUserPaged.queryOptions({
+							userId: ctx.params.id,
+							limit: ctx.deps.limit,
+							cursor: ctx.deps.offset,
+							filters: {
+								showResolved:
+									ctx.context.initialValues[SETTINGS_STORE_NAME]
+										.showResolvedDebts,
+							},
+						}),
+					),
+					ctx.context.queryClient.fetchQuery(
+						trpc.debts.getAllUser.queryOptions({ userId: ctx.params.id }),
+					),
+				]);
+				return userPaged;
+			},
+			({ items }) =>
+				items.map((debtId) => trpc.debts.get.queryOptions({ id: debtId })),
+		);
 		return { prefetched };
 	},
 	head: ({ match }) => ({

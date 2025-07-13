@@ -1,20 +1,19 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
-import { QueryErrorMessage } from "~app/components/error-message";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
-import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
-import type { DebtsId } from "~db/models";
+import type { DebtsId, UsersId } from "~db/models";
 
 type DebtShape = {
 	amount: React.ReactNode;
@@ -49,54 +48,52 @@ export const UserDebtPreviewSkeleton = () => (
 	/>
 );
 
-type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.get">;
-	resolved: boolean;
-};
-
-const UserDebtPreviewInner: React.FC<InnerProps> = ({ query, resolved }) => {
+const OnlyWithConnectedAccount = suspendedFallback<
+	React.PropsWithChildren<{ userId: UsersId }>
+>(({ userId, children }) => {
 	const trpc = useTRPC();
-	const debt = query.data;
-	const locale = useLocale();
-	const { formatPlainDate } = useFormat();
-	const userQuery = useQuery(trpc.users.get.queryOptions({ id: debt.userId }));
-	return (
-		<Link to="/debts/$id" params={{ id: debt.id }}>
-			<UserDebtPreviewShape
-				className={resolved ? "opacity-50" : undefined}
-				amount={
-					<Text
-						className={debt.amount >= 0 ? "text-success" : "text-danger"}
-						testID="preview-debt-amount"
-					>
-						{formatCurrency(locale, debt.currencyCode, Math.abs(debt.amount))}
-					</Text>
-				}
-				timestamp={<Text>{formatPlainDate(debt.timestamp)}</Text>}
-				synced={
-					userQuery.status === "success" && userQuery.data.connectedAccount ? (
-						<DebtSyncStatus debt={debt} theirDebt={debt.their} />
-					) : null
-				}
-				note={<Text>{debt.note}</Text>}
-			/>
-		</Link>
+	const { data: user } = useSuspenseQuery(
+		trpc.users.get.queryOptions({ id: userId }),
 	);
-};
+	if (user.connectedAccount) {
+		return <>{children}</>;
+	}
+	return null;
+}, null);
 
-type Props = {
+export const UserDebtPreview = suspendedFallback<{
 	debtId: DebtsId;
 	resolved: boolean;
-};
-
-export const UserDebtPreview: React.FC<Props> = ({ debtId, resolved }) => {
-	const trpc = useTRPC();
-	const query = useQuery(trpc.debts.get.queryOptions({ id: debtId }));
-	if (query.status === "pending") {
-		return <UserDebtPreviewSkeleton />;
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <UserDebtPreviewInner query={query} resolved={resolved} />;
-};
+}>(
+	({ debtId, resolved }) => {
+		const trpc = useTRPC();
+		const { data: debt } = useSuspenseQuery(
+			trpc.debts.get.queryOptions({ id: debtId }),
+		);
+		const locale = useLocale();
+		const { formatPlainDate } = useFormat();
+		return (
+			<Link to="/debts/$id" params={{ id: debt.id }}>
+				<UserDebtPreviewShape
+					className={resolved ? "opacity-50" : undefined}
+					amount={
+						<Text
+							className={debt.amount >= 0 ? "text-success" : "text-danger"}
+							testID="preview-debt-amount"
+						>
+							{formatCurrency(locale, debt.currencyCode, Math.abs(debt.amount))}
+						</Text>
+					}
+					timestamp={<Text>{formatPlainDate(debt.timestamp)}</Text>}
+					synced={
+						<OnlyWithConnectedAccount userId={debt.userId}>
+							<DebtSyncStatus debt={debt} theirDebt={debt.their} />
+						</OnlyWithConnectedAccount>
+					}
+					note={<Text>{debt.note}</Text>}
+				/>
+			</Link>
+		);
+	},
+	<UserDebtPreviewSkeleton />,
+);

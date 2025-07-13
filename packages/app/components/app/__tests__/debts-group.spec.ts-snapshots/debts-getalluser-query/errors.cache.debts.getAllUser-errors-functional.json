@@ -1,0 +1,18 @@
+{
+	"queries": {
+		"debts.getAllUser": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock \"debts.getAllUser\" error"
+				},
+				"errorUpdateCount": 1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

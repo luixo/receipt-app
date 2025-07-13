@@ -1,0 +1,5 @@
+{
+	"debts.getAllUser": {
+		"serverCalls": 1
+	}
+}

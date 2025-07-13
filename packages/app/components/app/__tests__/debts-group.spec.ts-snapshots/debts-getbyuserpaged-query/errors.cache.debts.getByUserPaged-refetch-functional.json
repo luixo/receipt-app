@@ -1,0 +1,23 @@
+{
+	"queries": {
+		"debts.getByUserPaged:[{\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\",\"filters\":{\"showResolved\":false},\"cursor\":0}]": {
+			"state": {
+				"data": {
+					"cursor": 0,
+					"count": 3,
+					"items": [
+						"070fb9b0-b5aa-47da-b25b-1b29c22b7e80",
+						"8744309a-4545-40d1-b6aa-988cefe46459",
+						"5dbbcb41-71f1-4369-8ae4-d94a19ecb1e0"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

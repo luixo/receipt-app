@@ -12,73 +12,69 @@ import { test as debtsGroupFixture } from "./debts-group.utils";
 
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
-test.describe("external query status", () => {
-	test("pending", async ({
-		api,
-		page,
-		mockDebts,
-		openUserDebtsScreen,
-		debtsGroupElement,
-		debtsGroup,
-		skeleton,
-		awaitCacheKey,
-	}) => {
-		const { debtUser, debts } = await mockDebts();
-		const getUserDebtsPause = api.createPause();
-		api.mockFirst("debts.getAllUser", async ({ next }) => {
-			await getUserDebtsPause.promise;
-			return next();
-		});
-		await openUserDebtsScreen(debtUser.id, { awaitCache: false });
-		await expect(
-			page.getByTestId("debt-group-element").and(skeleton).first(),
-		).toBeVisible();
-		await expect(debtsGroup).not.toBeAttached();
-		await expect(debtsGroupElement).not.toBeAttached();
-		getUserDebtsPause.resolve();
-		await awaitCacheKey("debts.getAllUser");
-		await expect(debtsGroup).toBeVisible();
-		await expect(debtsGroupElement).toHaveCount(debts.length);
-		await expect(
-			page.getByTestId("debt-group-element").locator(skeleton),
-		).toBeHidden();
-	});
-
-	test("errors", async ({
-		api,
-		mockDebts,
-		openUserDebtsScreen,
-		snapshotQueries,
-		debtsGroup,
-		errorMessage,
-		awaitCacheKey,
-	}) => {
-		const { debtUser } = await mockDebts({
-			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
-		});
-		const unmockGetDebt = api.mockFirst("debts.getAllUser", () => {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "debts.getAllUser" error`,
+const criticalPaths = ["debts.getByUserPaged", "debts.getAllUser"] as const;
+criticalPaths.forEach((path) => {
+	const otherPaths = criticalPaths.filter((lookupPath) => lookupPath !== path);
+	test.describe(`'${path}' query`, () => {
+		test("errors", async ({
+			api,
+			mockDebts,
+			openUserDebtsScreen,
+			snapshotQueries,
+			debtsGroup,
+			errorMessage,
+			awaitCacheKey,
+			consoleManager,
+		}) => {
+			const { debtUser } = await mockDebts({
+				generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 			});
+			const unmockError = api.mockFirst(path, () => {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: `Mock "${path}" error`,
+				});
+			});
+			consoleManager.ignore(new RegExp(`Mock "${path}" error`));
+			consoleManager.ignore(
+				new RegExp(
+					`Error in route match: /_protected/debts/user/${debtUser.id}/{\\"offset\\":0,\\"limit\\":10}`,
+				),
+			);
+			await snapshotQueries(
+				async () => {
+					await openUserDebtsScreen(debtUser.id, { awaitCache: false });
+					await awaitCacheKey(path, { errored: 1 });
+				},
+				{
+					name: `${path}-errors`,
+					blacklistKeys: otherPaths,
+				},
+			);
+			const getAllUserErrorLocator = errorMessage(
+				`Mock "${path}" error`,
+			).first();
+			await expect(getAllUserErrorLocator).toBeVisible();
+			await expect(debtsGroup).toBeHidden();
+			unmockError();
+			await snapshotQueries(
+				async () => {
+					await getAllUserErrorLocator
+						.locator("button", { hasText: "Refetch" })
+						.click();
+					await awaitCacheKey(path, { succeed: 1 });
+					await Promise.all(
+						otherPaths.map((anotherPath) =>
+							awaitCacheKey(anotherPath, { succeed: 1 }),
+						),
+					);
+				},
+				{
+					name: `${path}-refetch`,
+					blacklistKeys: ["debts.get", "users.get", ...otherPaths],
+				},
+			);
 		});
-		await openUserDebtsScreen(debtUser.id, { awaitCache: false });
-		await awaitCacheKey("debts.getAllUser", { errored: 1 });
-		const getAllUserErrorLocator = errorMessage(
-			'Mock "debts.getAllUser" error',
-		).first();
-		await expect(getAllUserErrorLocator).toBeVisible();
-		await expect(debtsGroup).toBeHidden();
-		unmockGetDebt();
-		await snapshotQueries(
-			async () => {
-				await getAllUserErrorLocator
-					.locator("button", { hasText: "Refetch" })
-					.click();
-				await awaitCacheKey("debts.getAllUser", { succeed: 1 });
-			},
-			{ name: "grouped-errors", blacklistKeys: ["debts.get"] },
-		);
 	});
 });
 

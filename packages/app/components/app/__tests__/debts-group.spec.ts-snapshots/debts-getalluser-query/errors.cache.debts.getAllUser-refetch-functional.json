@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"debts.getAllUser:[{\"userId\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
+			"state": {
+				"data": [
+					{
+						"currencyCode": "XPF",
+						"sum": 7387.08
+					},
+					{
+						"currencyCode": "CLP",
+						"sum": 6606.15
+					},
+					{
+						"currencyCode": "GIP",
+						"sum": -3537.36
+					}
+				],
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

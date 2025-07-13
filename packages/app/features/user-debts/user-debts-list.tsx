@@ -77,9 +77,13 @@ const useDebtsByIds = (debtIds: DebtsId[]) => {
 
 const useDividers = (
 	debts: TRPCQueryOutput<"debts.get">[],
-	aggregatedDebts: { sum: number; currencyCode: CurrencyCode }[],
-) =>
-	React.useMemo(() => {
+	userId: UsersId,
+) => {
+	const trpc = useTRPC();
+	const { data: aggregatedDebts = [] } = useQuery(
+		trpc.debts.getAllUser.queryOptions({ userId }),
+	);
+	return React.useMemo(() => {
 		const dividersCalculations = debts.reduce<{
 			sums: Partial<Record<CurrencyCode, number>>;
 			resolvedCurrencies: CurrencyCode[];
@@ -119,6 +123,7 @@ const useDividers = (
 			resolvedDebtIds: dividersCalculations.resolvedDebtIds,
 		};
 	}, [aggregatedDebts, debts]);
+};
 
 const useConsecutiveDebtIds = ({
 	input,
@@ -205,13 +210,8 @@ const UserDebtsPreviews: React.FC<{
 	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
 	consecutiveDebtIds: DebtsId[];
 }> = ({ userId, debtIds, consecutiveDebtIds }) => {
-	const trpc = useTRPC();
-	const getAllQuery = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
 	const consecutiveDebts = useDebtsByIds(consecutiveDebtIds);
-	const { dividers, resolvedDebtIds } = useDividers(
-		consecutiveDebts,
-		getAllQuery.status === "success" ? getAllQuery.data : [],
-	);
+	const { dividers, resolvedDebtIds } = useDividers(consecutiveDebts, userId);
 	return (
 		<UserDebtsListWrapper>
 			{debtIds.map((debtId) => (

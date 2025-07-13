@@ -1,21 +1,34 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import {
+	DebtsGroup,
+	DebtsGroupSkeleton,
+} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
+import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { AddIcon, PencilIcon, TransferIcon } from "~components/icons";
+import {
+	AddIcon,
+	ExchangeIcon,
+	PencilIcon,
+	TransferIcon,
+} from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 
-import { UserDebtsGroup } from "./user-debts-group";
 import { UserDebtsList } from "./user-debts-list";
 
 type HeaderProps = {
@@ -83,6 +96,41 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 		</>
 	);
 };
+
+const UserDebtsGroup = suspendedFallback<{
+	userId: UsersId;
+}>(
+	({ userId }) => {
+		const trpc = useTRPC();
+		const [showResolvedDebts] = useShowResolvedDebts();
+		const { data: debts } = useSuspenseQuery(
+			trpc.debts.getAllUser.queryOptions({ userId }),
+		);
+		const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+		return (
+			<View className="flex-row items-center justify-center gap-4 px-16">
+				<DebtsGroup debts={showResolvedDebts ? debts : nonResolvedDebts} />
+				{nonResolvedDebts.length > 1 ? (
+					<ButtonLink
+						color="primary"
+						to="/debts/user/$id/exchange"
+						params={{ id: userId }}
+						variant="bordered"
+						isIconOnly
+					>
+						<ExchangeIcon />
+					</ButtonLink>
+				) : null}
+				{debts.length !== nonResolvedDebts.length ? (
+					<ShowResolvedDebtsOption className="absolute right-0" />
+				) : null}
+			</View>
+		);
+	},
+	<View className="flex-row items-center justify-center">
+		<DebtsGroupSkeleton amount={3} />
+	</View>,
+);
 
 export const UserDebtsScreen: React.FC<
 	{ userId: UsersId } & Pick<
