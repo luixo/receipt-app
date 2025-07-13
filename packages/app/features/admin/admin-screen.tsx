@@ -1,11 +1,11 @@
 import React from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { User } from "~app/components/app/user";
-import { QueryErrorMessage } from "~app/components/error-message";
+import { SkeletonUser, User } from "~app/components/app/user";
 import { PageHeader } from "~app/components/page-header";
+import { SuspenseWrapper } from "~app/components/suspense-wrapper";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
@@ -15,8 +15,8 @@ import { Card, CardBody } from "~components/card";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
-import { Spinner } from "~components/spinner";
-import { Tab, Tabs } from "~components/tabs";
+import { Skeleton } from "~components/skeleton";
+import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
 import type { UsersId } from "~db/models";
 
 type ModalProps = {
@@ -56,6 +56,17 @@ const BecomeModal: React.FC<ModalProps> = ({
 	);
 };
 
+const SkeletonAdminUserCard: React.FC<React.PropsWithChildren> = ({
+	children,
+}) => (
+	<Card>
+		<CardBody className="flex-row items-start justify-between">
+			<SkeletonUser />
+			<div>{children}</div>
+		</CardBody>
+	</Card>
+);
+
 const AdminUserCard: React.FC<
 	React.PropsWithChildren<TRPCQueryOutput<"admin.accounts">[number]>
 > = ({ user, account, children }) => (
@@ -72,11 +83,27 @@ const AdminUserCard: React.FC<
 	</Card>
 );
 
+const AdminCard = () => {
+	const trpc = useTRPC();
+	const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
+	return (
+		<AdminUserCard
+			user={{
+				...account.user,
+				// Typesystem doesn't know that we use account id as self user id;
+				id: account.account.id as UsersId,
+			}}
+			account={account.account}
+		/>
+	);
+};
+
 const AdminScreenInner: React.FC = () => {
 	const { t } = useTranslation("admin");
 	const trpc = useTRPC();
-	const accountQuery = useQuery(trpc.account.get.queryOptions());
-	const accountsQuery = useQuery(trpc.admin.accounts.queryOptions());
+	const { data: accounts } = useSuspenseQuery(
+		trpc.admin.accounts.queryOptions(),
+	);
 	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
 	const {
 		[PRETEND_USER_STORE_NAME]: [pretendUser, setPretendUser, resetPretendUser],
@@ -92,65 +119,50 @@ const AdminScreenInner: React.FC = () => {
 		},
 		[],
 	);
-	switch (accountsQuery.status) {
-		case "pending":
-			return <Spinner size="md" />;
-		case "error":
-			return <QueryErrorMessage query={accountsQuery} />;
-		case "success": {
-			const pretendUserAccount = pretendUser.email
-				? accountsQuery.data.find(
-						(element) => element.account.email === pretendUser.email,
-					)
-				: null;
-			return (
-				<Tabs variant="underlined">
-					<Tab key="become" title={t("pretend.tabName")}>
-						<div className="flex flex-col items-stretch gap-2">
-							{pretendUserAccount ? (
-								<>
-									<AdminUserCard {...pretendUserAccount} />
-									<Button onPress={resetPretendUser} color="primary">
-										{t("pretend.resetToSelfButton")}
-									</Button>
-								</>
-							) : accountQuery.data ? (
-								<AdminUserCard
-									user={{
-										...accountQuery.data.user,
-										// Typesystem doesn't know that we use account id as self user id;
-										id: accountQuery.data.account.id as UsersId,
-									}}
-									account={accountQuery.data.account}
-								/>
-							) : null}
-							<Divider />
-							{accountsQuery.data
-								.filter(
-									(element) => pretendUser.email !== element.account.email,
-								)
-								.map((element) => (
-									<AdminUserCard key={element.account.id} {...element}>
-										<Button
-											onPress={setModalEmailCurried(element.account.email)}
-											color="warning"
-										>
-											{t("pretend.becomeButton")}
-										</Button>
-									</AdminUserCard>
-								))}
-							<BecomeModal
-								isModalOpen={Boolean(modalEmail)}
-								closeModal={closeModal}
-								email={modalEmail || "unknown"}
-								setMockedEmail={setPretendEmail}
-							/>
-						</div>
-					</Tab>
-				</Tabs>
-			);
-		}
-	}
+	const pretendUserAccount = pretendUser.email
+		? accounts.find((element) => element.account.email === pretendUser.email)
+		: null;
+	return (
+		<Tabs variant="underlined">
+			<Tab key="become" title={t("pretend.tabName")}>
+				<div className="flex flex-col items-stretch gap-2">
+					{pretendUserAccount ? (
+						<>
+							<AdminUserCard {...pretendUserAccount} />
+							<Button onPress={resetPretendUser} color="primary">
+								{t("pretend.resetToSelfButton")}
+							</Button>
+						</>
+					) : (
+						<SuspenseWrapper
+							fallback={<Skeleton className="h-8 w-60 rounded" />}
+						>
+							<AdminCard />
+						</SuspenseWrapper>
+					)}
+					<Divider />
+					{accounts
+						.filter((element) => pretendUser.email !== element.account.email)
+						.map((element) => (
+							<AdminUserCard key={element.account.id} {...element}>
+								<Button
+									onPress={setModalEmailCurried(element.account.email)}
+									color="warning"
+								>
+									{t("pretend.becomeButton")}
+								</Button>
+							</AdminUserCard>
+						))}
+					<BecomeModal
+						isModalOpen={Boolean(modalEmail)}
+						closeModal={closeModal}
+						email={modalEmail || "unknown"}
+						setMockedEmail={setPretendEmail}
+					/>
+				</div>
+			</Tab>
+		</Tabs>
+	);
 };
 
 export const AdminScreen: React.FC = () => {
@@ -158,7 +170,26 @@ export const AdminScreen: React.FC = () => {
 	return (
 		<>
 			<PageHeader>{t("pageHeader")}</PageHeader>
-			<AdminScreenInner />
+			<div>
+				<SuspenseWrapper
+					fallback={
+						<TabsSkeleton
+							tabsAmount={1}
+							content={
+								<div className="flex flex-col items-stretch gap-2 px-1 py-3">
+									<SkeletonAdminUserCard />
+									<Divider />
+									<SkeletonAdminUserCard />
+									<SkeletonAdminUserCard />
+									<SkeletonAdminUserCard />
+								</div>
+							}
+						/>
+					}
+				>
+					<AdminScreenInner />
+				</SuspenseWrapper>
+			</div>
 		</>
 	);
 };
