@@ -6,6 +6,15 @@ import { ConfirmModal } from "~app/components/confirm-modal";
 import { Button } from "~components/button";
 import { TrashBin } from "~components/icons";
 
+export const SkeletonRemoveButton: React.FC<
+	React.ComponentProps<typeof Button>
+> = ({ children, ...props }) => (
+	<Button color="danger" {...props}>
+		<TrashBin className="shrink-0" size={24} />
+		{children}
+	</Button>
+);
+
 type Props = {
 	mutation: { isPending: boolean };
 	onRemove: () => void;

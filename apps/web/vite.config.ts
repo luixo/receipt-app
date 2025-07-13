@@ -27,6 +27,8 @@ const optimizedDeps = [
 	// https://github.com/ValentinH/react-easy-crop/issues/490#issuecomment-2034722747
 	"react-easy-crop",
 	"tslib",
+	// SSR has a problem because of default export
+	"boring-avatars",
 ];
 
 const rootDir = path.resolve(url.fileURLToPath(import.meta.url), "../../..");
