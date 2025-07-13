@@ -13,38 +13,28 @@ import { test as localTest } from "./utils";
 const test = mergeTests(localTest, debtsGroupFixture);
 
 test.describe("Wrapper component", () => {
-	test("'debts.getByUserPaged' pending / error", async ({
+	test("'debts.getByUserPaged' error", async ({
 		api,
 		errorMessage,
-		loader,
-		user: userSelector,
 		mockBase,
 		openDebtsExchangeScreen,
-		exchangeAllToOneButton,
-		exchangeSpecificButton,
+		debtsGroup,
 		awaitCacheKey,
+		consoleManager,
 	}) => {
 		const { debtUser } = await mockBase();
-		const userDebtsPause = api.createPause();
 		api.mockFirst("debts.getAllUser", async () => {
-			await userDebtsPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "debts.getAllUser" error`,
 			});
 		});
+		consoleManager.ignore(/Mock "debts.getAllUser" error/);
 		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
 		await awaitCacheKey("users.get");
 
-		await expect(loader).toBeVisible();
-		await expect(userSelector).toBeVisible();
-		await expect(exchangeAllToOneButton).not.toBeAttached();
-		await expect(exchangeSpecificButton).not.toBeAttached();
-
-		userDebtsPause.resolve();
 		await expect(errorMessage(`Mock "debts.getAllUser" error`)).toBeVisible();
-		await expect(exchangeAllToOneButton).not.toBeAttached();
-		await expect(exchangeSpecificButton).not.toBeAttached();
+		await expect(debtsGroup).not.toBeAttached();
 	});
 });
 

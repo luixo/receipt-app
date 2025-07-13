@@ -1,36 +1,52 @@
 import type React from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { DebtsGroup } from "~app/components/app/debts-group";
+import {
+	DebtsGroup,
+	DebtsGroupSkeleton,
+} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink, ButtonLink } from "~components/link";
-import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
-type InnerProps = {
-	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getAllUser">;
-};
-
-const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const { t } = useTranslation("debts");
-	const [showResolvedDebts] = useShowResolvedDebts();
-	return (
-		<>
+const ExchangeDebtsGroup = suspendedFallback<{ userId: UsersId }>(
+	({ userId }) => {
+		const trpc = useTRPC();
+		const [showResolvedDebts] = useShowResolvedDebts();
+		const { data: debts } = useSuspenseQuery(
+			trpc.debts.getAllUser.queryOptions({ userId }),
+		);
+		return (
 			<DebtsGroup
 				debts={
 					showResolvedDebts
-						? query.data
-						: query.data.filter((element) => element.sum !== 0)
+						? debts
+						: debts.filter((element) => element.sum !== 0)
 				}
 			/>
+		);
+	},
+	<DebtsGroupSkeleton amount={3} />,
+);
+
+export const DebtsExchangeScreen: React.FC<{ userId: UsersId }> = ({
+	userId,
+}) => {
+	const { t } = useTranslation("debts");
+	return (
+		<>
+			<PageHeader
+				startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
+			>
+				<LoadableUser id={userId} />
+			</PageHeader>
+			<ExchangeDebtsGroup userId={userId} />
 			<ButtonLink
 				color="primary"
 				to="/debts/user/$id/exchange/all"
@@ -51,28 +67,3 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 		</>
 	);
 };
-
-type Props = { userId: UsersId };
-
-const DebtsExchangeLoader: React.FC<Props> = ({ userId }) => {
-	const trpc = useTRPC();
-	const query = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
-	if (query.status === "pending") {
-		return <Spinner />;
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <DebtsExchangeInner query={query} userId={userId} />;
-};
-
-export const DebtsExchangeScreen: React.FC<Props> = ({ userId }) => (
-	<>
-		<PageHeader
-			startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
-		>
-			<LoadableUser id={userId} />
-		</PageHeader>
-		<DebtsExchangeLoader userId={userId} />
-	</>
-);
