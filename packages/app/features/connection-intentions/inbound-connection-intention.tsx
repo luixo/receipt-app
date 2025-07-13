@@ -2,17 +2,44 @@ import React from "react";
 import { View } from "react-native";
 
 import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
-import { UsersSuggest } from "~app/components/app/users-suggest";
+import {
+	SkeletonUsersSuggest,
+	UsersSuggest,
+} from "~app/components/app/users-suggest";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
+import { Input, SkeletonInput } from "~components/input";
+import { Skeleton } from "~components/skeleton";
 import type { UsersId } from "~db/models";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
 import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
+
+export const SkeletonInboundConnectionIntention = () => {
+	const { t } = useTranslation("users");
+	return (
+		<View className="gap-2">
+			<View className="flex flex-row justify-between">
+				<SkeletonInput
+					isReadOnly
+					className="max-w-xs"
+					size="sm"
+					label={t("intentions.form.email.label")}
+					variant="bordered"
+					startContent={<Skeleton className="h-4 w-48 rounded-md" />}
+				/>
+				<Button color="warning" variant="bordered" isDisabled>
+					{t("intentions.form.rejectButton")}
+				</Button>
+			</View>
+			<SkeletonUsersSuggest label={t("intentions.userSuggestLabel")} />
+		</View>
+	);
+};
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];
@@ -21,6 +48,7 @@ type Props = {
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
 	const [userId, setUserId] = React.useState<UsersId>();
+	const { t } = useTranslation("users");
 
 	const acceptConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.accept.mutationOptions(
@@ -74,7 +102,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					className="max-w-xs"
 					size="sm"
 					defaultValue={intention.account.email}
-					label="Email to connect"
+					label={t("intentions.form.email.label")}
 					type="email"
 					variant="bordered"
 				/>
@@ -84,22 +112,23 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					isDisabled={isLoading}
 					onPress={rejectConnection}
 				>
-					Reject
+					{t("intentions.form.rejectButton")}
 				</Button>
 			</View>
 			<ConfirmModal
 				onConfirm={acceptConnection}
 				onCancel={() => setUserId(undefined)}
 				isLoading={acceptConnectionMutation.isPending}
-				title="Connect an account"
-				subtitle={`This will connect account "${
-					intention.account.email
-				}" with a user ${userQuery.data ? userQuery.data.name : "(loading..)"}`}
-				confirmText="Are you sure?"
+				title={t("intentions.modal.title")}
+				subtitle={t("intentions.modal.description", {
+					email: intention.account.email,
+					userName: userQuery.data ? userQuery.data.name : "(loading..)",
+				})}
+				confirmText={t("intentions.modal.confirmText")}
 			>
 				{({ openModal }) => (
 					<UsersSuggest
-						label="Please choose a user below to accept intention"
+						label={t("intentions.userSuggestLabel")}
 						onUserClick={onUserClick(openModal)}
 						options={usersSuggestOptions}
 						closeOnSelect

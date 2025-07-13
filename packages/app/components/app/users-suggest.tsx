@@ -25,9 +25,21 @@ import {
 } from "~components/autocomplete";
 import { Button } from "~components/button";
 import { PlusIcon } from "~components/icons";
+import { SkeletonInput } from "~components/input";
 import type { UsersId } from "~db/models";
 
 import { AddUserModal } from "./add-user-modal";
+
+export const SkeletonUsersSuggest: React.FC<
+	Partial<React.ComponentProps<typeof UsersSuggest>>
+> = ({ wrapperProps }) => {
+	const { t } = useTranslation("default");
+	return (
+		<View className="items-start gap-4" {...wrapperProps}>
+			<SkeletonInput label={t("components.usersSuggest.label")} />
+		</View>
+	);
+};
 
 const LIMIT = 5;
 const NEW_USER_KEY = "__NEW__";

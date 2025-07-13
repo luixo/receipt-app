@@ -63,5 +63,23 @@
 			"button": "Remove user",
 			"subtitle": "This will remove user and all his participations"
 		}
+	},
+	"intentions": {
+		"emptyTitle": "All done 👍",
+		"inboundTitle": "Inbound connections",
+		"outboundTitle": "Outbound connections",
+		"unlinkUserButton": "Unlink user from email",
+		"form": {
+			"email": {
+				"label": "Email to connect"
+			},
+			"rejectButton": "Reject"
+		},
+		"modal": {
+			"title": "Connect an account",
+			"description": "This will connect account \"{{email}}\" with a user \"{{userName}}\"",
+			"confirmText": "Are you sure?"
+		},
+		"userSuggestLabel": "Please choose a user below to accept intention"
 	}
 }

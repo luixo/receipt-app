@@ -1,14 +1,35 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { UnlinkIcon } from "~components/icons";
-import { Input } from "~components/input";
+import { Input, SkeletonInput } from "~components/input";
+import { Skeleton } from "~components/skeleton";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
+
+export const SkeletonOutboundConnectionIntention: React.FC = () => {
+	const { t } = useTranslation("users");
+	return (
+		<SkeletonInput
+			startContent={<Skeleton className="h-4 w-48 rounded-md" />}
+			endContent={
+				<Button
+					title={t("intentions.unlinkUserButton")}
+					variant="light"
+					isIconOnly
+					isDisabled
+				>
+					<UnlinkIcon size={24} />
+				</Button>
+			}
+		/>
+	);
+};
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["outbound"][number];
@@ -16,6 +37,7 @@ type Props = {
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
+	const { t } = useTranslation("users");
 	const removeConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.remove.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsRemoveOptions),
@@ -35,7 +57,7 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			mutation={removeConnectionMutation}
 			endContent={
 				<Button
-					title="Unlink user from email"
+					title={t("intentions.unlinkUserButton")}
 					variant="light"
 					isLoading={removeConnectionMutation.isPending}
 					isIconOnly
