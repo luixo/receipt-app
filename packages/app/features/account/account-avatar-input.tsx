@@ -1,18 +1,21 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
 import { z } from "zod";
 
-import { UserAvatar } from "~app/components/app/user-avatar";
+import {
+	SkeletonUserAvatar,
+	UserAvatar as UserAvatarRaw,
+} from "~app/components/app/user-avatar";
 import { ConfirmModal } from "~app/components/confirm-modal";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -74,6 +77,39 @@ const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
 	return croppedCanvas;
 };
 
+const OnlyAvatarButton = suspendedFallback<React.ComponentProps<typeof Button>>(
+	(props) => {
+		const trpc = useTRPC();
+		const {
+			data: { account },
+		} = useSuspenseQuery(trpc.account.get.queryOptions());
+		if (!account.avatarUrl) {
+			return null;
+		}
+		return <Button {...props} />;
+	},
+	null,
+);
+
+const UserAvatar = suspendedFallback<{ onClick: () => void }>(
+	({ onClick }) => {
+		const trpc = useTRPC();
+		const {
+			data: { account },
+		} = useSuspenseQuery(trpc.account.get.queryOptions());
+		return (
+			<UserAvatarRaw
+				id={account.id as UsersId}
+				connectedAccount={account}
+				onClick={onClick}
+				size="lg"
+				className="cursor-pointer"
+			/>
+		);
+	},
+	<SkeletonUserAvatar size="lg" />,
+);
+
 const formSchema = z.strictObject({
 	avatar: z.string(),
 	croppedArea: z.strictObject({
@@ -86,11 +122,9 @@ const formSchema = z.strictObject({
 
 type Form = z.infer<typeof formSchema>;
 
-type Props = React.PropsWithChildren<{
-	account: TRPCQueryOutput<"account.get">["account"];
-}>;
+type Props = React.PropsWithChildren;
 
-export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
+export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const [
@@ -164,15 +198,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		removeAvatarMutation.mutate(new FormData());
 	}, [removeAvatarMutation]);
 	const resetEditor = React.useCallback(() => form.reset(), [form]);
-	const avatar = (
-		<UserAvatar
-			id={account.id as UsersId}
-			connectedAccount={account}
-			onClick={enableAvatarEdit}
-			size="lg"
-			className="cursor-pointer"
-		/>
-	);
+	const avatar = <UserAvatar onClick={enableAvatarEdit} />;
 	const onCropChange = React.useCallback<
 		React.ComponentProps<typeof Cropper>["onCropChange"]
 	>(
@@ -257,31 +283,29 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 							>
 								<CloseIcon size={24} />
 							</Button>
-							{account.avatarUrl ? (
-								<ConfirmModal
-									onConfirm={resetAvatar}
-									isLoading={removeAvatarMutation.isPending}
-									title={t("avatar.remove.title")}
-									subtitle={t("avatar.remove.subtitle")}
-									confirmText={t("avatar.remove.confirm")}
-								>
-									{({ openModal }) => (
-										<Button
-											color="danger"
-											variant="bordered"
-											isLoading={removeAvatarMutation.isPending}
-											isDisabled={
-												updateAvatarMutation.isPending ||
-												removeAvatarMutation.isPending
-											}
-											onPress={openModal}
-											isIconOnly
-										>
-											<TrashBinIcon size={24} />
-										</Button>
-									)}
-								</ConfirmModal>
-							) : null}
+							<ConfirmModal
+								onConfirm={resetAvatar}
+								isLoading={removeAvatarMutation.isPending}
+								title={t("avatar.remove.title")}
+								subtitle={t("avatar.remove.subtitle")}
+								confirmText={t("avatar.remove.confirm")}
+							>
+								{({ openModal }) => (
+									<OnlyAvatarButton
+										color="danger"
+										variant="bordered"
+										isLoading={removeAvatarMutation.isPending}
+										isDisabled={
+											updateAvatarMutation.isPending ||
+											removeAvatarMutation.isPending
+										}
+										onPress={openModal}
+										isIconOnly
+									>
+										<TrashBinIcon size={24} />
+									</OnlyAvatarButton>
+								)}
+							</ConfirmModal>
 							<form.Subscribe selector={(state) => state.values.avatar}>
 								{(selectedAvatar) => (
 									<>

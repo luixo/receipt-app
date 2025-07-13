@@ -7,9 +7,16 @@ import { EyeIcon, EyeSlashIcon } from "~components/icons";
 
 import { Button } from "./button";
 import type { FieldError, MutationsProp } from "./utils";
-import { cn, getErrorState, getMutationLoading, tv } from "./utils";
+import { cn, getErrorState, getMutationLoading } from "./utils";
 
-const input = tv({});
+export const SkeletonInput: React.FC<
+	Omit<React.ComponentProps<typeof InputRaw | typeof Textarea>, "ref"> & {
+		multiline?: boolean;
+	}
+> = ({ multiline, ...props }) => {
+	const Component = multiline ? Textarea : InputRaw;
+	return <Component {...props} isDisabled isReadOnly />;
+};
 
 type Props = Omit<
 	React.ComponentProps<typeof InputRaw | typeof Textarea>,
@@ -22,7 +29,6 @@ type Props = Omit<
 };
 
 export const Input: React.FC<Props> = ({
-	className,
 	fieldError,
 	mutation,
 	endContent,
@@ -46,7 +52,6 @@ export const Input: React.FC<Props> = ({
 			color={isWarning ? "warning" : isError ? "danger" : props.color}
 			description={errors.join("\n")}
 			classNames={{
-				base: input({ className }),
 				description: cn(
 					"whitespace-pre",
 					isWarning ? "text-warning" : undefined,

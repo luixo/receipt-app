@@ -2,6 +2,7 @@ import type React from "react";
 
 import {
 	UserAvatar,
+	useSkeletonUserAvatarProps,
 	useUserAvatarProps,
 } from "~app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -23,19 +24,7 @@ export const SkeletonUser: React.FC<
 	chip,
 	...props
 }) => {
-	const avatarProps = {
-		...rawAvatarProps,
-		showFallback: true,
-		fallback: <Skeleton className="size-full" />,
-		classNames: { fallback: "size-full" },
-		size: rawAvatarProps?.size
-			? rawAvatarProps.size === "xs"
-				? "sm"
-				: rawAvatarProps.size
-			: chip
-				? "sm"
-				: undefined,
-	};
+	const avatarProps = useSkeletonUserAvatarProps(rawAvatarProps || {});
 	if (onlyAvatar) {
 		return <Avatar {...avatarProps} />;
 	}

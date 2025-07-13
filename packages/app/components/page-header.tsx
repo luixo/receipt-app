@@ -2,7 +2,9 @@ import type React from "react";
 import { View } from "react-native";
 
 import { H1 } from "~components/header";
+import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { cn } from "~components/utils";
 
 type Props = {
 	aside?: React.ReactNode;
@@ -32,4 +34,12 @@ export const PageHeader: React.FC<Props> = ({
 			{aside}
 		</View>
 	</View>
+);
+
+export const SkeletonPageHeader: React.FC<
+	React.ComponentProps<typeof PageHeader>
+> = ({ className, ...props }) => (
+	<PageHeader {...props}>
+		<Skeleton className={cn("h-10 w-40 rounded-md", className)} />
+	</PageHeader>
 );

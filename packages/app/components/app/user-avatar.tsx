@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
+import { Skeleton } from "~components/skeleton";
 import { tv } from "~components/utils";
 import type { UsersId } from "~db/models";
 import { hslToRgb } from "~utils/color";
@@ -26,15 +27,42 @@ const wrapper = tv({
 
 type OriginalProps = React.ComponentProps<typeof Avatar>;
 
-type Props = {
+type SkeletonProps = {
+	size?: OriginalProps["size"] | "xs";
+} & Omit<OriginalProps, "size">;
+
+export const useSkeletonUserAvatarProps = ({
+	className,
+	classNames,
+	...props
+}: SkeletonProps) =>
+	({
+		showFallback: true,
+		fallback: <Skeleton className="size-full" />,
+		classNames: {
+			fallback: "size-full",
+			base: wrapper({
+				className: [className, classNames?.base],
+				size: props.size === "xs" ? props.size : undefined,
+			}),
+			...classNames,
+		},
+		...props,
+		size: props.size === "xs" ? "sm" : props.size,
+	}) satisfies React.ComponentProps<typeof Avatar>;
+
+export const SkeletonUserAvatar: React.FC<SkeletonProps> = (props) => (
+	<Avatar {...useSkeletonUserAvatarProps(props)} />
+);
+
+type UserProps = SkeletonProps & {
 	id: UsersId;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
 	dimmed?: boolean;
-	size?: OriginalProps["size"] | "xs";
-} & Omit<OriginalProps, "size">;
+};
 
-const getSize = (size: Props["size"]) => {
+const getSize = (size: SkeletonProps["size"]) => {
 	switch (size) {
 		case "xs":
 			return 20;
@@ -62,7 +90,7 @@ export const useUserAvatarProps = ({
 	classNames,
 	dimmed,
 	...props
-}: Props) => {
+}: UserProps) => {
 	const { t } = useTranslation("default");
 	const size = getSize(props.size);
 	const imgProps = {
@@ -96,6 +124,6 @@ export const useUserAvatarProps = ({
 	} satisfies React.ComponentProps<typeof Avatar>;
 };
 
-export const UserAvatar: React.FC<Props> = (props) => (
+export const UserAvatar: React.FC<UserProps> = (props) => (
 	<Avatar {...useUserAvatarProps(props)} />
 );
