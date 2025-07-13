@@ -30,7 +30,7 @@ const prefetchQuery = (
 });
 
 export const prefetchQueries = (
-	ctx: { context: RouterContext },
+	ctx: PrefetchContext,
 	...optionsSet: ReturnType<TRPCQueryOptions<ResolverDef>>[]
 ) => {
 	if (!import.meta.env.SSR) {

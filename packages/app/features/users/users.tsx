@@ -1,11 +1,10 @@
 import type React from "react";
 
-import { useQueries } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 
-import { SkeletonUser } from "~app/components/app/user";
+import { SkeletonUser, User } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
-import { QueryErrorMessage } from "~app/components/error-message";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
@@ -14,45 +13,31 @@ import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import type { TRPCQueryErrorResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
-import { ButtonLink } from "~components/link";
-import { Spinner } from "~components/spinner";
+import { ButtonLink, Link } from "~components/link";
 import type { UsersId } from "~db/models";
 
-import { UserPreview } from "./user-preview";
-
-const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
-	const trpc = useTRPC();
-	const userQueries = useQueries({
-		queries: ids.map((id) => trpc.users.get.queryOptions({ id })),
-	});
-	if (userQueries.every((query) => query.status === "pending")) {
-		return <Spinner size="lg" />;
-	}
-	if (userQueries.every((query) => query.status === "error")) {
-		return (
-			<QueryErrorMessage
-				query={userQueries[0] as TRPCQueryErrorResult<"users.get">}
-			/>
+const UserPreview = suspendedFallback<{
+	id: UsersId;
+}>(
+	({ id }) => {
+		const trpc = useTRPC();
+		const { data: user } = useSuspenseQuery(
+			trpc.users.get.queryOptions({ id }),
 		);
-	}
-
-	return (
-		<>
-			{userQueries.map((userQuery, index) =>
-				userQuery.status === "pending" ? (
-					<SkeletonUser key={ids[index]} className="self-start" />
-				) : userQuery.status === "error" ? (
-					<QueryErrorMessage key={ids[index]} query={userQuery} />
-				) : (
-					<UserPreview key={ids[index]} user={userQuery.data} />
-				),
-			)}
-		</>
-	);
-};
+		return (
+			<Link to="/users/$id" params={{ id: user.id }}>
+				<User
+					id={user.id}
+					name={user.name}
+					connectedAccount={user.connectedAccount}
+				/>
+			</Link>
+		);
+	},
+	<SkeletonUser className="self-start" />,
+);
 
 type Props = {
 	limitState: SearchParamState<"/users", "offset">;
@@ -107,7 +92,11 @@ export const Users: React.FC<Props> = suspendedFallback(
 				}
 				isPending={isPending}
 			>
-				<UserPreviews ids={data.items} />
+				<>
+					{data.items.map((id) => (
+						<UserPreview key={id} id={id} />
+					))}
+				</>
 			</PaginationOverlay>
 		);
 	},
