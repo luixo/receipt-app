@@ -5,9 +5,7 @@ import { useTRPC } from "~app/utils/trpc";
 export const useConnectionIntentions = () => {
 	const trpc = useTRPC();
 	const connections = useQuery(
-		trpc.accountConnectionIntentions.getAll.queryOptions(undefined, {
-			trpc: { ssr: false },
-		}),
+		trpc.accountConnectionIntentions.getAll.queryOptions(),
 	);
 	return connections.status === "success" ? connections.data.inbound.length : 0;
 };
