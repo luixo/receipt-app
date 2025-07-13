@@ -31,7 +31,7 @@ test.describe("external query status", () => {
 		});
 		await openUserDebtsScreen(debtUser.id, { awaitCache: false });
 		await expect(
-			page.getByTestId("debt-group-element").filter({ has: skeleton }).first(),
+			page.getByTestId("debt-group-element").and(skeleton).first(),
 		).toBeVisible();
 		await expect(debtsGroup).not.toBeAttached();
 		await expect(debtsGroupElement).not.toBeAttached();
