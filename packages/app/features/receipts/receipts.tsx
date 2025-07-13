@@ -7,8 +7,12 @@ import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PaginationBlock } from "~app/components/pagination-block";
+import {
+	PaginationBlock,
+	PaginationBlockSkeleton,
+} from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult } from "~app/trpc";
@@ -40,15 +44,6 @@ const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 		</>
 	);
 };
-
-export const ReceiptsSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
-	<ReceiptsWrapper>
-		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<ReceiptPreviewSkeleton key={index} />
-		))}
-	</ReceiptsWrapper>
-);
 
 const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 	const trpc = useTRPC();
@@ -88,64 +83,74 @@ type Props = {
 	offsetState: SearchParamState<"/receipts", "offset">;
 };
 
-export const Receipts: React.FC<Props> = ({
-	filters,
-	sort,
-	limitState: [limit, setLimit],
-	offsetState,
-}) => {
-	const { t } = useTranslation("receipts");
-	const trpc = useTRPC();
-	const { data, onPageChange, isPending } = useCursorPaging(
-		trpc.receipts.getPaged,
-		{ limit, orderBy: sort, filters },
-		offsetState,
-	);
-
-	if (!data.count) {
-		if (values(filters).filter(isNonNullish).length === 0) {
-			return <Header className="text-center">{t("list.noResults")}</Header>;
-		}
-		return (
-			<EmptyCard title={t("list.empty.title")}>
-				<Trans
-					t={t}
-					i18nKey="list.empty.message"
-					components={{
-						icon: (
-							<ButtonLink
-								color="primary"
-								to="/receipts/add"
-								title={t("list.addButton")}
-								variant="bordered"
-								className="mx-2"
-								isIconOnly
-							>
-								<AddIcon size={24} />
-							</ButtonLink>
-						),
-					}}
-				/>
-			</EmptyCard>
+export const Receipts = suspendedFallback<Props>(
+	({ filters, sort, limitState: [limit, setLimit], offsetState }) => {
+		const { t } = useTranslation("receipts");
+		const trpc = useTRPC();
+		const { data, onPageChange, isPending } = useCursorPaging(
+			trpc.receipts.getPaged,
+			{ limit, orderBy: sort, filters },
+			offsetState,
 		);
-	}
 
-	return (
-		<PaginationOverlay
-			pagination={
-				<PaginationBlock
-					totalCount={data.count}
-					limit={limit}
-					setLimit={setLimit}
-					offset={offsetState[0]}
-					onPageChange={onPageChange}
-				/>
+		if (!data.count) {
+			if (values(filters).filter(isNonNullish).length === 0) {
+				return <Header className="text-center">{t("list.noResults")}</Header>;
 			}
-			isPending={isPending}
+			return (
+				<EmptyCard title={t("list.empty.title")}>
+					<Trans
+						t={t}
+						i18nKey="list.empty.message"
+						components={{
+							icon: (
+								<ButtonLink
+									color="primary"
+									to="/receipts/add"
+									title={t("list.addButton")}
+									variant="bordered"
+									className="mx-2"
+									isIconOnly
+								>
+									<AddIcon size={24} />
+								</ButtonLink>
+							),
+						}}
+					/>
+				</EmptyCard>
+			);
+		}
+
+		return (
+			<PaginationOverlay
+				pagination={
+					<PaginationBlock
+						totalCount={data.count}
+						limit={limit}
+						setLimit={setLimit}
+						offset={offsetState[0]}
+						onPageChange={onPageChange}
+					/>
+				}
+				isPending={isPending}
+			>
+				<ReceiptsWrapper>
+					<ReceiptPreviews ids={data.items} />
+				</ReceiptsWrapper>
+			</PaginationOverlay>
+		);
+	},
+	({ limitState }) => (
+		<PaginationOverlay
+			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+			isPending
 		>
 			<ReceiptsWrapper>
-				<ReceiptPreviews ids={data.items} />
+				{Array.from({ length: limitState[0] }).map((_, index) => (
+					// eslint-disable-next-line react/no-array-index-key
+					<ReceiptPreviewSkeleton key={index} />
+				))}
 			</ReceiptsWrapper>
 		</PaginationOverlay>
-	);
-};
+	),
+);

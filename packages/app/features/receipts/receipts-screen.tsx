@@ -3,16 +3,13 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
-import { PaginationBlockSkeleton } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
-import { SuspenseWrapper } from "~app/components/suspense-wrapper";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { AddIcon, ReceiptIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { FilterButton } from "./filter-button";
-import { Receipts, ReceiptsSkeleton } from "./receipts";
+import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: React.FC<{
 	sortState: SearchParamState<"/receipts", "sort">;
@@ -43,23 +40,12 @@ export const ReceiptsScreen: React.FC<{
 				{t("list.header")}
 			</PageHeader>
 			<EmailVerificationCard />
-			<SuspenseWrapper
-				fallback={
-					<PaginationOverlay
-						pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-						isPending
-					>
-						<ReceiptsSkeleton amount={limitState[0]} />
-					</PaginationOverlay>
-				}
-			>
-				<Receipts
-					filters={filtersState[0]}
-					sort={sortState[0]}
-					limitState={limitState}
-					offsetState={offsetState}
-				/>
-			</SuspenseWrapper>
+			<Receipts
+				filters={filtersState[0]}
+				sort={sortState[0]}
+				limitState={limitState}
+				offsetState={offsetState}
+			/>
 		</>
 	);
 };

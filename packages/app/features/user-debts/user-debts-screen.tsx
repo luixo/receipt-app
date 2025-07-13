@@ -5,9 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
-import { PaginationBlockSkeleton } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
-import { SuspenseWrapper } from "~app/components/suspense-wrapper";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -19,7 +16,7 @@ import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 
 import { UserDebtsGroup } from "./user-debts-group";
-import { UserDebtsList, UserDebtsListSkeleton } from "./user-debts-list";
+import { UserDebtsList } from "./user-debts-list";
 
 type HeaderProps = {
 	userId: UsersId;
@@ -96,17 +93,6 @@ export const UserDebtsScreen: React.FC<
 	<>
 		<Header userId={userId} />
 		<UserDebtsGroup userId={userId} />
-		<SuspenseWrapper
-			fallback={
-				<PaginationOverlay
-					pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-					isPending
-				>
-					<UserDebtsListSkeleton amount={limitState[0]} />
-				</PaginationOverlay>
-			}
-		>
-			<UserDebtsList userId={userId} limitState={limitState} {...props} />
-		</SuspenseWrapper>
+		<UserDebtsList userId={userId} limitState={limitState} {...props} />
 	</>
 );

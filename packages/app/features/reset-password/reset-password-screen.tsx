@@ -7,7 +7,7 @@ import { z } from "zod";
 import { EmptyCard } from "~app/components/empty-card";
 import { ErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { SuspenseWrapper } from "~app/components/suspense-wrapper";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
@@ -30,13 +30,16 @@ const formSchema = z
 	});
 type Form = z.infer<typeof formSchema>;
 
-const ResetPasswordHeader: React.FC<{ token: string }> = ({ token }) => {
-	const trpc = useTRPC();
-	const { data: intention } = useSuspenseQuery(
-		trpc.resetPasswordIntentions.get.queryOptions({ token }),
-	);
-	return <Header>{intention.email}</Header>;
-};
+const ResetPasswordHeader = suspendedFallback<{ token: string }>(
+	({ token }) => {
+		const trpc = useTRPC();
+		const { data: intention } = useSuspenseQuery(
+			trpc.resetPasswordIntentions.get.queryOptions({ token }),
+		);
+		return <Header>{intention.email}</Header>;
+	},
+	<Skeleton className="h-8 w-60 rounded" />,
+);
 
 type Props = {
 	token: string;
@@ -69,9 +72,7 @@ const ResetPassword: React.FC<Props> = ({ token }) => {
 
 	return (
 		<>
-			<SuspenseWrapper fallback={<Skeleton className="h-8 w-60 rounded" />}>
-				<ResetPasswordHeader token={token} />
-			</SuspenseWrapper>
+			<ResetPasswordHeader token={token} />
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">
 					<Input

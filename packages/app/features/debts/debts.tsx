@@ -5,8 +5,12 @@ import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
-import { PaginationBlock } from "~app/components/pagination-block";
+import {
+	PaginationBlock,
+	PaginationBlockSkeleton,
+} from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
@@ -28,85 +32,91 @@ const DebtsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
 	<View className="gap-2">{children}</View>
 );
 
-export const DebtsSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
-	<DebtsWrapper>
-		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<UserDebtsPreviewSkeleton key={index} />
-		))}
-	</DebtsWrapper>
-);
-
 type Props = {
 	limitState: SearchParamState<"/debts", "limit">;
 	offsetState: SearchParamState<"/debts", "offset">;
 };
 
-export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
-	const { t } = useTranslation("debts");
-	const [showResolvedDebts] = useShowResolvedDebts();
-	const [limit, setLimit] = limitState;
-	const filters = {};
-	const trpc = useTRPC();
-	const { data, onPageChange, isPending } = useCursorPaging(
-		trpc.debts.getUsersPaged,
-		{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
-		offsetState,
-	);
+export const Debts = suspendedFallback<Props>(
+	({ limitState, offsetState }) => {
+		const { t } = useTranslation("debts");
+		const [showResolvedDebts] = useShowResolvedDebts();
+		const [limit, setLimit] = limitState;
+		const filters = {};
+		const trpc = useTRPC();
+		const { data, onPageChange, isPending } = useCursorPaging(
+			trpc.debts.getUsersPaged,
+			{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
+			offsetState,
+		);
 
-	if (!data.count) {
-		if (values(filters).filter(isNonNullish).length === 0) {
+		if (!data.count) {
+			if (values(filters).filter(isNonNullish).length === 0) {
+				return (
+					<Header className="text-center">{t("list.filters.noResults")}</Header>
+				);
+			}
 			return (
-				<Header className="text-center">{t("list.filters.noResults")}</Header>
+				<EmptyCard title={t("list.empty.title")}>
+					<View className="items-center gap-4">
+						<View className="flex-row items-center">
+							<Trans
+								t={t}
+								i18nKey="list.empty.description"
+								components={{
+									text: bigText,
+									button: (
+										<ButtonLink
+											to="/debts/add"
+											color="primary"
+											title={t("list.buttons.add")}
+											variant="bordered"
+											isIconOnly
+											className="mx-2"
+										>
+											<AddIcon size={24} />
+										</ButtonLink>
+									),
+								}}
+							/>
+						</View>
+					</View>
+				</EmptyCard>
 			);
 		}
-		return (
-			<EmptyCard title={t("list.empty.title")}>
-				<View className="items-center gap-4">
-					<View className="flex-row items-center">
-						<Trans
-							t={t}
-							i18nKey="list.empty.description"
-							components={{
-								text: bigText,
-								button: (
-									<ButtonLink
-										to="/debts/add"
-										color="primary"
-										title={t("list.buttons.add")}
-										variant="bordered"
-										isIconOnly
-										className="mx-2"
-									>
-										<AddIcon size={24} />
-									</ButtonLink>
-								),
-							}}
-						/>
-					</View>
-				</View>
-			</EmptyCard>
-		);
-	}
 
-	return (
+		return (
+			<PaginationOverlay
+				pagination={
+					<PaginationBlock
+						totalCount={data.count}
+						limit={limit}
+						setLimit={setLimit}
+						offset={offsetState[0]}
+						onPageChange={onPageChange}
+					/>
+				}
+				isPending={isPending}
+			>
+				<DebtsWrapper>
+					{data.items.map((userId) => (
+						<UserDebtsPreview key={userId} userId={userId} />
+					))}
+				</DebtsWrapper>
+			</PaginationOverlay>
+		);
+	},
+	({ limitState }) => (
 		<PaginationOverlay
-			pagination={
-				<PaginationBlock
-					totalCount={data.count}
-					limit={limit}
-					setLimit={setLimit}
-					offset={offsetState[0]}
-					onPageChange={onPageChange}
-				/>
-			}
-			isPending={isPending}
+			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+			isPending
 		>
 			<DebtsWrapper>
-				{data.items.map((userId) => (
-					<UserDebtsPreview key={userId} userId={userId} />
+				{Array.from({ length: limitState[0] }).map((_, index) => (
+					// eslint-disable-next-line react/no-array-index-key
+					<UserDebtsPreviewSkeleton key={index} />
 				))}
 			</DebtsWrapper>
 		</PaginationOverlay>
-	);
-};
+	),
+);

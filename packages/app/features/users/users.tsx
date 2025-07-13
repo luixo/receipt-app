@@ -6,8 +6,12 @@ import { Trans, useTranslation } from "react-i18next";
 import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PaginationBlock } from "~app/components/pagination-block";
+import {
+	PaginationBlock,
+	PaginationBlockSkeleton,
+} from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult } from "~app/trpc";
@@ -18,17 +22,6 @@ import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
 import { UserPreview } from "./user-preview";
-
-export const UserPreviewsSkeleton: React.FC<{ amount: number }> = ({
-	amount,
-}) => (
-	<>
-		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<SkeletonUser key={index} className="self-start" />
-		))}
-	</>
-);
 
 const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 	const trpc = useTRPC();
@@ -66,57 +59,69 @@ type Props = {
 	offsetState: SearchParamState<"/users", "offset">;
 };
 
-export const Users: React.FC<Props> = ({
-	limitState: [limit, setLimit],
-	offsetState,
-}) => {
-	const { t } = useTranslation("users");
-	const trpc = useTRPC();
-	const { data, onPageChange, isPending } = useCursorPaging(
-		trpc.users.getPaged,
-		{ limit },
-		offsetState,
-	);
-
-	if (!data.count) {
-		return (
-			<EmptyCard title={t("list.empty.title")}>
-				<Trans
-					t={t}
-					i18nKey="list.empty.message"
-					components={{
-						icon: (
-							<ButtonLink
-								color="primary"
-								to="/users/add"
-								title={t("list.addUser.button")}
-								variant="bordered"
-								className="mx-2"
-								isIconOnly
-							>
-								<AddIcon size={24} />
-							</ButtonLink>
-						),
-					}}
-				/>
-			</EmptyCard>
+export const Users: React.FC<Props> = suspendedFallback(
+	({ limitState: [limit, setLimit], offsetState }) => {
+		const { t } = useTranslation("users");
+		const trpc = useTRPC();
+		const { data, onPageChange, isPending } = useCursorPaging(
+			trpc.users.getPaged,
+			{ limit },
+			offsetState,
 		);
-	}
 
-	return (
+		if (!data.count) {
+			return (
+				<EmptyCard title={t("list.empty.title")}>
+					<Trans
+						t={t}
+						i18nKey="list.empty.message"
+						components={{
+							icon: (
+								<ButtonLink
+									color="primary"
+									to="/users/add"
+									title={t("list.addUser.button")}
+									variant="bordered"
+									className="mx-2"
+									isIconOnly
+								>
+									<AddIcon size={24} />
+								</ButtonLink>
+							),
+						}}
+					/>
+				</EmptyCard>
+			);
+		}
+
+		return (
+			<PaginationOverlay
+				pagination={
+					<PaginationBlock
+						totalCount={data.count}
+						limit={limit}
+						setLimit={setLimit}
+						offset={offsetState[0]}
+						onPageChange={onPageChange}
+					/>
+				}
+				isPending={isPending}
+			>
+				<UserPreviews ids={data.items} />
+			</PaginationOverlay>
+		);
+	},
+	({ limitState }) => (
 		<PaginationOverlay
-			pagination={
-				<PaginationBlock
-					totalCount={data.count}
-					limit={limit}
-					setLimit={setLimit}
-					offset={offsetState[0]}
-					onPageChange={onPageChange}
-				/>
-			}
-			isPending={isPending}
+			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+			isPending
 		>
-			<UserPreviews ids={data.items} />
+			<>
+				{Array.from({ length: limitState[0] }).map((_, index) => (
+					// eslint-disable-next-line react/no-array-index-key
+					<SkeletonUser key={index} className="self-start" />
+				))}
+			</>
 		</PaginationOverlay>
-	);
-};
+	),
+);

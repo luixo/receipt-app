@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { SkeletonUser, User } from "~app/components/app/user";
 import { PageHeader } from "~app/components/page-header";
-import { SuspenseWrapper } from "~app/components/suspense-wrapper";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
@@ -83,87 +83,104 @@ const AdminUserCard: React.FC<
 	</Card>
 );
 
-const AdminCard = () => {
-	const trpc = useTRPC();
-	const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
-	return (
-		<AdminUserCard
-			user={{
-				...account.user,
-				// Typesystem doesn't know that we use account id as self user id;
-				id: account.account.id as UsersId,
-			}}
-			account={account.account}
-		/>
-	);
-};
+const AdminCard = suspendedFallback(
+	() => {
+		const trpc = useTRPC();
+		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
+		return (
+			<AdminUserCard
+				user={{
+					...account.user,
+					// Typesystem doesn't know that we use account id as self user id;
+					id: account.account.id as UsersId,
+				}}
+				account={account.account}
+			/>
+		);
+	},
+	<Skeleton className="h-8 w-60 rounded" />,
+);
 
-const AdminScreenInner: React.FC = () => {
-	const { t } = useTranslation("admin");
-	const trpc = useTRPC();
-	const { data: accounts } = useSuspenseQuery(
-		trpc.admin.accounts.queryOptions(),
-	);
-	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
-	const {
-		[PRETEND_USER_STORE_NAME]: [pretendUser, setPretendUser, resetPretendUser],
-	} = React.use(StoreDataContext);
-	const setPretendEmail = React.useCallback(
-		(email: string) => setPretendUser({ email }),
-		[setPretendUser],
-	);
-	const closeModal = React.useCallback(() => setModalEmail(undefined), []);
-	const setModalEmailCurried = React.useCallback(
-		(email: string) => () => {
-			setModalEmail(email);
-		},
-		[],
-	);
-	const pretendUserAccount = pretendUser.email
-		? accounts.find((element) => element.account.email === pretendUser.email)
-		: null;
-	return (
-		<Tabs variant="underlined">
-			<Tab key="become" title={t("pretend.tabName")}>
-				<div className="flex flex-col items-stretch gap-2">
-					{pretendUserAccount ? (
-						<>
-							<AdminUserCard {...pretendUserAccount} />
-							<Button onPress={resetPretendUser} color="primary">
-								{t("pretend.resetToSelfButton")}
-							</Button>
-						</>
-					) : (
-						<SuspenseWrapper
-							fallback={<Skeleton className="h-8 w-60 rounded" />}
-						>
-							<AdminCard />
-						</SuspenseWrapper>
-					)}
-					<Divider />
-					{accounts
-						.filter((element) => pretendUser.email !== element.account.email)
-						.map((element) => (
-							<AdminUserCard key={element.account.id} {...element}>
-								<Button
-									onPress={setModalEmailCurried(element.account.email)}
-									color="warning"
-								>
-									{t("pretend.becomeButton")}
+const AdminScreenInner = suspendedFallback(
+	() => {
+		const { t } = useTranslation("admin");
+		const trpc = useTRPC();
+		const { data: accounts } = useSuspenseQuery(
+			trpc.admin.accounts.queryOptions(),
+		);
+		const [modalEmail, setModalEmail] = React.useState<string | undefined>();
+		const {
+			[PRETEND_USER_STORE_NAME]: [
+				pretendUser,
+				setPretendUser,
+				resetPretendUser,
+			],
+		} = React.use(StoreDataContext);
+		const setPretendEmail = React.useCallback(
+			(email: string) => setPretendUser({ email }),
+			[setPretendUser],
+		);
+		const closeModal = React.useCallback(() => setModalEmail(undefined), []);
+		const setModalEmailCurried = React.useCallback(
+			(email: string) => () => {
+				setModalEmail(email);
+			},
+			[],
+		);
+		const pretendUserAccount = pretendUser.email
+			? accounts.find((element) => element.account.email === pretendUser.email)
+			: null;
+		return (
+			<Tabs variant="underlined">
+				<Tab key="become" title={t("pretend.tabName")}>
+					<div className="flex flex-col items-stretch gap-2">
+						{pretendUserAccount ? (
+							<>
+								<AdminUserCard {...pretendUserAccount} />
+								<Button onPress={resetPretendUser} color="primary">
+									{t("pretend.resetToSelfButton")}
 								</Button>
-							</AdminUserCard>
-						))}
-					<BecomeModal
-						isModalOpen={Boolean(modalEmail)}
-						closeModal={closeModal}
-						email={modalEmail || "unknown"}
-						setMockedEmail={setPretendEmail}
-					/>
-				</div>
-			</Tab>
-		</Tabs>
-	);
-};
+							</>
+						) : (
+							<AdminCard />
+						)}
+						<Divider />
+						{accounts
+							.filter((element) => pretendUser.email !== element.account.email)
+							.map((element) => (
+								<AdminUserCard key={element.account.id} {...element}>
+									<Button
+										onPress={setModalEmailCurried(element.account.email)}
+										color="warning"
+									>
+										{t("pretend.becomeButton")}
+									</Button>
+								</AdminUserCard>
+							))}
+						<BecomeModal
+							isModalOpen={Boolean(modalEmail)}
+							closeModal={closeModal}
+							email={modalEmail || "unknown"}
+							setMockedEmail={setPretendEmail}
+						/>
+					</div>
+				</Tab>
+			</Tabs>
+		);
+	},
+	<TabsSkeleton
+		tabsAmount={1}
+		content={
+			<div className="flex flex-col items-stretch gap-2 px-1 py-3">
+				<SkeletonAdminUserCard />
+				<Divider />
+				<SkeletonAdminUserCard />
+				<SkeletonAdminUserCard />
+				<SkeletonAdminUserCard />
+			</div>
+		}
+	/>,
+);
 
 export const AdminScreen: React.FC = () => {
 	const { t } = useTranslation("admin");
@@ -171,24 +188,7 @@ export const AdminScreen: React.FC = () => {
 		<>
 			<PageHeader>{t("pageHeader")}</PageHeader>
 			<div>
-				<SuspenseWrapper
-					fallback={
-						<TabsSkeleton
-							tabsAmount={1}
-							content={
-								<div className="flex flex-col items-stretch gap-2 px-1 py-3">
-									<SkeletonAdminUserCard />
-									<Divider />
-									<SkeletonAdminUserCard />
-									<SkeletonAdminUserCard />
-									<SkeletonAdminUserCard />
-								</div>
-							}
-						/>
-					}
-				>
-					<AdminScreenInner />
-				</SuspenseWrapper>
+				<AdminScreenInner />
 			</div>
 		</>
 	);

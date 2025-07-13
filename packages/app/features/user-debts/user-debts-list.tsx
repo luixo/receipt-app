@@ -5,8 +5,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fromEntries, isNonNullish, values } from "remeda";
 
-import { PaginationBlock } from "~app/components/pagination-block";
+import {
+	PaginationBlock,
+	PaginationBlockSkeleton,
+} from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -196,20 +200,6 @@ const UserDebtsListWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => <View className="gap-2">{children}</View>;
 
-export const UserDebtsListSkeleton: React.FC<{ amount: number }> = ({
-	amount,
-}) => (
-	<UserDebtsListWrapper>
-		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<React.Fragment key={index}>
-				<Divider />
-				<UserDebtPreviewSkeleton />
-			</React.Fragment>
-		))}
-	</UserDebtsListWrapper>
-);
-
 const UserDebtsPreviews: React.FC<{
 	userId: UsersId;
 	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
@@ -245,66 +235,84 @@ const UserDebtsPreviews: React.FC<{
 
 const filters = {};
 
-export const UserDebtsList: React.FC<{
+export const UserDebtsList = suspendedFallback<{
 	userId: UsersId;
 	limitState: SearchParamState<"/debts/user/$id", "limit">;
 	offsetState: SearchParamState<"/debts/user/$id", "offset">;
-}> = ({ userId, limitState: [limit, setLimit], offsetState }) => {
-	const { t } = useTranslation("debts");
-	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
-	const trpc = useTRPC();
-	const currentInput = React.useMemo(
-		() => ({
+}>(
+	({ userId, limitState: [limit, setLimit], offsetState }) => {
+		const { t } = useTranslation("debts");
+		const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
+		const trpc = useTRPC();
+		const currentInput = React.useMemo(
+			() => ({
+				limit,
+				userId,
+				filters: { showResolved: showResolvedDebts, ...filters },
+			}),
+			[limit, showResolvedDebts, userId],
+		);
+		const { data, onPageChange, isPending } = useCursorPaging(
+			trpc.debts.getByUserPaged,
+			currentInput,
+			offsetState,
+		);
+		const consecutiveDebtIds = useConsecutiveDebtIds({
+			input: currentInput,
 			limit,
-			userId,
-			filters: { showResolved: showResolvedDebts, ...filters },
-		}),
-		[limit, showResolvedDebts, userId],
-	);
-	const { data, onPageChange, isPending } = useCursorPaging(
-		trpc.debts.getByUserPaged,
-		currentInput,
-		offsetState,
-	);
-	const consecutiveDebtIds = useConsecutiveDebtIds({
-		input: currentInput,
-		limit,
-		currentCursor: offsetState[0],
-	});
+			currentCursor: offsetState[0],
+		});
 
-	if (data.count === 0 && values(filters).filter(isNonNullish).length === 0) {
-		return <Text className="text-center">{t("user.filters.empty")}</Text>;
-	}
+		if (data.count === 0 && values(filters).filter(isNonNullish).length === 0) {
+			return <Text className="text-center">{t("user.filters.empty")}</Text>;
+		}
 
-	return (
-		<PaginationOverlay
-			pagination={
-				<PaginationBlock
-					totalCount={data.count}
-					limit={limit}
-					setLimit={setLimit}
-					offset={offsetState[0]}
-					onPageChange={onPageChange}
+		return (
+			<PaginationOverlay
+				pagination={
+					<PaginationBlock
+						totalCount={data.count}
+						limit={limit}
+						setLimit={setLimit}
+						offset={offsetState[0]}
+						onPageChange={onPageChange}
+					/>
+				}
+				isPending={isPending}
+			>
+				<UserDebtsPreviews
+					userId={userId}
+					debtIds={data.items}
+					consecutiveDebtIds={consecutiveDebtIds}
 				/>
-			}
-			isPending={isPending}
+				{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
+					<View className="flex items-center">
+						<Button
+							variant="bordered"
+							color="primary"
+							onPress={() => setShowResolvedDebts(true)}
+						>
+							{t("user.showResolved")}
+						</Button>
+					</View>
+				)}
+			</PaginationOverlay>
+		);
+	},
+	({ limitState }) => (
+		<PaginationOverlay
+			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+			isPending
 		>
-			<UserDebtsPreviews
-				userId={userId}
-				debtIds={data.items}
-				consecutiveDebtIds={consecutiveDebtIds}
-			/>
-			{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
-				<View className="flex items-center">
-					<Button
-						variant="bordered"
-						color="primary"
-						onPress={() => setShowResolvedDebts(true)}
-					>
-						{t("user.showResolved")}
-					</Button>
-				</View>
-			)}
+			<UserDebtsListWrapper>
+				{Array.from({ length: limitState[0] }).map((_, index) => (
+					// eslint-disable-next-line react/no-array-index-key
+					<React.Fragment key={index}>
+						<Divider />
+						<UserDebtPreviewSkeleton />
+					</React.Fragment>
+				))}
+			</UserDebtsListWrapper>
 		</PaginationOverlay>
-	);
-};
+	),
+);

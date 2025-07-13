@@ -56,3 +56,18 @@ export const SuspenseWrapper: React.FC<
 		</React.Suspense>
 	);
 };
+
+export const suspendedFallback =
+	<P extends object = Record<string, never>>(
+		Component: React.ComponentType<P>,
+		Fallback: React.ReactNode | React.FC<P>,
+	): React.FC<P> =>
+	(props) => (
+		<SuspenseWrapper
+			fallback={
+				typeof Fallback === "function" ? <Fallback {...props} /> : Fallback
+			}
+		>
+			<Component {...props} />
+		</SuspenseWrapper>
+	);
