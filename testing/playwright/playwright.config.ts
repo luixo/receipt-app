@@ -96,7 +96,8 @@ export default defineConfig({
 		baseURL: urlSettings.baseUrl,
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-		trace: "on-first-retry",
+		trace: { mode: "on-first-retry", screenshots: true },
+		video: "on-first-retry",
 
 		timezoneId: localSettings.timezone,
 		locale: localSettings.locale,
