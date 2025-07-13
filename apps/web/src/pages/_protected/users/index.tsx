@@ -11,7 +11,7 @@ import {
 	offsetSchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetchQueries } from "~web/utils/ssr";
+import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
@@ -40,15 +40,19 @@ export const Route = createFileRoute("/_protected/users/")({
 		limit,
 	}),
 	loader: async (ctx) => {
-		const trpc = getLoaderTrpcClient(ctx.context);
-		const prefetched = prefetchQueries(
-			ctx,
-			trpc.users.getPaged.queryOptions({
-				limit: ctx.deps.limit,
-				cursor: ctx.deps.offset,
-			}),
-		);
 		await loadNamespaces(ctx.context, "users");
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const prefetched = await prefetchQueriesWith(
+			ctx,
+			() =>
+				ctx.context.queryClient.fetchQuery(
+					trpc.users.getPaged.queryOptions({
+						limit: ctx.deps.limit,
+						cursor: ctx.deps.offset,
+					}),
+				),
+			(list) => list.items.map((id) => trpc.users.get.queryOptions({ id })),
+		);
 		return { prefetched };
 	},
 	head: ({ match }) => ({

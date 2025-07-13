@@ -13,20 +13,38 @@ import type { RouterContext } from "~web/pages/__root";
 // see https://github.com/TanStack/router/issues/4084
 const ERROR_TAG = "__error__";
 
+type PrefetchContext = { context: RouterContext };
+const prefetchQuery = (
+	ctx: PrefetchContext,
+	options: ReturnType<TRPCQueryOptions<ResolverDef>>,
+) => ({
+	queryKey: options.queryKey,
+	promise: ctx.context.queryClient
+		.fetchQuery(options)
+		.catch((error) => ({ [ERROR_TAG]: true, message: String(error) }))
+		.then(transformer.serialize),
+});
+
 export const prefetchQueries = (
-	ctx: { context: RouterContext },
+	ctx: PrefetchContext,
 	...optionsSet: ReturnType<TRPCQueryOptions<ResolverDef>>[]
 ) => {
 	if (!import.meta.env.SSR) {
 		return [];
 	}
-	return optionsSet.map((options) => ({
-		queryKey: options.queryKey,
-		promise: ctx.context.queryClient
-			.fetchQuery(options)
-			.catch((error) => ({ [ERROR_TAG]: true, message: String(error) }))
-			.then(transformer.serialize),
-	}));
+	return optionsSet.map((options) => prefetchQuery(ctx, options));
+};
+
+export const prefetchQueriesWith = async <T,>(
+	ctx: PrefetchContext,
+	getPromise: () => Promise<T>,
+	getOptions: (result: T) => ReturnType<TRPCQueryOptions<ResolverDef>>[],
+) => {
+	if (!import.meta.env.SSR) {
+		return [];
+	}
+	const result = await getPromise();
+	return getOptions(result).map((options) => prefetchQuery(ctx, options));
 };
 
 export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
