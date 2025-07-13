@@ -92,6 +92,12 @@
 				"postfix": " / {{parts}}"
 			},
 			"addPayerButton": "+ payer"
+		},
+		"errors": {
+			"noOurs": "No debt has been propagated",
+			"desyncedOurs": "Our debt is currently \"{{actual}}\", but it should be \"{{expected}}\" according to the receipt.",
+			"noTheir": "They did not accept the debt yet",
+			"desyncedTheir": "They accepted the debt for \"{{actual}}\", while we intent the amount is \"{{expected}}\""
 		}
 	},
 	"item": {

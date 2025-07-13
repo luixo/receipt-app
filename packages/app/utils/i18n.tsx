@@ -126,9 +126,10 @@ type TitleKey<T extends ParseKeys> = T extends `titles.${infer X}` ? X : never;
 export const getTitle = (
 	ctx: Parameters<typeof getServerSideT>[0],
 	pageKey: TitleKey<ParseKeys>,
+	params?: Record<string, unknown>,
 ) => {
 	const t = getServerSideT(ctx, "default");
-	return t("titles.template", { page: t(`titles.${pageKey}`) });
+	return t("titles.template", { page: t(`titles.${pageKey}`, params) });
 };
 
 export const ensureI18nInitialized = async (ctx: {

@@ -15,7 +15,7 @@ test("Propagate state", async ({
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
-	skip(testInfo, "only-smallest");
+	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
@@ -34,7 +34,7 @@ test("Sync state", async ({
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
-	skip(testInfo, "only-smallest");
+	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
@@ -53,7 +53,7 @@ test("Synced state", async ({
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
-	skip(testInfo, "only-smallest");
+	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 	});

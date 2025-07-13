@@ -119,7 +119,7 @@ const fetchDebts = async (
 		])
 		.execute();
 
-const getReceiptDebt = (
+const getReceiptDebts = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
 	receiptOwnerAccountId: AccountsId,
 	selfAccountId: AccountsId,
@@ -134,16 +134,16 @@ const getReceiptDebt = (
 	  ))
 	| {
 			direction: "outcoming";
-			ids: DebtsId[];
+			debts: { id: DebtsId; userId: UsersId }[];
 	  } => {
 	if (receiptOwnerAccountId === selfAccountId) {
-		const outcomingDebtIds = debts
+		const outcomingDebt = debts
 			.filter((debt) => debt.ownerAccountId === selfAccountId)
 			.sort((a, b) => a.debtId.localeCompare(b.debtId))
-			.map((debt) => debt.debtId);
+			.map((debt) => ({ id: debt.debtId, userId: debt.userId }));
 		return {
 			direction: "outcoming",
-			ids: outcomingDebtIds,
+			debts: outcomingDebt,
 		};
 	}
 	const mineDebtId = debts.find(
@@ -201,7 +201,7 @@ const mapReceipt = (
 			...participant,
 			role: participant.role as Role,
 		})),
-		debt: getReceiptDebt(
+		debts: getReceiptDebts(
 			debts,
 			ownerAccountId,
 			auth.accountId,

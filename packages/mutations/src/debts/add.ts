@@ -45,14 +45,17 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 				get: (controller) => {
 					controller.update(receiptId, (receipt) => ({
 						...receipt,
-						debt: {
+						debts: {
 							direction: "outcoming",
-							ids:
-								receipt.debt.direction === "outcoming"
-									? receipt.debt.ids.includes(result.id)
-										? receipt.debt.ids
-										: [...receipt.debt.ids, result.id]
-									: [result.id],
+							debts:
+								receipt.debts.direction === "outcoming"
+									? receipt.debts.debts.some((debt) => debt.id === result.id)
+										? receipt.debts.debts
+										: [
+												...receipt.debts.debts,
+												{ id: result.id, userId: updateObject.userId },
+											]
+									: [{ id: result.id, userId: updateObject.userId }],
 						},
 					}));
 				},

@@ -126,7 +126,6 @@ export const test = originalTest.extend<Fixtures>({
 	openReceipt: ({ page, awaitCacheKey }, use) =>
 		use(async (receiptId) => {
 			await page.goto(`/receipts/${receiptId}`);
-			await awaitCacheKey("currency.top");
 			await awaitCacheKey("users.get");
 		}),
 });

@@ -32,9 +32,12 @@
 		"receipts.get:[{\"id\":\"72cc16e7-64ae-4b7a-b6f8-66948bf9d5df\"}]": {
 			"state": {
 				"data": {
-					"debt": {
-						"ids": {
-							"1": "b80f9427-ac79-412e-9682-6f56ce3b6a7b"
+					"debts": {
+						"debts": {
+							"1": {
+								"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
+								"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d"
+							}
 						}
 					}
 				},

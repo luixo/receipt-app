@@ -163,7 +163,7 @@ describe("receipts.get", () => {
 					items: [],
 					participants: [],
 					payers: [],
-					debt: { direction: "outcoming", ids: [] },
+					debts: { direction: "outcoming", debts: [] },
 				});
 			});
 		});
@@ -193,7 +193,7 @@ describe("receipts.get", () => {
 				items: [],
 				participants: getParticipants([participant]),
 				payers: [],
-				debt: {
+				debts: {
 					direction: "incoming",
 					hasMine: false,
 					hasForeign: false,
@@ -231,7 +231,7 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					debt: {
+					debts: {
 						direction: "incoming",
 						hasMine: false,
 						hasForeign: true,
@@ -268,7 +268,7 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					debt: {
+					debts: {
 						direction: "incoming",
 						hasMine: true,
 						hasForeign: false,
@@ -307,7 +307,7 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					debt: {
+					debts: {
 						direction: "incoming",
 						hasMine: true,
 						hasForeign: true,
@@ -328,10 +328,25 @@ describe("receipts.get", () => {
 				const receipt = await insertReceipt(ctx, accountId);
 				const { id: userId } = await insertUser(ctx, accountId);
 				const { id: anotherUserId } = await insertUser(ctx, accountId);
-				const debts = await Promise.all([
-					insertDebt(ctx, accountId, userId, { receiptId: receipt.id }),
-					insertDebt(ctx, accountId, anotherUserId, { receiptId: receipt.id }),
-				]);
+				const debts = await Promise.all(
+					[
+						{
+							promise: insertDebt(ctx, accountId, userId, {
+								receiptId: receipt.id,
+							}),
+							userId,
+						},
+						{
+							promise: insertDebt(ctx, accountId, anotherUserId, {
+								receiptId: receipt.id,
+							}),
+							userId: anotherUserId,
+						},
+					].map(async ({ promise, userId: localUserId }) => ({
+						...(await promise),
+						userId: localUserId,
+					})),
+				);
 
 				// Verify other users do not interfere
 				const { id: foreignAccountId } = await insertAccount(ctx);
@@ -347,9 +362,14 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: selfUserId,
 					selfUserId,
-					debt: {
+					debts: {
 						direction: "outcoming",
-						ids: debts.map((debt) => debt.id).sort(),
+						debts: debts
+							.map((debt) => ({
+								id: debt.id,
+								userId: debt.userId,
+							}))
+							.sort((a, b) => a.id.localeCompare(b.id)),
 					},
 					items: [],
 					participants: [],
@@ -428,7 +448,7 @@ describe("receipts.get", () => {
 					notConnectedParticipant,
 				]),
 				payers: [],
-				debt: { direction: "outcoming", ids: [] },
+				debts: { direction: "outcoming", debts: [] },
 			});
 		});
 
@@ -453,7 +473,7 @@ describe("receipts.get", () => {
 				items: [],
 				participants: [],
 				payers: [],
-				debt: { direction: "outcoming", ids: [] },
+				debts: { direction: "outcoming", debts: [] },
 			});
 		});
 
@@ -574,7 +594,7 @@ describe("receipts.get", () => {
 					connectedParticipant,
 				]),
 				payers: getPayers([foreignPayer, connectedPayer, ownerPayer]),
-				debt: {
+				debts: {
 					direction: "incoming",
 					hasMine: false,
 					hasForeign: false,

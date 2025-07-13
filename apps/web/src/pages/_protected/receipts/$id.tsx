@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { Receipt } from "~app/features/receipt/receipt";
 import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
@@ -12,8 +13,19 @@ export const Route = createFileRoute("/_protected/receipts/$id")({
 	component: Wrapper,
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "receipts");
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const receipt = await ctx.context.queryClient.fetchQuery(
+			trpc.receipts.get.queryOptions({ id: ctx.params.id }),
+		);
+		return { receipt };
 	},
-	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "receipt") }],
+	head: ({ match, loaderData: data }) => ({
+		meta: [
+			{
+				title: data
+					? getTitle(match.context, "receipt", { name: data.receipt.name })
+					: getTitle(match.context, "receiptUnknown"),
+			},
+		],
 	}),
 });

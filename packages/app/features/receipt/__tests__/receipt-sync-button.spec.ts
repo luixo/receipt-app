@@ -26,6 +26,7 @@ test.describe("Wrapper component", () => {
 		updateDebtsButton,
 		errorMessage,
 		openReceipt,
+		consoleManager,
 	}) => {
 		const { receipt } = await mockReceiptWithDebts();
 
@@ -41,6 +42,7 @@ test.describe("Wrapper component", () => {
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
 
+		consoleManager.ignore(/Mock "debts.get" error/);
 		debtsGetPause.resolve();
 		await expect(errorMessage(`Mock "debts.get" error`)).toBeVisible();
 		await expect(propagateDebtsButton).not.toBeAttached();

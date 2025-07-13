@@ -24,9 +24,9 @@ const localDefaultGenerateReceipt: LocalGenerateReceipt = ({
 	const generatedReceipt = defaultGenerateReceipt(opts);
 	return {
 		...generatedReceipt,
-		debt: {
+		debts: {
 			direction: "outcoming",
-			ids: debts.map((debt) => debt.id),
+			debts: debts.map((debt) => ({ id: debt.id, userId: debt.userId })),
 		},
 	};
 };
@@ -80,9 +80,9 @@ export const test = originalTest.extend<Fixtures>({
 		use(async (receipt) => {
 			await openReceipt(receipt.id);
 			const debtsAmount =
-				receipt.debt.direction === "outcoming"
-					? receipt.debt.ids.length
-					: !receipt.debt.id
+				receipt.debts.direction === "outcoming"
+					? receipt.debts.debts.length
+					: !receipt.debts.id
 						? undefined
 						: 1;
 			await awaitCacheKey("debts.get", debtsAmount || undefined);

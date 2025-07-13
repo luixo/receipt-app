@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -9,9 +9,11 @@ import { z } from "zod";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
@@ -35,6 +37,7 @@ import type { Participant } from "./state";
 const getParticipantError = (
 	t: TFunction<"receipts">,
 	participant: Participant,
+	debt: TRPCQueryOutput<"debts.get"> | undefined,
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
 	isSelfParticipant: boolean,
@@ -54,45 +57,80 @@ const getParticipantError = (
 	if (sum === 0) {
 		return;
 	}
-	if (participant.currentDebt === null) {
-		// We're waiting for all debts to load
-		return;
-	}
-	if (!participant.currentDebt) {
+	if (!debt) {
 		// No debt has been propagated
 		return {
 			className: "text-warning",
-			content: "No debt has been propagated",
+			content: t("participant.errors.noOurs"),
 		};
 	}
 	const expectedSum = isOwner ? sum : -sum;
-	if (participant.currentDebt.amount !== expectedSum) {
+	if (debt.amount !== expectedSum) {
 		// Our debt is desynced from the receipt
 		return {
 			className: "text-danger",
-			content: `Our debt is currently "${participant.currentDebt.amount}", but it should be "${expectedSum}" according to the receipt.`,
+			content: t("participant.errors.desyncedOurs", {
+				actual: debt.amount,
+				expected: expectedSum,
+			}),
 		};
 	}
 	if (!hasConnectedAccount) {
 		// Debt is not syncable
 		return;
 	}
-	if (!participant.currentDebt.their) {
+	if (!debt.their) {
 		// Our debts exists, their does not
 		return {
 			className: "text-warning",
-			content: "They did not accept the debt yet",
+			content: t("participant.errors.noTheir"),
 		};
 	}
-	if (participant.currentDebt.amount !== participant.currentDebt.their.amount) {
+	if (debt.amount !== debt.their.amount) {
 		// Our debt is desynced from their debt
 		return {
 			className: "text-warning",
-			content: `They accepted the debt for "${participant.currentDebt.their.amount}", while we intent the amount is "${participant.currentDebt.amount}"`,
+			content: t("participant.errors.desyncedTheir", {
+				actual: debt.their.amount,
+				expected: debt.amount,
+			}),
 		};
 	}
 	// In sync
 };
+
+const RenderParticipantError = suspendedFallback<{
+	participant: Participant;
+	children: (error: ReturnType<typeof getParticipantError>) => React.ReactNode;
+}>(
+	({ children, participant }) => {
+		const trpc = useTRPC();
+		const { data: debt } = useQuery(
+			trpc.debts.get.queryOptions(
+				participant.debtId ? { id: participant.debtId } : skipToken,
+				{ enabled: Boolean(participant.debtId) },
+			),
+		);
+		const { data: user } = useSuspenseQuery(
+			trpc.users.get.queryOptions({ id: participant.userId }),
+		);
+		const { t } = useTranslation("receipts");
+		const { fromSubunitToUnit } = useDecimals();
+		const { selfUserId } = useReceiptContext();
+		const isOwner = useIsOwner();
+		const error = getParticipantError(
+			t,
+			participant,
+			debt,
+			Boolean(user.connectedAccount),
+			isOwner,
+			participant.userId === selfUserId,
+			fromSubunitToUnit,
+		);
+		return children(error);
+	},
+	({ children }) => <>{children(undefined)}</>,
+);
 
 type Props = {
 	participant: Participant;
@@ -104,7 +142,6 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const {
 		receiptId,
 		currencyCode,
-		selfUserId,
 		renderParticipantActions,
 		items,
 		participants,
@@ -113,9 +150,6 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const { fromSubunitToUnit } = useDecimals();
-	const userQuery = useQuery(
-		trpc.users.get.queryOptions({ id: participant.userId }),
-	);
 
 	const currentPart = participant.payPart ?? 0;
 	const form = useAppForm({
@@ -189,14 +223,6 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const totalPayParts = roundParts(
 		participants.reduce((acc, { payPart }) => acc + (payPart ?? 0), 0),
 	);
-	const participantError = getParticipantError(
-		t,
-		participant,
-		Boolean(userQuery.data?.connectedAccount),
-		isOwner,
-		participant.userId === selfUserId,
-		fromSubunitToUnit,
-	);
 
 	return (
 		<Accordion>
@@ -218,16 +244,17 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							/>
 						</View>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
-							<Tooltip
-								content={participantError?.content}
-								isDisabled={!participantError}
-							>
-								<View>
-									<Text className={participantError?.className}>
-										{formatCurrency(locale, currencyCode, round(sum))}
-									</Text>
-								</View>
-							</Tooltip>
+							<RenderParticipantError participant={participant}>
+								{(error) => (
+									<Tooltip content={error?.content} isDisabled={!error}>
+										<View>
+											<Text className={error?.className}>
+												{formatCurrency(locale, currencyCode, round(sum))}
+											</Text>
+										</View>
+									</Tooltip>
+								)}
+							</RenderParticipantError>
 							<View className="flex-row items-center gap-2">
 								{isOwner ? (
 									<RemoveButton
@@ -352,7 +379,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							{participant.items.map((item) => (
 								<Text key={item.id}>
 									{t("participant.partDescription", {
-										itemName: item.name,
+										item: item.name,
 										amount: formatCurrency(
 											locale,
 											currencyCode,

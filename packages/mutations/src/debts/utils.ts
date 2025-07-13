@@ -99,20 +99,21 @@ export const getRevert =
 export const updateReceiptWithOutcomingDebtId = (
 	controllerContext: ControllerContext,
 	receiptId: ReceiptsId,
+	userId: UsersId,
 	debtId: DebtsId,
 ) => {
 	updateReceipts(controllerContext, {
 		get: (controller) => {
 			controller.update(receiptId, (receipt) => ({
 				...receipt,
-				debt: {
+				debts: {
 					direction: "outcoming",
-					ids:
-						receipt.debt.direction === "outcoming"
-							? receipt.debt.ids.includes(debtId)
-								? receipt.debt.ids
-								: [...receipt.debt.ids, debtId]
-							: [debtId],
+					debts:
+						receipt.debts.direction === "outcoming"
+							? receipt.debts.debts.some((debt) => debt.id === debtId)
+								? receipt.debts.debts
+								: [...receipt.debts.debts, { id: debtId, userId }]
+							: [{ id: debtId, userId }],
 				},
 			}));
 		},

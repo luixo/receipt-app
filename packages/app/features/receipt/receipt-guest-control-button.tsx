@@ -15,10 +15,10 @@ type Props = {
 export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	const { t } = useTranslation("receipts");
 
-	if (receipt.debt.direction === "outcoming") {
+	if (receipt.debts.direction === "outcoming") {
 		throw new Error("Unexpected owner control button with outcoming debt");
 	}
-	if (!receipt.debt.id) {
+	if (!receipt.debts.id) {
 		return null;
 	}
 
@@ -29,11 +29,11 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 		color: "primary",
 		isIconOnly: true,
 	} as const;
-	return receipt.debt.hasMine ? (
+	return receipt.debts.hasMine ? (
 		<ButtonLink
 			to="/debts/$id"
-			hash={receipt.debt.id}
-			params={{ id: receipt.debt.id }}
+			hash={receipt.debts.id}
+			params={{ id: receipt.debts.id }}
 			{...commonProps}
 		/>
 	) : (
