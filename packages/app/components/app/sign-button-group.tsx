@@ -19,6 +19,29 @@ const buttonClass = tv({
 	},
 });
 
+export const SkeletonSignButtonGroup = () => {
+	const { t } = useTranslation("default");
+	return (
+		<View className="flex-row">
+			<Button
+				className={buttonClass({ type: "left" })}
+				color="success"
+				isDisabled
+			>
+				{t("components.signButtonGroup.positive")}
+			</Button>
+			<Button
+				variant="bordered"
+				className={buttonClass({ type: "right" })}
+				color="danger"
+				isDisabled
+			>
+				{t("components.signButtonGroup.negative")}
+			</Button>
+		</View>
+	);
+};
+
 type Props = {
 	isLoading: boolean;
 	disabled?: boolean;

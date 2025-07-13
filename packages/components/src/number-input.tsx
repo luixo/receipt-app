@@ -3,8 +3,28 @@ import type React from "react";
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
 import { useIsSSR } from "@react-aria/ssr";
 
+import { Skeleton } from "~components/skeleton";
 import type { FieldError, MutationsProp } from "~components/utils";
 import { cn, getErrorState, getMutationLoading } from "~components/utils";
+
+export const SkeletonNumberInput: React.FC<
+	React.ComponentProps<typeof NumberInputRaw> & {
+		skeletonClassName?: string;
+	}
+> = ({ startContent, skeletonClassName, ...props }) => (
+	<NumberInputRaw
+		{...props}
+		isDisabled
+		isReadOnly
+		startContent={
+			startContent === undefined ? (
+				<Skeleton className={cn("h-4 w-32 rounded-md", skeletonClassName)} />
+			) : (
+				startContent
+			)
+		}
+	/>
+);
 
 type Props = Omit<
 	React.ComponentProps<typeof NumberInputRaw>,
