@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import type { TRPCQueryInput } from "~app/trpc";
@@ -22,8 +23,16 @@ import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { compare, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./get-paged";
+
+type MockReceipt = Awaited<ReturnType<typeof insertReceipt>>;
+const sortReceipts = (receipts: MockReceipt[]) =>
+	receipts.sort((a, b) => compare.plainDate(b.issued, a.issued));
+
+const mapReceipts = (receipts: MockReceipt[]) =>
+	receipts.map((receipt) => receipt.id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -111,16 +120,10 @@ const mockData = async (ctx: TestContext) => {
 	return {
 		accountId,
 		sessionId,
-		receipts: receipts.map((receipt) => ({
-			id: receipt.id,
-			name: receipt.name,
-			ownerAccountId: receipt.ownerAccountId,
-			issued: receipt.issued,
-		})),
+		receipts,
 	};
 };
 
-type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const runFunctionalTest = async (
 	ctx: TestContext,
 	modifyInput: (input: Input) => Input,
@@ -137,10 +140,7 @@ const runFunctionalTest = async (
 			orderBy: "date-desc",
 		}),
 	);
-	const items = modifyItems(
-		receipts.sort((a, b) => compare.plainDate(b.issued, a.issued)),
-		accountId,
-	).map(({ id }) => id);
+	const items = mapReceipts(modifyItems(sortReceipts(receipts), accountId));
 	expect(items.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
 		count: items.length,
@@ -358,6 +358,70 @@ describe("receipts.getPaged", () => {
 							),
 					);
 				});
+			});
+		});
+
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, receipts } = await mockData(ctx);
+
+				const descReceipts = mapReceipts(sortReceipts(receipts));
+				const ascReceipts = mapReceipts(receipts.toReversed());
+
+				const limit = 2;
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ limit, cursor: 0, orderBy: "date-desc" }),
+					() => caller.procedure({ limit, cursor: 2, orderBy: "date-desc" }),
+					() =>
+						caller.procedure({
+							limit,
+							cursor: 2,
+							orderBy: "date-asc",
+						}),
+					() => caller.procedure({ limit, cursor: 6, orderBy: "date-desc" }),
+				]);
+				expect(results).toStrictEqual<typeof results>([
+					{
+						count: receipts.length,
+						cursor: 0,
+						items: descReceipts.slice(0, 2),
+					},
+					{
+						count: receipts.length,
+						cursor: 2,
+						items: descReceipts.slice(2, 4),
+					},
+					{
+						count: receipts.length,
+						cursor: 2,
+						items: ascReceipts.slice(2, 4),
+					},
+					{
+						count: receipts.length,
+						cursor: 6,
+						items: descReceipts.slice(6, 8),
+					},
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, receipts } = await mockData(ctx);
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ limit: 2, cursor: 0, orderBy: "date-desc" }),
+					() =>
+						caller
+							.procedure({ limit: -1, cursor: 0, orderBy: "date-desc" })
+							.catch((e) => e),
+				]);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					count: receipts.length,
+					cursor: 0,
+					items: mapReceipts(sortReceipts(receipts)).slice(0, 2),
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
 		});
 	});

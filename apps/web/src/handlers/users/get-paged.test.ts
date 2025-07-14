@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
@@ -15,8 +16,12 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./get-paged";
+
+const mapUsers = (users: Awaited<ReturnType<typeof insertUser>>[]) =>
+	users.sort((a, b) => a.name.localeCompare(b.name)).map(({ id }) => id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -149,10 +154,7 @@ describe("users.getPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
 				cursor: 0,
-				items: users
-					.sort((a, b) => a.name.localeCompare(b.name))
-					.map(({ id }) => id)
-					.slice(0, limit),
+				items: mapUsers(users).slice(0, limit),
 			});
 		});
 
@@ -204,6 +206,62 @@ describe("users.getPaged", () => {
 			});
 			const sortedIds = [...result.items].sort();
 			expect(result.items).toStrictEqual(sortedIds);
+		});
+
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+				const users = mapUsers(
+					await Promise.all(
+						Array.from({ length: 10 }, async (_, index) =>
+							insertUser(ctx, accountId, { name: `Alice ${index}` }),
+						),
+					),
+				);
+
+				const limit = 2;
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ limit, cursor: 0 }),
+					() => caller.procedure({ limit, cursor: 2 }),
+					() => caller.procedure({ limit, cursor: 6 }),
+				]);
+				expect(results).toStrictEqual<typeof results>([
+					{
+						count: users.length,
+						cursor: 0,
+						items: users.slice(0, 2),
+					},
+					{
+						count: users.length,
+						cursor: 2,
+						items: users.slice(2, 4),
+					},
+					{
+						count: users.length,
+						cursor: 6,
+						items: users.slice(6, 8),
+					},
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const user = await insertUser(ctx, accountId);
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ limit: 2, cursor: 0 }),
+					() => caller.procedure({ limit: -1, cursor: 0 }).catch((e) => e),
+				]);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					count: 1,
+					cursor: 0,
+					items: mapUsers([user]),
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
+			});
 		});
 	});
 });

@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { TRPCError } from "@trpc/server";
+import { assert, describe, expect } from "vitest";
 
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -18,8 +19,19 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { getRandomAmount } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./get-users-paged";
+
+const mapUsers = (
+	userDebts: {
+		user: Awaited<ReturnType<typeof insertUser>>;
+	}[],
+) =>
+	userDebts
+		.map(({ user }) => user)
+		.sort((userA, userB) => userA.name.localeCompare(userB.name))
+		.map(({ id }) => id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -126,7 +138,7 @@ describe("debts.getUsersPaged", () => {
 				[accountId, user.id, { currencyCode: "USD" }],
 				[foreignAccountId, foreignToSelfUserId],
 			);
-			await Promise.all([
+			const userDebts = await Promise.all([
 				syncedDebt,
 				insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, user.id, { currencyCode: "EUR" }),
@@ -134,7 +146,7 @@ describe("debts.getUsersPaged", () => {
 			]);
 
 			const anotherUser = await insertUser(ctx, accountId);
-			await Promise.all([
+			const anotherUserDebts = await Promise.all([
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "EUR" }),
@@ -160,27 +172,28 @@ describe("debts.getUsersPaged", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ cursor: 0, limit: 10 });
-			const users = [user, anotherUser];
+			const users = [
+				{ user, debts: userDebts },
+				{ user: anotherUser, debts: anotherUserDebts },
+			];
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
 				cursor: 0,
-				items: users
-					.sort((userA, userB) => userA.name.localeCompare(userB.name))
-					.map(({ id }) => id),
+				items: mapUsers(users),
 			});
 		});
 
 		test("with resolved users", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const user = await insertUser(ctx, accountId);
-			await Promise.all([
+			const userDebts = await Promise.all([
 				insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, user.id, { currencyCode: "EUR" }),
 			]);
 
 			const resolvedUser = await insertUser(ctx, accountId);
 			const resolvedAmount = getRandomAmount();
-			await Promise.all([
+			const resolvedUserDebts = await Promise.all([
 				insertDebt(ctx, accountId, resolvedUser.id, {
 					currencyCode: "USD",
 					amount: resolvedAmount,
@@ -202,13 +215,14 @@ describe("debts.getUsersPaged", () => {
 				limit: 10,
 				filters: { showResolved: true },
 			});
-			const users = [user, resolvedUser];
+			const users = [
+				{ user, debts: userDebts },
+				{ user: resolvedUser, debts: resolvedUserDebts },
+			];
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
 				cursor: 0,
-				items: users
-					.sort((userA, userB) => userA.name.localeCompare(userB.name))
-					.map(({ id }) => id),
+				items: mapUsers(users),
 			});
 		});
 
@@ -217,8 +231,10 @@ describe("debts.getUsersPaged", () => {
 			const users = await Promise.all(
 				new Array(5).fill(null).map(async () => {
 					const user = await insertUser(ctx, accountId);
-					await insertDebt(ctx, accountId, user.id, { currencyCode: "USD" });
-					return user;
+					const debt = await insertDebt(ctx, accountId, user.id, {
+						currencyCode: "USD",
+					});
+					return { user, debts: [debt] };
 				}),
 			);
 
@@ -233,10 +249,97 @@ describe("debts.getUsersPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
 				cursor,
-				items: users
-					.sort((userA, userB) => userA.name.localeCompare(userB.name))
-					.slice(1, limit + 1)
-					.map(({ id }) => id),
+				items: mapUsers(users).slice(1, limit + 1),
+			});
+		});
+
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const usersDebts = await Promise.all(
+					new Array(12).fill(null).map(async (_, index) => {
+						const user = await insertUser(ctx, accountId);
+						const debts = [
+							await insertDebt(ctx, accountId, user.id, {
+								currencyCode: "USD",
+							}),
+						];
+						if (index <= 1) {
+							debts.push(
+								await insertDebt(ctx, accountId, user.id, {
+									currencyCode: "USD",
+									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									amount: -debts[0]!.amount,
+								}),
+							);
+						}
+						return { user, debts };
+					}),
+				);
+				const nonResolvedUsers = mapUsers(usersDebts);
+				const resolvedUsers = mapUsers(
+					usersDebts.filter(({ debts }) => debts.length === 1),
+				);
+				assert(
+					nonResolvedUsers.length !== resolvedUsers.length,
+					"Resolved and non-resolved users has to be different for test to make sense",
+				);
+
+				const limit = 2;
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ cursor: 0, limit }),
+					() => caller.procedure({ cursor: 2, limit }),
+					() =>
+						caller.procedure({
+							cursor: 2,
+							limit,
+							filters: { showResolved: true },
+						}),
+					() => caller.procedure({ cursor: 6, limit }),
+				]);
+				expect(results).toStrictEqual<typeof results>([
+					{
+						count: resolvedUsers.length,
+						cursor: 0,
+						items: resolvedUsers.slice(0, 2),
+					},
+					{
+						count: resolvedUsers.length,
+						cursor: 2,
+						items: resolvedUsers.slice(2, 4),
+					},
+					{
+						count: nonResolvedUsers.length,
+						cursor: 2,
+						items: nonResolvedUsers.slice(2, 4),
+					},
+					{
+						count: resolvedUsers.length,
+						cursor: 6,
+						items: resolvedUsers.slice(6, 8),
+					},
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const user = await insertUser(ctx, accountId);
+				const userDebts = await Promise.all([
+					insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
+				]);
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ cursor: 0, limit: 2 }),
+					() => caller.procedure({ cursor: 0, limit: -1 }).catch((e) => e),
+				]);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					count: userDebts.length,
+					cursor: 0,
+					items: mapUsers([{ user }]),
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
 		});
 	});

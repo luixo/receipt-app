@@ -107,6 +107,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				options,
 				filterIds,
 				direction: "forward",
+				cursor: 0,
 			},
 			{
 				getNextPageParam: (result, results) =>

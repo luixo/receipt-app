@@ -181,22 +181,15 @@ const useConsecutiveDebtIds = ({
 	);
 	// Fetching all the missing lists to show even debts markers
 	React.useEffect(() => {
-		const abortController = new AbortController();
-		void missingCursors.reduce(async (acc, missingCursor) => {
-			await acc;
-			if (abortController.signal.aborted) {
-				return;
-			}
-			await queryClient.prefetchQuery(
+		missingCursors.forEach((missingCursor) => {
+			// Lists are batched server-side so we can fetch all of them at once
+			void queryClient.prefetchQuery(
 				trpc.debts.getByUserPaged.queryOptions({
 					...input,
 					cursor: missingCursor,
 				}),
 			);
-		}, Promise.resolve());
-		return () => {
-			abortController.abort();
-		};
+		});
 	}, [input, missingCursors, queryClient, trpc]);
 	return debtIds;
 };

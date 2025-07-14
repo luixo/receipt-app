@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { TRPCError } from "@trpc/server";
+import { assert, describe, expect } from "vitest";
 
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import type { AccountsId, UsersId } from "~db/models";
@@ -22,10 +23,20 @@ import { CURRENCY_CODES } from "~utils/currency-data";
 import { compare } from "~utils/date";
 import { getRandomAmount } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./get-by-user-paged";
 
-const mapDebt = (debt: Awaited<ReturnType<typeof insertDebt>>) => debt.id;
+const mapDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
+	debts
+		.sort((a, b) => {
+			const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
+			if (timestampSort !== 0) {
+				return timestampSort;
+			}
+			return a.id.localeCompare(b.id);
+		})
+		.map((debt) => debt.id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -243,19 +254,14 @@ describe("debts.getByUserPaged", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const debts = [...userDebts, ...syncedDebts.map(([ours]) => ours)];
+			const debts = mapDebts([
+				...userDebts,
+				...syncedDebts.map(([ours]) => ours),
+			]);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 100 });
 			expect(result).toStrictEqual<typeof result>({
-				items: debts
-					.sort((a, b) => {
-						const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
-						if (timestampSort !== 0) {
-							return timestampSort;
-						}
-						return a.id.localeCompare(b.id);
-					})
-					.map(mapDebt),
+				items: debts,
 				count: debts.length,
 				cursor: 0,
 			});
@@ -305,15 +311,7 @@ describe("debts.getByUserPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: nonResolvedDebts.length,
 				cursor: 0,
-				items: nonResolvedDebts
-					.sort((a, b) => {
-						const timestampSort = compare.plainDate(b.timestamp, a.timestamp);
-						if (timestampSort !== 0) {
-							return timestampSort;
-						}
-						return a.id.localeCompare(b.id);
-					})
-					.map(mapDebt),
+				items: mapDebts(nonResolvedDebts),
 			});
 		});
 
@@ -339,15 +337,7 @@ describe("debts.getByUserPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: allDebts.length,
 				cursor: 0,
-				items: allDebts
-					.sort((a, b) => {
-						const timestampSort = compare.plainDate(b.timestamp, a.timestamp);
-						if (timestampSort !== 0) {
-							return timestampSort;
-						}
-						return a.id.localeCompare(b.id);
-					})
-					.map(mapDebt),
+				items: mapDebts(allDebts),
 			});
 		});
 
@@ -401,16 +391,112 @@ describe("debts.getByUserPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: userDebts.length,
 				cursor,
-				items: userDebts
-					.sort((a, b) => {
-						const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
-						if (timestampSort !== 0) {
-							return timestampSort;
-						}
-						return a.id.localeCompare(b.id);
-					})
-					.map(mapDebt)
-					.slice(1, limit + 1),
+				items: mapDebts(userDebts).slice(1, limit + 1),
+			});
+		});
+
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: userId } = await insertUser(ctx, accountId);
+				const { id: anotherUserId } = await insertUser(ctx, accountId);
+				const userDebts = await Promise.all(
+					new Array(12).fill(null).map((_, index) =>
+						insertDebt(ctx, accountId, userId, {
+							currencyCode: index <= 1 ? "EUR" : "USD",
+							amount: index === 0 ? 100 : index === 1 ? -100 : undefined,
+						}),
+					),
+				);
+				const nonResolvedUserDebts = mapDebts(userDebts);
+				const resolvedUserDebts = mapDebts(
+					userDebts.filter((debt) => debt.currencyCode !== "EUR"),
+				);
+				const anotherUserDebts = mapDebts(
+					await Promise.all(
+						new Array(4).fill(null).map(() =>
+							insertDebt(ctx, accountId, anotherUserId, {
+								currencyCode: "EUR",
+							}),
+						),
+					),
+				);
+				assert(
+					nonResolvedUserDebts.length !== resolvedUserDebts.length,
+					"Resolved and non-resolved debts has to be different for test to make sense",
+				);
+
+				const limit = 2;
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ userId, cursor: 0, limit }),
+					() => caller.procedure({ userId, cursor: 2, limit }),
+					() =>
+						caller.procedure({
+							userId,
+							cursor: 2,
+							limit,
+							filters: { showResolved: true },
+						}),
+					() => caller.procedure({ userId, cursor: 6, limit }),
+					() => caller.procedure({ userId: anotherUserId, cursor: 2, limit }),
+				]);
+				expect(results).toStrictEqual<typeof results>([
+					{
+						count: resolvedUserDebts.length,
+						cursor: 0,
+						items: resolvedUserDebts.slice(0, 2),
+					},
+					{
+						count: resolvedUserDebts.length,
+						cursor: 2,
+						items: resolvedUserDebts.slice(2, 4),
+					},
+					{
+						count: nonResolvedUserDebts.length,
+						cursor: 2,
+						items: nonResolvedUserDebts.slice(2, 4),
+					},
+					{
+						count: resolvedUserDebts.length,
+						cursor: 6,
+						items: resolvedUserDebts.slice(6, 8),
+					},
+					{
+						count: anotherUserDebts.length,
+						cursor: 2,
+						items: anotherUserDebts.slice(2, 4),
+					},
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: userId } = await insertUser(ctx, accountId);
+				const debts = mapDebts(
+					await Promise.all(
+						new Array(4)
+							.fill(null)
+							.map(() =>
+								insertDebt(ctx, accountId, userId, { currencyCode: "USD" }),
+							),
+					),
+				);
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ userId, cursor: 0, limit: 2 }),
+					() =>
+						caller
+							.procedure({ userId: faker.string.uuid(), cursor: 2, limit: 2 })
+							.catch((e) => e),
+				]);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					count: debts.length,
+					cursor: 0,
+					items: debts.slice(0, 2),
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
 		});
 	});

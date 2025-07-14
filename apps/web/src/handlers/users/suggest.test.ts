@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import {
@@ -21,8 +22,61 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./suggest";
+
+const getTrigrams = (s: string): Set<string> => {
+	const words = s.toLowerCase().split(" ");
+	return words.reduce((set, word) => {
+		const letters = `  ${word} `.split("");
+		letters.forEach((_, index) => {
+			if (index > letters.length - 3) {
+				return set;
+			}
+			const nextWord = letters.slice(index, index + 3).join("");
+			if (!nextWord.trim().includes(" ")) {
+				set.add(nextWord);
+			}
+		});
+		return set;
+	}, new Set<string>());
+};
+
+function trigramSimilarity(a: string, b: string): number {
+	const trigramsA = getTrigrams(a);
+	const trigramsB = getTrigrams(b);
+
+	if (trigramsA.size === 0) {
+		return 0;
+	}
+	return (
+		[...trigramsA.keys()].filter((trigramA) => trigramsB.has(trigramA)).length /
+		trigramsA.size
+	);
+}
+
+const mapUsers = (
+	term: string,
+	users: Awaited<ReturnType<typeof insertUser>>[],
+) =>
+	users
+		.sort((a, b) => {
+			if (term.length < 3) {
+				const sortedByName = a.name.localeCompare(b.name);
+				if (sortedByName !== 0) {
+					return sortedByName;
+				}
+			} else {
+				const similarityA = trigramSimilarity(term, a.name);
+				const similarityB = trigramSimilarity(term, b.name);
+				if (similarityA !== similarityB) {
+					return similarityB - similarityA;
+				}
+			}
+			return a.id.localeCompare(b.id);
+		})
+		.map(({ id }) => id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -33,6 +87,7 @@ describe("users.suggest", () => {
 				input: faker.string.alpha(),
 				limit: 1,
 				direction: "forward",
+				cursor: 0,
 			}),
 		);
 
@@ -46,6 +101,7 @@ describe("users.suggest", () => {
 							input: "a".repeat(MAX_SUGGEST_LENGTH + 1),
 							limit: 1,
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "input": Too big: expected string to have <=255 characters`,
@@ -63,6 +119,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 0,
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Too small: expected number to be >0`,
@@ -78,6 +135,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: MAX_LIMIT + 1,
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Too big: expected number to be <=100`,
@@ -93,6 +151,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: faker.number.float(),
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Invalid input: expected int, received number`,
@@ -161,6 +220,7 @@ describe("users.suggest", () => {
 							limit: 1,
 							filterIds: [faker.string.alpha()],
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "filterIds[0]": Invalid UUID`,
@@ -182,6 +242,7 @@ describe("users.suggest", () => {
 								receiptId: faker.string.alpha(),
 							},
 							direction: "forward",
+							cursor: 0,
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "options.receiptId": Invalid UUID`,
@@ -205,6 +266,7 @@ describe("users.suggest", () => {
 							receiptId: nonExistentReceiptId,
 						},
 						direction: "forward",
+						cursor: 0,
 					}),
 				"NOT_FOUND",
 				`Receipt "${nonExistentReceiptId}" does not exist.`,
@@ -226,6 +288,7 @@ describe("users.suggest", () => {
 							receiptId,
 						},
 						direction: "forward",
+						cursor: 0,
 					}),
 				"FORBIDDEN",
 				`Not enough rights to view receipt "${receiptId}".`,
@@ -266,9 +329,10 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: matchedUsers.map(({ id }) => id).sort(),
+				items: mapUsers("Alice", matchedUsers),
 				cursor: 0,
 				count: matchedUsers.length,
 			});
@@ -289,12 +353,11 @@ describe("users.suggest", () => {
 				input: "Al",
 				limit: 10,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
 				// Shorter requests are sorted by name, not by similarity
-				items: matchedUsers
-					.sort((a, b) => a.name.localeCompare(b.name))
-					.map(({ id }) => id),
+				items: mapUsers("Al", matchedUsers),
 				cursor: 0,
 				count: matchedUsers.length,
 			});
@@ -307,6 +370,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: [],
@@ -357,9 +421,10 @@ describe("users.suggest", () => {
 				filterIds: [filteredUserId],
 				options: { type: "not-connected-receipt", receiptId },
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: matchedUsers.map(({ id }) => id).sort(),
+				items: mapUsers("Alice", matchedUsers),
 				cursor: 0,
 				count: matchedUsers.length,
 			});
@@ -397,9 +462,10 @@ describe("users.suggest", () => {
 				limit: 10,
 				options: { type: "not-connected" },
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: matchedUsers.map(({ id }) => id).sort(),
+				items: mapUsers("Alice", matchedUsers),
 				cursor: 0,
 				count: matchedUsers.length,
 			});
@@ -424,6 +490,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual({
 				// Order of matched users is important - they are sorted by fuzziness
@@ -453,6 +520,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(firstPage.items.length).toBe(limit);
 			expect(firstPage.cursor).toBe(0);
@@ -495,9 +563,10 @@ describe("users.suggest", () => {
 				limit: 10,
 				filterIds: [filteredUserId],
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: matchedUsers.map(({ id }) => id).sort(),
+				items: mapUsers("Alice", matchedUsers),
 				cursor: 0,
 				count: matchedUsers.length,
 			});
@@ -516,11 +585,80 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				direction: "forward",
+				cursor: 0,
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: [user.id],
 				cursor: 0,
 				count: 1,
+			});
+		});
+
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+				const users = mapUsers(
+					"Alice",
+					await Promise.all(
+						Array.from({ length: 10 }, async (_, index) =>
+							insertUser(ctx, accountId, { name: `Alice ${index}` }),
+						),
+					),
+				);
+
+				const limit = 2;
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const commonOptions = {
+					input: "Alice",
+					limit,
+					direction: "forward" as const,
+				};
+				const results = await runInBand([
+					() => caller.procedure({ ...commonOptions, cursor: 0 }),
+					() => caller.procedure({ ...commonOptions, cursor: 2 }),
+					() => caller.procedure({ ...commonOptions, cursor: 6 }),
+				]);
+				expect(results).toStrictEqual<typeof results>([
+					{
+						count: users.length,
+						cursor: 0,
+						items: users.slice(0, 2),
+					},
+					{
+						count: users.length,
+						cursor: 2,
+						items: users.slice(2, 4),
+					},
+					{
+						count: users.length,
+						cursor: 6,
+						items: users.slice(6, 8),
+					},
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const user = await insertUser(ctx, accountId, { name: "Alice" });
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const commonOptions = {
+					input: "Alice",
+					direction: "forward" as const,
+					cursor: 0,
+				};
+				const results = await runInBand([
+					() => caller.procedure({ ...commonOptions, limit: 2 }),
+					() =>
+						caller.procedure({ ...commonOptions, limit: -1 }).catch((e) => e),
+				]);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					count: 1,
+					cursor: 0,
+					items: mapUsers("Alice", [user]),
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
 		});
 	});
