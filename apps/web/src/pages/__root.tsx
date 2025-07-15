@@ -19,7 +19,6 @@ import { z } from "zod";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import globalCss from "~app/global.css?url";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { Provider } from "~app/providers/index";
 import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import type { Language } from "~app/utils/i18n-data";
@@ -47,25 +46,6 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
 
 applyRemaps();
-
-const useTestSearchParams = () => {
-	const searchParams = Route.useSearch();
-	const navigate = useNavigate();
-	// We remove these params so they don't pop up in the URL
-	const removeTestSearchParams = React.useCallback(() => {
-		void navigate({
-			replace: true,
-			search: (prev) => ({
-				...prev,
-				proxyPort: undefined,
-				controllerId: undefined,
-			}),
-		});
-	}, [navigate]);
-	// eslint-disable-next-line react/hook-use-state
-	const [initialSearchParams] = React.useState(() => searchParams);
-	return [initialSearchParams, removeTestSearchParams] as const;
-};
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
@@ -115,18 +95,17 @@ const RootDocument: React.FC<
 const RootComponent = () => {
 	const data = Route.useLoaderData();
 	const baseLinksContext = React.use(LinksContext);
-	const [initialSearchParams, removeTestSearchParams] = useTestSearchParams();
-	React.useEffect(() => removeTestSearchParams(), [removeTestSearchParams]);
+	const searchParams = Route.useSearch();
 
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
-			debug: initialSearchParams.debug,
+			debug: searchParams.debug,
 			url:
 				data.baseUrl && typeof window === "undefined"
 					? new URL(baseLinksContext.url, data.baseUrl).toString()
 					: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
-			useBatch: !initialSearchParams.controllerId,
+			useBatch: !data.isTest,
 			source: typeof window === "undefined" ? "ssr" : "csr",
 			captureError: captureSentryError,
 			// We should check for just `data.request`, but serialization makes it complicated
@@ -134,7 +113,13 @@ const RootComponent = () => {
 				? fromEntries([...data.request.headers.entries()])
 				: undefined,
 		}),
-		[baseLinksContext.url, data.baseUrl, initialSearchParams, data.request],
+		[
+			baseLinksContext.url,
+			data.baseUrl,
+			searchParams.debug,
+			data.isTest,
+			data.request,
+		],
 	);
 	const storeContext = React.useMemo(
 		() =>
@@ -184,21 +169,21 @@ export type RouterContext = {
 	initialValues: StoreValues;
 	initialLanguage: Language;
 	request: Request | null;
+	isTest: boolean;
 } & EphemeralContext;
 
-export type ExternalRouterContext = Pick<RouterContext, "initialValues">;
+export type ExternalRouterContext = Pick<
+	RouterContext,
+	"initialValues" | "isTest"
+>;
 
 export const [rootSearchParamsSchema, rootSearchParamsDefaults] =
 	searchParamsWithDefaults(
 		z.object({
-			proxyPort: z.coerce.number(),
-			controllerId: z.uuid(),
 			debug: z.coerce.boolean(),
 			redirect: z.string(),
 		}),
 		{
-			proxyPort: 0,
-			controllerId: "",
 			debug: false,
 			redirect: "",
 		},

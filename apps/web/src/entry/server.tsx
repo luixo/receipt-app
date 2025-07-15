@@ -9,6 +9,7 @@ import {
 // Import is needed to apply Nativewind remaps to default components
 import "~app/utils/nativewind";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
+import { apiCookieNames } from "~utils/mocks";
 import type { ExternalRouterContext } from "~web/pages/__root";
 
 import type { TreeRouter } from "./router";
@@ -17,7 +18,10 @@ import { createRouter } from "./router";
 const getExternalContext = (): ExternalRouterContext => {
 	const cookies = parseCookies();
 	const initialValues = getStoreValuesFromInitialValues(cookies);
-	return { initialValues };
+	return {
+		initialValues,
+		isTest: Boolean(cookies[apiCookieNames.controllerId]),
+	};
 };
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;

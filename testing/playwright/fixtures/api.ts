@@ -23,9 +23,11 @@ import { AUTH_COOKIE } from "~app/utils/auth";
 import type { AccountsId, UsersId } from "~db/models";
 import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCY_CODES } from "~utils/currency-data";
+import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import type { TransformerResult } from "~utils/transformer";
 import type { MaybePromise } from "~utils/types";
+import { getCookie } from "~web/utils/cookies";
 
 import type { appRouter } from "../global/router";
 
@@ -254,8 +256,11 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			"Content-Type": "application/json",
 		});
 		const url = new URL(req.url || "/", "http://localhost");
-		const controllerId = url.searchParams.get("controllerId") || undefined;
-		if (!controllerId) {
+		const controllerId = getCookie(
+			req.headers.cookie || "",
+			apiCookieNames.controllerId,
+		);
+		if (!controllerId || Array.isArray(controllerId)) {
 			throw new Error(
 				`Expected to have controller id for url "${url.toString()}"`,
 			);

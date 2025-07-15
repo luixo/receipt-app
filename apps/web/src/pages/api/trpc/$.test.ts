@@ -1,14 +1,17 @@
 import { faker } from "@faker-js/faker";
+import type { proxyRequest } from "@tanstack/react-start/server";
 import { TRPCClientError } from "@trpc/client";
 import type { AnyTRPCProcedure, inferProcedureInput } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
-import { entries, pick } from "remeda";
-import { beforeEach, describe, expect, vi } from "vitest";
+import { serialize } from "cookie";
+import { entries, fromEntries, pick } from "remeda";
+import { assert, beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod";
 
 import { test } from "~tests/backend/utils/test";
+import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
-import type { FlattenObject, UnionToIntersection } from "~utils/types";
+import type { FlattenObject, Tail, UnionToIntersection } from "~utils/types";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
@@ -77,6 +80,8 @@ const router = t.router({
 const serializeInput = (input: object) =>
 	JSON.stringify(transformer.serialize(input));
 
+const BASE_HEADERS = { "content-type": "application/json" };
+
 type Procedures = UnionToIntersection<
 	FlattenObject<AnyTRPCProcedure, (typeof router)["_def"]["procedures"]>
 >;
@@ -84,6 +89,7 @@ type Options<P extends keyof Procedures> = {
 	procedure: P;
 	method?: "GET" | "POST";
 	headers?: Record<string, string>;
+	cookies?: Record<string, string>;
 	searchParams?: Record<string, string>;
 } & (undefined extends inferProcedureInput<Procedures[P]>
 	? { input?: undefined }
@@ -93,6 +99,7 @@ const runRoute = async <K extends keyof Procedures>({
 	input,
 	method = "GET",
 	headers,
+	cookies = {},
 	searchParams,
 }: Options<K>) => {
 	const url = new URL(`http://localhost:3000/${procedure}`);
@@ -110,7 +117,10 @@ const runRoute = async <K extends keyof Procedures>({
 		request: new Request(url, {
 			method,
 			headers: {
-				"content-type": "application/json",
+				...BASE_HEADERS,
+				cookie: entries(cookies)
+					.map(([key, value]) => serialize(key, value))
+					.join(";"),
 				...headers,
 			},
 			body: method === "POST" && input ? serializeInput(input) : undefined,
@@ -214,17 +224,37 @@ describe("TRPC endpoint", () => {
 		test("request is sent via proxy port", async ({ ctx }) => {
 			await withTestServer(ctx, router, async ({ url }) => {
 				const name = faker.person.firstName();
+				const controllerId = "random-controller-id";
 				await runRoute({
 					procedure: "query",
 					input: { name },
-					searchParams: { proxyPort: new URL(url).port },
+					cookies: {
+						[apiCookieNames.proxyPort]: new URL(url).port,
+						[apiCookieNames.controllerId]: controllerId,
+					},
 				});
 				const expectedUrl = new URL(url);
 				expectedUrl.pathname = "query";
 				expectedUrl.searchParams.set("input", serializeInput({ name }));
-				expect(proxySpy).toHaveBeenCalledExactlyOnceWith(
-					expectedUrl.toString(),
-				);
+				expect(proxySpy).toHaveBeenCalledOnce();
+				const firstCallArgs = proxySpy.mock.lastCall as
+					| Tail<Parameters<typeof proxyRequest>>
+					| undefined;
+				assert(firstCallArgs);
+				expect(firstCallArgs[0]).toEqual(expectedUrl.toString());
+				const options = firstCallArgs[1];
+				assert(options);
+				expect({
+					...options,
+					headers: options.headers
+						? fromEntries([...(options.headers as Headers).entries()])
+						: undefined,
+				}).toEqual({
+					headers: {
+						...BASE_HEADERS,
+						cookie: serialize(apiCookieNames.controllerId, controllerId),
+					},
+				});
 			});
 		});
 
@@ -234,7 +264,9 @@ describe("TRPC endpoint", () => {
 			const response = await runRoute({
 				procedure: "query",
 				input: { name },
-				searchParams: { proxyPort: "1000" },
+				cookies: {
+					[apiCookieNames.proxyPort]: "1000",
+				},
 			});
 			expect(response.status).toBe(403);
 			expect(response.text).toBe("Proxying is only allowed in test mode");

@@ -1,8 +1,7 @@
-import { expect } from "@playwright/test";
-
 import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { localSettings } from "~tests/frontend/consts";
+import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./even-debts-divider.utils";
 import { debtsWithDividers } from "./user-debts-list.utils";

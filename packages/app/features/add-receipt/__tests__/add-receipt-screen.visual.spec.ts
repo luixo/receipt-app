@@ -1,9 +1,10 @@
-import { expect, mergeTests } from "@playwright/test";
+import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
+import { expect } from "~tests/frontend/fixtures";
 import { add, getNow } from "~utils/date";
 
 import { test as localTest } from "./utils";

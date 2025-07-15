@@ -9,6 +9,7 @@ import { fromEntries } from "remeda";
 // Import is needed to apply Nativewind remaps to default components
 import "~app/utils/nativewind";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
+import { apiCookieNames } from "~utils/mocks";
 import type { ExternalRouterContext } from "~web/pages/__root";
 
 import { createRouter } from "./router";
@@ -26,9 +27,13 @@ const parseCookies = () =>
 			),
 	);
 
-const getContext = (): ExternalRouterContext => ({
-	initialValues: getStoreValuesFromInitialValues(parseCookies()),
-});
+const getContext = (): ExternalRouterContext => {
+	const cookies = parseCookies();
+	return {
+		initialValues: getStoreValuesFromInitialValues(cookies),
+		isTest: Boolean(cookies[apiCookieNames.controllerId]),
+	};
+};
 
 const router = createRouter(getContext());
 

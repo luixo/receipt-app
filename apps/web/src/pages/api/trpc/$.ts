@@ -14,11 +14,13 @@ import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import { getDatabase } from "~db/database";
+import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import { router } from "~web/handlers";
 import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
+import { getCookie } from "~web/utils/cookies";
 import { getReqHeader } from "~web/utils/headers";
 
 /* c8 ignore start */
@@ -82,23 +84,42 @@ const getTestRequestHandlerProps = ({
 	return { endpoint: "", router: overrideRouter };
 };
 
-const callback: Callback = async ({ request, ...rest }) => {
+const redirectTestHandler = async (
+	request: Request,
+	cookieHeader: string,
+	proxyPort: string,
+) => {
+	if (import.meta.env.MODE !== "test") {
+		// eslint-disable-next-line no-console
+		console.warn(
+			"You are trying to use proxying without activating --mode=test",
+		);
+		return new Response("Proxying is only allowed in test mode", {
+			status: 403,
+		});
+	}
 	const proxyUrl = new URL(request.url);
-	const proxyPort = proxyUrl.searchParams.get("proxyPort");
-	if (proxyPort && typeof proxyPort === "string") {
-		if (import.meta.env.MODE !== "test") {
-			// eslint-disable-next-line no-console
-			console.warn(
-				"You are trying to use proxying without activating --mode=test",
-			);
-			return new Response("Proxying is only allowed in test mode", {
-				status: 403,
-			});
-		}
-		proxyUrl.port = proxyPort;
-		proxyUrl.searchParams.delete("proxyPort");
-		await proxyRequest(proxyUrl.toString());
-		return new Response();
+	proxyUrl.port = proxyPort;
+	request.headers.set(
+		"cookie",
+		cookieHeader
+			.replace(
+				new RegExp(`(?:^|;\\s*)(${apiCookieNames.proxyPort}=[^;]+)(?=;|$)`),
+				"",
+			)
+			.replace(/^;/, "") || "",
+	);
+	await proxyRequest(proxyUrl.toString(), {
+		headers: request.headers,
+	});
+	return new Response();
+};
+
+const callback: Callback = async ({ request, ...rest }) => {
+	const cookieHeader = request.headers.get("cookie") ?? "";
+	const proxyPort = getCookie(cookieHeader, apiCookieNames.proxyPort);
+	if (proxyPort) {
+		return redirectTestHandler(request, cookieHeader, proxyPort);
 	}
 	if (import.meta.env.MODE === "test" && Boolean(process.env.PLAYWRIGHT)) {
 		return new Response(

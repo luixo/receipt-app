@@ -1,18 +1,30 @@
 import type { Page as OriginalPage, Page } from "@playwright/test";
 
 import type { ExtractFixture } from "~tests/frontend/types";
+import { apiCookieNames } from "~utils/mocks";
 
 import { apiFixtures as test } from "./api";
 
 type ExtendedPageFixtures = { page: Page };
 
-const getProxyUrl = (url: string, api: ExtractFixture<typeof test>["api"]) => {
+const setProxyHeaders = async (
+	page: Page,
+	api: ExtractFixture<typeof test>["api"],
+	baseUrl = "",
+) => {
 	const { port, controllerId } = api.getConnection();
-	const baseUrl = "http://localhost";
-	const urlObject = new URL(url, baseUrl);
-	urlObject.searchParams.set("proxyPort", port.toString());
-	urlObject.searchParams.set("controllerId", controllerId);
-	return urlObject.toString().replace(baseUrl, "");
+	await page.context().addCookies([
+		{
+			name: apiCookieNames.proxyPort,
+			value: port.toString(),
+			url: baseUrl,
+		},
+		{
+			name: apiCookieNames.controllerId,
+			value: controllerId,
+			url: baseUrl,
+		},
+	]);
 };
 
 const fakeBrowserDate = async (page: OriginalPage) => {
@@ -39,15 +51,16 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 };
 
 export const pageFixtures = test.extend<ExtendedPageFixtures>({
-	page: async ({ page, javaScriptEnabled, api }, use) => {
+	page: async ({ page, javaScriptEnabled, api, baseURL }, use) => {
 		await page.emulateMedia({ colorScheme: "light" });
 
 		const originalGoto = page.goto.bind(page);
 		page.goto = async (url, options) => {
 			await fakeBrowserDate(page);
+			await setProxyHeaders(page, api, baseURL);
 			// We wait for page stream to end while simultaneously hang requests in "loading" state
 			// So we consider page to be loaded when page is started loading and wait for `hydrated` mark
-			const result = await originalGoto(getProxyUrl(url, api), {
+			const result = await originalGoto(url, {
 				waitUntil: javaScriptEnabled ? "commit" : "load",
 				...options,
 			});
