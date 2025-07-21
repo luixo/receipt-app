@@ -38,6 +38,7 @@ describe("errors formatting", () => {
 					path: "account.get",
 					stack: typedError.shape?.data.stack,
 				},
+				input: undefined,
 			});
 		});
 	});

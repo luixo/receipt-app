@@ -1,20 +1,24 @@
 import React from "react";
 import { View } from "react-native";
 
-import * as Sentry from "@sentry/tanstackstart-react";
 import type { QueryClient } from "@tanstack/react-query";
 import { dehydrate, hydrate } from "@tanstack/react-query";
 import type {
 	ErrorRouteComponent,
 	NotFoundRouteComponent,
 } from "@tanstack/react-router";
-import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import {
+	createRouter as createTanStackRouter,
+	useRouter,
+} from "@tanstack/react-router";
 import { serverOnly } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
 import i18n from "i18next";
 import { I18nextProvider } from "react-i18next";
 import { clone } from "remeda";
 
+import { ErrorComponent } from "~app/components/suspense-wrapper";
+import { LinksContext } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
 	QueryClientsContext,
@@ -44,15 +48,17 @@ const NotFoundComponent: NotFoundRouteComponent = () => (
 	</View>
 );
 
-const ErrorComponent: ErrorRouteComponent = ({ error }) => {
+const RootErrorComponent: ErrorRouteComponent = ({ error, reset }) => {
+	const router = useRouter();
+	const { captureError } = React.use(LinksContext);
 	React.useEffect(() => {
-		void Sentry.captureException(error);
-	}, [error]);
-	return (
-		<View>
-			<Text>Something went wrong!</Text>
-		</View>
-	);
+		captureError(error);
+	}, [captureError, error]);
+	const resetInvalidate = React.useCallback(() => {
+		reset();
+		void router.invalidate();
+	}, [reset, router]);
+	return <ErrorComponent error={error} reset={resetInvalidate} />;
 };
 
 const getLocalQueryClient = (queryClient: QueryClient) => {
@@ -92,7 +98,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			nowTimestamp: serialize<"zonedDateTime">(getNow.zonedDateTime()),
 		},
 		defaultNotFoundComponent: NotFoundComponent,
-		defaultErrorComponent: ErrorComponent,
+		defaultErrorComponent: RootErrorComponent,
 		defaultPendingComponent: Spinner,
 		// Don't rerun loaders on the client
 		defaultStaleTime: Infinity,

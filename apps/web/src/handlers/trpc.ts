@@ -24,8 +24,12 @@ import { getReqHeader } from "~web/utils/headers";
 export const t = initTRPC.context<UnauthorizedContext>().create({
 	transformer,
 	errorFormatter: (opts) => {
-		const { shape, error } = opts;
-		return { ...shape, message: formatErrorMessage(error, shape.message) };
+		const { shape, error, input } = opts;
+		return {
+			...shape,
+			message: formatErrorMessage(error, shape.message),
+			input,
+		};
 	},
 });
 

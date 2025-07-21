@@ -50,7 +50,7 @@ export type GetLinksOptions = {
 	useBatch?: boolean;
 	keepError?: boolean;
 	headers?: Headers;
-	captureError: (error: TRPCClientError<AppRouter>) => string;
+	captureError: (error: Error) => string;
 	source: // Client-side rendering
 	| "csr"
 		// Client-side rendering via loader

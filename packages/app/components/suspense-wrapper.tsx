@@ -6,13 +6,12 @@ import {
 } from "@tanstack/react-query";
 import type { ErrorRouteComponent } from "@tanstack/react-router";
 import { CatchBoundary } from "@tanstack/react-router";
-import { TRPCClientError } from "@trpc/client";
 import { useTranslation } from "react-i18next";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { LinksContext } from "~app/contexts/links-context";
 
-const ErrorComponent: ErrorRouteComponent = ({
+export const ErrorComponent: ErrorRouteComponent = ({
 	error,
 	reset: resetBoundary,
 }) => {
@@ -42,11 +41,9 @@ export const SuspenseWrapper: React.FC<
 				<CatchBoundary
 					getResetKey={() => "static"}
 					onCatch={(error) => {
-						if (error instanceof TRPCClientError) {
-							captureError(error);
-						}
+						captureError(error);
 						// eslint-disable-next-line no-console
-						console.error(`Unknown error`, error);
+						console.error(error);
 					}}
 					errorComponent={ErrorComponent}
 				>
