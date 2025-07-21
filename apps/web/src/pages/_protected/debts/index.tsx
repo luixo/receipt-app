@@ -1,6 +1,4 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import z from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsScreen } from "~app/features/debts/debts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
@@ -15,16 +13,10 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		limit: limitSchema,
-		offset: offsetSchema,
-	}),
-	{
-		limit: DEFAULT_LIMIT,
-		offset: 0,
-	},
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	limit: limitSchema.catch(DEFAULT_LIMIT),
+	offset: offsetSchema.catch(0),
+});
 
 const Wrapper = () => {
 	const useQueryState = getQueryStates(Route);
@@ -38,8 +30,8 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/debts/")({
 	component: Wrapper,
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
+	validateSearch,
+	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { offset, limit } }) => ({
 		offset,
 		limit,

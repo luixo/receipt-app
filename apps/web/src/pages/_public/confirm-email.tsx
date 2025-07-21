@@ -1,16 +1,13 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { ConfirmEmailScreen } from "~app/features/confirm-email/confirm-email-screen";
 import { getTitle } from "~app/utils/i18n";
 import { confirmEmailTokenSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({ token: confirmEmailTokenSchema }),
-	{ token: "" },
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	token: confirmEmailTokenSchema.optional().catch(undefined),
+});
 
 const Wrapper = () => {
 	const { token } = Route.useSearch();
@@ -19,8 +16,8 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_public/confirm-email")({
 	component: Wrapper,
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
+	validateSearch,
+	search: { middlewares: [stripDefaults] },
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context, "confirmEmail") }],
 	}),

@@ -1,6 +1,4 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsTransferScreen } from "~app/features/debts-transfer/debts-transfer-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
@@ -9,13 +7,11 @@ import { userIdSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		to: userIdSchema.optional(),
-		from: userIdSchema.optional(),
-	}),
-	{ to: undefined, from: undefined },
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	to: userIdSchema.optional().catch(undefined),
+	from: userIdSchema.optional().catch(undefined),
+});
+
 const Wrapper = () => {
 	const useQueryState = getQueryStates(Route);
 	return (
@@ -28,8 +24,8 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/debts/transfer")({
 	component: Wrapper,
-	validateSearch: zodValidator({ schema, output: "input" }),
-	search: { middlewares: [stripSearchParams(defaults)] },
+	validateSearch,
+	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { to, from } }) => ({ to, from }),
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "debts");

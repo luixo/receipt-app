@@ -1,25 +1,18 @@
+import { stripSearchParams } from "@tanstack/react-router";
 import { mapValues } from "remeda";
 import { z } from "zod";
 
-import type { NoUndefined } from "~utils/types";
-
-export const searchParamsWithDefaults = <S extends Record<string, z.ZodType>>(
-	schema: z.ZodObject<S>,
-	defaultValues: { [K in keyof S]: z.infer<S[K]> },
-) =>
-	[
-		z.object(
-			mapValues(
-				schema.shape,
-				(value, key) =>
-					(value as S[keyof S])
-						.optional()
-						.default(defaultValues[key])
-						// Catch is hard to type so we ignore it for now
-						.catch(
-							defaultValues[key] as NoUndefined<z.infer<S[keyof S]>>,
-						) as unknown as z.ZodDefault<z.ZodOptional<S[keyof S]>>,
-			) as { [K in keyof S]: z.ZodDefault<z.ZodOptional<S[K]>> },
-		),
-		defaultValues,
+export const searchParamsWithDefaults = <S extends Record<string, z.ZodCatch>>(
+	shape: S,
+) => {
+	const defaultValues = mapValues(shape, (value) =>
+		// `catchValue` doesn't actually do anything with it's argument
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		value.def.catchValue({} as any),
+	) as z.input<ResultSchema>;
+	type ResultSchema = z.ZodObject<{ [K in keyof S]: z.ZodDefault<S[K]> }>;
+	return [
+		z.object(shape) as unknown as ResultSchema,
+		stripSearchParams<z.input<ResultSchema>>(defaultValues),
 	] as const;
+};

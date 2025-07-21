@@ -1,6 +1,4 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import z from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsExchangeAllScreen } from "~app/features/debts-exchange-all/debts-exchange-all-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
@@ -9,14 +7,9 @@ import { currencyCodeSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		from: currencyCodeSchema.optional(),
-	}),
-	{
-		from: undefined,
-	},
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	from: currencyCodeSchema.optional().catch(undefined),
+});
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
@@ -29,8 +22,8 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_protected/debts/user/$id/exchange/all")(
 	{
 		component: Wrapper,
-		validateSearch: zodValidator(schema),
-		search: { middlewares: [stripSearchParams(defaults)] },
+		validateSearch,
+		search: { middlewares: [stripDefaults] },
 		loaderDeps: ({ search: { from } }) => ({ from }),
 		loader: async (ctx) => {
 			await loadNamespaces(ctx.context, "debts");

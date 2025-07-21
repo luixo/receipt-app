@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"resetPasswordIntentions.get:[{\"token\":\"\"}]": {
+		"resetPasswordIntentions.get:[{}]": {
 			"state": {
 				"data": {
 					"email": "Jailyn_Wunsch@yahoo.com"

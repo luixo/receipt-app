@@ -8,9 +8,7 @@ import {
 	Outlet,
 	Scripts,
 	createRootRouteWithContext,
-	stripSearchParams,
 } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
 import { serialize } from "cookie";
 import type { i18n as i18nType } from "i18next";
 import { fromEntries, keys, omit } from "remeda";
@@ -177,17 +175,10 @@ export type ExternalRouterContext = Pick<
 	"initialValues" | "isTest"
 >;
 
-export const [rootSearchParamsSchema, rootSearchParamsDefaults] =
-	searchParamsWithDefaults(
-		z.object({
-			debug: z.coerce.boolean(),
-			redirect: z.string(),
-		}),
-		{
-			debug: false,
-			redirect: "",
-		},
-	);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	debug: z.coerce.boolean().optional().catch(false),
+	redirect: z.string().optional().catch(""),
+});
 
 const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 	createRootRouteWithContext,
@@ -200,8 +191,8 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 		await loadNamespaces(ctx.context, "default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
-	search: { middlewares: [stripSearchParams(rootSearchParamsDefaults)] },
-	validateSearch: zodValidator(rootSearchParamsSchema),
+	search: { middlewares: [stripDefaults] },
+	validateSearch,
 	head: ({ match }) => {
 		const t = getServerSideT(match.context, "default");
 		const title = t("titles.index");

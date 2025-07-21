@@ -1,6 +1,4 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { ResetPasswordScreen } from "~app/features/reset-password/reset-password-screen";
 import { getTitle, loadNamespaces } from "~app/utils/i18n";
@@ -8,10 +6,9 @@ import { resetPasswordTokenSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({ token: resetPasswordTokenSchema }),
-	{ token: "" },
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	token: resetPasswordTokenSchema.optional().catch(undefined),
+});
 
 const Wrapper = () => {
 	const { token } = Route.useSearch();
@@ -20,8 +17,8 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_public/reset-password")({
 	component: Wrapper,
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
+	validateSearch,
+	search: { middlewares: [stripDefaults] },
 	loaderDeps: (opts) => ({ token: opts.search.token }),
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "reset-password");

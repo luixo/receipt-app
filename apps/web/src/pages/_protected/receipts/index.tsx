@@ -1,6 +1,4 @@
-import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
-import { zodValidator } from "@tanstack/zod-adapter";
-import { z } from "zod";
+import { createFileRoute } from "@tanstack/react-router";
 
 import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
@@ -16,20 +14,12 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [schema, defaults] = searchParamsWithDefaults(
-	z.object({
-		sort: receiptsOrderBySchema,
-		filters: receiptsFiltersSchema,
-		limit: limitSchema,
-		offset: offsetSchema,
-	}),
-	{
-		sort: "date-desc",
-		filters: {},
-		limit: DEFAULT_LIMIT,
-		offset: 0,
-	},
-);
+const [validateSearch, stripDefaults] = searchParamsWithDefaults({
+	sort: receiptsOrderBySchema.catch("date-desc"),
+	filters: receiptsFiltersSchema.catch({}),
+	limit: limitSchema.catch(DEFAULT_LIMIT),
+	offset: offsetSchema.catch(0),
+});
 
 const Wrapper = () => {
 	const useQueryState = getQueryStates(Route);
@@ -46,8 +36,8 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: Wrapper,
 	staleTime: Infinity,
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
+	validateSearch,
+	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { offset, limit, filters, sort } }) => ({
 		offset,
 		limit,

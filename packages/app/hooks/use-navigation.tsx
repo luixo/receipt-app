@@ -45,21 +45,28 @@ export const useHref = () => (url: string) => url;
 
 type RouteKey = keyof FileRoutesByFullPath;
 type RouteByKey<K extends RouteKey> = FileRoutesByFullPath[K];
-export type RouteSearchParams<R extends AnyRoute> = R["types"]["searchSchema"];
+export type OutputRouteSearchParams<R extends AnyRoute> =
+	R["types"]["searchSchema"];
+export type InputRouteSearchParams<R extends AnyRoute> =
+	R["types"]["searchSchemaInput"];
 
 type SearchParamStateByRoute<
 	R extends AnyRoute,
-	P extends keyof RouteSearchParams<R>,
+	P extends keyof OutputRouteSearchParams<R>,
 > = [
-	RouteSearchParams<R>[P],
+	OutputRouteSearchParams<R>[P],
 	(
-		setStateAction: React.SetStateAction<RouteSearchParams<R>[P]>,
+		setStateAction:
+			| InputRouteSearchParams<R>[P]
+			| ((
+					prevState: OutputRouteSearchParams<R>[P],
+			  ) => InputRouteSearchParams<R>[P]),
 		options?: NavigateOptions<TreeRouter, "/">,
 	) => void,
 ];
 export type SearchParamState<
 	R extends RouteKey,
-	P extends keyof RouteSearchParams<RouteByKey<R>>,
+	P extends keyof OutputRouteSearchParams<RouteByKey<R>>,
 > = SearchParamStateByRoute<RouteByKey<R>, P>;
 
 export const getQueryStates =
