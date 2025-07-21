@@ -160,7 +160,7 @@ const useConsecutiveDebtIds = ({
 			if (!matchedElement?.data) {
 				return {
 					debtIds: consecutivePages.flatMap((page) => page.items),
-					missingCursors: new Array(currentCursor / limit)
+					missingCursors: new Array(Math.floor(currentCursor / limit))
 						.fill(null)
 						.map((_, page) =>
 							getMatchedElement(page * limit) ? null : page * limit,

@@ -10,6 +10,25 @@ import type {
 } from "~app/trpc";
 import { updateSetStateAction } from "~utils/react";
 
+const validateOffset = ({
+	limit,
+	offset,
+	count,
+}: {
+	limit: number;
+	offset: number;
+	count: number;
+}) => {
+	const maxOffset = count === 0 ? 0 : (Math.ceil(count / limit) - 1) * limit;
+	if (offset > maxOffset) {
+		return maxOffset;
+	}
+	if (offset % limit !== 0) {
+		return Math.floor(offset / limit) * limit;
+	}
+	return offset;
+};
+
 export const useCursorPaging = <
 	K extends TRPCInfiniteQueryKey,
 	P extends
@@ -32,14 +51,14 @@ export const useCursorPaging = <
 			procedure as TRPCDecoratedInfiniteQueryProcedure<"users.getPaged">
 		).queryOptions({ ...input, cursor: deferredOffset }),
 	);
-
+	const { count } = data;
 	React.useEffect(() => {
-		const maxOffset =
-			data.count === 0 ? 0 : (Math.ceil(data.count / limit) - 1) * limit;
-		if (offset > maxOffset) {
-			setOffset(maxOffset, { replace: true });
+		// This affect helps with invalid navigations / limit changes
+		const validatedOffset = validateOffset({ offset, limit, count });
+		if (validatedOffset !== offset) {
+			setOffset(validatedOffset);
 		}
-	}, [setOffset, data.count, limit, offset]);
+	}, [count, limit, offset, setOffset]);
 
 	return {
 		data: data as P["~types"]["output"],
@@ -50,9 +69,10 @@ export const useCursorPaging = <
 				setOffset((prevOffset) => {
 					const prevPage = Math.floor(prevOffset / limit) + 1;
 					const nextPage = updateSetStateAction(setStateAction, prevPage);
-					return (nextPage - 1) * limit;
+					const nextOffset = (nextPage - 1) * limit;
+					return validateOffset({ offset: nextOffset, limit, count });
 				}),
-			[setOffset, limit],
+			[setOffset, limit, count],
 		),
 		isPending: deferredOffset !== offset,
 	};
