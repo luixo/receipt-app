@@ -45,7 +45,12 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 		const originalGoto = page.goto.bind(page);
 		page.goto = async (url, options) => {
 			await fakeBrowserDate(page);
-			const result = await originalGoto(getProxyUrl(url, api), options);
+			// We wait for page stream to end while simultaneously hang requests in "loading" state
+			// So we consider page to be loaded when page is started loading and wait for `hydrated` mark
+			const result = await originalGoto(getProxyUrl(url, api), {
+				waitUntil: javaScriptEnabled ? "commit" : "load",
+				...options,
+			});
 			if (javaScriptEnabled) {
 				await page.locator("hydrated").waitFor({ state: "attached" });
 				// Remove rounding for dialogs to make screenshots more stable
