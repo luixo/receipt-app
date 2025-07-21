@@ -143,7 +143,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 			async () => {
 				await resetPasswordButton.click();
 				await expect(errorMessage(rawErrorMessage)).toBeVisible();
-				await verifyToastTexts(`Error resetting password: ${rawErrorMessage}`);
+				await verifyToastTexts(`Password reset failed: ${rawErrorMessage}`);
 			},
 			{ name: "error" },
 		);

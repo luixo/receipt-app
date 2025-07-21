@@ -52,6 +52,58 @@
 				"fetchStatus": "idle"
 			}
 		},
+		"debts.get:[{\"id\":\"4a275509-29dc-4fb3-a562-426bcf06bf5b\"}]": {
+			"state": {
+				"data": {
+					"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "PYG",
+					"amount": 4806.72,
+					"timestamp": "2019-12-18",
+					"note": "alias vitae sit magnam",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-18",
+						"amount": 4806.72,
+						"currencyCode": "PYG"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"952beab0-ac8a-4943-823f-8d3ecc424905\"}]": {
+			"state": {
+				"data": {
+					"id": "952beab0-ac8a-4943-823f-8d3ecc424905",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "MVR",
+					"amount": -837.35,
+					"timestamp": "2019-12-13",
+					"note": "qui architecto facilis ad",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-13",
+						"amount": -837.35,
+						"currencyCode": "MVR"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
 		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
 			"state": {
 				"data": {
@@ -150,6 +202,32 @@
 					"status": "success",
 					"variables": {
 						"id": "2229afe2-d79b-402a-949b-6f6be31e8205"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "952beab0-ac8a-4943-823f-8d3ecc424905"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b"
 					}
 				}
 			}

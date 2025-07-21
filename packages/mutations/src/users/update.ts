@@ -1,5 +1,6 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 
 import {
 	invalidateSuggest as invalidateSuggestUsers,
@@ -66,6 +67,7 @@ const getForeignRevert =
 	};
 
 export const options: UseContextedMutationOptions<"users.update"> = {
+	mutationKey: "users.update",
 	onMutate: (controllerContext) => (updateObject) =>
 		updateRevertUsers(controllerContext, {
 			get: (controller) =>
@@ -84,7 +86,7 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 		}),
 	onSuccess: (controllerContext) => () =>
 		invalidateSuggestUsers(controllerContext),
-	errorToastOptions: () => (error) => ({
-		text: `Error updating user: ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Error updating user${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

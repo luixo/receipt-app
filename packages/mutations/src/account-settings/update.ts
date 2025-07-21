@@ -1,7 +1,10 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { updateRevert as updateRevertAccountSettings } from "../cache/account-settings";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"accountSettings.update"> = {
+	mutationKey: "accountSettings.update",
 	onMutate: (controllerContext) => (variables) =>
 		updateRevertAccountSettings(controllerContext, {
 			get: (controller) =>
@@ -16,7 +19,7 @@ export const options: UseContextedMutationOptions<"accountSettings.update"> = {
 					}),
 				),
 		}),
-	errorToastOptions: () => (error) => ({
-		text: `Error updating account settings: ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Account settings update failed: ${mergeErrors(errors)}`,
 	}),
 };

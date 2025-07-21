@@ -47,19 +47,19 @@ test("'debtIntentions.accept' pending / error", async ({
 	page,
 }) => {
 	await api.mockUtils.authPage({ page });
-	const debtsAmount = 4;
-	const acceptedDebtsAmount = 2;
+	const debtsAmount = 6;
+	const rejectedDebtsAmount = 2;
 	const { debts, debtUser } = mockDebts({
 		generateDebts: (opts) =>
 			defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 	});
 	await openDebtIntentions();
 	const acceptIntentionLaterPause = api.createPause();
-	const acceptedDebtsIds = debts
-		.filter((_, index) => index < acceptedDebtsAmount)
+	const rejectedDebtsIds = debts
+		.filter((_, index) => index < rejectedDebtsAmount)
 		.map((debt) => debt.id);
 	api.mockFirst("debtIntentions.accept", async ({ input }) => {
-		if (!acceptedDebtsIds.includes(input.id)) {
+		if (!rejectedDebtsIds.includes(input.id)) {
 			return { updatedAt: getNow.zonedDateTime() };
 		}
 		await acceptIntentionLaterPause.promise;
@@ -73,16 +73,12 @@ test("'debtIntentions.accept' pending / error", async ({
 		async () => {
 			await acceptAllIntentionButton.click();
 			await awaitCacheKey("debtIntentions.accept", {
-				succeed: debtsAmount - acceptedDebtsAmount,
+				succeed: debtsAmount - rejectedDebtsAmount,
 				awaitLoading: false,
 			});
 			await verifyToastTexts([
-				...new Array(acceptedDebtsAmount)
-					.fill(null)
-					.map(() => "Accepting debt.."),
-				...new Array(debtsAmount - acceptedDebtsAmount)
-					.fill(null)
-					.map(() => "Debt accepted successfully"),
+				`Accepting ${debtsAmount} debts..`,
+				`${debtsAmount - rejectedDebtsAmount} debts accepted successfully`,
 			]);
 		},
 		{ name: "loading", blacklistKeys: "users.get" },
@@ -92,14 +88,10 @@ test("'debtIntentions.accept' pending / error", async ({
 		async () => {
 			acceptIntentionLaterPause.resolve();
 			await awaitCacheKey("debtIntentions.accept", {
-				errored: acceptedDebtsAmount,
+				errored: rejectedDebtsAmount,
 			});
 			await verifyToastTexts(
-				new Array(acceptedDebtsAmount)
-					.fill(null)
-					.map(
-						() => 'Error accepting debt: Mock "debtIntentions.accept" error',
-					),
+				'Error accepting debts: Mock "debtIntentions.accept" error',
 			);
 			await expect(page).toHaveURL("/debts/intentions");
 		},
@@ -119,9 +111,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		async () => {
 			await acceptAllIntentionButton.click();
 			await verifyToastTexts(
-				new Array(acceptedDebtsAmount)
-					.fill(null)
-					.map(() => "Debt accepted successfully"),
+				`${rejectedDebtsAmount} debts accepted successfully`,
 			);
 			await expect(page).toHaveURL("/debts");
 			await awaitCacheKey("debtIntentions.accept", {

@@ -70,7 +70,7 @@ test("'auth.voidAccount' mutation", async ({
 	await snapshotQueries(async () => {
 		await voidButton.click();
 		await verifyToastTexts(
-			`Error voiding account: Mock "auth.voidAccount" error`,
+			`Void account failed: Mock "auth.voidAccount" error`,
 		);
 		await awaitCacheKey("auth.voidAccount", { errored: 1 });
 	});

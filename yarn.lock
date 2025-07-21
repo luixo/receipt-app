@@ -7754,6 +7754,7 @@ __metadata:
     "@types/uuid": "npm:^9.0.2"
     array.prototype.tosorted: "npm:^1.1.2"
     boring-avatars: "npm:^1.10.1"
+    dataloader: "npm:^2.2.2"
     idb-keyval: "npm:^6.2.1"
     nativewind: "npm:^4.1.23"
     react-date-picker: "npm:^10.3.0"

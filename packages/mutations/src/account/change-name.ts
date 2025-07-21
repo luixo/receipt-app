@@ -1,4 +1,5 @@
 import type { AccountsId, UsersId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 
 import { update as updateAccount } from "../cache/account";
 import {
@@ -11,6 +12,7 @@ export const options: UseContextedMutationOptions<
 	"account.changeName",
 	{ id: AccountsId }
 > = {
+	mutationKey: "account.changeName",
 	onMutate:
 		(controllerContext, { id }) =>
 		(updateObject) =>
@@ -45,7 +47,7 @@ export const options: UseContextedMutationOptions<
 		});
 		void invalidateSuggestUsers(controllerContext);
 	},
-	errorToastOptions: () => (error) => ({
-		text: `Error updating your name: ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Error updating your name: ${mergeErrors(errors)}`,
 	}),
 };

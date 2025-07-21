@@ -1,4 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
+import { mergeErrors } from "~mutations/utils";
 
 import {
 	update as updateDebts,
@@ -11,6 +12,7 @@ export const options: UseContextedMutationOptions<
 	"debts.remove",
 	{ debt: TRPCQueryOutput<"debts.get"> }
 > = {
+	mutationKey: "debts.remove",
 	onMutate:
 		(controllerContext, { debt: currDebt }) =>
 		() =>
@@ -92,13 +94,13 @@ export const options: UseContextedMutationOptions<
 				},
 			});
 		},
-	mutateToastOptions: {
-		text: "Removing debt..",
-	},
-	successToastOptions: {
-		text: "Debt removed",
-	},
-	errorToastOptions: () => (error) => ({
-		text: `Error removing debt: ${error.message}`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Removing ${variablesSet.length > 1 ? `${variablesSet.length} ` : ""}debt${variablesSet.length > 1 ? "s" : ""}..`,
+	}),
+	successToastOptions: () => (_, variablesSet) => ({
+		text: `Debt${variablesSet.length > 1 ? "s" : ""} removed`,
+	}),
+	errorToastOptions: () => (errors) => ({
+		text: `Error removing debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

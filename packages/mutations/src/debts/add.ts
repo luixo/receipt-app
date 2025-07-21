@@ -3,6 +3,7 @@ import type {
 	TRPCMutationOutput,
 	TRPCQueryOutput,
 } from "~app/trpc";
+import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
@@ -38,6 +39,7 @@ const createDebt = (
 };
 
 export const options: UseContextedMutationOptions<"debts.add"> = {
+	mutationKey: "debts.add",
 	onSuccess: (controllerContext) => (result, updateObject) => {
 		const { receiptId } = updateObject;
 		if (receiptId) {
@@ -85,13 +87,13 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			getIntentions: undefined,
 		});
 	},
-	mutateToastOptions: {
-		text: "Adding debt..",
-	},
-	successToastOptions: {
-		text: "Debt added",
-	},
-	errorToastOptions: () => (error) => ({
-		text: `Error adding debt: ${error.message}`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Adding ${variablesSet.length > 1 ? `${variablesSet.length} debts` : "debt"}..`,
+	}),
+	successToastOptions: () => (resultSet) => ({
+		text: `${resultSet.length > 1 ? `${resultSet.length} debts` : "Debt"} added`,
+	}),
+	errorToastOptions: () => (errors) => ({
+		text: `Error adding debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

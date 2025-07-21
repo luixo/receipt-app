@@ -1,5 +1,6 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -42,6 +43,7 @@ export const options: UseContextedMutationOptions<
 	"receiptItems.update",
 	{ receiptId: ReceiptsId }
 > = {
+	mutationKey: "receiptItems.update",
 	onMutate:
 		(controllerContext, { receiptId }) =>
 		(updateObject) =>
@@ -55,7 +57,7 @@ export const options: UseContextedMutationOptions<
 					),
 				getPaged: undefined,
 			}),
-	errorToastOptions: () => (error) => ({
-		text: `Error updating item: ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Error updating item${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

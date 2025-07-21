@@ -176,3 +176,7 @@ export type AssertAllEqual<T extends unknown[]> = AssertTrue<
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Constructor<T> = new (...args: any[]) => T;
+
+export type ArrayOf<T extends unknown[]> = {
+	[K in keyof T]: [T[K], ...T[K][]];
+};

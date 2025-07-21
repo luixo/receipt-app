@@ -1,7 +1,10 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"account.changeAvatar"> = {
+	mutationKey: "account.changeAvatar",
 	onSuccess: (controllerContext) => (result) => {
 		updateAccount(controllerContext, {
 			get: (controller) => {
@@ -15,7 +18,7 @@ export const options: UseContextedMutationOptions<"account.changeAvatar"> = {
 			},
 		});
 	},
-	errorToastOptions: () => (error) => ({
-		text: `Error updating your avatar: ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Error updating your avatar: ${mergeErrors(errors)}`,
 	}),
 };

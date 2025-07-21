@@ -3,8 +3,8 @@ import React from "react";
 import { skipToken, useQueryClient } from "@tanstack/react-query";
 
 import type { TRPCMutationKey } from "~app/trpc";
+import { getMutationToaster } from "~app/utils/toasts";
 import { useTRPC } from "~app/utils/trpc";
-import { addToast, getToastQueue } from "~components/toast";
 import type {
 	InternalContext,
 	TRPCMutationOptions,
@@ -42,6 +42,7 @@ export const useTrpcMutationOptions = <
 			onMutate: onMutateTrpc,
 			onSettled: onSettledTrpc,
 			onSuccess: onSuccessTrpc,
+			mutationKey,
 		},
 		options,
 	]: MaybeAddElementToArray<
@@ -70,13 +71,18 @@ export const useTrpcMutationOptions = <
 	} = options || {};
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
+	const mutationToaster = getMutationToaster<
+		Path,
+		OuterContext,
+		LifecycleContext
+	>(mutationKey, mutateToastOptions, errorToastOptions, successToastOptions);
 	return React.useMemo(
 		() => ({
 			onMutate: async (...args) => {
 				if (pinnedOuterContext === skipToken) {
 					throw new Error(
 						`Expected to have context in "${JSON.stringify(
-							rest.mutationKey,
+							mutationKey,
 						)}" mutation, got skipToken`,
 					);
 				}
@@ -89,20 +95,10 @@ export const useTrpcMutationOptions = <
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					outerContext: pinnedOuterContext!,
 				};
-				let toastId: string | undefined;
-				const toastOptions =
-					typeof mutateToastOptions === "function"
-						? mutateToastOptions(...getToastArgs(partialInternalContext))(
-								...args,
-							)
-						: mutateToastOptions;
-				if (toastOptions) {
-					toastId = addToast({
-						title: "Loading..",
-						description: toastOptions.text,
-						timeout: Infinity,
-					});
-				}
+				const toastObject = await mutationToaster.mutateToast({
+					toastArgs: getToastArgs(partialInternalContext),
+					mutateArgs: args,
+				});
 				await onMutate?.(...args);
 				const lifecycleContextWithUpdateFns = await onMutateTrpc?.(
 					...getTrpcArgs(partialInternalContext),
@@ -110,7 +106,7 @@ export const useTrpcMutationOptions = <
 				return {
 					...partialInternalContext,
 					...lifecycleContextWithUpdateFns,
-					toastId,
+					toastObject,
 				};
 			},
 			onError: (error, vars, internalContext) => {
@@ -118,25 +114,14 @@ export const useTrpcMutationOptions = <
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const sureInternalContext = internalContext!;
 				const {
-					toastId,
+					toastObject,
 					context: lifecycleContext,
 					revertFn,
 				} = sureInternalContext;
-				const toastOptions =
-					typeof errorToastOptions === "function"
-						? errorToastOptions(...getToastArgs(sureInternalContext))(
-								error,
-								vars,
-								lifecycleContext,
-							)
-						: errorToastOptions;
-				if (toastId) {
-					getToastQueue().close(toastId);
-				}
-				addToast({
-					title: "Error",
-					description: toastOptions.text,
-					color: "danger",
+				void mutationToaster.errorToast({
+					toastArgs: getToastArgs(sureInternalContext),
+					errorArgs: [error, vars, lifecycleContext],
+					toastObject,
 				});
 				onError?.(error, vars, lifecycleContext);
 				revertFn?.();
@@ -148,31 +133,18 @@ export const useTrpcMutationOptions = <
 			},
 			onSuccess: (result, vars, internalContext) => {
 				const {
-					toastId,
+					toastObject,
 					context: lifecycleContext,
 					finalizeFn,
 				} = internalContext;
 				// We're sure `lifecycleContext` exists here
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const sureLifecycleContext = lifecycleContext!;
-				const toastOptions =
-					typeof successToastOptions === "function"
-						? successToastOptions(...getToastArgs(internalContext))(
-								result,
-								vars,
-								sureLifecycleContext,
-							)
-						: successToastOptions;
-				if (toastId) {
-					getToastQueue().close(toastId);
-				}
-				if (toastOptions) {
-					addToast({
-						title: "Success",
-						description: toastOptions.text,
-						color: "success",
-					});
-				}
+				void mutationToaster.successToast({
+					toastArgs: getToastArgs(internalContext),
+					successArgs: [result, vars, sureLifecycleContext],
+					toastObject,
+				});
 				onSuccess?.(result, vars, sureLifecycleContext);
 				finalizeFn?.();
 				return onSuccessTrpc?.(...getTrpcArgs(internalContext))(
@@ -208,9 +180,8 @@ export const useTrpcMutationOptions = <
 			onErrorTrpc,
 			onSettledTrpc,
 			onSuccessTrpc,
-			mutateToastOptions,
-			errorToastOptions,
-			successToastOptions,
+			mutationToaster,
+			mutationKey,
 			rest,
 		],
 	);

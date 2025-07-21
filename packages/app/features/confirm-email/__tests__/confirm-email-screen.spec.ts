@@ -63,7 +63,7 @@ test.describe("'auth.confirmEmail' mutation", () => {
 			async () => {
 				await page.goto(`/confirm-email?token=${token}`);
 				await expect(errorMessage(rawErrorMessage)).toBeVisible();
-				await verifyToastTexts(`Error confirming email: ${rawErrorMessage}`);
+				await verifyToastTexts(`Email confirmation failed: ${rawErrorMessage}`);
 			},
 			{ name: "error" },
 		);

@@ -1,4 +1,6 @@
-import { isNonNullish } from "remeda";
+import { isNonNullish, unique } from "remeda";
+
+import type { TRPCError } from "~app/trpc";
 
 import type { UpdaterRevertResult } from "./types";
 
@@ -21,3 +23,6 @@ export const mergeUpdaterResults = (
 		},
 	};
 };
+
+export const mergeErrors = (errors: TRPCError[]) =>
+	unique(errors.map((error) => error.message)).join("\n");

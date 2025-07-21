@@ -1,14 +1,17 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { updateRevert as updateRevertAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.remove"> =
 	{
+		mutationKey: "accountConnectionIntentions.remove",
 		onMutate: (controllerContext) => (variables) =>
 			updateRevertAccountConnections(controllerContext, {
 				getAll: (controller) =>
 					controller.outbound.remove(variables.targetAccountId),
 			}),
-		errorToastOptions: () => (error) => ({
-			text: `Error removing the invite: ${error.message}`,
+		errorToastOptions: () => (errors) => ({
+			text: `Error removing invite${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 		}),
 	};

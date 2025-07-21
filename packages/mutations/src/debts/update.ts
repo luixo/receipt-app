@@ -1,3 +1,5 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -15,6 +17,7 @@ export const options: UseContextedMutationOptions<
 	"debts.update",
 	{ currDebt: CurrentDebt }
 > = {
+	mutationKey: "debts.update",
 	onMutate:
 		(controllerContext, { currDebt }) =>
 		(updateObject) =>
@@ -72,9 +75,13 @@ export const options: UseContextedMutationOptions<
 				result.reverseUpdated,
 			);
 		},
-	mutateToastOptions: { text: "Updating debt.." },
-	successToastOptions: { text: "Debt updated successfully" },
-	errorToastOptions: () => (error) => ({
-		text: `Error updating debt: ${error.message}`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Updating ${variablesSet.length > 1 ? `${variablesSet.length} debts` : "debt"}..`,
+	}),
+	successToastOptions: () => (resultSet) => ({
+		text: `${resultSet.length > 1 ? `${resultSet.length} debts` : "Debt"} updated successfully`,
+	}),
+	errorToastOptions: () => (errors) => ({
+		text: `Error updating debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

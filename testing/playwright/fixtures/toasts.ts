@@ -31,9 +31,9 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 						);
 					}
 					const expectedTexts = textsArray.sort((a, b) => a.localeCompare(b));
-					const actualTexts = await toast
-						.locator(`.${DESCRIPTION_CLASSNAME}`)
-						.allInnerTexts();
+					const actualTexts = (
+						await toast.locator(`.${DESCRIPTION_CLASSNAME}`).allInnerTexts()
+					).sort((a, b) => a.localeCompare(b));
 					expect(actualTexts, {
 						message: `Expected to have length of ${
 							expectedTexts.length

@@ -45,3 +45,6 @@ export const updateUserConnected = (
 		getIntentions: (controller) => controller.invalidate(),
 	});
 };
+
+export const getEmailTexts = (variablesSet: { email: string }[]) =>
+	variablesSet.map((variables) => `"${variables.email}"`).join(",");

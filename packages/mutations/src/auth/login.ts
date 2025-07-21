@@ -1,7 +1,10 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.login"> = {
+	mutationKey: "auth.login",
 	onSuccess:
 		({ queryClient, trpc }) =>
 		async ({ account, user }, variables) => {
@@ -20,7 +23,7 @@ export const options: UseContextedMutationOptions<"auth.login"> = {
 	successToastOptions: {
 		text: "Login successful, redirecting..",
 	},
-	errorToastOptions: () => (error) => ({
-		text: error.message,
+	errorToastOptions: () => (errors) => ({
+		text: `Login failed: ${mergeErrors(errors)}`,
 	}),
 };

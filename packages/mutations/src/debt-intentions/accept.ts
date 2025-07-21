@@ -1,4 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
+import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import {
@@ -13,6 +14,7 @@ export const options: UseContextedMutationOptions<
 	"debtIntentions.accept",
 	{ intention: Intention }
 > = {
+	mutationKey: "debtIntentions.accept",
 	onMutate:
 		(controllerContext, { intention }) =>
 		() =>
@@ -88,13 +90,13 @@ export const options: UseContextedMutationOptions<
 
 				getIntentions: (controller) => controller.remove(intention.id),
 			}),
-	mutateToastOptions: {
-		text: `Accepting debt..`,
-	},
-	successToastOptions: {
-		text: `Debt accepted successfully`,
-	},
-	errorToastOptions: () => (error) => ({
-		text: `Error accepting debt: ${error.message}`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Accepting ${variablesSet.length > 1 ? `${variablesSet.length} debts` : "debt"}..`,
+	}),
+	successToastOptions: () => (resultSet) => ({
+		text: `${resultSet.length > 1 ? `${resultSet.length} debts` : "Debt"} accepted successfully`,
+	}),
+	errorToastOptions: () => (errors) => ({
+		text: `Error accepting debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

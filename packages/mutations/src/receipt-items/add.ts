@@ -1,4 +1,5 @@
 import type { ReceiptItemsId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import {
@@ -12,6 +13,7 @@ export const options: UseContextedMutationOptions<
 	undefined,
 	ReceiptItemsId
 > = {
+	mutationKey: "receiptItems.add",
 	onMutate: (controllerContext) => async (variables) => {
 		const temporaryId = `temp-${Math.random()}`;
 		const revertResult = await updateRevertReceipts(controllerContext, {
@@ -44,7 +46,7 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			});
 		},
-	errorToastOptions: () => (error, variables) => ({
-		text: `Error adding item "${variables.name}": ${error.message}`,
+	errorToastOptions: () => (errors, variablesSet) => ({
+		text: `Error adding item${variablesSet.length > 1 ? "s" : ""} ${variablesSet.map((variables) => `"${variables.name}"`).join(", ")}: ${mergeErrors(errors)}`,
 	}),
 };

@@ -1,4 +1,5 @@
 import type { ReceiptsId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import {
@@ -7,10 +8,13 @@ import {
 } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
+import { getConsumersText } from "./utils";
+
 export const options: UseContextedMutationOptions<
 	"receiptItemConsumers.add",
 	{ receiptId: ReceiptsId }
 > = {
+	mutationKey: "receiptItemConsumers.add",
 	onMutate:
 		(controllerContext, { receiptId }) =>
 		(variables) => {
@@ -61,11 +65,13 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			});
 		},
-	errorToastOptions:
-		({ receiptId }) =>
-		(error, variables) => ({
-			text: `Error adding ${
-				variables.itemId === receiptId ? "payer" : "consumer"
-			}(s): ${error.message}`,
-		}),
+	errorToastOptions: (contexts) => (errors, variablesSet) => {
+		const texts = getConsumersText(
+			variablesSet.map(({ itemId }) => itemId),
+			contexts.map((context) => context.receiptId),
+		);
+		return {
+			text: `Error adding ${texts}: ${mergeErrors(errors)}`,
+		};
+	},
 };

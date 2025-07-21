@@ -1,10 +1,13 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
-import { updateUserConnected } from "./utils";
+import { getEmailTexts, updateUserConnected } from "./utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.add"> =
 	{
+		mutationKey: "accountConnectionIntentions.add",
 		onSuccess: (controllerContext) => (result, variables) => {
 			if (result.connected) {
 				updateUserConnected(
@@ -28,13 +31,13 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				});
 			}
 		},
-		mutateToastOptions: () => (variables) => ({
-			text: `Sending connection intention to "${variables.email}"..`,
+		mutateToastOptions: () => (variablesSet) => ({
+			text: `Sending connection intention${variablesSet.length > 1 ? "s" : ""} to ${getEmailTexts(variablesSet)}..`,
 		}),
-		successToastOptions: () => (_result, variables) => ({
-			text: `Connection intention to "${variables.email}" sent`,
+		successToastOptions: () => (_result, variablesSet) => ({
+			text: `Connection intention${variablesSet.length > 1 ? "s" : ""} to ${getEmailTexts(variablesSet)} sent`,
 		}),
-		errorToastOptions: () => (error) => ({
-			text: `Error sending connection intention: ${error.message}`,
+		errorToastOptions: () => (errors) => ({
+			text: `Error sending connection intention${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 		}),
 	};

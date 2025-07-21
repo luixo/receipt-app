@@ -6,7 +6,7 @@ import type {
 	TRPCMutationKey,
 	TRPCMutationOutput,
 } from "~app/trpc";
-import type { MaybeAddElementToArray } from "~utils/types";
+import type { ArrayOf, MaybeAddElementToArray } from "~utils/types";
 
 import type { ControllerContext } from "./types";
 
@@ -43,24 +43,26 @@ type ControllerContextWith<OuterContext = undefined> = MaybeAddElementToArray<
 	OuterContext
 >;
 
-type LifecycleContextWithUpdateFns<LifecycleContext = unknown> = {
+export type LifecycleContextWithUpdateFns<LifecycleContext = unknown> = {
 	revertFn?: () => void;
 	finalizeFn?: () => void;
 	context?: LifecycleContext;
 };
 
+export type ToastObject = { id: string; count: number };
+
 export type InternalContext<
 	OuterContext = undefined,
 	LifecycleContext = unknown,
 > = LifecycleContextWithUpdateFns<LifecycleContext> & {
-	toastId?: string;
+	toastObject?: ToastObject;
 	controllerContext: ControllerContext;
 	outerContext: OuterContext;
 };
 
 type ToastArgs<OuterContext> = MaybeAddElementToArray<[], OuterContext>;
 
-type ToastOptions = {
+export type ToastOptions = {
 	text: string;
 };
 
@@ -83,21 +85,21 @@ export type UseContextedMutationOptions<
 	mutateToastOptions?:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<OuterContext>
+				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
 		  ) => (
-				...args: Parameters<
-					NonNullable<MutationOptionsWithUpdateFns["onMutate"]>
+				...args: ArrayOf<
+					Parameters<NonNullable<MutationOptionsWithUpdateFns["onMutate"]>>
 				>
-		  ) => ToastOptions | undefined);
+		  ) => ToastOptions);
 	onMutate?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<MutationOptionsWithUpdateFns["onMutate"]>;
 	errorToastOptions:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<OuterContext>
+				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
 		  ) => (
-				...args: Parameters<NonNullable<Options["onError"]>>
+				...args: ArrayOf<Parameters<NonNullable<Options["onError"]>>>
 		  ) => ToastOptions);
 	onError?: (
 		...args: ControllerContextWith<OuterContext>
@@ -105,14 +107,15 @@ export type UseContextedMutationOptions<
 	successToastOptions?:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<OuterContext>
+				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
 		  ) => (
-				...args: Parameters<NonNullable<Options["onSuccess"]>>
-		  ) => ToastOptions | undefined);
+				...args: ArrayOf<Parameters<NonNullable<Options["onSuccess"]>>>
+		  ) => ToastOptions);
 	onSuccess?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<Options["onSuccess"]>;
 	onSettled?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<Options["onSettled"]>;
+	mutationKey: Path;
 };

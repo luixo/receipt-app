@@ -1,3 +1,5 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import {
 	invalidateSuggest as invalidateSuggestUsers,
@@ -5,7 +7,10 @@ import {
 } from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
 
+import { getUsersText } from "./utils";
+
 export const options: UseContextedMutationOptions<"users.add"> = {
+	mutationKey: "users.add",
 	onSuccess:
 		(controllerContext) =>
 		({ id, connection }, variables) => {
@@ -37,13 +42,13 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 			}
 			void invalidateSuggestUsers(controllerContext);
 		},
-	mutateToastOptions: () => (variables) => ({
-		text: `Adding user "${variables.name}"..`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Adding user${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)}..`,
 	}),
-	successToastOptions: () => (_result, variables) => ({
-		text: `User "${variables.name}" added`,
+	successToastOptions: () => (_resultSet, variablesSet) => ({
+		text: `User${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)} added`,
 	}),
-	errorToastOptions: () => (error, variables) => ({
-		text: `Error adding user "${variables.name}": ${error.message}`,
+	errorToastOptions: () => (errors, variablesSet) => ({
+		text: `Error adding user${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)}: ${mergeErrors(errors)}`,
 	}),
 };

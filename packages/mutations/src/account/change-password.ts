@@ -1,7 +1,10 @@
+import { mergeErrors } from "~mutations/utils";
+
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"account.changePassword"> = {
-	errorToastOptions: () => (error) => ({
-		text: `Error changing password: ${error.message}`,
+	mutationKey: "account.changePassword",
+	errorToastOptions: () => (errors) => ({
+		text: `Error changing password: ${mergeErrors(errors)}`,
 	}),
 };

@@ -1,7 +1,10 @@
+import { mergeErrors } from "~mutations/utils";
+
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"receiptParticipants.add"> = {
+	mutationKey: "receiptParticipants.add",
 	onSuccess: (controllerContext) => (result, variables) => {
 		updateReceipts(controllerContext, {
 			get: (controller) => {
@@ -15,7 +18,7 @@ export const options: UseContextedMutationOptions<"receiptParticipants.add"> = {
 			getPaged: undefined,
 		});
 	},
-	errorToastOptions: () => (error) => ({
-		text: `Error adding participant(s): ${error.message}`,
+	errorToastOptions: () => (errors) => ({
+		text: `Error adding participant${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
 	}),
 };

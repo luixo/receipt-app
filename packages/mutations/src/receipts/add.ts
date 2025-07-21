@@ -1,12 +1,16 @@
 import type { AccountsId, UsersId } from "~db/models";
+import { mergeErrors } from "~mutations/utils";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
+
+import { getReceiptTexts } from "./utils";
 
 export const options: UseContextedMutationOptions<
 	"receipts.add",
 	{ selfAccountId: AccountsId }
 > = {
+	mutationKey: "receipts.add",
 	onSuccess:
 		(controllerContext, { selfAccountId }) =>
 		(result, variables) => {
@@ -88,13 +92,13 @@ export const options: UseContextedMutationOptions<
 				},
 			});
 		},
-	mutateToastOptions: () => (variables) => ({
-		text: `Adding receipt "${variables.name}"..`,
+	mutateToastOptions: () => (variablesSet) => ({
+		text: `Adding receipt${variablesSet.length > 1 ? "s" : ""} ${getReceiptTexts(variablesSet)}..`,
 	}),
-	successToastOptions: () => (_result, variables) => ({
-		text: `Receipt "${variables.name}" added`,
+	successToastOptions: () => (_result, variablesSet) => ({
+		text: `Receipt${variablesSet.length > 1 ? "s" : ""} ${getReceiptTexts(variablesSet)} added`,
 	}),
-	errorToastOptions: () => (error, variables) => ({
-		text: `Error adding receipt "${variables.name}": ${error.message}`,
+	errorToastOptions: () => (errors, variablesSet) => ({
+		text: `Error adding receipt ${getReceiptTexts(variablesSet)}: ${mergeErrors(errors)}`,
 	}),
 };
