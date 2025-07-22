@@ -1,8 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { AmountBadge } from "~app/components/amount-badge";
 import { usePathname } from "~app/hooks/use-navigation";
-import { Badge } from "~components/badge";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { tv } from "~components/utils";
@@ -36,7 +36,6 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	useShow = useTrue,
 	selected,
 }) => {
-	const amount = useBadgeAmount();
 	const show = useShow();
 	if (!show) {
 		return null;
@@ -44,13 +43,7 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	const icon = <Icon size={24} />;
 	return (
 		<Link key={pathname} to={pathname} className={link({ selected })}>
-			{amount === 0 ? (
-				icon
-			) : (
-				<Badge content={amount} color="danger" placement="top-right" size="lg">
-					{icon}
-				</Badge>
-			)}
+			<AmountBadge useAmount={useBadgeAmount}>{icon}</AmountBadge>
 			<Text className={`text-sm leading-8 ${selected ? "text-primary" : ""}`}>
 				{text}
 			</Text>

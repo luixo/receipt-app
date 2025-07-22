@@ -1,11 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "~app/utils/trpc";
 
 export const useConnectionIntentions = () => {
 	const trpc = useTRPC();
-	const connections = useQuery(
+	const connections = useSuspenseQuery(
 		trpc.accountConnectionIntentions.getAll.queryOptions(),
 	);
-	return connections.status === "success" ? connections.data.inbound.length : 0;
+	return connections.data.inbound.length;
 };

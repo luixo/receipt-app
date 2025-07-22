@@ -2,11 +2,11 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { AmountBadge } from "~app/components/amount-badge";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import { Badge } from "~components/badge";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
@@ -18,20 +18,6 @@ export const DebtsScreen: React.FC<{
 	offsetState: SearchParamState<"/debts", "offset">;
 }> = ({ limitState, offsetState }) => {
 	const { t } = useTranslation("debts");
-	const inboundDebtsAmount = useDebtsIntentions();
-	const intentionsButton = (
-		<ButtonLink
-			key="intentions"
-			to="/debts/intentions"
-			color="primary"
-			title={t("list.buttons.intentions")}
-			variant="bordered"
-			isDisabled={inboundDebtsAmount === 0}
-			isIconOnly
-		>
-			<InboxIcon size={24} />
-		</ButtonLink>
-	);
 	return (
 		<>
 			<PageHeader
@@ -56,18 +42,21 @@ export const DebtsScreen: React.FC<{
 						>
 							<AddIcon size={24} />
 						</ButtonLink>
-						{inboundDebtsAmount === 0 ? (
-							intentionsButton
-						) : (
-							<Badge
-								content={inboundDebtsAmount}
-								color="danger"
-								placement="top-right"
-								size="lg"
-							>
-								{intentionsButton}
-							</Badge>
-						)}
+						<AmountBadge useAmount={useDebtsIntentions}>
+							{({ amount }) => (
+								<ButtonLink
+									key="intentions"
+									to="/debts/intentions"
+									color="primary"
+									title={t("list.buttons.intentions")}
+									variant="bordered"
+									isDisabled={amount === 0}
+									isIconOnly
+								>
+									<InboxIcon size={24} />
+								</ButtonLink>
+							)}
+						</AmountBadge>
 					</>
 				}
 			>
