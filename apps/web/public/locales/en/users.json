@@ -81,5 +81,37 @@
 			"confirmText": "Are you sure?"
 		},
 		"userSuggestLabel": "Please choose a user below to accept intention"
+	},
+	"toasts": {
+		"acceptInvite": {
+			"error": "Error accepting {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"addIntention": {
+			"error": "Error sending connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}}: {{errors, uniqueErrors}}",
+			"success": "Connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}} to {{emails, list}} sent",
+			"mutate": "Sending connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}} to {{emails, list}}.."
+		},
+		"rejectInvite": {
+			"error": "Error rejecting {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"removeInvite": {
+			"error": "Error removing {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"addUser": {
+			"error": "Error adding {{usersAmount, plural(one:user; other:users)}} {{users, and}}: {{errors, uniqueErrors}}",
+			"success": "{{usersAmount, plural(one:user; other:users)}} {{users, and}} added",
+			"mutate": "Adding {{usersAmount, plural(one:user; other:users)}} {{users, and}}"
+		},
+		"removeUser": {
+			"error": "Error removing {{usersAmount, plural(one:user; other:{count} users)}}: {{errors, uniqueErrors}}",
+			"success": "{{usersAmount, plural(one:user; other:{count} users)}} removed",
+			"mutate": "Removing {{usersAmount, plural(one:user; other:{count} users)}}.."
+		},
+		"unlinkUser": {
+			"error": "Error unlinking {{usersAmount, plural(one:user; other:{count} users)}}: {{errors, uniqueErrors}}"
+		},
+		"updateUser": {
+			"error": "Error updating {{usersAmount, plural(one:user; other:{count} users)}}: {{errors, uniqueErrors}}"
+		}
 	}
 }

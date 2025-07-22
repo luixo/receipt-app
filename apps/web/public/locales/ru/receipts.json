@@ -137,5 +137,51 @@
 			"title": "У вас пока нет позиций чека",
 			"message": "Нажмите кнопку выше, чтобы добавить позицию чека"
 		}
+	},
+	"toasts": {
+		"consumersGenitive_one": "потребителя",
+		"consumersGenitive_other": "{{count}} потребителей",
+		"payersGenitive_one": "плательщика",
+		"payersGenitive_other": "{{count}} плательщиков",
+		"addConsumer": {
+			"error": "Ошибка при добавлении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeConsumer": {
+			"error": "Ошибка при удалении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"updateConsumer": {
+			"error": "Ошибка при обновлении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"addItem": {
+			"error": "Ошибка при добавлении {{itemsCount, plural(one:позиции; other:{count} позиций)}} {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeItem": {
+			"error": "Ошибка при удалении {{itemsCount, plural(one:позиции; other:{count} позиций)}}: {{errors, uniqueErrors}}"
+		},
+		"updateItem": {
+			"error": "Ошибка при обновлении {{itemsCount, plural(one:позиции; other:{count} позиций)}}: {{errors, uniqueErrors}}"
+		},
+		"addParticipant": {
+			"error": "Ошибка при добавлении {{participantsCount, plural(one:участника; other:{count} участников)}}: {{errors, uniqueErrors}}"
+		},
+		"removeParticipant": {
+			"error": "Ошибка при удалении {{participantsCount, plural(one:участника; other:{count} участников)}}: {{errors, uniqueErrors}}"
+		},
+		"updateParticipant": {
+			"error": "Ошибка при обновлении {{participantsCount, plural(one:участника; other:{count} участников)}}: {{errors, uniqueErrors}}"
+		},
+		"addReceipt": {
+			"error": "Ошибка при добавлении {{receipts, and}}: {{errors, uniqueErrors}}",
+			"success": "{{receiptsCount, plural(one:чек; other:чеки)}} {{receipts, and}} {{debtsAmount, plural(one:добавлен; other:добавлены)}}",
+			"mutate": "Добавляем {{receiptsCount, plural(one:чек; other:{count} чеки)}} {{receipts, and}}.."
+		},
+		"removeReceipt": {
+			"error": "Ошибка при удалении {{receiptsCount, plural(one:чека; other:{count} чеков)}}: {{errors, uniqueErrors}}",
+			"success": "{{receiptsCount, plural(one:чек; few:{count} чека; other:{count} чеков)}} {{receiptsAmount, plural(one:удалён; other:удалено)}}",
+			"mutate": "Удаляем {{receiptsCount, plural(one:чек; few:{count} чека; other:{count} чеков)}}.."
+		},
+		"updateReceipt": {
+			"error": "Ошибка при обновлении {{receiptsCount, plural(one:чека; other:{count} чеков)}}: {{errors, uniqueErrors}}"
+		}
 	}
 }

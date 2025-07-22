@@ -1,9 +1,7 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
-import { getEmailTexts, updateUserConnected } from "./utils";
+import { updateUserConnected } from "./utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.add"> =
 	{
@@ -31,13 +29,31 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				});
 			}
 		},
-		mutateToastOptions: () => (variablesSet) => ({
-			text: `Sending connection intention${variablesSet.length > 1 ? "s" : ""} to ${getEmailTexts(variablesSet)}..`,
-		}),
-		successToastOptions: () => (_result, variablesSet) => ({
-			text: `Connection intention${variablesSet.length > 1 ? "s" : ""} to ${getEmailTexts(variablesSet)} sent`,
-		}),
-		errorToastOptions: () => (errors) => ({
-			text: `Error sending connection intention${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-		}),
+		mutateToastOptions:
+			({ t }) =>
+			(variablesSet) => ({
+				text: t("toasts.addIntention.mutate", {
+					ns: "users",
+					intentionsAmount: variablesSet.length,
+					emails: variablesSet.map((variables) => `"${variables.email}"`),
+				}),
+			}),
+		successToastOptions:
+			({ t }) =>
+			(_result, variablesSet) => ({
+				text: t("toasts.addIntention.success", {
+					ns: "users",
+					intentionsAmount: variablesSet.length,
+					emails: variablesSet.map((variables) => `"${variables.email}"`),
+				}),
+			}),
+		errorToastOptions:
+			({ t }) =>
+			(errors) => ({
+				text: t("toasts.addIntention.error", {
+					ns: "users",
+					intentionsAmount: errors.length,
+					errors,
+				}),
+			}),
 	};

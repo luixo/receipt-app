@@ -16,5 +16,10 @@
 	},
 	"refresh": {
 		"header": "Перезагрузить кэш"
+	},
+	"toasts": {
+		"updateSettings": {
+			"error": "Ошибка обновления настроек аккаунта: {{errors, uniqueErrors}}"
+		}
 	}
 }

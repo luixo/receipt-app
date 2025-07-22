@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -18,7 +16,13 @@ export const options: UseContextedMutationOptions<"receiptParticipants.add"> = {
 			getPaged: undefined,
 		});
 	},
-	errorToastOptions: () => (errors) => ({
-		text: `Error adding participant${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.addParticipant.error", {
+				ns: "receipts",
+				participantsCount: errors.length,
+				errors,
+			}),
+		}),
 };

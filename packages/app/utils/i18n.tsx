@@ -5,10 +5,14 @@ import type {
 	BackendModule,
 	InitOptions,
 	ParseKeys,
+	PostProcessorModule,
+	Resource,
 	ResourceKey,
 	i18n,
 } from "i18next";
-import { keys } from "remeda";
+import { capitalize, keys, unique } from "remeda";
+
+import type { TRPCError } from "~app/trpc";
 
 import type { Language, Namespace } from "./i18n-data";
 import { baseLanguage, defaultNamespace, languages } from "./i18n-data";
@@ -25,6 +29,7 @@ export const i18nInitOptions: InitOptions = {
 		// React doesn't need to escape values
 		escapeValue: false,
 	},
+	postProcess: "capitalize",
 	partialBundledLanguages: true,
 };
 
@@ -135,6 +140,7 @@ export const getTitle = (
 export const ensureI18nInitialized = async (ctx: {
 	i18n: i18n;
 	initialLanguage: Language;
+	resources?: Resource;
 }): Promise<void> => {
 	if (ctx.i18n.isInitialized) {
 		return;
@@ -144,7 +150,58 @@ export const ensureI18nInitialized = async (ctx: {
 			ctx.i18n.on("initialized", () => resolve());
 		});
 	}
-	await ctx.i18n.init({ lng: ctx.initialLanguage });
+	await ctx.i18n
+		.use({
+			type: "postProcessor",
+			name: "capitalize",
+			process: (value, key) => {
+				const arrayKey = Array.isArray(key) ? key : [key];
+				const firstKey = arrayKey[0] || "";
+				if (
+					firstKey.startsWith("toasts") &&
+					["success", "error", "mutate"].some((suffix) =>
+						firstKey.endsWith(suffix),
+					)
+				) {
+					// We should always capitalize toast messages
+					return capitalize(value);
+				}
+				return value;
+			},
+		} satisfies PostProcessorModule)
+		.init({ lng: ctx.initialLanguage, resources: ctx.resources });
+	/* eslint-disable @typescript-eslint/no-non-null-assertion */
+	ctx.i18n.services.formatter!.add("and", (messages: string[]) => {
+		if (messages.length === 1) {
+			return messages.join("");
+		}
+		const t = ctx.i18n.getFixedT(ctx.i18n.language);
+		return [messages.slice(0, -1).join(", "), ...messages.slice(-1)].join(
+			t("common.andJoiner"),
+		);
+	});
+	ctx.i18n.services.formatter!.add("uniqueErrors", (errors: TRPCError[]) =>
+		unique(errors.map((error) => error.message)).join("\n"),
+	);
+	ctx.i18n.services.formatter!.add(
+		// Inline plural format
+		// Translation: `{ "foo": "Creating {{countVar, plural(one:item;other:{count} items)}}" }`
+		// Resolves `t("foo", {countVar: 3})` to `Creating 3 items`
+		"plural",
+		(
+			value: number,
+			lng: string | undefined,
+			options: Record<Intl.LDMLPluralRule, string>,
+		) => {
+			const pluralRules = new Intl.PluralRules(lng || baseLanguage);
+			const result = pluralRules.select(value);
+			return (options[result] || options.other).replace(
+				"{count}",
+				value.toString(),
+			);
+		},
+	);
+	/* eslint-enable @typescript-eslint/no-non-null-assertion */
 };
 
 export const loadNamespaces = async (

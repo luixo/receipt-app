@@ -104,5 +104,27 @@
 		"filters": {
 			"empty": "С текущими фильтрами ничего не найдено"
 		}
+	},
+	"toasts": {
+		"acceptIntention": {
+			"error": "Ошибка при принятии {{debtsAmount, plural(one:долга; other:{count} долгов)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}} успешно {{debtsAmount, plural(one:принят; other:принято)}}",
+			"mutate": "Принимаем {{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}}.."
+		},
+		"addDebt": {
+			"error": "Ошибка при добавлении {{debtsAmount, plural(one:долга; other:{count} долгов)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}} {{debtsAmount, plural(one:добавлен; other:добавлено)}}",
+			"mutate": "Добавляем {{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}}.."
+		},
+		"removeDebt": {
+			"error": "Ошибка при удалении {{debtsAmount, plural(one:долга; other:{count} долгов)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}} {{debtsAmount, plural(one:удалён; other:удалено)}}",
+			"mutate": "Удаляем {{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}}.."
+		},
+		"updateDebt": {
+			"error": "Ошибка при обновлении {{debtsAmount, plural(one:долга; other:{count} долгов)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}} успешно {{debtsAmount, plural(one:обновлён; other:обновлено)}}",
+			"mutate": "Обновляем {{debtsAmount, plural(one:долг; few:{count} долга; other:{count} долгов)}}.."
+		}
 	}
 }

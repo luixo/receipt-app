@@ -137,5 +137,51 @@
 			"title": "You have no receipt items yet",
 			"message": "Press a button above to add a receipt item"
 		}
+	},
+	"toasts": {
+		"consumersGenitive_one": "consumer",
+		"consumersGenitive_other": "{{count}} consumers",
+		"payersGenitive_one": "payer",
+		"payersGenitive_other": "{{count}} payers",
+		"addConsumer": {
+			"error": "Error adding {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeConsumer": {
+			"error": "Error removing {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"updateConsumer": {
+			"error": "Error updating {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"addItem": {
+			"error": "Error adding {{itemsCount, plural(one:item; other:{count} items}} {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeItem": {
+			"error": "Error removing {{itemsCount, plural(one:item; other:{count} items}}: {{errors, uniqueErrors}}"
+		},
+		"updateItem": {
+			"error": "Error updating {{itemsCount, plural(one:item; other:{count} items}}: {{errors, uniqueErrors}}"
+		},
+		"addParticipant": {
+			"error": "Error adding {{participantsCount, plural(one:participant; other:{count} participants)}}: {{errors, uniqueErrors}}"
+		},
+		"removeParticipant": {
+			"error": "Error removing {{participantsCount, plural(one:participant; other:{count} participants)}}: {{errors, uniqueErrors}}"
+		},
+		"updateParticipant": {
+			"error": "Error updating {{participantsCount, plural(one:participant; other:{count} participants)}}: {{errors, uniqueErrors}}"
+		},
+		"addReceipt": {
+			"error": "Error adding {{receipts, and}}: {{errors, uniqueErrors}}",
+			"success": "{{receiptsCount, plural(one:receipt; other:receipts)}} {{receipts, and}} added",
+			"mutate": "Adding {{receiptsCount, plural(one:receipt; other:receipts)}} {{receipts, and}}.."
+		},
+		"removeReceipt": {
+			"error": "Error removing {{receiptsCount, plural(one:receipt; other:{count} receipts)}}: {{errors, uniqueErrors}}",
+			"success": "{{receiptsCount, plural(one:receipt; other:{count} receipts)}} removed",
+			"mutate": "Removing {{receiptsCount, plural(one:receipt; other:{count} receipts)}}.."
+		},
+		"updateReceipt": {
+			"error": "Error updating {{receiptsCount, plural(one:receipt; other:{count} receipts)}}: {{errors, uniqueErrors}}"
+		}
 	}
 }

@@ -1,13 +1,9 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import {
 	invalidateSuggest as invalidateSuggestUsers,
 	update as updateUsers,
 } from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
-
-import { getUsersText } from "./utils";
 
 export const options: UseContextedMutationOptions<"users.add"> = {
 	mutationKey: "users.add",
@@ -42,13 +38,32 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 			}
 			void invalidateSuggestUsers(controllerContext);
 		},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Adding user${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)}..`,
-	}),
-	successToastOptions: () => (_resultSet, variablesSet) => ({
-		text: `User${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)} added`,
-	}),
-	errorToastOptions: () => (errors, variablesSet) => ({
-		text: `Error adding user${variablesSet.length > 1 ? "s" : ""} ${getUsersText(variablesSet)}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.addUser.mutate", {
+				ns: "users",
+				usersAmount: variablesSet.length,
+				users: variablesSet.map((variables) => `"${variables.name}"`),
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(_resultSet, variablesSet) => ({
+			text: t("toasts.addUser.success", {
+				ns: "users",
+				usersAmount: variablesSet.length,
+				users: variablesSet.map((variables) => `"${variables.name}"`),
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors, variablesSet) => ({
+			text: t("toasts.addUser.error", {
+				ns: "users",
+				usersAmount: variablesSet.length,
+				users: variablesSet.map((variables) => `"${variables.name}"`),
+				errors,
+			}),
+		}),
 };

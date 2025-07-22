@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -26,13 +24,19 @@ export const options: UseContextedMutationOptions<"auth.register"> = {
 				},
 			);
 		},
-	mutateToastOptions: {
-		text: "Registering..",
-	},
-	successToastOptions: {
-		text: "Register successful, redirecting..",
-	},
-	errorToastOptions: () => (errors) => ({
-		text: `Registration failed: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.register.mutate", { ns: "register" }),
+		}),
+	successToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.register.success", { ns: "register" }),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.register.error", { ns: "register", errors }),
+		}),
 };

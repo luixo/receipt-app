@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"resetPasswordIntentions.add"> =
@@ -8,7 +6,12 @@ export const options: UseContextedMutationOptions<"resetPasswordIntentions.add">
 		successToastOptions: () => (_result, variablesSet) => ({
 			text: `Password reset link was sent to email "${variablesSet[0].email}"`,
 		}),
-		errorToastOptions: () => (errors) => ({
-			text: `Password reset failed: ${mergeErrors(errors)}`,
-		}),
+		errorToastOptions:
+			({ t }) =>
+			(errors) => ({
+				text: t("toasts.addResetPasswordIntention.error", {
+					ns: "login",
+					errors,
+				}),
+			}),
 	};

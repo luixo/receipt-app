@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import {
 	update as updateReceipts,
 	updateRevert as updateRevertReceipts,
@@ -19,13 +17,29 @@ export const options: UseContextedMutationOptions<"receipts.remove"> = {
 			getPaged: (controller) => controller.invalidate(),
 		});
 	},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Removing receipt${variablesSet.length > 1 ? "s" : ""}..`,
-	}),
-	successToastOptions: () => (resultSet) => ({
-		text: `Receipt${resultSet.length > 1 ? "s" : ""} removed`,
-	}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error removing receipt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.removeReceipt.mutate", {
+				ns: "receipts",
+				receiptsCount: variablesSet.length,
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(resultSet) => ({
+			text: t("toasts.removeReceipt.success", {
+				ns: "receipts",
+				receiptsCount: resultSet.length,
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.removeReceipt.error", {
+				ns: "receipts",
+				receiptsCount: errors.length,
+				errors,
+			}),
+		}),
 };

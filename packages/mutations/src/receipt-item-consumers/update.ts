@@ -1,12 +1,11 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
-import { mergeErrors } from "~mutations/utils";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
-import { getConsumersText } from "./utils";
+import { getConsumersItems } from "./utils";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 type ReceiptItem = Receipt["items"][number];
@@ -99,13 +98,17 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			});
 		},
-	errorToastOptions: (contexts) => (errors, variablesSet) => {
-		const texts = getConsumersText(
-			variablesSet.map(({ itemId }) => itemId),
-			contexts.map((context) => context.receiptId),
-		);
-		return {
-			text: `Error updating ${texts}: ${mergeErrors(errors)}`,
-		};
-	},
+	errorToastOptions:
+		({ t }, contexts) =>
+		(errors, variablesSet) => ({
+			text: t("toasts.updateConsumer.error", {
+				ns: "receipts",
+				items: getConsumersItems(
+					t,
+					variablesSet.map(({ itemId }) => itemId),
+					contexts.map((context) => context.receiptId),
+				),
+				errors,
+			}),
+		}),
 };

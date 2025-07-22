@@ -1,10 +1,9 @@
 import type { ReceiptsId } from "~db/models";
-import { mergeErrors } from "~mutations/utils";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-import { getConsumersText } from "./utils";
+import { getConsumersItems } from "./utils";
 
 export const options: UseContextedMutationOptions<
 	"receiptItemConsumers.remove",
@@ -31,13 +30,17 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			});
 		},
-	errorToastOptions: (contexts) => (errors, variablesSet) => {
-		const texts = getConsumersText(
-			variablesSet.map(({ itemId }) => itemId),
-			contexts.map((context) => context.receiptId),
-		);
-		return {
-			text: `Error removing ${texts}: ${mergeErrors(errors)}`,
-		};
-	},
+	errorToastOptions:
+		({ t }, contexts) =>
+		(errors, variablesSet) => ({
+			text: t("toasts.removeConsumer.error", {
+				ns: "receipts",
+				items: getConsumersItems(
+					t,
+					variablesSet.map(({ itemId }) => itemId),
+					contexts.map((context) => context.receiptId),
+				),
+				errors,
+			}),
+		}),
 };

@@ -1,5 +1,4 @@
 import type { ReceiptItemsId } from "~db/models";
-import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import {
@@ -46,7 +45,14 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			});
 		},
-	errorToastOptions: () => (errors, variablesSet) => ({
-		text: `Error adding item${variablesSet.length > 1 ? "s" : ""} ${variablesSet.map((variables) => `"${variables.name}"`).join(", ")}: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors, variablesSet) => ({
+			text: t("toasts.addItem.error", {
+				ns: "receipts",
+				itemsCount: variablesSet.length,
+				items: variablesSet.map((variables) => `"${variables.name}"`),
+				errors,
+			}),
+		}),
 };

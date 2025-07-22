@@ -1,24 +1,25 @@
+import type { TFunction } from "i18next";
+
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 
-export const getConsumersText = (
-	itemsIds: ReceiptItemsId[],
+export const getConsumersItems = (
+	t: TFunction,
+	itemIds: ReceiptItemsId[],
 	receiptIds: ReceiptsId[],
 ) => {
-	const payersAmount = itemsIds.filter(
+	const payersAmount = itemIds.filter(
 		(itemId, index) => itemId === receiptIds[index],
 	).length;
-	const consumersAmount = itemsIds.length - payersAmount;
-	const payersText =
-		payersAmount > 1
-			? `${payersAmount} payers`
-			: payersAmount > 0
-				? "payer"
-				: undefined;
-	const consumersText =
-		consumersAmount > 1
-			? `${consumersAmount} consumers`
-			: consumersAmount > 0
-				? "consumer"
-				: undefined;
-	return [payersText, consumersText].filter(Boolean).join(" and ");
+	const consumersAmount = itemIds.length - payersAmount;
+	return [
+		consumersAmount
+			? t("toasts.consumersGenitive", {
+					ns: "receipts",
+					count: consumersAmount,
+				})
+			: undefined,
+		payersAmount
+			? t("toasts.payersGenitive", { ns: "receipts", count: payersAmount })
+			: undefined,
+	].filter(Boolean);
 };

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { skipToken, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import type { TRPCMutationKey } from "~app/trpc";
 import { getMutationToaster } from "~app/utils/toasts";
@@ -69,13 +70,20 @@ export const useTrpcMutationOptions = <
 		onSuccess,
 		...rest
 	} = options || {};
+	const { t } = useTranslation();
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const mutationToaster = getMutationToaster<
 		Path,
 		OuterContext,
 		LifecycleContext
-	>(mutationKey, mutateToastOptions, errorToastOptions, successToastOptions);
+	>(
+		mutationKey,
+		{ t },
+		mutateToastOptions,
+		errorToastOptions,
+		successToastOptions,
+	);
 	return React.useMemo(
 		() => ({
 			onMutate: async (...args) => {

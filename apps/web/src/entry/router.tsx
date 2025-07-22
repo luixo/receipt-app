@@ -27,10 +27,12 @@ import {
 } from "~app/contexts/query-clients-context";
 import { QueryProvider } from "~app/providers/query";
 import {
+	ensureI18nInitialized,
 	getBackendModule,
 	getLanguageFromRequest,
 	i18nInitOptions,
 } from "~app/utils/i18n";
+import type { Language } from "~app/utils/i18n-data";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
@@ -108,13 +110,14 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 				serializeData: transformer.serialize,
 			}),
 			i18n: {
-				language: i18nInstance.language,
+				language: i18nInstance.language as Language,
 				data: i18nInstance.store.data,
 			},
 		}),
 		hydrate: (dehydratedData) => {
-			void i18nInstance.init({
-				lng: dehydratedData.i18n.language,
+			void ensureI18nInitialized({
+				i18n: i18nInstance,
+				initialLanguage: dehydratedData.i18n.language,
 				resources: dehydratedData.i18n.data,
 			});
 			hydrate(queryClient, dehydratedData.dehydratedState, {

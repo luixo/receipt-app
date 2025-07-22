@@ -21,5 +21,14 @@
 			},
 			"success": "Ссылка для сброса пароля отправлена на {{email}}"
 		}
+	},
+	"toasts": {
+		"login": {
+			"error": "Ошибка входа: {{errors, uniqueErrors}}",
+			"success": "Вы вошли, подождите..."
+		},
+		"addResetPasswordIntention": {
+			"error": "Ошибка при сбросе пароля: {{errors, uniqueErrors}}"
+		}
 	}
 }

@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -75,13 +73,29 @@ export const options: UseContextedMutationOptions<
 				result.reverseUpdated,
 			);
 		},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Updating ${variablesSet.length > 1 ? `${variablesSet.length} debts` : "debt"}..`,
-	}),
-	successToastOptions: () => (resultSet) => ({
-		text: `${resultSet.length > 1 ? `${resultSet.length} debts` : "Debt"} updated successfully`,
-	}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error updating debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.updateDebt.mutate", {
+				ns: "debts",
+				debtsAmount: variablesSet.length,
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(resultSet) => ({
+			text: t("toasts.updateDebt.success", {
+				ns: "debts",
+				debtsAmount: resultSet.length,
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.updateDebt.error", {
+				ns: "debts",
+				debtsAmount: errors.length,
+				errors,
+			}),
+		}),
 };

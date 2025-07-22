@@ -1,13 +1,15 @@
-import { mergeErrors } from "~mutations/utils";
-
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.voidAccount"> = {
 	mutationKey: "auth.voidAccount",
-	successToastOptions: {
-		text: "Account successfully voided, redirecting..",
-	},
-	errorToastOptions: () => (errors) => ({
-		text: `Void account failed: ${mergeErrors(errors)}`,
-	}),
+	successToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.voidAccount.success", { ns: "void-account" }),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.voidAccount.error", { ns: "void-account", errors }),
+		}),
 };

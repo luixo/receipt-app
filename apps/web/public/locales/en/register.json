@@ -27,5 +27,17 @@
 			"home": "To home page"
 		},
 		"retryButton": "Retry"
+	},
+	"toasts": {
+		"confirmEmail": {
+			"error": "Email confirmation failed: {{errors, uniqueErrors}}",
+			"success": "Email \"{{email}}\" confirmed!",
+			"mutate": "Confirming email.."
+		},
+		"register": {
+			"error": "Registration failed: {{errors, uniqueErrors}}",
+			"success": "Register successful, redirecting..",
+			"mutate": "Registering.."
+		}
 	}
 }

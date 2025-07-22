@@ -32,5 +32,20 @@
 			"label": "Повторите новый пароль"
 		},
 		"submitButton": "Поменять пароль"
+	},
+	"toasts": {
+		"changeAvatar": {
+			"error": "Ошибка при обновлении аватара: {{errors, uniqueErrors}}"
+		},
+		"changeName": {
+			"error": "Ошибка при обновлении имени: {{errors, uniqueErrors}}"
+		},
+		"changePassword": {
+			"error": "Ошибка при смене пароля: {{errors, uniqueErrors}}"
+		},
+		"logout": {
+			"success": "Выход произведен, подождите..",
+			"error": "Ошибка выхода: {{errors, uniqueErrors}}"
+		}
 	}
 }

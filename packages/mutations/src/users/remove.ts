@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import {
 	invalidateSuggest as invalidateSuggestUsers,
 	updateRevert as updateRevertUsers,
@@ -18,13 +16,29 @@ export const options: UseContextedMutationOptions<"users.remove"> = {
 			}),
 	onSuccess: (controllerContext) => () =>
 		invalidateSuggestUsers(controllerContext),
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Removing user${variablesSet.length > 1 ? "s" : ""}..`,
-	}),
-	successToastOptions: () => (_resultSet, variablesSet) => ({
-		text: `User${variablesSet.length > 1 ? "s" : ""} removed`,
-	}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error removing user: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.removeUser.mutate", {
+				ns: "users",
+				usersAmount: variablesSet.length,
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(_resultSet, variablesSet) => ({
+			text: t("toasts.removeUser.success", {
+				ns: "users",
+				usersAmount: variablesSet.length,
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.removeUser.error", {
+				ns: "users",
+				usersAmount: errors.length,
+				errors,
+			}),
+		}),
 };

@@ -1,13 +1,15 @@
-import { mergeErrors } from "~mutations/utils";
-
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.resetPassword"> = {
 	mutationKey: "auth.resetPassword",
-	successToastOptions: {
-		text: "Password successfully reset",
-	},
-	errorToastOptions: () => (errors) => ({
-		text: `Password reset failed: ${mergeErrors(errors)}`,
-	}),
+	successToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.resetPassword.success", { ns: "reset-password" }),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.resetPassword.error", { ns: "reset-password", errors }),
+		}),
 };

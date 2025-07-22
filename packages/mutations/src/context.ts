@@ -1,4 +1,5 @@
 import type { UseTRPCMutationOptions } from "@trpc/react-query/shared";
+import type { TFunction } from "i18next";
 
 import type {
 	TRPCError,
@@ -36,6 +37,9 @@ There is `internalContext` which is the actual lifecycle context object that is 
 It includes `controllerContext`, `outerContext`, `lifecycleContext`
 as well as possible update functions (the ones we need to run in success / error hooks to revert or finalize the data)
 as well as toast data (the id of the toast we need to update).
+
+There is `toastContext` which is the object passed to a batched toast options
+E.g.: calculating translations in toasts
 */
 
 type ControllerContextWith<OuterContext = undefined> = MaybeAddElementToArray<
@@ -47,6 +51,10 @@ export type LifecycleContextWithUpdateFns<LifecycleContext = unknown> = {
 	revertFn?: () => void;
 	finalizeFn?: () => void;
 	context?: LifecycleContext;
+};
+
+export type ToastContext = {
+	t: TFunction;
 };
 
 export type ToastObject = { id: string; count: number };
@@ -82,35 +90,32 @@ export type UseContextedMutationOptions<
 		LifecycleContextWithUpdateFns<LifecycleContext>
 	>,
 > = {
-	mutateToastOptions?:
-		| ToastOptions
-		| ((
-				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
-		  ) => (
-				...args: ArrayOf<
-					Parameters<NonNullable<MutationOptionsWithUpdateFns["onMutate"]>>
-				>
-		  ) => ToastOptions);
+	mutateToastOptions?: (
+		context: ToastContext,
+		...contextArgs: ArrayOf<ToastArgs<OuterContext>>
+	) => (
+		...args: ArrayOf<
+			Parameters<NonNullable<MutationOptionsWithUpdateFns["onMutate"]>>
+		>
+	) => ToastOptions;
 	onMutate?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<MutationOptionsWithUpdateFns["onMutate"]>;
-	errorToastOptions:
-		| ToastOptions
-		| ((
-				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
-		  ) => (
-				...args: ArrayOf<Parameters<NonNullable<Options["onError"]>>>
-		  ) => ToastOptions);
+	errorToastOptions: (
+		context: ToastContext,
+		...contextArgs: ArrayOf<ToastArgs<OuterContext>>
+	) => (
+		...args: ArrayOf<Parameters<NonNullable<Options["onError"]>>>
+	) => ToastOptions;
 	onError?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<Options["onError"]>;
-	successToastOptions?:
-		| ToastOptions
-		| ((
-				...contextArgs: ArrayOf<ToastArgs<OuterContext>>
-		  ) => (
-				...args: ArrayOf<Parameters<NonNullable<Options["onSuccess"]>>>
-		  ) => ToastOptions);
+	successToastOptions?: (
+		context: ToastContext,
+		...contextArgs: ArrayOf<ToastArgs<OuterContext>>
+	) => (
+		...args: ArrayOf<Parameters<NonNullable<Options["onSuccess"]>>>
+	) => ToastOptions;
 	onSuccess?: (
 		...args: ControllerContextWith<OuterContext>
 	) => NonNullable<Options["onSuccess"]>;

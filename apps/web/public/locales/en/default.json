@@ -28,6 +28,9 @@
 		"resetPassword": "Reset password",
 		"voidAccount": "Void account"
 	},
+	"common": {
+		"andJoiner": " and "
+	},
 	"navigation": {
 		"receipts": "Receipts",
 		"debts": "Debts",
@@ -98,6 +101,22 @@
 		},
 		"debtsGroup": {
 			"noDebtsYet": "No debts yet"
+		},
+		"emailVerification": {
+			"header": "Your email is not verified!",
+			"text": "Until you verify your email, you won't be able to use most of the app's features",
+			"success": "Email successfully sent to {{email}}!",
+			"resendButton": "Resend email"
+		}
+	},
+	"toasts": {
+		"header": {
+			"mutate": "Loading..",
+			"success": "Success",
+			"error": "Error"
+		},
+		"resendEmail": {
+			"error": "Resend email failed: {{errors, uniqueErrors}}"
 		}
 	}
 }

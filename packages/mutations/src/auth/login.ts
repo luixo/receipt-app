@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -20,10 +18,14 @@ export const options: UseContextedMutationOptions<"auth.login"> = {
 				},
 			);
 		},
-	successToastOptions: {
-		text: "Login successful, redirecting..",
-	},
-	errorToastOptions: () => (errors) => ({
-		text: `Login failed: ${mergeErrors(errors)}`,
-	}),
+	successToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.login.success", { ns: "login" }),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.login.error", { ns: "login", errors }),
+		}),
 };

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
@@ -11,6 +12,7 @@ import { Text } from "~components/text";
 import { options as accountResendEmailOptions } from "~mutations/account/resend-email";
 
 export const EmailVerificationCard: React.FC = () => {
+	const { t } = useTranslation();
 	const trpc = useTRPC();
 	const accountQuery = useQuery(trpc.account.get.queryOptions());
 	const resendEmailMutation = useMutation(
@@ -29,18 +31,17 @@ export const EmailVerificationCard: React.FC = () => {
 		<Card className="min-w-fit self-center" shadow="md">
 			<CardHeader>
 				<Text className="text-warning text-center text-2xl">
-					Your email is not verified!
+					{t("components.emailVerification.header")}
 				</Text>
 			</CardHeader>
 			<Divider />
 			<CardBody className="gap-4">
-				<Text>
-					Until you verify your email, you won&apos;t be able to use most of the
-					app&apos;s features
-				</Text>
+				<Text>{t("components.emailVerification.text")}</Text>
 				{resendEmailMutation.status === "success" ? (
 					<Text className="text-center text-2xl">
-						Email successfully sent to {resendEmailMutation.data.email}!
+						{t("components.emailVerification.success", {
+							email: resendEmailMutation.data.email,
+						})}
 					</Text>
 				) : (
 					<Button
@@ -49,7 +50,7 @@ export const EmailVerificationCard: React.FC = () => {
 						isDisabled={resendEmailMutation.isPending}
 						isLoading={resendEmailMutation.isPending}
 					>
-						Resend email
+						{t("components.emailVerification.resendButton")}
 					</Button>
 				)}
 			</CardBody>

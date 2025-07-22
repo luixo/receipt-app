@@ -1,6 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
-import { mergeErrors } from "~mutations/utils";
 
 import {
 	invalidateSuggest as invalidateSuggestUsers,
@@ -86,7 +85,13 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 		}),
 	onSuccess: (controllerContext) => () =>
 		invalidateSuggestUsers(controllerContext),
-	errorToastOptions: () => (errors) => ({
-		text: `Error updating user${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.updateUser.error", {
+				ns: "users",
+				usersAmount: errors.length,
+				errors,
+			}),
+		}),
 };

@@ -16,5 +16,10 @@
 	},
 	"refresh": {
 		"header": "Reset cache"
+	},
+	"toasts": {
+		"updateSettings": {
+			"error": "Account settings update failed: {{errors, uniqueErrors}}"
+		}
 	}
 }

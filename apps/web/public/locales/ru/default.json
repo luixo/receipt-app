@@ -28,6 +28,9 @@
 		"resetPassword": "Сбросить пароль",
 		"voidAccount": "Отмена регистрации"
 	},
+	"common": {
+		"andJoiner": " и "
+	},
 	"navigation": {
 		"receipts": "Чеки",
 		"debts": "Долги",
@@ -98,6 +101,22 @@
 		},
 		"debtsGroup": {
 			"noDebtsYet": "Долгов пока нет"
+		},
+		"emailVerification": {
+			"header": "Почта не подтверждена!",
+			"text": "Пока вы не подтвердите почту, вы не сможете использовать большинство функций приложения",
+			"success": "Подтверждение отправлено не почту {{email}}!",
+			"resendButton": "Отправить заново"
+		}
+	},
+	"toasts": {
+		"header": {
+			"mutate": "Загрузка..",
+			"success": "Успех",
+			"error": "Ошибка"
+		},
+		"resendEmail": {
+			"error": "Ошибка при отправке письма: {{errors, uniqueErrors}}"
 		}
 	}
 }

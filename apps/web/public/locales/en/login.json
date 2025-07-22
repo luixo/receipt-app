@@ -21,5 +21,14 @@
 			},
 			"success": "Reset password link was sent to {{email}}"
 		}
+	},
+	"toasts": {
+		"login": {
+			"error": "Login failed: {{errors, uniqueErrors}}",
+			"success": "Login successful, redirecting.."
+		},
+		"addResetPasswordIntention": {
+			"error": "Password reset failed: {{errors, uniqueErrors}}"
+		}
 	}
 }

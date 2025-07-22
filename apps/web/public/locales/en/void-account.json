@@ -12,5 +12,11 @@
 	"success": {
 		"message": "Account removed succesfully",
 		"toLogin": "To login page"
+	},
+	"toasts": {
+		"voidAccount": {
+			"error": "Void account failed: {{errors, uniqueErrors}}",
+			"success": "Account successfully voided, redirecting.."
+		}
 	}
 }

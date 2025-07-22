@@ -5,6 +5,7 @@ import { addToast, getToastQueue } from "~components/toast";
 import type {
 	LifecycleContextWithUpdateFns,
 	TRPCMutationOptions,
+	ToastContext,
 	ToastObject,
 	ToastOptions,
 	UseContextedMutationOptions,
@@ -129,6 +130,7 @@ export const getMutationToaster = <
 	> = OptionsLocal<Path, OuterContext, LifecycleContext>,
 >(
 	key: Path,
+	toastContext: ToastContext,
 	mutateToastOptions: UseContextedMutationOptions<
 		Path,
 		OuterContext,
@@ -166,15 +168,16 @@ export const getMutationToaster = <
 						if (!mutateToastOptions) {
 							return;
 						}
-						return typeof mutateToastOptions === "function"
-							? mutateToastOptions(...toastArgs)(...mutateArgs)
-							: mutateToastOptions;
+						return mutateToastOptions(
+							toastContext,
+							...toastArgs,
+						)(...mutateArgs);
 					},
 				(input) => input.toastArgs,
 				(input) => input.mutateArgs,
 				(result, inputs) => {
 					const toastId = addToast({
-						title: "Loading..",
+						title: toastContext.t("toasts.header.mutate"),
 						description: result.text,
 						timeout: Infinity,
 					});
@@ -195,14 +198,12 @@ export const getMutationToaster = <
 							OnLifecycle<"onError", Path, LifecycleContext>
 						>
 					) =>
-						typeof errorToastOptions === "function"
-							? errorToastOptions(...toastArgs)(...errorArgs)
-							: errorToastOptions,
+						errorToastOptions(toastContext, ...toastArgs)(...errorArgs),
 				(input) => input.toastArgs,
 				(input) => input.errorArgs,
 				(result) => {
 					addToast({
-						title: "Error",
+						title: toastContext.t("toasts.header.error"),
 						description: result.text,
 						color: "danger",
 					});
@@ -232,14 +233,12 @@ export const getMutationToaster = <
 							OnLifecycle<"onSuccess", Path, LifecycleContext>
 						>
 					) =>
-						typeof successToastOptions === "function"
-							? successToastOptions(...toastArgs)(...successArgs)
-							: successToastOptions,
+						successToastOptions?.(toastContext, ...toastArgs)(...successArgs),
 				(input) => input.toastArgs,
 				(input) => input.successArgs,
 				(result) => {
 					addToast({
-						title: "Success",
+						title: toastContext.t("toasts.header.success"),
 						description: result.text,
 						color: "success",
 					});

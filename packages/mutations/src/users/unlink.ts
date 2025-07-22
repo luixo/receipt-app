@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { updateRevert as updateRevertUsers } from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -19,7 +17,13 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 			getForeign: (controller) => controller.removeOwn(variables.id),
 			getPaged: undefined,
 		}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error unlinking user${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.unlinkUser.error", {
+				ns: "users",
+				usersAmount: errors.length,
+				errors,
+			}),
+		}),
 };

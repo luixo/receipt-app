@@ -1,5 +1,4 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import { mergeErrors } from "~mutations/utils";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -49,7 +48,13 @@ export const options: UseContextedMutationOptions<"receiptParticipants.update"> 
 					),
 				getPaged: undefined,
 			}),
-		errorToastOptions: () => (errors) => ({
-			text: `Error updating participant${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-		}),
+		errorToastOptions:
+			({ t }) =>
+			(errors) => ({
+				text: t("toasts.updateParticipant.error", {
+					ns: "receipts",
+					participantsCount: errors.length,
+					errors,
+				}),
+			}),
 	};

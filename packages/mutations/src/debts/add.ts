@@ -3,7 +3,6 @@ import type {
 	TRPCMutationOutput,
 	TRPCQueryOutput,
 } from "~app/trpc";
-import { mergeErrors } from "~mutations/utils";
 import { getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
@@ -87,13 +86,29 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			getIntentions: undefined,
 		});
 	},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Adding ${variablesSet.length > 1 ? `${variablesSet.length} debts` : "debt"}..`,
-	}),
-	successToastOptions: () => (resultSet) => ({
-		text: `${resultSet.length > 1 ? `${resultSet.length} debts` : "Debt"} added`,
-	}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error adding debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.addDebt.mutate", {
+				ns: "debts",
+				debtsAmount: variablesSet.length,
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(resultSet) => ({
+			text: t("toasts.addDebt.success", {
+				ns: "debts",
+				debtsAmount: resultSet.length,
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.addDebt.error", {
+				ns: "debts",
+				debtsAmount: errors.length,
+				errors,
+			}),
+		}),
 };

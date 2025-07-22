@@ -32,5 +32,20 @@
 			"label": "Retype new password"
 		},
 		"submitButton": "Change password"
+	},
+	"toasts": {
+		"changeAvatar": {
+			"error": "Error updating your avatar: {{errors, uniqueErrors}}"
+		},
+		"changeName": {
+			"error": "Error updating your name: {{errors, uniqueErrors}}"
+		},
+		"changePassword": {
+			"error": "Error changing password: {{errors, uniqueErrors}}"
+		},
+		"logout": {
+			"success": "Logout successful, redirecting..",
+			"error": "Logout failed: {{errors, uniqueErrors}}"
+		}
 	}
 }

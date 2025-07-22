@@ -27,5 +27,17 @@
 			"home": "На главную"
 		},
 		"retryButton": "Попробовать еще раз"
+	},
+	"toasts": {
+		"confirmEmail": {
+			"error": "Ошибка подтверждения почты: {{errors, uniqueErrors}}",
+			"success": "Почта \"{{email}}\" подтверждена!",
+			"mutate": "Подтверждаем почту.."
+		},
+		"register": {
+			"error": "Ошибка регистрации: {{errors, uniqueErrors}}",
+			"success": "Регистрация успешна, подождите..",
+			"mutate": "Регистрируем.."
+		}
 	}
 }

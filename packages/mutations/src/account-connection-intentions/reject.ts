@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { updateRevert as updateRevertAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -11,7 +9,13 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.r
 				getAll: (controller) =>
 					controller.inbound.remove(variables.sourceAccountId),
 			}),
-		errorToastOptions: () => (errors) => ({
-			text: `Error rejecting ${errors.length > 1 ? "invites" : "invite"}: ${mergeErrors(errors)}`,
-		}),
+		errorToastOptions:
+			({ t }) =>
+			(errors) => ({
+				text: t("toasts.rejectInvite.error", {
+					ns: "users",
+					invitesAmount: errors.length,
+					errors,
+				}),
+			}),
 	};

@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { updateRevert as updateRevertAccountSettings } from "../cache/account-settings";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -19,7 +17,9 @@ export const options: UseContextedMutationOptions<"accountSettings.update"> = {
 					}),
 				),
 		}),
-	errorToastOptions: () => (errors) => ({
-		text: `Account settings update failed: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.updateSettings.error", { ns: "settings", errors }),
+		}),
 };

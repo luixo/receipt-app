@@ -91,7 +91,7 @@ test("'debtIntentions.accept' pending / error", async ({
 				errored: rejectedDebtsAmount,
 			});
 			await verifyToastTexts(
-				'Error accepting debts: Mock "debtIntentions.accept" error',
+				'Error accepting 2 debts: Mock "debtIntentions.accept" error',
 			);
 			await expect(page).toHaveURL("/debts/intentions");
 		},

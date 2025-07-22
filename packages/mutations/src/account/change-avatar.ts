@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
@@ -18,7 +16,9 @@ export const options: UseContextedMutationOptions<"account.changeAvatar"> = {
 			},
 		});
 	},
-	errorToastOptions: () => (errors) => ({
-		text: `Error updating your avatar: ${mergeErrors(errors)}`,
-	}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.changeAvatar.error", { ns: "account", errors }),
+		}),
 };

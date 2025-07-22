@@ -1,5 +1,3 @@
-import { mergeErrors } from "~mutations/utils";
-
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"account.logout"> = {
@@ -9,10 +7,17 @@ export const options: UseContextedMutationOptions<"account.logout"> = {
 		async () => {
 			await queryClient.invalidateQueries(trpc.pathFilter());
 		},
-	successToastOptions: {
-		text: "Logout successful, redirecting..",
-	},
-	errorToastOptions: () => (errors) => ({
-		text: `Logout failed: ${mergeErrors(errors)}`,
-	}),
+	successToastOptions:
+		({ t }) =>
+		() => ({
+			text: t("toasts.logout.success", { ns: "account" }),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.logout.error", {
+				ns: "account",
+				errors,
+			}),
+		}),
 };

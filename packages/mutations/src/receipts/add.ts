@@ -1,10 +1,7 @@
 import type { AccountsId, UsersId } from "~db/models";
-import { mergeErrors } from "~mutations/utils";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
-
-import { getReceiptTexts } from "./utils";
 
 export const options: UseContextedMutationOptions<
 	"receipts.add",
@@ -92,13 +89,31 @@ export const options: UseContextedMutationOptions<
 				},
 			});
 		},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Adding receipt${variablesSet.length > 1 ? "s" : ""} ${getReceiptTexts(variablesSet)}..`,
-	}),
-	successToastOptions: () => (_result, variablesSet) => ({
-		text: `Receipt${variablesSet.length > 1 ? "s" : ""} ${getReceiptTexts(variablesSet)} added`,
-	}),
-	errorToastOptions: () => (errors, variablesSet) => ({
-		text: `Error adding receipt ${getReceiptTexts(variablesSet)}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.addReceipt.mutate", {
+				ns: "receipts",
+				receiptsCount: variablesSet.length,
+				receipts: variablesSet.map((variables) => `"${variables.name}"`),
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(_result, variablesSet) => ({
+			text: t("toasts.addReceipt.success", {
+				ns: "receipts",
+				receiptsCount: variablesSet.length,
+				receipts: variablesSet.map((variables) => `"${variables.name}"`),
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors, variablesSet) => ({
+			text: t("toasts.addReceipt.error", {
+				ns: "receipts",
+				receipts: variablesSet.map((variables) => `"${variables.name}"`),
+				errors,
+			}),
+		}),
 };

@@ -1,5 +1,4 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import { mergeErrors } from "~mutations/utils";
 
 import {
 	update as updateDebts,
@@ -94,13 +93,29 @@ export const options: UseContextedMutationOptions<
 				},
 			});
 		},
-	mutateToastOptions: () => (variablesSet) => ({
-		text: `Removing ${variablesSet.length > 1 ? `${variablesSet.length} ` : ""}debt${variablesSet.length > 1 ? "s" : ""}..`,
-	}),
-	successToastOptions: () => (_, variablesSet) => ({
-		text: `${variablesSet.length > 1 ? `${variablesSet.length} debts` : "Debt"} removed`,
-	}),
-	errorToastOptions: () => (errors) => ({
-		text: `Error removing debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,
-	}),
+	mutateToastOptions:
+		({ t }) =>
+		(variablesSet) => ({
+			text: t("toasts.removeDebt.mutate", {
+				ns: "debts",
+				debtsAmount: variablesSet.length,
+			}),
+		}),
+	successToastOptions:
+		({ t }) =>
+		(_, variablesSet) => ({
+			text: t("toasts.removeDebt.success", {
+				ns: "debts",
+				debtsAmount: variablesSet.length,
+			}),
+		}),
+	errorToastOptions:
+		({ t }) =>
+		(errors) => ({
+			text: t("toasts.removeDebt.error", {
+				ns: "debts",
+				debtsAmount: errors.length,
+				errors,
+			}),
+		}),
 };

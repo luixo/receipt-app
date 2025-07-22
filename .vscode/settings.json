@@ -2,5 +2,6 @@
 	"javascript.preferences.importModuleSpecifier": "non-relative",
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"i18n-ally.localesPaths": ["apps/web/public/locales"],
-	"i18n-ally.namespace": true
+	"i18n-ally.namespace": true,
+	"i18n-ally.keystyle": "nested"
 }

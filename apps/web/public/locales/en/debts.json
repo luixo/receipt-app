@@ -104,5 +104,27 @@
 		"filters": {
 			"empty": "No debts under given filters"
 		}
+	},
+	"toasts": {
+		"acceptIntention": {
+			"error": "Error accepting {{debtsAmount, plural(one:debt; other:{count} debts)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:debt; other:{count} debts)}} accepted successfully",
+			"mutate": "Accepting {{debtsAmount, plural(one:debt; other:{count} debts)}}.."
+		},
+		"addDebt": {
+			"error": "Error adding {{debtsAmount, plural(one:debt; other:{count} debts)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:debt; other:{count} debts)}} added",
+			"mutate": "Adding {{debtsAmount, plural(one:debt; other:{count} debts)}}.."
+		},
+		"removeDebt": {
+			"error": "Error removing {{debtsAmount, plural(one:debt; other:{count} debts)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:debt; other:{count} debts)}} removed",
+			"mutate": "Removing {{debtsAmount, plural(one:debt; other:{count} debts)}}.."
+		},
+		"updateDebt": {
+			"error": "Error updating {{debtsAmount, plural(one:debt; other:{count} debts)}}: {{errors, uniqueErrors}}",
+			"success": "{{debtsAmount, plural(one:debt; other:{count} debts)}} updated successfully",
+			"mutate": "Updating {{debtsAmount, plural(one:debt; other:{count} debts)}}.."
+		}
 	}
 }

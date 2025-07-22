@@ -81,5 +81,37 @@
 			"confirmText": "Вы уверены?"
 		},
 		"userSuggestLabel": "Пожалуйста, выберите пользователя для привязки к почте"
+	},
+	"toasts": {
+		"acceptInvite": {
+			"error": "Ошибка принятия {{invitesAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}"
+		},
+		"addIntention": {
+			"error": "Ошибка отправки {{intentionsAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}",
+			"success": "{{intentionsAmount, plural(one:приглашение; other:{count} приглашения)}} {{emails, list}} {{intentionsAmount, plural(one:отправлено; other:{count} отправлены)}}",
+			"mutate": "Отправляем {{intentionsAmount, plural(one:приглашение; other:{count} приглашений)}} {{emails, list}}.."
+		},
+		"rejectInvite": {
+			"error": "Ошибка отказа {{invitesAmount, plural(one:приглашению; other:{count} приглашениям)}}: {{errors, uniqueErrors}}"
+		},
+		"removeInvite": {
+			"error": "Ошибка удаления {{invitesAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}"
+		},
+		"addUser": {
+			"error": "Ошибка добавления {{usersAmount, plural(one:пользователя; other:пользователей)}} {{users, and}}: {{errors, uniqueErrors}}",
+			"success": "{{usersAmount, plural(one:пользователь; other:{count} пользователи)}} {{users, and}} {{usersAmount, plural(one:добавлен; other:добавлены)}}",
+			"mutate": "Добавляем {{usersAmount, plural(one:пользователя; other:пользователей)}} {{users, and}}"
+		},
+		"removeUser": {
+			"error": "Ошибка удаления {{usersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}",
+			"success": "{{usersAmount, plural(one:пользователь; few:{count} пользователя; other:{count} пользователей)}} {{usersAmount, plural(one:удалён; other:удалено)}}",
+			"mutate": "Удаляем {{usersAmount, plural(one:пользователя; other:{count} пользователей)}}.."
+		},
+		"unlinkUser": {
+			"error": "Ошибка отвязки {{usersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}"
+		},
+		"updateUser": {
+			"error": "Ошибка обновления {{usersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}"
+		}
 	}
 }

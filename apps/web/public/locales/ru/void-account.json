@@ -12,5 +12,11 @@
 	"success": {
 		"message": "Аккаунт успешно удален",
 		"toLogin": "На страницу входа"
+	},
+	"toasts": {
+		"voidAccount": {
+			"error": "Ошибка удаления аккаунта: {{errors, uniqueErrors}}",
+			"success": "Аккаунт успешно удален, подождите.."
+		}
 	}
 }
