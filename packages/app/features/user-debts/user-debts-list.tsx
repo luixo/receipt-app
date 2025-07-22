@@ -1,7 +1,12 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	skipToken,
+	useMutation,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fromEntries, isNonNullish, values } from "remeda";
 
@@ -10,12 +15,14 @@ import {
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useSubscribeToQueryUpdate } from "~app/hooks/use-subscribe-to-query";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { typeQuery } from "~app/utils/queries";
@@ -24,6 +31,7 @@ import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Text } from "~components/text";
 import type { DebtsId, UsersId } from "~db/models";
+import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
@@ -196,33 +204,108 @@ const useConsecutiveDebtIds = ({
 
 const UserDebtsListWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
-}) => <View className="gap-2">{children}</View>;
+}) => <View>{children}</View>;
 
 const UserDebtsPreviews: React.FC<{
 	userId: UsersId;
 	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
 	consecutiveDebtIds: DebtsId[];
-}> = ({ userId, debtIds, consecutiveDebtIds }) => {
+	selectedDebtIds: DebtsId[];
+	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtsId[]>>;
+}> = ({
+	userId,
+	debtIds,
+	consecutiveDebtIds,
+	selectedDebtIds,
+	setSelectedDebtIds,
+}) => {
 	const consecutiveDebts = useDebtsByIds(consecutiveDebtIds);
 	const { dividers, resolvedDebtIds } = useDividers(consecutiveDebts, userId);
 	return (
 		<UserDebtsListWrapper>
-			{debtIds.map((debtId) => (
+			{debtIds.map((debtId, index) => (
 				<React.Fragment key={debtId}>
 					{dividers[debtId] ? (
 						<>
 							<Divider />
-							<EvenDebtsDivider currencyCode={dividers[debtId]} />
+							<EvenDebtsDivider
+								className="py-2"
+								currencyCode={dividers[debtId]}
+							/>
 						</>
 					) : null}
-					<Divider />
+					{index === 0 ? null : <Divider />}
 					<UserDebtPreview
 						debtId={debtId}
 						resolved={resolvedDebtIds.includes(debtId)}
+						isSelected={selectedDebtIds.includes(debtId)}
+						onValueChange={(nextSelected) =>
+							setSelectedDebtIds((prevSelected) =>
+								nextSelected
+									? [...prevSelected, debtId]
+									: prevSelected.filter(
+											(lookupValue) => lookupValue !== debtId,
+										),
+							)
+						}
 					/>
 				</React.Fragment>
 			))}
 		</UserDebtsListWrapper>
+	);
+};
+
+const RemoveDebtsButton: React.FC<{
+	debtIds: DebtsId[];
+	selectedDebtIds: DebtsId[];
+	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtsId[]>>;
+}> = ({ selectedDebtIds, setSelectedDebtIds, debtIds }) => {
+	const trpc = useTRPC();
+	const queryClient = useQueryClient();
+	const removeMutations = debtIds.map((debtId) => {
+		const cachedDebt = queryClient.getQueryData(
+			trpc.debts.get.queryOptions({ id: debtId }).queryKey,
+		);
+		return {
+			debtId,
+			// Mutations are stable due to `key` based on limit in the parent component
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			mutation: useMutation(
+				trpc.debts.remove.mutationOptions(
+					// eslint-disable-next-line react-hooks/rules-of-hooks
+					useTrpcMutationOptions(debtsRemoveOptions, {
+						context: cachedDebt ? { debt: cachedDebt } : skipToken,
+					}),
+				),
+			),
+		};
+	});
+	const onRemoveSelected = React.useCallback(() => {
+		removeMutations.forEach(({ debtId, mutation }) => {
+			if (!selectedDebtIds.includes(debtId)) {
+				return;
+			}
+			mutation.mutate(
+				{ id: debtId },
+				{
+					onSuccess: () =>
+						setSelectedDebtIds((prevDebtIds) =>
+							prevDebtIds.filter((lookupId) => lookupId !== debtId),
+						),
+				},
+			);
+		});
+	}, [removeMutations, selectedDebtIds, setSelectedDebtIds]);
+	return (
+		<RemoveButton
+			onRemove={onRemoveSelected}
+			mutation={{
+				isPending: removeMutations.some(({ mutation }) => mutation.isPending),
+			}}
+			isIconOnly
+			noConfirm={selectedDebtIds.length < 2}
+			isDisabled={selectedDebtIds.length === 0}
+		/>
 	);
 };
 
@@ -255,6 +338,7 @@ export const UserDebtsList = suspendedFallback<{
 			limit,
 			currentCursor: offsetState[0],
 		});
+		const [selectedDebtIds, setSelectedDebtIds] = React.useState<DebtsId[]>([]);
 
 		if (data.count === 0 && values(filters).filter(isNonNullish).length === 0) {
 			return <Text className="text-center">{t("user.filters.empty")}</Text>;
@@ -269,6 +353,19 @@ export const UserDebtsList = suspendedFallback<{
 						setLimit={setLimit}
 						offset={offsetState[0]}
 						onPageChange={onPageChange}
+						selection={{
+							items: data.items,
+							selectedItems: selectedDebtIds,
+							setSelectedItems: setSelectedDebtIds,
+						}}
+						endContent={
+							<RemoveDebtsButton
+								key={data.items.length}
+								selectedDebtIds={selectedDebtIds}
+								setSelectedDebtIds={setSelectedDebtIds}
+								debtIds={data.items}
+							/>
+						}
 					/>
 				}
 				isPending={isPending}
@@ -277,6 +374,8 @@ export const UserDebtsList = suspendedFallback<{
 					userId={userId}
 					debtIds={data.items}
 					consecutiveDebtIds={consecutiveDebtIds}
+					selectedDebtIds={selectedDebtIds}
+					setSelectedDebtIds={setSelectedDebtIds}
 				/>
 				{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
 					<View className="flex items-center">

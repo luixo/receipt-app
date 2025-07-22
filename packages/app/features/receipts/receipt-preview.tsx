@@ -6,14 +6,17 @@ import { useTranslation } from "react-i18next";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
+import { Checkbox } from "~components/checkbox";
 import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
+import { cn } from "~components/utils";
 import type { ReceiptsId } from "~db/models";
 import { round } from "~utils/math";
 
@@ -30,15 +33,24 @@ export const ReceiptPreviewSkeleton = () => {
 		</View>
 	);
 	const sumComponent = <Skeleton className="h-5 w-16 rounded" />;
+	const checkboxComponent = (
+		<View className="flex size-8 shrink-0 items-center justify-center">
+			<Checkbox isDisabled color="secondary" classNames={{ wrapper: "me-0" }} />
+		</View>
+	);
 	return (
 		<View>
 			<View className="flex-row gap-2 sm:hidden">
+				{checkboxComponent}
 				<View className="flex-[8] p-2">{titleComponent}</View>
 				<View className="flex-[2] flex-row justify-end p-2">
 					{sumComponent}
 				</View>
 			</View>
 			<View className="flex-row gap-2">
+				<View className="flex items-center justify-center max-sm:hidden">
+					{checkboxComponent}
+				</View>
 				<View className="flex-[8] p-2 max-sm:hidden">{titleComponent}</View>
 				<View className="flex-[2] flex-row justify-end self-center p-2 max-sm:hidden">
 					{sumComponent}
@@ -53,14 +65,21 @@ export const ReceiptPreviewSkeleton = () => {
 
 export const ReceiptPreview = suspendedFallback<{
 	id: ReceiptsId;
+	isSelected: boolean;
+	onValueChange: (nextValue: boolean) => void;
 }>(
-	({ id }) => {
+	({ id, isSelected, onValueChange }) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
 		const { data: receipt } = useSuspenseQuery(
 			trpc.receipts.get.queryOptions({ id }),
 		);
 		const { formatPlainDate } = useFormat();
+		const lastMutationState = useTrpcMutationState<"receipts.remove">(
+			trpc.receipts.remove.mutationKey(),
+			(vars) => vars.id === id,
+		);
+		const isRemoving = lastMutationState?.status === "pending";
 		const locale = useLocale();
 		const isOwner = receipt.selfUserId === receipt.ownerUserId;
 		const emptyItems = receipt.items.filter(
@@ -103,15 +122,35 @@ export const ReceiptPreview = suspendedFallback<{
 				{formatCurrency(locale, receipt.currencyCode, sum)}
 			</Text>
 		);
+		const checkboxComponent = (
+			<View className="flex min-w-8 shrink-0 items-center justify-center">
+				<Checkbox
+					isSelected={isSelected}
+					onValueChange={isRemoving ? undefined : onValueChange}
+					isDisabled={isRemoving}
+					color="secondary"
+					classNames={{ wrapper: "me-0" }}
+				/>
+			</View>
+		);
 		return (
-			<View>
+			<View
+				className={cn(
+					"overflow-hidden first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
+					isSelected ? "bg-secondary/20" : undefined,
+				)}
+			>
 				<View className="flex-row gap-2 sm:hidden">
+					{checkboxComponent}
 					<Text className="flex-[8] p-2">{title}</Text>
 					<Text className="flex-[2] flex-row justify-end p-2 text-right">
 						{sumComponent}
 					</Text>
 				</View>
 				<View className="flex-row gap-2">
+					<View className="flex items-center justify-center max-sm:hidden">
+						{checkboxComponent}
+					</View>
 					<Text className="flex-[8] p-2 max-sm:hidden">{title}</Text>
 					<Text className="flex-[2] flex-row justify-end self-center p-2 text-right max-sm:hidden">
 						{sumComponent}

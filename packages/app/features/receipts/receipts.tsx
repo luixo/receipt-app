@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
@@ -10,15 +11,19 @@ import {
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
+import type { ReceiptsId } from "~db/models";
+import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
@@ -36,8 +41,54 @@ const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 				<View className="flex-1 p-2 max-sm:hidden" />
 			</View>
 			<Divider className="max-sm:hidden" />
-			{children}
+			<View>{children}</View>
 		</>
+	);
+};
+
+const RemoveReceiptsButton: React.FC<{
+	receiptIds: ReceiptsId[];
+	selectedReceiptIds: ReceiptsId[];
+	setSelectedReceiptIds: React.Dispatch<React.SetStateAction<ReceiptsId[]>>;
+}> = ({ selectedReceiptIds, setSelectedReceiptIds, receiptIds }) => {
+	const trpc = useTRPC();
+	const removeMutations = receiptIds.map((receiptId) => ({
+		receiptId,
+		// Mutations are stable due to `key` based on limit in the parent component
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		mutation: useMutation(
+			trpc.receipts.remove.mutationOptions(
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				useTrpcMutationOptions(receiptsRemoveOptions),
+			),
+		),
+	}));
+	const onRemoveSelected = React.useCallback(() => {
+		removeMutations.forEach(({ receiptId, mutation }) => {
+			if (!selectedReceiptIds.includes(receiptId)) {
+				return;
+			}
+			mutation.mutate(
+				{ id: receiptId },
+				{
+					onSuccess: () =>
+						setSelectedReceiptIds((prevReceiptIds) =>
+							prevReceiptIds.filter((lookupId) => lookupId !== receiptId),
+						),
+				},
+			);
+		});
+	}, [removeMutations, selectedReceiptIds, setSelectedReceiptIds]);
+	return (
+		<RemoveButton
+			onRemove={onRemoveSelected}
+			mutation={{
+				isPending: removeMutations.some(({ mutation }) => mutation.isPending),
+			}}
+			isIconOnly
+			isDisabled={selectedReceiptIds.length === 0}
+			noConfirm={selectedReceiptIds.length < 2}
+		/>
 	);
 };
 
@@ -57,6 +108,9 @@ export const Receipts = suspendedFallback<Props>(
 			{ limit, orderBy: sort, filters },
 			offsetState,
 		);
+		const [selectedReceiptIds, setSelectedReceiptIds] = React.useState<
+			ReceiptsId[]
+		>([]);
 
 		if (!data.count) {
 			if (values(filters).filter(isNonNullish).length === 0) {
@@ -95,15 +149,40 @@ export const Receipts = suspendedFallback<Props>(
 						setLimit={setLimit}
 						offset={offsetState[0]}
 						onPageChange={onPageChange}
+						selection={{
+							items: data.items,
+							selectedItems: selectedReceiptIds,
+							setSelectedItems: setSelectedReceiptIds,
+						}}
+						endContent={
+							<RemoveReceiptsButton
+								key={data.items.length}
+								selectedReceiptIds={selectedReceiptIds}
+								setSelectedReceiptIds={setSelectedReceiptIds}
+								receiptIds={data.items}
+							/>
+						}
 					/>
 				}
 				isPending={isPending}
 			>
 				<ReceiptsWrapper>
-					{data.items.map((id) => (
+					{data.items.map((id, index) => (
 						<React.Fragment key={id}>
-							<Divider className="sm:hidden" />
-							<ReceiptPreview id={id} />
+							{index === 0 ? null : <Divider className="sm:hidden" />}
+							<ReceiptPreview
+								id={id}
+								isSelected={selectedReceiptIds.includes(id)}
+								onValueChange={(nextSelected) =>
+									setSelectedReceiptIds((prevSelected) =>
+										nextSelected
+											? [...prevSelected, id]
+											: prevSelected.filter(
+													(lookupValue) => lookupValue !== id,
+												),
+									)
+								}
+							/>
 						</React.Fragment>
 					))}
 				</ReceiptsWrapper>

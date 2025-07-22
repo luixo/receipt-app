@@ -98,7 +98,7 @@ export const options: UseContextedMutationOptions<
 		text: `Removing ${variablesSet.length > 1 ? `${variablesSet.length} ` : ""}debt${variablesSet.length > 1 ? "s" : ""}..`,
 	}),
 	successToastOptions: () => (_, variablesSet) => ({
-		text: `Debt${variablesSet.length > 1 ? "s" : ""} removed`,
+		text: `${variablesSet.length > 1 ? `${variablesSet.length} debts` : "Debt"} removed`,
 	}),
 	errorToastOptions: () => (errors) => ({
 		text: `Error removing debt${errors.length > 1 ? "s" : ""}: ${mergeErrors(errors)}`,

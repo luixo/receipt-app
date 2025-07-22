@@ -1,6 +1,9 @@
 import { mergeErrors } from "~mutations/utils";
 
-import { updateRevert as updateRevertReceipts } from "../cache/receipts";
+import {
+	update as updateReceipts,
+	updateRevert as updateRevertReceipts,
+} from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"receipts.remove"> = {
@@ -8,8 +11,14 @@ export const options: UseContextedMutationOptions<"receipts.remove"> = {
 	onMutate: (controllerContext) => (variables) =>
 		updateRevertReceipts(controllerContext, {
 			get: (controller) => controller.remove(variables.id),
-			getPaged: (controller) => controller.remove(variables.id),
+			getPaged: undefined,
 		}),
+	onSuccess: (controllerContext) => () => {
+		updateReceipts(controllerContext, {
+			get: undefined,
+			getPaged: (controller) => controller.invalidate(),
+		});
+	},
 	mutateToastOptions: () => (variablesSet) => ({
 		text: `Removing receipt${variablesSet.length > 1 ? "s" : ""}..`,
 	}),
