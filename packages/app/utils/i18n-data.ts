@@ -94,8 +94,8 @@ type ValidatedResources = AssertAllEqual<
 	]
 >;
 
-// Set to true when ready to translate all translations in the same time
-type StrictTranslations = false;
+// Set to false if it's ok to have partial translations
+type StrictTranslations = true;
 
 declare module "i18next" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
