@@ -3,11 +3,7 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import {
-	AdminWrapper,
-	AdminWrapperWithEffect,
-} from "~app/components/app/admin-wrapper";
-import { NoAuthEffect } from "~app/components/app/no-auth-effect";
+import { AdminWrapper } from "~app/components/app/admin-wrapper";
 import { Page } from "~app/components/page";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
@@ -69,7 +65,7 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
 						pathname: "/admin",
 						text: t("navigation.admin"),
 						useShow: useShowAdmin,
-						PageWrapper: AdminWrapperWithEffect,
+						PageWrapper: AdminWrapper,
 						ItemWrapper: AdminWrapper,
 					},
 				],
@@ -78,7 +74,6 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
 			{...props}
 		>
 			{children}
-			<NoAuthEffect />
 		</Page>
 	);
 };

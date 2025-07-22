@@ -1,12 +1,13 @@
 import React from "react";
 
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
+import { TRPCClientError } from "@trpc/client";
 
 import { PublicPage } from "~app/components/public-page";
-import { AUTH_COOKIE } from "~app/utils/auth";
+import type { TRPCError } from "~app/trpc";
 import { ensureI18nInitialized } from "~app/utils/i18n";
 import { Spinner } from "~components/spinner";
-import { getCookie } from "~web/utils/cookies";
+import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const Wrapper = () => (
 	<PublicPage>
@@ -17,19 +18,26 @@ const Wrapper = () => (
 );
 
 export const Route = createFileRoute("/_public")({
-	beforeLoad: async ({ context }) => {
+	beforeLoad: async ({ context, search }) => {
 		if (!context.request) {
 			return;
 		}
-		const authToken = getCookie(
-			context.request.headers.get("cookie") || "",
-			AUTH_COOKIE,
-		);
-		if (authToken) {
-			await ensureI18nInitialized(context);
-			// eslint-disable-next-line @typescript-eslint/only-throw-error
-			throw redirect({ to: "/receipts", search: true });
+		const trpc = getLoaderTrpcClient(context);
+		try {
+			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
+		} catch (error) {
+			if (error instanceof TRPCClientError) {
+				const castedError = error as TRPCError;
+				if (castedError.data?.code === "UNAUTHORIZED") {
+					// It's ok we get an error for the account on public route - bail out
+					return;
+				}
+			}
 		}
+		// If we do get an account - we're authorized and we need to get to the app page
+		await ensureI18nInitialized(context);
+		// eslint-disable-next-line @typescript-eslint/only-throw-error
+		throw redirect({ to: search.redirect || "/receipts" });
 	},
 	component: Wrapper,
 });

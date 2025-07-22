@@ -1,18 +1,1 @@
-{
-	"queries": {
-		"account.get": {
-			"state": {
-				"error": {
-					"type": "TRPCClientError",
-					"message": "No token provided - mocked"
-				},
-				"errorUpdateCount": 1,
-				"fetchFailureCount": 1,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "error",
-				"fetchStatus": "idle"
-			}
-		}
-	}
-}
+{}

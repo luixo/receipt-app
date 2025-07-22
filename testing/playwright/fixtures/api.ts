@@ -411,13 +411,17 @@ const createApiManager = async (
 
 const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 	noAuthPage: () => {
-		api.mockLast("currency.getList", CURRENCY_CODES);
-		api.mockLast("account.get", () => {
+		const unmockCurrency = api.mockLast("currency.getList", CURRENCY_CODES);
+		const unmockAccount = api.mockLast("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "No token provided - mocked",
 			});
 		});
+		return {
+			unmockCurrency,
+			unmockAccount,
+		};
 	},
 	authPage: async ({ page }: { page: Page }) => {
 		await page.context().addCookies([

@@ -10,19 +10,12 @@ test("On load with token", async ({
 	voidButton,
 	cancelButton,
 	snapshotQueries,
-	awaitCacheKey,
 	faker,
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await snapshotQueries(
-		async () => {
-			await page.goto(`/void-account?token=${faker.string.uuid()}`);
-			await awaitCacheKey("account.get", { errored: 1 });
-		},
-		{
-			whitelistKeys: "account.get",
-		},
+	await snapshotQueries(() =>
+		page.goto(`/void-account?token=${faker.string.uuid()}`),
 	);
 	await expect(page.locator("h3")).toHaveText(
 		"Are you sure you want to void your account?",

@@ -1,25 +1,4 @@
 {
-	"queries": {
-		"account.get": {
-			"state": {
-				"data": {
-					"user": {
-						"name": "Test name"
-					},
-					"account": {
-						"id": "test",
-						"email": "test@mail.ru",
-						"verified": false,
-						"avatarUrl": "<undefined>",
-						"role": "<undefined>"
-					}
-				},
-				"dataUpdateCount": 1,
-				"error": null,
-				"status": "success"
-			}
-		}
-	},
 	"mutations": {
 		"auth.register": {
 			"1": {

@@ -17,22 +17,23 @@ const DEFAULT_SET_COOKIE_OPTIONS: SerializeOptions = {
 	sameSite: "strict",
 };
 
+type Options = Omit<SerializeOptions, "expires"> & {
+	expires: Temporal.ZonedDateTime;
+};
+
+export const getOptions = ({ expires, ...opts }: Options) => ({
+	...DEFAULT_SET_COOKIE_OPTIONS,
+	expires: expires.toDate(),
+	...opts,
+});
+
 export const setCookie = serverOnly(
 	(
-		{ event }: UnauthorizedContext,
+		{ event }: Pick<UnauthorizedContext, "event">,
 		cookieName: string,
 		cookieValue: string,
-		{
-			expires,
-			...opts
-		}: Omit<SerializeOptions, "expires"> & {
-			expires: Temporal.ZonedDateTime;
-		},
+		opts: Options,
 	) => {
-		setRawCookie(event, cookieName, cookieValue, {
-			...DEFAULT_SET_COOKIE_OPTIONS,
-			expires: expires.toDate(),
-			...opts,
-		});
+		setRawCookie(event, cookieName, cookieValue, getOptions(opts));
 	},
 );

@@ -4,24 +4,10 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test("On load", async ({
-	page,
-	api,
-	registerButton,
-	snapshotQueries,
-	awaitCacheKey,
-}) => {
+test("On load", async ({ page, api, registerButton, snapshotQueries }) => {
 	api.mockUtils.noAuthPage();
 
-	await snapshotQueries(
-		async () => {
-			await page.goto("/register");
-			await awaitCacheKey("account.get", { errored: 1 });
-		},
-		{
-			whitelistKeys: "account.get",
-		},
-	);
+	await snapshotQueries(() => page.goto("/register"));
 	await expect(page).toHaveTitle("RA - Register");
 	await expect(registerButton).toBeDisabled();
 });
@@ -101,7 +87,6 @@ test("'auth.register' mutation", async ({
 			await verifyToastTexts("Register successful, redirecting..");
 		},
 		{
-			whitelistKeys: "account.get",
 			blacklistKeys: "receipts.getPaged",
 			skipQueries: true,
 			name: "success",

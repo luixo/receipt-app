@@ -2,7 +2,6 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { AuthEffect } from "~app/components/app/auth-effect";
 import { Page } from "~app/components/page";
 import { LoginIcon, RegisterIcon } from "~components/icons";
 
@@ -32,7 +31,6 @@ export const PublicPage: React.FC<Props> = ({ children, ...props }) => {
 			{...props}
 		>
 			{children}
-			<AuthEffect />
 		</Page>
 	);
 };

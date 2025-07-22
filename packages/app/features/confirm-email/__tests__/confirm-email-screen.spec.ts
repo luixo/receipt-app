@@ -99,8 +99,10 @@ test.describe("'auth.confirmEmail' mutation", () => {
 });
 
 test("Nagivating back to the home page", async ({ page, api, faker }) => {
-	api.mockUtils.noAuthPage();
-	api.mockFirst("auth.confirmEmail", ({ headers }) => {
+	const { unmockAccount } = api.mockUtils.noAuthPage();
+	const confirmEmailPause = api.createPause();
+	api.mockFirst("auth.confirmEmail", async ({ headers }) => {
+		await confirmEmailPause.promise;
 		headers.set(
 			"set-cookie",
 			serialize(AUTH_COOKIE, faker.string.uuid(), { path: "/" }),
@@ -108,6 +110,10 @@ test("Nagivating back to the home page", async ({ page, api, faker }) => {
 		return { email: faker.internet.email() };
 	});
 	await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
+	unmockAccount();
+	await api.mockUtils.authPage({ page });
+	api.mockFirst("receipts.getPaged", { items: [], count: 0, cursor: 0 });
+	confirmEmailPause.resolve();
 	await page.locator("button", { hasText: "To home page" }).click();
 	await expect(page).toHaveURL("/receipts");
 });
