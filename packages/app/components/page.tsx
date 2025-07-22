@@ -2,22 +2,37 @@ import type React from "react";
 import { View } from "react-native";
 
 import { AmountBadge } from "~app/components/amount-badge";
+import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { usePathname } from "~app/hooks/use-navigation";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { tv } from "~components/utils";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
 
+type ShowProps = {
+	useShow?: () => boolean;
+};
+
 export type MenuElement = {
 	Icon: React.FC<{ size: number }>;
 	text: string;
 	pathname: FileRouteTypes["to"];
 	useBadgeAmount?: () => number;
-	useShow?: () => boolean;
-};
+} & ShowProps;
 
 const useZero = () => 0;
 const useTrue = () => true;
+
+const WithShow = suspendedFallback<React.PropsWithChildren<ShowProps>>(
+	({ useShow = useTrue, children }) => {
+		const show = useShow();
+		if (!show) {
+			return null;
+		}
+		return <>{children}</>;
+	},
+	() => null,
+);
 
 const link = tv({
 	base: "text-foreground flex flex-1 flex-col items-center justify-center",
@@ -33,23 +48,20 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	pathname,
 	text,
 	useBadgeAmount = useZero,
-	useShow = useTrue,
+	useShow,
 	selected,
-}) => {
-	const show = useShow();
-	if (!show) {
-		return null;
-	}
-	const icon = <Icon size={24} />;
-	return (
+}) => (
+	<WithShow useShow={useShow}>
 		<Link key={pathname} to={pathname} className={link({ selected })}>
-			<AmountBadge useAmount={useBadgeAmount}>{icon}</AmountBadge>
+			<AmountBadge useAmount={useBadgeAmount}>
+				<Icon size={24} />
+			</AmountBadge>
 			<Text className={`text-sm leading-8 ${selected ? "text-primary" : ""}`}>
 				{text}
 			</Text>
 		</Link>
-	);
-};
+	</WithShow>
+);
 
 type Props = {
 	children?: React.ReactNode;

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -23,10 +23,8 @@ import {
 
 const useShowAdmin = () => {
 	const trpc = useTRPC();
-	const accountQuery = useQuery(trpc.account.get.queryOptions());
-	const role =
-		accountQuery.status === "success" ? accountQuery.data.account.role : null;
-	return role === "admin";
+	const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
+	return account.account.role === "admin";
 };
 
 type Props = {
