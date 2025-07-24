@@ -114,8 +114,8 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 				data: i18nInstance.store.data,
 			},
 		}),
-		hydrate: (dehydratedData) => {
-			void ensureI18nInitialized({
+		hydrate: async (dehydratedData) => {
+			await ensureI18nInitialized({
 				i18n: i18nInstance,
 				initialLanguage: dehydratedData.i18n.language,
 				resources: dehydratedData.i18n.data,
