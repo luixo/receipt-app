@@ -33,6 +33,7 @@ export const Route = createFileRoute("/_public")({
 					return;
 				}
 			}
+			throw error;
 		}
 		// If we do get an account - we're authorized and we need to get to the app page
 		await ensureI18nInitialized(context);
