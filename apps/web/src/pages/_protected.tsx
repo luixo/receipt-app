@@ -10,6 +10,7 @@ import { AUTH_COOKIE } from "~app/utils/auth";
 import { ensureI18nInitialized } from "~app/utils/i18n";
 import { Spinner } from "~components/spinner";
 import { getNow } from "~utils/date";
+import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 import { getOptions } from "../utils/cookies";
@@ -31,26 +32,26 @@ export const Route = createFileRoute("/_protected")({
 		try {
 			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
 		} catch (error) {
-			if (!(error instanceof TRPCClientError)) {
-				throw error;
+			if (error instanceof TRPCClientError) {
+				const castedError = error as TRPCError;
+				if (castedError.data?.code === "UNAUTHORIZED") {
+					await ensureI18nInitialized(context);
+					// eslint-disable-next-line @typescript-eslint/only-throw-error
+					throw redirect({
+						to: "/login",
+						search: { redirect: location.href, ...location.search },
+						headers: {
+							"set-cookie": serialize(
+								AUTH_COOKIE,
+								"",
+								getOptions({ expires: getNow.zonedDateTime() }),
+							),
+						},
+					});
+				}
 			}
-			const castedError = error as TRPCError;
-			if (castedError.data?.code !== "UNAUTHORIZED") {
-				throw error;
-			}
-			await ensureI18nInitialized(context);
-			// eslint-disable-next-line @typescript-eslint/only-throw-error
-			throw redirect({
-				to: "/login",
-				search: { redirect: location.href, ...location.search },
-				headers: {
-					"set-cookie": serialize(
-						AUTH_COOKIE,
-						"",
-						getOptions({ expires: getNow.zonedDateTime() }),
-					),
-				},
-			});
+			captureSentryError(error as Error);
+			throw error;
 		}
 	},
 	component: Wrapper,

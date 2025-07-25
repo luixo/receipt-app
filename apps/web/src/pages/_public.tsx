@@ -7,6 +7,7 @@ import { PublicPage } from "~app/components/public-page";
 import type { TRPCError } from "~app/trpc";
 import { ensureI18nInitialized } from "~app/utils/i18n";
 import { Spinner } from "~components/spinner";
+import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const Wrapper = () => (
@@ -33,6 +34,7 @@ export const Route = createFileRoute("/_public")({
 					return;
 				}
 			}
+			captureSentryError(error as Error);
 			throw error;
 		}
 		// If we do get an account - we're authorized and we need to get to the app page
