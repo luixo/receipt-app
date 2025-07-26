@@ -3,13 +3,13 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   replace-pr-number:
     name: Replace PR number in a message
     runs-on: ubuntu-latest
-    if: ${{ github.ref != 'refs/heads/master' }}
+    if: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Replace Pull Request Body
         uses: ivangabriele/find-and-replace-pull-request-body@v1.1.5
@@ -171,7 +171,7 @@ jobs:
       - name: Backend coverage badge
         uses: schneegans/dynamic-badges-action@v1.7.0
         env:
-          branch: ${{ github.ref == 'refs/heads/master' && 'master' || github.event.pull_request.number }}
+          branch: ${{ github.ref == 'refs/heads/main' && 'main' || github.event.pull_request.number }}
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 878178ea4ba8d28122cc72204df909e7
@@ -220,19 +220,19 @@ jobs:
   analyze:
     name: Analyze bundle
     runs-on: ubuntu-latest
-    if: ${{ github.ref != 'refs/heads/master' }}
+    if: ${{ github.ref != 'refs/heads/main' }}
     needs: build
     permissions:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
-      - name: Download stats from latest successful run on `master`
+      - name: Download stats from latest successful run on `main`
         uses: dawidd6/action-download-artifact@v3
         with:
           workflow: continuous-integration-workflow.yml
           workflow_conclusion: completed
-          branch: master
+          branch: main
           github_token: ${{ secrets.GITHUB_TOKEN }}
           name: web-build-stats
           path: ./stats/base
