@@ -40,7 +40,7 @@ const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 				</View>
 				<View className="flex-1 p-2 max-sm:hidden" />
 			</View>
-			<Divider className="max-sm:hidden" />
+			<Divider />
 			<View>{children}</View>
 		</>
 	);
@@ -167,23 +167,19 @@ export const Receipts = suspendedFallback<Props>(
 				isPending={isPending}
 			>
 				<ReceiptsWrapper>
-					{data.items.map((id, index) => (
-						<React.Fragment key={id}>
-							{index === 0 ? null : <Divider className="sm:hidden" />}
-							<ReceiptPreview
-								id={id}
-								isSelected={selectedReceiptIds.includes(id)}
-								onValueChange={(nextSelected) =>
-									setSelectedReceiptIds((prevSelected) =>
-										nextSelected
-											? [...prevSelected, id]
-											: prevSelected.filter(
-													(lookupValue) => lookupValue !== id,
-												),
-									)
-								}
-							/>
-						</React.Fragment>
+					{data.items.map((id) => (
+						<ReceiptPreview
+							key={id}
+							id={id}
+							isSelected={selectedReceiptIds.includes(id)}
+							onValueChange={(nextSelected) =>
+								setSelectedReceiptIds((prevSelected) =>
+									nextSelected
+										? [...prevSelected, id]
+										: prevSelected.filter((lookupValue) => lookupValue !== id),
+								)
+							}
+						/>
 					))}
 				</ReceiptsWrapper>
 			</PaginationOverlay>
