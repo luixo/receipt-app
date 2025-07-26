@@ -73,7 +73,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 				),
 			);
 			return JSON.parse(
-				resource.toString("utf-8"),
+				resource.toString("utf8"),
 			) as Resources[typeof namespace];
 		});
 	},

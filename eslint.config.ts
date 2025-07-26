@@ -18,7 +18,7 @@ import path from "node:path";
 import { entries, fromEntries, omit } from "remeda";
 import ts from "typescript-eslint";
 
-const nodeVersion = await readFile(".nvmrc", "utf-8");
+const nodeVersion = await readFile(".nvmrc", "utf8");
 
 const getExtraneousDependenciesConfig = (
 	packageJsonDir = "",
@@ -332,12 +332,6 @@ const temporaryDisabledRules = {
 		"unicorn/numeric-separators-style": "off", // 9 cases
 		"unicorn/prefer-number-properties": "off", // 8 cases
 		"unicorn/prefer-spread": "off", // 8 cases
-		"unicorn/prefer-string-replace-all": "off", // 7 cases
-		"unicorn/prefer-module": "off", // 6 cases
-		"unicorn/no-single-promise-in-promise-methods": "off", // 6 cases
-		"unicorn/prefer-export-from": "off", // 6 cases
-		"unicorn/prefer-set-has": "off", // 5 cases
-		"unicorn/text-encoding-identifier-case": "off", // 5 cases
 	},
 } satisfies Linter.Config;
 

@@ -54,9 +54,7 @@ const mockData = async (ctx: TestContext) => {
 		issued: parsers.plainDate("2020-01-06"),
 	});
 	// Self receipt: participants
-	await Promise.all([
-		insertReceiptParticipant(ctx, selfReceipt.id, selfUserId),
-	]);
+	await insertReceiptParticipant(ctx, selfReceipt.id, selfUserId);
 	// Self receipt: items
 	await Promise.all([
 		insertReceiptItem(ctx, selfReceipt.id),
@@ -100,9 +98,11 @@ const mockData = async (ctx: TestContext) => {
 		issued: parsers.plainDate("2020-04-06"),
 	});
 	// Other foreign receipt: participants
-	await Promise.all([
-		insertReceiptParticipant(ctx, otherForeignReceipt.id, foreignToSelfUser.id),
-	]);
+	await insertReceiptParticipant(
+		ctx,
+		otherForeignReceipt.id,
+		foreignToSelfUser.id,
+	);
 	// Other foreign receipt: items
 	await Promise.all([
 		insertReceiptItem(ctx, otherForeignReceipt.id),

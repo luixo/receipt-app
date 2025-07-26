@@ -52,15 +52,15 @@ const getSnapshotName = (
 ) => {
 	const path = testInfo.titlePath.slice(1, -1).map((element) =>
 		element
-			.replace(/[^a-zA-Z0-9]/g, "-")
+			.replaceAll(/[^a-zA-Z0-9]/g, "-")
 			// Trim dashes
-			.replace(/(^-*|-*$)/g, "")
+			.replaceAll(/(^-*|-*$)/g, "")
 			// Replace multiple dashes with one
 			.replaceAll(/-{2,}/g, "-")
 			.toLowerCase(),
 	);
 	const name = [
-		toKebabCase(testInfo.title.replace(/[^a-zA-Z0-9]/g, "-")),
+		toKebabCase(testInfo.title.replaceAll(/[^a-zA-Z0-9]/g, "-")),
 		key,
 		// Removing baseName "0" by .filter(Boolean) is intended
 		overrideName || testInfo.queriesSnapshotIndex,

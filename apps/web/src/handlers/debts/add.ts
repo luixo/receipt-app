@@ -262,9 +262,11 @@ const queueAddDebt = queueCallFactory<
 		users,
 		debts,
 	);
-	const localUserIds = users
-		.filter((user) => user.foreignAccountId === null)
-		.map((user) => user.userId);
+	const localUserIds = new Set(
+		users
+			.filter((user) => user.foreignAccountId === null)
+			.map((user) => user.userId),
+	);
 	const addedDebts = await addDebts(ctx, debts, reverseIdMap);
 	return debtsOrErrors.map((debtOrError) => {
 		if (debtOrError instanceof TRPCError) {
@@ -287,7 +289,7 @@ const queueAddDebt = queueCallFactory<
 		return {
 			id,
 			updatedAt: matchedAddedDebt.updatedAt,
-			reverseAccepted: localUserIds.includes(debtOrError.userId)
+			reverseAccepted: localUserIds.has(debtOrError.userId)
 				? undefined
 				: acceptedUserIds.includes(debtOrError.userId),
 		};

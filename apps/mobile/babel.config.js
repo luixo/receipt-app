@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-module */
 const config = (api) => {
 	api.cache(true);
 	return {

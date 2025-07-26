@@ -325,9 +325,9 @@ describe("debts.getUsersPaged", () => {
 			test("mixed success and fail", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const user = await insertUser(ctx, accountId);
-				const userDebts = await Promise.all([
-					insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
-				]);
+				const userDebts = [
+					await insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
+				];
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await runInBand([

@@ -105,7 +105,7 @@ export const getBackendModule = (): BackendModule => ({
 				);
 
 				const fileContent = await fs.readFile(url.fileURLToPath(jsonUrl));
-				const resource = JSON.parse(fileContent.toString("utf-8"));
+				const resource = JSON.parse(fileContent.toString("utf8"));
 				return resource as ResourceKey;
 			}
 			const response = await fetch(`/locales/${language}/${namespace}.json`);

@@ -198,6 +198,7 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 		const title = t("titles.index");
 		return {
 			meta: [
+				// eslint-disable-next-line unicorn/text-encoding-identifier-case
 				{ charSet: "utf-8" },
 				{
 					name: "viewport",

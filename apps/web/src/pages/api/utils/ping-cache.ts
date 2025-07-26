@@ -8,7 +8,7 @@ export const ServerRoute = createServerFileRoute(
 	POST: async ({ request }) => {
 		const client = getApiTrpcClient(request);
 		try {
-			await Promise.all([client.utils.pingCache.mutate()]);
+			await client.utils.pingCache.mutate();
 			return new Response(`Cache ping successful`);
 		} catch (e) {
 			return new Response(`Error on cache ping: ${String(e)}`, { status: 500 });

@@ -8,7 +8,7 @@ import { getS3Client } from "~web/providers/s3";
 
 export const S3_AVATAR_PREFIX = "avatars";
 
-const ALLOWED_FORMATS: (keyof Sharp.FormatEnum)[] = ["png", "jpeg", "jpg"];
+const ALLOWED_FORMATS = new Set<keyof Sharp.FormatEnum>(["png", "jpeg", "jpg"]);
 
 const validateImage = async (image: Buffer) => {
 	const parsedImage = Sharp(image);
@@ -19,7 +19,7 @@ const validateImage = async (image: Buffer) => {
 			message: `Maximum bytesize allowed is ${MAX_AVATAR_BYTESIZE}.`,
 		});
 	}
-	if (!metadata.format || !ALLOWED_FORMATS.includes(metadata.format)) {
+	if (!metadata.format || !ALLOWED_FORMATS.has(metadata.format)) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			/* c8 ignore next */

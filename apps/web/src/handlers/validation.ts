@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import { accountIdSchema, flavored, userIdSchema } from "~app/utils/validation";
+import { flavored } from "~app/utils/validation";
 import type {
 	DebtsId,
 	ReceiptItemsId,
@@ -35,4 +35,4 @@ export const UUID_REGEX =
 
 export const MAX_INTENTIONS_AMOUNT = 3;
 
-export { userIdSchema, accountIdSchema };
+export { accountIdSchema, userIdSchema } from "~app/utils/validation";

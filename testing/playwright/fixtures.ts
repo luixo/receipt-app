@@ -1,4 +1,4 @@
-import { test as base, expect, mergeTests } from "@playwright/test";
+import { test as base, mergeTests } from "@playwright/test";
 
 import { apiFixtures } from "./fixtures/api";
 import { browserFixtures } from "./fixtures/browser";
@@ -29,4 +29,4 @@ export const test = mergeTests(
 	queriesFixtures,
 );
 
-export { expect };
+export { expect } from "@playwright/test";

@@ -60,9 +60,11 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const isRemovalPending = removeItemMutationState?.status === "pending";
 
 	const notAddedParticipants = React.useMemo(() => {
-		const addedParticipants = item.consumers.map((consumer) => consumer.userId);
+		const addedParticipants = new Set(
+			item.consumers.map((consumer) => consumer.userId),
+		);
 		return participants.filter(
-			(participant) => !addedParticipants.includes(participant.userId),
+			(participant) => !addedParticipants.has(participant.userId),
 		);
 	}, [item.consumers, participants]);
 	const onAddEveryItemParticipant = React.useCallback(() => {

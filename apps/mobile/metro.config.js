@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-module */
 // Learn more https://docs.expo.dev/guides/monorepos
 // Learn more https://docs.expo.io/guides/customizing-metro
 /**

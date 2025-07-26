@@ -398,9 +398,9 @@ describe("users.suggest", () => {
 				name: "Alice from school",
 				publicName: faker.person.fullName(),
 			});
-			const matchedUsers = await Promise.all([
-				insertUser(ctx, accountId, { name: "Alice from gym" }),
-			]);
+			const matchedUsers = [
+				await insertUser(ctx, accountId, { name: "Alice from gym" }),
+			];
 			const [matchedConnectedUser] = await insertConnectedUsers(ctx, [
 				{ accountId, name: "Connected Alice" },
 				accounts[0].id,
@@ -539,7 +539,7 @@ describe("users.suggest", () => {
 		test("returns users with given filtered users", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
-			const accounts = await Promise.all([insertAccount(ctx)]);
+			const accounts = [await insertAccount(ctx)] as const;
 
 			const { id: filteredUserId } = await insertUser(ctx, accountId, {
 				name: "Alice from work",

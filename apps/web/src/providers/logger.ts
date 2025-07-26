@@ -1,4 +1,3 @@
-import type { Logger } from "pino";
 import pino from "pino";
 import pinoPretty from "pino-pretty";
 
@@ -10,4 +9,5 @@ export const baseLogger = pino(
 		colorize: true,
 	}),
 );
-export type { Logger };
+
+export { type Logger } from "pino";

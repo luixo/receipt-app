@@ -206,7 +206,7 @@ describe("users.suggestTop", () => {
 				const { id: threeDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: zeroDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: lastZeroDebtsUserId } = await insertUser(ctx, accountId, {
-					id: faker.string.uuid().replace(/^./g, "f"),
+					id: faker.string.uuid().replaceAll(/^./g, "f"),
 				});
 
 				await insertDebt(ctx, accountId, oneDebtUserId);
@@ -337,7 +337,7 @@ describe("users.suggestTop", () => {
 
 				const { id: zeroDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: lastZeroDebtsUserId } = await insertUser(ctx, accountId, {
-					id: faker.string.uuid().replace(/^./g, "f"),
+					id: faker.string.uuid().replaceAll(/^./g, "f"),
 				});
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -464,7 +464,7 @@ describe("users.suggestTop", () => {
 			test("users are sorted by receipts amount and uuids", async ({ ctx }) => {
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { sessionId, accountId } = await insertAccountWithSession(ctx, {
-					account: { id: faker.string.uuid().replace(/^./g, "f") },
+					account: { id: faker.string.uuid().replaceAll(/^./g, "f") },
 				});
 
 				// Verify other users don't affect our top users

@@ -33,7 +33,7 @@ class ServerMessagesReporter implements Reporter {
 		test: TestCase | undefined,
 		type: "error" | "info",
 	) {
-		const message = chunk.toString("utf-8");
+		const message = chunk.toString("utf8");
 		const prefix = colors.dim(`[${serverName}] `);
 		if (!message.startsWith(prefix)) {
 			return;

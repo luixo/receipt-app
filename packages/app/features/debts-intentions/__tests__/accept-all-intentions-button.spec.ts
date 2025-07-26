@@ -55,11 +55,13 @@ test("'debtIntentions.accept' pending / error", async ({
 	});
 	await openDebtIntentions();
 	const acceptIntentionLaterPause = api.createPause();
-	const rejectedDebtsIds = debts
-		.filter((_, index) => index < rejectedDebtsAmount)
-		.map((debt) => debt.id);
+	const rejectedDebtsIds = new Set(
+		debts
+			.filter((_, index) => index < rejectedDebtsAmount)
+			.map((debt) => debt.id),
+	);
 	api.mockFirst("debtIntentions.accept", async ({ input }) => {
-		if (!rejectedDebtsIds.includes(input.id)) {
+		if (!rejectedDebtsIds.has(input.id)) {
 			return { updatedAt: getNow.zonedDateTime() };
 		}
 		await acceptIntentionLaterPause.promise;

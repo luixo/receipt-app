@@ -20,7 +20,7 @@ const convertStylesToString = (styles: AugmentedProperies): string =>
 	entries(styles)
 		.map(
 			([key, value]) =>
-				`${key.replace(
+				`${key.replaceAll(
 					/[A-Z]/g,
 					(match) => `-${match.toLowerCase()}`,
 				)}:${String(value)};`,

@@ -22,4 +22,5 @@ export const TabsSkeleton: React.FC<
 		{content}
 	</>
 );
-export { Tabs, Tab };
+
+export { Tabs, Tab } from "@heroui/tabs";
