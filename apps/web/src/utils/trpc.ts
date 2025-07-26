@@ -16,7 +16,6 @@ const getLinksParamsFromRequest = (
 ) => {
 	const urlObject = new URL(request.url);
 	urlObject.pathname = DEFAULT_TRPC_ENDPOINT;
-	urlObject.protocol = "http";
 	return {
 		debug: Boolean(urlObject.searchParams.get("debug")),
 		url: urlObject.toString(),
