@@ -141,8 +141,7 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 			retry: false,
 			retryOnMount: true,
 			staleTime: serializeDuration({ minutes: 1 }),
-			refetchOnWindowFocus: false,
-			refetchOnMount: false,
+			refetchOnWindowFocus: !import.meta.env.DEV,
 		},
 	},
 });
