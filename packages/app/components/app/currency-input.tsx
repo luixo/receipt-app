@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { z } from "zod";
 
@@ -8,6 +9,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import { getCurrencyDescription } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input, SkeletonInput } from "~components/input";
@@ -41,6 +43,32 @@ const InnerInput: React.FC<InnerProps> = ({
 			{...props}
 		/>
 	);
+};
+
+const useAutoLoadCurrency = (
+	topQueryOptions: React.ComponentProps<
+		typeof CurrenciesPicker
+	>["topQueryOptions"],
+	onLoad: (
+		currencyCodes: CurrencyCode[],
+		topCurrencyCodes: CurrencyCode[],
+	) => void,
+) => {
+	const trpc = useTRPC();
+	const currenciesQuery = useQuery(trpc.currency.getList.queryOptions());
+	const topCurrenciesQuery = useQuery(
+		trpc.currency.top.queryOptions({
+			options: topQueryOptions,
+		}),
+	);
+	React.useEffect(() => {
+		if (currenciesQuery.data && topCurrenciesQuery.data) {
+			onLoad(
+				currenciesQuery.data,
+				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode),
+			);
+		}
+	}, [currenciesQuery.data, topCurrenciesQuery.data, onLoad]);
 };
 
 type Props = {
@@ -94,6 +122,7 @@ export const CurrencyInput: React.FC<Props> = ({
 		},
 		[onCurrencyChange, value],
 	);
+	useAutoLoadCurrency(topQueryOptions, onLoad);
 
 	return (
 		<>
