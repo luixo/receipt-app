@@ -1,7 +1,7 @@
 import type { Migration, MigrationProvider, MigrationResult } from "kysely";
 import { Migrator } from "kysely";
 import * as fs from "node:fs/promises";
-import * as path from "node:path";
+import path from "node:path";
 import * as url from "node:url";
 
 import type { Database } from "~db/types";
@@ -39,7 +39,10 @@ class ESMFileMigrationProvider implements MigrationProvider {
 			const importPath = path.join(resolvedPath, fileName);
 			// eslint-disable-next-line no-await-in-loop
 			const migration = (await import(importPath)) as Migration;
-			const migrationKey = fileName.substring(0, fileName.lastIndexOf("."));
+			const migrationKey = fileName.slice(
+				0,
+				Math.max(0, fileName.lastIndexOf(".")),
+			);
 			migrations[migrationKey] = migration;
 		}
 

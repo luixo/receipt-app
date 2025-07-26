@@ -24,18 +24,19 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		if (input.id === ctx.auth.accountId) {
-			if (input.update.type === "name") {
-				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message:
-						'Please use "account.changeName" handler to update your own name.',
-				});
-			} else {
-				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message:
-						'Updating self user property expect but "name" is not allowed.',
-				});
+			switch (input.update.type) {
+				case "name":
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message:
+							'Please use "account.changeName" handler to update your own name.',
+					});
+				default:
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message:
+							'Updating self user property expect but "name" is not allowed.',
+					});
 			}
 		}
 		const { database } = ctx;

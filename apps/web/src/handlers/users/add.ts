@@ -57,9 +57,8 @@ const insertConnections = async (
 		if (!connection) {
 			return;
 		}
-		const matchedNonEmptyConnectionIndex = nonEmptyConnections.findIndex(
-			(nonEmptyConnection) => nonEmptyConnection === connection,
-		);
+		const matchedNonEmptyConnectionIndex =
+			nonEmptyConnections.indexOf(connection);
 		const matchedIntentionOrError = intentions[matchedNonEmptyConnectionIndex];
 		if (matchedIntentionOrError instanceof TRPCError) {
 			throw matchedIntentionOrError;

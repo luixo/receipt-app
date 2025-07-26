@@ -41,7 +41,7 @@ const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
 	Sentry.init({
 		dsn: sentryDsn,
-		tracesSampleRate: 1.0,
+		tracesSampleRate: 1,
 		integrations: [Sentry.tanstackRouterBrowserTracingIntegration(router)],
 		// Adds request headers and IP for users, for more info visit:
 		// https://docs.sentry.io/platforms/javascript/guides/tanstackstart-react/configuration/options/#sendDefaultPii

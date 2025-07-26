@@ -29,7 +29,7 @@ const setProxyHeaders = async (
 
 const fakeBrowserDate = async (page: OriginalPage) => {
 	// eslint-disable-next-line no-restricted-syntax
-	const localMockedTimestamp = new Date().valueOf();
+	const localMockedTimestamp = Date.now();
 	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {
 			Date.now = () => mockedTimestamp;

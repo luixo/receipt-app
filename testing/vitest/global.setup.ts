@@ -15,7 +15,7 @@ declare module "vitest" {
 	}
 }
 
-export default async (context: TestProject) => {
+const setup = async (context: TestProject) => {
 	process.env.TZ = "GMT";
 	const port = await getFreePort();
 	const routerConfig = { port };
@@ -33,3 +33,5 @@ export default async (context: TestProject) => {
 		});
 	};
 };
+
+export default setup;

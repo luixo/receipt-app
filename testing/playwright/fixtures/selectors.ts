@@ -44,7 +44,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	skeleton: ({ page }, use) =>
 		use(
 			page.locator(
-				".data-\\[loaded\\=true\\]\\:before\\:opacity-0.data-\\[loaded\\=true\\]\\:before\\:-z-10.data-\\[loaded\\=true\\]\\:before\\:animate-none",
+				String.raw`.data-\[loaded\=true\]\:before\:opacity-0.data-\[loaded\=true\]\:before\:-z-10.data-\[loaded\=true\]\:before\:animate-none`,
 			),
 		),
 	user: ({ page }, use) => use(page.getByTestId("user")),

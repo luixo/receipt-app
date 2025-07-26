@@ -31,20 +31,23 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 						);
 					}
 					const expectedTexts = textsArray.sort((a, b) => a.localeCompare(b));
-					const actualTexts = (
-						await toast.locator(`.${DESCRIPTION_CLASSNAME}`).allInnerTexts()
-					).sort((a, b) => a.localeCompare(b));
-					expect(actualTexts, {
+					const actualTexts = await toast
+						.locator(`.${DESCRIPTION_CLASSNAME}`)
+						.allInnerTexts();
+					const sortedActualTexts = actualTexts.sort((a, b) =>
+						a.localeCompare(b),
+					);
+					expect(sortedActualTexts, {
 						message: `Expected to have length of ${
 							expectedTexts.length
 						} for toast messages.${
-							actualTexts.length !== 0
-								? `\nGot actually:\n${actualTexts.join("\n")}`
+							sortedActualTexts.length !== 0
+								? `\nGot actually:\n${sortedActualTexts.join("\n")}`
 								: ""
 						}`,
 					}).toHaveLength(expectedTexts.length);
 					expectedTexts.forEach((expectedText, index) => {
-						const actualText = actualTexts[index];
+						const actualText = sortedActualTexts[index];
 						expect(actualText, {
 							message: `Expected to have "${expectedText.toString()}" at index ${index}, got "${actualText}"`,
 						}).toMatch(expectedText);

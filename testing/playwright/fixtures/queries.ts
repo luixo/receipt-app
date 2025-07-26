@@ -334,8 +334,9 @@ const getAmountElement = (
 	};
 };
 
+const defaultOptionsObject: AwaitOptionsObject = { min: 1, max: Infinity };
 const getAmount = (
-	optionsObject: AwaitOptionsObject = { min: 1, max: Infinity },
+	optionsObject: AwaitOptionsObject = defaultOptionsObject,
 ): ExpectedAwaitAmounts => {
 	if (typeof optionsObject === "number") {
 		return {

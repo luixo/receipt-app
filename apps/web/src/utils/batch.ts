@@ -31,7 +31,7 @@ const mergeInputs = <I extends GeneralInput>(inputs: I[]): Map<I, I> => {
 	const sorted = [...inputs].sort((a, b) => a.cursor - b.cursor);
 
 	const groups = sorted.reduce<(I & { members: I[] })[]>((acc, element) => {
-		const lastGroup = acc[acc.length - 1];
+		const lastGroup = acc.at(-1);
 		if (!lastGroup || element.cursor > lastGroup.cursor + lastGroup.limit) {
 			return [...acc, { ...element, members: [element] }];
 		}

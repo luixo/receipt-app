@@ -4,19 +4,19 @@ const project = new Project();
 
 const updateVersionNumbers = (input: string): string => {
 	const buildNumberParts = input.split(".");
-	return [...buildNumberParts]
-		.reverse()
+	return buildNumberParts
+		.toReversed()
 		.map((part, index) => {
 			if (index !== 0) {
 				return part;
 			}
 			const numPart = Number(part);
 			if (Number.isNaN(numPart)) {
-				throw new Error("buildNumber property last part is not a number!");
+				throw new TypeError("buildNumber property last part is not a number!");
 			}
 			return String(numPart + 1);
 		})
-		.reverse()
+		.toReversed()
 		.join(".");
 };
 
@@ -29,17 +29,18 @@ const main = async () => {
 		.getExportAssignmentOrThrow(() => true)
 		.transform((control) => {
 			const node = control.visitChildren();
-			if (ts.isPropertyAssignment(node)) {
-				if (node.name.getText() === "buildNumber") {
-					const { initializer } = node;
-					if (ts.isStringLiteral(initializer)) {
-						const nextVersion = updateVersionNumbers(initializer.text);
-						console.log(`Updated dynamic app buildNumber to ${nextVersion}`);
-						return ts.factory.createPropertyAssignment(
-							node.name,
-							ts.factory.createStringLiteral(nextVersion),
-						);
-					}
+			if (
+				ts.isPropertyAssignment(node) &&
+				node.name.getText() === "buildNumber"
+			) {
+				const { initializer } = node;
+				if (ts.isStringLiteral(initializer)) {
+					const nextVersion = updateVersionNumbers(initializer.text);
+					console.log(`Updated dynamic app buildNumber to ${nextVersion}`);
+					return ts.factory.createPropertyAssignment(
+						node.name,
+						ts.factory.createStringLiteral(nextVersion),
+					);
 				}
 			}
 			return node;

@@ -30,9 +30,7 @@ describe("procedures", () => {
 			await caller.sessions.cleanup();
 			const loggedMessages = ctx.logger.getMessages();
 			expect(Array.isArray(loggedMessages)).toBe(true);
-			const loggedProcedureMessage = loggedMessages[
-				loggedMessages.length - 1
-			] as [
+			const loggedProcedureMessage = loggedMessages.at(-1) as [
 				{
 					durationMs: number;
 					path: string;
@@ -59,9 +57,7 @@ describe("procedures", () => {
 			await caller.account.get().catch((e) => e);
 			const loggedMessages = ctx.logger.getMessages();
 			expect(Array.isArray(loggedMessages)).toBe(true);
-			const loggedProcedureMessage = loggedMessages[
-				loggedMessages.length - 1
-			] as [
+			const loggedProcedureMessage = loggedMessages.at(-1) as [
 				{
 					durationMs: number;
 					path: string;

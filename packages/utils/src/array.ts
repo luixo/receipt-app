@@ -2,9 +2,7 @@ import type { TupleOf } from "./types";
 
 export const rotate = <T>(array: T[], by: number): T[] => {
 	const byConstrained = by % array.length;
-	return array
-		.slice(byConstrained, array.length)
-		.concat(array.slice(0, byConstrained));
+	return array.slice(byConstrained).concat(array.slice(0, byConstrained));
 };
 
 export const isSameOrder = <T>(a: T[], b: T[]): boolean => {

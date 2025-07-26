@@ -239,7 +239,7 @@ const queueReceipt = queueCallFactory<
 		}
 		if (
 			receipt.ownerUserId !== ctx.auth.accountId &&
-			!receipt.participants.find(
+			!receipt.participants.some(
 				(participant) => participant.userId === receipt.selfUserId,
 			)
 		) {

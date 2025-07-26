@@ -194,7 +194,7 @@ export const deserialize = <K extends TemporalType>(
 				return;
 			}
 		})
-		.find((value) => value) as TemporalMapping[K] | undefined;
+		.find(Boolean) as TemporalMapping[K] | undefined;
 export const serialize = <K extends TemporalType>(input: TemporalMapping[K]) =>
 	input.toString() as TemporalInputMapping[K];
 

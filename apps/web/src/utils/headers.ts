@@ -4,7 +4,7 @@ import type { NetContext } from "~web/handlers/context";
 
 const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
 	/* c8 ignore start */
-	typeof valueOrValues === "undefined"
+	valueOrValues === undefined
 		? undefined
 		: Array.isArray(valueOrValues)
 			? valueOrValues[0]

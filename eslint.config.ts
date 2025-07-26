@@ -10,6 +10,7 @@ import playwrightPlugin from "eslint-plugin-playwright";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import tailwindPlugin from "eslint-plugin-tailwindcss";
+import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
 import { readFile } from "node:fs/promises";
@@ -35,7 +36,7 @@ const getExtraneousDependenciesConfig = (
 const restrictedImports = [
 	{
 		// see https://eslint.org/docs/latest/extend/selectors#known-issues
-		from: "~mutations\\u002F.*",
+		from: String.raw`~mutations\u002F.*`,
 		imports: [
 			{
 				actual: "options",
@@ -44,7 +45,7 @@ const restrictedImports = [
 		],
 	},
 	{
-		from: "~mutations\\u002Fcache\\u002F.*",
+		from: String.raw`~mutations\u002Fcache\u002F.*`,
 		imports: [
 			{
 				actual: "update",
@@ -309,6 +310,37 @@ const disabledRules = {
 	},
 } satisfies Linter.Config;
 
+const temporaryDisabledRules = {
+	name: "local/temporary-disabled",
+	rules: {
+		"unicorn/prevent-abbreviations": "off", // 1179 cases
+		"unicorn/no-null": "off", // 168 cases
+		"unicorn/switch-case-braces": "off", // 58 cases
+		"unicorn/no-array-reduce": "off", // 48 cases
+		"unicorn/no-array-callback-reference": "off", // 46 cases
+		"unicorn/catch-error-name": "off", // 41 cases
+		"unicorn/no-array-for-each": "off", // 40 cases
+		"unicorn/explicit-length-check": "off", // 34 cases
+		"unicorn/no-negated-condition": "off", // 25 cases
+		"unicorn/prefer-global-this": "off", // 24 cases
+		"unicorn/prefer-top-level-await": "off", // 19 cases
+		"unicorn/consistent-function-scoping": "off", // 18 cases
+		"unicorn/no-useless-undefined": "off", // 16 cases
+		"unicorn/no-new-array": "off", // 15 cases
+		"unicorn/prefer-object-from-entries": "off", // 13 cases
+		"unicorn/consistent-assert": "off", // 11 cases
+		"unicorn/numeric-separators-style": "off", // 9 cases
+		"unicorn/prefer-number-properties": "off", // 8 cases
+		"unicorn/prefer-spread": "off", // 8 cases
+		"unicorn/prefer-string-replace-all": "off", // 7 cases
+		"unicorn/prefer-module": "off", // 6 cases
+		"unicorn/no-single-promise-in-promise-methods": "off", // 6 cases
+		"unicorn/prefer-export-from": "off", // 6 cases
+		"unicorn/prefer-set-has": "off", // 5 cases
+		"unicorn/text-encoding-identifier-case": "off", // 5 cases
+	},
+} satisfies Linter.Config;
+
 export default ts.config(
 	{ files: ["**/*.{js,jsx,ts,tsx}"] },
 	{
@@ -339,7 +371,7 @@ export default ts.config(
 					"text-warning",
 					"text-danger",
 					"text-success",
-					"text-default-\\d+",
+					String.raw`text-default-\d+`,
 				],
 			},
 			react: {
@@ -355,6 +387,7 @@ export default ts.config(
 	importPlugin.flatConfigs["react-native"],
 	importPlugin.flatConfigs["stage-0"],
 	reactHooksPlugin.configs["recommended-latest"],
+	eslintPluginUnicorn.configs.recommended,
 	airbnbPlugin.plugins.stylistic,
 	airbnbPlugin.plugins.node,
 	airbnbPlugin.configs.base.recommended,
@@ -394,6 +427,7 @@ export default ts.config(
 	overriddenRules,
 	typescriptOverriddenRules,
 	disabledRules,
+	temporaryDisabledRules,
 	// Disabling stylistic rules as it is Prettier's matter
 	{
 		rules: fromEntries(
@@ -491,6 +525,7 @@ export default ts.config(
 			globals: {
 				...globals.commonjs,
 				...globals.node,
+				...globals.builtin,
 			},
 		},
 	},
@@ -546,6 +581,13 @@ export default ts.config(
 				"error",
 				...getNoRestrictedSyntax("client-only"),
 			],
+		},
+	},
+	{
+		// Generated files might want to disable eslint rules completely
+		files: ["**/*.gen.ts"],
+		rules: {
+			"unicorn/no-abusive-eslint-disable": "off",
 		},
 	},
 	{

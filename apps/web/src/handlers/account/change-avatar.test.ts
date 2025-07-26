@@ -24,20 +24,19 @@ const getFormData = (bits?: BlobPart[]) => {
 	return formData;
 };
 
+type FormImageOptions = {
+	exif?: Record<string, unknown>;
+	format?: "png" | "jpeg" | "webp";
+	type?: "static" | "noise";
+};
+const defaultSettings: FormImageOptions = {
+	format: "png",
+};
+
 const generateFormWithImage = async (
 	width: number,
 	height: number,
-	{
-		exif,
-		format = "png",
-		type = "static",
-	}: {
-		exif?: Record<string, unknown>;
-		format?: "png" | "jpeg" | "webp";
-		type?: "static" | "noise";
-	} = {
-		format: "png",
-	},
+	{ exif, format = "png", type = "static" }: FormImageOptions = defaultSettings,
 ) => {
 	let image = Sharp({
 		create: {

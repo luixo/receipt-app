@@ -175,14 +175,16 @@ test.describe("Mutations", () => {
 			reverseAccepted:
 				addedDebt.userId
 					.split("")
-					.reduce((acc, c) => acc + c.charCodeAt(0), 0) %
+					.reduce((acc, c) => acc + (c.codePointAt(0) || 0), 0) %
 					2 ===
 				0,
 		}));
 		api.mockFirst("debts.update", ({ input: updatedDebt }) => ({
 			updatedAt: getNow.zonedDateTime(),
 			reverseUpdated:
-				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
+				updatedDebt.id
+					.split("")
+					.reduce((acc, c) => acc + (c.codePointAt(0) || 0), 0) %
 					2 ===
 				0,
 		}));

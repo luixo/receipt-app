@@ -242,13 +242,14 @@ const verifyItems = (
 	/* c8 ignore stop */
 };
 
+const defaultPayers = {
+	errors: [],
+	consumers: [],
+};
 const verifyPayers = (
 	input: z.infer<typeof addReceiptSchema>,
 	receiptId: ReceiptsId,
-	payers: Awaited<ReturnType<typeof insertConsumers>>[string] = {
-		errors: [],
-		consumers: [],
-	},
+	payers: Awaited<ReturnType<typeof insertConsumers>>[string] = defaultPayers,
 ) => {
 	const firstError = payers.errors[0];
 	if (firstError) {

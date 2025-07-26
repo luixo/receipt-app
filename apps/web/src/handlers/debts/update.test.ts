@@ -61,13 +61,12 @@ const insertDefaultDebt = async ({
 	target,
 }: Parameters<GetData>[0]) => {
 	if (counterParty !== "auto-accept-no-exist") {
-		return (
-			await insertSyncedDebts(
-				ctx,
-				[selfAccountId, target.userId],
-				[target.accountId, target.meUserId],
-			)
-		)[0];
+		const syncedDebts = await insertSyncedDebts(
+			ctx,
+			[selfAccountId, target.userId],
+			[target.accountId, target.meUserId],
+		);
+		return syncedDebts[0];
 	}
 	return insertDebt(ctx, selfAccountId, target.userId);
 };

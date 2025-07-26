@@ -12,6 +12,8 @@ export const getStoreContext = (
 ): StoreContextType => ({
 	getInitialItems: () => ({ nowTimestamp, values: initialValues }),
 	setItem: (key, value) => {
+		// Switch to cookie store whenever it's widespread enough
+		// eslint-disable-next-line unicorn/no-document-cookie
 		document.cookie = serialize(
 			key,
 			typeof value === "string" ? value : JSON.stringify(value),
@@ -23,6 +25,8 @@ export const getStoreContext = (
 		);
 	},
 	deleteItem: (key: string) => {
+		// Switch to cookie store whenever it's widespread enough
+		// eslint-disable-next-line unicorn/no-document-cookie
 		document.cookie = serialize(key, "", {
 			maxAge: -1,
 			sameSite: "strict",

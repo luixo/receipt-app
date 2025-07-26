@@ -30,6 +30,8 @@ export const procedure = authProcedure
 			.where("accountSettings.accountId", "=", ctx.auth.accountId)
 			.limit(1)
 			.executeTakeFirst();
+		// This reads better without ternary
+		// eslint-disable-next-line unicorn/prefer-ternary
 		if (!existingSettings) {
 			await database
 				.insertInto("accountSettings")

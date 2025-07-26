@@ -6,7 +6,7 @@ export const useHydratedMark = () => {
 			return;
 		}
 		if (!document.querySelector("hydrated")) {
-			document.body.appendChild(document.createElement("hydrated"));
+			document.body.append(document.createElement("hydrated"));
 		}
 	});
 };

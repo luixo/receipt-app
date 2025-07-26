@@ -26,7 +26,7 @@ export const getConfig: (config: Config) => Config = (config) =>
 					"Noto Color Emoji",
 				],
 			},
-			...(config.theme || {}),
+			...config.theme,
 		},
 		...config,
 	});

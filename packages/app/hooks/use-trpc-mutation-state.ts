@@ -40,5 +40,5 @@ export const useTrpcMutationState = <Key extends TRPCMutationKey>(
 	...args: Parameters<typeof useTrpcMutationStates<Key>>
 ) => {
 	const states = useTrpcMutationStates(...args);
-	return states[states.length - 1];
+	return states.at(-1);
 };

@@ -252,13 +252,13 @@ describe("currency.rates", () => {
 				);
 				const dbMessages = dbMock.getMessages();
 				// Removing ping message
-				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
-					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
+				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>(
+					currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"get",
 						[`${currencyFrom}->${currencyTo}`],
 						{ result: fakeRates[currencyTo] },
 					]),
-				]);
+				);
 			});
 		});
 

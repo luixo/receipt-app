@@ -24,7 +24,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		if (!html) {
 			return;
 		}
-		html.setAttribute("data-theme", selectedMode);
+		html.dataset.theme = selectedMode;
 		html.classList.add(selectedMode);
 		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
 	}, [selectedMode]);

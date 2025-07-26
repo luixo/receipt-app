@@ -47,9 +47,9 @@ const formSchema = z
 	.record(currencyCodeSchema, debtAmountSchema.or(z.literal(0)))
 	.refine(
 		(record) =>
-			entries(record).filter(
+			entries(record).some(
 				([, sum]) => !Number.isNaN(sum) && Number.isFinite(sum) && sum !== 0,
-			).length !== 0,
+			),
 		{ message: "No non-zero transfers" },
 	);
 type Form = z.infer<typeof formSchema>;

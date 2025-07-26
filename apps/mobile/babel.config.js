@@ -1,4 +1,4 @@
-module.exports = (api) => {
+const config = (api) => {
 	api.cache(true);
 	return {
 		presets: [
@@ -8,3 +8,5 @@ module.exports = (api) => {
 		plugins: ["react-native-reanimated/plugin"],
 	};
 };
+
+module.exports = config;
