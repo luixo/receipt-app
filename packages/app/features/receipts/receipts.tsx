@@ -10,7 +10,7 @@ import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
@@ -141,61 +141,61 @@ export const Receipts = suspendedFallback<Props>(
 		}
 
 		return (
-			<PaginationOverlay
-				pagination={
-					<PaginationBlock
-						totalCount={data.count}
-						limit={limit}
-						setLimit={setLimit}
-						offset={offsetState[0]}
-						onPageChange={onPageChange}
-						selection={{
-							items: data.items,
-							selectedItems: selectedReceiptIds,
-							setSelectedItems: setSelectedReceiptIds,
-						}}
-						endContent={
-							<RemoveReceiptsButton
-								key={data.items.length}
-								selectedReceiptIds={selectedReceiptIds}
-								setSelectedReceiptIds={setSelectedReceiptIds}
-								receiptIds={data.items}
-							/>
-						}
-					/>
-				}
-				isPending={isPending}
-			>
-				<ReceiptsWrapper>
-					{data.items.map((id) => (
-						<ReceiptPreview
-							key={id}
-							id={id}
-							isSelected={selectedReceiptIds.includes(id)}
-							onValueChange={(nextSelected) =>
-								setSelectedReceiptIds((prevSelected) =>
-									nextSelected
-										? [...prevSelected, id]
-										: prevSelected.filter((lookupValue) => lookupValue !== id),
-								)
-							}
+			<>
+				<PaginationBlock
+					totalCount={data.count}
+					limit={limit}
+					setLimit={setLimit}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
+					selection={{
+						items: data.items,
+						selectedItems: selectedReceiptIds,
+						setSelectedItems: setSelectedReceiptIds,
+					}}
+					endContent={
+						<RemoveReceiptsButton
+							key={data.items.length}
+							selectedReceiptIds={selectedReceiptIds}
+							setSelectedReceiptIds={setSelectedReceiptIds}
+							receiptIds={data.items}
 						/>
-					))}
-				</ReceiptsWrapper>
-			</PaginationOverlay>
+					}
+				/>
+				<SuspendedOverlay isPending={isPending}>
+					<ReceiptsWrapper>
+						{data.items.map((id) => (
+							<ReceiptPreview
+								key={id}
+								id={id}
+								isSelected={selectedReceiptIds.includes(id)}
+								onValueChange={(nextSelected) =>
+									setSelectedReceiptIds((prevSelected) =>
+										nextSelected
+											? [...prevSelected, id]
+											: prevSelected.filter(
+													(lookupValue) => lookupValue !== id,
+												),
+									)
+								}
+							/>
+						))}
+					</ReceiptsWrapper>
+				</SuspendedOverlay>
+			</>
 		);
 	},
 	({ limitState }) => (
-		<PaginationOverlay
-			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-			isPending
-		>
-			<ReceiptsWrapper>
-				{Array.from({ length: limitState[0] }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
-					<ReceiptPreviewSkeleton key={index} />
-				))}
-			</ReceiptsWrapper>
-		</PaginationOverlay>
+		<>
+			<PaginationBlockSkeleton limit={limitState[0]} />
+			<SuspendedOverlay isPending>
+				<ReceiptsWrapper>
+					{Array.from({ length: limitState[0] }).map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<ReceiptPreviewSkeleton key={index} />
+					))}
+				</ReceiptsWrapper>
+			</SuspendedOverlay>
+		</>
 	),
 );

@@ -9,7 +9,7 @@ import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -86,37 +86,35 @@ export const Debts = suspendedFallback<Props>(
 		}
 
 		return (
-			<PaginationOverlay
-				pagination={
-					<PaginationBlock
-						totalCount={data.count}
-						limit={limit}
-						setLimit={setLimit}
-						offset={offsetState[0]}
-						onPageChange={onPageChange}
-					/>
-				}
-				isPending={isPending}
-			>
-				<DebtsWrapper>
-					{data.items.map((userId) => (
-						<UserDebtsPreview key={userId} userId={userId} />
-					))}
-				</DebtsWrapper>
-			</PaginationOverlay>
+			<>
+				<PaginationBlock
+					totalCount={data.count}
+					limit={limit}
+					setLimit={setLimit}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
+				/>
+				<SuspendedOverlay isPending={isPending}>
+					<DebtsWrapper>
+						{data.items.map((userId) => (
+							<UserDebtsPreview key={userId} userId={userId} />
+						))}
+					</DebtsWrapper>
+				</SuspendedOverlay>
+			</>
 		);
 	},
 	({ limitState }) => (
-		<PaginationOverlay
-			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-			isPending
-		>
-			<DebtsWrapper>
-				{Array.from({ length: limitState[0] }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
-					<UserDebtsPreviewSkeleton key={index} />
-				))}
-			</DebtsWrapper>
-		</PaginationOverlay>
+		<>
+			<PaginationBlockSkeleton limit={limitState[0]} />
+			<SuspendedOverlay isPending>
+				<DebtsWrapper>
+					{Array.from({ length: limitState[0] }).map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<UserDebtsPreviewSkeleton key={index} />
+					))}
+				</DebtsWrapper>
+			</SuspendedOverlay>
+		</>
 	),
 );

@@ -9,7 +9,7 @@ import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -80,37 +80,35 @@ export const Users: React.FC<Props> = suspendedFallback(
 		}
 
 		return (
-			<PaginationOverlay
-				pagination={
-					<PaginationBlock
-						totalCount={data.count}
-						limit={limit}
-						setLimit={setLimit}
-						offset={offsetState[0]}
-						onPageChange={onPageChange}
-					/>
-				}
-				isPending={isPending}
-			>
-				<>
-					{data.items.map((id) => (
-						<UserPreview key={id} id={id} />
-					))}
-				</>
-			</PaginationOverlay>
+			<>
+				<PaginationBlock
+					totalCount={data.count}
+					limit={limit}
+					setLimit={setLimit}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
+				/>
+				<SuspendedOverlay isPending={isPending}>
+					<>
+						{data.items.map((id) => (
+							<UserPreview key={id} id={id} />
+						))}
+					</>
+				</SuspendedOverlay>
+			</>
 		);
 	},
 	({ limitState }) => (
-		<PaginationOverlay
-			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-			isPending
-		>
-			<>
-				{Array.from({ length: limitState[0] }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
-					<SkeletonUser key={index} className="self-start" />
-				))}
-			</>
-		</PaginationOverlay>
+		<>
+			<PaginationBlockSkeleton limit={limitState[0]} />
+			<SuspendedOverlay isPending>
+				<>
+					{Array.from({ length: limitState[0] }).map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<SkeletonUser key={index} className="self-start" />
+					))}
+				</>
+			</SuspendedOverlay>
+		</>
 	),
 );

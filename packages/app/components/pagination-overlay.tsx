@@ -4,23 +4,17 @@ import { Overlay } from "~components/overlay";
 import { Spinner } from "~components/spinner";
 
 type Props = {
-	pagination: React.ReactNode;
 	isPending?: boolean;
 };
 
-export const PaginationOverlay: React.FC<React.PropsWithChildren<Props>> = ({
-	pagination,
+export const SuspendedOverlay: React.FC<React.PropsWithChildren<Props>> = ({
 	isPending,
 	children,
 }) => (
-	<>
-		{pagination}
-		<Overlay
-			className="gap-2"
-			overlay={isPending ? <Spinner size="lg" /> : undefined}
-		>
-			{children}
-		</Overlay>
-		{pagination}
-	</>
+	<Overlay
+		className="gap-2"
+		overlay={isPending ? <Spinner size="lg" /> : undefined}
+	>
+		{children}
+	</Overlay>
 );

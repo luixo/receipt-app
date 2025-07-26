@@ -14,7 +14,7 @@ import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
-import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
@@ -345,66 +345,64 @@ export const UserDebtsList = suspendedFallback<{
 		}
 
 		return (
-			<PaginationOverlay
-				pagination={
-					<PaginationBlock
-						totalCount={data.count}
-						limit={limit}
-						setLimit={setLimit}
-						offset={offsetState[0]}
-						onPageChange={onPageChange}
-						selection={{
-							items: data.items,
-							selectedItems: selectedDebtIds,
-							setSelectedItems: setSelectedDebtIds,
-						}}
-						endContent={
-							<RemoveDebtsButton
-								key={data.items.length}
-								selectedDebtIds={selectedDebtIds}
-								setSelectedDebtIds={setSelectedDebtIds}
-								debtIds={data.items}
-							/>
-						}
-					/>
-				}
-				isPending={isPending}
-			>
-				<UserDebtsPreviews
-					userId={userId}
-					debtIds={data.items}
-					consecutiveDebtIds={consecutiveDebtIds}
-					selectedDebtIds={selectedDebtIds}
-					setSelectedDebtIds={setSelectedDebtIds}
+			<>
+				<PaginationBlock
+					totalCount={data.count}
+					limit={limit}
+					setLimit={setLimit}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
+					selection={{
+						items: data.items,
+						selectedItems: selectedDebtIds,
+						setSelectedItems: setSelectedDebtIds,
+					}}
+					endContent={
+						<RemoveDebtsButton
+							key={data.items.length}
+							selectedDebtIds={selectedDebtIds}
+							setSelectedDebtIds={setSelectedDebtIds}
+							debtIds={data.items}
+						/>
+					}
 				/>
-				{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
-					<View className="flex items-center">
-						<Button
-							variant="bordered"
-							color="primary"
-							onPress={() => setShowResolvedDebts(true)}
-						>
-							{t("user.showResolved")}
-						</Button>
-					</View>
-				)}
-			</PaginationOverlay>
+				<SuspendedOverlay isPending={isPending}>
+					<UserDebtsPreviews
+						userId={userId}
+						debtIds={data.items}
+						consecutiveDebtIds={consecutiveDebtIds}
+						selectedDebtIds={selectedDebtIds}
+						setSelectedDebtIds={setSelectedDebtIds}
+					/>
+					{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
+						<View className="flex items-center">
+							<Button
+								variant="bordered"
+								color="primary"
+								onPress={() => setShowResolvedDebts(true)}
+							>
+								{t("user.showResolved")}
+							</Button>
+						</View>
+					)}
+				</SuspendedOverlay>
+			</>
 		);
 	},
 	({ limitState }) => (
-		<PaginationOverlay
-			pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
-			isPending
-		>
-			<UserDebtsListWrapper>
-				{Array.from({ length: limitState[0] }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
-					<React.Fragment key={index}>
-						<Divider />
-						<UserDebtPreviewSkeleton />
-					</React.Fragment>
-				))}
-			</UserDebtsListWrapper>
-		</PaginationOverlay>
+		<>
+			<PaginationBlockSkeleton limit={limitState[0]} />
+			<SuspendedOverlay isPending>
+				<UserDebtsListWrapper>
+					{Array.from({ length: limitState[0] }).map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<React.Fragment key={index}>
+							<Divider />
+							<UserDebtPreviewSkeleton />
+						</React.Fragment>
+					))}
+				</UserDebtsListWrapper>
+			</SuspendedOverlay>
+		</>
 	),
 );
