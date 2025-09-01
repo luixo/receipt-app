@@ -12,7 +12,10 @@ import {
 import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
-import type { SearchParamState } from "~app/hooks/use-navigation";
+import type {
+	SearchParamState,
+	SearchParamStateDefaulted,
+} from "~app/hooks/use-navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink, Link } from "~components/link";
@@ -40,7 +43,7 @@ const UserPreview = suspendedFallback<{
 );
 
 type Props = {
-	limitState: SearchParamState<"/users", "offset">;
+	limitState: SearchParamStateDefaulted<"/users", "limit", number>;
 	offsetState: SearchParamState<"/users", "offset">;
 };
 

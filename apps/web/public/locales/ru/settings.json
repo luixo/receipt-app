@@ -14,6 +14,9 @@
 	"manuallyAcceptDebts": {
 		"header": "Вручную одобрять долги"
 	},
+	"defaultLimit": {
+		"header": "Количество элементов на страницу по умолчанию"
+	},
 	"refresh": {
 		"header": "Перезагрузить кэш"
 	},

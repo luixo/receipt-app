@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { getQueryStates } from "~app/hooks/use-navigation";
 import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { withDefaultLimit } from "~app/utils/store/limit";
 import {
-	DEFAULT_LIMIT,
 	limitSchema,
 	offsetSchema,
 	receiptsFiltersSchema,
@@ -17,17 +18,17 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 const [validateSearch, stripDefaults] = searchParamsWithDefaults({
 	sort: receiptsOrderBySchema.catch("date-desc"),
 	filters: receiptsFiltersSchema.catch({}),
-	limit: limitSchema.catch(DEFAULT_LIMIT),
+	limit: limitSchema.optional().catch(undefined),
 	offset: offsetSchema.catch(0),
 });
 
 const Wrapper = () => {
-	const useQueryState = getQueryStates(Route);
+	const { useQueryState, useDefaultedQueryState } = getQueryStates(Route);
 	return (
 		<ReceiptsScreen
 			sortState={useQueryState("sort")}
 			filtersState={useQueryState("filters")}
-			limitState={useQueryState("limit")}
+			limitState={useDefaultedQueryState("limit", useDefaultLimit())}
 			offsetState={useQueryState("offset")}
 		/>
 	);
@@ -52,7 +53,7 @@ export const Route = createFileRoute("/_protected/receipts/")({
 			() =>
 				ctx.context.queryClient.fetchQuery(
 					trpc.receipts.getPaged.queryOptions({
-						limit: ctx.deps.limit,
+						limit: withDefaultLimit(ctx.deps.limit, ctx.context),
 						orderBy: ctx.deps.sort,
 						filters: ctx.deps.filters,
 						cursor: ctx.deps.offset,

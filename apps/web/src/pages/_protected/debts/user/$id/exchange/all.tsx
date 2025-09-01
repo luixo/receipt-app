@@ -13,7 +13,7 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults({
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
-	const useQueryState = getQueryStates(Route);
+	const { useQueryState } = getQueryStates(Route);
 	return (
 		<DebtsExchangeAllScreen userId={id} fromState={useQueryState("from")} />
 	);

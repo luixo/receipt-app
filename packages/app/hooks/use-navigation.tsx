@@ -69,9 +69,16 @@ export type SearchParamState<
 	P extends keyof OutputRouteSearchParams<RouteByKey<R>>,
 > = SearchParamStateByRoute<RouteByKey<R>, P>;
 
-export const getQueryStates =
-	<R extends AnyRoute>(route: R) =>
-	<P extends keyof R["types"]["searchSchema"]>(param: P) => {
+export type SearchParamStateDefaulted<
+	R extends RouteKey,
+	P extends keyof OutputRouteSearchParams<RouteByKey<R>>,
+	O extends OutputRouteSearchParams<RouteByKey<R>>[P],
+> = [O, SearchParamState<R, P>[1]];
+
+export const getQueryStates = <R extends AnyRoute>(route: R) => {
+	const useQueryState = <P extends keyof R["types"]["searchSchema"]>(
+		param: P,
+	) => {
 		const searchParams = route.useSearch() as R["types"]["searchSchema"];
 		const navigate = useRawNavigate();
 		const setValue = React.useCallback<SearchParamStateByRoute<R, P>[1]>(
@@ -95,5 +102,20 @@ export const getQueryStates =
 			[param, searchParams, setValue],
 		);
 	};
+	const useDefaultedQueryState = <
+		P extends keyof R["types"]["searchSchema"],
+		K extends R["types"]["searchSchema"][P],
+	>(
+		param: P,
+		defaultValue: K,
+	) => {
+		const [value, setValue] = useQueryState(param);
+		return [value === undefined ? defaultValue : value, setValue] as [
+			K,
+			SearchParamStateByRoute<R, P>[1],
+		];
+	};
+	return { useQueryState, useDefaultedQueryState };
+};
 
 export const usePathname = () => useRouterState().location.pathname;

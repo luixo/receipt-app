@@ -1,30 +1,28 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserDebtsScreen } from "~app/features/user-debts/user-debts-screen";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { getQueryStates } from "~app/hooks/use-navigation";
 import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { withDefaultLimit } from "~app/utils/store/limit";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import {
-	DEFAULT_LIMIT,
-	limitSchema,
-	offsetSchema,
-} from "~app/utils/validation";
+import { limitSchema, offsetSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	limit: limitSchema.catch(DEFAULT_LIMIT),
+	limit: limitSchema.optional().catch(undefined),
 	offset: offsetSchema.catch(0),
 });
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
-	const useQueryState = getQueryStates(Route);
+	const { useQueryState, useDefaultedQueryState } = getQueryStates(Route);
 	return (
 		<UserDebtsScreen
 			userId={id}
-			limitState={useQueryState("limit")}
+			limitState={useDefaultedQueryState("limit", useDefaultLimit())}
 			offsetState={useQueryState("offset")}
 		/>
 	);
@@ -48,7 +46,7 @@ export const Route = createFileRoute("/_protected/debts/user/$id/")({
 					ctx.context.queryClient.fetchQuery(
 						trpc.debts.getByUserPaged.queryOptions({
 							userId: ctx.params.id,
-							limit: ctx.deps.limit,
+							limit: withDefaultLimit(ctx.deps.limit, ctx.context),
 							cursor: ctx.deps.offset,
 							filters: {
 								showResolved:

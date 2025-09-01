@@ -8,6 +8,7 @@ import { Divider } from "~components/divider";
 import { Text } from "~components/text";
 
 import { ColorModeSettings } from "./color-mode-settings";
+import { DefaultLimitOption } from "./default-limit-option";
 import { LanguageSettings } from "./language-settings";
 import { ManualAcceptDebtsOption } from "./manual-accept-debts-option";
 import { RefreshSettings } from "./refresh-settings";
@@ -29,6 +30,10 @@ export const SettingsScreen: React.FC = () => {
 			<View className="flex-row gap-2">
 				<Text>{t("manuallyAcceptDebts.header")}</Text>
 				<ManualAcceptDebtsOption />
+			</View>
+			<View className="flex gap-2">
+				<Text>{t("defaultLimit.header")}</Text>
+				<DefaultLimitOption />
 			</View>
 			<Divider />
 			<RefreshSettings />

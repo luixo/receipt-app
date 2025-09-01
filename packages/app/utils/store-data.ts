@@ -9,6 +9,7 @@ import {
 	lastColorModeSchema,
 	selectedColorModeSchema,
 } from "~app/utils/store/color-modes";
+import { LIMIT_STORE_NAME, limitSchema } from "~app/utils/store/limit";
 import {
 	LOCALE_STORE_NAME,
 	getLocale,
@@ -40,6 +41,8 @@ export const schemas = {
 	[SELECTED_COLOR_MODE_STORE_NAME]: selectedColorModeSchema,
 	// Pretend user
 	[PRETEND_USER_STORE_NAME]: pretendUserSchema,
+	// Default limit in paged comopnents
+	[LIMIT_STORE_NAME]: limitSchema,
 } satisfies Record<string, z.ZodType>;
 
 export type StoreValues = {
