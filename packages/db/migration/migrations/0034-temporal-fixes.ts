@@ -5,10 +5,8 @@ import type { Database } from "~db/types";
 
 const toTsTz = (columnName: string) =>
 	sql`timestamptz using ${sql.id(columnName)} at time zone 'UTC'`;
-const toTs = (columnName: string) =>
-	sql`timestamptz using ${sql.id(columnName)} at time zone 'UTC'`;
-const toDate = (columnName: string) =>
-	sql`date using ${sql.id(columnName)} at time zone 'UTC'`;
+const toTs = (columnName: string) => sql`timestamp using ${sql.id(columnName)}`;
+const toDate = (columnName: string) => sql`date using ${sql.id(columnName)}`;
 
 const upgradeAccountConnectionsIntentionsTable = async (db: Database) => {
 	await db.schema
