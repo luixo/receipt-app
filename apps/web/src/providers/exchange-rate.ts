@@ -1,7 +1,7 @@
 import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import fetch from "isomorphic-fetch";
-import { entries } from "remeda";
+import { entries, keys } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -36,22 +36,13 @@ const fetchCDNRate =
 			);
 		}
 		const json: unknown = await response.json();
-		const keysSchema = z.enum(toCodesLower);
 		const parsedJson = z
 			.object({
-				date: z.string().regex(/\d{4}-\d{2}-\d{2}/),
+				[fromCodeLower]: z.record(z.string(), z.float32()).refine((obj) => {
+					const actualKeys = keys(obj);
+					return toCodesLower.every((code) => actualKeys.includes(code));
+				}),
 			})
-			.and(
-				z.record(
-					z.literal(fromCodeLower),
-					z
-						.record(keysSchema, z.float32())
-						.refine(
-							(obj): obj is typeof obj extends Partial<infer R> ? R : never =>
-								keysSchema.options.every((key) => obj[key] != null),
-						),
-				),
-			)
 			.safeParse(json);
 		if (!parsedJson.success) {
 			throw parsedJson.error;
@@ -60,9 +51,7 @@ const fetchCDNRate =
 			Number(
 				// We just verified it exists
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				(parsedJson.data[fromCodeLower] as Record<string, number>)[
-					toCodeLower
-				]!.toFixed(6),
+				parsedJson.data[fromCodeLower]![toCodeLower]!.toFixed(6),
 			),
 		);
 	};
