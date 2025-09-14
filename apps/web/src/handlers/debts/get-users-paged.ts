@@ -59,7 +59,8 @@ const fetchPage = async (
 		users
 			.select("userId")
 			.groupBy(["name", "userId"])
-			.orderBy(["name", "userId"])
+			.orderBy("name")
+			.orderBy("userId")
 			.offset(input.cursor)
 			.limit(input.limit)
 			.execute(),

@@ -11,7 +11,7 @@
 		"@ra/web": "workspace:*",
 		"deep-object-diff": "^1.1.9",
 		"h3": "^1.15.3",
-		"kysely": "^0.27.2",
+		"kysely": "^0.28.7",
 		"mock-http": "^1.1.1",
 		"timekeeper": "^2.3.1"
 	}

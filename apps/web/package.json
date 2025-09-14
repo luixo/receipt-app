@@ -24,7 +24,7 @@
 		"dataloader": "^2.2.2",
 		"fetch-to-node": "^2.1.0",
 		"isomorphic-fetch": "^3.0.0",
-		"kysely": "^0.27.2",
+		"kysely": "^0.28.7",
 		"nativewind": "^4.1.23",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",

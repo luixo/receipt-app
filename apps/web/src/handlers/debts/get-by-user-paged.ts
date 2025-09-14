@@ -84,7 +84,8 @@ const fetchPage = async (
 	const [paginatedDebts, totalCount] = await Promise.all([
 		debts
 			.select(["debts.id"])
-			.orderBy(["debts.timestamp desc", "debts.id"])
+			.orderBy("debts.timestamp", "desc")
+			.orderBy("debts.id")
 			.offset(input.cursor)
 			.limit(input.limit)
 			.execute(),

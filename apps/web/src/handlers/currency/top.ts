@@ -49,7 +49,7 @@ export const procedure = authProcedure
 						),
 					)
 					.groupBy("currencyCode")
-					.orderBy("count desc")
+					.orderBy("count", "desc")
 					.execute();
 				return topCurrenciesResult.map(({ currencyCode, count }) => ({
 					currencyCode,
@@ -87,7 +87,7 @@ export const procedure = authProcedure
 						(eb) => eb.fn.sum<string>("count").as("count"),
 					])
 					.groupBy("currencyCode")
-					.orderBy("count desc")
+					.orderBy("count", "desc")
 					.execute();
 				return topCurrenciesResult.map(({ currencyCode, count }) => ({
 					currencyCode,

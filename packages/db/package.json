@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@ra/utils": "workspace:*",
-		"kysely": "^0.27.2",
+		"kysely": "^0.28.7",
 		"kysely-plugin-serialize": "^0.8.2",
 		"pg": "^8.16.0"
 	},

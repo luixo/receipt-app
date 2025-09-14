@@ -74,7 +74,8 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"selfDebts.timestamp as selfTimestamp",
 			"selfDebts.currencyCode as selfCurrencyCode",
 		])
-		.orderBy(["theirDebts.updatedAt desc", "theirDebts.id desc"])
+		.orderBy("theirDebts.updatedAt", "desc")
+		.orderBy("theirDebts.id", "desc")
 		.$narrowType<
 			MappedNullableObject<
 				Debts,

@@ -138,8 +138,8 @@ const addItemParticipantsCreatedAtUpdatedAt = async (db: Database) => {
 		)
 		.execute();
 	await db
-		// @ts-expect-error Expected as table is renamed
-		.updateTable("itemParticipants")
+		// Casting as table is renamed
+		.updateTable("itemParticipants" as "receiptItemConsumers")
 		.set({ createdAt: defaultCreatedDate, updatedAt: defaultCreatedDate })
 		.execute();
 	await sql`

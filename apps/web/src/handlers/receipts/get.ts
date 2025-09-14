@@ -65,14 +65,13 @@ const fetchReceipts = async (
 									"receiptItemConsumers.createdAt",
 								])
 								.whereRef("receiptItemConsumers.itemId", "=", "receiptItems.id")
-								.orderBy([
-									"receiptItemConsumers.createdAt desc",
-									"receiptItemConsumers.userId",
-								]),
+								.orderBy("receiptItemConsumers.createdAt", "desc")
+								.orderBy("receiptItemConsumers.userId"),
 						).as("consumers"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")
-					.orderBy(["receiptItems.createdAt desc", "receiptItems.id"]),
+					.orderBy("receiptItems.createdAt", "desc")
+					.orderBy("receiptItems.id"),
 			).as("items"),
 			jsonArrayFrom(
 				eb
@@ -95,10 +94,8 @@ const fetchReceipts = async (
 						"receiptParticipants.createdAt",
 						"receiptParticipants.role",
 					])
-					.orderBy([
-						"receiptParticipants.createdAt desc",
-						"receiptParticipants.userId",
-					]),
+					.orderBy("receiptParticipants.createdAt", "desc")
+					.orderBy("receiptParticipants.userId"),
 			).as("participants"),
 		])
 		.execute();

@@ -10,7 +10,8 @@ export const procedure = adminProcedure.query(async ({ ctx }) => {
 				.on("users.ownerAccountId", "=", ctx.auth.accountId),
 		)
 		.where("accounts.id", "!=", ctx.auth.accountId)
-		.orderBy(["users.name", "accounts.email"])
+		.orderBy("users.name")
+		.orderBy("accounts.email")
 		.select([
 			"users.id as userId",
 			"users.name",

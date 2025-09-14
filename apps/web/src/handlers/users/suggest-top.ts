@@ -99,7 +99,7 @@ export const procedure = authProcedure
 				)
 				.selectFrom("orderedUsers")
 				.select(["id"])
-				.orderBy("latestCount desc")
+				.orderBy("latestCount", "desc")
 				.limit(input.limit)
 				.execute();
 
@@ -129,7 +129,8 @@ export const procedure = authProcedure
 					database.fn.count<string>("debts.id").as("latestCount"),
 				])
 				.groupBy(["users.id"])
-				.orderBy(["latestCount desc", "users.id"])
+				.orderBy("latestCount", "desc")
+				.orderBy("users.id")
 				.limit(input.limit)
 				.execute();
 			return { items: users.map(({ id }) => id) };
@@ -156,7 +157,8 @@ export const procedure = authProcedure
 				database.fn.count<string>("debts.id").as("latestCount"),
 			])
 			.groupBy("users.id")
-			.orderBy(["latestCount desc", "users.id"])
+			.orderBy("latestCount", "desc")
+			.orderBy("users.id")
 			.limit(input.limit)
 			.execute();
 

@@ -31,7 +31,8 @@ const fetchPage = async (
 		accountUsers
 			.select("users.id")
 			// Stable order for users with the same name
-			.orderBy(["users.name", "users.id"])
+			.orderBy("users.name")
+			.orderBy("users.id")
 			.offset(input.cursor)
 			.limit(input.limit)
 			.execute(),

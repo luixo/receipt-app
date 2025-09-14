@@ -7787,7 +7787,7 @@ __metadata:
     "@ra/vitest": "workspace:*"
     extract-pg-schema: "npm:^4.1.0"
     kanel: "npm:^3.14.1"
-    kysely: "npm:^0.27.2"
+    kysely: "npm:^0.28.7"
     kysely-plugin-serialize: "npm:^0.8.2"
     pg: "npm:^8.16.0"
     tsx: "npm:^4.7.1"
@@ -7894,7 +7894,7 @@ __metadata:
     "@ra/web": "workspace:*"
     deep-object-diff: "npm:^1.1.9"
     h3: "npm:^1.15.3"
-    kysely: "npm:^0.27.2"
+    kysely: "npm:^0.28.7"
     mock-http: "npm:^1.1.1"
     timekeeper: "npm:^2.3.1"
   languageName: unknown
@@ -7930,7 +7930,7 @@ __metadata:
     dataloader: "npm:^2.2.2"
     fetch-to-node: "npm:^2.1.0"
     isomorphic-fetch: "npm:^3.0.0"
-    kysely: "npm:^0.27.2"
+    kysely: "npm:^0.28.7"
     module-alias: "npm:^2.2.3"
     nativewind: "npm:^4.1.23"
     pino: "npm:^8.14.1"
@@ -22194,10 +22194,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.27.2":
-  version: 0.27.2
-  resolution: "kysely@npm:0.27.2"
-  checksum: 10/eb2cca2bdec14a3e7d430e1fbf08cc3015fa425bfc0e9508dbbfc4351f6c0df23ec8bc54c5b417b5e4481af5a8b855fad53c51e2e3c4a893f9f907ef913ce278
+"kysely@npm:^0.28.7":
+  version: 0.28.7
+  resolution: "kysely@npm:0.28.7"
+  checksum: 10/1ef0b6c6d3b18841c3d8b01c3f316fda2339ae30e5d6825ee178faf4741967e47edaf3abc425dc2db3fb34e5db0eacb0125935b9e6632135d5f1d373fb483249
   languageName: node
   linkType: hard
 

@@ -56,12 +56,11 @@ const fetchPage = async (
 		mergedReceipts
 			.select("id")
 			// Stable order for receipts with the same date
-			.orderBy([
-				input.orderBy === "date-asc"
-					? "mergedReceipts.issued asc"
-					: "mergedReceipts.issued desc",
-				"mergedReceipts.id",
-			])
+			.orderBy(
+				"mergedReceipts.issued",
+				input.orderBy === "date-asc" ? "asc" : "desc",
+			)
+			.orderBy("mergedReceipts.id")
 			.offset(input.cursor)
 			.limit(input.limit)
 			.execute(),
