@@ -5,7 +5,7 @@ exports[`receiptItemConsumers.update > functionality > updates item participant 
   "updated": {
     "receiptItemConsumers": {
       "itemId:a0d2c899-9a35-48de-9884-8fa1c27564f7|userId:b666c83a-bf04-4b01-b4e3-dd80c28a35f2": {
-        "part": "83.00",
+        "part": "64.00",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

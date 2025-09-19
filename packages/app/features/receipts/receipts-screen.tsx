@@ -41,7 +41,7 @@ export const ReceiptsScreen: React.FC<{
 			</PageHeader>
 			<EmailVerificationCard />
 			<Receipts
-				filters={filtersState[0]}
+				filtersState={filtersState}
 				sort={sortState[0]}
 				limitState={limitState}
 				offsetState={offsetState}

@@ -1,8 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
+import { identity } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { TRPCQueryInput } from "~app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import type { AccountsId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -27,16 +28,20 @@ import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./get-paged";
 
-type MockReceipt = Awaited<ReturnType<typeof insertReceipt>>;
+type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const sortReceipts = (receipts: MockReceipt[]) =>
 	receipts.sort((a, b) => compare.plainDate(b.issued, a.issued));
 
-const mapReceipts = (receipts: MockReceipt[]) =>
-	receipts.map((receipt) => receipt.id);
+const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
+	id: receipt.id,
+	highlights: [],
+	matchedItems: [],
+});
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
+type Output = TRPCQueryOutput<"receipts.getPaged">;
 
 const mockData = async (ctx: TestContext) => {
 	const {
@@ -56,16 +61,24 @@ const mockData = async (ctx: TestContext) => {
 	// Self receipt: participants
 	await insertReceiptParticipant(ctx, selfReceipt.id, selfUserId);
 	// Self receipt: items
-	await Promise.all([
+	const selfReceiptItems = await Promise.all([
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
 	]);
+	const selfReceiptWithItems = {
+		...selfReceipt,
+		items: selfReceiptItems,
+	};
 
 	// Other self receipt
 	const otherSelfReceipt = await insertReceipt(ctx, accountId, {
 		issued: parsers.plainDate("2020-02-06"),
 	});
+	const otherSelfReceiptWithItems = {
+		...otherSelfReceipt,
+		items: [],
+	};
 	const user = await insertUser(ctx, accountId);
 	// Other self receipt: participants
 	await Promise.all([
@@ -87,15 +100,20 @@ const mockData = async (ctx: TestContext) => {
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfUser.id),
 	]);
 	// Foreign receipt: items
-	await Promise.all([
+	const foreignReceiptItems = await Promise.all([
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
 	]);
+	const foreignReceiptWithItems = {
+		...foreignReceipt,
+		items: foreignReceiptItems,
+	};
 
 	// Other foreign receipt
 	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: parsers.plainDate("2020-04-06"),
+		name: "T'zolkin",
 	});
 	// Other foreign receipt: participants
 	await insertReceiptParticipant(
@@ -104,17 +122,23 @@ const mockData = async (ctx: TestContext) => {
 		foreignToSelfUser.id,
 	);
 	// Other foreign receipt: items
-	await Promise.all([
-		insertReceiptItem(ctx, otherForeignReceipt.id),
+	const otherForeignReceiptItems = await Promise.all([
+		insertReceiptItem(ctx, otherForeignReceipt.id, { name: "Teotihuacan" }),
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 	]);
+	const otherForeignReceiptWithItems = {
+		...otherForeignReceipt,
+		items: otherForeignReceiptItems,
+	};
 
-	const receipts: Awaited<ReturnType<typeof insertReceipt>>[] = [
-		selfReceipt,
-		otherSelfReceipt,
-		foreignReceipt,
-		otherForeignReceipt,
+	const receipts: (Awaited<ReturnType<typeof insertReceipt>> & {
+		items: Awaited<ReturnType<typeof insertReceiptItem>>[];
+	})[] = [
+		selfReceiptWithItems,
+		otherSelfReceiptWithItems,
+		foreignReceiptWithItems,
+		otherForeignReceiptWithItems,
 	];
 
 	return {
@@ -126,26 +150,38 @@ const mockData = async (ctx: TestContext) => {
 
 const runFunctionalTest = async (
 	ctx: TestContext,
-	modifyInput: (input: Input) => Input,
-	modifyItems: (items: MockReceipt[], accountId: AccountsId) => MockReceipt[],
+	{
+		modifyInput = identity(),
+		modifyOutput = (receipts) => receipts.map(mapReceipt),
+	}: {
+		modifyInput?: (input: Input, opts: { receipts: MockReceipt[] }) => Input;
+		modifyOutput?: (
+			receipts: MockReceipt[],
+			opts: { accountId: AccountsId },
+		) => Output["items"];
+	} = {},
 ) => {
 	const { accountId, sessionId, receipts } = await mockData(ctx);
 
 	const limit = 10;
 	const caller = createCaller(await createAuthContext(ctx, sessionId));
+	const sortedReceipts = sortReceipts(receipts);
 	const result = await caller.procedure(
-		modifyInput({
-			limit,
-			cursor: 0,
-			orderBy: "date-desc",
-		}),
+		modifyInput(
+			{
+				limit,
+				cursor: 0,
+				orderBy: "date-desc",
+			},
+			{ receipts: sortedReceipts },
+		),
 	);
-	const items = mapReceipts(modifyItems(sortReceipts(receipts), accountId));
-	expect(items.length).toBeGreaterThan(0);
+	const output = modifyOutput(sortedReceipts, { accountId });
+	expect(output.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
-		count: items.length,
+		count: output.length,
 		cursor: 0,
-		items: items.slice(0, limit),
+		items: output.slice(0, limit),
 	});
 };
 
@@ -284,11 +320,7 @@ describe("receipts.getPaged", () => {
 		});
 
 		test("returns results", async ({ ctx }) => {
-			await runFunctionalTest(
-				ctx,
-				(input) => input,
-				(items) => items,
-			);
+			await runFunctionalTest(ctx);
 		});
 
 		test("returns paged results", async ({ ctx }) => {
@@ -327,36 +359,137 @@ describe("receipts.getPaged", () => {
 		});
 
 		test("orderBy - asc", async ({ ctx }) => {
-			await runFunctionalTest(
-				ctx,
-				(input) => ({ ...input, orderBy: "date-asc" }),
-				(receipts) =>
-					receipts.sort((a, b) => compare.plainDate(a.issued, b.issued)),
-			);
+			await runFunctionalTest(ctx, {
+				modifyInput: (input) => ({ ...input, orderBy: "date-asc" }),
+				modifyOutput: (receipts) =>
+					receipts
+						.sort((a, b) => compare.plainDate(a.issued, b.issued))
+						.map(mapReceipt),
+			});
 		});
 
 		describe("filters", () => {
-			describe("owned by me", () => {
-				test("true", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { ownedByMe: true } }),
-						(receipts, selfAccountId) =>
-							receipts.filter(
-								(receipt) => receipt.ownerAccountId === selfAccountId,
-							),
-					);
-				});
+			describe("ownage filter", () => {
+				describe("owned by me", () => {
+					test("true", async ({ ctx }) => {
+						await runFunctionalTest(ctx, {
+							modifyInput: (input) => ({
+								...input,
+								filters: { ownedByMe: true },
+							}),
+							modifyOutput: (receipts, { accountId: selfAccountId }) =>
+								receipts
+									.filter((receipt) => receipt.ownerAccountId === selfAccountId)
+									.map(mapReceipt),
+						});
+					});
 
-				test("false", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { ownedByMe: false } }),
-						(receipts, selfAccountId) =>
-							receipts.filter(
-								(receipt) => receipt.ownerAccountId !== selfAccountId,
-							),
-					);
+					test("false", async ({ ctx }) => {
+						await runFunctionalTest(ctx, {
+							modifyInput: (input) => ({
+								...input,
+								filters: { ownedByMe: false },
+							}),
+							modifyOutput: (receipts, { accountId: selfAccountId }) =>
+								receipts
+									.filter((receipt) => receipt.ownerAccountId !== selfAccountId)
+									.map(mapReceipt),
+						});
+					});
+				});
+			});
+
+			describe("lookup filter", () => {
+				describe("name match", () => {
+					test("full match", async ({ ctx }) => {
+						await runFunctionalTest(ctx, {
+							modifyInput: (input, { receipts }) => ({
+								...input,
+								filters: { query: receipts[0]?.name },
+							}),
+							modifyOutput: (receipts) =>
+								receipts.slice(0, 1).map((receipt) => ({
+									id: receipt.id,
+									highlights: [[0, receipt.name.length]],
+									matchedItems: [],
+								})),
+						});
+					});
+					test("partial match", async ({ ctx }) => {
+						const partialSliceLength = 5;
+						await runFunctionalTest(ctx, {
+							modifyInput: (input, { receipts }) => ({
+								...input,
+								filters: {
+									query: receipts[0]?.name.slice(0, partialSliceLength),
+								},
+							}),
+							modifyOutput: (receipts) =>
+								receipts.slice(0, 1).map((receipt) => ({
+									id: receipt.id,
+									highlights: [[0, partialSliceLength]],
+									matchedItems: [],
+								})),
+						});
+					});
+				});
+				describe("item name match", () => {
+					test("full match", async ({ ctx }) => {
+						await runFunctionalTest(ctx, {
+							modifyInput: (input, { receipts }) => ({
+								...input,
+								filters: { query: receipts[0]?.items[0]?.name },
+							}),
+							modifyOutput: (receipts) =>
+								receipts.slice(0, 1).map((receipt) => {
+									const firstItem = receipt.items[0];
+									if (!firstItem) {
+										throw new Error("Expected to have at least 1 item");
+									}
+									return {
+										id: receipt.id,
+										highlights: [],
+										matchedItems: [
+											{
+												id: firstItem.id,
+												highlights: [[0, firstItem.name.length]],
+											},
+										],
+									};
+								}),
+						});
+					});
+					test("partial match", async ({ ctx }) => {
+						const partialSliceLength = 5;
+						await runFunctionalTest(ctx, {
+							modifyInput: (input, { receipts }) => ({
+								...input,
+								filters: {
+									query: receipts[0]?.items[0]?.name.slice(
+										0,
+										partialSliceLength,
+									),
+								},
+							}),
+							modifyOutput: (receipts) =>
+								receipts.slice(0, 1).map((receipt) => {
+									const firstItem = receipt.items[0];
+									if (!firstItem) {
+										throw new Error("Expected to have at least 1 item");
+									}
+									return {
+										id: receipt.id,
+										highlights: [],
+										matchedItems: [
+											{
+												id: firstItem.id,
+												highlights: [[0, partialSliceLength]],
+											},
+										],
+									};
+								}),
+						});
+					});
 				});
 			});
 		});
@@ -365,8 +498,8 @@ describe("receipts.getPaged", () => {
 			test("success", async ({ ctx }) => {
 				const { sessionId, receipts } = await mockData(ctx);
 
-				const descReceipts = mapReceipts(sortReceipts(receipts));
-				const ascReceipts = mapReceipts(receipts.toReversed());
+				const descReceipts = sortReceipts(receipts).map(mapReceipt);
+				const ascReceipts = receipts.toReversed().map(mapReceipt);
 
 				const limit = 2;
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -419,7 +552,7 @@ describe("receipts.getPaged", () => {
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: receipts.length,
 					cursor: 0,
-					items: mapReceipts(sortReceipts(receipts)).slice(0, 2),
+					items: sortReceipts(receipts).map(mapReceipt).slice(0, 2),
 				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});

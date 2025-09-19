@@ -59,7 +59,8 @@ export const Route = createFileRoute("/_protected/receipts/")({
 						cursor: ctx.deps.offset,
 					}),
 				),
-			(list) => list.items.map((id) => trpc.receipts.get.queryOptions({ id })),
+			(list) =>
+				list.items.map(({ id }) => trpc.receipts.get.queryOptions({ id })),
 		);
 		return { prefetched };
 	},

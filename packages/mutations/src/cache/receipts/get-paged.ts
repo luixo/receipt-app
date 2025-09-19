@@ -1,6 +1,7 @@
 import type { QueryKey } from "@tanstack/react-query";
 import { hashKey } from "@tanstack/react-query";
 
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
@@ -9,6 +10,8 @@ import { applyUpdateFnWithRevert, getAllInputs } from "../utils";
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
 }>;
+type Output = TRPCQueryOutput<"receipts.getPaged">;
+type OutputItem = Output["items"][number];
 
 const invalidate = ({ queryClient, procedure }: Controller) => {
 	const inputs = getAllInputs<"receipts.getPaged">(
@@ -22,10 +25,10 @@ const invalidate = ({ queryClient, procedure }: Controller) => {
 
 const updatePages =
 	({ queryClient, procedure }: Controller) =>
-	(updater: UpdateFn<ReceiptsId[], ReceiptsId[], QueryKey>) => {
+	(updater: UpdateFn<OutputItem[], OutputItem[], QueryKey>) => {
 		const snapshots: {
 			queryKey: QueryKey;
-			items: ReceiptsId[];
+			items: OutputItem[];
 		}[] = [];
 		const inputs = getAllInputs<"receipts.getPaged">(
 			queryClient,
@@ -68,8 +71,8 @@ export const getRevertController = ({
 			applyUpdateFnWithRevert(
 				updatePages(controller),
 				(items) =>
-					items.includes(receiptId)
-						? items.filter((item) => item !== receiptId)
+					items.some((item) => item.id === receiptId)
+						? items.filter((item) => item.id !== receiptId)
 						: items,
 				(snapshots) => (items, queryKey) => {
 					const matchedSnapshot = snapshots.find(
@@ -78,10 +81,16 @@ export const getRevertController = ({
 					if (!matchedSnapshot) {
 						return items;
 					}
-					const lastIndex = matchedSnapshot.items.indexOf(receiptId);
+					const lastIndex = matchedSnapshot.items.findIndex(
+						(item) => item.id === receiptId,
+					);
+					const matchedItem = matchedSnapshot.items[lastIndex];
+					if (!matchedItem) {
+						return items;
+					}
 					return [
 						...items.slice(0, lastIndex),
-						receiptId,
+						matchedItem,
 						...items.slice(lastIndex),
 					];
 				},

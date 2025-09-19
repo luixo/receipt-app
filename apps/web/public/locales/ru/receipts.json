@@ -55,7 +55,11 @@
 			"text": "Удалить чек",
 			"confirmSubtitle": "Это удалит чек навсегда"
 		},
-		"emptyItems": "{{amount}} пустых позиций"
+		"emptyItems": "{{amount}} пустых позиций",
+		"matchedItem": {
+			"notFound": "Не обнаружена позиция",
+			"found": "- <name />"
+		}
 	},
 	"participants": {
 		"payedBy": "<text>оплачено</text><by />",

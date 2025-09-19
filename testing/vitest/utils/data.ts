@@ -551,7 +551,9 @@ export const insertReceiptItem = async (
 		.values({
 			receiptId,
 			id: data.id || ctx.getTestUuid(),
-			name: data.name ?? faker.commerce.product(),
+			name:
+				data.name ??
+				`${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
 			price: (
 				data.price ??
 				faker.number.float({ min: 1, max: 10000, precision: 0.01 })

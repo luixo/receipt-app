@@ -94,15 +94,21 @@ const RemoveReceiptsButton: React.FC<{
 
 type Props = {
 	sort: SearchParamState<"/receipts", "sort">[0];
-	filters: SearchParamState<"/receipts", "filters">[0];
+	filtersState: SearchParamState<"/receipts", "filters">;
 	limitState: SearchParamState<"/receipts", "limit">;
 	offsetState: SearchParamState<"/receipts", "offset">;
 };
 
 export const Receipts = suspendedFallback<Props>(
-	({ filters, sort, limitState: [limit, setLimit], offsetState }) => {
+	({ filtersState, sort, limitState: [limit, setLimit], offsetState }) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
+		const [filters, setFilters] = filtersState;
+		const updateFilters = React.useCallback(
+			(nextValue: string) =>
+				setFilters((prev) => ({ ...prev, query: nextValue })),
+			[setFilters],
+		);
 		const { data, onPageChange, isPending } = useCursorPaging(
 			trpc.receipts.getPaged,
 			{ limit, orderBy: sort, filters },
@@ -111,6 +117,10 @@ export const Receipts = suspendedFallback<Props>(
 		const [selectedReceiptIds, setSelectedReceiptIds] = React.useState<
 			ReceiptsId[]
 		>([]);
+		const receiptIds = React.useMemo(
+			() => data.items.map(({ id }) => id),
+			[data.items],
+		);
 
 		if (!data.count) {
 			if (values(filters).filter(isNonNullish).length === 0) {
@@ -149,25 +159,32 @@ export const Receipts = suspendedFallback<Props>(
 					offset={offsetState[0]}
 					onPageChange={onPageChange}
 					selection={{
-						items: data.items,
+						items: receiptIds,
 						selectedItems: selectedReceiptIds,
 						setSelectedItems: setSelectedReceiptIds,
+					}}
+					search={{
+						onValueChange: updateFilters,
+						initialValue: filters.query ?? "",
 					}}
 					endContent={
 						<RemoveReceiptsButton
 							key={data.items.length}
 							selectedReceiptIds={selectedReceiptIds}
 							setSelectedReceiptIds={setSelectedReceiptIds}
-							receiptIds={data.items}
+							receiptIds={receiptIds}
 						/>
 					}
 				/>
 				<SuspendedOverlay isPending={isPending}>
 					<ReceiptsWrapper>
-						{data.items.map((id) => (
+						{data.items.map(({ id, highlights, matchedItems }) => (
 							<ReceiptPreview
 								key={id}
 								id={id}
+								highlights={highlights}
+								filterQuery={filters.query || ""}
+								matchedItems={matchedItems}
 								isSelected={selectedReceiptIds.includes(id)}
 								onValueChange={(nextSelected) =>
 									setSelectedReceiptIds((prevSelected) =>

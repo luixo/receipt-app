@@ -18,6 +18,7 @@ export {
 	MdKey as KeyIcon,
 	MdOutlineAttachMoney as MoneyIcon,
 	MdLowPriority as TransferIcon,
+	MdOutlineSearch as SearchIcon,
 } from "react-icons/md";
 export {
 	BsReceipt as ReceiptsIcon,

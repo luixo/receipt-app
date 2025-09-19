@@ -118,5 +118,8 @@
 		"resendEmail": {
 			"error": "Ошибка при отправке письма: {{errors, uniqueErrors}}"
 		}
+	},
+	"searchBar": {
+		"placeholder": "Начните поиск"
 	}
 }

@@ -88,3 +88,23 @@ export const asFixedSizeArray =
 	<N extends number>() =>
 	<T>(array: T[]) =>
 		array as TupleOf<T, N>;
+
+export type Interval = [number, number];
+export const mergeIntervals = (
+	intervals: Interval[],
+	connectAdjacentInts = false,
+) =>
+	intervals
+		.sort((a, b) => a[0] - b[0])
+		.reduce<Interval[]>((acc, [from, to]) => {
+			const lastInterval = acc.at(-1);
+			if (
+				!lastInterval ||
+				lastInterval[1] + (connectAdjacentInts ? 1 : 0) < from
+			) {
+				acc.push([from, to]);
+			} else {
+				lastInterval[1] = Math.max(lastInterval[1], to);
+			}
+			return acc;
+		}, []);

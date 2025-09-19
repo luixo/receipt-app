@@ -2,11 +2,7 @@ import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
-import {
-	MAX_LIMIT,
-	MAX_OFFSET,
-	MAX_SUGGEST_LENGTH,
-} from "~app/utils/validation";
+import { MAX_LIMIT, MAX_OFFSET, MAX_QUERY_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -21,40 +17,11 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { wordSimilarity } from "~utils/trigram";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./suggest";
-
-const getTrigrams = (s: string): Set<string> => {
-	const words = s.toLowerCase().split(" ");
-	return words.reduce((set, word) => {
-		const letters = `  ${word} `.split("");
-		letters.forEach((_, index) => {
-			if (index > letters.length - 3) {
-				return set;
-			}
-			const nextWord = letters.slice(index, index + 3).join("");
-			if (!nextWord.trim().includes(" ")) {
-				set.add(nextWord);
-			}
-		});
-		return set;
-	}, new Set<string>());
-};
-
-function trigramSimilarity(a: string, b: string): number {
-	const trigramsA = getTrigrams(a);
-	const trigramsB = getTrigrams(b);
-
-	if (trigramsA.size === 0) {
-		return 0;
-	}
-	return (
-		[...trigramsA.keys()].filter((trigramA) => trigramsB.has(trigramA)).length /
-		trigramsA.size
-	);
-}
 
 const mapUsers = (
 	term: string,
@@ -68,8 +35,8 @@ const mapUsers = (
 					return sortedByName;
 				}
 			} else {
-				const similarityA = trigramSimilarity(term, a.name);
-				const similarityB = trigramSimilarity(term, b.name);
+				const similarityA = wordSimilarity(term, a.name);
+				const similarityB = wordSimilarity(term, b.name);
 				if (similarityA !== similarityB) {
 					return similarityB - similarityA;
 				}
@@ -98,7 +65,7 @@ describe("users.suggest", () => {
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							input: "a".repeat(MAX_SUGGEST_LENGTH + 1),
+							input: "a".repeat(MAX_QUERY_LENGTH + 1),
 							limit: 1,
 							direction: "forward",
 							cursor: 0,

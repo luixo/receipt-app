@@ -65,7 +65,8 @@ export const userNameSchema = constrainLength(z.string(), {
 	target: "user name",
 });
 
-export const MAX_SUGGEST_LENGTH = 255;
+export const MIN_QUERY_LENGTH = 3;
+export const MAX_QUERY_LENGTH = 255;
 
 export const MIN_DEBT_NOTE_LENGTH = 1;
 export const MAX_DEBT_NOTE_LENGTH = 255;
@@ -193,8 +194,12 @@ export const offsetSchema = z.int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.int().gt(0).max(MAX_LIMIT);
 export const directionSchema = z.enum(["forward", "backward"]);
 
+export const queryNoMinSchema = z.string().max(MAX_QUERY_LENGTH);
+export const querySchema = queryNoMinSchema.min(MIN_QUERY_LENGTH);
+
 export const receiptsFiltersSchema = z.strictObject({
 	ownedByMe: z.boolean().optional(),
+	query: querySchema.optional(),
 });
 export const receiptsOrderBySchema = z.enum(["date-asc", "date-desc"]);
 

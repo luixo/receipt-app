@@ -3,12 +3,13 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import {
-	MAX_SUGGEST_LENGTH,
 	directionSchema,
 	limitSchema,
 	offsetSchema,
+	queryNoMinSchema,
 } from "~app/utils/validation";
 import type { UsersId } from "~db/models";
+import { SIMILARTY_THRESHOLD } from "~utils/trigram";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { getAccessRole } from "~web/handlers/receipts/utils";
@@ -17,10 +18,8 @@ import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
 import type { GeneralOutput } from "~web/utils/batch";
 import { queueList } from "~web/utils/batch";
 
-const SIMILARTY_THRESHOLD = 0.33;
-
 const inputSchema = z.strictObject({
-	input: z.string().max(MAX_SUGGEST_LENGTH),
+	input: queryNoMinSchema,
 	cursor: offsetSchema,
 	limit: limitSchema,
 	filterIds: z.array(userIdSchema).optional(),

@@ -55,7 +55,11 @@
 			"text": "Remove receipt",
 			"confirmSubtitle": "This will remove receipt forever"
 		},
-		"emptyItems": "{{amount}} empty item(s)"
+		"emptyItems": "{{amount}} empty item(s)",
+		"matchedItem": {
+			"notFound": "Matched item not found",
+			"found": "- <name />"
+		}
 	},
 	"participants": {
 		"payedBy": "<text>payed by</text><by />",

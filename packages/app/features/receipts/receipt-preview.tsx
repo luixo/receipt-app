@@ -2,23 +2,26 @@ import type React from "react";
 import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
+import { HighlightText } from "~app/components/highlight-text";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { Checkbox } from "~components/checkbox";
-import { KeyIcon } from "~components/icons";
+import { InfoIcon, KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
 import type { ReceiptsId } from "~db/models";
+import type { Interval } from "~utils/array";
 import { round } from "~utils/math";
 
 import {
@@ -32,8 +35,9 @@ const ReceiptPreviewShape: React.FC<
 		checkbox: React.ReactNode;
 		sum: React.ReactNode;
 		icon: React.ReactNode;
+		infoTooltip?: React.ReactNode;
 	} & React.ComponentProps<typeof View>
-> = ({ title, checkbox, sum, icon, className, ...props }) => {
+> = ({ title, checkbox, sum, icon, className, infoTooltip, ...props }) => {
 	const checkboxComponent = (
 		<View className="flex min-w-8 shrink-0 items-center justify-center">
 			{checkbox}
@@ -51,7 +55,20 @@ const ReceiptPreviewShape: React.FC<
 				<View className="flex items-center justify-center">
 					{checkboxComponent}
 				</View>
-				<Text className="flex-[8] overflow-hidden p-2">{title}</Text>
+				<Text className="flex-[6] overflow-hidden p-2">{title}</Text>
+				<Tooltip
+					content={infoTooltip}
+					isDisabled={!infoTooltip}
+					className="box-content flex flex-1 p-2"
+				>
+					<InfoIcon
+						className={cn(
+							"text-primary cursor-pointer self-center opacity-75",
+							infoTooltip ? undefined : "hidden",
+						)}
+						size={24}
+					/>
+				</Tooltip>
 				<Text className="flex-[2] flex-row justify-end self-center p-2 text-right">
 					{sum}
 				</Text>
@@ -81,10 +98,20 @@ export const ReceiptPreviewSkeleton = () => (
 
 export const ReceiptPreview = suspendedFallback<{
 	id: ReceiptsId;
+	highlights: Interval[];
 	isSelected: boolean;
 	onValueChange: (nextValue: boolean) => void;
+	matchedItems: TRPCQueryOutput<"receipts.getPaged">["items"][number]["matchedItems"];
+	filterQuery: string;
 }>(
-	({ id, isSelected, onValueChange }) => {
+	({
+		id,
+		highlights,
+		isSelected,
+		onValueChange,
+		matchedItems,
+		filterQuery,
+	}) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
 		const { data: receipt } = useSuspenseQuery(
@@ -120,7 +147,15 @@ export const ReceiptPreview = suspendedFallback<{
 							isDot
 							className="translate-x-full"
 						>
-							<Text>{receipt.name}</Text>
+							<Text>
+								{filterQuery ? (
+									<HighlightText intervals={highlights}>
+										{receipt.name}
+									</HighlightText>
+								) : (
+									receipt.name
+								)}
+							</Text>
 						</Badge>
 					</Tooltip>
 					{isOwner ? <KeyIcon className="shrink-0" size={12} /> : null}
@@ -145,6 +180,41 @@ export const ReceiptPreview = suspendedFallback<{
 						color="secondary"
 						classNames={{ wrapper: "me-0" }}
 					/>
+				}
+				infoTooltip={
+					matchedItems.length !== 0 ? (
+						<View>
+							{matchedItems.map(
+								({ id: itemId, highlights: itemHighlights }) => {
+									const matchedItem = receipt.items.find(
+										(item) => item.id === itemId,
+									);
+									if (!matchedItem) {
+										return (
+											<Text key={itemId}>
+												{t("receipt.matchedItem.notFound")}
+											</Text>
+										);
+									}
+									return (
+										<Text key={itemId}>
+											<Trans
+												t={t}
+												i18nKey="receipt.matchedItem.found"
+												components={{
+													name: (
+														<HighlightText intervals={itemHighlights}>
+															{matchedItem.name}
+														</HighlightText>
+													),
+												}}
+											/>
+										</Text>
+									);
+								},
+							)}
+						</View>
+					) : null
 				}
 				sum={
 					<Text className="font-medium">

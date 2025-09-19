@@ -118,5 +118,8 @@
 		"resendEmail": {
 			"error": "Resend email failed: {{errors, uniqueErrors}}"
 		}
+	},
+	"searchBar": {
+		"placeholder": "Type to search"
 	}
 }
