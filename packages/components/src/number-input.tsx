@@ -32,6 +32,7 @@ type Props = Omit<
 > & {
 	fieldError?: FieldError;
 	mutation?: MutationsProp;
+	continuousMutations?: boolean;
 	errorMessage?: React.ReactNode;
 	fractionDigits: number;
 };
@@ -40,6 +41,7 @@ export const NumberInput: React.FC<Props> = ({
 	className,
 	fieldError,
 	mutation,
+	continuousMutations = false,
 	fractionDigits,
 	formatOptions,
 	...props
@@ -53,7 +55,9 @@ export const NumberInput: React.FC<Props> = ({
 	return (
 		<NumberInputRaw
 			{...props}
-			isDisabled={isMutationLoading || props.isDisabled}
+			isDisabled={
+				(continuousMutations ? false : isMutationLoading) || props.isDisabled
+			}
 			color={isWarning ? "warning" : isError ? "danger" : undefined}
 			description={errors.join("\n")}
 			isInvalid={errors.length !== 0 || props.isInvalid}

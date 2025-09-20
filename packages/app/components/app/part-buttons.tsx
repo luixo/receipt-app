@@ -5,14 +5,12 @@ import { Button } from "~components/button";
 import { MinusIcon, PlusIcon } from "~components/icons";
 
 type Props = React.PropsWithChildren<{
-	isPending: boolean;
 	updatePart: React.Dispatch<React.SetStateAction<number>>;
 	downDisabled?: boolean;
 	upDisabled?: boolean;
 }>;
 
 export const PartButtons: React.FC<Props> = ({
-	isPending,
 	updatePart,
 	downDisabled,
 	upDisabled,
@@ -22,7 +20,6 @@ export const PartButtons: React.FC<Props> = ({
 		<Button
 			variant="ghost"
 			color="primary"
-			isLoading={isPending}
 			onPress={() => updatePart((prev) => prev - 1)}
 			isDisabled={downDisabled}
 			isIconOnly
@@ -33,7 +30,6 @@ export const PartButtons: React.FC<Props> = ({
 		<Button
 			variant="ghost"
 			color="primary"
-			isLoading={isPending}
 			onPress={() => updatePart((prev) => prev + 1)}
 			isDisabled={upDisabled}
 			isIconOnly

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { PartButtons } from "~app/components/app/part-buttons";
+import { useAutofocus } from "~app/hooks/use-autofocus";
+import { useAutosave, useAutosaveEffect } from "~app/hooks/use-autosave";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useRoundParts } from "~app/hooks/use-decimals";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
@@ -12,9 +14,7 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
-import { updateSetStateAction } from "~utils/react";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
@@ -35,7 +35,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	const { updateItemConsumerPart } = useActionsHooksContext();
 	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
-	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+	const [isEditing, { setTrue: setEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
 	const trpc = useTRPC();
@@ -44,41 +44,61 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 			trpc.receiptItemConsumers.update.mutationKey(),
 			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
+	const isDisabled = isExternalDisabled || receiptDisabled;
+	const {
+		onSuccess,
+		onSubmit,
+		onSubmitImmediate,
+		updateElement,
+		eagerToSubmitState,
+	} = useAutosave({
+		isUpdatePending: Boolean(updateMutationState?.status === "pending"),
+	});
 	const form = useAppForm({
 		defaultValues: { value: consumer.part },
 		validators: { onChange: z.object({ value: partSchema }) },
 		onSubmit: ({ value }) => {
+			if (isDisabled || value.value === consumer.part) {
+				return;
+			}
 			updateItemConsumerPart(item.id, consumer.userId, value.value, {
-				onSuccess: unsetEditing,
+				onSuccess,
 			});
 		},
+		listeners: {
+			onBlur: () => {
+				onSubmitImmediate();
+				unsetEditing();
+			},
+		},
 	});
-	const isPending = updateMutationState?.status === "pending";
+	useAutosaveEffect(form, { state: eagerToSubmitState });
+	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
+		shouldFocus: isEditing,
+	});
 
 	const updateConsumerPart = React.useCallback(
 		(setStateAction: React.SetStateAction<number>) => {
-			const nextPart = updateSetStateAction(setStateAction, consumer.part);
-			if (nextPart === consumer.part) {
-				unsetEditing();
-				return;
-			}
-			form.setFieldValue("value", nextPart);
-			void form.handleSubmit();
+			form.setFieldValue("value", setStateAction);
+			onSubmit();
 		},
-		[consumer.part, form, unsetEditing],
+		[onSubmit, form],
 	);
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
-			<PartButtons
-				isPending={isPending}
-				updatePart={updateConsumerPart}
-				downDisabled={consumer.part <= 1}
-			>
-				{children}
-			</PartButtons>
+			<form.Subscribe selector={(state) => state.values.value}>
+				{(currentValue) => (
+					<PartButtons
+						updatePart={updateConsumerPart}
+						downDisabled={currentValue <= 1}
+					>
+						{children}
+					</PartButtons>
+				)}
+			</form.Subscribe>
 		),
-		[updateConsumerPart, consumer.part, isPending],
+		[updateConsumerPart, form],
 	);
 
 	const roundParts = useRoundParts();
@@ -87,22 +107,28 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	);
 
 	const readOnlyComponent = (
-		<Text>
-			{consumer.part} / {totalParts}
-		</Text>
+		<form.Subscribe selector={(state) => state.values.value}>
+			{(currentValue) => (
+				<>
+					<Text>
+						{Number.isNaN(currentValue) ? "-" : currentValue} / {totalParts}
+					</Text>
+					<View className="absolute right-1 top-1">{updateElement}</View>
+				</>
+			)}
+		</form.Subscribe>
 	);
 
 	if (!canEdit) {
 		return readOnlyComponent;
 	}
 
-	const isDisabled = isExternalDisabled || receiptDisabled;
-
 	if (isEditing) {
 		return wrap(
 			<form.AppField name="value">
 				{(field) => (
 					<field.NumberField
+						ref={inputRef}
 						value={field.state.value}
 						onValueChange={field.setValue}
 						name={field.name}
@@ -110,29 +136,15 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						fieldError={
 							field.state.meta.isDirty ? field.state.meta.errors : undefined
 						}
+						onKeyDown={onKeyDownBlur}
 						fractionDigits={partSchemaDecimal}
-						className="w-32"
+						className="w-28"
 						aria-label={t("item.form.consumer.label")}
 						mutation={updateMutationState}
+						continuousMutations
 						isDisabled={isDisabled}
 						labelPlacement="outside-left"
-						endContent={
-							<View className="flex gap-2">
-								<Text className="self-center">/ {totalParts}</Text>
-								<form.Subscribe selector={(state) => state.canSubmit}>
-									{(canSubmit) => (
-										<SaveButton
-											title={t("item.form.consumer.saveButton")}
-											onPress={() => {
-												void field.form.handleSubmit();
-											}}
-											isLoading={updateMutationState?.status === "pending"}
-											isDisabled={isDisabled || !canSubmit}
-										/>
-									)}
-								</form.Subscribe>
-							</View>
-						}
+						endContent={<Text className="self-center">/ {totalParts}</Text>}
 						variant="bordered"
 					/>
 				)}
@@ -143,7 +155,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	return wrap(
 		<Button
 			variant="light"
-			onPress={switchEditing}
+			onPress={setEditing}
 			isDisabled={isDisabled}
 			isIconOnly
 			className="w-auto min-w-16 px-2"

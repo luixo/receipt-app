@@ -10,6 +10,8 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { useAutofocus } from "~app/hooks/use-autofocus";
+import { useAutosave, useAutosaveEffect } from "~app/hooks/use-autosave";
 import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
@@ -22,12 +24,10 @@ import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { MoneyIcon } from "~components/icons";
-import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
 import { round } from "~utils/math";
-import { updateSetStateAction } from "~utils/react";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
@@ -152,48 +152,6 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const { fromSubunitToUnit } = useDecimals();
 
 	const currentPart = participant.payPart ?? 0;
-	const form = useAppForm({
-		defaultValues: { value: currentPart },
-		validators: { onChange: z.object({ value: partSchema.or(z.literal(0)) }) },
-		onSubmit: ({ value }) => {
-			if (value.value === 0) {
-				removePayer(participant.userId);
-			} else {
-				updatePayerPart(participant.userId, value.value);
-			}
-		},
-	});
-
-	const removeParticipantMutationState =
-		useTrpcMutationState<"receiptParticipants.remove">(
-			trpc.receiptParticipants.remove.mutationKey(),
-			(vars) =>
-				vars.receiptId === receiptId && vars.userId === participant.userId,
-		);
-	const isPending = removeParticipantMutationState?.status === "pending";
-	const removeReceiptParticipant = React.useCallback(() => {
-		removeParticipant(participant.userId);
-		form.setFieldValue("value", 0);
-	}, [form, participant.userId, removeParticipant]);
-	const onAddPayer = React.useCallback(() => {
-		addPayer(participant.userId, 1);
-		form.setFieldValue("value", 1);
-	}, [addPayer, form, participant.userId]);
-	const onPartUpdate = React.useCallback(
-		(setStateAction: React.SetStateAction<number>) => {
-			const nextPart = updateSetStateAction(setStateAction, currentPart);
-			if (nextPart === currentPart) {
-				return;
-			}
-			if (nextPart === 0) {
-				removePayer(participant.userId);
-			} else {
-				updatePayerPart(participant.userId, nextPart);
-			}
-			form.setFieldValue("value", nextPart);
-		},
-		[currentPart, form, participant.userId, removePayer, updatePayerPart],
-	);
 	const addPayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.add">(
 			trpc.receiptItemConsumers.add.mutationKey(),
@@ -209,10 +167,69 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 			trpc.receiptItemConsumers.update.mutationKey(),
 			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
 		);
-	const isPayerPending =
-		addPayerMutationState?.status === "pending" ||
-		removePayerMutationState?.status === "pending" ||
-		updatePayerMutationState?.status === "pending";
+	const isPayerPending = getMutationLoading([
+		addPayerMutationState,
+		removePayerMutationState,
+		updatePayerMutationState,
+	]);
+	const {
+		onSuccess,
+		onSubmit,
+		onSubmitImmediate,
+		updateElement,
+		eagerToSubmitState,
+	} = useAutosave({ isUpdatePending: isPayerPending });
+	const form = useAppForm({
+		defaultValues: { value: currentPart },
+		validators: { onChange: z.object({ value: partSchema.or(z.literal(0)) }) },
+		onSubmit: ({ value }) => {
+			if (value.value === currentPart) {
+				return;
+			}
+			if (value.value === 0) {
+				removePayer(participant.userId, { onSuccess });
+			} else if (currentPart === 0 && value.value === 1) {
+				addPayer(participant.userId, value.value, { onSuccess });
+			} else {
+				updatePayerPart(participant.userId, value.value, { onSuccess });
+			}
+		},
+		listeners: {
+			onBlur: onSubmitImmediate,
+		},
+	});
+	useAutosaveEffect(form, { state: eagerToSubmitState });
+	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
+		shouldFocus: true,
+	});
+
+	const removeParticipantMutationState =
+		useTrpcMutationState<"receiptParticipants.remove">(
+			trpc.receiptParticipants.remove.mutationKey(),
+			(vars) =>
+				vars.receiptId === receiptId && vars.userId === participant.userId,
+		);
+	const isPending = removeParticipantMutationState?.status === "pending";
+	const removeReceiptParticipant = React.useCallback(() => {
+		removeParticipant(participant.userId);
+		form.setFieldValue("value", 0);
+	}, [form, participant.userId, removeParticipant]);
+	const onAddPayer = React.useCallback(() => {
+		form.setFieldValue("value", 1);
+		onSubmitImmediate();
+	}, [form, onSubmitImmediate]);
+	const onPartUpdate = React.useCallback(
+		(setStateAction: React.SetStateAction<number>) => {
+			form.setFieldValue("value", setStateAction);
+			const value = form.getFieldValue("value");
+			if (value === 0) {
+				onSubmitImmediate();
+			} else {
+				onSubmit();
+			}
+		},
+		[form, onSubmit, onSubmitImmediate],
+	);
 
 	const locale = useLocale();
 	const disabled = participant.items.length === 0;
@@ -274,82 +291,77 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 				}
 			>
 				<View className="flex gap-3">
-					<View className="flex flex-row items-center justify-between gap-4">
-						<ReceiptParticipantRoleInput participant={participant} />
+					<View className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 						<View className="flex flex-row items-center gap-2">
-							{currentPart ? (
-								<>
-									<Text>{t("participant.payedInfix")}</Text>
-									<PartButtons
-										isPending={isPayerPending}
-										updatePart={onPartUpdate}
-										downDisabled={currentPart <= 0}
-										upDisabled={currentPart === totalPayParts}
-									>
-										<form.AppField name="value">
-											{(field) => (
-												<field.NumberField
-													value={field.state.value}
-													onValueChange={field.setValue}
-													name={field.name}
-													onBlur={field.handleBlur}
-													fieldError={
-														field.state.meta.isDirty
-															? field.state.meta.errors
-															: undefined
-													}
-													className="w-32"
-													aria-label={t("participant.form.payerPart.label")}
-													mutation={[
-														addPayerMutationState,
-														removePayerMutationState,
-														updatePayerMutationState,
-													]}
-													labelPlacement="outside-left"
-													fractionDigits={partSchemaDecimal}
-													hideStepper
-													endContent={
-														<View className="flex gap-2">
-															<Text className="self-center">
-																{t("participant.form.payerPart.postfix", {
-																	parts: totalPayParts,
-																})}
-															</Text>
-															<form.Subscribe
-																selector={(state) => state.canSubmit}
-															>
-																{(canSubmit) => (
-																	<SaveButton
-																		title={t(
-																			"participant.form.payerPart.saveButton",
-																		)}
-																		onPress={() => {
-																			void field.form.handleSubmit();
-																		}}
-																		isLoading={getMutationLoading([
-																			addPayerMutationState,
-																			removePayerMutationState,
-																			updatePayerMutationState,
-																		])}
-																		isDisabled={!canSubmit}
-																	/>
-																)}
-															</form.Subscribe>
-														</View>
-													}
-													variant="bordered"
-												/>
-											)}
-										</form.AppField>
-									</PartButtons>
-								</>
-							) : (
-								<Button onPress={onAddPayer}>
-									{t("participant.form.addPayerButton")}
-								</Button>
-							)}
+							<form.Subscribe selector={(state) => state.values.value}>
+								{(currentValue) =>
+									currentValue !== 0 ? (
+										<>
+											<Text>{t("participant.payedInfix")}</Text>
+											<PartButtons
+												updatePart={onPartUpdate}
+												downDisabled={currentValue <= 0}
+											>
+												<form.AppField name="value">
+													{(field) => (
+														<field.NumberField
+															ref={inputRef}
+															value={field.state.value}
+															onValueChange={field.setValue}
+															name={field.name}
+															onBlur={field.handleBlur}
+															fieldError={
+																field.state.meta.isDirty
+																	? field.state.meta.errors
+																	: undefined
+															}
+															onKeyDown={onKeyDownBlur}
+															className="w-28"
+															aria-label={t("participant.form.payerPart.label")}
+															mutation={[
+																addPayerMutationState,
+																removePayerMutationState,
+																updatePayerMutationState,
+															]}
+															continuousMutations
+															labelPlacement="outside-left"
+															fractionDigits={partSchemaDecimal}
+															hideStepper
+															endContent={
+																<View className="flex flex-row items-center gap-1">
+																	<Text className="shrink-0 self-center">
+																		{t("participant.form.payerPart.postfix", {
+																			parts: totalPayParts,
+																		})}
+																	</Text>
+																	<View className="absolute -right-2 -top-1">
+																		{updateElement}
+																	</View>
+																</View>
+															}
+															variant="bordered"
+														/>
+													)}
+												</form.AppField>
+											</PartButtons>
+										</>
+									) : (
+										<>
+											<Button onPress={onAddPayer}>
+												{t("participant.form.addPayerButton")}
+											</Button>
+											<View className="absolute -right-0.5 -top-0.5">
+												{updateElement}
+											</View>
+										</>
+									)
+								}
+							</form.Subscribe>
 						</View>
-						{renderParticipantActions(participant)}
+						<View className="flex flex-row items-center gap-2 self-end">
+							{renderParticipantActions(participant)}
+							<ReceiptParticipantRoleInput participant={participant} />
+						</View>
 					</View>
 					{currentPart && items.length !== 0 ? <Divider /> : null}
 					<View className="flex flex-col gap-3">
