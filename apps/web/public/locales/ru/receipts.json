@@ -176,7 +176,7 @@
 		},
 		"addReceipt": {
 			"error": "Ошибка при добавлении {{receipts, and}}: {{errors, uniqueErrors}}",
-			"success": "{{receiptsCount, plural(one:чек; other:чеки)}} {{receipts, and}} {{debtsAmount, plural(one:добавлен; other:добавлены)}}",
+			"success": "{{receiptsCount, plural(one:чек; other:чеки)}} {{receipts, and}} {{receiptsCount, plural(one:добавлен; other:добавлены)}}",
 			"mutate": "Добавляем {{receiptsCount, plural(one:чек; other:{count} чеки)}} {{receipts, and}}.."
 		},
 		"removeReceipt": {
