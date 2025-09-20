@@ -56,7 +56,7 @@ describe("debts.get", () => {
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeDebtId }),
 				"NOT_FOUND",
-				`Debt "${fakeDebtId}" does not exist or you don't have access to it.`,
+				`Debt "${fakeDebtId}" does not exist.`,
 			);
 		});
 
@@ -75,8 +75,8 @@ describe("debts.get", () => {
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignDebtId }),
-				"NOT_FOUND",
-				`Debt "${foreignDebtId}" does not exist or you don't have access to it.`,
+				"FORBIDDEN",
+				`You don't have access to debt "${foreignDebtId}".`,
 			);
 		});
 	});
