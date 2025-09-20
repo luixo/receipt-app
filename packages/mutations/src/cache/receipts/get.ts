@@ -14,6 +14,7 @@ import {
 	applyUpdateFnWithRevert,
 	applyWithRevert,
 	getAllInputs,
+	getUpdatedData,
 	withRef,
 } from "../utils";
 
@@ -57,11 +58,8 @@ const update =
 			queryClient.setQueryData(
 				procedure.queryKey({ id: receiptId }),
 				(receipt) => {
-					if (!receipt) {
-						return;
-					}
 					ref.current = receipt;
-					return updater(receipt);
+					return getUpdatedData(receipt, updater);
 				},
 			);
 		}).current;
@@ -74,16 +72,9 @@ const updateAll =
 			procedure.queryKey(),
 		);
 		inputs.forEach((input) => {
-			queryClient.setQueryData(procedure.queryKey(input), (receipt) => {
-				if (!receipt) {
-					return;
-				}
-				const updatedReceipt = updater(receipt);
-				if (updatedReceipt === receipt) {
-					return;
-				}
-				return updatedReceipt;
-			});
+			queryClient.setQueryData(procedure.queryKey(input), (receipt) =>
+				getUpdatedData(receipt, updater),
+			);
 		});
 	};
 

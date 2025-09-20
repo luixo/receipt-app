@@ -165,3 +165,17 @@ export const getUpdaters = <
 
 	return { updateRevert, update };
 };
+
+export const getUpdatedData = <T extends NonNullable<unknown>>(
+	data: T | undefined,
+	updater: UpdateFn<T>,
+): T | undefined => {
+	if (!data) {
+		return;
+	}
+	const nextData = updater(data);
+	if (nextData === data) {
+		return;
+	}
+	return nextData;
+};

@@ -1,6 +1,5 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
-import { removeFromArray } from "~utils/array";
 
 import type {
 	ControllerContext,
@@ -8,42 +7,41 @@ import type {
 	UpdateFn,
 	UpdaterRevertResult,
 } from "../../types";
-import { applyWithRevert, getAllInputs } from "../utils";
+import { applyWithRevert, getAllInputs, getUpdatedData } from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debts"]["getUsersPaged"];
 }>;
 
 type Input = TRPCQueryInput<"debts.getUsersPaged">;
+type Output = TRPCQueryOutput<"debts.getUsersPaged">;
+
+const updatePage =
+	({ queryClient, procedure }: Controller, input: Input) =>
+	(updater: UpdateFn<Output>) =>
+		queryClient.setQueryData(procedure.queryKey(input), (result) =>
+			getUpdatedData(result, updater),
+		);
 
 const updatePages =
-	({ queryClient, procedure }: Controller) =>
+	(controller: Controller) =>
 	(updater: UpdateFn<UsersId[], UsersId[], Input>) => {
-		const snapshots: {
-			input: Input;
-			items: UsersId[];
-		}[] = [];
 		const inputs = getAllInputs<"debts.getUsersPaged">(
-			queryClient,
-			procedure.queryKey(),
+			controller.queryClient,
+			controller.procedure.queryKey(),
 		);
 		inputs.forEach((input) => {
-			queryClient.setQueryData(procedure.queryKey(input), (result) => {
-				if (!result) {
-					return;
+			updatePage(
+				controller,
+				input,
+			)((page) => {
+				const nextItems = updater(page.items, input);
+				if (nextItems === page.items) {
+					return page;
 				}
-				const nextItems = updater(result.items, input);
-				if (nextItems === result.items) {
-					return result;
-				}
-				snapshots.push({
-					input,
-					items: result.items,
-				});
-				return { ...result, items: nextItems };
+				return { ...page, items: nextItems };
 			});
 		});
-		return snapshots;
 	};
 
 const updateUser = (
@@ -59,18 +57,14 @@ const updateUser = (
 		if (input.filters?.showResolved) {
 			return userIds;
 		}
-		// If user will have no debts - they should be removed from "only non resolved" list
-		if (!allDebts.some((debt) => debt.sum !== 0)) {
-			return removeFromArray(
-				userIds,
-				(lookupUserId) => lookupUserId !== userId,
-			);
+		// If user will have no debts - we should update all pages
+		if (allDebts.every((debt) => debt.sum === 0)) {
+			void queryClient.invalidateQueries(procedure.queryFilter(input));
 		}
-		// If user will have debts and they're not in the "only non-resolved" list
-		// We should invalidate query to add them in the list
+		// If user will have debts and they're not on the page - they might be next time
+		// We should invalidate query to probably add them in the list
 		if (!userIds.includes(userId)) {
 			void queryClient.invalidateQueries(procedure.queryFilter(input));
-			return [];
 		}
 		return userIds;
 	});

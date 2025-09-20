@@ -1,15 +1,17 @@
-import type { QueryKey } from "@tanstack/react-query";
-import { hashKey } from "@tanstack/react-query";
-
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
-import { applyUpdateFnWithRevert, getAllInputs } from "../utils";
+import {
+	applyUpdateFnWithRevert,
+	getAllInputs,
+	getUpdatedData,
+} from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
 }>;
+type Input = TRPCQueryInput<"receipts.getPaged">;
 type Output = TRPCQueryOutput<"receipts.getPaged">;
 type OutputItem = Output["items"][number];
 
@@ -23,35 +25,32 @@ const invalidate = ({ queryClient, procedure }: Controller) => {
 	);
 };
 
+const updatePage =
+	({ queryClient, procedure }: Controller, input: Input) =>
+	(updater: UpdateFn<Output>) =>
+		queryClient.setQueryData(procedure.queryKey(input), (result) =>
+			getUpdatedData(result, updater),
+		);
+
 const updatePages =
-	({ queryClient, procedure }: Controller) =>
-	(updater: UpdateFn<OutputItem[], OutputItem[], QueryKey>) => {
-		const snapshots: {
-			queryKey: QueryKey;
-			items: OutputItem[];
-		}[] = [];
+	(controller: Controller) =>
+	(updater: UpdateFn<OutputItem[], OutputItem[], Input>) => {
 		const inputs = getAllInputs<"receipts.getPaged">(
-			queryClient,
-			procedure.queryKey(),
+			controller.queryClient,
+			controller.procedure.queryKey(),
 		);
 		inputs.forEach((input) => {
-			const queryKey = procedure.queryKey(input);
-			queryClient.setQueryData(queryKey, (result) => {
-				if (!result) {
-					return;
+			updatePage(
+				controller,
+				input,
+			)((page) => {
+				const nextItems = updater(page.items, input);
+				if (nextItems === page.items) {
+					return page;
 				}
-				const nextItems = updater(result.items, queryKey);
-				if (nextItems === result.items) {
-					return result;
-				}
-				snapshots.push({
-					queryKey,
-					items: result.items,
-				});
-				return { ...result, items: nextItems };
+				return { ...page, items: nextItems };
 			});
 		});
-		return snapshots;
 	};
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
@@ -74,25 +73,9 @@ export const getRevertController = ({
 					items.some((item) => item.id === receiptId)
 						? items.filter((item) => item.id !== receiptId)
 						: items,
-				(snapshots) => (items, queryKey) => {
-					const matchedSnapshot = snapshots.find(
-						(snapshot) => hashKey(snapshot.queryKey) === hashKey(queryKey),
-					);
-					if (!matchedSnapshot) {
-						return items;
-					}
-					const lastIndex = matchedSnapshot.items.findIndex(
-						(item) => item.id === receiptId,
-					);
-					const matchedItem = matchedSnapshot.items[lastIndex];
-					if (!matchedItem) {
-						return items;
-					}
-					return [
-						...items.slice(0, lastIndex),
-						matchedItem,
-						...items.slice(lastIndex),
-					];
+				() => (items) => {
+					void invalidate(controller);
+					return items;
 				},
 			),
 	};

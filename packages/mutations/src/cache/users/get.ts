@@ -7,7 +7,12 @@ import type {
 	SnapshotFn,
 	UpdateFn,
 } from "../../types";
-import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
+import {
+	applyUpdateFnWithRevert,
+	applyWithRevert,
+	getUpdatedData,
+	withRef,
+} from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["users"]["get"];
@@ -20,11 +25,8 @@ const update =
 	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
-				if (!user) {
-					return;
-				}
 				ref.current = user;
-				return updater(user);
+				return getUpdatedData(user, updater);
 			});
 		}).current;
 

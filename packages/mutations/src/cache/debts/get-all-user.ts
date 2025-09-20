@@ -9,7 +9,7 @@ import type {
 	SnapshotFn,
 	UpdateFn,
 } from "../../types";
-import { applyUpdateFnWithRevert, withRef } from "../utils";
+import { applyUpdateFnWithRevert, getUpdatedData, withRef } from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debts"]["getAllUser"];
@@ -18,24 +18,31 @@ type Controller = ControllerWith<{
 type AggregatedDebts = TRPCQueryOutput<"debts.getAllUser">;
 type AggregatedDebt = AggregatedDebts[number];
 
+const updateAllSums =
+	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	(updater: UpdateFn<AggregatedDebts>) =>
+		withRef<AggregatedDebts | undefined>((ref) => {
+			queryClient.setQueryData(procedure.queryKey({ userId }), (prevDebts) => {
+				ref.current = prevDebts;
+				return getUpdatedData(prevDebts, updater);
+			});
+		});
+
 const updateSum =
-	(
-		{ queryClient, procedure }: Controller,
-		userId: UsersId,
-		currencyCode: CurrencyCode,
-	) =>
+	(controller: Controller, userId: UsersId, currencyCode: CurrencyCode) =>
 	(updater: UpdateFn<number>) =>
 		withRef<AggregatedDebt | undefined>((ref) => {
-			queryClient.setQueryData(procedure.queryKey({ userId }), (prevData) =>
-				prevData
-					? upsertInArray<(typeof prevData)[number]>(
-							prevData,
-							(entry) => entry.currencyCode === currencyCode,
-							(entry) => ({ ...entry, sum: updater(entry.sum) }),
-							{ currencyCode, sum: updater(0) },
-							ref,
-						)
-					: undefined,
+			updateAllSums(
+				controller,
+				userId,
+			)((prevDebts) =>
+				upsertInArray<(typeof prevDebts)[number]>(
+					prevDebts,
+					(entry) => entry.currencyCode === currencyCode,
+					(entry) => ({ ...entry, sum: updater(entry.sum) }),
+					{ currencyCode, sum: updater(0) },
+					ref,
+				),
 			);
 		}).current?.sum;
 

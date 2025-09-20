@@ -9,7 +9,12 @@ import type {
 	SnapshotFn,
 	UpdateFn,
 } from "../../types";
-import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
+import {
+	applyUpdateFnWithRevert,
+	applyWithRevert,
+	getUpdatedData,
+	withRef,
+} from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debtIntentions"]["getAll"];
@@ -22,13 +27,9 @@ const updateIntentions = (
 	{ queryClient, procedure }: Controller,
 	updater: (intentions: Intention[]) => Intention[],
 ) =>
-	queryClient.setQueryData(procedure.queryKey(), (prevIntentions) => {
-		if (!prevIntentions) {
-			return;
-		}
-		const nextIntentions = updater(prevIntentions);
-		return nextIntentions === prevIntentions ? prevIntentions : nextIntentions;
-	});
+	queryClient.setQueryData(procedure.queryKey(), (prevIntentions) =>
+		getUpdatedData(prevIntentions, updater),
+	);
 
 const updateIntention =
 	(controller: Controller, debtId: DebtsId) =>

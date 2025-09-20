@@ -8,7 +8,7 @@ import type {
 	SnapshotFn,
 	UpdateFn,
 } from "../../types";
-import { applyUpdateFnWithRevert, withRef } from "../utils";
+import { applyUpdateFnWithRevert, getUpdatedData, withRef } from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debts"]["getAll"];
@@ -17,21 +17,29 @@ type Controller = ControllerWith<{
 type Debts = TRPCQueryOutput<"debts.getAll">;
 type Debt = Debts[number];
 
+const updateAllSums =
+	({ queryClient, procedure }: Controller) =>
+	(updater: UpdateFn<Debts>) =>
+		withRef<Debts | undefined>((ref) => {
+			queryClient.setQueryData(procedure.queryKey(), (prevDebts) => {
+				ref.current = prevDebts;
+				return getUpdatedData(prevDebts, updater);
+			});
+		});
+
 const update =
-	({ queryClient, procedure }: Controller, currencyCode: CurrencyCode) =>
+	(controller: Controller, currencyCode: CurrencyCode) =>
 	(updater: UpdateFn<number>) =>
-		withRef<Debt | undefined>((ref) => {
-			queryClient.setQueryData(procedure.queryKey(), (prevData) =>
-				prevData
-					? replaceInArray<(typeof prevData)[number]>(
-							prevData,
-							(entry) => entry.currencyCode === currencyCode,
-							(entry) => ({ ...entry, sum: updater(entry.sum) }),
-							ref,
-						)
-					: undefined,
-			);
-		}).current?.sum;
+		withRef<Debt | undefined>((ref) =>
+			updateAllSums(controller)((prevData) =>
+				replaceInArray<(typeof prevData)[number]>(
+					prevData,
+					(entry) => entry.currencyCode === currencyCode,
+					(entry) => ({ ...entry, sum: updater(entry.sum) }),
+					ref,
+				),
+			),
+		).current?.sum;
 
 const invalidate =
 	({ queryClient, procedure }: Controller) =>

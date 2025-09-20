@@ -11,6 +11,7 @@ import {
 	applyUpdateFnWithRevert,
 	applyWithRevert,
 	getAllInputs,
+	getUpdatedData,
 	withRef,
 } from "../utils";
 
@@ -29,11 +30,8 @@ const update =
 	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
-				if (!user) {
-					return;
-				}
 				ref.current = user;
-				return updater(user);
+				return getUpdatedData(user, updater);
 			});
 		}).current;
 

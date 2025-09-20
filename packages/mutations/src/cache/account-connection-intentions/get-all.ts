@@ -9,7 +9,12 @@ import type {
 	SnapshotFn,
 	UpdateFn,
 } from "../../types";
-import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
+import {
+	applyUpdateFnWithRevert,
+	applyWithRevert,
+	getUpdatedData,
+	withRef,
+} from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["accountConnectionIntentions"]["getAll"];
@@ -25,22 +30,30 @@ type IntentionMapping = {
 	outbound: OutboundIntention;
 };
 
-const updateIntentions = <D extends Direction>(
+const updateIntentions = (
 	{ queryClient, procedure }: Controller,
-	direction: Direction,
-	updater: (intentions: IntentionMapping[D][]) => IntentionMapping[D][],
+	updater: (intentions: Intentions) => Intentions,
 ) =>
-	queryClient.setQueryData(procedure.queryKey(), (intentions) => {
-		if (!intentions) {
-			return;
-		}
-		const prevIntentions = intentions[direction] as IntentionMapping[D][];
-		const nextIntentions = updater(prevIntentions);
-		if (nextIntentions === prevIntentions) {
-			return intentions;
-		}
-		return { ...intentions, [direction]: nextIntentions };
-	});
+	queryClient.setQueryData(procedure.queryKey(), (intentions) =>
+		getUpdatedData(intentions, updater),
+	);
+
+const updateDirectionIntentions = <D extends Direction>(
+	controller: Controller,
+	direction: Direction,
+	updater: UpdateFn<IntentionMapping[D][]>,
+) =>
+	withRef<IntentionMapping[D][] | undefined>((ref) =>
+		updateIntentions(controller, (intentions) => {
+			const prevIntentions = intentions[direction] as IntentionMapping[D][];
+			ref.current = prevIntentions;
+			const nextIntentions = updater(prevIntentions);
+			if (nextIntentions === prevIntentions) {
+				return intentions;
+			}
+			return { ...intentions, [direction]: nextIntentions };
+		}),
+	).current;
 
 const updateIntention =
 	<D extends Direction>(
@@ -50,7 +63,7 @@ const updateIntention =
 	) =>
 	(updater: UpdateFn<IntentionMapping[D]>) =>
 		withRef<IntentionMapping[D] | undefined>((ref) =>
-			updateIntentions<D>(controller, direction, (intentions) =>
+			updateDirectionIntentions<D>(controller, direction, (intentions) =>
 				replaceInArray(
 					intentions,
 					(intention) => intention.account.id === accountId,
@@ -66,7 +79,7 @@ const removeIntention = <D extends Direction>(
 	accountId: AccountsId,
 ) =>
 	withRef<ItemWithIndex<IntentionMapping[D]> | undefined>((ref) =>
-		updateIntentions<D>(controller, direction, (intentions) =>
+		updateDirectionIntentions<D>(controller, direction, (intentions) =>
 			removeFromArray(
 				intentions,
 				(intention) => intention.account.id === accountId,
@@ -81,7 +94,7 @@ const addIntention = <D extends Direction>(
 	intention: IntentionMapping[D],
 	index = 0,
 ) => {
-	updateIntentions<D>(controller, direction, (intentions) =>
+	updateDirectionIntentions<D>(controller, direction, (intentions) =>
 		addToArray(intentions, intention, index),
 	);
 };
