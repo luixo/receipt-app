@@ -57,7 +57,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 			return <StatusButton type="unsynced" />;
 		}
 		if (receipt.selfUserId === receipt.ownerUserId) {
-			const syncedParticipants = syncableParticipants.map((participant) => {
+			const syncedParticipants = syncableParticipants.filter((participant) => {
 				const sum = fromSubunitToUnit(
 					participant.debtSumDecimals - participant.paySumDecimals,
 				);
