@@ -1,18 +1,18 @@
 import React from "react";
 
-import { useSuspenseQueries } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { isNonNullish } from "remeda";
 
 import { useDecimals } from "~app/hooks/use-decimals";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { isDebtInSyncWithReceipt } from "~app/utils/debts";
+import { ensureQueryDataOrError } from "~app/utils/queries";
 import {
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
+import type { UsersId } from "~db/models";
 import { compare } from "~utils/date";
-import type { NonNullableField } from "~utils/types";
 
 const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debts">) =>
 	receipt.debts.direction === "outcoming"
@@ -94,97 +94,111 @@ export const useParticipantsWithDebts = (
 ) => {
 	const participants = useParticipants(receipt);
 	const trpc = useTRPC();
-	const { fromSubunitToUnit } = useDecimals();
-	const debts = useSuspenseQueries({
-		queries: getDebtIds(receipt).map((debtId) =>
-			trpc.debts.get.queryOptions({ id: debtId }),
-		),
-	}).map(({ data }) => data);
+	const queryClient = useQueryClient();
+	const debtIds = getDebtIds(receipt);
+	const debtPromises = React.useMemo(
+		() =>
+			Promise.all(
+				debtIds.map((debtId) =>
+					ensureQueryDataOrError(
+						queryClient,
+						trpc.debts.get.queryOptions({ id: debtId }),
+					),
+				),
+			),
+		[queryClient, debtIds, trpc],
+	);
+	const debtDataOrErrors = React.use(debtPromises);
+	const debts = debtDataOrErrors.map((dataOrError) =>
+		"data" in dataOrError ? dataOrError.data : null,
+	);
+	const { data: intentions } = useSuspenseQuery(
+		trpc.debtIntentions.getAll.queryOptions(),
+	);
 	const isOwner = receipt.ownerUserId === receipt.selfUserId;
+	const getDebt = React.useCallback(
+		(participantUserId: UsersId) => {
+			const ownDebt = debts.find((debt) =>
+				debt
+					? isOwner
+						? debt.userId === participantUserId
+						: debt.userId === receipt.ownerUserId &&
+							participantUserId === receipt.selfUserId
+					: false,
+			);
+			const incomingIntention = intentions.find(
+				(intention) =>
+					intention.userId === participantUserId &&
+					intention.receiptId === receipt.id,
+			);
+			if (ownDebt) {
+				return {
+					id: ownDebt.id,
+					userId: ownDebt.userId,
+					receiptId: ownDebt.receiptId,
+					our: {
+						amount: ownDebt.amount,
+						currencyCode: ownDebt.currencyCode,
+						timestamp: ownDebt.timestamp,
+						updatedAt: ownDebt.updatedAt,
+					},
+					their: ownDebt.their
+						? {
+								amount: ownDebt.their.amount,
+								currencyCode: ownDebt.their.currencyCode,
+								timestamp: ownDebt.their.timestamp,
+								updatedAt: ownDebt.their.updatedAt,
+							}
+						: undefined,
+				};
+			}
+			if (incomingIntention) {
+				return {
+					id: incomingIntention.id,
+					userId: incomingIntention.userId,
+					receiptId: incomingIntention.receiptId,
+					their: {
+						amount: incomingIntention.amount,
+						currencyCode: incomingIntention.currencyCode,
+						timestamp: incomingIntention.timestamp,
+						updatedAt: incomingIntention.updatedAt,
+					},
+				};
+			}
+		},
+		[
+			debts,
+			intentions,
+			isOwner,
+			receipt.id,
+			receipt.ownerUserId,
+			receipt.selfUserId,
+		],
+	);
 	const participantsWithDebts = React.useMemo(
 		() =>
 			participants.map((participant) => ({
 				...participant,
-				currentDebt: debts.find((debt) =>
-					isOwner
-						? debt.userId === participant.userId
-						: debt.userId === receipt.ownerUserId &&
-							participant.userId === receipt.selfUserId,
-				),
+				currentDebt: getDebt(participant.userId),
 			})),
-		[debts, isOwner, participants, receipt.ownerUserId, receipt.selfUserId],
+		[getDebt, participants],
 	);
 
-	// Debts that are non-zero and reasonable (foreigns for own receipt, own for foreign receipt)
+	// Debts that are non-zero and non-owner
 	const syncableParticipants = React.useMemo(
 		() =>
 			participantsWithDebts
-				.filter((participant) => {
-					const isSelfParticipant = participant.userId === receipt.selfUserId;
-					if (isOwner) {
-						return !isSelfParticipant;
-					}
-					return isSelfParticipant;
-				})
+				.filter((participant) => participant.userId !== receipt.ownerUserId)
 				.filter((participant) => {
 					const sumDecimals =
 						participant.debtSumDecimals - participant.paySumDecimals;
 					return sumDecimals !== 0;
 				}),
-		[isOwner, participantsWithDebts, receipt.selfUserId],
-	);
-	// Debts not created yet
-	const nonCreatedParticipants = React.useMemo(
-		() =>
-			syncableParticipants.filter(
-				({ currentDebt }) => currentDebt === undefined,
-			),
-		[syncableParticipants],
-	);
-	// Debts that are already created
-	const createdParticipants = React.useMemo(
-		() =>
-			syncableParticipants.filter(
-				(
-					participant,
-				): participant is NonNullableField<typeof participant, "currentDebt"> =>
-					Boolean(participant.currentDebt),
-			),
-		[syncableParticipants],
-	);
-	// Debts being de-synced from the receipt
-	const desyncedParticipants = React.useMemo(
-		() =>
-			createdParticipants.filter((participant) => {
-				const sum = fromSubunitToUnit(
-					participant.debtSumDecimals - participant.paySumDecimals,
-				);
-				return !isDebtInSyncWithReceipt(
-					{
-						...receipt,
-						participantSum:
-							receipt.debts.direction === "outcoming" ? sum : -sum,
-					},
-					participant.currentDebt,
-				);
-			}),
-		[createdParticipants, fromSubunitToUnit, receipt],
-	);
-	// Debts being synced with the receipt
-	const syncedParticipants = React.useMemo(
-		() =>
-			createdParticipants.filter(
-				(participant) => !desyncedParticipants.includes(participant),
-			),
-		[createdParticipants, desyncedParticipants],
+		[participantsWithDebts, receipt.ownerUserId],
 	);
 	return {
 		participantsWithDebts,
 		syncableParticipants,
-		createdParticipants,
-		nonCreatedParticipants,
-		desyncedParticipants,
-		syncedParticipants,
 	};
 };
 

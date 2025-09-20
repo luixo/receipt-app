@@ -1,22 +1,10 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { type Temporal, getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../types";
-
-export type CurrentDebt = {
-	userId: UsersId;
-	amount: number;
-	currencyCode: CurrencyCode;
-	receiptId?: ReceiptsId;
-	updatedAt: Temporal.ZonedDateTime;
-	their?: {
-		updatedAt: Temporal.ZonedDateTime;
-	};
-};
 
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];

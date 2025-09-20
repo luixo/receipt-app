@@ -8,6 +8,7 @@ import { useDecimals } from "~app/hooks/use-decimals";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -25,11 +26,56 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 	({ receipt, isLoading }) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
-		const {
-			participantsWithDebts,
-			desyncedParticipants,
-			nonCreatedParticipants,
-		} = useParticipantsWithDebts(receipt);
+		const { fromSubunitToUnit } = useDecimals();
+		const { participantsWithDebts, syncableParticipants } =
+			useParticipantsWithDebts(receipt);
+		const ourDebtsParticipants = React.useMemo(
+			() =>
+				syncableParticipants.map(
+					({ debtSumDecimals, paySumDecimals, currentDebt, userId }) => {
+						const sum = fromSubunitToUnit(debtSumDecimals - paySumDecimals);
+						const ourDebt = currentDebt?.our;
+						if (!ourDebt) {
+							return { sum, userId };
+						}
+						return { sum, debt: { ...ourDebt, id: currentDebt.id }, userId };
+					},
+				),
+			[syncableParticipants, fromSubunitToUnit],
+		);
+		// Debts that are already created
+		const createdParticipants = React.useMemo(
+			() =>
+				ourDebtsParticipants.filter(
+					(
+						participant,
+					): participant is Extract<
+						typeof participant,
+						{ debt: NonNullable<unknown> }
+					> => Boolean(participant.debt),
+				),
+			[ourDebtsParticipants],
+		);
+		// Debts not created yet
+		const nonCreatedParticipants = React.useMemo(
+			() =>
+				ourDebtsParticipants.filter(
+					(participant) =>
+						!createdParticipants.includes(
+							participant as (typeof createdParticipants)[number],
+						),
+				),
+			[ourDebtsParticipants, createdParticipants],
+		);
+		// Debts being de-synced from the receipt
+		const desyncedParticipants = React.useMemo(
+			() =>
+				createdParticipants.filter(
+					({ sum, debt }) =>
+						!isDebtInSyncWithReceipt({ ...receipt, participantSum: sum }, debt),
+				),
+			[createdParticipants, receipt],
+		);
 
 		const addMutations = participantsWithDebts.map(() =>
 			useMutation(
@@ -43,47 +89,44 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			return useMutation(
 				trpc.debts.update.mutationOptions(
 					useTrpcMutationOptions(debtsUpdateOptions, {
-						context: matchedDesyncedParticipant?.currentDebt
-							? { currDebt: matchedDesyncedParticipant.currentDebt }
+						context: matchedDesyncedParticipant?.debt
+							? { currDebt: { ...matchedDesyncedParticipant.debt, userId } }
 							: skipToken,
 					}),
 				),
 			);
 		});
 
-		const { fromSubunitToUnit } = useDecimals();
 		const propagateDebts = React.useCallback(() => {
 			nonCreatedParticipants.forEach((participant) => {
-				const participantIndex = participantsWithDebts.indexOf(participant);
+				const participantIndex = participantsWithDebts.findIndex(
+					({ userId }) => userId === participant.userId,
+				);
 				const matchedMutation = addMutations[participantIndex];
 				if (!matchedMutation) {
 					return;
 				}
-				const sum = fromSubunitToUnit(
-					participant.debtSumDecimals - participant.paySumDecimals,
-				);
 				matchedMutation.mutate({
 					note: getReceiptDebtName(receipt.name),
 					currencyCode: receipt.currencyCode,
 					userId: participant.userId,
-					amount: sum,
+					amount: participant.sum,
 					timestamp: receipt.issued,
 					receiptId: receipt.id,
 				});
 			});
 			desyncedParticipants.forEach((participant) => {
-				const participantIndex = participantsWithDebts.indexOf(participant);
+				const participantIndex = participantsWithDebts.findIndex(
+					({ userId }) => userId === participant.userId,
+				);
 				const matchedMutation = updateMutations[participantIndex];
 				if (!matchedMutation) {
 					return;
 				}
-				const sum = fromSubunitToUnit(
-					participant.debtSumDecimals - participant.paySumDecimals,
-				);
 				matchedMutation.mutate({
-					id: participant.currentDebt.id,
+					id: participant.debt.id,
 					update: {
-						amount: sum,
+						amount: participant.sum,
 						currencyCode: receipt.currencyCode,
 						timestamp: receipt.issued,
 						receiptId: receipt.id,
@@ -95,7 +138,6 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			desyncedParticipants,
 			participantsWithDebts,
 			addMutations,
-			fromSubunitToUnit,
 			receipt.name,
 			receipt.currencyCode,
 			receipt.issued,
