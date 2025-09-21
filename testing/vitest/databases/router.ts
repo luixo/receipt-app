@@ -95,9 +95,12 @@ export const appRouter = router({
 			await cleanupManager.withCleanup(
 				() => database.destroy(),
 				async () => {
-					const migrationResult = await migrate({ target: "latest", database });
-					if (!migrationResult.ok) {
-						throw migrationResult.error;
+					const resultSet = await migrate(database, "latest", {
+						migrationFolder: "packages/db/migration/migrations",
+						experimentalResolveTSConfigPaths: true,
+					});
+					if ("error" in resultSet) {
+						throw resultSet.error;
 					}
 					await database.destroy();
 				},

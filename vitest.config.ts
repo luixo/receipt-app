@@ -20,6 +20,7 @@ export default defineConfig({
 			reporter: ["text", "html", "lcov", "json-summary", "json"],
 			exclude: [
 				...(configDefaults.coverage.exclude || []),
+				path.resolve(rootPath, "*.config.*"),
 				path.resolve(rootPath, "apps/web/src/providers/**/*"),
 				path.resolve(rootPath, "apps/web/src/hooks/**/*"),
 				path.resolve(rootPath, "apps/web/src/entry/**/*"),
@@ -36,7 +37,6 @@ export default defineConfig({
 				path.resolve(rootPath, "packages/components/**/*"),
 				path.resolve(rootPath, "packages/mutations/**/*"),
 				path.resolve(rootPath, "packages/db/!(src)/**/*"),
-				path.resolve(rootPath, "packages/db/src/consts"),
 				path.resolve(rootPath, "scripts/**/*"),
 				path.resolve(rootPath, "testing/playwright/**/*"),
 				path.resolve(vitestRoot, "**/*"),
