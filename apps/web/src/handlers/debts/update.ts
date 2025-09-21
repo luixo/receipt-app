@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { isNonNullish, keys, omitBy, unique } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import type { Temporal } from "~utils/date";
 import { temporalSchemas } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
@@ -44,7 +45,7 @@ const updateDebtSchema = z.strictObject({
 		}),
 });
 
-type DebtUpdateObject = SimpleUpdateObject<"debts">;
+type DebtUpdateObject = Updateable<DB["debts"]>;
 
 const buildSetObjects = (input: z.infer<typeof updateDebtSchema>) => {
 	const setObject: DebtUpdateObject = omitBy(
@@ -120,15 +121,10 @@ type UpdateWithDebt = ReturnType<typeof buildSetObjects> & {
 	debt: Debt;
 };
 
-const mergeSetObjects = (
-	setObjectA: DebtUpdateObject,
-	setObjectB: DebtUpdateObject,
-): DebtUpdateObject => ({ ...setObjectA, ...setObjectB });
-
-const mergeReverseSetObjects = (
-	setObjectA: Partial<DebtUpdateObject>,
-	setObjectB: Partial<DebtUpdateObject>,
-): Partial<DebtUpdateObject> => ({ ...setObjectA, ...setObjectB });
+const mergeSetObjects = <T extends DebtUpdateObject>(
+	setObjectA: T,
+	setObjectB: T,
+): T => ({ ...setObjectA, ...setObjectB });
 
 const mergeUpdates = (debtsToUpdate: UpdateWithDebt[]): UpdateWithDebt[] =>
 	debtsToUpdate.reduce<UpdateWithDebt[]>((acc, debtToUpdate) => {
@@ -146,7 +142,7 @@ const mergeUpdates = (debtsToUpdate: UpdateWithDebt[]): UpdateWithDebt[] =>
 					debtToUpdate.setObject,
 					previousDebt.setObject,
 				),
-				reverseSetObject: mergeReverseSetObjects(
+				reverseSetObject: mergeSetObjects(
 					debtToUpdate.reverseSetObject,
 					previousDebt.reverseSetObject,
 				),

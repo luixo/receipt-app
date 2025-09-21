@@ -1,11 +1,10 @@
-import type { Selection } from "kysely";
+import type { SelectExpression, Selection } from "kysely";
 
+import type { Database } from "~db/database";
 import type { ReceiptsId, UsersId } from "~db/models";
-import type {
-	Database,
-	ReceiptsDatabase,
-	ReceiptsSelectExpression,
-} from "~db/types";
+import type { DB } from "~db/types.gen";
+
+type ReceiptsSelectExpression<TB extends keyof DB> = SelectExpression<DB, TB>;
 
 export const getReceiptParticipant = <
 	SE extends ReceiptsSelectExpression<"receiptParticipants">,
@@ -14,9 +13,7 @@ export const getReceiptParticipant = <
 	userId: UsersId,
 	receiptId: ReceiptsId,
 	selectExpression: SE[],
-): Promise<
-	Selection<ReceiptsDatabase, "receiptParticipants", SE> | undefined
-> =>
+): Promise<Selection<DB, "receiptParticipants", SE> | undefined> =>
 	database
 		.selectFrom("receiptParticipants")
 		.where((eb) => eb.and({ receiptId, userId }))

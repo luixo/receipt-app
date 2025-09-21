@@ -1,5 +1,5 @@
+import type { Database } from "~db/database";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 import {
 	createAccountConnectionsTable,

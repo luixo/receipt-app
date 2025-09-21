@@ -1,11 +1,11 @@
 import { sql } from "kysely";
 
+import type { Database } from "~db/database";
 import {
 	FUNCTIONS,
 	ITEM_PARTICIPANTS_DEPRECATED,
 	RECEIPT_ITEM_CONSUMERS,
 } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 const dropOldIndexes = async (db: Database) => {
 	await db.schema

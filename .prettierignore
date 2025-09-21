@@ -3,5 +3,5 @@ apps/mobile/.expo
 ios/
 android/
 **/*-snapshots/**/*.json
-*.gen.ts
+**/*.gen.ts
 .output/

@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 
+import type { Database } from "~db/database";
 import {
 	ACCOUNTS,
 	ITEM_PARTICIPANTS_DEPRECATED,
@@ -8,7 +9,6 @@ import {
 	RECEIPT_PARTICIPANTS,
 	SESSIONS,
 } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 const camelcaseAccountsTable = async (db: Database) => {
 	await db.schema.dropIndex("accounts_email_index").execute();

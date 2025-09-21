@@ -1,5 +1,5 @@
+import type { Database } from "~db/database";
 import { CURRENT_TIMESTAMP } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 const removeReceiptCreatedAtDefault = async (db: Database) => {
 	await db.schema

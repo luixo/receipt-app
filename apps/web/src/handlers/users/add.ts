@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
+import type { Insertable } from "kysely";
 import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { UsersId, UsersInitializer } from "~db/models";
+import type { UsersId } from "~db/models";
+import type { DB } from "~db/types.gen";
 import { batchFn as addAccountConnectionIntentions } from "~web/handlers/account-connection-intentions/add";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -69,7 +71,7 @@ const insertConnections = async (
 
 const insertUsers = async (
 	ctx: AuthorizedContext,
-	users: UsersInitializer[],
+	users: Insertable<DB["users"]>[],
 ) => {
 	await ctx.database.insertInto("users").values(users).execute();
 };

@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
+import type { Database } from "~db/database";
 import { CURRENT_TIMESTAMP } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 const toTsTz = (columnName: string) =>
 	sql`timestamptz using ${sql.id(columnName)} at time zone 'UTC'`;

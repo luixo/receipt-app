@@ -7,7 +7,7 @@ import { z } from "zod";
 
 import { getDatabase, temporalParsers } from "~db/database";
 import { migrate } from "~db/migration/index";
-import type { ReceiptsDatabase } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { transformer } from "~utils/transformer";
 
 import type { ConnectionData } from "./connection";
@@ -21,11 +21,8 @@ const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
 const POSTGRES_TEMP_DIR = "/temp_pgdata";
 
-type OrderBy<DB, TB extends keyof DB> = keyof DB[TB];
 const ORDERS: {
-	[K in keyof ReceiptsDatabase]:
-		| OrderBy<ReceiptsDatabase, K>
-		| OrderBy<ReceiptsDatabase, K>[];
+	[K in keyof DB]: keyof DB[K] | (keyof DB[K])[];
 } = {
 	accountConnectionsIntentions: ["accountId", "targetAccountId"],
 	accounts: "id",

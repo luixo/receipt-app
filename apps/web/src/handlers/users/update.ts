@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
@@ -58,7 +59,7 @@ export const procedure = authProcedure
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		let setObject: SimpleUpdateObject<"users"> = {};
+		let setObject: Updateable<DB["users"]> = {};
 		switch (input.update.type) {
 			case "name":
 				setObject = { name: input.update.name };

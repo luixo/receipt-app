@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
 import {
@@ -6,7 +7,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema } from "~web/handlers/validation";
@@ -68,7 +69,7 @@ export const procedure = authProcedure
 				message: `Receipt "${receiptItem.receiptId}" is not allowed to be modified by "${ctx.auth.email}" with role "${accessRole}"`,
 			});
 		}
-		let setObject: SimpleUpdateObject<"receiptItems"> = {};
+		let setObject: Updateable<DB["receiptItems"]> = {};
 		switch (input.update.type) {
 			case "name":
 				setObject = { name: input.update.name };

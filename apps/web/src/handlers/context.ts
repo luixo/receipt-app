@@ -3,7 +3,7 @@ import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import type { TRPCRequestInfo } from "@trpc/server/http";
 import type { IncomingMessage, ServerResponse } from "node:http";
 
-import type { Database } from "~db/types";
+import type { Database } from "~db/database";
 import type { TestContext } from "~tests/backend/utils/test";
 import type { authProcedure } from "~web/handlers/trpc";
 import type { CacheDbOptions } from "~web/providers/cache-db";

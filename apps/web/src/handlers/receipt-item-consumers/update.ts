@@ -1,8 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
 import { partSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
@@ -66,7 +67,7 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" does not consume item "${input.itemId}" of the receipt "${receipt.id}".`,
 			});
 		}
-		let setObject: SimpleUpdateObject<"receiptItemConsumers"> = {};
+		let setObject: Updateable<DB["receiptItemConsumers"]> = {};
 		switch (input.update.type) {
 			// We want this to blow up in case we add more cases
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

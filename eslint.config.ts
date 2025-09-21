@@ -159,6 +159,7 @@ const overriddenRules = {
 			getExtraneousDependenciesConfig(undefined, [
 				"vitest.config.ts",
 				"eslint.config.ts",
+				"kysely-codegen.config.ts",
 			]),
 		],
 		// Custom order
@@ -597,6 +598,7 @@ export default ts.config(
 			"**/coverage/",
 			"**/playwright-report/",
 			"**/test-results/",
+			"**/*.gen.ts",
 			"apps/mobile/ios",
 		],
 	},

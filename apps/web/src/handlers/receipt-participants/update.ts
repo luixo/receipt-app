@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import {
@@ -79,7 +80,7 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
-		let setObject: SimpleUpdateObject<"receiptParticipants"> = {};
+		let setObject: Updateable<DB["receiptParticipants"]> = {};
 		switch (input.update.type) {
 			// We want this to blow up in case we add more cases
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

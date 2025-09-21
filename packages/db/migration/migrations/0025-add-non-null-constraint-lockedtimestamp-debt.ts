@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/types";
+import type { Database } from "~db/database";
 
 const addNonNullConstraint = async (db: Database) => {
 	await db

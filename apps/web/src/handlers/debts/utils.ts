@@ -1,12 +1,14 @@
+import type { Insertable } from "kysely";
 import { isNonNullish, omit } from "remeda";
 
+import type { Database } from "~db/database";
 import type { DebtsId, UsersId } from "~db/models";
-import type { Database, SimpleInsertObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import type { MakeUndefinedOptional } from "~utils/types";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,
-	debts: (MakeUndefinedOptional<SimpleInsertObject<"debts">> & {
+	debts: (MakeUndefinedOptional<Insertable<DB["debts"]>> & {
 		isNew: boolean;
 	})[],
 ) => {

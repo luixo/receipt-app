@@ -11,10 +11,11 @@ import { Pool, types } from "pg";
 import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
+import type { DB } from "~db/types.gen";
 import type { TemporalType } from "~utils/date";
 import { isTemporalObject, parsers, serialize } from "~utils/date";
 
-import type { ReceiptsDatabase } from "./types";
+export type Database = Kysely<DB>;
 
 const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 	const common = {
@@ -161,7 +162,7 @@ export const getDatabase = ({
 	pool.on("remove", () => {
 		delete sharedPools[connectionString];
 	});
-	return new Kysely<ReceiptsDatabase>({
+	return new Kysely<DB>({
 		dialect: new PostgresDialect({ pool }),
 		log: logger && getLogger(logger),
 		/* c8 ignore start */

@@ -5,7 +5,6 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"scripts": {
-		"db:generate-types": "tsx scripts/generate-types.ts && yarn lint:fix packages/db && yarn run -T format",
 		"db:migrate": "kysely migrate latest --cwd ../.. --experimental-resolve-tsconfig-paths"
 	},
 	"dependencies": {
@@ -17,8 +16,6 @@
 	},
 	"devDependencies": {
 		"@ra/vitest": "workspace:*",
-		"extract-pg-schema": "^4.1.0",
-		"kanel": "^3.14.1",
 		"tsx": "^4.7.1"
 	}
 }

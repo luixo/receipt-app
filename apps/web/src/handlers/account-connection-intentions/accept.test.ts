@@ -1,7 +1,9 @@
 import { faker } from "@faker-js/faker";
+import type { Selectable } from "kysely";
 import { describe, expect } from "vitest";
 
-import type { AccountsId, Debts, UsersId } from "~db/models";
+import type { AccountsId, UsersId } from "~db/models";
+import type { DB } from "~db/types.gen";
 import { createAuthContext } from "~tests/backend/utils/context";
 import type {
 	AccountSettingsData,
@@ -341,7 +343,7 @@ describe("accountConnectionIntentions.accept", () => {
 					foreignDebt: InsertedDebt;
 					selfAccount: AccountWithUser;
 					foreignAccount: AccountWithUser;
-					debts: Debts[];
+					debts: Selectable<DB["debts"]>[];
 				}) => void,
 			) => {
 				const { sessionId, accountId: selfAccountId } =

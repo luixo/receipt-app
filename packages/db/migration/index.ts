@@ -5,7 +5,7 @@ import { TSFileMigrationProvider } from "kysely-ctl";
 import path from "node:path";
 import * as url from "node:url";
 
-import type { Database } from "~db/types";
+import type { Database } from "~db/database";
 
 export const migrate = async (
 	database: Database,

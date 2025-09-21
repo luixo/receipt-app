@@ -1,11 +1,12 @@
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { authProcedure } from "~web/handlers/trpc";
 
 import { DEFAULT_ACCOUNT_SETTINGS } from "./get";
 
-type SettingsUpdateObject = SimpleUpdateObject<"accountSettings">;
+type SettingsUpdateObject = Updateable<DB["accountSettings"]>;
 
 export const procedure = authProcedure
 	.input(

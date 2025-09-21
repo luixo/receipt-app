@@ -1,5 +1,8 @@
+import type { Selectable } from "kysely";
+
 import type { CurrencyCode } from "~app/utils/currency";
-import type { Debts, DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { DB } from "~db/types.gen";
 import type { Temporal } from "~utils/date";
 import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
@@ -78,7 +81,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.orderBy("theirDebts.id", "desc")
 		.$narrowType<
 			MappedNullableObject<
-				Debts,
+				Selectable<DB["debts"]>,
 				{
 					selfAmount: "amount";
 					selfTimestamp: "timestamp";

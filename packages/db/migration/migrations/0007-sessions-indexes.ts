@@ -1,5 +1,5 @@
+import type { Database } from "~db/database";
 import { SESSIONS } from "~db/migration/consts";
-import type { Database } from "~db/types";
 
 const addSessionsAccountIdIndex = async (db: Database) => {
 	await db.schema.dropIndex(SESSIONS.INDEXES.SESSION_ID).execute();

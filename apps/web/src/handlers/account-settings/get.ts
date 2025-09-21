@@ -1,13 +1,7 @@
-import type { ReceiptsDatabase } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { authProcedure } from "~web/handlers/trpc";
 
-type SettingsKey = Omit<ReceiptsDatabase["accountSettings"], "accountId">;
-type Settings = Omit<
-	{
-		[K in keyof SettingsKey]: SettingsKey[K]["__select__"];
-	},
-	"updatedAt"
->;
+type Settings = Omit<DB["accountSettings"], "accountId" | "updatedAt">;
 
 export const DEFAULT_ACCOUNT_SETTINGS: Settings = {
 	manualAcceptDebts: false,

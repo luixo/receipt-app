@@ -1,13 +1,10 @@
-import type { UpdateObject } from "kysely";
+import type { Updateable } from "kysely";
 
+import type { Database } from "~db/database";
 import { CURRENT_TIMESTAMP } from "~db/migration/consts";
-import type { Database, ReceiptsDatabase } from "~db/types";
+import type { DB } from "~db/types.gen";
 
-type ReceiptsUpdateObject = UpdateObject<
-	ReceiptsDatabase,
-	"receipts",
-	"receipts"
->;
+type ReceiptsUpdateObject = Updateable<DB["receipts"]>;
 
 const addLockedTimestampColumn = async (db: Database) => {
 	await db.schema

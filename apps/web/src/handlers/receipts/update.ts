@@ -1,13 +1,14 @@
 import { TRPCError } from "@trpc/server";
+import type { Updateable } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
+import type { DB } from "~db/types.gen";
 import { temporalSchemas } from "~utils/date";
 import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema, receiptIdSchema } from "~web/handlers/validation";
 
-type ReceiptUpdateObject = SimpleUpdateObject<"receipts">;
+type ReceiptUpdateObject = Updateable<DB["receipts"]>;
 
 export const procedure = authProcedure
 	.input(

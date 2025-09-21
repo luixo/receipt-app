@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 
+import type { Database } from "~db/database";
 import {
 	ACCOUNTS,
 	ACCOUNT_CONNECTIONS_INTENTIONS,
@@ -15,7 +16,6 @@ import {
 	USERS,
 } from "~db/migration/consts";
 import { isTestEnv } from "~db/migration/utils";
-import type { Database } from "~db/types";
 import { parsers } from "~utils/date";
 
 const updateColumn = "updatedAt";

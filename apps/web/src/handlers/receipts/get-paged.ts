@@ -11,7 +11,7 @@ import {
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import type { ReceiptsDatabase } from "~db/types";
+import type { DB } from "~db/types.gen";
 import type { Interval } from "~utils/array";
 import { mergeIntervals } from "~utils/array";
 import {
@@ -101,7 +101,7 @@ const itemSimilarity = (query: string, lookupColumn: string) =>
 	sql<number>`similarity(${query}, ${sql.id(...lookupColumn.split("."))})`;
 
 const selectFields = (
-	eb: ExpressionBuilder<ReceiptsDatabase, "receipts" | "receiptItems">,
+	eb: ExpressionBuilder<DB, "receipts" | "receiptItems">,
 	query: string | undefined,
 ) => {
 	if (!query) {
