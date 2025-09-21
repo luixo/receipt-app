@@ -6,7 +6,7 @@ import {
 	limitSchema,
 	offsetSchema,
 } from "~app/utils/validation";
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -22,7 +22,7 @@ const inputSchema = z.strictObject({
 });
 
 type Input = z.infer<typeof inputSchema>;
-type Output = GeneralOutput<DebtsId> & { count: number };
+type Output = GeneralOutput<DebtId> & { count: number };
 
 const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
@@ -103,7 +103,7 @@ const fetchPage = async (
 
 const queueDebtList = queueCallFactory<AuthorizedContext, Input, Output>(
 	(ctx) => async (inputs) =>
-		queueList<Input, DebtsId, Output>(inputs, (value) => fetchPage(ctx, value)),
+		queueList<Input, DebtId, Output>(inputs, (value) => fetchPage(ctx, value)),
 );
 
 export const procedure = authProcedure.input(inputSchema).query(queueDebtList);

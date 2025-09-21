@@ -5,7 +5,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
-import type { ReceiptItemsId } from "~db/models";
+import type { ReceiptItemId } from "~db/ids";
 import { compare } from "~utils/date";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
@@ -57,7 +57,7 @@ const AddReceiptItemController: React.FC = () => {
 
 export const ReceiptItems: React.FC = () => {
 	const { items, emptyReceiptElement } = useReceiptContext();
-	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
+	const itemsRef = React.useRef<Record<ReceiptItemId, HTMLDivElement | null>>(
 		{},
 	);
 	const sortedItems = React.useMemo(

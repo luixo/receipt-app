@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { entries } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import {
 	type GenerateDebts,
@@ -23,7 +23,7 @@ type Fixtures = {
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
 	openDebtsExchangeScreen: (
-		userId: UsersId,
+		userId: UserId,
 		options?: { awaitCache?: boolean },
 	) => Promise<void>;
 	exchangeAllToOneButton: Locator;

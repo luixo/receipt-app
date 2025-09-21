@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 
@@ -59,7 +59,7 @@ const updateIntention =
 	<D extends Direction>(
 		controller: Controller,
 		direction: Direction,
-		accountId: AccountsId,
+		accountId: AccountId,
 	) =>
 	(updater: UpdateFn<IntentionMapping[D]>) =>
 		withRef<IntentionMapping[D] | undefined>((ref) =>
@@ -76,7 +76,7 @@ const updateIntention =
 const removeIntention = <D extends Direction>(
 	controller: Controller,
 	direction: Direction,
-	accountId: AccountsId,
+	accountId: AccountId,
 ) =>
 	withRef<ItemWithIndex<IntentionMapping[D]> | undefined>((ref) =>
 		updateDirectionIntentions<D>(controller, direction, (intentions) =>
@@ -102,7 +102,7 @@ const addIntention = <D extends Direction>(
 const updateRevert =
 	<D extends Direction>(controller: Controller, direction: D) =>
 	(
-		accountId: AccountsId,
+		accountId: AccountId,
 		updateFn: UpdateFn<IntentionMapping[D]>,
 		revertFn?: SnapshotFn<IntentionMapping[D]>,
 	) =>
@@ -114,12 +114,12 @@ const updateRevert =
 
 const update =
 	<D extends Direction>(controller: Controller, direction: D) =>
-	(accountId: AccountsId, updateFn: UpdateFn<IntentionMapping[D]>) =>
+	(accountId: AccountId, updateFn: UpdateFn<IntentionMapping[D]>) =>
 		updateIntention<D>(controller, direction, accountId)(updateFn);
 
 const removeRevert =
 	<D extends Direction>(controller: Controller, direction: D) =>
-	(accountId: AccountsId) =>
+	(accountId: AccountId) =>
 		applyWithRevert(
 			() => removeIntention(controller, direction, accountId),
 			({ index, item }) => addIntention(controller, direction, item, index),
@@ -127,7 +127,7 @@ const removeRevert =
 
 const remove =
 	<D extends Direction>(controller: Controller, direction: D) =>
-	(accountId: AccountsId) =>
+	(accountId: AccountId) =>
 	() =>
 		removeIntention(controller, direction, accountId);
 

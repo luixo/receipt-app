@@ -23,7 +23,7 @@ import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
@@ -50,9 +50,9 @@ const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 const RemoveReceiptsButton: React.FC<{
-	receiptIds: ReceiptsId[];
-	selectedReceiptIds: ReceiptsId[];
-	setSelectedReceiptIds: React.Dispatch<React.SetStateAction<ReceiptsId[]>>;
+	receiptIds: ReceiptId[];
+	selectedReceiptIds: ReceiptId[];
+	setSelectedReceiptIds: React.Dispatch<React.SetStateAction<ReceiptId[]>>;
 }> = ({ selectedReceiptIds, setSelectedReceiptIds, receiptIds }) => {
 	const trpc = useTRPC();
 	const removeMutations = receiptIds.map((receiptId) => ({
@@ -122,7 +122,7 @@ export const Receipts = suspendedFallback<Props>(
 			offsetState,
 		);
 		const [selectedReceiptIds, setSelectedReceiptIds] = React.useState<
-			ReceiptsId[]
+			ReceiptId[]
 		>([]);
 		const receiptIds = React.useMemo(
 			() => data.items.map(({ id }) => id),

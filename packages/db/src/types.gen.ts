@@ -4,7 +4,7 @@
  */
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { AccountsId, DebtsId, ReceiptItemsId, ReceiptsId, SessionsSessionId, UsersId } from "~db/models";
+import type { AccountId, DebtId, ReceiptId, ReceiptItemId, SessionId, UserId } from "~db/ids";
 import type { Temporal } from "~utils/date";
 import type { ColumnType } from "kysely";
 
@@ -15,11 +15,11 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 export type Numeric = ColumnType<string, number | string, number | string>;
 
 export interface AccountConnectionsIntention {
-  accountId: AccountsId;
+  accountId: AccountId;
   createdAt: Generated<Temporal.ZonedDateTime>;
-  targetAccountId: AccountsId;
+  targetAccountId: AccountId;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UsersId;
+  userId: UserId;
 }
 
 export interface Account {
@@ -28,7 +28,7 @@ export interface Account {
   confirmationTokenTimestamp: Temporal.ZonedDateTime | null;
   createdAt: Generated<Temporal.ZonedDateTime>;
   email: string;
-  id: AccountsId;
+  id: AccountId;
   passwordHash: string;
   passwordSalt: string;
   role: string | null;
@@ -36,7 +36,7 @@ export interface Account {
 }
 
 export interface AccountSetting {
-  accountId: AccountsId;
+  accountId: AccountId;
   manualAcceptDebts: boolean;
   updatedAt: Generated<Temporal.ZonedDateTime>;
 }
@@ -45,53 +45,53 @@ export interface Debt {
   amount: Numeric;
   createdAt: Generated<Temporal.ZonedDateTime>;
   currencyCode: CurrencyCode;
-  id: DebtsId;
+  id: DebtId;
   note: string;
-  ownerAccountId: AccountsId;
-  receiptId: ReceiptsId | null;
+  ownerAccountId: AccountId;
+  receiptId: ReceiptId | null;
   timestamp: Temporal.PlainDate;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UsersId;
+  userId: UserId;
 }
 
 export interface ReceiptItemConsumer {
   createdAt: Generated<Temporal.ZonedDateTime>;
-  itemId: ReceiptItemsId;
+  itemId: ReceiptItemId;
   part: Numeric;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UsersId;
+  userId: UserId;
 }
 
 export interface ReceiptItem {
   createdAt: Generated<Temporal.ZonedDateTime>;
-  id: ReceiptItemsId;
+  id: ReceiptItemId;
   name: string;
   price: Numeric;
   quantity: Numeric;
-  receiptId: ReceiptsId;
+  receiptId: ReceiptId;
   updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface ReceiptParticipant {
   createdAt: Generated<Temporal.ZonedDateTime>;
-  receiptId: ReceiptsId;
+  receiptId: ReceiptId;
   role: string;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UsersId;
+  userId: UserId;
 }
 
 export interface Receipt {
   createdAt: Generated<Temporal.ZonedDateTime>;
   currencyCode: CurrencyCode;
-  id: ReceiptsId;
+  id: ReceiptId;
   issued: Temporal.PlainDate;
   name: string;
-  ownerAccountId: AccountsId;
+  ownerAccountId: AccountId;
   updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface ResetPasswordIntention {
-  accountId: AccountsId;
+  accountId: AccountId;
   createdAt: Generated<Temporal.ZonedDateTime>;
   expiresTimestamp: Temporal.ZonedDateTime;
   token: string;
@@ -102,17 +102,17 @@ export interface Session {
   accountId: string;
   createdAt: Generated<Temporal.ZonedDateTime>;
   expirationTimestamp: Temporal.ZonedDateTime;
-  sessionId: SessionsSessionId;
+  sessionId: SessionId;
 }
 
 export interface User {
   acceptReceipts: Generated<boolean>;
-  connectedAccountId: AccountsId | null;
+  connectedAccountId: AccountId | null;
   createdAt: Generated<Temporal.ZonedDateTime>;
   exposeReceipts: Generated<boolean>;
-  id: UsersId;
+  id: UserId;
   name: string;
-  ownerAccountId: AccountsId;
+  ownerAccountId: AccountId;
   publicName: string | null;
   updatedAt: Generated<Temporal.ZonedDateTime>;
 }

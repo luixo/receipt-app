@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -9,7 +9,7 @@ import { userIdSchema } from "~web/handlers/validation";
 
 const fetchUsers = async (
 	{ database, auth }: AuthorizedContext,
-	ids: UsersId[],
+	ids: UserId[],
 ) =>
 	database
 		.selectFrom("users")
@@ -40,7 +40,7 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => ({
 					email: user.email,
 					avatarUrl: user.avatarUrl || undefined,
 				} as {
-					id: AccountsId;
+					id: AccountId;
 					email: string;
 					avatarUrl?: string;
 				}),
@@ -48,7 +48,7 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => ({
 
 const queueUser = queueCallFactory<
 	AuthorizedContext,
-	{ id: UsersId },
+	{ id: UserId },
 	ReturnType<typeof mapUser>
 >((ctx) => async (inputs) => {
 	const users = await fetchUsers(

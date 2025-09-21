@@ -3,7 +3,7 @@ import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import { VALID_LOCALES, getValidLocale } from "~app/utils/locale";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 
 const getLengthMessage = (
 	amount: number,
@@ -166,8 +166,8 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 	decimals: currencyRateSchemaDecimal,
 });
 
-export const userIdSchema = z.uuid().transform<UsersId>(flavored);
-export const accountIdSchema = z.uuid().transform<AccountsId>(flavored);
+export const userIdSchema = z.uuid().transform<UserId>(flavored);
+export const accountIdSchema = z.uuid().transform<AccountId>(flavored);
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 

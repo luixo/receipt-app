@@ -1,4 +1,4 @@
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
@@ -41,11 +41,11 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.execute();
 	return relatedIntentions.reduce<{
 		inbound: {
-			account: { id: AccountsId; email: string };
+			account: { id: AccountId; email: string };
 		}[];
 		outbound: {
-			account: { id: AccountsId; email: string };
-			user: { id: UsersId; name: string };
+			account: { id: AccountId; email: string };
+			user: { id: UserId; name: string };
 		}[];
 	}>(
 		(acc, intention) => {

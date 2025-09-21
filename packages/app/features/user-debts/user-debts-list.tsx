@@ -30,12 +30,12 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Text } from "~components/text";
-import type { DebtsId, UsersId } from "~db/models";
+import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
-const useDebtsByIds = (debtIds: DebtsId[]) => {
+const useDebtsByIds = (debtIds: DebtId[]) => {
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	const queryFilters = trpc.debts.get.queryFilter();
@@ -50,7 +50,7 @@ const useDebtsByIds = (debtIds: DebtsId[]) => {
 					data: typedQuery.state.data,
 				};
 			});
-		const getMatchedDebt = (id: DebtsId) =>
+		const getMatchedDebt = (id: DebtId) =>
 			cachedQueries.find((cachedQuery) => cachedQuery.id === id);
 		const consecutiveDebts: TRPCQueryOutput<"debts.get">[] = [];
 		for (const debtId of debtIds) {
@@ -83,10 +83,7 @@ const useDebtsByIds = (debtIds: DebtsId[]) => {
 	return debts;
 };
 
-const useDividers = (
-	debts: TRPCQueryOutput<"debts.get">[],
-	userId: UsersId,
-) => {
+const useDividers = (debts: TRPCQueryOutput<"debts.get">[], userId: UserId) => {
 	const trpc = useTRPC();
 	const { data: aggregatedDebts = [] } = useQuery(
 		trpc.debts.getAllUser.queryOptions({ userId }),
@@ -95,8 +92,8 @@ const useDividers = (
 		const dividersCalculations = debts.reduce<{
 			sums: Partial<Record<CurrencyCode, number>>;
 			resolvedCurrencies: CurrencyCode[];
-			resolvedDebtIds: DebtsId[];
-			dividers: Record<DebtsId, CurrencyCode>;
+			resolvedDebtIds: DebtId[];
+			dividers: Record<DebtId, CurrencyCode>;
 		}>(
 			(acc, debt) => {
 				const prevCurrencySum = acc.sums[debt.currencyCode] ?? 0;
@@ -207,11 +204,11 @@ const UserDebtsListWrapper: React.FC<React.PropsWithChildren> = ({
 }) => <View>{children}</View>;
 
 const UserDebtsPreviews: React.FC<{
-	userId: UsersId;
+	userId: UserId;
 	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
-	consecutiveDebtIds: DebtsId[];
-	selectedDebtIds: DebtsId[];
-	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtsId[]>>;
+	consecutiveDebtIds: DebtId[];
+	selectedDebtIds: DebtId[];
+	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtId[]>>;
 }> = ({
 	userId,
 	debtIds,
@@ -256,9 +253,9 @@ const UserDebtsPreviews: React.FC<{
 };
 
 const RemoveDebtsButton: React.FC<{
-	debtIds: DebtsId[];
-	selectedDebtIds: DebtsId[];
-	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtsId[]>>;
+	debtIds: DebtId[];
+	selectedDebtIds: DebtId[];
+	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtId[]>>;
 }> = ({ selectedDebtIds, setSelectedDebtIds, debtIds }) => {
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
@@ -312,7 +309,7 @@ const RemoveDebtsButton: React.FC<{
 const filters = {};
 
 export const UserDebtsList = suspendedFallback<{
-	userId: UsersId;
+	userId: UserId;
 	limitState: SearchParamState<"/debts/user/$id", "limit">;
 	offsetState: SearchParamState<"/debts/user/$id", "offset">;
 }>(
@@ -338,7 +335,7 @@ export const UserDebtsList = suspendedFallback<{
 			limit,
 			currentCursor: offsetState[0],
 		});
-		const [selectedDebtIds, setSelectedDebtIds] = React.useState<DebtsId[]>([]);
+		const [selectedDebtIds, setSelectedDebtIds] = React.useState<DebtId[]>([]);
 
 		if (data.count === 0 && values(filters).filter(isNonNullish).length === 0) {
 			return <Text className="text-center">{t("user.filters.empty")}</Text>;

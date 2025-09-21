@@ -20,7 +20,7 @@ import type {
 	TRPCQueryOutput,
 } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
@@ -439,11 +439,11 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 		});
 		const selfId = faker.string.uuid();
 		const selfUser = {
-			id: selfId as UsersId,
+			id: selfId as UserId,
 			name: faker.person.firstName(),
 			publicName: undefined,
 			connectedAccount: {
-				id: selfId as AccountsId,
+				id: selfId as AccountId,
 				email: faker.internet.email(),
 				avatarUrl: undefined,
 			},

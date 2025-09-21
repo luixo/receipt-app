@@ -4,7 +4,7 @@ import { pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	assertDatabase,
@@ -44,11 +44,11 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 type GetData = (opts: {
 	ctx: TestContext;
 	counterParty: "auto-accept" | "manual-accept" | "auto-accept-no-exist";
-	selfAccountId: AccountsId;
+	selfAccountId: AccountId;
 	target: {
-		accountId: AccountsId;
-		userId: UsersId;
-		meUserId: UsersId;
+		accountId: AccountId;
+		userId: UserId;
+		meUserId: UserId;
 	};
 }) => Promise<{
 	updates: TRPCMutationInput<"debts.update">[];

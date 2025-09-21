@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-import type { AccountsId, DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { AccountId, DebtId, ReceiptId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { Role } from "~web/handlers/receipts/utils";
@@ -11,7 +11,7 @@ import { receiptIdSchema } from "~web/handlers/validation";
 
 const fetchReceipts = async (
 	{ database, auth }: AuthorizedContext,
-	ids: ReceiptsId[],
+	ids: ReceiptId[],
 ) =>
 	database
 		.selectFrom("receipts")
@@ -102,7 +102,7 @@ const fetchReceipts = async (
 
 const fetchDebts = async (
 	{ database }: AuthorizedContext,
-	receiptIds: ReceiptsId[],
+	receiptIds: ReceiptId[],
 ) =>
 	database
 		.selectFrom("debts")
@@ -118,20 +118,20 @@ const fetchDebts = async (
 
 const getReceiptDebts = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
-	receiptOwnerAccountId: AccountsId,
-	selfAccountId: AccountsId,
-	receiptSelfUserId: UsersId,
+	receiptOwnerAccountId: AccountId,
+	selfAccountId: AccountId,
+	receiptSelfUserId: UserId,
 ):
 	| ({
 			direction: "incoming";
 	  } & (
-			| { id: DebtsId; hasMine: true; hasForeign: boolean }
-			| { id: DebtsId; hasMine: false; hasForeign: true }
+			| { id: DebtId; hasMine: true; hasForeign: boolean }
+			| { id: DebtId; hasMine: false; hasForeign: true }
 			| { id: undefined; hasMine: false; hasForeign: false }
 	  ))
 	| {
 			direction: "outcoming";
-			debts: { id: DebtsId; userId: UsersId }[];
+			debts: { id: DebtId; userId: UserId }[];
 	  } => {
 	if (receiptOwnerAccountId === selfAccountId) {
 		const outcomingDebt = debts
@@ -218,7 +218,7 @@ type Receipt = ReturnType<typeof mapReceipt>;
 
 const queueReceipt = queueCallFactory<
 	AuthorizedContext,
-	{ id: ReceiptsId },
+	{ id: ReceiptId },
 	Receipt
 >((ctx) => async (inputs) => {
 	const receiptIds = inputs.map(({ id }) => id);

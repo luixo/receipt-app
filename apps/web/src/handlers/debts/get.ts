@@ -2,13 +2,13 @@ import { TRPCError } from "@trpc/server";
 import { pick } from "remeda";
 import { z } from "zod";
 
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import { debtIdSchema } from "~web/handlers/validation";
 
-const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtsId[]) =>
+const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtId[]) =>
 	database
 		.selectFrom("debts")
 		.where("debts.id", "in", ids)
@@ -40,7 +40,7 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => ({
 
 const queueDebt = queueCallFactory<
 	AuthorizedContext,
-	{ id: DebtsId },
+	{ id: DebtId },
 	ReturnType<typeof mapDebt> & {
 		their?: Pick<
 			ReturnType<typeof mapDebt>,

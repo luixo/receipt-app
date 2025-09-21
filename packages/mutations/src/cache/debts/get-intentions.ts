@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 
@@ -32,7 +32,7 @@ const updateIntentions = (
 	);
 
 const updateIntention =
-	(controller: Controller, debtId: DebtsId) =>
+	(controller: Controller, debtId: DebtId) =>
 	(updater: (intention: Intention) => Intention) =>
 		withRef<Intention | undefined>((ref) =>
 			updateIntentions(controller, (intentions) =>
@@ -45,7 +45,7 @@ const updateIntention =
 			),
 		).current;
 
-const removeIntention = (controller: Controller, debtId: DebtsId) =>
+const removeIntention = (controller: Controller, debtId: DebtId) =>
 	withRef<ItemWithIndex<Intention> | undefined>((ref) =>
 		updateIntentions(controller, (intentions) =>
 			removeFromArray(intentions, (intention) => intention.id === debtId, ref),
@@ -65,7 +65,7 @@ const addIntention = (
 const updateRevert =
 	(controller: Controller) =>
 	(
-		debtId: DebtsId,
+		debtId: DebtId,
 		updateFn: UpdateFn<Intention>,
 		revertFn?: SnapshotFn<Intention>,
 	) =>
@@ -76,17 +76,16 @@ const updateRevert =
 		);
 
 const update =
-	(controller: Controller) =>
-	(debtId: DebtsId, updateFn: UpdateFn<Intention>) =>
+	(controller: Controller) => (debtId: DebtId, updateFn: UpdateFn<Intention>) =>
 		updateIntention(controller, debtId)(updateFn);
 
-const removeRevert = (controller: Controller) => (debtId: DebtsId) =>
+const removeRevert = (controller: Controller) => (debtId: DebtId) =>
 	applyWithRevert(
 		() => removeIntention(controller, debtId),
 		({ index, item }) => addIntention(controller, item, index),
 	);
 
-const remove = (controller: Controller) => (debtId: DebtsId) =>
+const remove = (controller: Controller) => (debtId: DebtId) =>
 	removeIntention(controller, debtId);
 
 const addRevert =

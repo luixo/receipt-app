@@ -26,7 +26,7 @@ import {
 import { Button } from "~components/button";
 import { PlusIcon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { AddUserModal } from "./add-user-modal";
 
@@ -45,14 +45,14 @@ const LIMIT = 5;
 const NEW_USER_KEY = "__NEW__";
 
 type Props = {
-	selected?: UsersId | UsersId[];
+	selected?: UserId | UserId[];
 	multiselect?: boolean;
 	throttledMs?: number;
-	onUserClick: (user: UsersId) => void;
+	onUserClick: (user: UserId) => void;
 	limit?: number;
 	topLimit?: number;
-	filterIds?: UsersId[];
-	additionalIds?: UsersId[];
+	filterIds?: UserId[];
+	additionalIds?: UserId[];
 	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
 	userProps?: Partial<React.ComponentProps<typeof LoadableUser>>;
@@ -150,7 +150,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	);
 
 	const fetchedUserIds = (
-		query.data?.pages.reduce<UsersId[]>(
+		query.data?.pages.reduce<UserId[]>(
 			(acc, page) => [...acc, ...page.items],
 			[],
 		) ?? []
@@ -165,7 +165,7 @@ export const UsersSuggest: React.FC<Props> = ({
 
 	const queryClient = useQueryClient();
 	const setUserNameById = React.useCallback(
-		(id: UsersId) => {
+		(id: UserId) => {
 			const userData = queryClient.getQueryData(
 				trpc.users.get.queryKey({ id }),
 			);
@@ -183,7 +183,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		}
 	}, [setUserNameById, initialUserIds]);
 	const onUserClick = React.useCallback(
-		(userId: UsersId) => {
+		(userId: UserId) => {
 			onUserClickOuter(userId);
 			if (setUserNameToInput) {
 				setUserNameById(userId);

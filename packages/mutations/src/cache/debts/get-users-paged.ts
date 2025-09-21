@@ -1,5 +1,5 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import type {
 	ControllerContext,
@@ -25,7 +25,7 @@ const updatePage =
 
 const updatePages =
 	(controller: Controller) =>
-	(updater: UpdateFn<UsersId[], UsersId[], Input>) => {
+	(updater: UpdateFn<UserId[], UserId[], Input>) => {
 		const inputs = getAllInputs<"debts.getUsersPaged">(
 			controller.queryClient,
 			controller.procedure.queryKey(),
@@ -47,7 +47,7 @@ const updatePages =
 const updateUser = (
 	{ queryClient, procedure }: Controller,
 	allDebts: TRPCQueryOutput<"debts.getAllUser"> | undefined,
-	userId: UsersId,
+	userId: UserId,
 ) => {
 	if (!allDebts) {
 		return;
@@ -73,7 +73,7 @@ const updateUser = (
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getUsersPaged };
 	return {
-		update: (userId: UsersId) => {
+		update: (userId: UserId) => {
 			setTimeout(() => {
 				const allDebts = queryClient.getQueryData(
 					trpc.debts.getAllUser.queryKey({ userId }),
@@ -95,7 +95,7 @@ export const getRevertController = ({
 }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getUsersPaged };
 	return {
-		update: async (userId: UsersId) =>
+		update: async (userId: UserId) =>
 			new Promise<UpdaterRevertResult | undefined>((resolve) => {
 				setTimeout(() => {
 					const allDebts = queryClient.getQueryData(

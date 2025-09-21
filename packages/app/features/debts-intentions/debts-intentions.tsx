@@ -12,7 +12,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { compare } from "~utils/date";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
@@ -47,7 +47,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 		);
 		const aggregatedIntentions = React.useMemo(() => {
 			const intentionsByUser = intentions.reduce<
-				Record<UsersId, IntentionsQuery["data"]>
+				Record<UserId, IntentionsQuery["data"]>
 			>((acc, intention) => {
 				const userIntentions = acc[intention.userId] || [];
 				userIntentions.push(intention);

@@ -3,13 +3,13 @@ import { assert } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type {
-	AccountsId,
-	DebtsId,
-	ReceiptItemsId,
-	ReceiptsId,
-	SessionsSessionId,
-	UsersId,
-} from "~db/models";
+	AccountId,
+	DebtId,
+	ReceiptId,
+	ReceiptItemId,
+	SessionId,
+	UserId,
+} from "~db/ids";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import type { Temporal } from "~utils/date";
@@ -28,7 +28,7 @@ export type AccountSettingsData = {
 
 export const insertAccountSettings = async (
 	ctx: TestContext,
-	accountId: AccountsId,
+	accountId: AccountId,
 	data: AccountSettingsData,
 ) => {
 	const database = assertDatabase(ctx);
@@ -42,18 +42,18 @@ export const insertAccountSettings = async (
 };
 
 type UserData = {
-	id?: UsersId;
+	id?: UserId;
 	name?: string;
 	publicName?: string;
 };
 
 export const insertUser = async (
 	ctx: TestContext,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 	data: UserData = {},
 ) => {
 	const database = assertDatabase(ctx);
-	const extendedData = data as UserData & { connectedAccountId?: AccountsId };
+	const extendedData = data as UserData & { connectedAccountId?: AccountId };
 	const { id, name } = await database
 		.insertInto("users")
 		.values({
@@ -69,7 +69,7 @@ export const insertUser = async (
 };
 
 type AccountData = {
-	id?: AccountsId;
+	id?: AccountId;
 	email?: string;
 	avatarUrl?: string | null;
 	password?: string;
@@ -131,7 +131,7 @@ export const insertAccount = async (
 	const { id: userId, name } = await database
 		.insertInto("users")
 		.values({
-			id: id as UsersId,
+			id: id as UserId,
 			ownerAccountId: id,
 			name: data.user?.name || faker.person.firstName(),
 			connectedAccountId: id,
@@ -152,7 +152,7 @@ export const insertAccount = async (
 	};
 };
 
-type ConnectedUserData = { accountId: AccountsId } & Omit<
+type ConnectedUserData = { accountId: AccountId } & Omit<
 	UserData,
 	"connectedAccountId"
 >;
@@ -160,8 +160,8 @@ type ConnectedUserData = { accountId: AccountsId } & Omit<
 export const insertConnectedUsers = async (
 	ctx: TestContext,
 	accountsOrData: [
-		AccountsId | ConnectedUserData,
-		AccountsId | ConnectedUserData,
+		AccountId | ConnectedUserData,
+		AccountId | ConnectedUserData,
 	],
 ) => {
 	const database = assertDatabase(ctx);
@@ -219,13 +219,13 @@ export const insertConnectedUsers = async (
 };
 
 type SessionData = {
-	id?: SessionsSessionId;
+	id?: SessionId;
 	expirationTimestamp?: Temporal.ZonedDateTime;
 };
 
 export const insertSession = async (
 	ctx: TestContext,
-	accountId: AccountsId,
+	accountId: AccountId,
 	data: SessionData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -244,14 +244,14 @@ export const insertSession = async (
 };
 
 type ResetPasswordIntentionData = {
-	id?: SessionsSessionId;
+	id?: SessionId;
 	expiresTimestamp?: Temporal.ZonedDateTime;
 	token?: string;
 };
 
 export const insertResetPasswordIntention = async (
 	ctx: TestContext,
-	accountId: AccountsId,
+	accountId: AccountId,
 	data: ResetPasswordIntentionData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -270,19 +270,19 @@ export const insertResetPasswordIntention = async (
 };
 
 type DebtData = {
-	id?: DebtsId;
+	id?: DebtId;
 	currencyCode?: CurrencyCode;
 	amount?: number;
 	timestamp?: Temporal.PlainDate;
 	createdAt?: Temporal.ZonedDateTime;
 	note?: string;
-	receiptId?: ReceiptsId;
+	receiptId?: ReceiptId;
 };
 
 export const insertDebt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountsId,
-	userId: UsersId,
+	ownerAccountId: AccountId,
+	userId: UserId,
 	data: DebtData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -337,8 +337,8 @@ export type InsertedDebt = Awaited<ReturnType<typeof insertDebt>>;
 
 const updateDebt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountsId,
-	debtId: DebtsId,
+	ownerAccountId: AccountId,
+	debtId: DebtId,
 ) => {
 	const database = assertDatabase(ctx);
 	const debt = await database
@@ -375,8 +375,8 @@ type ReturnDebtData = Awaited<ReturnType<typeof insertDebt>>;
 
 export const insertSyncedDebts = async (
 	ctx: TestContext,
-	[ownerAccountId, userId, data = {}]: [AccountsId, UsersId, DebtData?],
-	[foreignOwnerAccountId, foreignUserId]: [AccountsId, UsersId],
+	[ownerAccountId, userId, data = {}]: [AccountId, UserId, DebtData?],
+	[foreignOwnerAccountId, foreignUserId]: [AccountId, UserId],
 	desync?: {
 		fn?: (input: ReturnDebtData) => ReturnDebtData;
 		ahead?: "our" | "their";
@@ -424,7 +424,7 @@ export const insertSyncedDebts = async (
 };
 
 type ReceiptData = {
-	id?: ReceiptsId;
+	id?: ReceiptId;
 	currencyCode?: CurrencyCode;
 	name?: string;
 	createdAt?: Temporal.ZonedDateTime;
@@ -433,7 +433,7 @@ type ReceiptData = {
 
 export const insertReceipt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 	data: ReceiptData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -455,7 +455,7 @@ export const insertReceipt = async (
 			name: "",
 			price: "0",
 			quantity: "0",
-			id: id as ReceiptItemsId,
+			id: id as ReceiptItemId,
 			receiptId: id,
 		})
 		.execute();
@@ -476,8 +476,8 @@ type ReceiptParticipantData = {
 
 export const insertReceiptParticipant = async (
 	ctx: TestContext,
-	receiptId: ReceiptsId,
-	userId: UsersId,
+	receiptId: ReceiptId,
+	userId: UserId,
 	data: ReceiptParticipantData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -508,15 +508,15 @@ type ReceiptPayerData = {
 
 export const insertReceiptPayer = async (
 	ctx: TestContext,
-	receiptId: ReceiptsId,
-	userId: UsersId,
+	receiptId: ReceiptId,
+	userId: UserId,
 	data: ReceiptPayerData = {},
 ) => {
 	const database = assertDatabase(ctx);
 	const { createdAt, part } = await database
 		.insertInto("receiptItemConsumers")
 		.values({
-			itemId: receiptId as ReceiptItemsId,
+			itemId: receiptId as ReceiptItemId,
 			userId,
 			part: (data.part ?? 1).toString(),
 			createdAt: data.createdAt ?? getNow.zonedDateTime(),
@@ -527,7 +527,7 @@ export const insertReceiptPayer = async (
 };
 
 type ReceiptItemData = {
-	id?: ReceiptItemsId;
+	id?: ReceiptItemId;
 	name?: string;
 	price?: number;
 	quantity?: number;
@@ -536,7 +536,7 @@ type ReceiptItemData = {
 
 export const insertReceiptItem = async (
 	ctx: TestContext,
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 	data: ReceiptItemData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -575,8 +575,8 @@ type ReceiptItemConsumerData = {
 
 export const insertReceiptItemConsumer = async (
 	ctx: TestContext,
-	itemId: ReceiptItemsId,
-	userId: UsersId,
+	itemId: ReceiptItemId,
+	userId: UserId,
 	data: ReceiptItemConsumerData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -605,9 +605,9 @@ type AccountConnectionIntentionData = {
 
 export const insertAccountConnectionIntention = async (
 	ctx: TestContext,
-	accountId: AccountsId,
-	targetAccountId: AccountsId,
-	userId: UsersId,
+	accountId: AccountId,
+	targetAccountId: AccountId,
+	userId: UserId,
 	data: AccountConnectionIntentionData = {},
 ) => {
 	const database = assertDatabase(ctx);

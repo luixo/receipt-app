@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { limitSchema } from "~app/utils/validation";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { getNow, subtract } from "~utils/date";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
@@ -31,7 +31,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const filterIds = [
 			...(input.filterIds || []),
-			ctx.auth.accountId as UsersId,
+			ctx.auth.accountId as UserId,
 		];
 		const monthAgo = subtract.plainDate(getNow.plainDate(), { months: 1 });
 		const options = input.options || { type: "all" };
@@ -141,7 +141,7 @@ export const procedure = authProcedure
 				eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
 					"users.id",
 					"<>",
-					ctx.auth.accountId as UsersId,
+					ctx.auth.accountId as UserId,
 				),
 			)
 			.leftJoin("debts", (qb) =>

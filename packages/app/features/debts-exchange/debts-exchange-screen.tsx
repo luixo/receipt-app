@@ -13,9 +13,9 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink, ButtonLink } from "~components/link";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
-const ExchangeDebtsGroup = suspendedFallback<{ userId: UsersId }>(
+const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 	({ userId }) => {
 		const trpc = useTRPC();
 		const [showResolvedDebts] = useShowResolvedDebts();
@@ -35,7 +35,7 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UsersId }>(
 	<DebtsGroupSkeleton amount={3} />,
 );
 
-export const DebtsExchangeScreen: React.FC<{ userId: UsersId }> = ({
+export const DebtsExchangeScreen: React.FC<{ userId: UserId }> = ({
 	userId,
 }) => {
 	const { t } = useTranslation("debts");

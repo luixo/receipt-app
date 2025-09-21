@@ -1,5 +1,5 @@
 import type { TRPCQueryInput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import type { ControllerContext, ControllerWith } from "../../types";
 
@@ -11,7 +11,7 @@ type Filters = Omit<Partial<TRPCQueryInput<"debts.getByUserPaged">>, "userId">;
 
 const invalidate = (
 	{ queryClient, procedure }: Controller,
-	userId: UsersId,
+	userId: UserId,
 	filters?: Filters,
 ) =>
 	queryClient.invalidateQueries(procedure.queryFilter({ userId, ...filters }));
@@ -19,7 +19,7 @@ const invalidate = (
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getByUserPaged };
 	return {
-		invalidate: (userId: UsersId, filters?: Filters) => {
+		invalidate: (userId: UserId, filters?: Filters) => {
 			void invalidate(controller, userId, filters);
 		},
 	};
@@ -31,7 +31,7 @@ export const getRevertController = ({
 }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getByUserPaged };
 	return {
-		invalidate: (userId: UsersId, filters?: Filters) => {
+		invalidate: (userId: UserId, filters?: Filters) => {
 			void invalidate(controller, userId, filters);
 		},
 	};

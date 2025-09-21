@@ -8,13 +8,13 @@ import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
 import { Header } from "~components/header";
 import { ArrowDown } from "~components/icons";
-import type { ReceiptItemsId } from "~db/models";
+import type { ReceiptItemId } from "~db/ids";
 import { round } from "~utils/math";
 
 import { useReceiptContext } from "./context";
 
 type InnerProps = {
-	itemsRef: React.RefObject<Record<ReceiptItemsId, HTMLDivElement | null>>;
+	itemsRef: React.RefObject<Record<ReceiptItemId, HTMLDivElement | null>>;
 };
 
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
@@ -23,7 +23,7 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 	const locale = useLocale();
 	const emptyItems = items.filter((item) => item.consumers.length === 0);
 	const onEmptyItemClick = React.useCallback(
-		(id: ReceiptItemsId) => {
+		(id: ReceiptItemId) => {
 			const matchedItem = itemsRef.current[id];
 			if (!matchedItem) {
 				return;

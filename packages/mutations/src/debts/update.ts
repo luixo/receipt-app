@@ -1,5 +1,5 @@
 import type { CurrencyCode } from "~app/utils/currency";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, UserId } from "~db/ids";
 
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
@@ -17,10 +17,10 @@ export const options: UseContextedMutationOptions<
 	"debts.update",
 	{
 		currDebt: {
-			userId: UsersId;
+			userId: UserId;
 			amount: number;
 			currencyCode: CurrencyCode;
-			receiptId?: ReceiptsId;
+			receiptId?: ReceiptId;
 		};
 	}
 > = {

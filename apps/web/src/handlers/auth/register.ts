@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { getNow } from "~utils/date";
 import {
 	createAuthorizationSession,
@@ -39,7 +39,7 @@ export const procedure = unauthProcedure
 				message: `Email "${input.email.original}" already exists.`,
 			});
 		}
-		const id: AccountsId = ctx.getUuid();
+		const id: AccountId = ctx.getUuid();
 		const confirmationToken = ctx.getUuid();
 		const emailServiceActive = ctx.emailOptions.active;
 		const passwordData = await generatePasswordData(ctx, input.password);
@@ -67,7 +67,7 @@ export const procedure = unauthProcedure
 			.insertInto("users")
 			.values({
 				// Typesystem doesn't know that we use account id as self user id
-				id: id as UsersId,
+				id: id as UserId,
 				name: input.name,
 				ownerAccountId: id,
 				connectedAccountId: id,

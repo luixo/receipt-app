@@ -17,7 +17,7 @@ import { Header } from "~components/header";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 type ModalProps = {
 	isModalOpen: boolean;
@@ -73,7 +73,7 @@ const AdminUserCard: React.FC<
 	<Card>
 		<CardBody className="flex-row items-start justify-between">
 			<User
-				id={user ? user.id : (account.id as UsersId)}
+				id={user ? user.id : (account.id as UserId)}
 				name={user ? user.name : account.email}
 				connectedAccount={account}
 				dimmed={!user}
@@ -92,7 +92,7 @@ const AdminCard = suspendedFallback(
 				user={{
 					...account.user,
 					// Typesystem doesn't know that we use account id as self user id;
-					id: account.account.id as UsersId,
+					id: account.account.id as UserId,
 				}}
 				account={account.account}
 			/>

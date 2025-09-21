@@ -2,7 +2,7 @@ import type { QueryCreator } from "kysely";
 import type { z } from "zod";
 
 import type { Database } from "~db/database";
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { assignableRoleSchema } from "~web/handlers/validation";
 import { roleSchema } from "~web/handlers/validation";
@@ -50,13 +50,13 @@ export const getAccessRole = async (
 
 export const getOwnReceipts = (
 	database: Database | QueryCreator<DB>,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 ) =>
 	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
 
 export const getParticipantsReceipts = (
 	database: Database | QueryCreator<DB>,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 ) =>
 	database
 		.selectFrom("users")

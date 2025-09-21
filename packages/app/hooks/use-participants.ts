@@ -10,7 +10,7 @@ import {
 	getParticipantSums,
 } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { compare } from "~utils/date";
 
 const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debts">) =>
@@ -106,7 +106,7 @@ export const useParticipantsWithDebts = (
 	});
 	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 	const getDebt = React.useCallback(
-		(participantUserId: UsersId) => {
+		(participantUserId: UserId) => {
 			const ownDebt = debts.find((debt) =>
 				isOwner
 					? debt.data.userId === participantUserId

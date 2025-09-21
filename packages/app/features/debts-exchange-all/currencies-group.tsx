@@ -8,7 +8,7 @@ import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { Skeleton } from "~components/skeleton";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 type ButtonProps = {
 	selected: boolean;
@@ -35,7 +35,7 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 type Props = {
 	selectedCurrencyCode?: CurrencyCode;
 	onSelectOther: () => void;
-	userId: UsersId;
+	userId: UserId;
 } & Pick<ButtonProps, "setSelectedCurrencyCode">;
 
 export const CurrenciesGroup = suspendedFallback<Props>(

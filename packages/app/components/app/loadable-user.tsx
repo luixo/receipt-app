@@ -6,7 +6,7 @@ import { SkeletonUser, User } from "~app/components/app/user";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 type InnerProps = {
 	data: TRPCQueryOutput<"users.getForeign">;
@@ -29,7 +29,7 @@ const LoadableUserInner: React.FC<InnerProps> = ({ data, ...props }) => {
 type DirectionProps = Omit<
 	React.ComponentProps<typeof LoadableUserInner>,
 	"data"
-> & { id: UsersId };
+> & { id: UserId };
 
 const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	const trpc = useTRPC();

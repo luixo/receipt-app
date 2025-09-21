@@ -1,28 +1,28 @@
 import { entries, fromEntries, mapValues, values } from "remeda";
 
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { rotate } from "~utils/array";
 import type { Temporal } from "~utils/date";
 import { compare } from "~utils/date";
 import { getIndexByString } from "~utils/hash";
 
 type ReceiptItem = {
-	id: ReceiptItemsId;
+	id: ReceiptItemId;
 	quantity: number;
 	price: number;
 	consumers: {
-		userId: UsersId;
+		userId: UserId;
 		part: number;
 	}[];
 };
 type ReceiptParticipant = {
 	createdAt: Temporal.ZonedDateTime;
-	userId: UsersId;
+	userId: UserId;
 };
 
 export const getItemCalculations = (
 	itemSum: number,
-	consumerParts: Record<UsersId, number>,
+	consumerParts: Record<UserId, number>,
 ) => {
 	const partsAmount = values(consumerParts).reduce(
 		(acc, part) => acc + part,
@@ -37,19 +37,19 @@ export const getItemCalculations = (
 		0,
 	);
 	const sums = mapValues(sumByUser, (sum) => [sum, Math.floor(sum)]) as Record<
-		UsersId,
+		UserId,
 		[number, number]
 	>;
 	return {
 		sumFlooredByParticipant: mapValues(
 			sums,
 			([, flooredSum]) => flooredSum,
-		) as Record<UsersId, number>,
+		) as Record<UserId, number>,
 		leftover: itemSum - sumTotal,
 		shortageByParticipant: mapValues(
 			sums,
 			([sum, flooredSum]) => sum - flooredSum,
-		) as Record<UsersId, number>,
+		) as Record<UserId, number>,
 	};
 };
 
@@ -57,7 +57,7 @@ const getPayersSums = <
 	P extends ReceiptItem["consumers"][number],
 	I extends ReceiptItem,
 >(
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 	payers: P[],
 	items: I[],
 	fromUnitToSubunit: (input: number) => number,
@@ -85,7 +85,7 @@ const getPayersSums = <
 			return shortageB - shortageA;
 		})
 		.map(({ userId }) => userId);
-	const luckyLeftovers = orderedPayerIds.reduce<Record<UsersId, number>>(
+	const luckyLeftovers = orderedPayerIds.reduce<Record<UserId, number>>(
 		(acc, id, index) => ({ ...acc, [id]: index < leftover ? 1 : 0 }),
 		{},
 	);
@@ -173,7 +173,7 @@ export const getParticipantSums = <
 	R extends ReceiptItem["consumers"][number],
 	I extends ReceiptItem,
 >(
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 	items: I[],
 	participants: P[],
 	payers: R[],
@@ -196,8 +196,8 @@ export const getParticipantSums = <
 			),
 		)
 		.reduce<{
-			sumFlooredByParticipant: Record<UsersId, number>;
-			shortageByParticipant: Record<UsersId, number>;
+			sumFlooredByParticipant: Record<UserId, number>;
+			shortageByParticipant: Record<UserId, number>;
 			leftoverBeforeReimburse: number;
 		}>(
 			(acc, item) => ({
@@ -231,7 +231,7 @@ export const getParticipantSums = <
 			notReimbursed: shortage - integer,
 		};
 	}) as Record<
-		UsersId,
+		UserId,
 		{
 			reimbursed: number;
 			notReimbursed: number;
@@ -278,7 +278,7 @@ export const getParticipantSums = <
 			? nonEmptyParticipantsPinned.length
 			: leftoverAmount;
 	const luckyLeftovers = nonEmptyParticipantsPinned.reduce<
-		Record<UsersId, number>
+		Record<UserId, number>
 	>(
 		(acc, { userId: id }, index) => ({
 			...acc,

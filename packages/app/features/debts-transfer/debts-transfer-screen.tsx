@@ -39,7 +39,7 @@ import { SkeletonNumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow } from "~utils/date";
 
@@ -61,8 +61,8 @@ const transformCurrencyCode = (currencyCode: CurrencyCode): `${CurrencyCode}` =>
 /* eslint-enable @typescript-eslint/no-unnecessary-template-expression */
 
 const DebtsListForm = suspendedFallback<{
-	fromUserId: UsersId;
-	toUserId?: UsersId;
+	fromUserId: UserId;
+	toUserId?: UserId;
 }>(
 	({ fromUserId, toUserId }) => {
 		const { t } = useTranslation("debts");
@@ -382,13 +382,13 @@ export const DebtsTransferScreen: React.FC<{
 }> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
 	const { t } = useTranslation("debts");
 	const onFromClick = React.useCallback(
-		(userId: UsersId) => {
+		(userId: UserId) => {
 			void setFromId(fromId === userId ? undefined : userId);
 		},
 		[fromId, setFromId],
 	);
 	const onToClick = React.useCallback(
-		(userId: UsersId) => {
+		(userId: UserId) => {
 			void setToId(toId === userId ? undefined : userId);
 		},
 		[setToId, toId],

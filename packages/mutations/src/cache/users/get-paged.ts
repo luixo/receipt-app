@@ -1,5 +1,5 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
 import {
@@ -33,7 +33,7 @@ const updatePage =
 
 const updatePages =
 	(controller: Controller) =>
-	(updater: UpdateFn<UsersId[], UsersId[], Input>) => {
+	(updater: UpdateFn<UserId[], UserId[], Input>) => {
 		const inputs = getAllInputs<"users.getPaged">(
 			controller.queryClient,
 			controller.procedure.queryKey(),
@@ -65,7 +65,7 @@ export const getRevertController = ({
 }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.users.getPaged };
 	return {
-		remove: (userId: UsersId) =>
+		remove: (userId: UserId) =>
 			applyUpdateFnWithRevert(
 				updatePages(controller),
 				(items) =>

@@ -1,4 +1,4 @@
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 
 import { update as updateAccount } from "../cache/account";
 import {
@@ -9,7 +9,7 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"account.changeName",
-	{ id: AccountsId }
+	{ id: AccountId }
 > = {
 	mutationKey: "account.changeName",
 	onMutate:
@@ -19,14 +19,14 @@ export const options: UseContextedMutationOptions<
 				get: (controller) =>
 					controller.update(
 						// Typesystem doesn't know that we use account id as self user id
-						id as UsersId,
+						id as UserId,
 						(user) => ({ ...user, name: updateObject.name }),
 						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
 					),
 				getForeign: (controller) =>
 					controller.updateOwn(
 						// Typesystem doesn't know that we use account id as self user id
-						id as UsersId,
+						id as UserId,
 						(user) => ({ ...user, name: updateObject.name }),
 						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
 					),

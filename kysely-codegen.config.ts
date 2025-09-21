@@ -30,8 +30,8 @@ const TYPES: Record<
 		},
 	},
 	accountId: {
-		expression: "AccountsId",
-		importSource: "~db/models",
+		expression: "AccountId",
+		importSource: "~db/ids",
 		tables: {
 			accountConnectionsIntentions: ["accountId", "targetAccountId"],
 			accountSettings: ["accountId"],
@@ -44,29 +44,29 @@ const TYPES: Record<
 	},
 	// Kysely can't introspect references ids yet
 	accountIdNullable: {
-		expression: "AccountsId | null",
+		expression: "AccountId | null",
 		tables: {
 			users: ["connectedAccountId"],
 		},
 	},
 	debtId: {
-		expression: "DebtsId",
-		importSource: "~db/models",
+		expression: "DebtId",
+		importSource: "~db/ids",
 		tables: {
 			debts: ["id"],
 		},
 	},
 	receiptItemId: {
-		expression: "ReceiptItemsId",
-		importSource: "~db/models",
+		expression: "ReceiptItemId",
+		importSource: "~db/ids",
 		tables: {
 			receiptItemConsumers: ["itemId"],
 			receiptItems: ["id"],
 		},
 	},
 	receiptId: {
-		expression: "ReceiptsId",
-		importSource: "~db/models",
+		expression: "ReceiptId",
+		importSource: "~db/ids",
 		tables: {
 			receiptItems: ["receiptId"],
 			receiptParticipants: ["receiptId"],
@@ -75,21 +75,21 @@ const TYPES: Record<
 	},
 	// Kysely can't introspect references ids yet
 	receiptIdNullable: {
-		expression: "ReceiptsId | null",
+		expression: "ReceiptId | null",
 		tables: {
 			debts: ["receiptId"],
 		},
 	},
 	sessionsSessionId: {
-		expression: "SessionsSessionId",
-		importSource: "~db/models",
+		expression: "SessionId",
+		importSource: "~db/ids",
 		tables: {
 			sessions: ["sessionId"],
 		},
 	},
 	userId: {
-		expression: "UsersId",
-		importSource: "~db/models",
+		expression: "UserId",
+		importSource: "~db/ids",
 		tables: {
 			accountConnectionsIntentions: ["userId"],
 			debts: ["userId"],

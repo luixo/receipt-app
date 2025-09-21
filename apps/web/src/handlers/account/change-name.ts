@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure
@@ -11,6 +11,6 @@ export const procedure = authProcedure
 		await database
 			.updateTable("users")
 			.set({ name: input.name })
-			.where("id", "=", ctx.auth.accountId as UsersId)
+			.where("id", "=", ctx.auth.accountId as UserId)
 			.executeTakeFirst();
 	});

@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import type { Temporal } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -52,7 +52,7 @@ type FetchedIntention = Awaited<ReturnType<typeof fetchIntentions>>[number];
 
 const acceptUpdatedIntentions = async (
 	ctx: AuthorizedContext,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 	intentions: Pick<
 		FetchedIntention,
 		"id" | "amount" | "currencyCode" | "selfId" | "timestamp"
@@ -91,7 +91,7 @@ const acceptUpdatedIntentions = async (
 
 export const acceptNewIntentions = async (
 	ctx: AuthorizedContext,
-	ownerAccountId: AccountsId,
+	ownerAccountId: AccountId,
 	intentions: Pick<
 		FetchedIntention,
 		| "id"

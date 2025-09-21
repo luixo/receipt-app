@@ -19,10 +19,10 @@ import type {
 import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink, Link } from "~components/link";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 const UserPreview = suspendedFallback<{
-	id: UsersId;
+	id: UserId;
 }>(
 	({ id }) => {
 		const trpc = useTRPC();

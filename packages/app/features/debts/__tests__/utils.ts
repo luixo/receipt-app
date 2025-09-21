@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { entries } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
@@ -18,7 +18,7 @@ type Fixtures = {
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
 	openUserDebtsScreen: (
-		userId: UsersId,
+		userId: UserId,
 		options?: { awaitCache?: boolean; awaitDebts?: number },
 	) => Promise<void>;
 };

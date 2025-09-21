@@ -1,11 +1,11 @@
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receiptItems.remove",
-	{ receiptId: ReceiptsId }
+	{ receiptId: ReceiptId }
 > = {
 	mutationKey: "receiptItems.remove",
 	onMutate:

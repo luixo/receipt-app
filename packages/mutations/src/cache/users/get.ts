@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import type {
 	ControllerContext,
@@ -21,7 +21,7 @@ type Controller = ControllerWith<{
 type User = TRPCQueryOutput<"users.get">;
 
 const update =
-	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	({ queryClient, procedure }: Controller, userId: UserId) =>
 	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
@@ -33,7 +33,7 @@ const update =
 const upsert = ({ queryClient, procedure }: Controller, user: User) =>
 	queryClient.setQueryData(procedure.queryKey({ id: user.id }), user);
 
-const remove = ({ queryClient, procedure }: Controller, userId: UsersId) =>
+const remove = ({ queryClient, procedure }: Controller, userId: UserId) =>
 	withRef<User | undefined>((ref) => {
 		ref.current = queryClient.getQueryData(procedure.queryKey({ id: userId }));
 		return queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
@@ -42,10 +42,10 @@ const remove = ({ queryClient, procedure }: Controller, userId: UsersId) =>
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.users.get };
 	return {
-		update: (userId: UsersId, updater: UpdateFn<User>) =>
+		update: (userId: UserId, updater: UpdateFn<User>) =>
 			update(controller, userId)(updater),
 		add: (user: User) => upsert(controller, user),
-		remove: (userId: UsersId) => remove(controller, userId),
+		remove: (userId: UserId) => remove(controller, userId),
 	};
 };
 
@@ -56,7 +56,7 @@ export const getRevertController = ({
 	const controller = { queryClient, procedure: trpc.users.get };
 	return {
 		update: (
-			userId: UsersId,
+			userId: UserId,
 			updater: UpdateFn<User>,
 			revertUpdater: SnapshotFn<User>,
 		) =>
@@ -70,7 +70,7 @@ export const getRevertController = ({
 				() => upsert(controller, user),
 				() => remove(controller, user.id),
 			),
-		remove: (userId: UsersId) =>
+		remove: (userId: UserId) =>
 			applyWithRevert(
 				() => remove(controller, userId),
 				(snapshot) => upsert(controller, snapshot),

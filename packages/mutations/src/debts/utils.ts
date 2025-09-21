@@ -1,5 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import { type Temporal, getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
@@ -86,9 +86,9 @@ export const getRevert =
 
 export const updateReceiptWithOutcomingDebtId = (
 	controllerContext: ControllerContext,
-	receiptId: ReceiptsId,
-	userId: UsersId,
-	debtId: DebtsId,
+	receiptId: ReceiptId,
+	userId: UserId,
+	debtId: DebtId,
 ) => {
 	updateReceipts(controllerContext, {
 		get: (controller) => {
@@ -111,7 +111,7 @@ export const updateReceiptWithOutcomingDebtId = (
 
 export const updateUpdatedAt = (
 	controllerContext: ControllerContext,
-	debtId: DebtsId,
+	debtId: DebtId,
 	updatedAt: Temporal.ZonedDateTime | undefined,
 	reverseUpdated: boolean | undefined,
 ) => {

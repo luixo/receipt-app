@@ -34,7 +34,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm, useTypedValues } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getNow } from "~utils/date";
 import type { UseStateReturn } from "~utils/react";
@@ -71,7 +71,7 @@ const ContextedAddReceipt = suspendedFallback<{
 	}) => {
 		const trpc = useTRPC();
 		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
-		const selfUserId = account.account.id as UsersId;
+		const selfUserId = account.account.id as UserId;
 		const formValues = useTypedValues(formStore, defaultFormValues);
 		const receiptId = React.useId();
 		const participants = useParticipants({

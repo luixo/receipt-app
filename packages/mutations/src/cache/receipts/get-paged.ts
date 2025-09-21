@@ -1,5 +1,5 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
 import {
@@ -66,7 +66,7 @@ export const getRevertController = ({
 }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.receipts.getPaged };
 	return {
-		remove: (receiptId: ReceiptsId) =>
+		remove: (receiptId: ReceiptId) =>
 			applyUpdateFnWithRevert(
 				updatePages(controller),
 				(items) =>

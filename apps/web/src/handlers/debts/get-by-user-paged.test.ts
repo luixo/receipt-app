@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { assert, describe, expect } from "vitest";
 
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -269,8 +269,8 @@ describe("debts.getByUserPaged", () => {
 
 		const insertDebts = async (
 			ctx: TestContext,
-			accountId: AccountsId,
-			userId: UsersId,
+			accountId: AccountId,
+			userId: UserId,
 		) => {
 			// Create debts with non-zero sum currencies
 			const nonResolvedDebts = await Promise.all([

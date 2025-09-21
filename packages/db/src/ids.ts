@@ -1,6 +1,6 @@
-export type AccountsId = string & { __flavor?: "accounts" };
-export type DebtsId = string & { __flavor?: "debts" };
-export type ReceiptItemsId = string & { __flavor?: "receiptItems" };
-export type ReceiptsId = string & { __flavor?: "receipts" };
-export type SessionsSessionId = string & { __flavor?: "sessions" };
-export type UsersId = string & { __flavor?: "users" };
+export type AccountId = string & { __flavor?: "accounts" };
+export type DebtId = string & { __flavor?: "debts" };
+export type ReceiptItemId = string & { __flavor?: "receiptItems" };
+export type ReceiptId = string & { __flavor?: "receipts" };
+export type SessionId = string & { __flavor?: "sessions" };
+export type UserId = string & { __flavor?: "users" };

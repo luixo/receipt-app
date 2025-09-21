@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { limitSchema, offsetSchema } from "~app/utils/validation";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -13,7 +13,7 @@ const inputSchema = z.strictObject({
 	limit: limitSchema,
 });
 type Input = z.infer<typeof inputSchema>;
-type Output = GeneralOutput<UsersId> & { count: number };
+type Output = GeneralOutput<UserId> & { count: number };
 
 const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
@@ -24,7 +24,7 @@ const fetchPage = async (
 			"users.id",
 			"<>",
 			// Typesystem doesn't know that we use account id as self user id;
-			auth.accountId as UsersId,
+			auth.accountId as UserId,
 		),
 	);
 	const [users, usersCount] = await Promise.all([
@@ -50,7 +50,7 @@ const fetchPage = async (
 
 const queueUserList = queueCallFactory<AuthorizedContext, Input, Output>(
 	(ctx) => async (inputs) =>
-		queueList<Input, UsersId, Output>(inputs, (values) =>
+		queueList<Input, UserId, Output>(inputs, (values) =>
 			fetchPage(ctx, values),
 		),
 );

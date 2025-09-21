@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { getParticipantsReceipts } from "~web/handlers/receipts/utils";
@@ -10,7 +10,7 @@ import { userIdSchema } from "~web/handlers/validation";
 
 // We allow account fetch foreign users
 // In case they share the same receipt (as participant or as payer)
-const fetchUsers = async (ctx: AuthorizedContext, ids: UsersId[]) =>
+const fetchUsers = async (ctx: AuthorizedContext, ids: UserId[]) =>
 	ctx.database
 		.with("mergedReceipts", (qc) =>
 			getParticipantsReceipts(qc, ctx.auth.accountId)
@@ -90,7 +90,7 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => {
 				avatarUrl: user.avatarUrl || undefined,
 			} as
 				| {
-						id: AccountsId;
+						id: AccountId;
 						email: string;
 						avatarUrl?: string;
 				  }
@@ -102,7 +102,7 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => {
 
 const queueUser = queueCallFactory<
 	AuthorizedContext,
-	{ id: UsersId },
+	{ id: UserId },
 	ReturnType<typeof mapUser>
 >((ctx) => async (inputs) => {
 	const users = await fetchUsers(

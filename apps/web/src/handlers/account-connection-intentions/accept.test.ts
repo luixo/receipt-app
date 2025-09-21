@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import type { Selectable } from "kysely";
 import { describe, expect } from "vitest";
 
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import { createAuthContext } from "~tests/backend/utils/context";
 import type {
@@ -320,7 +320,7 @@ describe("accountConnectionIntentions.accept", () => {
 		});
 
 		describe("auto-accepted debts", () => {
-			type AccountWithUser = { id: AccountsId; foreignUserId: UsersId };
+			type AccountWithUser = { id: AccountId; foreignUserId: UserId };
 
 			const revertDebt = (
 				debt: InsertedDebt,

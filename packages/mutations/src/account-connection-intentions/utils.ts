@@ -1,5 +1,5 @@
 import type { TRPCMutationOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { update as updateDebts } from "../cache/debts";
 import {
@@ -10,7 +10,7 @@ import type { ControllerContext } from "../types";
 
 export const updateUserConnected = (
 	controllerContext: ControllerContext,
-	userId: UsersId,
+	userId: UserId,
 	account: TRPCMutationOutput<"accountConnectionIntentions.add">["account"],
 ) => {
 	updateUsers(controllerContext, {

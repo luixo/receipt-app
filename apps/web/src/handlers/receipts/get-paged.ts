@@ -10,7 +10,7 @@ import {
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
+import type { ReceiptId, ReceiptItemId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { Interval } from "~utils/array";
 import { mergeIntervals } from "~utils/array";
@@ -38,10 +38,10 @@ const inputSchema = z.strictObject({
 
 type Input = z.infer<typeof inputSchema>;
 type OutputItem = {
-	id: ReceiptsId;
+	id: ReceiptId;
 	highlights: Interval[];
 	matchedItems: {
-		id: ReceiptItemsId;
+		id: ReceiptItemId;
 		highlights: Interval[];
 	}[];
 };

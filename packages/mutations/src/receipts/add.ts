@@ -1,11 +1,11 @@
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receipts.add",
-	{ selfAccountId: AccountsId }
+	{ selfAccountId: AccountId }
 > = {
 	mutationKey: "receipts.add",
 	onSuccess:
@@ -14,7 +14,7 @@ export const options: UseContextedMutationOptions<
 			updateReceipts(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
 				get: (controller) => {
-					const selfUserId = selfAccountId as UsersId;
+					const selfUserId = selfAccountId as UserId;
 					controller.add({
 						id: result.id,
 						createdAt: result.createdAt,

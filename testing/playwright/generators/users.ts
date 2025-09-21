@@ -1,15 +1,15 @@
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 
 import type { GeneratorFnWithAmount } from "./utils";
 import { generateAmount } from "./utils";
 
 export type GenerateUsers = GeneratorFnWithAmount<{
-	id: UsersId;
+	id: UserId;
 	name: string;
 	publicName: string | undefined;
 	connectedAccount:
 		| {
-				id: AccountsId;
+				id: AccountId;
 				email: string;
 				avatarUrl?: string;
 		  }

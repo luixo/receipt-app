@@ -8,7 +8,7 @@ import {
 	offsetSchema,
 	queryNoMinSchema,
 } from "~app/utils/validation";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { SIMILARTY_THRESHOLD } from "~utils/trigram";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -37,13 +37,13 @@ const inputSchema = z.strictObject({
 	direction: directionSchema,
 });
 type Input = z.infer<typeof inputSchema>;
-type Output = GeneralOutput<UsersId> & { count: number };
+type Output = GeneralOutput<UserId> & { count: number };
 
 const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
 	input: Input,
 ) => {
-	let filterIds = [...(input.filterIds || []), auth.accountId as UsersId];
+	let filterIds = [...(input.filterIds || []), auth.accountId as UserId];
 	const cursor = input.cursor || 0;
 	const options = input.options || { type: "all" };
 	if (options.type === "not-connected-receipt") {
@@ -126,7 +126,7 @@ const fetchPage = async (
 
 const queueSuggestUserList = queueCallFactory<AuthorizedContext, Input, Output>(
 	(ctx) => async (inputs) =>
-		queueList<Input, UsersId, Output>(inputs, (values) =>
+		queueList<Input, UserId, Output>(inputs, (values) =>
 			fetchPage(ctx, values),
 		),
 );

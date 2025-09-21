@@ -1,4 +1,4 @@
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 import { getNow } from "~utils/date";
 
 import {
@@ -11,7 +11,7 @@ import { getConsumersItems } from "./utils";
 
 export const options: UseContextedMutationOptions<
 	"receiptItemConsumers.add",
-	{ receiptId: ReceiptsId }
+	{ receiptId: ReceiptId }
 > = {
 	mutationKey: "receiptItemConsumers.add",
 	onMutate:

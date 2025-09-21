@@ -15,7 +15,7 @@ import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
@@ -72,7 +72,7 @@ export const ReceiptParticipantNoDebtAction: React.FC<Props> = ({
 
 export const ReceiptParticipantDebtActions = suspendedFallback<
 	Omit<Props, "participant"> & {
-		participant: Omit<Props["participant"], "debtId"> & { debtId: DebtsId };
+		participant: Omit<Props["participant"], "debtId"> & { debtId: DebtId };
 	}
 >(
 	({ receipt, participant }) => {

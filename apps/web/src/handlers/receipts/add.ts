@@ -3,7 +3,7 @@ import { omit, values } from "remeda";
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { temporalSchemas } from "~utils/date";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
@@ -51,7 +51,7 @@ type InsertedParticipants = {
 const insertParticipants = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 ): Promise<InsertedParticipants> => {
 	if (!input.participants || input.participants.length === 0) {
 		return { errors: [], participants: [] };
@@ -82,9 +82,9 @@ type InsertedItems = {
 const insertItems = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 ): Promise<InsertedItems> => {
-	const receiptIdAsItemId = receiptId as ReceiptItemsId;
+	const receiptIdAsItemId = receiptId as ReceiptItemId;
 	const [insertedItems, insertPayerItem] = await Promise.all([
 		!input.items || input.items.length === 0
 			? []
@@ -125,19 +125,19 @@ const insertItems = async (
 };
 
 type InsertedConsumers = Record<
-	ReceiptItemsId,
+	ReceiptItemId,
 	{
 		errors: TRPCError[];
-		consumers: (ConsumerOutput & { userId: UsersId })[];
+		consumers: (ConsumerOutput & { userId: UserId })[];
 	}
 >;
 const insertConsumers = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 	insertedItems: Awaited<ReturnType<typeof insertItems>>["items"],
 ): Promise<InsertedConsumers> => {
-	const receiptIdAsItemId = receiptId as ReceiptItemsId;
+	const receiptIdAsItemId = receiptId as ReceiptItemId;
 	const consumers = [
 		...(input.items?.flatMap((item, index) =>
 			(item.consumers ?? []).map((consumer) => {
@@ -248,7 +248,7 @@ const defaultPayers = {
 };
 const verifyPayers = (
 	input: z.infer<typeof addReceiptSchema>,
-	receiptId: ReceiptsId,
+	receiptId: ReceiptId,
 	payers: Awaited<ReturnType<typeof insertConsumers>>[string] = defaultPayers,
 ) => {
 	const firstError = payers.errors[0];
@@ -319,7 +319,7 @@ const verifyConsumers = (
 export const procedure = authProcedure
 	.input(addReceiptSchema)
 	.mutation(async ({ input, ctx }) => {
-		const receiptId: ReceiptsId = ctx.getUuid();
+		const receiptId: ReceiptId = ctx.getUuid();
 		return ctx.database.transaction().execute(async (tx) => {
 			const transactionCtx = { ...ctx, database: tx };
 			const result = await tx
@@ -348,7 +348,7 @@ export const procedure = authProcedure
 				receiptId,
 				regularItems,
 			);
-			const receiptIdAsItemId = receiptId as ReceiptItemsId;
+			const receiptIdAsItemId = receiptId as ReceiptItemId;
 			const payersConsumers = addedConsumers[receiptIdAsItemId];
 			const regularConsumers = omit(addedConsumers, [
 				receiptIdAsItemId,

@@ -8,7 +8,7 @@ import type { MockRequestOptions, MockResponseOptions } from "mock-http";
 import { Request as MockRequest, Response as MockResponse } from "mock-http";
 import { assert } from "vitest";
 
-import type { SessionsSessionId } from "~db/models";
+import type { SessionId } from "~db/ids";
 import type { TestContext } from "~tests/backend/utils/test";
 import { createContext as createContextRaw } from "~web/handlers/context";
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -51,7 +51,7 @@ export const createContext = async (
 
 export const createAuthContext = (
 	ctx: TestContext,
-	sessionId: SessionsSessionId,
+	sessionId: SessionId,
 	{ request, ...options }: ContextOptions = {},
 ) =>
 	createContext(ctx, {

@@ -1,11 +1,11 @@
 import type { TFunction } from "i18next";
 
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
+import type { ReceiptId, ReceiptItemId } from "~db/ids";
 
 export const getConsumersItems = (
 	t: TFunction,
-	itemIds: ReceiptItemsId[],
-	receiptIds: ReceiptsId[],
+	itemIds: ReceiptItemId[],
+	receiptIds: ReceiptId[],
 ) => {
 	const payersAmount = itemIds.filter(
 		(itemId, index) => itemId === receiptIds[index],

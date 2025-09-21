@@ -16,7 +16,7 @@ import type { TRPCMutationResult, TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input, SkeletonInput } from "~components/input";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
 import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
 
@@ -49,7 +49,7 @@ const ConfirmModalWrapper = suspendedFallback<
 			>[0],
 		) => React.ReactNode;
 		acceptMutation: TRPCMutationResult<"accountConnectionIntentions.accept">;
-		userId: UsersId;
+		userId: UserId;
 		resetUserId: () => void;
 	}
 >(
@@ -87,7 +87,7 @@ type Props = {
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
-	const [userId, setUserId] = React.useState<UsersId>();
+	const [userId, setUserId] = React.useState<UserId>();
 	const { t } = useTranslation("users");
 
 	const acceptConnectionMutation = useMutation(
@@ -112,7 +112,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		[],
 	);
 	const onUserClick = React.useCallback(
-		(openModal?: () => void) => (nextUserId: UsersId) => {
+		(openModal?: () => void) => (nextUserId: UserId) => {
 			if (nextUserId === userId) {
 				setUserId(undefined);
 				return;

@@ -20,7 +20,7 @@ import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 import type { Interval } from "~utils/array";
 import { round } from "~utils/math";
 
@@ -97,7 +97,7 @@ export const ReceiptPreviewSkeleton = () => (
 );
 
 export const ReceiptPreview = suspendedFallback<{
-	id: ReceiptsId;
+	id: ReceiptId;
 	highlights: Interval[];
 	isSelected: boolean;
 	onValueChange: (nextValue: boolean) => void;

@@ -29,7 +29,7 @@ import {
 } from "~components/icons";
 import { Slider } from "~components/slider";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
 import {
 	MAX_AVATAR_SIDE_SIZE,
@@ -99,7 +99,7 @@ const UserAvatar = suspendedFallback<{ onClick: () => void }>(
 		} = useSuspenseQuery(trpc.account.get.queryOptions());
 		return (
 			<UserAvatarRaw
-				id={account.id as UsersId}
+				id={account.id as UserId}
 				connectedAccount={account}
 				onClick={onClick}
 				size="lg"

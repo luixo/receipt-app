@@ -14,7 +14,7 @@ import { Divider } from "~components/divider";
 import { PencilIcon, UserIcon } from "~components/icons";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
@@ -158,11 +158,11 @@ export const ReceiptParticipants: React.FC = () => {
 	const isSelfAdded = participants.some(
 		(participant) => participant.userId === selfUserId,
 	);
-	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
+	const [localFilterIds, setLocalFilterIds] = React.useState<UserId[]>([]);
 	const { addParticipant } = useActionsHooksContext();
 
 	const onUserClick = React.useCallback(
-		(userId: UsersId) => {
+		(userId: UserId) => {
 			setLocalFilterIds((prevIds) => [...prevIds, userId]);
 			addParticipant(userId, "editor", {
 				onSettled: () =>

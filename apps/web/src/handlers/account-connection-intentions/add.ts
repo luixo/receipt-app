@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -321,7 +321,7 @@ const insertDirectIntentions = async (
 
 type IntentionOutput = {
 	account: {
-		id: AccountsId;
+		id: AccountId;
 		email: string;
 		avatarUrl?: string;
 	};

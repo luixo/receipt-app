@@ -7,7 +7,7 @@ import {
 	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
 } from "~app/utils/store/pretend-user";
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import { getNow, isFirstEarlier, subtract } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import {
@@ -73,11 +73,11 @@ const queueSession = queueCallFactory<
 	{ authToken: string },
 	{
 		realAuth: {
-			accountId: AccountsId;
+			accountId: AccountId;
 			email: string;
 		};
 		auth: {
-			accountId: AccountsId;
+			accountId: AccountId;
 			email: string;
 		};
 		role: string | undefined;

@@ -5,7 +5,7 @@ import { describe, expect } from "vitest";
 
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountsId } from "~db/models";
+import type { AccountId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -157,7 +157,7 @@ const runFunctionalTest = async (
 		modifyInput?: (input: Input, opts: { receipts: MockReceipt[] }) => Input;
 		modifyOutput?: (
 			receipts: MockReceipt[],
-			opts: { accountId: AccountsId },
+			opts: { accountId: AccountId },
 		) => Output["items"];
 	} = {},
 ) => {

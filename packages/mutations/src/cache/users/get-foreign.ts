@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import type {
 	ControllerContext,
@@ -26,7 +26,7 @@ type OwnUser = Exclude<
 >;
 
 const update =
-	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	({ queryClient, procedure }: Controller, userId: UserId) =>
 	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
@@ -36,7 +36,7 @@ const update =
 		}).current;
 
 const updateOwn =
-	(controller: Controller, userId: UsersId) => (updater: UpdateFn<OwnUser>) =>
+	(controller: Controller, userId: UserId) => (updater: UpdateFn<OwnUser>) =>
 		update(
 			controller,
 			userId,
@@ -47,7 +47,7 @@ const updateOwn =
 			return updater(user);
 		}) as OwnUser | undefined;
 
-const removeOwn = ({ queryClient, procedure }: Controller, userId: UsersId) =>
+const removeOwn = ({ queryClient, procedure }: Controller, userId: UserId) =>
 	withRef<OwnUser | undefined>((ref) => {
 		const currentUser = queryClient.getQueryData(
 			procedure.queryKey({ id: userId }),
@@ -79,7 +79,7 @@ const invalidateForeign = ({ queryClient, procedure }: Controller) => {
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.users.getForeign };
 	return {
-		updateOwn: (userId: UsersId, updater: UpdateFn<OwnUser>) =>
+		updateOwn: (userId: UserId, updater: UpdateFn<OwnUser>) =>
 			updateOwn(controller, userId)(updater),
 		invalidateForeign: () => invalidateForeign(controller),
 	};
@@ -92,7 +92,7 @@ export const getRevertController = ({
 	const controller = { queryClient, procedure: trpc.users.getForeign };
 	return {
 		updateOwn: (
-			userId: UsersId,
+			userId: UserId,
 			updater: UpdateFn<OwnUser>,
 			revertUpdater: SnapshotFn<OwnUser>,
 		) =>
@@ -101,7 +101,7 @@ export const getRevertController = ({
 				updater,
 				revertUpdater,
 			),
-		removeOwn: (userId: UsersId) =>
+		removeOwn: (userId: UserId) =>
 			applyWithRevert(
 				() => removeOwn(controller, userId),
 				(snapshot) => addOwn(controller, snapshot),

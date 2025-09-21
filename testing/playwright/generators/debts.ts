@@ -2,7 +2,7 @@ import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { add, getNow } from "~utils/date";
 
 import type {
@@ -16,7 +16,7 @@ import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
 
 export type GenerateDebts = GeneratorFnWithAmount<
 	TRPCQueryOutput<"debts.get">,
-	{ userId: UsersId }
+	{ userId: UserId }
 >;
 
 export const defaultGenerateDebts = ({
@@ -43,7 +43,7 @@ export const defaultGenerateDebts = ({
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"debts.get">[],
 	{
-		selfUserId: UsersId;
+		selfUserId: UserId;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;

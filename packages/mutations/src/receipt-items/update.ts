@@ -1,5 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -40,7 +40,7 @@ const getRevert =
 
 export const options: UseContextedMutationOptions<
 	"receiptItems.update",
-	{ receiptId: ReceiptsId }
+	{ receiptId: ReceiptId }
 > = {
 	mutationKey: "receiptItems.update",
 	onMutate:

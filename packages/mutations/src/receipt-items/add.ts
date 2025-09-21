@@ -1,4 +1,4 @@
-import type { ReceiptItemsId } from "~db/models";
+import type { ReceiptItemId } from "~db/ids";
 import { getNow } from "~utils/date";
 
 import {
@@ -10,7 +10,7 @@ import type { UseContextedMutationOptions } from "../context";
 export const options: UseContextedMutationOptions<
 	"receiptItems.add",
 	undefined,
-	ReceiptItemsId
+	ReceiptItemId
 > = {
 	mutationKey: "receiptItems.add",
 	onMutate: (controllerContext) => async (variables) => {

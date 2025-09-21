@@ -6,7 +6,7 @@ import {
 	MAX_RECEIPT_NAME_LENGTH,
 	MIN_RECEIPT_NAME_LENGTH,
 } from "~app/utils/validation";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
@@ -94,7 +94,7 @@ export const verifyIssued = <T>(
 export const verifyReceiptId = <T>(
 	runProcedure: (
 		context: UnauthorizedContext,
-		receiptId: ReceiptsId,
+		receiptId: ReceiptId,
 	) => Promise<T>,
 	prefix: string,
 ) => {

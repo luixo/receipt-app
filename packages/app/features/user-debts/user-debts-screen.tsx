@@ -27,12 +27,12 @@ import {
 import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { UserDebtsList } from "./user-debts-list";
 
 type HeaderProps = {
-	userId: UsersId;
+	userId: UserId;
 };
 
 const Header: React.FC<HeaderProps> = ({ userId }) => {
@@ -98,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 };
 
 const UserDebtsGroup = suspendedFallback<{
-	userId: UsersId;
+	userId: UserId;
 }>(
 	({ userId }) => {
 		const trpc = useTRPC();
@@ -133,7 +133,7 @@ const UserDebtsGroup = suspendedFallback<{
 );
 
 export const UserDebtsScreen: React.FC<
-	{ userId: UsersId } & Pick<
+	{ userId: UserId } & Pick<
 		React.ComponentProps<typeof UserDebtsList>,
 		"offsetState" | "limitState"
 	>

@@ -5,7 +5,7 @@ import type {
 	useGetReceiptContext,
 } from "~app/features/receipt/hooks";
 import type { EmptyMutateOptions } from "~app/utils/queries";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { getNow } from "~utils/date";
 
 import type { Form, Item, Participant, Payer } from "./state";
@@ -59,7 +59,7 @@ const useRemoveItem = (setItems: SetItems) =>
 const useUpdateItem = (setItems: SetItems) =>
 	React.useCallback(
 		(
-			itemId: ReceiptItemsId,
+			itemId: ReceiptItemId,
 			setStateAction: React.SetStateAction<Partial<Item>>,
 			options: EmptyMutateOptions | undefined,
 		) => {
@@ -203,7 +203,7 @@ const useUpdatePayers = (setPayers: SetPayers) =>
 	React.useCallback(
 		(
 			options: EmptyMutateOptions | undefined,
-			userId: UsersId,
+			userId: UserId,
 			setStateAction: React.SetStateAction<Partial<Payer>>,
 		) => {
 			setPayers((prevPayers) => {
@@ -268,7 +268,7 @@ const useUpdateParticipant = (setParticipants: SetParticipants) =>
 	React.useCallback(
 		(
 			options: EmptyMutateOptions | undefined,
-			userId: UsersId,
+			userId: UserId,
 			setStateAction: React.SetStateAction<Partial<Participant>>,
 		) => {
 			setParticipants((prevParticipants) => {
@@ -363,8 +363,8 @@ export const useActionsHooks = (
 
 export const useAddReceiptContext = (
 	form: Partial<Form>,
-	receiptId: ReceiptsId,
-	selfUserId: UsersId,
+	receiptId: ReceiptId,
+	selfUserId: UserId,
 	payers: ReceiptContext["payers"],
 	items: ReceiptContext["items"],
 	participants: ReceiptContext["participants"],

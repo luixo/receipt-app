@@ -1,21 +1,21 @@
 import type { Selectable } from "kysely";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { Temporal } from "~utils/date";
 import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 
 type InboundIntention = {
-	id: DebtsId;
-	userId: UsersId;
+	id: DebtId;
+	userId: UserId;
 	currencyCode: CurrencyCode;
 	amount: number;
 	timestamp: Temporal.PlainDate;
 	updatedAt: Temporal.ZonedDateTime;
 	note: string;
-	receiptId?: ReceiptsId;
+	receiptId?: ReceiptId;
 	current?: {
 		amount: number;
 		currencyCode: CurrencyCode;

@@ -2,12 +2,7 @@ import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import { flavored } from "~app/utils/validation";
-import type {
-	DebtsId,
-	ReceiptItemsId,
-	ReceiptsId,
-	SessionsSessionId,
-} from "~db/models";
+import type { DebtId, ReceiptId, ReceiptItemId, SessionId } from "~db/ids";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
 export const assignableRoleSchema = z.literal(["viewer", "editor"]);
@@ -22,10 +17,10 @@ export const currencyCodeSchema = z
 	})
 	.transform<CurrencyCode>(flavored);
 
-export const receiptIdSchema = z.uuid().transform<ReceiptsId>(flavored);
-export const receiptItemIdSchema = z.uuid().transform<ReceiptItemsId>(flavored);
-export const sessionIdSchema = z.uuid().transform<SessionsSessionId>(flavored);
-export const debtIdSchema = z.uuid().transform<DebtsId>(flavored);
+export const receiptIdSchema = z.uuid().transform<ReceiptId>(flavored);
+export const receiptItemIdSchema = z.uuid().transform<ReceiptItemId>(flavored);
+export const sessionIdSchema = z.uuid().transform<SessionId>(flavored);
+export const debtIdSchema = z.uuid().transform<DebtId>(flavored);
 export const emailSchema = z
 	.email({ message: "Invalid email address" })
 	.transform((email) => ({ lowercase: email.toLowerCase(), original: email }));

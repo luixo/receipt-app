@@ -7,7 +7,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
 import { Skeleton } from "~components/skeleton";
 import { tv } from "~components/utils";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { hslToRgb } from "~utils/color";
 
 // eslint-disable-next-line tailwindcss/enforces-shorthand
@@ -56,7 +56,7 @@ export const SkeletonUserAvatar: React.FC<SkeletonProps> = (props) => (
 );
 
 type UserProps = SkeletonProps & {
-	id: UsersId;
+	id: UserId;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
 	dimmed?: boolean;

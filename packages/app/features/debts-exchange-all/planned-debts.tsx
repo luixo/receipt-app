@@ -29,7 +29,7 @@ import { Button } from "~components/button";
 import { SkeletonNumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow } from "~utils/date";
 import { round } from "~utils/math";
@@ -109,7 +109,7 @@ const getDebt = (
 
 type Props = {
 	selectedCurrencyCode: CurrencyCode;
-	userId: UsersId;
+	userId: UserId;
 	onDone: () => void;
 };
 

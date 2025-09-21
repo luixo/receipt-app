@@ -1,6 +1,6 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { upsertInArray } from "~utils/array";
 
 import type {
@@ -19,7 +19,7 @@ type AggregatedDebts = TRPCQueryOutput<"debts.getAllUser">;
 type AggregatedDebt = AggregatedDebts[number];
 
 const updateAllSums =
-	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	({ queryClient, procedure }: Controller, userId: UserId) =>
 	(updater: UpdateFn<AggregatedDebts>) =>
 		withRef<AggregatedDebts | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ userId }), (prevDebts) => {
@@ -29,7 +29,7 @@ const updateAllSums =
 		});
 
 const updateSum =
-	(controller: Controller, userId: UsersId, currencyCode: CurrencyCode) =>
+	(controller: Controller, userId: UserId, currencyCode: CurrencyCode) =>
 	(updater: UpdateFn<number>) =>
 		withRef<AggregatedDebt | undefined>((ref) => {
 			updateAllSums(
@@ -48,14 +48,14 @@ const updateSum =
 
 const invalidate =
 	({ queryClient, procedure }: Controller) =>
-	(userId: UsersId) =>
+	(userId: UserId) =>
 		queryClient.invalidateQueries(procedure.queryFilter({ userId }));
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getAllUser };
 	return {
 		update: (
-			userId: UsersId,
+			userId: UserId,
 			currencyCode: CurrencyCode,
 			updater: UpdateFn<number>,
 		) => updateSum(controller, userId, currencyCode)(updater),
@@ -70,7 +70,7 @@ export const getRevertController = ({
 	const controller = { queryClient, procedure: trpc.debts.getAllUser };
 	return {
 		update: (
-			userId: UsersId,
+			userId: UserId,
 			currencyCode: CurrencyCode,
 			updater: UpdateFn<number>,
 			revertUpdater: SnapshotFn<number>,

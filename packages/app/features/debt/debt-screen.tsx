@@ -43,7 +43,7 @@ import { SkeletonInput } from "~components/input";
 import { BackLink, ButtonLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";
 import { SaveButton } from "~components/save-button";
-import type { DebtsId, UsersId } from "~db/models";
+import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import type { Temporal } from "~utils/date";
@@ -52,7 +52,7 @@ import { areEqual } from "~utils/date";
 import { DebtControlButtons } from "./debt-control-buttons";
 
 type HeaderProps = {
-	userId?: UsersId;
+	userId?: UserId;
 } & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "startContent">;
 
 const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
@@ -67,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
 );
 
 const DebtCurrencyInput = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	isLoading: boolean;
 }>(
 	({ debtId, isLoading }) => {
@@ -130,7 +130,7 @@ const DebtCurrencyInput = suspendedFallback<{
 );
 
 const DebtAmountInput = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	isLoading: boolean;
 }>(
 	({ debtId, isLoading }) => {
@@ -218,7 +218,7 @@ const DebtAmountInput = suspendedFallback<{
 );
 
 const DebtDateInput = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	isLoading: boolean;
 }>(
 	({ debtId, isLoading: isDisabled }) => {
@@ -260,7 +260,7 @@ const DebtDateInput = suspendedFallback<{
 );
 
 const DebtNoteInput = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	isLoading: boolean;
 }>(
 	({ debtId, isLoading }) => {
@@ -327,7 +327,7 @@ const DebtNoteInput = suspendedFallback<{
 );
 
 type RemoveButtonProps = {
-	debtId: DebtsId;
+	debtId: DebtId;
 	setLoading: (nextLoading: boolean) => void;
 } & Omit<React.ComponentProps<typeof RemoveButton>, "mutation" | "onRemove">;
 
@@ -384,7 +384,7 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = suspendedFallback(
 );
 
 const DebtSignButtonGroup = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	disabled: boolean;
 }>(
 	({ debtId, disabled }) => {
@@ -426,7 +426,7 @@ const DebtSignButtonGroup = suspendedFallback<{
 	<SkeletonSignButtonGroup />,
 );
 
-const DebtHeader = suspendedFallback<{ debtId: DebtsId }>(
+const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 	({ debtId }) => {
 		const { t } = useTranslation("debts");
 		const trpc = useTRPC();
@@ -472,7 +472,7 @@ const DebtHeader = suspendedFallback<{ debtId: DebtsId }>(
 	},
 );
 
-const DebtUser = suspendedFallback<{ debtId: DebtsId }>(
+const DebtUser = suspendedFallback<{ debtId: DebtId }>(
 	({ debtId }) => {
 		const trpc = useTRPC();
 		const { data: debt } = useSuspenseQuery(
@@ -484,7 +484,7 @@ const DebtUser = suspendedFallback<{ debtId: DebtsId }>(
 );
 
 export const DebtScreen: React.FC<{
-	id: DebtsId;
+	id: DebtId;
 }> = ({ id }) => {
 	const [removing, setRemoving] = React.useState(false);
 

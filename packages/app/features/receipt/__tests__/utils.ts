@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type {
 	GenerateReceipt,
@@ -39,9 +39,9 @@ type Fixtures = {
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		users: ReturnType<GenerateUsers>;
-		selfUserId: UsersId;
+		selfUserId: UserId;
 	}>;
-	openReceipt: (id: ReceiptsId) => Promise<void>;
+	openReceipt: (id: ReceiptId) => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({

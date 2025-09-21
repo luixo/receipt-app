@@ -22,14 +22,14 @@ import { TrashBin } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import { BackLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import { options as usersRemoveOptions } from "~mutations/users/remove";
 import { options as usersUpdateOptions } from "~mutations/users/update";
 
 import { UserConnectionInput } from "./user-connection-input";
 
 type NameProps = {
-	id: UsersId;
+	id: UserId;
 	isLoading: boolean;
 };
 
@@ -98,7 +98,7 @@ const UserNameInput = suspendedFallback<NameProps>(
 );
 
 type PublicNameProps = {
-	id: UsersId;
+	id: UserId;
 	isLoading: boolean;
 };
 
@@ -205,7 +205,7 @@ const UserPublicNameInput = suspendedFallback<PublicNameProps>(
 );
 
 type RemoveProps = {
-	id: UsersId;
+	id: UserId;
 	setLoading: (nextLoading: boolean) => void;
 	onSuccess?: () => void;
 } & Omit<
@@ -250,7 +250,7 @@ const UserRemoveButton = suspendedFallback<RemoveProps>(
 	),
 );
 
-export const User: React.FC<{ id: UsersId; onRemove: () => void }> = ({
+export const User: React.FC<{ id: UserId; onRemove: () => void }> = ({
 	id,
 	onRemove,
 }) => {

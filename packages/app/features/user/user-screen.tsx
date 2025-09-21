@@ -4,11 +4,11 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { BackLink } from "~components/link";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { User } from "./user";
 
-export const UserScreen: React.FC<{ id: UsersId }> = ({ id }) => {
+export const UserScreen: React.FC<{ id: UserId }> = ({ id }) => {
 	const navigate = useNavigate();
 
 	const onUserRemove = React.useCallback(() => {

@@ -27,7 +27,7 @@ import { ReceiptIcon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptId } from "~db/ids";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";
@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = (props) => (
 	/>
 );
 
-export const Receipt = suspendedFallback<{ id: ReceiptsId }>(
+export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 	({ id }) => {
 		const trpc = useTRPC();
 		const { data: receipt } = useSuspenseQuery(

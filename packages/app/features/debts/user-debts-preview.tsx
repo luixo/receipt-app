@@ -15,7 +15,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody } from "~components/card";
 import { CardLink } from "~components/link";
 import { tv } from "~components/utils";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 const card = tv({
 	base: "flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center",
@@ -26,7 +26,7 @@ const card = tv({
 	},
 });
 
-export const UserDebtsPreviewSkeleton: React.FC<{ userId?: UsersId }> = ({
+export const UserDebtsPreviewSkeleton: React.FC<{ userId?: UserId }> = ({
 	userId,
 }) => (
 	<Card>
@@ -39,7 +39,7 @@ export const UserDebtsPreviewSkeleton: React.FC<{ userId?: UsersId }> = ({
 	</Card>
 );
 
-export const UserDebtsPreview = suspendedFallback<{ userId: UsersId }>(
+export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 	({ userId }) => {
 		const trpc = useTRPC();
 		const { data: userDebts } = useSuspenseQuery(

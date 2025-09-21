@@ -6,7 +6,7 @@ import {
 	MAX_DEBT_NOTE_LENGTH,
 	MIN_DEBT_NOTE_LENGTH,
 } from "~app/utils/validation";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptId, UserId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
@@ -18,7 +18,7 @@ import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 export const getRandomAmount = () =>
 	(faker.datatype.boolean() ? 1 : -1) * Number(faker.finance.amount());
 
-export const getValidDebt = (userId: UsersId = faker.string.uuid()) => ({
+export const getValidDebt = (userId: UserId = faker.string.uuid()) => ({
 	note: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
 	userId,
@@ -142,7 +142,7 @@ export const verifyTimestamp = <T>(
 export const verifyReceiptId = <T>(
 	runProcedure: (
 		context: UnauthorizedContext,
-		receiptId: ReceiptsId,
+		receiptId: ReceiptId,
 	) => Promise<T>,
 	prefix: string,
 ) => {
@@ -160,7 +160,7 @@ export const verifyReceiptId = <T>(
 };
 
 export const verifyUserId = <T>(
-	runProcedure: (context: UnauthorizedContext, userId: UsersId) => Promise<T>,
+	runProcedure: (context: UnauthorizedContext, userId: UserId) => Promise<T>,
 	prefix: string,
 ) => {
 	describe("userId", () => {

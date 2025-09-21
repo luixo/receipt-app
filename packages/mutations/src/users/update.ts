@@ -1,5 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import {
 	invalidateSuggest as invalidateSuggestUsers,
@@ -39,7 +39,7 @@ const getRevert =
 
 type OwnUserSnapshot = Exclude<
 	TRPCQueryOutput<"users.getForeign">,
-	{ remoteId: UsersId }
+	{ remoteId: UserId }
 >;
 
 const applyForeignUpdate =

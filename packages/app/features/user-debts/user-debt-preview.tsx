@@ -15,7 +15,7 @@ import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
-import type { DebtsId, UsersId } from "~db/models";
+import type { DebtId, UserId } from "~db/ids";
 
 type DebtShape = {
 	amount: React.ReactNode;
@@ -70,7 +70,7 @@ export const UserDebtPreviewSkeleton = () => (
 );
 
 const OnlyWithConnectedAccount = suspendedFallback<
-	React.PropsWithChildren<{ userId: UsersId }>
+	React.PropsWithChildren<{ userId: UserId }>
 >(({ userId, children }) => {
 	const trpc = useTRPC();
 	const { data: user } = useSuspenseQuery(
@@ -83,7 +83,7 @@ const OnlyWithConnectedAccount = suspendedFallback<
 }, null);
 
 export const UserDebtPreview = suspendedFallback<{
-	debtId: DebtsId;
+	debtId: DebtId;
 	resolved: boolean;
 	isSelected: boolean;
 	onValueChange: (nextValue: boolean) => void;

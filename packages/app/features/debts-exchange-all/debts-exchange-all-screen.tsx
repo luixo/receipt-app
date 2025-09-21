@@ -19,12 +19,12 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { BackLink } from "~components/link";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";
 
-const ExchangeDebtsGroup = suspendedFallback<{ userId: UsersId }>(
+const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 	({ userId }) => {
 		const [showResolvedDebts] = useShowResolvedDebts();
 		const trpc = useTRPC();
@@ -43,7 +43,7 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UsersId }>(
 );
 
 export const DebtsExchangeAllScreen: React.FC<{
-	userId: UsersId;
+	userId: UserId;
 	fromState: SearchParamState<"/debts/user/$id/exchange/all", "from">;
 }> = ({ userId, fromState }) => {
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = fromState;

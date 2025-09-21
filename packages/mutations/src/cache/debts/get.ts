@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 
 import type {
 	ControllerContext,
@@ -21,7 +21,7 @@ type Controller = ControllerWith<{
 type Debt = TRPCQueryOutput<"debts.get">;
 
 const update =
-	({ queryClient, procedure }: Controller, debtId: DebtsId) =>
+	({ queryClient, procedure }: Controller, debtId: DebtId) =>
 	(updater: UpdateFn<Debt>) =>
 		withRef<Debt | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: debtId }), (debt) => {
@@ -33,7 +33,7 @@ const update =
 const upsert = ({ queryClient, procedure }: Controller, debt: Debt) =>
 	queryClient.setQueryData(procedure.queryKey({ id: debt.id }), debt);
 
-const remove = ({ queryClient, procedure }: Controller, debtId: DebtsId) =>
+const remove = ({ queryClient, procedure }: Controller, debtId: DebtId) =>
 	withRef<Debt | undefined>((ref) => {
 		ref.current = queryClient.getQueryData(procedure.queryKey({ id: debtId }));
 		return queryClient.invalidateQueries(procedure.queryFilter({ id: debtId }));
@@ -42,10 +42,10 @@ const remove = ({ queryClient, procedure }: Controller, debtId: DebtsId) =>
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.get };
 	return {
-		update: (debtId: DebtsId, updater: UpdateFn<Debt>) =>
+		update: (debtId: DebtId, updater: UpdateFn<Debt>) =>
 			update(controller, debtId)(updater),
 		add: (debt: Debt) => upsert(controller, debt),
-		remove: (debtId: DebtsId) => {
+		remove: (debtId: DebtId) => {
 			remove(controller, debtId);
 		},
 	};
@@ -58,7 +58,7 @@ export const getRevertController = ({
 	const controller = { queryClient, procedure: trpc.debts.get };
 	return {
 		update: (
-			debtId: DebtsId,
+			debtId: DebtId,
 			updater: UpdateFn<Debt>,
 			revertUpdater: SnapshotFn<Debt>,
 		) =>
@@ -72,7 +72,7 @@ export const getRevertController = ({
 				() => upsert(controller, debt),
 				() => remove(controller, debt.id),
 			),
-		remove: (debtId: DebtsId) =>
+		remove: (debtId: DebtId) =>
 			applyWithRevert(
 				() => remove(controller, debtId),
 				(snapshot) => upsert(controller, snapshot),

@@ -3,7 +3,7 @@ import { isNonNullish, unique } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { DebtsId } from "~db/models";
+import type { DebtId } from "~db/ids";
 import type { Temporal } from "~utils/date";
 import { getNow, temporalSchemas } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
@@ -101,7 +101,7 @@ const getMatchedUser = (
 const addAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
 	users: Awaited<ReturnType<typeof getData>>["users"],
-	debts: (z.infer<typeof addDebtSchema> & { generatedId: DebtsId })[],
+	debts: (z.infer<typeof addDebtSchema> & { generatedId: DebtId })[],
 ) => {
 	const { updatedDebts, newDebts } = await upsertAutoAcceptedDebts(
 		ctx.database,
@@ -148,34 +148,31 @@ const addAutoAcceptingDebts = async (
 		return matchedUser.userId;
 	});
 	return {
-		reverseIdMap: debts.reduce<Partial<Record<string, DebtsId>>>(
-			(acc, debt) => {
-				if (!debt.receiptId) {
-					return acc;
-				}
-				const matchedUser = getMatchedUser(debt, users);
-				const matchedUpdatedDebt = updatedDebts.find(
-					(lookupDebt) =>
-						lookupDebt.receiptId === debt.receiptId &&
-						lookupDebt.userId === matchedUser.theirUserId,
-				);
-				if (!matchedUpdatedDebt) {
-					return acc;
-				}
-				return {
-					...acc,
-					[getDebtUserReceiptTupleId(debt)]: matchedUpdatedDebt.id,
-				};
-			},
-			{},
-		),
+		reverseIdMap: debts.reduce<Partial<Record<string, DebtId>>>((acc, debt) => {
+			if (!debt.receiptId) {
+				return acc;
+			}
+			const matchedUser = getMatchedUser(debt, users);
+			const matchedUpdatedDebt = updatedDebts.find(
+				(lookupDebt) =>
+					lookupDebt.receiptId === debt.receiptId &&
+					lookupDebt.userId === matchedUser.theirUserId,
+			);
+			if (!matchedUpdatedDebt) {
+				return acc;
+			}
+			return {
+				...acc,
+				[getDebtUserReceiptTupleId(debt)]: matchedUpdatedDebt.id,
+			};
+		}, {}),
 		acceptedUserIds,
 	};
 };
 
 const addDebts = async (
 	ctx: AuthorizedContext,
-	debts: (z.infer<typeof addDebtSchema> & { generatedId: DebtsId })[],
+	debts: (z.infer<typeof addDebtSchema> & { generatedId: DebtId })[],
 	reverseIdMap: Awaited<
 		ReturnType<typeof addAutoAcceptingDebts>
 	>["reverseIdMap"],
@@ -214,7 +211,7 @@ const queueAddDebt = queueCallFactory<
 	AuthorizedContext,
 	z.infer<typeof addDebtSchema>,
 	{
-		id: DebtsId;
+		id: DebtId;
 		updatedAt: Temporal.ZonedDateTime;
 		// `undefined` signifies that user is local
 		reverseAccepted: boolean | undefined;
@@ -251,7 +248,7 @@ const queueAddDebt = queueCallFactory<
 				message: `There is already a debt for user "${matchedDebtReceipt.userId}" in receipt "${matchedDebtReceipt.receiptId}".`,
 			});
 		}
-		return { ...debt, generatedId: ctx.getUuid() as DebtsId };
+		return { ...debt, generatedId: ctx.getUuid() as DebtId };
 	});
 	const debts = debtsOrErrors.filter(
 		(debtOrError): debtOrError is Exclude<typeof debtOrError, TRPCError> =>

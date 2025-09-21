@@ -2,7 +2,7 @@ import type { Insertable } from "kysely";
 import { isNonNullish, omit } from "remeda";
 
 import type { Database } from "~db/database";
-import type { DebtsId, UsersId } from "~db/models";
+import type { DebtId, UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { MakeUndefinedOptional } from "~utils/types";
 
@@ -71,7 +71,7 @@ export const upsertAutoAcceptedDebts = async (
 		.filter(isNonNullish);
 	const [newDebts, ...updatedDebts] = await Promise.all([
 		nonExistentDebts.length === 0
-			? ([] as { id: DebtsId; userId: UsersId }[])
+			? ([] as { id: DebtId; userId: UserId }[])
 			: database
 					.insertInto("debts")
 					.values(nonExistentDebts.map((debt) => omit(debt, ["isNew"])))

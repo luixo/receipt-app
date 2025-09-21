@@ -11,7 +11,7 @@ import { Chip } from "~components/chip";
 import { Skeleton } from "~components/skeleton";
 import { User as RawUser } from "~components/user";
 import { tv } from "~components/utils";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 
 const wrapper = tv({ base: "text-foreground" });
 
@@ -54,7 +54,7 @@ export const SkeletonUser: React.FC<
 };
 
 export type Props = {
-	id: UsersId;
+	id: UserId;
 	name: string;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	chip?: boolean | React.ComponentProps<typeof Chip>;

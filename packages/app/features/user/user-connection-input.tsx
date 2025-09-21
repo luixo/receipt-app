@@ -12,13 +12,13 @@ import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
 import { Input, SkeletonInput } from "~components/input";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountId, UserId } from "~db/ids";
 import { options as accountConnectionsAddOptions } from "~mutations/account-connection-intentions/add";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 import { options as usersUnlinkOptions } from "~mutations/users/unlink";
 
 type Props = {
-	id: UsersId;
+	id: UserId;
 	isLoading: boolean;
 };
 
@@ -68,7 +68,7 @@ export const UserConnectionInput: React.FC<Props> = suspendedFallback(
 			),
 		);
 		const cancelRequest = React.useCallback(
-			(accountId: AccountsId) =>
+			(accountId: AccountId) =>
 				cancelRequestMutation.mutate({ targetAccountId: accountId }),
 			[cancelRequestMutation],
 		);

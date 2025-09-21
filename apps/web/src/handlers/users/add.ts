@@ -4,7 +4,7 @@ import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { UsersId } from "~db/models";
+import type { UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import { batchFn as addAccountConnectionIntentions } from "~web/handlers/account-connection-intentions/add";
 import { queueCallFactory } from "~web/handlers/batch";
@@ -23,7 +23,7 @@ const getUsers = (
 	inputs: readonly z.infer<typeof addUserSchema>[],
 ) =>
 	inputs.map((input) => {
-		const id = ctx.getUuid() as UsersId;
+		const id = ctx.getUuid() as UserId;
 		return {
 			user: {
 				id,
@@ -80,7 +80,7 @@ const queueAddUser = queueCallFactory<
 	AuthorizedContext,
 	z.infer<typeof addUserSchema>,
 	{
-		id: UsersId;
+		id: UserId;
 		connection?: Exclude<
 			Awaited<
 				ReturnType<ReturnType<typeof addAccountConnectionIntentions>>
