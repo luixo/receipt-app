@@ -1,11 +1,10 @@
 import React from "react";
 
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import { isNonNullish } from "remeda";
 
 import { useDecimals } from "~app/hooks/use-decimals";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { ensureQueryDataOrError } from "~app/utils/queries";
 import {
 	getItemCalculations,
 	getParticipantSums,
@@ -94,38 +93,26 @@ export const useParticipantsWithDebts = (
 ) => {
 	const participants = useParticipants(receipt);
 	const trpc = useTRPC();
-	const queryClient = useQueryClient();
 	const debtIds = getDebtIds(receipt);
-	const debtPromises = React.useMemo(
-		() =>
-			Promise.all(
-				debtIds.map((debtId) =>
-					ensureQueryDataOrError(
-						queryClient,
-						trpc.debts.get.queryOptions({ id: debtId }),
-					),
-				),
-			),
-		[queryClient, debtIds, trpc],
-	);
-	const debtDataOrErrors = React.use(debtPromises);
-	const debts = debtDataOrErrors.map((dataOrError) =>
-		"data" in dataOrError ? dataOrError.data : null,
-	);
 	const { data: intentions } = useSuspenseQuery(
 		trpc.debtIntentions.getAll.queryOptions(),
 	);
+	const debts = useSuspenseQueries({
+		queries: debtIds
+			.filter(
+				(debtId) => !intentions.some((intention) => intention.id === debtId),
+			)
+			.map((debtId) => trpc.debts.get.queryOptions({ id: debtId })),
+	});
 	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 	const getDebt = React.useCallback(
 		(participantUserId: UsersId) => {
 			const ownDebt = debts.find((debt) =>
-				debt
-					? isOwner
-						? debt.userId === participantUserId
-						: debt.userId === receipt.ownerUserId &&
-							participantUserId === receipt.selfUserId
-					: false,
-			);
+				isOwner
+					? debt.data.userId === participantUserId
+					: debt.data.userId === receipt.ownerUserId &&
+						participantUserId === receipt.selfUserId,
+			)?.data;
 			const incomingIntention = intentions.find(
 				(intention) =>
 					intention.userId === participantUserId &&
