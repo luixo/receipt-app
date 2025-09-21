@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { useMutation } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
@@ -26,6 +27,8 @@ import type { ReceiptsId } from "~db/models";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
+
+const SEARCH_UPDATE_DEBOUNCE = 1000;
 
 const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const { t } = useTranslation("receipts");
@@ -104,10 +107,14 @@ export const Receipts = suspendedFallback<Props>(
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
 		const [filters, setFilters] = filtersState;
-		const updateFilters = React.useCallback(
+		const updateFiltersQuery = React.useCallback(
 			(nextValue: string) =>
 				setFilters((prev) => ({ ...prev, query: nextValue })),
 			[setFilters],
+		);
+		const debounceUpdateFiltersQuery = useDebouncedCallback(
+			updateFiltersQuery,
+			{ wait: SEARCH_UPDATE_DEBOUNCE },
 		);
 		const { data, onPageChange, isPending } = useCursorPaging(
 			trpc.receipts.getPaged,
@@ -164,8 +171,8 @@ export const Receipts = suspendedFallback<Props>(
 						setSelectedItems: setSelectedReceiptIds,
 					}}
 					search={{
-						onValueChange: updateFilters,
-						initialValue: filters.query ?? "",
+						onValueChange: debounceUpdateFiltersQuery,
+						value: filters.query ?? "",
 					}}
 					endContent={
 						<RemoveReceiptsButton

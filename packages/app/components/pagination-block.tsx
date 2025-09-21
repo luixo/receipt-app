@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
@@ -47,6 +47,14 @@ export function PaginationBlockShape<T>({
 				: "selected-partial"
 		: undefined;
 
+	const [searchInput, setSearchInput] = React.useState(search?.value ?? "");
+	React.useEffect(() => {
+		search?.onValueChange(searchInput);
+	}, [searchInput, search]);
+	const searchBar = search ? (
+		<SearchBar {...search} value={searchInput} onValueChange={setSearchInput} />
+	) : null;
+
 	return (
 		<>
 			<View
@@ -84,19 +92,20 @@ export function PaginationBlockShape<T>({
 							page={totalCount === 0 ? 0 : offset / limit + 1}
 							onChange={onPageChange}
 						/>
-					) : search ? (
-						<SearchBar className={"block sm:hidden"} {...search} />
+					) : searchBar ? (
+						<View className="block sm:hidden">{searchBar}</View>
 					) : null}
 				</View>
 				<View className="flex flex-1 flex-row items-center justify-end gap-2">
-					{search ? (
-						<SearchBar
+					{searchBar ? (
+						<View
 							className={cn(
 								"block",
 								totalCount <= limit ? "max-sm:hidden" : "sm:hidden",
 							)}
-							{...search}
-						/>
+						>
+							{searchBar}
+						</View>
 					) : null}
 					{endContent}
 					{totalCount <= DEFAULT_LIMIT ? null : (
@@ -127,11 +136,12 @@ export function PaginationBlockShape<T>({
 					)}
 				</View>
 			</View>
-			{search ? (
-				<SearchBar
+			{searchBar ? (
+				<View
 					className={cn("hidden", totalCount > limit ? "sm:block" : undefined)}
-					{...search}
-				/>
+				>
+					{searchBar}
+				</View>
 			) : null}
 		</>
 	);
