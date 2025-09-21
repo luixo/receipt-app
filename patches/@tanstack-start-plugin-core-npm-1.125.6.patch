@@ -1,0 +1,40 @@
+# see https://github.com/TanStack/router/pull/5180
+diff --git a/dist/cjs/resolve-virtual-entries-plugin/plugin.cjs b/dist/cjs/resolve-virtual-entries-plugin/plugin.cjs
+index f24601efef9b5b2f8ef7d09412c0261e4b16c258..7733bf063e258ae5ffe600da8622aeaf4b960f24 100644
+--- a/dist/cjs/resolve-virtual-entries-plugin/plugin.cjs
++++ b/dist/cjs/resolve-virtual-entries-plugin/plugin.cjs
+@@ -58,7 +58,7 @@ function resolveVirtualEntriesPlugin(opts, startConfig) {
+           const ssrEntryFilepath = startConfig.serverEntryPath.startsWith(
+             "/~start/default-server-entry"
+           ) ? startConfig.serverEntryPath : vite__namespace.normalizePath(
+-            path.resolve(resolvedConfig.root, startConfig.serverEntryPath)
++            path.resolve(startConfig.root || resolvedConfig.root, startConfig.serverEntryPath)
+           );
+           return opts.getVirtualServerRootHandler({
+             routerFilepath,
+diff --git a/dist/esm/resolve-virtual-entries-plugin/plugin.js b/dist/esm/resolve-virtual-entries-plugin/plugin.js
+index 1dbd052aa29a6d74062c8cc9529c88b538f7aa13..f1a385a60bc9b564453696c795afae334bc471b2 100644
+--- a/dist/esm/resolve-virtual-entries-plugin/plugin.js
++++ b/dist/esm/resolve-virtual-entries-plugin/plugin.js
+@@ -39,7 +39,7 @@ function resolveVirtualEntriesPlugin(opts, startConfig) {
+           const ssrEntryFilepath = startConfig.serverEntryPath.startsWith(
+             "/~start/default-server-entry"
+           ) ? startConfig.serverEntryPath : vite.normalizePath(
+-            path.resolve(resolvedConfig.root, startConfig.serverEntryPath)
++            path.resolve(startConfig.root || resolvedConfig.root, startConfig.serverEntryPath)
+           );
+           return opts.getVirtualServerRootHandler({
+             routerFilepath,
+diff --git a/src/resolve-virtual-entries-plugin/plugin.ts b/src/resolve-virtual-entries-plugin/plugin.ts
+index 3046781a4a49d086aa623816a8da45cf97af700b..4263eea15a36c3a09ee6ec699fa38faf408146e3 100644
+--- a/src/resolve-virtual-entries-plugin/plugin.ts
++++ b/src/resolve-virtual-entries-plugin/plugin.ts
+@@ -53,7 +53,7 @@ export function resolveVirtualEntriesPlugin(
+           )
+             ? startConfig.serverEntryPath
+             : vite.normalizePath(
+-                path.resolve(resolvedConfig.root, startConfig.serverEntryPath),
++                path.resolve(startConfig.root || resolvedConfig.root, startConfig.serverEntryPath),
+               )
+ 
+           return opts.getVirtualServerRootHandler({

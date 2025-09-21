@@ -11429,6 +11429,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/start-plugin-core@patch:@tanstack/start-plugin-core@npm%3A1.125.6#~/patches/@tanstack-start-plugin-core-npm-1.125.6.patch":
+  version: 1.125.6
+  resolution: "@tanstack/start-plugin-core@patch:@tanstack/start-plugin-core@npm%3A1.125.6#~/patches/@tanstack-start-plugin-core-npm-1.125.6.patch::version=1.125.6&hash=b22ac6"
+  dependencies:
+    "@babel/code-frame": "npm:7.26.2"
+    "@babel/core": "npm:^7.26.8"
+    "@babel/types": "npm:^7.26.8"
+    "@tanstack/router-core": "npm:1.125.4"
+    "@tanstack/router-generator": "npm:1.125.4"
+    "@tanstack/router-plugin": "npm:1.125.6"
+    "@tanstack/router-utils": "npm:1.121.21"
+    "@tanstack/server-functions-plugin": "npm:1.124.1"
+    "@tanstack/start-server-core": "npm:1.125.4"
+    "@types/babel__code-frame": "npm:^7.0.6"
+    "@types/babel__core": "npm:^7.20.5"
+    babel-dead-code-elimination: "npm:^1.0.9"
+    cheerio: "npm:^1.0.0"
+    h3: "npm:1.13.0"
+    nitropack: "npm:^2.11.12"
+    pathe: "npm:^2.0.3"
+    ufo: "npm:^1.5.4"
+    xmlbuilder2: "npm:^3.1.1"
+    zod: "npm:^3.24.2"
+  peerDependencies:
+    vite: ">=6.0.0"
+  checksum: 10/ff10dd52f156b3fafdf548d8eae1b0b320d9853c3573ce03ba74bdfb4fe0ffe55cbc69a3cc47ec12346ccc78a68f1ed34c21f830ee47423d4ff37c87d2fbd9ba
+  languageName: node
+  linkType: hard
+
 "@tanstack/start-server-core@npm:1.125.4":
   version: 1.125.4
   resolution: "@tanstack/start-server-core@npm:1.125.4"
