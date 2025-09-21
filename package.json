@@ -12,9 +12,8 @@
 	"scripts": {
 		"backend:test": "NODE_OPTIONS='--import tsx' vitest",
 		"db:generate-types": "kysely-codegen",
-		"db:migrate": "dotenv -c -- yarn workspace @ra/db db:migrate",
-		"db:migrate:production": "dotenv -c production -- yarn workspace @ra/db db:migrate",
-		"dev": "dotenv -c -- yarn workspace @ra/scripts dev",
+		"db:migrate": "yarn workspace @ra/db db:migrate",
+		"dev": "yarn workspace @ra/scripts dev",
 		"format": "prettier --write .",
 		"format:verify": "prettier --check .",
 		"frontend:test": "yarn workspace @ra/playwright test",
@@ -26,7 +25,7 @@
 		"native:dev": "yarn workspace @ra/mobile dev",
 		"typecheck": "tsc --noEmit",
 		"web:build": "yarn workspace @ra/web build",
-		"web:dev": "dotenv -c -- yarn workspace @ra/web dev",
+		"web:dev": "yarn workspace @ra/web dev",
 		"web:start": "yarn workspace @ra/web start"
 	},
 	"pre-commit": [
@@ -80,8 +79,6 @@
 		"@typescript-eslint/parser": "^8.38.0",
 		"@vitest/coverage-v8": "^3.2.2",
 		"alias-hq": "^6.2.1",
-		"dotenv": "^16.0.0",
-		"dotenv-cli": "^5.1.0",
 		"eslint": "^9.32.0",
 		"eslint-config-airbnb-extended": "^2.1.2",
 		"eslint-config-prettier": "^10.1.8",

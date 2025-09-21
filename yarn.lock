@@ -16540,20 +16540,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-cli@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "dotenv-cli@npm:5.1.0"
-  dependencies:
-    cross-spawn: "npm:^7.0.3"
-    dotenv: "npm:^16.0.0"
-    dotenv-expand: "npm:^8.0.1"
-    minimist: "npm:^1.2.5"
-  bin:
-    dotenv: cli.js
-  checksum: 10/dd060623c4b63555effe9c25c073c0c01be1f0d17a0bc35a6b18f98ca8f918a5dfdd0ff2b879152fd2df9d57b207126d04adcb0207b9f66268ba9c788c213578
-  languageName: node
-  linkType: hard
-
 "dotenv-expand@npm:^12.0.2":
   version: 12.0.3
   resolution: "dotenv-expand@npm:12.0.3"
@@ -16563,24 +16549,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-expand@npm:^8.0.1":
-  version: 8.0.3
-  resolution: "dotenv-expand@npm:8.0.3"
-  checksum: 10/375c681ee44511ac30491494b106761c76a132b800ffe5060bfd2037fffa942941bf15b7fcc93113836c33ca05a8880d0bd82ba82d3c5cccc2d32419fe11b182
-  languageName: node
-  linkType: hard
-
 "dotenv-expand@npm:~10.0.0":
   version: 10.0.0
   resolution: "dotenv-expand@npm:10.0.0"
   checksum: 10/b41eb278bc96b92cbf3037ca5f3d21e8845bf165dc06b6f9a0a03d278c2bd5a01c0cfbb3528ae3a60301ba1a8a9cace30e748c54b460753bc00d4c014b675597
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^16.0.0":
-  version: 16.3.1
-  resolution: "dotenv@npm:16.3.1"
-  checksum: 10/dbb778237ef8750e9e3cd1473d3c8eaa9cc3600e33a75c0e36415d0fa0848197f56c3800f77924c70e7828f0b03896818cd52f785b07b9ad4d88dba73fbba83f
   languageName: node
   linkType: hard
 
@@ -23699,7 +23671,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11, nanoid@npm:^3.3.8":
+"nanoid@npm:^3.3.11":
   version: 3.3.11
   resolution: "nanoid@npm:3.3.11"
   bin:
@@ -25514,18 +25486,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.4":
-  version: 8.4.32
-  resolution: "postcss@npm:8.4.32"
-  dependencies:
-    nanoid: "npm:^3.3.7"
-    picocolors: "npm:^1.0.0"
-    source-map-js: "npm:^1.0.2"
-  checksum: 10/28084864122f29148e1f632261c408444f5ead0e0b9ea9bd9729d0468818ebe73fe5dc0075acd50c1365dbe639b46a79cba27d355ec857723a24bc9af0f18525
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.47, postcss@npm:^8.5.1":
+"postcss@npm:^8.4.4, postcss@npm:^8.4.47, postcss@npm:^8.5.1, postcss@npm:^8.5.3":
   version: 8.5.4
   resolution: "postcss@npm:8.5.4"
   dependencies:
@@ -25533,17 +25494,6 @@ __metadata:
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
   checksum: 10/b037b55182aa3aa2f7c4ffb0f37518b35855bb0107222cc46e1b6fa13a4462cb2747d88d3bf66640e7cad20f465354b18d5eafffd44eba97364683a72a336695
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.5.3":
-  version: 8.5.3
-  resolution: "postcss@npm:8.5.3"
-  dependencies:
-    nanoid: "npm:^3.3.8"
-    picocolors: "npm:^1.1.1"
-    source-map-js: "npm:^1.2.1"
-  checksum: 10/6d7e21a772e8b05bf102636918654dac097bac013f0dc8346b72ac3604fc16829646f94ea862acccd8f82e910b00e2c11c1f0ea276543565d278c7ca35516a7c
   languageName: node
   linkType: hard
 
@@ -26662,8 +26612,6 @@ __metadata:
     "@vitest/coverage-v8": "npm:^3.2.2"
     alias-hq: "npm:^6.2.1"
     cookie: "npm:^1.0.2"
-    dotenv: "npm:^16.0.0"
-    dotenv-cli: "npm:^5.1.0"
     eslint: "npm:^9.32.0"
     eslint-config-airbnb-extended: "npm:^2.1.2"
     eslint-config-prettier: "npm:^10.1.8"

@@ -18,7 +18,7 @@ Install dependencies
 yarn install
 ```
 
-To run a development build, you need to copy `.env.example` file as `.env.local` and fill with proper values.
+To run a development build, you need to copy `.env.example` file as `.env` and fill with proper values.
 
 Run development (web & mobile):
 
@@ -74,7 +74,7 @@ npx playwright install
 
 ```sh
 # Mode is needed to run test-specific code
-npx dotenv -c -- yarn web:build --mode test
+yarn web:build --mode test
 ```
 
 #### Testing in development with HMR

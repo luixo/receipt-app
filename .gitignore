@@ -110,7 +110,8 @@ local.properties
 *.hprof
 
 # env files
-.env*.local
+.env
+.env.*
 
 # node.js
 #

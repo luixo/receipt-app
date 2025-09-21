@@ -1,9 +1,11 @@
 import { wrapVinxiConfigWithSentry } from "@sentry/tanstackstart-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import autoprefixer from "autoprefixer";
 import initModuleAlias, { addAlias } from "module-alias";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import url from "node:url";
+import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
 import type { Plugin } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
@@ -55,7 +57,10 @@ const replaceImportPlugin = (
 	},
 });
 
+const webDir = path.join(rootDir, "apps/web");
 const config = defineConfig({
+	root: rootDir,
+	publicDir: path.join(webDir, "public"),
 	resolve: {
 		extensions: [
 			// Prioritizing .ts(x) over .js(x) to keep proper imports
@@ -74,9 +79,15 @@ const config = defineConfig({
 			".json",
 		],
 	},
+	css: {
+		postcss: {
+			plugins: [tailwindcss(), autoprefixer()],
+		},
+	},
 	plugins: [
 		vitePluginInspect(),
 		tanstackStart({
+			root: webDir,
 			tsr: {
 				srcDirectory: "./src/entry",
 				routesDirectory: "./src/pages",
@@ -140,9 +151,7 @@ const config = defineConfig({
 				"inline-style-prefixer/lib/createPrefixer",
 			],
 		}),
-		viteTsConfigPaths({
-			projects: ["../../tsconfig.json"],
-		}),
+		viteTsConfigPaths(),
 		analyzer({
 			analyzerMode: "json",
 			enabled: Boolean(process.env.ANALYZE_BUNDLE),
