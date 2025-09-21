@@ -169,7 +169,17 @@ const config = defineConfig({
 });
 
 // We need this to place stats.json
-await fsp.mkdir("dist").catch(() => {});
+await fsp.mkdir(path.resolve(rootDir, "dist")).catch((error) => {
+	if (
+		typeof error === "object" &&
+		error &&
+		"code" in error &&
+		error.code === "EEXIST"
+	) {
+		return;
+	}
+	throw error;
+});
 
 export default process.env.NODE_ENV !== "production"
 	? config
