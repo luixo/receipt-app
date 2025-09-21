@@ -17,6 +17,7 @@
 		"format": "prettier --write .",
 		"format:verify": "prettier --check .",
 		"frontend:test": "yarn workspace @ra/playwright test",
+		"install:immutable": "yarn --immutable",
 		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
 		"ios:publish": "yarn workspace @ra/mobile ios:publish",
 		"lint": "eslint --max-warnings=0",
@@ -29,6 +30,7 @@
 		"web:start": "yarn workspace @ra/web start"
 	},
 	"pre-commit": [
+		"install:immutable",
 		"typecheck",
 		"lint-staged"
 	],
