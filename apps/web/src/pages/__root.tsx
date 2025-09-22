@@ -9,9 +9,11 @@ import {
 	Scripts,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
+import { serverOnly } from "@tanstack/react-start";
+import { getHeaders } from "@tanstack/react-start/server";
 import { serialize } from "cookie";
 import type { i18n as i18nType } from "i18next";
-import { fromEntries, keys, omit } from "remeda";
+import { keys, omit } from "remeda";
 import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
@@ -95,8 +97,12 @@ const RootComponent = () => {
 	const baseLinksContext = React.use(LinksContext);
 	const searchParams = Route.useSearch();
 
-	const linksContext = React.useMemo<LinksContextType>(
-		() => ({
+	const linksContext = React.useMemo<LinksContextType>(() => {
+		// We want headers to only exist on server-side so we don't pass them in the context
+		const headers = (
+			typeof window === "undefined" ? serverOnly(getHeaders) : undefined
+		)?.();
+		return {
 			debug: searchParams.debug,
 			url:
 				data.baseUrl && typeof window === "undefined"
@@ -106,19 +112,9 @@ const RootComponent = () => {
 			useBatch: !data.isTest,
 			source: typeof window === "undefined" ? "ssr" : "csr",
 			captureError: captureSentryError,
-			// We should check for just `data.request`, but serialization makes it complicated
-			headers: data.request?.headers
-				? fromEntries([...data.request.headers.entries()])
-				: undefined,
-		}),
-		[
-			baseLinksContext.url,
-			data.baseUrl,
-			searchParams.debug,
-			data.isTest,
-			data.request,
-		],
-	);
+			headers,
+		};
+	}, [baseLinksContext.url, searchParams.debug, data]);
 	const storeContext = React.useMemo(
 		() =>
 			getStoreContext(
@@ -153,10 +149,12 @@ const RootComponent = () => {
 };
 
 type EphemeralContext = {
+	request: Request | null;
 	queryClient: QueryClient;
 	i18n: i18nType;
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
+	request: true,
 	queryClient: true,
 	i18n: true,
 };
@@ -166,7 +164,6 @@ export type RouterContext = {
 	nowTimestamp: TemporalInputMapping["zonedDateTime"];
 	initialValues: StoreValues;
 	initialLanguage: Language;
-	request: Request | null;
 	isTest: boolean;
 } & EphemeralContext;
 

@@ -13,7 +13,7 @@
 		"@tanstack/react-form": "^1.12.2",
 		"@tanstack/react-pacer": "^0.16.3",
 		"@tanstack/react-query-persist-client": "^5.80.6",
-		"@tanstack/react-router": "^1.125.6",
+		"@tanstack/react-router": "^1.131.49",
 		"array.prototype.tosorted": "^1.1.2",
 		"boring-avatars": "^1.10.1",
 		"dataloader": "^2.2.2",

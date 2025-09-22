@@ -17,13 +17,13 @@ export const Route = createFileRoute("/_protected/receipts/$id")({
 		const receipt = await ctx.context.queryClient.fetchQuery(
 			trpc.receipts.get.queryOptions({ id: ctx.params.id }),
 		);
-		return { receipt };
+		return { receiptName: receipt.name };
 	},
 	head: ({ match, loaderData: data }) => ({
 		meta: [
 			{
 				title: data
-					? getTitle(match.context, "receipt", { name: data.receipt.name })
+					? getTitle(match.context, "receipt", { name: data.receiptName })
 					: getTitle(match.context, "receiptUnknown"),
 			},
 		],

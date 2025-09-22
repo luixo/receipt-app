@@ -1,5 +1,6 @@
 import { wrapVinxiConfigWithSentry } from "@sentry/tanstackstart-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
 import autoprefixer from "autoprefixer";
 import initModuleAlias, { addAlias } from "module-alias";
 import fsp from "node:fs/promises";
@@ -93,12 +94,13 @@ const config = defineConfig({
 				routesDirectory: "./src/pages",
 				routeFileIgnorePattern: "test.",
 			},
-			react: {
-				jsxImportSource: "nativewind",
-				babel: {
-					presets: ["nativewind/babel"],
-					plugins: [["babel-plugin-react-compiler", {}]],
-				},
+			customViteReactPlugin: true,
+		}),
+		viteReact({
+			jsxImportSource: "nativewind",
+			babel: {
+				presets: ["nativewind/babel"],
+				plugins: [["babel-plugin-react-compiler", {}]],
 			},
 		}),
 		replaceImportPlugin(
