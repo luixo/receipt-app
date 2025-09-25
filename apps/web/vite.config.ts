@@ -82,6 +82,7 @@ const config = defineConfig({
 	},
 	css: {
 		postcss: {
+			// @ts-expect-error Those packages yet to be upgraded (with upgrade to Tailwind v4)
 			plugins: [tailwindcss(), autoprefixer()],
 		},
 	},
