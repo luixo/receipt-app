@@ -14,23 +14,17 @@ import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody } from "~components/card";
 import { CardLink } from "~components/link";
-import { tv } from "~components/utils";
+import { cn } from "~components/utils";
 import type { UserId } from "~db/ids";
 
-const card = tv({
-	base: "flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center",
-	variants: {
-		transparent: {
-			true: "opacity-50",
-		},
-	},
-});
+const baseClassName =
+	"flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center";
 
 export const UserDebtsPreviewSkeleton: React.FC<{ userId?: UserId }> = ({
 	userId,
 }) => (
 	<Card>
-		<CardBody className={card({ transparent: Boolean(userId) })}>
+		<CardBody className={cn(baseClassName, userId ? "opacity-50" : undefined)}>
 			{userId ? <LoadableUser id={userId} /> : <SkeletonUser />}
 			<View className="flex flex-row items-center justify-center gap-2">
 				<DebtsGroupSkeleton className="shrink-0" amount={3} />
@@ -52,9 +46,10 @@ export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 		return (
 			<CardLink to="/debts/user/$id" params={{ id: userId }}>
 				<CardBody
-					className={card({
-						transparent: userDebts.every(({ sum }) => sum === 0),
-					})}
+					className={cn(
+						baseClassName,
+						userDebts.every(({ sum }) => sum === 0) ? "opacity-50" : undefined,
+					)}
 				>
 					<LoadableUser id={userId} />
 					<View className="flex flex-row items-center justify-center gap-2">

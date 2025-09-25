@@ -6,7 +6,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { usePathname } from "~app/hooks/use-navigation";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
-import { tv } from "~components/utils";
+import { cn } from "~components/utils";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
 
 type ShowProps = {
@@ -34,15 +34,6 @@ const WithShow = suspendedFallback<React.PropsWithChildren<ShowProps>>(
 	() => null,
 );
 
-const link = tv({
-	base: "text-foreground flex flex-1 flex-col items-center justify-center",
-	variants: {
-		selected: {
-			true: "text-primary",
-		},
-	},
-});
-
 const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	Icon,
 	pathname,
@@ -52,7 +43,14 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	selected,
 }) => (
 	<WithShow useShow={useShow}>
-		<Link key={pathname} to={pathname} className={link({ selected })}>
+		<Link
+			key={pathname}
+			to={pathname}
+			className={cn(
+				"text-foreground flex flex-1 flex-col items-center justify-center",
+				selected ? "text-primary" : undefined,
+			)}
+		>
 			<AmountBadge useAmount={useBadgeAmount}>
 				<Icon size={24} />
 			</AmountBadge>

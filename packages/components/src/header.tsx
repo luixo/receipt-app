@@ -3,18 +3,13 @@ import React from "react";
 import { H2, H3, H4 } from "@expo/html-elements";
 
 import { Text } from "./text";
-import { tv } from "./utils";
+import { cn } from "./utils";
 
-const wrapper = tv({
-	base: "font-medium",
-	variants: {
-		size: {
-			sm: "text-lg",
-			md: "text-2xl",
-			lg: "text-4xl",
-		},
-	},
-});
+const SIZE_CLASSNAME = {
+	sm: "text-lg",
+	md: "text-2xl",
+	lg: "text-4xl",
+};
 
 type Props = React.PropsWithChildren<{
 	size?: "sm" | "md" | "lg";
@@ -33,11 +28,11 @@ const getComponent = (size: NonNullable<Props["size"]>) => {
 };
 
 export const Header = React.memo<Props>(
-	({ size = "md", children, ...props }) => (
+	({ size = "md", children, className, ...props }) => (
 		<Text
 			{...props}
 			Component={getComponent(size)}
-			className={wrapper({ size, className: props.className })}
+			className={cn("font-medium", SIZE_CLASSNAME[size], className)}
 		>
 			{children}
 		</Text>

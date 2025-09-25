@@ -7,17 +7,8 @@ import { useLocale } from "~app/hooks/use-locale";
 import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
-import { tv } from "~components/utils";
+import { cn } from "~components/utils";
 import { round } from "~utils/math";
-
-const debt = tv({
-	variants: {
-		direction: {
-			out: "text-danger",
-			in: "text-success",
-		},
-	},
-});
 
 const DebtGroupElementSkeleton = () => (
 	<Skeleton className="h-6 w-20 rounded" data-testid="debt-group-element" />
@@ -32,16 +23,12 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 			numberOfLines={1}
 			key={currencyCode}
 			testID="debts-group-element"
-			className={debt({ direction: sum >= 0 ? "in" : "out" })}
+			className={cn(sum >= 0 ? "text-success" : "text-danger")}
 		>
 			{formatCurrency(locale, currencyCode, round(Math.abs(sum)))}
 		</Text>
 	);
 };
-
-const debtGroup = tv({
-	base: "shrink flex-row flex-wrap items-center justify-center gap-2",
-});
 
 const SeparatedDebts: React.FC<{ children: React.ReactNode[] }> = ({
 	children,
@@ -69,7 +56,12 @@ export const DebtsGroupSkeleton: React.FC<{
 		[amount],
 	);
 	return (
-		<View className={debtGroup({ className })}>
+		<View
+			className={cn(
+				"shrink flex-row flex-wrap items-center justify-center gap-2",
+				className,
+			)}
+		>
 			<SeparatedDebts>
 				{elements.map((_, index) => (
 					// eslint-disable-next-line react/no-array-index-key
@@ -87,7 +79,14 @@ type Props = {
 export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
 	const { t } = useTranslation("default");
 	return (
-		<View className={debtGroup({ className })} testID="debts-group" {...props}>
+		<View
+			className={cn(
+				"shrink flex-row flex-wrap items-center justify-center gap-2",
+				className,
+			)}
+			testID="debts-group"
+			{...props}
+		>
 			<SeparatedDebts>
 				{debts.map(({ currencyCode, sum }) => (
 					<DebtGroupElement

@@ -13,18 +13,8 @@ import {
 	UnsyncIcon,
 } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
-import { tv } from "~components/utils";
+import { cn } from "~components/utils";
 import { compare } from "~utils/date";
-
-const wrapper = tv({
-	base: "flex-row",
-	variants: {
-		type: {
-			sync: "text-success",
-			unsync: "text-warning",
-		},
-	},
-});
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -71,7 +61,7 @@ export const DebtSyncStatus: React.FC<Props> = ({
 			placement="bottom-end"
 		>
 			<View
-				className={wrapper({ type: synced ? "sync" : "unsync" })}
+				className={cn("flex-row", synced ? "text-success" : "text-warning")}
 				testID="debt-sync-status"
 			>
 				{synced ? (

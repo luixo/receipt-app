@@ -2,11 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { Header } from "~components/header";
-import { tv } from "~components/utils";
-
-const wrapper = tv({
-	base: "m-10 gap-4 self-center md:max-w-lg",
-});
+import { cn } from "~components/utils";
 
 type Props = {
 	title: string;
@@ -15,10 +11,10 @@ type Props = {
 } & React.ComponentProps<typeof View>;
 
 export const EmptyCard = React.memo<Props>(
-	({ title, children, startContent, endContent, ...props }) => (
+	({ title, children, startContent, endContent, className, ...props }) => (
 		<View
 			{...props}
-			className={wrapper({ className: props.className })}
+			className={cn("m-10 gap-4 self-center md:max-w-lg", className)}
 			testID="empty-card"
 		>
 			{startContent}

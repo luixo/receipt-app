@@ -6,25 +6,12 @@ import { useTranslation } from "react-i18next";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
 import { Skeleton } from "~components/skeleton";
-import { tv } from "~components/utils";
+import { cn } from "~components/utils";
 import type { UserId } from "~db/ids";
 import { hslToRgb } from "~utils/color";
 
-// eslint-disable-next-line tailwindcss/enforces-shorthand
-const wrapper = tv({
-	// The hover=true is needed to remove default translation of avatars in avatar group
-	base: "shrink-0 bg-transparent data-[hover=true]:translate-x-0",
-	variants: {
-		dimmed: {
-			true: "grayscale",
-		},
-		size: {
-			// This is used because we don't merge with original classname
-			// hence original width and height override `size-5`
-			xs: "h-5 w-5",
-		},
-	},
-});
+// The hover=true is needed to remove default translation of avatars in avatar group
+const baseClassName = "shrink-0 bg-transparent data-[hover=true]:translate-x-0";
 
 type OriginalProps = React.ComponentProps<typeof Avatar>;
 
@@ -42,10 +29,14 @@ export const useSkeletonUserAvatarProps = ({
 		fallback: <Skeleton className="size-full" />,
 		classNames: {
 			fallback: "size-full",
-			base: wrapper({
-				className: [className, classNames?.base],
-				size: props.size === "xs" ? props.size : undefined,
-			}),
+			base: cn(
+				baseClassName,
+				// This is used because we don't merge with original classname
+				// hence original width and height override `size-5`
+				props.size === "xs" ? "h-5 w-5" : undefined,
+				className,
+				classNames?.base,
+			),
 			...classNames,
 		},
 		...props,
@@ -115,11 +106,13 @@ export const useUserAvatarProps = ({
 		size: props.size === "xs" ? "sm" : props.size,
 		classNames: {
 			...classNames,
-			base: wrapper({
-				className: [className, classNames?.base],
-				size: props.size === "xs" ? props.size : undefined,
-				dimmed,
-			}),
+			base: cn(
+				baseClassName,
+				props.size === "xs" ? "h-5 w-5" : undefined,
+				dimmed ? "grayscale" : undefined,
+				className,
+				classNames?.base,
+			),
 		},
 		imgProps,
 	} satisfies React.ComponentProps<typeof Avatar>;

@@ -3,7 +3,7 @@ import { isNonNullish } from "remeda";
 
 import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";
 
-export { cn, tv, HeroUIProvider } from "@heroui/react";
+export { cn, HeroUIProvider } from "@heroui/react";
 
 export type FieldError =
 	| (StandardSchemaV1Issue | undefined)

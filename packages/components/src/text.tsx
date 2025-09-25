@@ -3,11 +3,7 @@ import { Text as RawText } from "react-native";
 
 import type { Span } from "@expo/html-elements";
 
-import { tv } from "./utils";
-
-const text = tv({
-	base: "text-foreground m-0 font-sans text-base font-normal leading-6",
-});
+import { cn } from "./utils";
 
 type RawTextProps = Omit<
 	React.ComponentProps<typeof RawText> & React.ComponentProps<typeof Span>,
@@ -17,5 +13,11 @@ type RawTextProps = Omit<
 export const Text = React.memo<
 	RawTextProps & { Component?: React.ComponentType<RawTextProps> }
 >(({ className, Component = RawText, ...props }) => (
-	<Component {...props} className={text({ className })} />
+	<Component
+		{...props}
+		className={cn(
+			"text-foreground m-0 font-sans text-base font-normal leading-6",
+			className,
+		)}
+	/>
 ));
