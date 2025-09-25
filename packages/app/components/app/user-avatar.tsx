@@ -12,7 +12,8 @@ import { hslToRgb } from "~utils/color";
 
 // eslint-disable-next-line tailwindcss/enforces-shorthand
 const wrapper = tv({
-	base: "shrink-0 bg-transparent",
+	// The hover=true is needed to remove default translation of avatars in avatar group
+	base: "shrink-0 bg-transparent data-[hover=true]:translate-x-0",
 	variants: {
 		dimmed: {
 			true: "grayscale",
