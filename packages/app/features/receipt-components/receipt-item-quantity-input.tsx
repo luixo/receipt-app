@@ -19,11 +19,13 @@ import type { Item } from "./state";
 type Props = {
 	item: Item;
 	isDisabled: boolean;
+	className?: string;
 };
 
 export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
+	className,
 }) => {
 	const { t } = useTranslation("receipts");
 	const { receiptDisabled } = useReceiptContext();
@@ -79,7 +81,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					aria-label={t("item.form.quantity.label")}
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
-					className="basis-24"
+					className={className}
 					labelPlacement="outside-left"
 					variant="bordered"
 					endContent={

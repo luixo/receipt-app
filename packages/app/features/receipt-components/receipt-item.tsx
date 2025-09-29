@@ -163,9 +163,17 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 			</CardHeader>
 			<Divider />
 			<CardBody className="gap-2">
-				<View className="flex-row items-center gap-2">
-					<ReceiptItemPriceInput item={item} isDisabled={isRemovalPending} />
-					<ReceiptItemQuantityInput item={item} isDisabled={isRemovalPending} />
+				<View className="flex-row flex-wrap items-center gap-2">
+					<ReceiptItemPriceInput
+						item={item}
+						isDisabled={isRemovalPending}
+						className="w-full shrink-0 sm:w-36"
+					/>
+					<ReceiptItemQuantityInput
+						item={item}
+						isDisabled={isRemovalPending}
+						className="w-full shrink-0 sm:w-36"
+					/>
 					<Text>
 						={" "}
 						{formatCurrency(

@@ -21,11 +21,13 @@ import type { Item } from "./state";
 type Props = {
 	item: Item;
 	isDisabled: boolean;
+	className?: string;
 };
 
 export const ReceiptItemPriceInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
+	className = "",
 }) => {
 	const { t } = useTranslation("receipts");
 	const { currencyCode, receiptDisabled } = useReceiptContext();
@@ -80,7 +82,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					}
 					fractionDigits={priceSchemaDecimal}
 					aria-label={t("item.form.price.label")}
-					className="basis-24"
+					className={className}
 					labelPlacement="outside-left"
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
