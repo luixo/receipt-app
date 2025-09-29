@@ -4,7 +4,6 @@ import { skipToken, useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useDecimals } from "~app/hooks/use-decimals";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -26,22 +25,22 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 	({ receipt, isLoading }) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
-		const { fromSubunitToUnit } = useDecimals();
 		const { participantsWithDebts, syncableParticipants } =
 			useParticipantsWithDebts(receipt);
 		const ourDebtsParticipants = React.useMemo(
 			() =>
-				syncableParticipants.map(
-					({ debtSumDecimals, paySumDecimals, currentDebt, userId }) => {
-						const sum = fromSubunitToUnit(debtSumDecimals - paySumDecimals);
-						const ourDebt = currentDebt?.our;
-						if (!ourDebt) {
-							return { sum, userId };
-						}
-						return { sum, debt: { ...ourDebt, id: currentDebt.id }, userId };
-					},
-				),
-			[syncableParticipants, fromSubunitToUnit],
+				syncableParticipants.map(({ balance, currentDebt, userId }) => {
+					const ourDebt = currentDebt?.our;
+					if (!ourDebt) {
+						return { sum: balance, userId };
+					}
+					return {
+						sum: balance,
+						debt: { ...ourDebt, id: currentDebt.id },
+						userId,
+					};
+				}),
+			[syncableParticipants],
 		);
 		// Debts that are already created
 		const createdParticipants = React.useMemo(

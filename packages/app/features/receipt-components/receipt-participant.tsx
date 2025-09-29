@@ -12,7 +12,7 @@ import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useAutofocus } from "~app/hooks/use-autofocus";
 import { useAutosave, useAutosaveEffect } from "~app/hooks/use-autosave";
-import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
+import { useRoundParts } from "~app/hooks/use-decimals";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -27,6 +27,7 @@ import { MoneyIcon } from "~components/icons";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
+import type { DebtId } from "~db/ids";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -41,7 +42,6 @@ const getParticipantError = (
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
 	isSelfParticipant: boolean,
-	fromSubunitToUnit: (input: number) => number,
 ) => {
 	if (!isOwner && !isSelfParticipant) {
 		// We don't have data on foreign debts with a foreign receipt
@@ -51,10 +51,7 @@ const getParticipantError = (
 		// We don't have debt for ourselves
 		return;
 	}
-	const sum = fromSubunitToUnit(
-		participant.debtSumDecimals - participant.paySumDecimals,
-	);
-	if (sum === 0) {
+	if (participant.balance === 0) {
 		return;
 	}
 	if (!debt) {
@@ -64,7 +61,7 @@ const getParticipantError = (
 			content: t("participant.errors.noOurs"),
 		};
 	}
-	const expectedSum = isOwner ? sum : -sum;
+	const expectedSum = isOwner ? participant.balance : -participant.balance;
 	if (debt.amount !== expectedSum) {
 		// Our debt is desynced from the receipt
 		return {
@@ -101,31 +98,32 @@ const getParticipantError = (
 
 const RenderParticipantError = suspendedFallback<{
 	participant: Participant;
+	outcomingDebtId: DebtId | undefined;
 	children: (error: ReturnType<typeof getParticipantError>) => React.ReactNode;
 }>(
-	({ children, participant }) => {
+	({ children, participant, outcomingDebtId }) => {
 		const trpc = useTRPC();
 		const { data: debt } = useQuery(
 			trpc.debts.get.queryOptions(
-				participant.debtId ? { id: participant.debtId } : skipToken,
-				{ enabled: Boolean(participant.debtId) },
+				outcomingDebtId ? { id: outcomingDebtId } : skipToken,
+				{ enabled: Boolean(outcomingDebtId) },
 			),
 		);
-		const { data: user } = useSuspenseQuery(
-			trpc.users.get.queryOptions({ id: participant.userId }),
-		);
-		const { t } = useTranslation("receipts");
-		const { fromSubunitToUnit } = useDecimals();
-		const { selfUserId } = useReceiptContext();
 		const isOwner = useIsOwner();
+		const { data: user } = isOwner
+			? useSuspenseQuery(
+					trpc.users.get.queryOptions({ id: participant.userId }),
+				)
+			: { data: null };
+		const { t } = useTranslation("receipts");
+		const { selfUserId } = useReceiptContext();
 		const error = getParticipantError(
 			t,
 			participant,
 			debt,
-			Boolean(user.connectedAccount),
+			Boolean(user?.connectedAccount),
 			isOwner,
 			participant.userId === selfUserId,
-			fromSubunitToUnit,
 		);
 		return children(error);
 	},
@@ -134,24 +132,23 @@ const RenderParticipantError = suspendedFallback<{
 
 type Props = {
 	participant: Participant;
+	outcomingDebtId?: DebtId;
 };
 
-export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
+export const ReceiptParticipant: React.FC<Props> = ({
+	participant,
+	outcomingDebtId,
+}) => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
-	const {
-		receiptId,
-		currencyCode,
-		renderParticipantActions,
-		items,
-		participants,
-	} = useReceiptContext();
+	const { receiptId, currencyCode, renderParticipantActions, items, payers } =
+		useReceiptContext();
 	const { removeParticipant, updatePayerPart, addPayer, removePayer } =
 		useActionsHooksContext();
 	const isOwner = useIsOwner();
-	const { fromSubunitToUnit } = useDecimals();
 
-	const currentPart = participant.payPart ?? 0;
+	const currentPart =
+		payers.find((payer) => payer.userId === participant.userId)?.part ?? 0;
 	const addPayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.add">(
 			trpc.receiptItemConsumers.add.mutationKey(),
@@ -232,13 +229,10 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	);
 
 	const locale = useLocale();
-	const disabled = participant.items.length === 0;
-	const sum = fromSubunitToUnit(
-		participant.debtSumDecimals - participant.paySumDecimals,
-	);
+	const disabled = participant.debt.items.length === 0;
 	const roundParts = useRoundParts();
 	const totalPayParts = roundParts(
-		participants.reduce((acc, { payPart }) => acc + (payPart ?? 0), 0),
+		payers.reduce((acc, { part }) => acc + part, 0),
 	);
 
 	return (
@@ -261,13 +255,31 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							/>
 						</View>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
-							<RenderParticipantError participant={participant}>
+							<RenderParticipantError
+								participant={participant}
+								outcomingDebtId={outcomingDebtId}
+							>
 								{(error) => (
 									<Tooltip content={error?.content} isDisabled={!error}>
-										<View>
+										<View className="flex flex-col items-end">
 											<Text className={error?.className}>
-												{formatCurrency(locale, currencyCode, round(sum))}
+												{formatCurrency(
+													locale,
+													currencyCode,
+													round(participant.debt.total),
+												)}
 											</Text>
+											{participant.payment.total === 0 ? null : (
+												<Text>
+													{t("participant.payedShort", {
+														amount: formatCurrency(
+															locale,
+															currencyCode,
+															round(participant.payment.total),
+														),
+													})}
+												</Text>
+											)}
 										</View>
 									</Tooltip>
 								)}
@@ -278,10 +290,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 										onRemove={removeReceiptParticipant}
 										mutation={{ isPending }}
 										subtitle={t("participants.remove.confirmSubtitle")}
-										noConfirm={
-											participant.debtSumDecimals === 0 &&
-											participant.paySumDecimals === 0
-										}
+										noConfirm={participant.balance === 0}
 										isIconOnly
 									/>
 								) : null}
@@ -371,36 +380,42 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									amount: formatCurrency(
 										locale,
 										currencyCode,
-										fromSubunitToUnit(participant.paySumDecimals),
+										participant.payment.total,
 									),
 								})}
 							</Text>
 						) : null}
 						<View>
-							{currentPart && participant.items.length > 1 ? (
+							{currentPart && participant.debt.items.length > 1 ? (
 								<Text className="text-secondary">
 									{t("participant.consumerPart", {
 										amount: formatCurrency(
 											locale,
 											currencyCode,
-											fromSubunitToUnit(participant.debtSumDecimals),
+											participant.debt.total,
 										),
 									})}
 								</Text>
 							) : null}
-							{participant.items.map((item) => (
-								<Text key={item.id}>
-									{t("participant.partDescription", {
-										item: item.name,
-										amount: formatCurrency(
-											locale,
-											currencyCode,
-											round(item.sum),
-										),
-										extraSymbol: item.hasExtra ? "*" : "",
-									})}
-								</Text>
-							))}
+							{participant.debt.items.map((item) => {
+								const matchedItem = items.find(({ id }) => id === item.itemId);
+								if (!matchedItem) {
+									return null;
+								}
+								return (
+									<Text key={matchedItem.id}>
+										{t("participant.partDescription", {
+											item: matchedItem.name,
+											amount: formatCurrency(
+												locale,
+												currencyCode,
+												round(item.sum),
+											),
+											extraSymbol: item.shortage !== 0 ? "+" : "",
+										})}
+									</Text>
+								);
+							})}
 						</View>
 					</View>
 				</View>

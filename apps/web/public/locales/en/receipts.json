@@ -83,6 +83,7 @@
 		"title": "Participant {{userId}}",
 		"payedInfix": "Payed",
 		"payerPart": "Payed {{amount}} in total",
+		"payedShort": "Payed {{amount}}",
 		"consumerPart": "Spent {{amount}} in total",
 		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
 		"role": {
@@ -134,6 +135,9 @@
 		"participants": {
 			"everyone": "Everyone",
 			"orphanedError": "Consumer part for user id {{userId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id"
+		},
+		"payer": {
+			"placeholder": "Payer"
 		}
 	},
 	"empty": {
@@ -154,6 +158,15 @@
 			"error": "Error removing {{items, and}}: {{errors, uniqueErrors}}"
 		},
 		"updateConsumer": {
+			"error": "Error updating {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"addItemPayer": {
+			"error": "Error adding {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeItemPayer": {
+			"error": "Error removing {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"updateItemPayer": {
 			"error": "Error updating {{items, and}}: {{errors, uniqueErrors}}"
 		},
 		"addItem": {

@@ -28,6 +28,8 @@ type ReceiptItems = Receipt["items"];
 type ReceiptItem = ReceiptItems[number];
 type ReceiptItemConsumers = ReceiptItem["consumers"];
 type ReceiptItemConsumer = ReceiptItemConsumers[number];
+type ReceiptItemPayers = ReceiptItem["payers"];
+type ReceiptItemPayer = ReceiptItemPayers[number];
 
 type ReceiptParticipants = Receipt["participants"];
 type ReceiptParticipant = ReceiptParticipants[number];
@@ -212,6 +214,72 @@ const addItemConsumer =
 			itemId,
 		)((consumers) => addToArray(consumers, consumer, index));
 
+const updateItemPayers =
+	(controller: Controller, receiptId: ReceiptId, itemId: ReceiptItemId) =>
+	(updater: UpdateFn<ReceiptItemPayers>) =>
+		withRef<ReceiptItemPayers | undefined>((ref) =>
+			updateItem(
+				controller,
+				receiptId,
+				itemId,
+			)((item) => {
+				const nextPayers = updater(item.payers);
+				if (nextPayers === item.payers) {
+					return item;
+				}
+				ref.current = item.payers;
+				return { ...item, payers: nextPayers };
+			}),
+		).current;
+
+const updateItemPayer =
+	(
+		controller: Controller,
+		receiptId: ReceiptId,
+		itemId: ReceiptItemId,
+		userId: UserId,
+	) =>
+	(updater: UpdateFn<ReceiptItemPayer>) =>
+		withRef<ReceiptItemPayer | undefined>((ref) =>
+			updateItemPayers(
+				controller,
+				receiptId,
+				itemId,
+			)((payers) =>
+				replaceInArray(
+					payers,
+					(payer) => payer.userId === userId,
+					updater,
+					ref,
+				),
+			),
+		).current;
+
+const removeItemPayer = (
+	controller: Controller,
+	receiptId: ReceiptId,
+	itemId: ReceiptItemId,
+	userId: UserId,
+) =>
+	withRef<ItemWithIndex<ReceiptItemPayer> | undefined>((ref) =>
+		updateItemPayers(
+			controller,
+			receiptId,
+			itemId,
+		)((payers) =>
+			removeFromArray(payers, (payer) => userId === payer.userId, ref),
+		),
+	).current;
+
+const addItemPayer =
+	(controller: Controller, receiptId: ReceiptId, itemId: ReceiptItemId) =>
+	(payer: ReceiptItemPayer, index = 0) =>
+		updateItemPayers(
+			controller,
+			receiptId,
+			itemId,
+		)((payers) => addToArray(payers, payer, index));
+
 const updateParticipants =
 	(controller: Controller, receiptId: ReceiptId) =>
 	(updater: UpdateFn<ReceiptParticipants>) =>
@@ -354,6 +422,12 @@ export const getController = ({ queryClient, trpc }: ControllerContext) => {
 			userId: UserId,
 			updater: UpdateFn<ReceiptItemConsumer>,
 		) => updateItemConsumer(controller, receiptId, itemId, userId)(updater),
+		updateItemPayer: (
+			receiptId: ReceiptId,
+			itemId: ReceiptItemId,
+			userId: UserId,
+			updater: UpdateFn<ReceiptItemConsumer>,
+		) => updateItemPayer(controller, receiptId, itemId, userId)(updater),
 		updatePayer: (
 			receiptId: ReceiptId,
 			userId: UserId,
@@ -457,6 +531,55 @@ export const getRevertController = ({
 				() => removeItemConsumer(controller, receiptId, itemId, userId),
 				({ item: consumer, index }) =>
 					addItemConsumer(controller, receiptId, itemId)(consumer, index),
+			),
+		updateItemPayers: (
+			receiptId: ReceiptId,
+			itemId: ReceiptItemId,
+			updater: UpdateFn<ReceiptItemPayers>,
+			revertUpdater: SnapshotFn<ReceiptItemPayers>,
+		) =>
+			applyUpdateFnWithRevert(
+				updateItemPayers(controller, receiptId, itemId),
+				updater,
+				revertUpdater,
+			),
+		updateItemPayer: (
+			receiptId: ReceiptId,
+			itemId: ReceiptItemId,
+			userId: UserId,
+			updater: UpdateFn<ReceiptItemPayer>,
+			revertUpdater: SnapshotFn<ReceiptItemPayer>,
+		) =>
+			applyUpdateFnWithRevert(
+				updateItemPayer(controller, receiptId, itemId, userId),
+				updater,
+				revertUpdater,
+			),
+		addItemPayer: (
+			receiptId: ReceiptId,
+			itemId: ReceiptItemId,
+			userId: UserId,
+			part: number,
+			createdAt: Temporal.ZonedDateTime,
+		) =>
+			applyWithRevert(
+				() =>
+					addItemPayer(
+						controller,
+						receiptId,
+						itemId,
+					)({ userId, part, createdAt }),
+				() => removeItemPayer(controller, receiptId, itemId, userId),
+			),
+		removeItemPayer: (
+			receiptId: ReceiptId,
+			itemId: ReceiptItemId,
+			userId: UserId,
+		) =>
+			applyWithRevert(
+				() => removeItemPayer(controller, receiptId, itemId, userId),
+				({ item: payer, index }) =>
+					addItemPayer(controller, receiptId, itemId)(payer, index),
 			),
 		removeItemConsumersByUser: (receiptId: ReceiptId, userId: UserId) =>
 			applyUpdateFnWithRevert(

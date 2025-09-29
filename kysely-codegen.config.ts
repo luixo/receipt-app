@@ -62,6 +62,7 @@ const TYPES: Record<
 		tables: {
 			receiptItemConsumers: ["itemId"],
 			receiptItems: ["id"],
+			receiptItemPayers: ["itemId"],
 		},
 	},
 	receiptId: {
@@ -96,6 +97,7 @@ const TYPES: Record<
 			receiptItemConsumers: ["userId"],
 			receiptParticipants: ["userId"],
 			users: ["id"],
+			receiptItemPayers: ["userId"],
 		},
 	},
 };

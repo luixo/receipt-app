@@ -599,6 +599,37 @@ export const insertReceiptItemConsumer = async (
 	return { part, createdAt, userId, itemId };
 };
 
+type ReceiptItemPayerData = {
+	part?: number;
+	createdAt?: Temporal.ZonedDateTime;
+};
+
+export const insertReceiptItemPayer = async (
+	ctx: TestContext,
+	itemId: ReceiptItemId,
+	userId: UserId,
+	data: ReceiptItemPayerData = {},
+) => {
+	const database = assertDatabase(ctx);
+	await database
+		.selectFrom("receiptItems")
+		.where("receiptItems.id", "=", itemId)
+		.executeTakeFirstOrThrow(
+			() => new Error(`Expected to have receipt item id ${itemId} in tests`),
+		);
+	const { part, createdAt } = await database
+		.insertInto("receiptItemPayers")
+		.values({
+			userId,
+			itemId,
+			part: (data.part ?? 1).toString(),
+			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+		})
+		.returning(["part", "createdAt"])
+		.executeTakeFirstOrThrow();
+	return { part, createdAt, userId, itemId };
+};
+
 type AccountConnectionIntentionData = {
 	createdAt?: Temporal.ZonedDateTime;
 };

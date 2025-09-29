@@ -11,6 +11,11 @@ import {
 	batchFn as addConsumers,
 	addItemConsumerSchema,
 } from "~web/handlers/receipt-item-consumers/add";
+import type { PayerOutput } from "~web/handlers/receipt-item-payers/add";
+import {
+	addItemPayerSchema,
+	batchFn as addPayers,
+} from "~web/handlers/receipt-item-payers/add";
 import type { ItemOutput } from "~web/handlers/receipt-items/add";
 import {
 	addItemSchema,
@@ -37,6 +42,7 @@ export const addReceiptSchema = z.strictObject({
 					.omit({ itemId: true })
 					.array()
 					.optional(),
+				payers: addItemPayerSchema.omit({ itemId: true }).array().optional(),
 			}),
 		)
 		.optional(),
@@ -185,6 +191,58 @@ const insertConsumers = async (
 	);
 };
 
+type InsertedPayers = Record<
+	ReceiptItemId,
+	{
+		errors: TRPCError[];
+		payers: (PayerOutput & { userId: UserId })[];
+	}
+>;
+const insertPayers = async (
+	ctx: AuthorizedContext,
+	input: z.infer<typeof addReceiptSchema>,
+	receiptId: ReceiptId,
+	insertedItems: Awaited<ReturnType<typeof insertItems>>["items"],
+): Promise<InsertedPayers> => {
+	const payers =
+		input.items?.flatMap((item, index) =>
+			(item.payers ?? []).map((payer) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const itemId = insertedItems[index]!.id;
+				/* c8 ignore start */
+				if (!itemId) {
+					throw new TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: `Expected to have an inserted item for user "${payer.userId}" with part ${payer.part}.`,
+					});
+				}
+				/* c8 ignore stop */
+				return { itemId, ...payer };
+			}),
+		) ?? [];
+	if (payers.length === 0) {
+		return {};
+	}
+	const insertedPayers = await addPayers(ctx)(payers);
+	return insertedPayers.reduce<InsertedPayers>((acc, insertedPayer, index) => {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const { itemId, userId } = payers[index]!;
+		const itemAcc = acc[itemId] || { errors: [], payers: [] };
+		if (insertedPayer instanceof TRPCError) {
+			itemAcc.errors.push(insertedPayer);
+		} else {
+			itemAcc.payers.push({
+				userId,
+				createdAt: insertedPayer.createdAt,
+			});
+		}
+		if (!acc[itemId]) {
+			acc[itemId] = itemAcc;
+		}
+		return acc;
+	}, {});
+};
+
 const verifyParticipants = (
 	input: z.infer<typeof addReceiptSchema>,
 	participants: Awaited<ReturnType<typeof insertParticipants>>,
@@ -276,7 +334,7 @@ const verifyPayers = (
 	/* c8 ignore stop */
 };
 
-const verifyConsumers = (
+const verifyItemConsumers = (
 	input: z.infer<typeof addReceiptSchema>,
 	consumers: Awaited<ReturnType<typeof insertConsumers>>,
 ) => {
@@ -316,6 +374,44 @@ const verifyConsumers = (
 	/* c8 ignore stop */
 };
 
+const verifyItemPayers = (
+	input: z.infer<typeof addReceiptSchema>,
+	payers: Awaited<ReturnType<typeof insertPayers>>,
+) => {
+	const addedPayersErrors = values(payers).reduce<TRPCError[]>(
+		(acc, { errors }) => [...acc, ...errors],
+		[],
+	);
+	/* c8 ignore start */
+	const firstError = addedPayersErrors[0];
+	if (firstError) {
+		throw new TRPCError({
+			code: firstError.code,
+			message: `${firstError.message}${
+				addedPayersErrors.length !== 1
+					? ` (+${addedPayersErrors.length - 1} errors)`
+					: ""
+			}`,
+		});
+	}
+	/* c8 ignore stop */
+	const actualAddedPayers = values(payers).reduce(
+		(acc, { payers: localPayers }) => acc + localPayers.length,
+		0,
+	);
+	const expectedAddedPayers =
+		input.items?.reduce((acc, item) => acc + (item.payers?.length ?? 0), 0) ??
+		0;
+	/* c8 ignore start */
+	if (actualAddedPayers !== expectedAddedPayers) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: `Expected to add ${expectedAddedPayers} payers, added ${actualAddedPayers}.`,
+		});
+	}
+	/* c8 ignore stop */
+};
+
 export const procedure = authProcedure
 	.input(addReceiptSchema)
 	.mutation(async ({ input, ctx }) => {
@@ -348,19 +444,27 @@ export const procedure = authProcedure
 				receiptId,
 				regularItems,
 			);
+			const addedPayers = await insertPayers(
+				transactionCtx,
+				input,
+				receiptId,
+				regularItems,
+			);
 			const receiptIdAsItemId = receiptId as ReceiptItemId;
 			const payersConsumers = addedConsumers[receiptIdAsItemId];
 			const regularConsumers = omit(addedConsumers, [
 				receiptIdAsItemId,
 			]) as typeof addedConsumers;
 			verifyPayers(input, receiptId, payersConsumers);
-			verifyConsumers(input, regularConsumers);
+			verifyItemConsumers(input, regularConsumers);
+			verifyItemPayers(input, addedPayers);
 			return {
 				id: receiptId,
 				createdAt: result.createdAt,
 				participants: addedParticipants.participants,
 				items: regularItems.map((item) => {
 					const itemConsumers = regularConsumers[item.id]?.consumers;
+					const itemPayers = addedPayers[item.id]?.payers;
 					return {
 						id: item.id,
 						createdAt: item.createdAt,
@@ -368,6 +472,8 @@ export const procedure = authProcedure
 							!itemConsumers || itemConsumers.length === 0
 								? undefined
 								: itemConsumers,
+						payers:
+							!itemPayers || itemPayers.length === 0 ? undefined : itemPayers,
 					};
 				}),
 				payers: payersConsumers?.consumers ?? [],

@@ -83,6 +83,7 @@
 		"title": "Участник {{userId}}",
 		"payedInfix": "заплатил",
 		"payerPart": "Заплатил {{amount}} из суммы",
+		"payedShort": "Оплачено {{amount}}",
 		"consumerPart": "Потратил {{amount}} из суммы",
 		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
 		"role": {
@@ -134,6 +135,9 @@
 		"participants": {
 			"everyone": "Все",
 			"orphanedError": "Доля для пользователя {{userId}} не имеет родителя. Пожалуйста, сообщите об этой ошибке, приложив id чека, имя позиции и id пользователя"
+		},
+		"payer": {
+			"placeholder": "Плательщик"
 		}
 	},
 	"empty": {
@@ -154,6 +158,15 @@
 			"error": "Ошибка при удалении {{items, and}}: {{errors, uniqueErrors}}"
 		},
 		"updateConsumer": {
+			"error": "Ошибка при обновлении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"addItemPayer": {
+			"error": "Ошибка при добавлении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"removeItemPayer": {
+			"error": "Ошибка при удалении {{items, and}}: {{errors, uniqueErrors}}"
+		},
+		"updateItemPayer": {
 			"error": "Ошибка при обновлении {{items, and}}: {{errors, uniqueErrors}}"
 		},
 		"addItem": {

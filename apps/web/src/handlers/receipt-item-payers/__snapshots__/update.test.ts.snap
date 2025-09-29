@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptItemPayers.update > functionality > updates item participant payment part 1`] = `
+{
+  "updated": {
+    "receiptItemPayers": {
+      "itemId:88d0ae01-90e5-4052-a942-3569c1416382|userId:a01488f5-7317-4b96-85df-aa832bc9c7b7": {
+        "part": "75.00",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;

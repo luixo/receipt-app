@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptItemPayers.remove > functionality > user does not pay for item anymore 1`] = `
+{
+  "deleted": {
+    "receiptItemPayers": {
+      "itemId:640994ef-9039-46ac-af79-bcce4ac5ef69|userId:10173d3d-1138-47ff-9b0d-af60294d8282": undefined,
+    },
+  },
+}
+`;

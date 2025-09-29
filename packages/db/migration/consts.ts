@@ -69,6 +69,19 @@ export const RECEIPT_ITEM_CONSUMERS = {
 	},
 } as const;
 
+export const RECEIPT_ITEM_PAYERS = {
+	TABLE_NAME: "receiptItemPayers",
+	INDEXES: {
+		ITEM_ID: "receiptItemPayers:itemId:index",
+	},
+	CONSTRAINTS: {
+		ITEM_ID_USER_ID_PAIR: "receiptItemPayers:itemId-userId:primaryKey",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "receiptItemPayers:updateTimestamp",
+	},
+} as const;
+
 export const RECEIPT_PARTICIPANTS = {
 	INDEXES: {
 		RECEIPT_ID: "receiptParticipants:receiptId:index",

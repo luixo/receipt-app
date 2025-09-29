@@ -1,14 +1,10 @@
 import React from "react";
 
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
-import { isNonNullish } from "remeda";
 
 import { useDecimals } from "~app/hooks/use-decimals";
 import type { TRPCQueryOutput } from "~app/trpc";
-import {
-	getItemCalculations,
-	getParticipantSums,
-} from "~app/utils/receipt-item";
+import { getParticipantSums } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
 import type { UserId } from "~db/ids";
 import { compare } from "~utils/date";
@@ -40,51 +36,31 @@ export const useParticipants = (
 ) => {
 	const { fromUnitToSubunit, fromSubunitToUnit } = useDecimals();
 	return React.useMemo(() => {
-		const calculatedItems = receipt.items.map((item) => ({
-			calculations: getItemCalculations(
-				fromUnitToSubunit(item.price * item.quantity),
-				item.consumers.reduce(
-					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
-					{},
-				),
-			),
-			id: item.id,
-			name: item.name,
-		}));
-		return getParticipantSums(
+		const participantsSums = getParticipantSums(
 			receipt.id,
+			receipt.ownerUserId,
 			receipt.items,
 			receipt.participants,
 			receipt.payers,
 			fromUnitToSubunit,
-		)
-			.sort(SORT_PARTICIPANTS)
-			.map((participant) => ({
+			fromSubunitToUnit,
+		);
+		return receipt.participants.sort(SORT_PARTICIPANTS).map((participant) => {
+			const matchedParticipant = participantsSums.find(
+				({ userId }) => userId === participant.userId,
+			);
+			if (!matchedParticipant) {
+				throw new Error(
+					"Expected to have matched participant on getting their sums",
+				);
+			}
+			return {
 				...participant,
-				debtId:
-					receipt.debts.direction === "outcoming"
-						? receipt.debts.debts.find(
-								({ userId }) => participant.userId === userId,
-							)?.id
-						: undefined,
-				items: calculatedItems
-					.map((item) => {
-						const itemSum =
-							item.calculations.sumFlooredByParticipant[participant.userId];
-						if (!itemSum) {
-							return null;
-						}
-						return {
-							sum: fromSubunitToUnit(itemSum),
-							hasExtra: Boolean(
-								item.calculations.shortageByParticipant[participant.userId],
-							),
-							id: item.id,
-							name: item.name,
-						};
-					})
-					.filter(isNonNullish),
-			}));
+				debt: matchedParticipant.debt,
+				payment: matchedParticipant.payment,
+				balance: matchedParticipant.balance,
+			};
+		});
 	}, [fromSubunitToUnit, fromUnitToSubunit, receipt]);
 };
 
@@ -176,11 +152,7 @@ export const useParticipantsWithDebts = (
 		() =>
 			participantsWithDebts
 				.filter((participant) => participant.userId !== receipt.ownerUserId)
-				.filter((participant) => {
-					const sumDecimals =
-						participant.debtSumDecimals - participant.paySumDecimals;
-					return sumDecimals !== 0;
-				}),
+				.filter((participant) => participant.balance !== 0),
 		[participantsWithDebts, receipt.ownerUserId],
 	);
 	return {

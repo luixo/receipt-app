@@ -13,6 +13,11 @@ export type Item = {
 		userId: UserId;
 		createdAt: Temporal.ZonedDateTime;
 	}[];
+	payers: {
+		part: number;
+		userId: UserId;
+		createdAt: Temporal.ZonedDateTime;
+	}[];
 	createdAt: Temporal.ZonedDateTime;
 };
 

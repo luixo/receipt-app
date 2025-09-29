@@ -8,6 +8,7 @@ import { SkeletonUser } from "~app/components/app/user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { AvatarGroup } from "~components/avatar";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -27,21 +28,19 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	switchModal,
 }) => {
 	const { t } = useTranslation("receipts");
-	const { participants, ownerUserId } = useReceiptContext();
+	const { participants, ownerUserId, payers } = useReceiptContext();
 	const isOwner = useIsOwner();
 	if (participants.length === 0) {
 		return <Button onPress={switchModal}>{t("participants.addButton")}</Button>;
 	}
-	const payerParticipants = participants.filter(({ payPart }) =>
-		Boolean(payPart),
+	const payerParticipants = participants.filter(({ userId }) =>
+		payers.some((payer) => payer.userId === userId),
 	);
 	const surePayerParticipants =
 		payerParticipants.length === 0
 			? [{ userId: ownerUserId, part: 1 }]
 			: payerParticipants;
-	const debtParticipants = participants.filter(
-		({ debtSumDecimals }) => debtSumDecimals !== 0,
-	);
+	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
 		<View
 			className="xs:flex-row flex cursor-pointer flex-col gap-2"
@@ -149,7 +148,9 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 	);
 };
 
-export const ReceiptParticipants: React.FC = () => {
+export const ReceiptParticipants: React.FC<{
+	debts?: TRPCQueryOutput<"receipts.get">["debts"];
+}> = ({ debts }) => {
 	const { t } = useTranslation("receipts");
 	const { receiptDisabled, participants, selfUserId, getUsersSuggestOptions } =
 		useReceiptContext();
@@ -201,6 +202,13 @@ export const ReceiptParticipants: React.FC = () => {
 										<ReceiptParticipant
 											key={participant.userId}
 											participant={participant}
+											outcomingDebtId={
+												debts?.direction === "outcoming"
+													? debts.debts.find(
+															({ userId }) => participant.userId === userId,
+														)?.id
+													: undefined
+											}
 										/>
 									))}
 								</View>

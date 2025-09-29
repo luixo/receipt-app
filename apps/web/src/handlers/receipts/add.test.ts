@@ -325,6 +325,7 @@ describe("receipts.add", () => {
 					id: result.items[index]!.id,
 					createdAt: getNow.zonedDateTime(),
 					consumers: undefined,
+					payers: undefined,
 				})),
 				payers: [],
 			});
@@ -357,6 +358,10 @@ describe("receipts.add", () => {
 						userId: participant.userId,
 						part: index + 1,
 					})),
+					payers: participants.map((participant, index) => ({
+						userId: participant.userId,
+						part: index + 2,
+					})),
 				},
 			];
 
@@ -384,6 +389,10 @@ describe("receipts.add", () => {
 					createdAt: getNow.zonedDateTime(),
 					consumers: item.consumers?.map((consumer) => ({
 						userId: consumer.userId,
+						createdAt: getNow.zonedDateTime(),
+					})),
+					payers: item.payers?.map((payer) => ({
+						userId: payer.userId,
 						createdAt: getNow.zonedDateTime(),
 					})),
 				})),

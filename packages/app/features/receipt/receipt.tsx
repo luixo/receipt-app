@@ -76,6 +76,13 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 					<ReceiptParticipantActions
 						participant={participant}
 						receipt={receipt}
+						outcomingDebtId={
+							receipt.debts.direction === "outcoming"
+								? receipt.debts.debts.find(
+										({ userId }) => userId === participant.userId,
+									)?.id
+								: undefined
+						}
 					/>
 				) : null,
 		);
@@ -135,7 +142,7 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 									receipt={receipt}
 									isLoading={deleteLoading}
 								/>
-								<ReceiptParticipants />
+								<ReceiptParticipants debts={receipt.debts} />
 							</View>
 						</View>
 						<ReceiptItems />

@@ -139,6 +139,7 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 				userId: participant.userId,
 				part: faker.number.int({ min: 1, max: 3 }),
 			})),
+			payers: [],
 		}));
 
 export type GenerateReceipt = GeneratorFnWithFaker<

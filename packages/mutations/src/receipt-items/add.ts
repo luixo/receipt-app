@@ -24,6 +24,7 @@ export const options: UseContextedMutationOptions<
 					quantity: variables.quantity,
 					createdAt: getNow.zonedDateTime(),
 					consumers: [],
+					payers: [],
 				}),
 			getPaged: undefined,
 		});

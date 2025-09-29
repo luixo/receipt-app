@@ -62,6 +62,14 @@ export interface ReceiptItemConsumer {
   userId: UserId;
 }
 
+export interface ReceiptItemPayer {
+  createdAt: Generated<Temporal.ZonedDateTime>;
+  itemId: ReceiptItemId;
+  part: Numeric;
+  updatedAt: Generated<Temporal.ZonedDateTime>;
+  userId: UserId;
+}
+
 export interface ReceiptItem {
   createdAt: Generated<Temporal.ZonedDateTime>;
   id: ReceiptItemId;
@@ -123,6 +131,7 @@ export interface DB {
   accountSettings: AccountSetting;
   debts: Debt;
   receiptItemConsumers: ReceiptItemConsumer;
+  receiptItemPayers: ReceiptItemPayer;
   receiptItems: ReceiptItem;
   receiptParticipants: ReceiptParticipant;
   receipts: Receipt;

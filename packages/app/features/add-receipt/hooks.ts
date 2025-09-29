@@ -38,6 +38,7 @@ const useAddItem = (setItems: SetItems) =>
 						price,
 						quantity,
 						consumers: [],
+						payers: [],
 						createdAt: getNow.zonedDateTime(),
 					},
 				],

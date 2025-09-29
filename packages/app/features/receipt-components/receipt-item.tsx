@@ -1,25 +1,33 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { LoadableUser } from "~app/components/app/loadable-user";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
+import { AvatarGroup } from "~components/avatar";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { ScrollShadow } from "~components/scroll-shadow";
+import { Select, SelectItem } from "~components/select";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import type { UserId } from "~db/ids";
+import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-payers/add";
+import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-payers/remove";
 import { compare } from "~utils/date";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
-import { useCanEdit } from "./hooks";
+import { useCanEdit, useIsOwner } from "./hooks";
 import {
 	ReceiptItemConsumer,
 	ReceiptItemConsumerSkeleton,
@@ -47,8 +55,10 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants } = useReceiptContext();
+	const { currencyCode, participants, selfUserId, receiptId } =
+		useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
+	const isOwner = useIsOwner();
 	const canEdit = useCanEdit();
 	const locale = useLocale();
 
@@ -77,19 +87,79 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 		[item.consumers],
 	);
 
+	const addPayerMutation = useMutation(
+		trpc.receiptItemPayers.add.mutationOptions(
+			useTrpcMutationOptions(receiptItemConsumersAddOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	const addPayer = React.useCallback(
+		(userId: UserId) =>
+			addPayerMutation.mutate({ itemId: item.id, userId, part: 1 }),
+		[addPayerMutation, item.id],
+	);
+	const removePayerMutation = useMutation(
+		trpc.receiptItemPayers.remove.mutationOptions(
+			useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	const removePayer = React.useCallback(
+		(userId: UserId) => removePayerMutation.mutate({ itemId: item.id, userId }),
+		[item.id, removePayerMutation],
+	);
+
 	return (
 		<Card ref={ref}>
-			<CardHeader className="justify-between gap-4">
+			<CardHeader className="flex flex-col items-start justify-between gap-4 sm:flex-row">
 				<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
-				{!canEdit ? null : (
-					<RemoveButton
-						onRemove={() => removeItem(item.id)}
-						mutation={{ isPending: isRemovalPending }}
-						subtitle={t("item.removeButton.confirmSubtitle")}
-						noConfirm={item.consumers.length === 0}
-						isIconOnly
-					/>
-				)}
+				<View className="flex w-full flex-1 flex-row justify-end gap-4 self-end">
+					{item.payers.length === 0 ? (
+						<Select
+							className="max-w-64"
+							placeholder={t("item.payer.placeholder")}
+							isDisabled={addPayerMutation.isPending}
+							onSelectionChange={(selection) => {
+								if (selection instanceof Set) {
+									addPayer([...selection.values()][0] as UserId);
+								}
+							}}
+						>
+							{participants
+								.filter((participant) => participant.userId !== selfUserId)
+								.map((participant) => (
+									<SelectItem
+										key={participant.userId}
+										textValue={participant.userId}
+									>
+										<LoadableUser id={participant.userId} foreign={!isOwner} />
+									</SelectItem>
+								))}
+						</Select>
+					) : (
+						<AvatarGroup className="ml-2 cursor-pointer">
+							{item.payers.map((payer) => (
+								<LoadableUser
+									key={payer.userId}
+									id={payer.userId}
+									foreign={!isOwner}
+									onClick={() => removePayer(payer.userId)}
+								/>
+							))}
+						</AvatarGroup>
+					)}
+					{!canEdit ? null : (
+						<RemoveButton
+							onRemove={() => removeItem(item.id)}
+							mutation={{ isPending: isRemovalPending }}
+							subtitle={t("item.removeButton.confirmSubtitle")}
+							noConfirm={item.consumers.length === 0}
+							isIconOnly
+						/>
+					)}
+				</View>
 			</CardHeader>
 			<Divider />
 			<CardBody className="gap-2">

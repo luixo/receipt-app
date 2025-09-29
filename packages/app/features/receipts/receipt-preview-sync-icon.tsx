@@ -1,7 +1,6 @@
 import type React from "react";
 
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useDecimals } from "~app/hooks/use-decimals";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
@@ -44,7 +43,6 @@ type Props = {
 
 export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 	({ receipt }) => {
-		const { fromSubunitToUnit } = useDecimals();
 		const { participantsWithDebts, syncableParticipants } =
 			useParticipantsWithDebts(receipt);
 		if (receipt.items.length === 0 || participantsWithDebts.length === 0) {
@@ -57,17 +55,14 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 			return <StatusButton type="unsynced" />;
 		}
 		if (receipt.selfUserId === receipt.ownerUserId) {
-			const syncedParticipants = syncableParticipants.filter((participant) => {
-				const sum = fromSubunitToUnit(
-					participant.debtSumDecimals - participant.paySumDecimals,
-				);
-				return participant.currentDebt?.our
+			const syncedParticipants = syncableParticipants.filter((participant) =>
+				participant.currentDebt?.our
 					? isDebtInSyncWithReceipt(
-							{ ...receipt, participantSum: sum },
+							{ ...receipt, participantSum: participant.balance },
 							participant.currentDebt.our,
 						)
-					: false;
-			});
+					: false,
+			);
 			if (syncableParticipants.length === syncedParticipants.length) {
 				return <StatusButton type="synced" />;
 			}
@@ -88,12 +83,9 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 			return <StatusButton type="unsynced" />;
 		}
 
-		const sum = fromSubunitToUnit(
-			selfParticipant.debtSumDecimals - selfParticipant.paySumDecimals,
-		);
 		if (
 			!isDebtInSyncWithReceipt(
-				{ ...receipt, participantSum: -sum },
+				{ ...receipt, participantSum: -selfParticipant.balance },
 				selfParticipant.currentDebt.our,
 			)
 		) {

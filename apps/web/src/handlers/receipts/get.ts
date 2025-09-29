@@ -68,6 +68,18 @@ const fetchReceipts = async (
 								.orderBy("receiptItemConsumers.createdAt", "desc")
 								.orderBy("receiptItemConsumers.userId"),
 						).as("consumers"),
+						jsonArrayFrom(
+							ebb
+								.selectFrom("receiptItemPayers")
+								.select([
+									"receiptItemPayers.part",
+									"receiptItemPayers.userId",
+									"receiptItemPayers.createdAt",
+								])
+								.whereRef("receiptItemPayers.itemId", "=", "receiptItems.id")
+								.orderBy("receiptItemPayers.createdAt", "desc")
+								.orderBy("receiptItemPayers.userId"),
+						).as("payers"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")
 					.orderBy("receiptItems.createdAt", "desc")
@@ -189,6 +201,10 @@ const mapReceipt = (
 			...item,
 			price: Number(item.price),
 			quantity: Number(item.quantity),
+			payers: item.payers.map(({ part, ...consumer }) => ({
+				...consumer,
+				part: Number(part),
+			})),
 			consumers: item.consumers.map(({ part, ...consumer }) => ({
 				...consumer,
 				part: Number(part),

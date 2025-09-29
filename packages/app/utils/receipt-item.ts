@@ -1,4 +1,12 @@
-import { entries, fromEntries, mapValues, values } from "remeda";
+import {
+	entries,
+	fromEntries,
+	keys,
+	mapValues,
+	omitBy,
+	unique,
+	values,
+} from "remeda";
 
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { rotate } from "~utils/array";
@@ -14,88 +22,203 @@ type ReceiptItem = {
 		userId: UserId;
 		part: number;
 	}[];
+	payers: {
+		userId: UserId;
+		part: number;
+	}[];
 };
 type ReceiptParticipant = {
 	createdAt: Temporal.ZonedDateTime;
 	userId: UserId;
 };
 
-export const getItemCalculations = (
-	itemSum: number,
-	consumerParts: Record<UserId, number>,
+const getSortUsersByReceipt = (
+	receiptId: ReceiptId,
+	participants: ReceiptParticipant[],
 ) => {
-	const partsAmount = values(consumerParts).reduce(
-		(acc, part) => acc + part,
-		0,
+	const mappedParticipants = rotate(
+		participants.toSorted((participantA, participantB) => {
+			const createdDelta = compare.zonedDateTime(
+				participantA.createdAt,
+				participantB.createdAt,
+			);
+			const userIdComparison = participantA.userId.localeCompare(
+				participantB.userId,
+			);
+			return createdDelta || userIdComparison;
+		}),
+		getIndexByString(receiptId),
 	);
-	const sumByUser = mapValues(
-		consumerParts,
-		(part) => (part / partsAmount) * itemSum,
-	);
-	const sumTotal = values(sumByUser).reduce(
-		(acc, sum) => acc + Math.floor(sum),
-		0,
-	);
-	const sums = mapValues(sumByUser, (sum) => [sum, Math.floor(sum)]) as Record<
-		UserId,
-		[number, number]
-	>;
-	return {
-		sumFlooredByParticipant: mapValues(
-			sums,
-			([, flooredSum]) => flooredSum,
-		) as Record<UserId, number>,
-		leftover: itemSum - sumTotal,
-		shortageByParticipant: mapValues(
-			sums,
-			([sum, flooredSum]) => sum - flooredSum,
-		) as Record<UserId, number>,
+	return (userA: UserId, userB: UserId) => {
+		const participantAIndex = mappedParticipants.findIndex(
+			(participant) => participant.userId === userA,
+		);
+		const participantBIndex = mappedParticipants.findIndex(
+			(participant) => participant.userId === userB,
+		);
+		if (participantAIndex === -1 || participantBIndex === -1) {
+			throw new Error(
+				`Expected to have participants matched in sorting by receipt`,
+			);
+		}
+		return participantAIndex - participantBIndex;
 	};
 };
 
-const getPayersSums = <
-	P extends ReceiptItem["consumers"][number],
-	I extends ReceiptItem,
->(
-	receiptId: ReceiptId,
-	payers: P[],
-	items: I[],
-	fromUnitToSubunit: (input: number) => number,
+export const getItemCalculations = (
+	sum: number,
+	parts: Record<UserId, number>,
 ) => {
-	const { shortageByParticipant, sumFlooredByParticipant, leftover } =
-		getItemCalculations(
-			items.reduce(
-				(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
-				0,
-			),
-			fromEntries(payers.map(({ userId, part }) => [userId, part])),
-		);
-	const orderedPayerIds = rotate(
-		payers
-			.filter((payer) => {
-				const sum = sumFlooredByParticipant[payer.userId];
-				return sum && sum >= 0;
-			})
-			.sort((a, b) => a.userId.localeCompare(b.userId)),
-		getIndexByString(receiptId),
-	)
-		.sort((payerA, payerB) => {
-			const shortageA = shortageByParticipant[payerA.userId] ?? 0;
-			const shortageB = shortageByParticipant[payerB.userId] ?? 0;
-			return shortageB - shortageA;
-		})
-		.map(({ userId }) => userId);
-	const luckyLeftovers = orderedPayerIds.reduce<Record<UserId, number>>(
-		(acc, id, index) => ({ ...acc, [id]: index < leftover ? 1 : 0 }),
-		{},
+	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
+	const sumsByUser = mapValues(parts, (part) => (part / partsAmount) * sum);
+	const flooredByUsers = mapValues(sumsByUser, (sumByUser) =>
+		Math.floor(sumByUser),
 	);
-	return payers.map((payer) => ({
-		...payer,
-		sumDecimals: Math.round(
-			(sumFlooredByParticipant[payer.userId] ?? 0) +
-				(luckyLeftovers[payer.userId] ?? 0),
+	const shortagesByUsers = mapValues(
+		sumsByUser,
+		(sumByUser) => sumByUser - Math.floor(sumByUser),
+	);
+	const flooredSum = values(flooredByUsers).reduce(
+		(acc, flooredByUser) => acc + flooredByUser,
+		0,
+	);
+	return {
+		flooredByUsers,
+		shortagesByUsers,
+		leftover: sum - flooredSum,
+	};
+};
+
+const distributeLeftovers = (
+	shortagesByUsers: Record<UserId, number>,
+	initialLeftover: number,
+	sortUsers: (userA: UserId, userB: UserId) => number,
+) => {
+	const reimbursedByUsers = mapValues(shortagesByUsers, (shortage) =>
+		Math.trunc(shortage),
+	);
+	const totalReimbursed = values(reimbursedByUsers).reduce(
+		(acc, reimbursed) => acc + reimbursed,
+		0,
+	);
+	const notReimbursedByUsers = mapValues(
+		shortagesByUsers,
+		(shortage, userId) => shortage - (reimbursedByUsers[userId] ?? 0),
+	);
+	const luckyLeftover = initialLeftover - totalReimbursed;
+	if (luckyLeftover < 0) {
+		throw new Error("Unexpected negative lucky leftover");
+	}
+	if (luckyLeftover > keys(shortagesByUsers).length) {
+		throw new Error("Unexpected lucky leftover bigger than users left");
+	}
+
+	const notReimbursedOrder = entries(notReimbursedByUsers).sort(
+		([userA, userANotReimbursed], [userB, userBNotReimbursed]) => {
+			const notReimbursedDelta = userBNotReimbursed - userANotReimbursed;
+			return notReimbursedDelta || sortUsers(userA, userB);
+		},
+	);
+	const luckyLeftovers = fromEntries(
+		notReimbursedOrder.map(([userId], index) => [
+			userId,
+			index + 1 <= luckyLeftover ? 1 : 0,
+		]),
+	);
+	const totalByUsers = mapValues(
+		reimbursedByUsers,
+		(reimbursed, userId) => reimbursed + (luckyLeftovers[userId] ?? 0),
+	);
+	if (
+		initialLeftover !== values(totalByUsers).reduce((acc, sum) => acc + sum, 0)
+	) {
+		throw new Error(
+			"Unexpected total after reimbursement differs from initial leftover",
+		);
+	}
+	return totalByUsers;
+};
+
+const getUserSums = (
+	sum: number,
+	parts: Record<UserId, number>,
+	sortUsers: (userA: UserId, userB: UserId) => number,
+) => {
+	const { flooredByUsers, shortagesByUsers, leftover } = getItemCalculations(
+		sum,
+		parts,
+	);
+	const distributedLeftovers = distributeLeftovers(
+		shortagesByUsers,
+		leftover,
+		sortUsers,
+	);
+	return mapValues(
+		flooredByUsers,
+		(value, userId) => value + (distributedLeftovers[userId] ?? 0),
+	);
+};
+
+const getPayersSums = (
+	commonPayers: ReceiptItem["consumers"],
+	items: ReceiptItem[],
+	fromUnitToSubunit: (input: number) => number,
+	sortUsers: (userA: UserId, userB: UserId) => number,
+) => {
+	const separatelyPayedItems = items.filter((item) => item.payers.length !== 0);
+	const separatelyPayedSum = separatelyPayedItems.reduce(
+		(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
+		0,
+	);
+	const commonlyPayedItems = items.filter((item) => item.payers.length === 0);
+	const commonlyPayedSum = commonlyPayedItems.reduce(
+		(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
+		0,
+	);
+
+	const separatelyPayedSumsByItem = separatelyPayedItems.map((item) => ({
+		itemId: item.id,
+		sums: getUserSums(
+			fromUnitToSubunit(item.price * item.quantity),
+			fromEntries(item.payers.map(({ userId, part }) => [userId, part])),
+			sortUsers,
 		),
 	}));
+	const commonlyPayedSums = getUserSums(
+		commonlyPayedSum,
+		fromEntries(commonPayers.map(({ userId, part }) => [userId, part])),
+		sortUsers,
+	);
+	const allPayers = unique<UserId[]>([
+		...separatelyPayedSumsByItem.flatMap((item) => keys(item.sums)),
+		...keys(commonlyPayedSums),
+	]);
+	const payersSums = fromEntries(
+		allPayers.map((payerId) => {
+			const commonPayedSum = commonlyPayedSums[payerId] ?? 0;
+			const itemPayedSums = separatelyPayedSumsByItem.map((sumsByUsers) => ({
+				itemId: sumsByUsers.itemId,
+				sum: sumsByUsers.sums[payerId] ?? 0,
+			}));
+			return [
+				payerId,
+				{
+					common: commonPayedSum,
+					items: itemPayedSums,
+					total:
+						commonPayedSum +
+						itemPayedSums.reduce((acc, { sum }) => acc + sum, 0),
+				},
+			];
+		}),
+	);
+	if (
+		separatelyPayedSum + commonlyPayedSum !==
+		values(payersSums).reduce((acc, { total }) => acc + total, 0)
+	) {
+		throw new Error("Unexpected total payed sum differs from payer sums");
+	}
+	return payersSums;
 };
 
 /*
@@ -168,138 +291,122 @@ const getPayersSums = <
 	- reimbursed shortage is 1
 	- lucky leftover gave 0
 */
-export const getParticipantSums = <
-	P extends ReceiptParticipant,
-	R extends ReceiptItem["consumers"][number],
-	I extends ReceiptItem,
->(
+export const getParticipantSums = (
 	receiptId: ReceiptId,
-	items: I[],
-	participants: P[],
-	payers: R[],
+	ownerUserId: UserId,
+	items: ReceiptItem[],
+	participants: ReceiptParticipant[],
+	payers: ReceiptItem["consumers"],
 	fromUnitToSubunit: (input: number) => number,
+	fromSubunitToUnit: (input: number) => number,
 ) => {
-	const payersSums = getPayersSums(receiptId, payers, items, fromUnitToSubunit);
-	const {
-		sumFlooredByParticipant,
-		shortageByParticipant,
-		leftoverBeforeReimburse,
-	} = items
-		.filter((item) => item.consumers.length !== 0)
-		.map((item) =>
-			getItemCalculations(
-				fromUnitToSubunit(item.price * item.quantity),
-				item.consumers.reduce(
-					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
-					{},
-				),
-			),
-		)
-		.reduce<{
-			sumFlooredByParticipant: Record<UserId, number>;
-			shortageByParticipant: Record<UserId, number>;
-			leftoverBeforeReimburse: number;
-		}>(
-			(acc, item) => ({
-				sumFlooredByParticipant: entries(item.sumFlooredByParticipant).reduce(
-					(subacc, [id, sum]) => ({
-						...subacc,
-						[id]: (subacc[id] || 0) + sum,
-					}),
-					acc.sumFlooredByParticipant,
-				),
-				shortageByParticipant: entries(item.shortageByParticipant).reduce(
-					(subacc, [id, shortage]) => ({
-						...subacc,
-						[id]: (subacc[id] || 0) + shortage,
-					}),
-					acc.shortageByParticipant,
-				),
-				leftoverBeforeReimburse: acc.leftoverBeforeReimburse + item.leftover,
-			}),
-			{
-				sumFlooredByParticipant: {},
-				shortageByParticipant: {},
-				leftoverBeforeReimburse: 0,
-			},
-		);
-
-	const reimbursedShortages = mapValues(shortageByParticipant, (shortage) => {
-		const integer = Math.trunc(shortage);
-		return {
-			reimbursed: integer,
-			notReimbursed: shortage - integer,
-		};
-	}) as Record<
-		UserId,
-		{
-			reimbursed: number;
-			notReimbursed: number;
-		}
-	>;
-	const totalReimbursedShortage = values(reimbursedShortages).reduce(
-		(acc, { reimbursed }) => acc + reimbursed,
+	const totalSum = items.reduce(
+		(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
 		0,
 	);
-	const leftover = leftoverBeforeReimburse - totalReimbursedShortage;
-
-	const nonEmptyParticipants = participants
-		.filter((participant) => {
-			const sum = sumFlooredByParticipant[participant.userId];
-			return sum && sum >= 0;
-		})
-		.sort((a, b) => {
-			const leftoverA = reimbursedShortages[a.userId]?.notReimbursed ?? 0;
-			const leftoverB = reimbursedShortages[b.userId]?.notReimbursed ?? 0;
-			const leftoverDelta = leftoverB - leftoverA;
-			if (leftoverDelta === 0) {
-				const createdDelta = compare.zonedDateTime(a.createdAt, b.createdAt);
-				if (createdDelta === 0) {
-					return a.userId.localeCompare(b.userId);
-				}
-				return createdDelta;
-			}
-			return leftoverDelta;
-		});
-	const nonEmptyParticipantsPinned = rotate(
-		nonEmptyParticipants,
-		getIndexByString(receiptId),
+	const sortUsersByReceipt = getSortUsersByReceipt(receiptId, participants);
+	const allParticipantsIds = fromEntries(
+		participants.map((participant) => [participant.userId, 0]),
 	);
-
-	if (leftover > nonEmptyParticipantsPinned.length) {
-		throw new Error("Unexpected leftover bigger than participants left");
-	}
-	// 1c left for a few lucky ones
-	const leftoverAmount = leftover % nonEmptyParticipantsPinned.length;
-	// leftoverAmount === 0 with some leftover means that everyone gets a 1c leftover
-	// Aamount of leftover cents roughly equals to shortage sum (because of rounding)
-	const leftoverThresholdIndex =
-		leftoverAmount === 0 && leftover !== 0
-			? nonEmptyParticipantsPinned.length
-			: leftoverAmount;
-	const luckyLeftovers = nonEmptyParticipantsPinned.reduce<
-		Record<UserId, number>
-	>(
-		(acc, { userId: id }, index) => ({
-			...acc,
-			[id]: index < leftoverThresholdIndex ? 1 : 0,
-		}),
+	const itemCalculations = items
+		.filter((item) => item.consumers.length !== 0)
+		.map((item) => ({
+			id: item.id,
+			...getItemCalculations(
+				fromUnitToSubunit(item.price * item.quantity),
+				fromEntries(item.consumers.map(({ userId, part }) => [userId, part])),
+			),
+		}));
+	const flooredByUsers = itemCalculations.reduce<Record<UserId, number>>(
+		(acc, itemCalculation) =>
+			mapValues(
+				allParticipantsIds,
+				(_, userId) =>
+					(acc[userId] ?? 0) + (itemCalculation.flooredByUsers[userId] ?? 0),
+			),
 		{},
 	);
+	const shortagesByUsers = itemCalculations.reduce<Record<UserId, number>>(
+		(acc, itemCalculation) =>
+			mapValues(
+				allParticipantsIds,
+				(_, userId) =>
+					(acc[userId] ?? 0) + (itemCalculation.shortagesByUsers[userId] ?? 0),
+			),
+		{},
+	);
+	const totalLeftover = itemCalculations.reduce(
+		(acc, itemCalculation) => acc + itemCalculation.leftover,
+		0,
+	);
+	const distributedLeftovers = distributeLeftovers(
+		// Not distributing leftovers amongst those who don't participate
+		omitBy(shortagesByUsers, (value) => value === 0) as Record<UserId, number>,
+		totalLeftover,
+		sortUsersByReceipt,
+	);
+	const debtSums = mapValues(
+		flooredByUsers,
+		(value, userId) => value + (distributedLeftovers[userId] ?? 0),
+	);
 
-	return participants.map(({ userId, ...participant }) => {
-		const debtSumDecimals = Math.round(
-			(sumFlooredByParticipant[userId] ?? 0) +
-				(reimbursedShortages[userId]?.reimbursed ?? 0) +
-				(luckyLeftovers[userId] ?? 0),
-		);
-		const payer = payersSums.find((payerSum) => userId === payerSum.userId);
+	if (totalSum !== values(debtSums).reduce((acc, sum) => acc + sum, 0)) {
+		throw new Error("Unexpected total debt sum differs from debtors sums");
+	}
+
+	const surePayers =
+		payers.length === 0
+			? [
+					{
+						userId: ownerUserId,
+						part: 1,
+					},
+				]
+			: payers;
+	const payersSums = getPayersSums(
+		surePayers,
+		items,
+		fromUnitToSubunit,
+		sortUsersByReceipt,
+	);
+
+	return participants.map(({ userId }) => {
+		const payerObject = payersSums[userId] ?? {
+			common: 0,
+			items: [],
+			total: 0,
+		};
+		const flooredDebts = itemCalculations
+			.map((item) => ({
+				itemId: item.id,
+				sum: item.flooredByUsers[userId] ?? 0,
+				shortage: item.shortagesByUsers[userId] ?? 0,
+			}))
+			.filter(({ sum, shortage }) => sum !== 0 || shortage !== 0);
+		// Sometimes there's a rounding error around here
+		const totalPayment = Math.round(payerObject.total);
+		// Sometimes there's a rounding error around here
+		const totalDebt = Math.round(debtSums[userId] ?? 0);
 		return {
-			...participant,
 			userId,
-			debtSumDecimals,
-			paySumDecimals: payer?.sumDecimals ?? 0,
-			payPart: payer?.part,
+			payment: {
+				// Sometimes there's a rounding error around here
+				total: fromSubunitToUnit(totalPayment),
+				common: fromSubunitToUnit(payerObject.common),
+				items: payerObject.items.map((item) => ({
+					...item,
+					sum: fromSubunitToUnit(item.sum),
+				})),
+			},
+			debt: {
+				total: fromSubunitToUnit(totalDebt),
+				items: flooredDebts.map((item) => ({
+					...item,
+					sum: fromSubunitToUnit(item.sum),
+				})),
+				leftover: fromSubunitToUnit(distributedLeftovers[userId] ?? 0),
+			},
+			balance: fromSubunitToUnit(totalDebt - totalPayment),
 		};
 	});
 };

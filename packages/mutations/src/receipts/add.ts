@@ -66,6 +66,22 @@ export const options: UseContextedMutationOptions<
 												createdAt: matchedConsumer.createdAt,
 											};
 										}) ?? [],
+									payers:
+										item.payers?.map((payer) => {
+											const matchedPayer = matchedItem.payers?.find(
+												(lookupPayer) => lookupPayer.userId === payer.userId,
+											);
+											if (!matchedPayer) {
+												throw new Error(
+													`Expected to have payer with user id "${payer.userId}" returned from receipt creation.`,
+												);
+											}
+											return {
+												userId: payer.userId,
+												part: payer.part,
+												createdAt: matchedPayer.createdAt,
+											};
+										}) ?? [],
 								};
 							}) ?? [],
 						payers:

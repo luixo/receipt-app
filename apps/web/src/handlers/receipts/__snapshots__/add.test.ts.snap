@@ -48,6 +48,22 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
         "userId": "63519bcb-aae8-491a-be96-1416818752ac",
       },
     },
+    "receiptItemPayers": {
+      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "part": "2.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
+      },
+      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:63519bcb-aae8-491a-be96-1416818752ac": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "part": "3.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+      },
+    },
     "receiptItems": {
       "id:8669afe9-1540-42e5-a723-2f5667b522b9": {
         "createdAt": "2020-01-01 00:00:00+00",

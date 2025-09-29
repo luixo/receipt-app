@@ -10,6 +10,7 @@ import {
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
+	insertReceiptItemPayer,
 	insertReceiptParticipant,
 	insertReceiptPayer,
 	insertSyncedDebts,
@@ -28,6 +29,7 @@ import { procedure } from "./get";
 const getItems = (
 	items: Awaited<ReturnType<typeof insertReceiptItem>>[],
 	consumers: Awaited<ReturnType<typeof insertReceiptItemConsumer>>[],
+	payers: Awaited<ReturnType<typeof insertReceiptItemPayer>>[],
 ) =>
 	items
 		.map((item) => ({
@@ -42,6 +44,17 @@ const getItems = (
 					userId: consumer.userId,
 					part: Number(consumer.part),
 					createdAt: consumer.createdAt,
+				}))
+				.sort((a, b) => {
+					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
+				}),
+			payers: payers
+				.filter((payer) => payer.itemId === item.id)
+				.map((payer) => ({
+					userId: payer.userId,
+					part: Number(payer.part),
+					createdAt: payer.createdAt,
 				}))
 				.sort((a, b) => {
 					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
@@ -380,7 +393,7 @@ describe("receipts.get", () => {
 	});
 
 	describe("items functionality", () => {
-		test("own receipt2", async ({ ctx }) => {
+		test("own receipt", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
@@ -402,9 +415,9 @@ describe("receipts.get", () => {
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
 				insertReceiptItem(ctx, receipt.id),
-				// item with 1 participant
+				// item with 1 participant & multiple payers
 				insertReceiptItem(ctx, receipt.id),
-				// item with no participants
+				// item with no participants & single payer
 				insertReceiptItem(ctx, receipt.id),
 			]);
 			const consumers = await Promise.all([
@@ -430,6 +443,24 @@ describe("receipts.get", () => {
 					notConnectedParticipant.userId,
 				),
 			]);
+			const payers = await Promise.all([
+				insertReceiptItemPayer(
+					ctx,
+					receiptItems[1].id,
+					notConnectedParticipant.userId,
+					{ part: 2 },
+				),
+				insertReceiptItemPayer(
+					ctx,
+					receiptItems[1].id,
+					foreignParticipant.userId,
+				),
+				insertReceiptItemConsumer(
+					ctx,
+					receiptItems[2].id,
+					foreignParticipant.userId,
+				),
+			]);
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
@@ -441,7 +472,7 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerUserId: selfUserId,
 				selfUserId,
-				items: getItems(receiptItems, consumers),
+				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,
@@ -533,13 +564,13 @@ describe("receipts.get", () => {
 						milliseconds: 20,
 					}),
 				}),
-				// item with 1 participant
+				// item with 1 participant & 1 payer
 				insertReceiptItem(ctx, receipt.id, {
 					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
 						milliseconds: 10,
 					}),
 				}),
-				// item with no participants
+				// item with no participants & multiple payers
 				insertReceiptItem(ctx, receipt.id),
 			]);
 			const consumers = await Promise.all([
@@ -575,6 +606,24 @@ describe("receipts.get", () => {
 					notConnectedParticipant.userId,
 				),
 			]);
+			const payers = await Promise.all([
+				insertReceiptItemPayer(
+					ctx,
+					receiptItems[1].id,
+					notConnectedParticipant.userId,
+				),
+				insertReceiptItemPayer(
+					ctx,
+					receiptItems[2].id,
+					foreignParticipant.userId,
+				),
+				insertReceiptItemPayer(
+					ctx,
+					receiptItems[2].id,
+					notConnectedParticipant.userId,
+					{ part: 3 },
+				),
+			]);
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
@@ -586,7 +635,7 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerUserId: foreignUser.id,
 				selfUserId: foreignToSelfUser.id,
-				items: getItems(receiptItems, consumers),
+				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,
