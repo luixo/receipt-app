@@ -300,7 +300,10 @@ export const getParticipantSums = (
 	fromUnitToSubunit: (input: number) => number,
 	fromSubunitToUnit: (input: number) => number,
 ) => {
-	const totalSum = items.reduce(
+	const itemsWithConsumers = items.filter(
+		(item) => item.consumers.length !== 0,
+	);
+	const totalSum = itemsWithConsumers.reduce(
 		(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
 		0,
 	);
@@ -308,15 +311,13 @@ export const getParticipantSums = (
 	const allParticipantsIds = fromEntries(
 		participants.map((participant) => [participant.userId, 0]),
 	);
-	const itemCalculations = items
-		.filter((item) => item.consumers.length !== 0)
-		.map((item) => ({
-			id: item.id,
-			...getItemCalculations(
-				fromUnitToSubunit(item.price * item.quantity),
-				fromEntries(item.consumers.map(({ userId, part }) => [userId, part])),
-			),
-		}));
+	const itemCalculations = itemsWithConsumers.map((item) => ({
+		id: item.id,
+		...getItemCalculations(
+			fromUnitToSubunit(item.price * item.quantity),
+			fromEntries(item.consumers.map(({ userId, part }) => [userId, part])),
+		),
+	}));
 	const flooredByUsers = itemCalculations.reduce<Record<UserId, number>>(
 		(acc, itemCalculation) =>
 			mapValues(
