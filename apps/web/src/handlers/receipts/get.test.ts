@@ -455,7 +455,7 @@ describe("receipts.get", () => {
 					receiptItems[1].id,
 					foreignParticipant.userId,
 				),
-				insertReceiptItemConsumer(
+				insertReceiptItemPayer(
 					ctx,
 					receiptItems[2].id,
 					foreignParticipant.userId,
