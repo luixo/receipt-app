@@ -38,7 +38,7 @@ criticalPaths.forEach((path) => {
 			consoleManager.ignore(new RegExp(`Mock "${path}" error`));
 			consoleManager.ignore(
 				new RegExp(
-					`Error in route match: /_protected/debts/user/${debtUser.id}/{\\"offset\\":0,\\"limit\\":10}`,
+					`Error in route match: /_protected/debts/user/${debtUser.id}/`,
 				),
 			);
 			await snapshotQueries(

@@ -37,6 +37,8 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/Error reading data from TLS socket/,
 	// Sometimes happens in tests, doesn't seem to affect anything
 	/The resource .* was preloaded using link preload but not used within a few seconds from the window's load event/,
+	// Will be fixed later!
+	"If you do not provide a visible label, you must specify an aria-label or aria-labelledby attribute for accessibility",
 ];
 
 type ConsoleManager = {

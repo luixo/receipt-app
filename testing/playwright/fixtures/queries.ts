@@ -1,6 +1,11 @@
 import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import type { DehydratedState, Mutation, Query } from "@tanstack/react-query";
+import {
+	type DehydratedState,
+	type Mutation,
+	type Query,
+	hashKey,
+} from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
 import type { RouterRecord } from "@trpc/server/unstable-core-do-not-import";
@@ -148,7 +153,7 @@ type RawQueryKey = [
 	TRPCSplitQueryKey,
 	(
 		| {
-				input: TRPCQueryInput<TRPCQueryKey>;
+				input: readonly [TRPCQueryInput<TRPCQueryKey>];
 				type: "query" | "infinite";
 		  }
 		| undefined
@@ -164,7 +169,7 @@ const mapQueries = (queries: DehydratedState["queries"]) =>
 				...omit(query, ["queryHash", "dehydratedAt"]),
 				queryKey: {
 					handler: typedQueryKey[0].join(".") as TRPCQueryKey,
-					input: JSON.stringify(typedQueryKey[1]?.input),
+					input: hashKey(typedQueryKey[1]?.input ?? []),
 				},
 				state: {
 					...query.state,
