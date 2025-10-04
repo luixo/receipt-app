@@ -181,7 +181,9 @@ export const getMutationToaster = <
 						description: result.text,
 						timeout: Infinity,
 					});
-					return { id: toastId, count: inputs.length };
+					// We always have a toast queue
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					return { id: toastId!, count: inputs.length };
 				},
 			),
 			errorDataloader: createDataloader<

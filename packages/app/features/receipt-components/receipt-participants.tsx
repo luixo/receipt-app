@@ -43,7 +43,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
 		<View
-			className="xs:flex-row flex cursor-pointer flex-col gap-2"
+			className="flex cursor-pointer flex-col gap-2 xs:flex-row"
 			onClick={switchModal}
 		>
 			<View className="flex flex-row gap-2">
@@ -109,7 +109,7 @@ const skeletonParticipants = new Array(3).fill(null).map((_, index) => index);
 export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 	const { t } = useTranslation("receipts");
 	return (
-		<View className="xs:flex-row flex cursor-pointer flex-col gap-2">
+		<View className="flex cursor-pointer flex-col gap-2 xs:flex-row">
 			<View className="flex flex-row gap-2">
 				<Trans
 					t={t}

@@ -28,7 +28,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => {
 	return (
 		<Card data-testid="error-message">
 			<CardHeader>
-				<View className="text-danger flex flex-row gap-2">
+				<View className="flex flex-row gap-2 text-danger">
 					<WarningIcon size={32} />
 					<Header className="text-danger">
 						{t("components.errorMessage.error")}

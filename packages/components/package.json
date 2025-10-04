@@ -6,7 +6,7 @@
 	"main": "src/index.ts",
 	"dependencies": {
 		"@expo/html-elements": "^0.5.1",
-		"@heroui/react": "^2.7.11",
+		"@heroui/react": "^2.8.4",
 		"@ra/utils": "workspace:*",
 		"@tanstack/react-form": "^1.12.2",
 		"date-fns": "^3.3.1",

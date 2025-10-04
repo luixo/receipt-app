@@ -343,7 +343,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 																			parts: totalPayParts,
 																		})}
 																	</Text>
-																	<View className="absolute -right-2 -top-1">
+																	<View className="absolute -top-1 -right-2">
 																		{updateElement}
 																	</View>
 																</View>
@@ -359,7 +359,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 											<Button onPress={onAddPayer}>
 												{t("participant.form.addPayerButton")}
 											</Button>
-											<View className="absolute -right-0.5 -top-0.5">
+											<View className="absolute -top-0.5 -right-0.5">
 												{updateElement}
 											</View>
 										</>

@@ -32,7 +32,7 @@ export const useAutosave = ({
 				<Spinner size="sm" classNames={{ wrapper: `size-3 ${className}` }} />
 			) : (
 				<CheckMark
-					className={`text-success size-3 transition-opacity duration-500 ${justSaved ? "opacity-100" : "opacity-0"} ${className}`}
+					className={`size-3 text-success transition-opacity duration-500 ${justSaved ? "opacity-100" : "opacity-0"} ${className}`}
 				/>
 			),
 		[isUpdatePending, justSaved, className],

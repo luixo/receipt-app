@@ -44,7 +44,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	const isDisabled = isExternalDisabled || isPending;
 
 	return (
-		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
+		<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
 			<LoadableUser id={participant.userId} foreign={!isOwner} />
 			<View className="flex-row gap-2 self-end">
 				<ReceiptItemConsumerInput
@@ -67,7 +67,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 };
 
 export const ReceiptItemConsumerSkeleton: React.FC = () => (
-	<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
+	<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
 		<SkeletonUser />
 		<View className="flex-row gap-2 self-end">
 			<Skeleton className="h-7 w-10 rounded-md" />

@@ -4,5 +4,6 @@
 	"tabWidth": 2,
 	"singleQuote": false,
 	"plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-packagejson"],
-	"tailwindFunctions": ["tv"]
+	"tailwindStylesheet": "./packages/app/global.css",
+	"tailwindFunctions": ["tv", "cn"]
 }

@@ -47,7 +47,7 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 			key={pathname}
 			to={pathname}
 			className={cn(
-				"text-foreground flex flex-1 flex-col items-center justify-center",
+				"flex flex-1 flex-col items-center justify-center text-foreground",
 				selected ? "text-primary" : undefined,
 			)}
 		>
@@ -79,7 +79,7 @@ export const Page: React.FC<Props> = ({ children, elements }) => {
 		<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
 			{PageWrapper ? <PageWrapper>{slot}</PageWrapper> : slot}
 			<View
-				className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
+				className="fixed bottom-0 left-0 z-20 w-full flex-row bg-content1 p-2 shadow-lg"
 				testID="sticky-menu"
 			>
 				<View className="mx-auto max-w-screen-sm flex-1 flex-row">

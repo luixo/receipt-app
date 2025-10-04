@@ -3,13 +3,13 @@ import pluginRouter from "@tanstack/eslint-plugin-router";
 import type { Linter } from "eslint";
 import * as airbnbPlugin from "eslint-config-airbnb-extended";
 import prettierConfig from "eslint-config-prettier";
+import tailwindPlugin from "eslint-plugin-better-tailwindcss";
 import importPlugin from "eslint-plugin-import-x";
 import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
 import packageJson from "eslint-plugin-package-json";
 import playwrightPlugin from "eslint-plugin-playwright";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import tailwindPlugin from "eslint-plugin-tailwindcss";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
@@ -208,12 +208,12 @@ const overriddenRules = {
 			},
 		],
 		"react/jsx-fragments": ["error", "syntax"],
-
-		// 'warn' recommended for those 4
-		"tailwindcss/enforces-negative-arbitrary-values": "error",
-		"tailwindcss/enforces-shorthand": "error",
-		"tailwindcss/migration-from-tailwind-2": "error",
-		"tailwindcss/no-custom-classname": "error",
+		"better-tailwindcss/enforce-consistent-important-position": "error",
+		"better-tailwindcss/enforce-consistent-variable-syntax": "error",
+		"better-tailwindcss/enforce-shorthand-classes": "error",
+		"better-tailwindcss/no-duplicate-classes": "error",
+		"better-tailwindcss/no-unnecessary-whitespace": "error",
+		"better-tailwindcss/no-unregistered-classes": "error",
 	},
 } satisfies Linter.Config;
 
@@ -288,7 +288,7 @@ const disabledRules = {
 		// We use mostly named exports
 		"import-x/prefer-default-export": "off",
 		// Maintained by prettier plugin
-		"tailwindcss/classnames-order": "off",
+		"better-tailwindcss/enforce-consistent-class-order": "off",
 		// `(object | undefined) || number` is assumed incorrect by this rule
 		// it should be `(object | undefined) ?? number`
 		"@typescript-eslint/prefer-nullish-coalescing": "off",
@@ -333,6 +333,10 @@ const temporaryDisabledRules = {
 		"unicorn/numeric-separators-style": "off", // 9 cases
 		"unicorn/prefer-number-properties": "off", // 8 cases
 		"unicorn/prefer-spread": "off", // 8 cases
+		"better-tailwindcss/enforce-consistent-line-wrapping": "off",
+		"better-tailwindcss/multiline": "off",
+		"better-tailwindcss/sort-classes": "off",
+		"better-tailwindcss/no-deprecated-classes": "off",
 	},
 } satisfies Linter.Config;
 
@@ -356,18 +360,9 @@ export default ts.config(
 					project: true,
 				},
 			},
-			tailwindcss: {
-				callees: ["tv"],
-				config: "apps/web/tailwind.config.ts",
-				ignoredKeys: ["responsiveVariants"],
-				whitelist: [
-					"text-foreground",
-					"text-primary",
-					"text-warning",
-					"text-danger",
-					"text-success",
-					String.raw`text-default-\d+`,
-				],
+			"better-tailwindcss": {
+				entryPoint: "packages/app/global.css",
+				callees: ["tv", "cn"],
 			},
 			react: {
 				version: "detect",
@@ -390,7 +385,11 @@ export default ts.config(
 	airbnbPlugin.configs.node.recommended,
 	airbnbPlugin.configs.react.recommended,
 	airbnbPlugin.rules.react.strict,
-	tailwindPlugin.configs["flat/recommended"],
+	{
+		plugins: { [tailwindPlugin.meta.name]: tailwindPlugin },
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		rules: tailwindPlugin.configs.recommended!.rules,
+	},
 	jsxAccessibilityPlugin.flatConfigs.recommended,
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	reactPlugin.configs.flat.recommended!,
@@ -483,7 +482,7 @@ export default ts.config(
 	{
 		files: ["apps/web/src/email/**/*"],
 		rules: {
-			"tailwindcss/no-custom-classname": "off",
+			"better-tailwindcss/no-unregistered-classes": "off",
 		},
 	},
 	{

@@ -63,7 +63,7 @@ const ReceiptPreviewShape: React.FC<
 				>
 					<InfoIcon
 						className={cn(
-							"text-primary cursor-pointer self-center opacity-75",
+							"cursor-pointer self-center text-primary opacity-75",
 							infoTooltip ? undefined : "hidden",
 						)}
 						size={24}
@@ -160,7 +160,7 @@ export const ReceiptPreview = suspendedFallback<{
 					</Tooltip>
 					{isOwner ? <KeyIcon className="shrink-0" size={12} /> : null}
 				</View>
-				<Text className="text-default-400 text-xs">
+				<Text className="text-xs text-default-400">
 					{formatPlainDate(receipt.issued)}
 				</Text>
 			</Link>

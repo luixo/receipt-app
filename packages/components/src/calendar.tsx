@@ -33,7 +33,7 @@ export const Calendar: React.FC<Props> = ({
 			isTriggerDisabled={props.isDisabled}
 		>
 			<PopoverTrigger>{children}</PopoverTrigger>
-			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
+			<PopoverContent className="border-2 border-foreground p-0 shadow-md">
 				<RawCalendar<Temporal.PlainDate>
 					onChange={onChange}
 					showMonthAndYearPickers

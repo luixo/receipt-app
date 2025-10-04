@@ -113,7 +113,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 					<Text>
 						{Number.isNaN(currentValue) ? "-" : currentValue} / {totalParts}
 					</Text>
-					<View className="absolute right-1 top-1">{updateElement}</View>
+					<View className="absolute top-1 right-1">{updateElement}</View>
 				</>
 			)}
 		</form.Subscribe>

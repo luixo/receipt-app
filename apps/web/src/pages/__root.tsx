@@ -22,7 +22,6 @@ import globalCss from "~app/global.css?url";
 import { Provider } from "~app/providers/index";
 import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import type { Language } from "~app/utils/i18n-data";
-import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
 import type { ColorMode } from "~app/utils/store/color-modes";
@@ -44,8 +43,6 @@ import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
-
-applyRemaps();
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();

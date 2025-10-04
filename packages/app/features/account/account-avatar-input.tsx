@@ -261,7 +261,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 											className="cursor-pointer items-center justify-center"
 											onClick={onInputButtonClick}
 										>
-											<View className="absolute left-0 top-0 m-4 opacity-30">
+											<View className="absolute top-0 left-0 m-4 opacity-30">
 												{avatar}
 											</View>
 											<Text>{t("avatar.uploadImage.text")}</Text>

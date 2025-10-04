@@ -1,9 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { H1 } from "~components/header";
+import { Header } from "~components/header";
 import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
 import { cn } from "~components/utils";
 
 type Props = {
@@ -22,9 +21,9 @@ export const PageHeader: React.FC<Props> = ({
 	<View className="flex-row flex-wrap justify-between gap-4">
 		<View className="flex-1 flex-row items-center gap-4" {...props}>
 			{startContent}
-			<Text Component={H1} className="text-4xl font-medium">
+			<Header size="xl" className="text-4xl font-medium">
 				{children}
-			</Text>
+			</Header>
 			{endContent}
 		</View>
 		<View

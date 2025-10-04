@@ -1,14 +1,13 @@
 import { wrapVinxiConfigWithSentry } from "@sentry/tanstackstart-react";
+import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
-import autoprefixer from "autoprefixer";
 import initModuleAlias, { addAlias } from "module-alias";
 import fsp from "node:fs/promises";
+import { createRequire } from "node:module";
 import path from "node:path";
 import url from "node:url";
-import tailwindcss from "tailwindcss";
 import { defineConfig } from "vite";
-import type { Plugin } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import { cjsInterop } from "vite-plugin-cjs-interop";
 import commonjs from "vite-plugin-commonjs";
@@ -20,13 +19,17 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 initModuleAlias();
 addAlias("react-native", "react-native-web");
 
+const require = createRequire(import.meta.url);
+
 const optimizedDeps = [
 	"react-native-web",
 	"@expo/html-elements",
 	"expo-modules-core",
 	"nativewind",
-	"react-native-css-interop",
+	"react-native-css",
 	"react-native-safe-area-context",
+	"react-native-reanimated",
+	"react-native-worklets",
 	// https://github.com/ValentinH/react-easy-crop/issues/490#issuecomment-2034722747
 	"react-easy-crop",
 	"tslib",
@@ -35,28 +38,6 @@ const optimizedDeps = [
 ];
 
 const rootDir = path.resolve(url.fileURLToPath(import.meta.url), "../../..");
-
-const replaceImportPlugin = (
-	baseDir: string,
-	sources: Partial<Record<string, string>>,
-	ignoreFn: (
-		// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-		options: Parameters<Extract<NonNullable<Plugin["resolveId"]>, Function>>[2],
-	) => boolean = () => false,
-): Plugin => ({
-	name: "react-native-css-interop-src",
-	enforce: "pre",
-	resolveId: (source, _importer, options) => {
-		if (ignoreFn(options)) {
-			return;
-		}
-		const matchedSource = sources[source];
-		if (!matchedSource) {
-			return;
-		}
-		return path.join(baseDir, "node_modules", matchedSource);
-	},
-});
 
 const webDir = path.join(rootDir, "apps/web");
 const config = defineConfig({
@@ -80,14 +61,9 @@ const config = defineConfig({
 			".json",
 		],
 	},
-	css: {
-		postcss: {
-			// @ts-expect-error Those packages yet to be upgraded (with upgrade to Tailwind v4)
-			plugins: [tailwindcss(), autoprefixer()],
-		},
-	},
 	plugins: [
 		vitePluginInspect(),
+		tailwindcss(),
 		tanstackStart({
 			root: webDir,
 			tsr: {
@@ -98,40 +74,16 @@ const config = defineConfig({
 			customViteReactPlugin: true,
 		}),
 		viteReact({
-			jsxImportSource: "nativewind",
 			babel: {
-				presets: ["nativewind/babel"],
-				plugins: [["babel-plugin-react-compiler", {}]],
+				plugins: [
+					// This is a copy of `react-native-css/babel` preset which can't be run
+					// due to a mix of ESM syntax and `require`
+					require.resolve("react-native-css/babel/import-plugin"),
+					"react-native-worklets/plugin",
+					// End of the copy
+					"babel-plugin-react-compiler",
+				],
 			},
-		}),
-		replaceImportPlugin(
-			rootDir,
-			// A mix of CJS and ESM in SSR in nativewind / react-native-css-interop is a mess
-			// We better import source typescript that Vite will process on its own
-			{
-				"react-native-css-interop/jsx-runtime":
-					"react-native-css-interop/src/runtime/jsx-runtime.ts",
-				"nativewind/jsx-runtime":
-					"react-native-css-interop/src/runtime/jsx-runtime.ts",
-				"react-native-css-interop/jsx-dev-runtime":
-					"react-native-css-interop/src/runtime/jsx-dev-runtime.ts",
-				"nativewind/jsx-dev-runtime":
-					"react-native-css-interop/src/runtime/jsx-dev-runtime.ts",
-				nativewind: "nativewind/src/index.tsx",
-				"react-native-css-interop/runtime":
-					"react-native-css-interop/src/runtime/index.ts",
-				"react-native-css-interop": "react-native-css-interop/src/index.ts",
-				"react-native-css-interop/runtime/components":
-					"react-native-css-interop/src/runtime/components.ts",
-			},
-			// We skip import only client-side in dev environment
-			// Because gods told us so (also, experiments)
-			(options) => !options.ssr && process.env.NODE_ENV !== "production",
-		),
-		// Aliasing a component remap so it can be imported
-		replaceImportPlugin(rootDir, {
-			"react-native-css-interop/runtime/components":
-				"react-native-css-interop/src/runtime/components.ts",
 		}),
 		commonjs({
 			filter: (id) =>

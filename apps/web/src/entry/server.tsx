@@ -1,4 +1,5 @@
 /// <reference types="vite/client" />
+import "./prelude";
 import * as Sentry from "@sentry/tanstackstart-react";
 import {
 	createStartHandler,
@@ -6,8 +7,6 @@ import {
 	parseCookies,
 } from "@tanstack/react-start/server";
 
-// Import is needed to apply Nativewind remaps to default components
-import "~app/utils/nativewind";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import { apiCookieNames } from "~utils/mocks";
 import type { ExternalRouterContext } from "~web/pages/__root";

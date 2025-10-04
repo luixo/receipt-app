@@ -6,8 +6,6 @@ import { StartClient } from "@tanstack/react-start";
 import { hydrateRoot } from "react-dom/client";
 import { fromEntries } from "remeda";
 
-// Import is needed to apply Nativewind remaps to default components
-import "~app/utils/nativewind";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import { apiCookieNames } from "~utils/mocks";
 import type { ExternalRouterContext } from "~web/pages/__root";

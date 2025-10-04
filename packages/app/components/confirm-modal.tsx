@@ -58,7 +58,7 @@ export const ConfirmModal: React.FC<Props> = ({
 					<ModalHeader className="flex-col items-center">
 						<Header>{confirmText}</Header>
 						{subtitle ? (
-							<Header size="sm" className="text-warning mt-2">
+							<Header size="sm" className="mt-2 text-warning">
 								{subtitle}
 							</Header>
 						) : null}

@@ -1,0 +1,96 @@
+diff --git a/dist/cjs/exports/PlatformColor/index.js b/dist/cjs/exports/PlatformColor/index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..ccfaed91cf057075ade371905dffd7ea34997b90
+--- /dev/null
++++ b/dist/cjs/exports/PlatformColor/index.js
+@@ -0,0 +1,17 @@
++"use strict";
++
++exports.__esModule = true;
++exports.default = void 0;
++/**
++ * Copyright (c) Nicolas Gallagher.
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ *
++ * 
++ */
++
++var PlatformColor = (v) => v;
++var _default = exports.default = PlatformColor;
++module.exports = exports.default;
+\ No newline at end of file
+diff --git a/dist/cjs/index.js b/dist/cjs/index.js
+index b6962700f4e31dfccfacb7e5267eb8a0e5515463..356ae18e030cbd2544440583b623e01bb6ce0cf8 100644
+--- a/dist/cjs/index.js
++++ b/dist/cjs/index.js
+@@ -2,7 +2,7 @@
+ 
+ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault").default;
+ exports.__esModule = true;
+-exports.useWindowDimensions = exports.useLocaleContext = exports.useColorScheme = exports.unstable_createElement = exports.unmountComponentAtNode = exports.render = exports.processColor = exports.findNodeHandle = exports.YellowBox = exports.VirtualizedList = exports.View = exports.Vibration = exports.UIManager = exports.TouchableWithoutFeedback = exports.TouchableOpacity = exports.TouchableNativeFeedback = exports.TouchableHighlight = exports.Touchable = exports.TextInput = exports.Text = exports.Switch = exports.StyleSheet = exports.StatusBar = exports.Share = exports.SectionList = exports.ScrollView = exports.SafeAreaView = exports.RefreshControl = exports.ProgressBar = exports.Pressable = exports.Platform = exports.PixelRatio = exports.Picker = exports.PanResponder = exports.NativeModules = exports.NativeEventEmitter = exports.Modal = exports.LogBox = exports.Linking = exports.LayoutAnimation = exports.KeyboardAvoidingView = exports.Keyboard = exports.InteractionManager = exports.ImageBackground = exports.Image = exports.I18nManager = exports.FlatList = exports.Easing = exports.Dimensions = exports.DeviceEventEmitter = exports.Clipboard = exports.CheckBox = exports.Button = exports.BackHandler = exports.Appearance = exports.AppState = exports.AppRegistry = exports.Animated = exports.Alert = exports.ActivityIndicator = exports.AccessibilityInfo = void 0;
++exports.useWindowDimensions = exports.useLocaleContext = exports.useColorScheme = exports.unstable_createElement = exports.unmountComponentAtNode = exports.render = exports.processColor = exports.findNodeHandle = exports.YellowBox = exports.VirtualizedList = exports.View = exports.Vibration = exports.UIManager = exports.TouchableWithoutFeedback = exports.TouchableOpacity = exports.TouchableNativeFeedback = exports.TouchableHighlight = exports.Touchable = exports.TextInput = exports.Text = exports.Switch = exports.StyleSheet = exports.StatusBar = exports.Share = exports.SectionList = exports.ScrollView = exports.SafeAreaView = exports.RefreshControl = exports.ProgressBar = exports.Pressable = exports.PlatformColor = exports.Platform = exports.PixelRatio = exports.Picker = exports.PanResponder = exports.NativeModules = exports.NativeEventEmitter = exports.Modal = exports.LogBox = exports.Linking = exports.LayoutAnimation = exports.KeyboardAvoidingView = exports.Keyboard = exports.InteractionManager = exports.ImageBackground = exports.Image = exports.I18nManager = exports.FlatList = exports.Easing = exports.Dimensions = exports.DeviceEventEmitter = exports.Clipboard = exports.CheckBox = exports.Button = exports.BackHandler = exports.Appearance = exports.AppState = exports.AppRegistry = exports.Animated = exports.Alert = exports.ActivityIndicator = exports.AccessibilityInfo = void 0;
+ var _createElement = _interopRequireDefault(require("./exports/createElement"));
+ exports.unstable_createElement = _createElement.default;
+ var _findNodeHandle = _interopRequireDefault(require("./exports/findNodeHandle"));
+@@ -53,6 +53,8 @@ var _PixelRatio = _interopRequireDefault(require("./exports/PixelRatio"));
+ exports.PixelRatio = _PixelRatio.default;
+ var _Platform = _interopRequireDefault(require("./exports/Platform"));
+ exports.Platform = _Platform.default;
++var _PlatformColor = _interopRequireDefault(require("./exports/PlatformColor"));
++exports.PlatformColor = _PlatformColor.default;
+ var _Share = _interopRequireDefault(require("./exports/Share"));
+ exports.Share = _Share.default;
+ var _StyleSheet = _interopRequireDefault(require("./exports/StyleSheet"));
+diff --git a/dist/exports/PlatformColor/index.js b/dist/exports/PlatformColor/index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b1f58e1a758e3c3bea3bed92f8e13c479df00b2
+--- /dev/null
++++ b/dist/exports/PlatformColor/index.js
+@@ -0,0 +1,12 @@
++/**
++ * Copyright (c) Nicolas Gallagher.
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ *
++ * 
++ */
++
++var PlatformColor = (v) => v;
++export default PlatformColor;
+\ No newline at end of file
+diff --git a/dist/exports/PlatformColor/index.js.flow b/dist/exports/PlatformColor/index.js.flow
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b1f58e1a758e3c3bea3bed92f8e13c479df00b2
+--- /dev/null
++++ b/dist/exports/PlatformColor/index.js.flow
+@@ -0,0 +1,12 @@
++/**
++ * Copyright (c) Nicolas Gallagher.
++ * Copyright (c) Meta Platforms, Inc. and affiliates.
++ *
++ * This source code is licensed under the MIT license found in the
++ * LICENSE file in the root directory of this source tree.
++ *
++ * 
++ */
++
++var PlatformColor = (v) => v;
++export default PlatformColor;
+\ No newline at end of file
+diff --git a/dist/index.js b/dist/index.js
+index 4f699876d1902f758c3af4df5438e8ecc78bd6b4..89cb5a34b95cde6bb6903070a818737d19a019e4 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -25,6 +25,7 @@ export { default as NativeEventEmitter } from './exports/NativeEventEmitter';
+ export { default as PanResponder } from './exports/PanResponder';
+ export { default as PixelRatio } from './exports/PixelRatio';
+ export { default as Platform } from './exports/Platform';
++export { default as PlatformColor } from './exports/PlatformColor';
+ export { default as Share } from './exports/Share';
+ export { default as StyleSheet } from './exports/StyleSheet';
+ export { default as UIManager } from './exports/UIManager';

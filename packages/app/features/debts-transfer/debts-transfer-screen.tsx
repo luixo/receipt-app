@@ -357,7 +357,7 @@ const DebtsListForm = suspendedFallback<{
 							</Text>
 							<SkeletonNumberInput
 								className="flex-[6]"
-								startContent={<View className="bg-default size-4 rounded" />}
+								startContent={<View className="size-4 rounded bg-default" />}
 								defaultValue={0}
 								endContent={
 									<View className="cursor-pointer">

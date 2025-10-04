@@ -1,3 +1,4 @@
+// Sync this with global.css
 export const screens = {
 	xs: 320,
 	sm: 480,
