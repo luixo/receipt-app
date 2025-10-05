@@ -1,0 +1,111 @@
+# This crashes client sometimes
+diff --git a/dist/cjs/client.js b/dist/cjs/client.js
+index 4ec3d066abe2f91f0503183851ac697c15c7f3fe..0511a08af63a63e5c7d89f0b41cd2c22403383a2 100644
+--- a/dist/cjs/client.js
++++ b/dist/cjs/client.js
+@@ -9537,17 +9537,6 @@ function loadExternalIsValidProp(isValidProp) {
+  * By making it an optionalDependency we can offer this functionality only in the situations where it's
+  * actually required.
+  */
+-try {
+-    /**
+-     * We attempt to import this package but require won't be defined in esm environments, in that case
+-     * isPropValid will have to be provided via `MotionContext`. In a 6.0.0 this should probably be removed
+-     * in favour of explicit injection.
+-     */
+-    loadExternalIsValidProp(require("@emotion/is-prop-valid").default);
+-}
+-catch (_a) {
+-    // We don't need to actually do anything here - the fallback is the existing `isPropValid`.
+-}
+ function filterProps(props, isDom, forwardMotionProps) {
+     const filteredProps = {};
+     for (const key in props) {
+diff --git a/dist/cjs/index.js b/dist/cjs/index.js
+index 1025ffa353b6d5edc2a5759fd5a4cf796322634e..2fce6b0aef93cd05332b9cd4ca6c9f57a1b19054 100644
+--- a/dist/cjs/index.js
++++ b/dist/cjs/index.js
+@@ -11033,17 +11033,6 @@ function loadExternalIsValidProp(isValidProp) {
+  * By making it an optionalDependency we can offer this functionality only in the situations where it's
+  * actually required.
+  */
+-try {
+-    /**
+-     * We attempt to import this package but require won't be defined in esm environments, in that case
+-     * isPropValid will have to be provided via `MotionContext`. In a 6.0.0 this should probably be removed
+-     * in favour of explicit injection.
+-     */
+-    loadExternalIsValidProp(require("@emotion/is-prop-valid").default);
+-}
+-catch (_a) {
+-    // We don't need to actually do anything here - the fallback is the existing `isPropValid`.
+-}
+ function filterProps(props, isDom, forwardMotionProps) {
+     const filteredProps = {};
+     for (const key in props) {
+diff --git a/dist/cjs/m.js b/dist/cjs/m.js
+index ab6663f341335130946d785925805d9fbbee48af..26b4b7969df5f6a49bd825ce7607d2779a0dde1e 100644
+--- a/dist/cjs/m.js
++++ b/dist/cjs/m.js
+@@ -1365,17 +1365,6 @@ function loadExternalIsValidProp(isValidProp) {
+  * By making it an optionalDependency we can offer this functionality only in the situations where it's
+  * actually required.
+  */
+-try {
+-    /**
+-     * We attempt to import this package but require won't be defined in esm environments, in that case
+-     * isPropValid will have to be provided via `MotionContext`. In a 6.0.0 this should probably be removed
+-     * in favour of explicit injection.
+-     */
+-    loadExternalIsValidProp(require("@emotion/is-prop-valid").default);
+-}
+-catch (_a) {
+-    // We don't need to actually do anything here - the fallback is the existing `isPropValid`.
+-}
+ function filterProps(props, isDom, forwardMotionProps) {
+     const filteredProps = {};
+     for (const key in props) {
+diff --git a/dist/es/render/dom/utils/filter-props.mjs b/dist/es/render/dom/utils/filter-props.mjs
+index 264ccbde2510c427b7068042f009cd980b81c519..e6f337b705f66f377596ee46dd42301662e388bf 100644
+--- a/dist/es/render/dom/utils/filter-props.mjs
++++ b/dist/es/render/dom/utils/filter-props.mjs
+@@ -20,17 +20,6 @@ function loadExternalIsValidProp(isValidProp) {
+  * By making it an optionalDependency we can offer this functionality only in the situations where it's
+  * actually required.
+  */
+-try {
+-    /**
+-     * We attempt to import this package but require won't be defined in esm environments, in that case
+-     * isPropValid will have to be provided via `MotionContext`. In a 6.0.0 this should probably be removed
+-     * in favour of explicit injection.
+-     */
+-    loadExternalIsValidProp(require("@emotion/is-prop-valid").default);
+-}
+-catch (_a) {
+-    // We don't need to actually do anything here - the fallback is the existing `isPropValid`.
+-}
+ function filterProps(props, isDom, forwardMotionProps) {
+     const filteredProps = {};
+     for (const key in props) {
+diff --git a/dist/framer-motion.dev.js b/dist/framer-motion.dev.js
+index 92ff104f680c58ec04c28129ef1ed15b6f45d59d..ea86a57c064b29dd965f23abd6e2b88c0f22f357 100644
+--- a/dist/framer-motion.dev.js
++++ b/dist/framer-motion.dev.js
+@@ -11064,17 +11064,6 @@
+      * By making it an optionalDependency we can offer this functionality only in the situations where it's
+      * actually required.
+      */
+-    try {
+-        /**
+-         * We attempt to import this package but require won't be defined in esm environments, in that case
+-         * isPropValid will have to be provided via `MotionContext`. In a 6.0.0 this should probably be removed
+-         * in favour of explicit injection.
+-         */
+-        loadExternalIsValidProp(require("@emotion/is-prop-valid").default);
+-    }
+-    catch (_a) {
+-        // We don't need to actually do anything here - the fallback is the existing `isPropValid`.
+-    }
+     function filterProps(props, isDom, forwardMotionProps) {
+         const filteredProps = {};
+         for (const key in props) {
