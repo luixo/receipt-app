@@ -63,12 +63,14 @@ const getData = async (
 						.on("accounts.id", "=", ctx.auth.accountId),
 				)
 				.groupBy([
+					"accounts.id",
 					"receipts.ownerAccountId",
 					"receipts.id",
 					"receiptParticipants.role",
 					"receiptItems.id",
 				])
 				.select([
+					"accounts.id as selfAccountId",
 					"receipts.ownerAccountId",
 					"receipts.id as receiptId",
 					"receiptParticipants.role",
@@ -107,28 +109,34 @@ const getPayersOrErrors = (
 	}: Awaited<ReturnType<typeof getData>>,
 ) =>
 	inputs.map((input) => {
-		const matchedReceiptItem = receiptItems.find(
+		const matchedReceiptItems = receiptItems.filter(
 			(receiptItem) => receiptItem.itemId === input.itemId,
 		);
-		if (!matchedReceiptItem) {
+		if (matchedReceiptItems.length === 0) {
 			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt item "${input.itemId}" does not exist.`,
 			});
 		}
-		if (matchedReceiptItem.ownerAccountId !== ctx.auth.accountId) {
-			const parsed = roleSchema.safeParse(matchedReceiptItem.role);
+		// We just checked for non-empty array
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const { receiptId, ownerAccountId } = matchedReceiptItems[0]!;
+		if (ownerAccountId !== ctx.auth.accountId) {
+			const selfReceiptItemRole = matchedReceiptItems.find(
+				(receiptItem) => receiptItem.selfAccountId === ctx.auth.accountId,
+			)?.role;
+			const parsed = roleSchema.safeParse(selfReceiptItemRole);
 			if (!parsed.success) {
 				return new TRPCError({
 					code: "PRECONDITION_FAILED",
-					message: `User "${input.userId}" doesn't participate in receipt "${matchedReceiptItem.receiptId}".`,
+					message: `User "${input.userId}" doesn't participate in receipt "${receiptId}".`,
 				});
 			}
 			const accessRole = parsed.data;
 			if (accessRole !== "owner" && accessRole !== "editor") {
 				return new TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to add item to receipt "${matchedReceiptItem.receiptId}".`,
+					message: `Not enough rights to add item to receipt "${receiptId}".`,
 				});
 			}
 		}
@@ -139,7 +147,7 @@ const getPayersOrErrors = (
 		if (matchedReceiptItemPayer) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" already pays for item "${matchedReceiptItem.itemId}".`,
+				message: `User "${input.userId}" already pays for item "${input.itemId}".`,
 			});
 		}
 		const matchedUser = receiptParticipants.find(
@@ -148,7 +156,7 @@ const getPayersOrErrors = (
 		if (!matchedUser) {
 			return new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `User "${input.userId}" doesn't participate in receipt "${matchedReceiptItem.receiptId}".`,
+				message: `User "${input.userId}" doesn't participate in receipt "${receiptId}".`,
 			});
 		}
 		return {
