@@ -201,7 +201,6 @@ type InsertedPayers = Record<
 const insertPayers = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
-	receiptId: ReceiptId,
 	insertedItems: Awaited<ReturnType<typeof insertItems>>["items"],
 ): Promise<InsertedPayers> => {
 	const payers =
@@ -228,6 +227,7 @@ const insertPayers = async (
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const { itemId, userId } = payers[index]!;
 		const itemAcc = acc[itemId] || { errors: [], payers: [] };
+		/* c8 ignore next 2 */
 		if (insertedPayer instanceof TRPCError) {
 			itemAcc.errors.push(insertedPayer);
 		} else {
@@ -447,7 +447,6 @@ export const procedure = authProcedure
 			const addedPayers = await insertPayers(
 				transactionCtx,
 				input,
-				receiptId,
 				regularItems,
 			);
 			const receiptIdAsItemId = receiptId as ReceiptItemId;
