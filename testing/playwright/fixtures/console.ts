@@ -3,10 +3,7 @@ import colors from "colors";
 
 type IgnoredPattern = string | RegExp;
 
-export const DEFAULT_IGNORED: IgnoredPattern[] = [
-	// Router options are currently passed to DOM in HeroUI (TODO: open a PR)
-	/routerOptions/,
-];
+export const DEFAULT_IGNORED: IgnoredPattern[] = [];
 
 export const isIgnored = (patterns: IgnoredPattern[], message: string) =>
 	patterns.some((ignoredElement) =>

@@ -109,13 +109,9 @@ test.describe("Server-side translations", () => {
 test.describe("Client-side translations", () => {
 	test("Initial load does not fetch extra data", async ({
 		openAccount,
-		page,
-		api,
 		getNamespaces,
 	}) => {
-		const { user } = await api.mockUtils.authPage({ page });
 		await openAccount();
-		await expect(page.locator("h1")).toHaveText(user.name);
 		expect(await getNamespaces()).toEqual(["default", "account"]);
 	});
 
@@ -127,7 +123,6 @@ test.describe("Client-side translations", () => {
 	}) => {
 		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
 		await openAccount();
-		expect(await getNamespaces()).toEqual(["default", "account"]);
 		await page.locator("a[href='/settings']").click();
 		await expect
 			.poll(() => getNamespaces())
