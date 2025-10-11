@@ -41,6 +41,7 @@
 		]
 	},
 	"resolutions": {
+		"@heroui/toast@npm:2.0.16": "patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch",
 		"@internationalized/date": "^3.10.0",
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
 		"@tanstack/react-query@^5.80.6": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",

@@ -1,17 +1,21 @@
 import React from "react";
 
-import { closeAll } from "~components/toast";
+import { closeAll, getToastQueue } from "~components/toast";
 
 declare global {
 	// external interface extension
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
-		removeToasts?: () => void;
+		removeToasts?: () => number;
 	}
 }
 
 export const useToastHelper = () => {
 	React.useEffect(() => {
-		window.removeToasts = () => closeAll();
+		window.removeToasts = () => {
+			const currentToastAmount = getToastQueue().visibleToasts.length;
+			closeAll({ disableAnimation: true });
+			return currentToastAmount;
+		};
 	}, []);
 };

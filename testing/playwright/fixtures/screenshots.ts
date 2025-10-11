@@ -4,13 +4,15 @@ import type {
 	Page,
 	PageScreenshotOptions,
 } from "@playwright/test";
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { joinImages } from "join-images";
 import assert from "node:assert";
 import { isNonNullish } from "remeda";
 import sharp from "sharp";
 
 import type { ColorMode } from "~app/utils/store/color-modes";
+
+import { toastsFixtures as test } from "./toasts";
 
 const FRAME_LENGTH = 33;
 const DELAY_FRAME_COUNT = 5;
@@ -227,7 +229,7 @@ type ScreenshotsFixtures = {
 };
 
 export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
-	expectScreenshotWithSchemes: async ({ page }, use) => {
+	expectScreenshotWithSchemes: async ({ page, toast }, use) => {
 		await use(
 			async (
 				name,
@@ -245,6 +247,12 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 				} = {},
 			) => {
 				await page.evaluate(() => document.fonts.ready);
+				const visibleToasts = await toast.count();
+				if (visibleToasts !== 0) {
+					throw new Error(
+						"There are visible toasts, please clear toasts before making a screenshot!",
+					);
+				}
 				const stickyMenu = page.getByTestId("sticky-menu");
 				const stickyMenuBoundingBox = await stickyMenu.boundingBox();
 				const masks = mask.map((maskElement) => {

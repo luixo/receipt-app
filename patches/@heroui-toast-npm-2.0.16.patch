@@ -1,0 +1,111 @@
+# see https://github.com/heroui-inc/heroui/issues/5802
+diff --git a/dist/chunk-HO5AVL6Z.mjs b/dist/chunk-HO5AVL6Z.mjs
+index abe9e25d4afaf6eb5f8d8a6d07366985ecd77dfc..45d50ab490eac0b81572c481f3b2a85bee4d5ccb 100644
+--- a/dist/chunk-HO5AVL6Z.mjs
++++ b/dist/chunk-HO5AVL6Z.mjs
+@@ -58,26 +58,31 @@ var addToast = ({ ...props }) => {
+   return globalToastQueue.add(props);
+ };
+ var closingToasts = /* @__PURE__ */ new Map();
+-var closeToast = (key) => {
++var closeToast = (key, { disableAnimation } = {}) => {
+   if (!globalToastQueue) {
+     return;
+   }
+   if (closingToasts.has(key)) {
+     return;
+   }
++  const removeToastFromQueue = () => globalToastQueue == null ? void 0 : globalToastQueue.close(key);
++  if (disableAnimation) {
++    removeToastFromQueue();
++    return;
++  }
+   const timeoutId = setTimeout(() => {
+     closingToasts.delete(key);
+-    globalToastQueue == null ? void 0 : globalToastQueue.close(key);
++    removeToastFromQueue();
+   }, 300);
+   closingToasts.set(key, timeoutId);
+ };
+-var closeAll = () => {
++var closeAll = ({ disableAnimation } = {}) => {
+   if (!globalToastQueue) {
+     return;
+   }
+   const toasts = [...globalToastQueue.visibleToasts];
+   toasts.forEach((toast) => {
+-    closeToast(toast.key);
++    closeToast(toast.key, { disableAnimation });
+   });
+ };
+ var isToastClosing = (key) => closingToasts.has(key);
+diff --git a/dist/toast-provider.d.mts b/dist/toast-provider.d.mts
+index 6619b590837c7e56e4ec49bf65194649d9418804..f8cb3ca073e7b46569d4915d019201df4113ec35 100644
+--- a/dist/toast-provider.d.mts
++++ b/dist/toast-provider.d.mts
+@@ -21,8 +21,8 @@ interface ToastProviderProps {
+ declare const getToastQueue: () => ToastQueue<ToastProps>;
+ declare const ToastProvider: ({ placement, disableAnimation: disableAnimationProp, maxVisibleToasts, toastOffset, toastProps, regionProps, }: ToastProviderProps) => react_jsx_runtime.JSX.Element;
+ declare const addToast: ({ ...props }: ToastProps & ToastOptions) => string | null;
+-declare const closeToast: (key: string) => void;
+-declare const closeAll: () => void;
++declare const closeToast: (key: string, options?: { disableAnimation?: boolean }) => void;
++declare const closeAll: (options?: { disableAnimation?: boolean }) => void;
+ declare const isToastClosing: (key: string) => boolean;
+ 
+ export { ToastProvider, addToast, closeAll, closeToast, getToastQueue, isToastClosing };
+diff --git a/dist/toast-provider.d.ts b/dist/toast-provider.d.ts
+index 1c11e095390e3a76daa6f13933129a479046db14..8ed8c80f2f0b09d8a8ed1edfb9f10e03af1a5c8b 100644
+--- a/dist/toast-provider.d.ts
++++ b/dist/toast-provider.d.ts
+@@ -21,8 +21,8 @@ interface ToastProviderProps {
+ declare const getToastQueue: () => ToastQueue<ToastProps>;
+ declare const ToastProvider: ({ placement, disableAnimation: disableAnimationProp, maxVisibleToasts, toastOffset, toastProps, regionProps, }: ToastProviderProps) => react_jsx_runtime.JSX.Element;
+ declare const addToast: ({ ...props }: ToastProps & ToastOptions) => string | null;
+-declare const closeToast: (key: string) => void;
+-declare const closeAll: () => void;
++declare const closeToast: (key: string, options?: { disableAnimation?: boolean }) => void;
++declare const closeAll: (options?: { disableAnimation?: boolean }) => void;
+ declare const isToastClosing: (key: string) => boolean;
+ 
+ export { ToastProvider, addToast, closeAll, closeToast, getToastQueue, isToastClosing };
+diff --git a/dist/toast-provider.js b/dist/toast-provider.js
+index 20f9d12fcf2ebf280ff83c34282760c7891b2efc..ac45d076a7a2f3c717faa65b0a63e294d4975a89 100644
+--- a/dist/toast-provider.js
++++ b/dist/toast-provider.js
+@@ -1285,26 +1285,31 @@ var addToast = ({ ...props }) => {
+   return globalToastQueue.add(props);
+ };
+ var closingToasts = /* @__PURE__ */ new Map();
+-var closeToast = (key) => {
++var closeToast = (key, { disableAnimation } = {}) => {
+   if (!globalToastQueue) {
+     return;
+   }
+   if (closingToasts.has(key)) {
+     return;
+   }
++  const removeToastFromQueue = () => globalToastQueue == null ? void 0 : globalToastQueue.close(key);
++  if (disableAnimation) {
++    removeToastFromQueue();
++    return;
++  }
+   const timeoutId = setTimeout(() => {
+     closingToasts.delete(key);
+-    globalToastQueue == null ? void 0 : globalToastQueue.close(key);
++    removeToastFromQueue();
+   }, 300);
+   closingToasts.set(key, timeoutId);
+ };
+-var closeAll = () => {
++var closeAll = ({ disableAnimation } = {}) => {
+   if (!globalToastQueue) {
+     return;
+   }
+   const toasts = [...globalToastQueue.visibleToasts];
+   toasts.forEach((toast) => {
+-    closeToast(toast.key);
++    closeToast(toast.key, { disableAnimation });
+   });
+ };
+ var isToastClosing = (key) => closingToasts.has(key);

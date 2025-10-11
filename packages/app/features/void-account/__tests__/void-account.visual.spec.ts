@@ -46,7 +46,6 @@ test(`"auth.voidAccount" mutation`, async ({
 		return { email: "foo@gmail.com" };
 	});
 	await voidButton.click();
-	await clearToasts();
 	await expectScreenshotWithSchemes("loading.png");
 	voidAccountPause.resolve();
 	await awaitCacheKey("auth.voidAccount");

@@ -6,11 +6,9 @@ test("Empty card on error", async ({
 	page,
 	api,
 	expectScreenshotWithSchemes,
-	clearToasts,
 }) => {
 	api.mockUtils.noAuthPage();
 	await page.goto("/confirm-email");
-	await clearToasts();
 	await expectScreenshotWithSchemes("empty.png");
 });
 
@@ -30,7 +28,7 @@ test.describe("States", () => {
 			});
 		});
 		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
-		await clearToasts();
+		await clearToasts(2);
 		await expectScreenshotWithSchemes("error.png");
 	});
 
@@ -64,7 +62,7 @@ test.describe("States", () => {
 		api.mockFirst("auth.confirmEmail", { email: faker.internet.email() });
 		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
 		await api.mockUtils.authPage({ page });
-		await clearToasts();
+		await clearToasts(2);
 		await expectScreenshotWithSchemes("success.png");
 	});
 });

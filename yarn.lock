@@ -6154,6 +6154,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroui/toast@patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch":
+  version: 2.0.16
+  resolution: "@heroui/toast@patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch::version=2.0.16&hash=75e5d8"
+  dependencies:
+    "@heroui/react-utils": "npm:2.1.13"
+    "@heroui/shared-icons": "npm:2.1.10"
+    "@heroui/shared-utils": "npm:2.1.11"
+    "@heroui/spinner": "npm:2.2.23"
+    "@heroui/use-is-mobile": "npm:2.2.12"
+    "@react-aria/interactions": "npm:3.25.5"
+    "@react-aria/toast": "npm:3.0.7"
+    "@react-stately/toast": "npm:3.1.2"
+  peerDependencies:
+    "@heroui/system": ">=2.4.18"
+    "@heroui/theme": ">=2.4.17"
+    framer-motion: ">=11.5.6 || >=12.0.0-alpha.1"
+    react: ">=18 || >=19.0.0-rc.0"
+    react-dom: ">=18 || >=19.0.0-rc.0"
+  checksum: 10/0dac9543cfa0d3ce0dfdcac5c7c848dc8c39cb5031b4bd0eaf5c766cc5a8b7b8e846c69fe6e191f53257692667420b82b5d94a1de985d33ecf496b3dbefa79c6
+  languageName: node
+  linkType: hard
+
 "@heroui/tooltip@npm:2.2.23":
   version: 2.2.23
   resolution: "@heroui/tooltip@npm:2.2.23"

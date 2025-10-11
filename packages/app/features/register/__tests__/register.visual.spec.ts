@@ -58,7 +58,7 @@ test("'auth.register' mutation", async ({
 	});
 	await registerButton.click();
 
-	await clearToasts();
+	await clearToasts(2);
 	await expectScreenshotWithSchemes("loading.png");
 });
 
