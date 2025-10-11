@@ -20,6 +20,7 @@ import { ScrollShadow } from "~components/scroll-shadow";
 import { Select, SelectItem } from "~components/select";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { cn } from "~components/utils";
 import type { UserId } from "~db/ids";
 import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-payers/add";
 import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-payers/remove";
@@ -116,7 +117,22 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 			<CardHeader className="flex flex-col items-start justify-between gap-4 sm:flex-row">
 				<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
 				<View className="flex w-full flex-1 flex-row justify-end gap-4 self-end">
-					{item.payers.length === 0 ? (
+					{item.payers.length !== 0 ? (
+						<AvatarGroup
+							className={cn("ml-2", canEdit ? "cursor-pointer" : undefined)}
+						>
+							{item.payers.map((payer) => (
+								<LoadableUser
+									key={payer.userId}
+									id={payer.userId}
+									foreign={!isOwner}
+									onClick={
+										canEdit ? () => removePayer(payer.userId) : undefined
+									}
+								/>
+							))}
+						</AvatarGroup>
+					) : canEdit ? (
 						<Select
 							className="max-w-64"
 							placeholder={t("item.payer.placeholder")}
@@ -138,18 +154,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									</SelectItem>
 								))}
 						</Select>
-					) : (
-						<AvatarGroup className="ml-2 cursor-pointer">
-							{item.payers.map((payer) => (
-								<LoadableUser
-									key={payer.userId}
-									id={payer.userId}
-									foreign={!isOwner}
-									onClick={() => removePayer(payer.userId)}
-								/>
-							))}
-						</AvatarGroup>
-					)}
+					) : null}
 					{!canEdit ? null : (
 						<RemoveButton
 							onRemove={() => removeItem(item.id)}
