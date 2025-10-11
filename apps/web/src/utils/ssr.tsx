@@ -4,13 +4,11 @@ import type { QueryKey } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouterState } from "@tanstack/react-router";
 import { TRPCClientError } from "@trpc/client";
-import { getQueryKey } from "@trpc/react-query";
 import type { ResolverDef, TRPCQueryOptions } from "@trpc/tanstack-react-query";
 import { isNonNullish } from "remeda";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
-import type { AppRouter } from "~app/trpc";
 import { transformer } from "~utils/transformer";
 import type { RouterContext } from "~web/pages/__root";
 
@@ -60,23 +58,7 @@ export const prefetchQueriesWith = async <T,>(
 	try {
 		const result = await getPromise();
 		return getOptions(result).map((options) => prefetchQuery(ctx, options));
-	} catch (e) {
-		if (e instanceof TRPCClientError) {
-			const castedError = e as TRPCClientError<AppRouter>;
-			throw new SerializedTRPCError(
-				getQueryKey(
-					{
-						// @ts-expect-error Simulating procedure to get correct query key
-						_def: () => ({
-							path: castedError.shape?.data.path?.split(".") ?? [],
-						}),
-					},
-					castedError.shape?.input,
-					"query",
-				),
-				e,
-			);
-		}
+	} catch {
 		return [];
 	}
 };
