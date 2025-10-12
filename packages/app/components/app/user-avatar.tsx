@@ -4,7 +4,7 @@ import BoringAvatar from "boring-avatars";
 import { useTranslation } from "react-i18next";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Avatar } from "~components/avatar";
+import { Avatar, useAvatarGroupContext } from "~components/avatar";
 import { Skeleton } from "~components/skeleton";
 import { cn } from "~components/utils";
 import type { UserId } from "~db/ids";
@@ -84,7 +84,10 @@ export const useUserAvatarProps = ({
 	...props
 }: UserProps) => {
 	const { t } = useTranslation("default");
-	const size = getSize(props.size);
+	const avatarGroupContext = useAvatarGroupContext();
+	// This is a bug in types, context is actually optional
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	const size = getSize(avatarGroupContext?.size ?? props.size);
 	const imgProps = {
 		src: connectedAccount?.avatarUrl ?? "",
 		alt: t("components.avatar.alt"),
@@ -102,6 +105,7 @@ export const useUserAvatarProps = ({
 				colors={COLORS}
 			/>
 		),
+		...avatarGroupContext,
 		...props,
 		size: props.size === "xs" ? "sm" : props.size,
 		classNames: {

@@ -1,1 +1,1 @@
-export { Avatar, AvatarGroup } from "@heroui/avatar";
+export { Avatar, AvatarGroup, useAvatarGroupContext } from "@heroui/avatar";
