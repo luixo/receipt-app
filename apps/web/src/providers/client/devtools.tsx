@@ -1,22 +1,38 @@
 import type React from "react";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { FormDevtoolsPlugin } from "@tanstack/react-form-devtools";
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
+import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useMountEffect } from "~app/hooks/use-mount-effect";
+import { useHotkey } from "~app/hooks/use-hotkey";
 
 export const DevToolsProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
-	const [isMounted, { setTrue: setMounted }] = useBooleanState();
-	useMountEffect(setMounted);
+	const [isMounted, { switchValue: switchMounted }] = useBooleanState();
+	useHotkey(["shift"], "x", switchMounted);
 	return (
 		<>
 			{children}
 			{/* When running with '--mode test' hydration mismatch error appears */}
-			{isMounted ? <ReactQueryDevtools /> : null}
-			{isMounted ? <TanStackRouterDevtools /> : null}
+			{isMounted ? (
+				<TanStackDevtools
+					// config={{ triggerHidden: import.meta.env.MODE === "test" }}
+					plugins={[
+						{
+							name: "TanStack Query",
+							render: <ReactQueryDevtoolsPanel />,
+						},
+						{
+							name: "TanStack Router",
+							render: <TanStackRouterDevtoolsPanel />,
+						},
+						FormDevtoolsPlugin(),
+					]}
+				/>
+			) : null}
 		</>
 	);
 };
