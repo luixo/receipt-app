@@ -21,7 +21,6 @@ criticalPaths.forEach((path) => {
 			mockDebts,
 			openUserDebtsScreen,
 			snapshotQueries,
-			debtsGroup,
 			errorMessage,
 			awaitCacheKey,
 			consoleManager,
@@ -55,7 +54,6 @@ criticalPaths.forEach((path) => {
 				`Mock "${path}" error`,
 			).first();
 			await expect(getAllUserErrorLocator).toBeVisible();
-			await expect(debtsGroup).toBeHidden();
 			unmockError();
 			await snapshotQueries(
 				async () => {

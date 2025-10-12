@@ -1,6 +1,72 @@
 {
 	"queries": {
-		"debts.getAllUser": {
+		"debts.get:[{\"id\":\"56074242-0dc3-439a-963d-d1cd677e603d\"}]": {
+			"state": {
+				"data": {
+					"id": "56074242-0dc3-439a-963d-d1cd677e603d",
+					"currencyCode": "XPF",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-16",
+					"note": "architecto ex consequuntur aut",
+					"receiptId": "<undefined>",
+					"amount": 7387.08,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"ca3e89b3-523d-4e5b-94a1-c750dd68f06a\"}]": {
+			"state": {
+				"data": {
+					"id": "ca3e89b3-523d-4e5b-94a1-c750dd68f06a",
+					"currencyCode": "CLP",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-16",
+					"note": "a possimus blanditiis consequatur",
+					"receiptId": "<undefined>",
+					"amount": 6606.15,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"ec7042fc-4520-46ce-acb4-0ef485e983ef\"}]": {
+			"state": {
+				"data": {
+					"id": "ec7042fc-4520-46ce-acb4-0ef485e983ef",
+					"currencyCode": "GIP",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-10",
+					"note": "sunt est debitis aliquam",
+					"receiptId": "<undefined>",
+					"amount": -3537.36,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",
@@ -11,6 +77,22 @@
 				"fetchMeta": null,
 				"isInvalidated": false,
 				"status": "error",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
+			"state": {
+				"data": {
+					"id": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9",
+					"name": "Dr. Essie Stiedemann",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
 				"fetchStatus": "idle"
 			}
 		}

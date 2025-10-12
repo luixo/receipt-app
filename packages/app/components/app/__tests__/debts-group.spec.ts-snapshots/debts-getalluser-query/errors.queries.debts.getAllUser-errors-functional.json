@@ -1,5 +1,14 @@
 {
+	"debts.get": {
+		"serverCalls": 3,
+		"clientCalls": 3
+	},
 	"debts.getAllUser": {
-		"serverCalls": 1
+		"serverCalls": 1,
+		"clientCalls": 1
+	},
+	"users.get": {
+		"serverCalls": 1,
+		"clientCalls": 1
 	}
 }

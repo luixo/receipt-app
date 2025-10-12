@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.getByUserPaged": {
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",
@@ -11,6 +11,22 @@
 				"fetchMeta": null,
 				"isInvalidated": false,
 				"status": "error",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
+			"state": {
+				"data": {
+					"id": "2226aee6-53a5-4bf5-b7bd-8596a3355d7e",
+					"name": "Luz Trantow Jr.",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
 				"fetchStatus": "idle"
 			}
 		}

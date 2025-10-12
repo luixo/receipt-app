@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.getByUserPaged:[{\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\",\"filters\":{\"showResolved\":false},\"cursor\":0}]": {
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
 			"state": {
 				"data": {
 					"cursor": 0,
@@ -13,10 +13,8 @@
 				},
 				"dataUpdateCount": 1,
 				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
+				"fetchFailureCount": -1,
+				"status": "success"
 			}
 		}
 	}
