@@ -56,8 +56,7 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants, selfUserId, receiptId } =
-		useReceiptContext();
+	const { currencyCode, participants, receiptId } = useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const canEdit = useCanEdit();
@@ -144,16 +143,14 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								}
 							}}
 						>
-							{participants
-								.filter((participant) => participant.userId !== selfUserId)
-								.map((participant) => (
-									<SelectItem
-										key={participant.userId}
-										textValue={participant.userId}
-									>
-										<LoadableUser id={participant.userId} foreign={!isOwner} />
-									</SelectItem>
-								))}
+							{participants.map((participant) => (
+								<SelectItem
+									key={participant.userId}
+									textValue={participant.userId}
+								>
+									<LoadableUser id={participant.userId} foreign={!isOwner} />
+								</SelectItem>
+							))}
 						</Select>
 					) : null}
 					{!canEdit ? null : (
