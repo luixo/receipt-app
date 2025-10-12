@@ -1,13 +1,12 @@
 import type React from "react";
 
+import type { UserAvatar } from "~app/components/app/user-avatar";
 import {
-	UserAvatar,
 	useSkeletonUserAvatarProps,
 	useUserAvatarProps,
 } from "~app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
-import { Chip } from "~components/chip";
 import { Skeleton } from "~components/skeleton";
 import { User as RawUser } from "~components/user";
 import { cn } from "~components/utils";
@@ -15,29 +14,10 @@ import type { UserId } from "~db/ids";
 
 export const SkeletonUser: React.FC<
 	Omit<Props, "id" | "name" | "connectedAccount">
-> = ({
-	className,
-	onlyAvatar,
-	avatarProps: rawAvatarProps,
-	chip,
-	...props
-}) => {
+> = ({ className, onlyAvatar, avatarProps: rawAvatarProps, ...props }) => {
 	const avatarProps = useSkeletonUserAvatarProps(rawAvatarProps || {});
 	if (onlyAvatar) {
 		return <Avatar {...avatarProps} />;
-	}
-	if (chip) {
-		return (
-			<Chip
-				data-testid="user-chip-skeleton"
-				className={cn("text-foreground", className)}
-				avatar={<Avatar {...avatarProps} />}
-				onClick={props.onClick}
-				{...(typeof chip === "boolean" ? {} : chip)}
-			>
-				<Skeleton className="h-4 w-12 rounded" />
-			</Chip>
-		);
 	}
 	return (
 		<RawUser
@@ -55,7 +35,6 @@ export type Props = {
 	id: UserId;
 	name: string;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
-	chip?: boolean | React.ComponentProps<typeof Chip>;
 	onlyAvatar?: boolean;
 	avatarProps?: Partial<
 		Omit<
@@ -83,7 +62,6 @@ export const User: React.FC<Props> = ({
 	avatarProps: rawAvatarProps,
 	dimmed,
 	onlyAvatar,
-	chip,
 	ref,
 	...props
 }) => {
@@ -96,20 +74,6 @@ export const User: React.FC<Props> = ({
 	const avatarProps = useUserAvatarProps(avatarInput);
 	if (onlyAvatar) {
 		return <Avatar {...avatarProps} />;
-	}
-	if (chip) {
-		return (
-			<Chip
-				ref={ref}
-				data-testid="user-chip"
-				className={cn("text-foreground", className)}
-				avatar={<UserAvatar size="xs" {...avatarInput} />}
-				onClick={props.onClick}
-				{...(typeof chip === "boolean" ? {} : chip)}
-			>
-				{name}
-			</Chip>
-		);
 	}
 	return (
 		<RawUser

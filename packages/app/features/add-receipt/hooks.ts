@@ -176,6 +176,73 @@ const useUpdateItemConsumerPart = (setItems: SetItems) => {
 	);
 };
 
+const useAddItemPayer = (setItems: SetItems) => {
+	const updateItem = useUpdateItem(setItems);
+	return React.useCallback<ActionsHooks["addItemPayer"]>(
+		(itemId, userId, part, options) =>
+			updateItem(
+				itemId,
+				(prevItem) => ({
+					// Remove accidentally added double participants
+					payers: [
+						...(prevItem.payers || []).filter(
+							({ userId: lookupUserId }) => lookupUserId !== userId,
+						),
+						{ userId, part, createdAt: getNow.zonedDateTime() },
+					],
+				}),
+				options,
+			),
+		[updateItem],
+	);
+};
+
+const useRemoveItemPayer = (setItems: SetItems) => {
+	const updateItem = useUpdateItem(setItems);
+	return React.useCallback<ActionsHooks["removeItemPayer"]>(
+		(itemId, userId, options) =>
+			updateItem(
+				itemId,
+				(prevItem) => ({
+					payers: (prevItem.payers || []).filter(
+						({ userId: lookupUserId }) => lookupUserId !== userId,
+					),
+				}),
+				options,
+			),
+		[updateItem],
+	);
+};
+
+const useUpdateItemPayerPart = (setItems: SetItems) => {
+	const updateItem = useUpdateItem(setItems);
+	return React.useCallback<ActionsHooks["updateItemPayerPart"]>(
+		(itemId, userId, part, options) =>
+			updateItem(
+				itemId,
+				(prevItem) => {
+					const prevPayers = prevItem.payers || [];
+					const matchedPartIndex = prevPayers.findIndex(
+						({ userId: lookupUserId }) => userId === lookupUserId,
+					);
+					if (matchedPartIndex === -1) {
+						return {};
+					}
+					return {
+						payers: [
+							...prevPayers.slice(0, matchedPartIndex),
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							{ ...prevPayers[matchedPartIndex]!, part },
+							...prevPayers.slice(matchedPartIndex + 1),
+						],
+					};
+				},
+				options,
+			),
+		[updateItem],
+	);
+};
+
 const useAddPayer = (setPayers: SetPayers) =>
 	React.useCallback<ActionsHooks["addPayer"]>(
 		(userId, part, options) =>
@@ -353,6 +420,9 @@ export const useActionsHooks = (
 		addItemConsumer: useAddItemConsumer(setItems),
 		removeItemConsumer: useRemoveItemConsumer(setItems),
 		updateItemConsumerPart: useUpdateItemConsumerPart(setItems),
+		addItemPayer: useAddItemPayer(setItems),
+		removeItemPayer: useRemoveItemPayer(setItems),
+		updateItemPayerPart: useUpdateItemPayerPart(setItems),
 		addParticipant: useAddParticipant(setParticipants),
 		removeParticipant: useRemoveParticipant(setParticipants),
 		updateParticipantRole: useUpdateParticipantRole(setParticipants),

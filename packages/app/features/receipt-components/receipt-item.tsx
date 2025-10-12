@@ -1,53 +1,35 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
-import { AvatarGroup } from "~components/avatar";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
-import { ScrollShadow } from "~components/scroll-shadow";
-import { Select, SelectItem } from "~components/select";
+import { ArrowIcon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import type { UserId } from "~db/ids";
-import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-payers/add";
-import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-payers/remove";
-import { compare } from "~utils/date";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
-import { useCanEdit, useIsOwner } from "./hooks";
+import { useCanEdit } from "./hooks";
 import {
 	ReceiptItemConsumer,
 	ReceiptItemConsumerSkeleton,
 } from "./receipt-item-consumer";
-import { ReceiptItemConsumerChip } from "./receipt-item-consumer-chip";
+import { ReceiptItemConsumers } from "./receipt-item-consumers";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
+import { ReceiptItemPayers } from "./receipt-item-payers";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 import type { Item } from "./state";
-
-type ItemConsumer = Item["consumers"][number];
-
-const SORT_CONSUMERS = (a: ItemConsumer, b: ItemConsumer) => {
-	const delta = compare.zonedDateTime(a.createdAt, b.createdAt);
-	if (delta === 0) {
-		return a.userId.localeCompare(b.userId);
-	}
-	return delta;
-};
+import { SORT_USERS } from "./utils";
 
 type Props = {
 	item: Item;
@@ -56,9 +38,8 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants, receiptId } = useReceiptContext();
+	const { currencyCode, participants } = useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
-	const isOwner = useIsOwner();
 	const canEdit = useCanEdit();
 	const locale = useLocale();
 
@@ -69,90 +50,44 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	);
 	const isRemovalPending = removeItemMutationState?.status === "pending";
 
-	const notAddedParticipants = React.useMemo(() => {
-		const addedParticipants = new Set(
-			item.consumers.map((consumer) => consumer.userId),
-		);
-		return participants.filter(
-			(participant) => !addedParticipants.has(participant.userId),
-		);
-	}, [item.consumers, participants]);
-	const onAddEveryItemParticipant = React.useCallback(() => {
-		notAddedParticipants.forEach((participant) => {
-			addItemConsumer(item.id, participant.userId, 1);
-		});
-	}, [addItemConsumer, item.id, notAddedParticipants]);
-	const sortedConsumers = React.useMemo(
-		() => item.consumers.sort(SORT_CONSUMERS),
+	const participantsIds = React.useMemo(
+		() => participants.map(({ userId }) => userId),
+		[participants],
+	);
+	const addedParticipantsIds = React.useMemo(
+		() => item.consumers.map((consumer) => consumer.userId),
 		[item.consumers],
 	);
-
-	const addPayerMutation = useMutation(
-		trpc.receiptItemPayers.add.mutationOptions(
-			useTrpcMutationOptions(receiptItemConsumersAddOptions, {
-				context: { receiptId },
-			}),
-		),
+	const notAddedParticipantsIds = React.useMemo(
+		() =>
+			participantsIds.filter(
+				(participantId) => !addedParticipantsIds.includes(participantId),
+			),
+		[addedParticipantsIds, participantsIds],
 	);
-	const addPayer = React.useCallback(
-		(userId: UserId) =>
-			addPayerMutation.mutate({ itemId: item.id, userId, part: 1 }),
-		[addPayerMutation, item.id],
-	);
-	const removePayerMutation = useMutation(
-		trpc.receiptItemPayers.remove.mutationOptions(
-			useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
-				context: { receiptId },
-			}),
-		),
-	);
-	const removePayer = React.useCallback(
-		(userId: UserId) => removePayerMutation.mutate({ itemId: item.id, userId }),
-		[item.id, removePayerMutation],
-	);
+	const onAddEveryItemParticipant = React.useCallback(() => {
+		notAddedParticipantsIds.forEach((participantId) => {
+			addItemConsumer(item.id, participantId, 1);
+		});
+	}, [addItemConsumer, item.id, notAddedParticipantsIds]);
+	const sortedConsumers = item.consumers.sort(SORT_USERS);
 
 	return (
 		<Card ref={ref}>
-			<CardHeader className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-				<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
-				<View className="flex w-full flex-1 flex-row justify-end gap-4 self-end">
-					{item.payers.length !== 0 ? (
-						<AvatarGroup
-							className={cn("ml-2", canEdit ? "cursor-pointer" : undefined)}
-						>
-							{item.payers.map((payer) => (
-								<LoadableUser
-									key={payer.userId}
-									id={payer.userId}
-									foreign={!isOwner}
-									onClick={
-										canEdit ? () => removePayer(payer.userId) : undefined
-									}
-								/>
-							))}
-						</AvatarGroup>
-					) : canEdit ? (
-						<Select
-							className="max-w-64"
-							aria-label={t("item.payer.label")}
-							placeholder={t("item.payer.placeholder")}
-							isDisabled={addPayerMutation.isPending}
-							onSelectionChange={(selection) => {
-								if (selection instanceof Set) {
-									addPayer([...selection.values()][0] as UserId);
-								}
-							}}
-						>
-							{participants.map((participant) => (
-								<SelectItem
-									key={participant.userId}
-									textValue={participant.userId}
-								>
-									<LoadableUser id={participant.userId} foreign={!isOwner} />
-								</SelectItem>
-							))}
-						</Select>
-					) : null}
+			<CardHeader className="flex flex-col items-start justify-between gap-4">
+				<View className="flex w-full flex-row justify-between gap-4">
+					<View className="flex flex-row items-center gap-4">
+						<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
+						{notAddedParticipantsIds.length > 1 ? (
+							<Chip
+								color="secondary"
+								className="cursor-pointer"
+								onClick={onAddEveryItemParticipant}
+							>
+								{t("item.participants.everyone")}
+							</Chip>
+						) : null}
+					</View>
 					{!canEdit ? null : (
 						<RemoveButton
 							onRemove={() => removeItem(item.id)}
@@ -163,6 +98,13 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						/>
 					)}
 				</View>
+				{canEdit ? (
+					<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
+						<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
+						<ArrowIcon size={36} className="shrink-0 rotate-90 sm:rotate-0" />
+						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
+					</View>
+				) : null}
 			</CardHeader>
 			<Divider />
 			<CardBody className="gap-2">
@@ -186,29 +128,6 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						)}
 					</Text>
 				</View>
-				{!canEdit || notAddedParticipants.length === 0 ? null : (
-					<ScrollShadow
-						orientation="horizontal"
-						className="flex w-full flex-row gap-1 overflow-x-auto"
-					>
-						{notAddedParticipants.length > 1 ? (
-							<Chip
-								color="secondary"
-								className="cursor-pointer"
-								onClick={onAddEveryItemParticipant}
-							>
-								{t("item.participants.everyone")}
-							</Chip>
-						) : null}
-						{notAddedParticipants.map((participant) => (
-							<ReceiptItemConsumerChip
-								key={participant.userId}
-								item={item}
-								participant={participant}
-							/>
-						))}
-					</ScrollShadow>
-				)}
 				{sortedConsumers.length === 0 ? null : (
 					<>
 						<Divider />

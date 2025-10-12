@@ -19,6 +19,9 @@ import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-consumers/add";
 import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-consumers/remove";
 import { options as receiptItemConsumersUpdateOptions } from "~mutations/receipt-item-consumers/update";
+import { options as receiptItemPayersAddOptions } from "~mutations/receipt-item-payers/add";
+import { options as receiptItemPayersRemoveOptions } from "~mutations/receipt-item-payers/remove";
+import { options as receiptItemPayersUpdateOptions } from "~mutations/receipt-item-payers/update";
 import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
@@ -282,6 +285,66 @@ const useUpdateItemConsumerPart = (receiptId: ReceiptId) => {
 	);
 };
 
+const useAddItemPayer = (receiptId: ReceiptId) => {
+	const trpc = useTRPC();
+	const addItemPayerMutation = useMutation(
+		trpc.receiptItemPayers.add.mutationOptions(
+			useTrpcMutationOptions(receiptItemPayersAddOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	return React.useCallback(
+		(
+			itemId: ReceiptItemId,
+			userId: UserId,
+			part: number,
+			options: EmptyMutateOptions = {},
+		) => addItemPayerMutation.mutate({ itemId, userId, part }, options),
+		[addItemPayerMutation],
+	);
+};
+
+const useRemoveItemPayer = (receiptId: ReceiptId) => {
+	const trpc = useTRPC();
+	const removeItemPayerMutation = useMutation(
+		trpc.receiptItemPayers.remove.mutationOptions(
+			useTrpcMutationOptions(receiptItemPayersRemoveOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	return React.useCallback(
+		(itemId: ReceiptItemId, userId: UserId, options: EmptyMutateOptions = {}) =>
+			removeItemPayerMutation.mutate({ itemId, userId }, options),
+		[removeItemPayerMutation],
+	);
+};
+
+const useUpdateItemPayerPart = (receiptId: ReceiptId) => {
+	const trpc = useTRPC();
+	const updateItemPayerMutation = useMutation(
+		trpc.receiptItemPayers.update.mutationOptions(
+			useTrpcMutationOptions(receiptItemPayersUpdateOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	return React.useCallback(
+		(
+			itemId: ReceiptItemId,
+			userId: UserId,
+			part: number,
+			options: EmptyMutateOptions = {},
+		) =>
+			updateItemPayerMutation.mutate(
+				{ itemId, userId, update: { type: "part", part } },
+				options,
+			),
+		[updateItemPayerMutation],
+	);
+};
+
 export const useActionHooks = (receipt: TRPCQueryOutput<"receipts.get">) => ({
 	addItem: useAddItem(receipt.id),
 	removeItem: useRemoveItem(receipt.id),
@@ -297,6 +360,9 @@ export const useActionHooks = (receipt: TRPCQueryOutput<"receipts.get">) => ({
 	addPayer: useAddPayer(receipt.id),
 	removePayer: useRemovePayer(receipt.id),
 	updatePayerPart: useUpdatePayerPart(receipt.id),
+	addItemPayer: useAddItemPayer(receipt.id),
+	removeItemPayer: useRemoveItemPayer(receipt.id),
+	updateItemPayerPart: useUpdateItemPayerPart(receipt.id),
 });
 
 export type ReceiptContext = {

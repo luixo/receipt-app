@@ -133,12 +133,17 @@
 			"confirmSubtitle": "This will remove item with all participant's parts"
 		},
 		"participants": {
-			"everyone": "Everyone",
+			"everyone": "Consumed by everyone",
 			"orphanedError": "Consumer part for user id {{userId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id"
 		},
 		"payer": {
 			"placeholder": "Payer",
 			"label": "Choose a payer"
+		},
+		"consumer": {
+			"placeholder": "Consumers",
+			"label": "Choose consumers",
+			"group": "{{consumers, and}}"
 		}
 	},
 	"empty": {
