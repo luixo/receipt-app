@@ -54,6 +54,8 @@ const ContextedAddReceipt = suspendedFallback<{
 			FormAsyncValidateOrFn<Form> | undefined,
 			typeof formSchema,
 			FormAsyncValidateOrFn<Form> | undefined,
+			FormValidateOrFn<Form> | undefined,
+			FormAsyncValidateOrFn<Form> | undefined,
 			FormAsyncValidateOrFn<Form> | undefined
 		>
 	>;

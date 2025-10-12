@@ -44,7 +44,7 @@ export const { useAppForm, withForm } = createFormHook({
 export const useTypedValues = <Form, DefaultValues extends Partial<Form>>(
 	formStore: Derived<
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		FormState<Form, any, any, any, any, any, any, any, any>
+		FormState<Form, any, any, any, any, any, any, any, any, any, any>
 	>,
 	// This is only needed for types
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
