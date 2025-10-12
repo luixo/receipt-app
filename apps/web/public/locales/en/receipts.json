@@ -137,7 +137,8 @@
 			"orphanedError": "Consumer part for user id {{userId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id"
 		},
 		"payer": {
-			"placeholder": "Payer"
+			"placeholder": "Payer",
+			"label": "Choose a payer"
 		}
 	},
 	"empty": {

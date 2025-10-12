@@ -135,6 +135,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 					) : canEdit ? (
 						<Select
 							className="max-w-64"
+							aria-label={t("item.payer.label")}
 							placeholder={t("item.payer.placeholder")}
 							isDisabled={addPayerMutation.isPending}
 							onSelectionChange={(selection) => {
