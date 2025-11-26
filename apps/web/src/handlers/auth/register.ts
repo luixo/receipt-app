@@ -84,6 +84,6 @@ export const procedure = unauthProcedure
 		);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
-			account: { id },
+			account: { id, verified: !emailServiceActive },
 		};
 	});

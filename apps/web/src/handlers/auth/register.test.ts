@@ -132,7 +132,7 @@ describe("auth.register", () => {
 			);
 			expect(result.account.id).toMatch(UUID_REGEX);
 			expect(result).toEqual<typeof result>({
-				account: { id: result.account.id },
+				account: { id: result.account.id, verified: true },
 			});
 			const responseHeaders = getResHeaders(context);
 			const setCookieTuple = responseHeaders.find(
@@ -156,13 +156,14 @@ describe("auth.register", () => {
 		test("email sent if active", async ({ ctx }) => {
 			const email = faker.internet.email();
 			const caller = createCaller(await createContext(ctx));
-			await expectDatabaseDiffSnapshot(ctx, () =>
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email,
 					password: faker.internet.password(),
 					name: faker.person.firstName(),
 				}),
 			);
+			expect(result.account.verified).toEqual(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const message = ctx.emailOptions.mock.getMessages()[0];
 			assert(message);
