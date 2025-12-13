@@ -12,12 +12,16 @@ export const SkeletonSignButtonGroup = () => {
 	const { t } = useTranslation("default");
 	return (
 		<View className="flex-row">
-			<Button className="flex-row rounded-r-none" color="success" isDisabled>
+			<Button
+				className="flex-1 flex-row rounded-r-none"
+				color="success"
+				isDisabled
+			>
 				{t("components.signButtonGroup.positive")}
 			</Button>
 			<Button
 				variant="bordered"
-				className="flex-row rounded-l-none"
+				className="flex-1 flex-row rounded-l-none"
 				color="danger"
 				isDisabled
 			>
@@ -48,7 +52,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 			<Button
 				onPress={setPositive}
 				variant={direction === "-" ? "bordered" : undefined}
-				className="flex-row rounded-r-none"
+				className="flex-1 flex-row rounded-r-none"
 				color="success"
 				isDisabled={disabled || isLoading}
 			>
@@ -61,7 +65,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 			<Button
 				onPress={setNegative}
 				variant={direction === "+" ? "bordered" : undefined}
-				className="flex-row rounded-l-none"
+				className="flex-1 flex-row rounded-l-none"
 				color="danger"
 				isDisabled={disabled || isLoading}
 			>
