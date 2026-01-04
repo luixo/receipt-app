@@ -486,7 +486,7 @@ export default ts.config(
 		},
 	},
 	{
-		files: ["packages/db/src/models/*"],
+		files: ["packages/db/src/models/*", "**/uniwind-types.d.ts"],
 		rules: {
 			// DB types are generated via interfaces
 			"@typescript-eslint/consistent-type-definitions": "off",

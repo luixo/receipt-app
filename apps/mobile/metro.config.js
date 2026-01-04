@@ -5,7 +5,6 @@
  * @type {import('expo/metro-config')}
  */
 const { getDefaultConfig } = require("expo/metro-config");
-const { withNativewind } = require("nativewind/metro");
 const path = require("node:path");
 
 // Find the project and workspace directories
@@ -25,7 +24,4 @@ config.resolver.nodeModulesPaths = [
 // 3. Force Metro to resolve (sub)dependencies only from the `nodeModulesPaths`
 config.resolver.disableHierarchicalLookup = true;
 
-module.exports = withNativewind(config, {
-	input: "../web/src/global.css",
-	configPath: "./tailwind.config.ts",
-});
+module.exports = config;

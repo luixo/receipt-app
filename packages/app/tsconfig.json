@@ -2,7 +2,7 @@
 	"extends": "../../tsconfig",
 	"include": [
 		"rnw-env.d.ts",
-		"nativewind-env.d.ts",
+		"uniwind-types.d.ts",
 		"promise.d.ts",
 		"../**/*.ts",
 		"../**/*.tsx",

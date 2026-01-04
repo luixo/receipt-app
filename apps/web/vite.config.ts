@@ -5,9 +5,9 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import initModuleAlias, { addAlias } from "module-alias";
 import fsp from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import url from "node:url";
+import { uniwind } from "uniwind/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import { cjsInterop } from "vite-plugin-cjs-interop";
@@ -20,14 +20,11 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 initModuleAlias();
 addAlias("react-native", "react-native-web");
 
-const require = createRequire(import.meta.url);
-
 const optimizedDeps = [
 	"react-native-web",
 	"@expo/html-elements",
 	"expo-modules-core",
-	"nativewind",
-	"react-native-css",
+	"uniwind",
 	"react-native-safe-area-context",
 	"react-native-reanimated",
 	"react-native-worklets",
@@ -66,6 +63,10 @@ const config = defineConfig({
 		devtools(),
 		vitePluginInspect(),
 		tailwindcss(),
+		uniwind({
+			cssEntryFile: path.join(rootDir, "packages/app/global.css"),
+			dtsFile: path.join(rootDir, "packages/app/uniwind-types.d.ts"),
+		}),
 		tanstackStart({
 			root: webDir,
 			tsr: {
@@ -77,14 +78,7 @@ const config = defineConfig({
 		}),
 		viteReact({
 			babel: {
-				plugins: [
-					// This is a copy of `react-native-css/babel` preset which can't be run
-					// due to a mix of ESM syntax and `require`
-					require.resolve("react-native-css/babel/import-plugin"),
-					"react-native-worklets/plugin",
-					// End of the copy
-					"babel-plugin-react-compiler",
-				],
+				plugins: ["babel-plugin-react-compiler"],
 			},
 		}),
 		commonjs({

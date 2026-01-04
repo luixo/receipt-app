@@ -48,7 +48,6 @@
 		"@tanstack/start-plugin-core@npm:1.131.49": "patch:@tanstack/start-plugin-core@npm%3A1.131.49#~/patches/@tanstack-start-plugin-core-npm-1.131.49.patch",
 		"framer-motion@npm:^11.11.11": "patch:framer-motion@npm%3A11.11.11#~/patches/framer-motion-npm-11.11.11.patch",
 		"h3@npm:1.13.0": "^1.13.0",
-		"react-native-css@npm:^3.0.0": "patch:react-native-css@npm%3A3.0.0#~/patches/react-native-css-npm-3.0.0.patch",
 		"react-native-web@npm:^0.21.1": "patch:react-native-web@npm%3A0.21.1#~/patches/react-native-web-npm-0.21.1.patch",
 		"vite@npm:6.1.4": "^6.0.0"
 	},
@@ -61,18 +60,17 @@
 		"@trpc/tanstack-react-query": "^11.4.3",
 		"cookie": "^1.0.2",
 		"i18next": "^25.2.1",
-		"nativewind": "5.0.0-preview.1",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-i18next": "^15.5.3",
 		"react-native": "^0.81.4",
-		"react-native-css": "^3.0.0",
 		"react-native-reanimated": "^4.1.2",
 		"react-native-safe-area-context": "^5.6.1",
 		"react-native-web": "^0.21.1",
 		"react-native-worklets": "^0.6.0",
 		"remeda": "^2.25.0",
 		"tailwindcss": "^4.1.14",
+		"uniwind": "^1.2.2",
 		"zod": "^4.0.5"
 	},
 	"devDependencies": {

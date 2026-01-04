@@ -82,6 +82,19 @@ index 0000000000000000000000000000000000000000..3b1f58e1a758e3c3bea3bed92f8e13c4
 +var PlatformColor = (v) => v;
 +export default PlatformColor;
 \ No newline at end of file
+diff --git a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+index 86fad4b02c974213f39c53af8333a095ff50b53f..4f4c5c4800f5c760aaaef79885a72bf9c3bffbf1 100644
+--- a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
++++ b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+@@ -85,7 +85,7 @@ export default function createOrderedCSSStyleSheet(sheet) {
+         var marker = rules.shift();
+         rules.sort();
+         rules.unshift(marker);
+-        return rules.join('\n');
++        return ['@layer rnw {', ...rules, '}'].join('\n');
+       }).join('\n');
+     },
+     /**
 diff --git a/dist/index.js b/dist/index.js
 index 4f699876d1902f758c3af4df5438e8ecc78bd6b4..89cb5a34b95cde6bb6903070a818737d19a019e4 100644
 --- a/dist/index.js

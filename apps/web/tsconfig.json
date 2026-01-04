@@ -18,7 +18,7 @@
 	},
 	"include": [
 		"../../packages/app/rnw-env.d.ts",
-		"../../packages/app/nativewind-env.d.ts",
+		"../../packages/app/uniwind-types.d.ts",
 		"../../packages/app/promise.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
