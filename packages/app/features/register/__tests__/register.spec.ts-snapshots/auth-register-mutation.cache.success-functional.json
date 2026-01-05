@@ -5,7 +5,8 @@
 				"state": {
 					"data": {
 						"account": {
-							"id": "test"
+							"id": "test",
+							"verified": true
 						}
 					},
 					"status": "success"
