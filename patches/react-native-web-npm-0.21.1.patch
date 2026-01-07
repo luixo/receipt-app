@@ -83,10 +83,29 @@ index 0000000000000000000000000000000000000000..3b1f58e1a758e3c3bea3bed92f8e13c4
 +export default PlatformColor;
 \ No newline at end of file
 diff --git a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
-index 86fad4b02c974213f39c53af8333a095ff50b53f..4f4c5c4800f5c760aaaef79885a72bf9c3bffbf1 100644
+index 86fad4b02c974213f39c53af8333a095ff50b53f..2dbede0c86177fe00fe1994fd643882425736270 100644
 --- a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
 +++ b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
-@@ -85,7 +85,7 @@ export default function createOrderedCSSStyleSheet(sheet) {
+@@ -33,10 +33,16 @@ export default function createOrderedCSSStyleSheet(sheet) {
+    */
+   if (sheet != null) {
+     var group;
+-    slice.call(sheet.cssRules).forEach((cssRule, i) => {
++    var rules = slice.call(sheet.cssRules).reduce((acc, rule) => {
++      if ('cssRules' in rule) {
++        return acc.concat(slice.call(rule.cssRules));
++      }
++      return acc.concat(rule);
++    }, []);
++    rules.forEach((cssRule, i) => {
+       var cssText = cssRule.cssText;
+       // Create record of existing selectors and rules
+-      if (cssText.indexOf('stylesheet-group') > -1) {
++      if (cssText.indexOf('[stylesheet-group=') === 0) {
+         group = decodeGroupRule(cssRule);
+         groups[group] = {
+           start: i,
+@@ -85,7 +91,7 @@ export default function createOrderedCSSStyleSheet(sheet) {
          var marker = rules.shift();
          rules.sort();
          rules.unshift(marker);
