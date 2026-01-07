@@ -6,3 +6,4 @@ android/
 **/*.gen.ts
 .output/
 .nitro/
+**/uniwind-types.d.ts

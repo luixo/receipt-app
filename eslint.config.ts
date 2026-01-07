@@ -486,7 +486,7 @@ export default ts.config(
 		},
 	},
 	{
-		files: ["packages/db/src/models/*", "**/uniwind-types.d.ts"],
+		files: ["packages/db/src/models/*"],
 		rules: {
 			// DB types are generated via interfaces
 			"@typescript-eslint/consistent-type-definitions": "off",
@@ -598,6 +598,7 @@ export default ts.config(
 			"**/playwright-report/",
 			"**/test-results/",
 			"**/*.gen.ts",
+			"**/uniwind-types.d.ts",
 			"apps/mobile/ios",
 		],
 	},
