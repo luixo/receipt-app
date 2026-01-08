@@ -64,7 +64,7 @@ const config = defineConfig({
 		vitePluginInspect(),
 		tailwindcss(),
 		uniwind({
-			cssEntryFile: path.join(rootDir, "packages/app/global.css"),
+			cssEntryFile: path.join(rootDir, "apps/web/src/app.css"),
 			dtsFile: path.join(rootDir, "packages/app/uniwind-types.d.ts"),
 		}),
 		tanstackStart({

@@ -18,7 +18,6 @@ import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
-import globalCss from "~app/global.css?url";
 import { Provider } from "~app/providers/index";
 import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import type { Language } from "~app/utils/i18n-data";
@@ -33,6 +32,7 @@ import type { StoreValues } from "~app/utils/store-data";
 import { ToastProvider, defaultToastProps } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
 import { parsers } from "~utils/date";
+import appCss from "~web/app.css?url";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useI18nHelper } from "~web/hooks/use-i18-helper";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
@@ -205,7 +205,7 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 				{ rel: "icon", href: "/favicon.svg" },
 				{
 					rel: "stylesheet",
-					href: globalCss,
+					href: appCss,
 				},
 				{
 					rel: "stylesheet",

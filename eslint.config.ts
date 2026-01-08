@@ -582,8 +582,7 @@ export default ts.config(
 			"**/*.gen.ts",
 			"**/uniwind-types.d.ts",
 			"apps/mobile/ios",
-			"metro.config.js",
-			"babel.config.js",
+			"**/*.config.js",
 		],
 	},
 );

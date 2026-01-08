@@ -2,8 +2,6 @@ import React from "react";
 
 import { Stack } from "expo-router";
 
-import "~app/global.css";
-
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import {
@@ -11,6 +9,7 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
+import "~mobile/app.css";
 import { Provider } from "~app/providers/index";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
