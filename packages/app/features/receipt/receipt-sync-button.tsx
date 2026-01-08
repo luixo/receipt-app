@@ -11,7 +11,7 @@ import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { SendIcon, SyncIcon, UnsyncIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
@@ -168,9 +168,9 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 					isIconOnly
 				>
 					{hasDesyncedParticipants ? (
-						<SyncIcon size={24} />
+						<Icon name="sync" className="size-6" />
 					) : (
-						<SendIcon size={24} />
+						<Icon name="send" className="size-6" />
 					)}
 				</Button>
 			) : (
@@ -182,9 +182,9 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 					isIconOnly
 				>
 					{emptyItemsAmount !== 0 ? (
-						<UnsyncIcon size={24} />
+						<Icon name="unsync" className="size-6" />
 					) : (
-						<SyncIcon size={24} />
+						<Icon name="sync" className="size-6" />
 					)}
 				</Button>
 			);
@@ -204,6 +204,6 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 		);
 	},
 	<Button variant="flat" isDisabled color="success" isIconOnly>
-		<SyncIcon size={24} />
+		<Icon name="sync" className="size-6" />
 	</Button>,
 );

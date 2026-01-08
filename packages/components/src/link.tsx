@@ -6,13 +6,13 @@ import type { CreateLinkProps } from "@tanstack/react-router";
 import { createLink } from "@tanstack/react-router";
 
 import { Button } from "~components/button";
-import { BackArrow } from "~components/icons";
+import { Icon } from "~components/icons";
 
 export const Link = createLink(LinkRaw);
 
 export const BackLink = createLink((props) => (
 	<Link data-testid="back-link" color="foreground" {...props}>
-		<BackArrow size={36} />
+		<Icon name="arrow-left" className="size-9" />
 	</Link>
 ));
 

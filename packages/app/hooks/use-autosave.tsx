@@ -4,8 +4,9 @@ import type { AnyFormApi } from "@tanstack/react-form";
 import { useStore } from "@tanstack/react-form";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 
-import { CheckMark } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Spinner } from "~components/spinner";
+import { cn } from "~components/utils";
 
 export const useAutosave = ({
 	isUpdatePending,
@@ -31,8 +32,13 @@ export const useAutosave = ({
 			isUpdatePending ? (
 				<Spinner size="sm" classNames={{ wrapper: `size-3 ${className}` }} />
 			) : (
-				<CheckMark
-					className={`size-3 text-success transition-opacity duration-500 ${justSaved ? "opacity-100" : "opacity-0"} ${className}`}
+				<Icon
+					name="check"
+					className={cn(
+						"text-success size-3 transition-opacity duration-500",
+						justSaved ? "opacity-100" : "opacity-0",
+						className,
+					)}
 				/>
 			),
 		[isUpdatePending, justSaved, className],

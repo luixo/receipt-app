@@ -20,7 +20,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
-import { AddIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
 import type { ReceiptId } from "~db/ids";
@@ -148,7 +148,7 @@ export const Receipts = suspendedFallback<Props>(
 									className="mx-2"
 									isIconOnly
 								>
-									<AddIcon size={24} />
+									<Icon name="add" className="size-6" />
 								</ButtonLink>
 							),
 						}}

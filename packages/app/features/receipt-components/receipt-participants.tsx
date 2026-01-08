@@ -12,7 +12,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { AvatarGroup } from "~components/avatar";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { PencilIcon, UserIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UserId } from "~db/ids";
@@ -98,7 +98,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 				onPress={switchModal}
 				isIconOnly
 			>
-				<PencilIcon size={32} />
+				<Icon name="pencil" className="size-6" />
 			</Button>
 		</View>
 	);
@@ -142,7 +142,7 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 				/>
 			</View>
 			<Button variant="bordered" color="primary" isIconOnly isDisabled>
-				<PencilIcon size={32} />
+				<Icon name="pencil" className="size-6" />
 			</Button>
 		</View>
 	);
@@ -190,7 +190,7 @@ export const ReceiptParticipants: React.FC<{
 				<ModalContent>
 					<ModalHeader>
 						<View className="flex-row gap-2">
-							<UserIcon size={24} />
+							<Icon name="user" className="size-6" />
 							<Text className="text-xl">{t("participants.picker.title")}</Text>
 						</View>
 					</ModalHeader>

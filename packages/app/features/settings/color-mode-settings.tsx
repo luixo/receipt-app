@@ -8,7 +8,7 @@ import {
 	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
 import { Checkbox } from "~components/checkbox";
-import { MoonIcon, SunIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
 
@@ -48,16 +48,10 @@ export const ColorModeSettings: React.FC = () => {
 			<Switch
 				isSelected={isSelected}
 				onValueChange={setColorMode}
-				thumbIcon={
-					isSelected ? (
-						<MoonIcon color="currentColor" />
-					) : (
-						<SunIcon color="currentColor" />
-					)
-				}
+				thumbIcon={isSelected ? <Icon name="moon" /> : <Icon name="sun" />}
 				isDisabled={selectedColorMode === undefined}
 				size="lg"
-				classNames={{ thumb: "bg-background" }}
+				classNames={{ thumb: "bg-background", thumbIcon: "text-foreground" }}
 			/>
 		</View>
 	);

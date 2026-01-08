@@ -16,7 +16,7 @@ import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
 import { Header } from "~components/header";
-import { AddIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
 
@@ -74,7 +74,7 @@ export const Debts = suspendedFallback<Props>(
 											isIconOnly
 											className="mx-2"
 										>
-											<AddIcon size={24} />
+											<Icon name="add" className="size-6" />
 										</ButtonLink>
 									),
 								}}

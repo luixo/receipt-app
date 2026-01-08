@@ -6,12 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { areDebtsSynced } from "~app/utils/debts";
-import {
-	IncomingIcon,
-	OutcomingIcon,
-	SyncIcon,
-	UnsyncIcon,
-} from "~components/icons";
+import { Icon } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
 import { compare } from "~utils/date";
@@ -52,7 +47,7 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	theirDebt,
 }) => {
 	const { t } = useTranslation("default");
-	const pixelSize = size === "md" ? 24 : 36;
+	const iconClassName = size === "md" ? "size-6" : "size-9";
 
 	const synced = theirDebt ? areDebtsSynced(debt, theirDebt) : false;
 	return (
@@ -65,9 +60,9 @@ export const DebtSyncStatus: React.FC<Props> = ({
 				testID="debt-sync-status"
 			>
 				{synced ? (
-					<SyncIcon size={pixelSize} />
+					<Icon name="sync" className={iconClassName} />
 				) : (
-					<UnsyncIcon size={pixelSize} />
+					<Icon name="unsync" className={iconClassName} />
 				)}
 				<View
 					className={`absolute ${
@@ -76,9 +71,9 @@ export const DebtSyncStatus: React.FC<Props> = ({
 				>
 					{synced ? null : theirDebt?.updatedAt &&
 					  compare.zonedDateTime(theirDebt.updatedAt, debt.updatedAt) > 0 ? (
-						<IncomingIcon size={pixelSize} />
+						<Icon name="incoming" className={iconClassName} />
 					) : (
-						<OutcomingIcon size={pixelSize} />
+						<Icon name="outcoming" className={iconClassName} />
 					)}
 				</View>
 			</View>

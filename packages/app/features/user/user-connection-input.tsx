@@ -10,7 +10,7 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Input, SkeletonInput } from "~components/input";
 import type { AccountId, UserId } from "~db/ids";
 import { options as accountConnectionsAddOptions } from "~mutations/account-connection-intentions/add";
@@ -101,7 +101,7 @@ export const UserConnectionInput: React.FC<Props> = suspendedFallback(
 								cancelRequest(outboundConnectionIntention.account.id)
 							}
 						>
-							<TrashBinIcon size={24} />
+							<Icon name="trash" className="size-6" />
 						</Button>
 					}
 				/>
@@ -146,7 +146,7 @@ export const UserConnectionInput: React.FC<Props> = suspendedFallback(
 											isIconOnly
 											onPress={unlinkUser}
 										>
-											<UnlinkIcon size={24} />
+											<Icon name="unlink" className="size-6" />
 										</Button>
 									) : (
 										<Button
@@ -159,7 +159,7 @@ export const UserConnectionInput: React.FC<Props> = suspendedFallback(
 											}}
 											isIconOnly
 										>
-											<LinkIcon size={24} />
+											<Icon name="link" className="size-6" />
 										</Button>
 									)
 								}

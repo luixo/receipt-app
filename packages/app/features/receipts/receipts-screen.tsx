@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import { AddIcon, ReceiptIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { FilterButton } from "./filter-button";
@@ -21,7 +21,7 @@ export const ReceiptsScreen: React.FC<{
 	return (
 		<>
 			<PageHeader
-				startContent={<ReceiptIcon size={36} />}
+				startContent={<Icon name="receipt" className="size-9" />}
 				aside={
 					<>
 						<FilterButton filtersState={filtersState} sortState={sortState} />
@@ -32,7 +32,7 @@ export const ReceiptsScreen: React.FC<{
 							variant="bordered"
 							isIconOnly
 						>
-							<AddIcon size={24} />
+							<Icon name="add" className="size-6" />
 						</ButtonLink>
 					</>
 				}

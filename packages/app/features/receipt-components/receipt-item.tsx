@@ -12,7 +12,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
-import { ArrowIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { round } from "~utils/math";
@@ -101,7 +101,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 				{canEdit ? (
 					<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
 						<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
-						<ArrowIcon size={36} className="shrink-0 rotate-90 sm:rotate-0" />
+						<Icon name="arrow-right" className="size-9 rotate-90 sm:rotate-0" />
 						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
 					</View>
 				) : null}

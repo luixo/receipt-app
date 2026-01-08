@@ -7,7 +7,7 @@ import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { Debts } from "./debts";
@@ -21,7 +21,7 @@ export const DebtsScreen: React.FC<{
 	return (
 		<>
 			<PageHeader
-				startContent={<DebtIcon size={36} />}
+				startContent={<Icon name="money" className="size-9" />}
 				aside={
 					<>
 						<ButtonLink
@@ -31,7 +31,7 @@ export const DebtsScreen: React.FC<{
 							variant="bordered"
 							isIconOnly
 						>
-							<TransferIcon size={24} />
+							<Icon name="transfer" className="size-6" />
 						</ButtonLink>
 						<ButtonLink
 							to="/debts/add"
@@ -40,7 +40,7 @@ export const DebtsScreen: React.FC<{
 							variant="bordered"
 							isIconOnly
 						>
-							<AddIcon size={24} />
+							<Icon name="add" className="size-6" />
 						</ButtonLink>
 						<AmountBadge useAmount={useDebtsIntentions}>
 							{({ amount }) => (
@@ -53,7 +53,7 @@ export const DebtsScreen: React.FC<{
 									isDisabled={amount === 0}
 									isIconOnly
 								>
-									<InboxIcon size={24} />
+									<Icon name="inbox" className="size-6" />
 								</ButtonLink>
 							)}
 						</AmountBadge>

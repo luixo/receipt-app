@@ -3,7 +3,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { Page } from "~app/components/page";
-import { LoginIcon, RegisterIcon } from "~components/icons";
 
 type Props = {
 	children: React.ReactNode;
@@ -17,12 +16,12 @@ export const PublicPage: React.FC<Props> = ({ children, ...props }) => {
 				() => [
 					{
 						pathname: "/login",
-						Icon: LoginIcon,
+						iconName: "login",
 						text: t("navigation.login"),
 					},
 					{
 						pathname: "/register",
-						Icon: RegisterIcon,
+						iconName: "register",
 						text: t("navigation.register"),
 					},
 				],

@@ -6,7 +6,7 @@ import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { Card, CardBody } from "~components/card";
-import { ArrowIcon, ReceiptIcon, SyncIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -25,7 +25,7 @@ export const SkeletonDebtIntention: React.FC<React.PropsWithChildren> = ({
 			</View>
 			<View className="flex-row justify-between">
 				<View className="flex-row gap-1">
-					<SyncIcon size={24} />
+					<Icon name="sync" className="size-6" />
 					<Skeleton className="h-6 w-32 rounded-md" />
 				</View>
 				<View className="max-md:hidden">{children}</View>
@@ -76,7 +76,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 							</Text>
 							<Text>{formatPlainDate(intention.current.timestamp)}</Text>
 						</View>
-						<ArrowIcon size={24} />
+						<Icon name="arrow-right" className="size-6" />
 						{intentionDataComponent}
 					</View>
 				) : (
@@ -92,14 +92,14 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 							isIconOnly
 							size="sm"
 						>
-							<ReceiptIcon size={20} />
+							<Icon name="receipt" className="size-5" />
 						</ButtonLink>
 					) : null}
 					<Text>{intention.note}</Text>
 				</View>
 				<View className="flex-row justify-between">
 					<View className="flex-row gap-1">
-						<SyncIcon size={24} />
+						<Icon name="sync" className="size-6" />
 						<Text>{formatZonedDateTime(intention.updatedAt)}</Text>
 					</View>
 					<View className="max-md:hidden">{children}</View>

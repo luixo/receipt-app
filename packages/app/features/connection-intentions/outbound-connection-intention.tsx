@@ -7,7 +7,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { UnlinkIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Input, SkeletonInput } from "~components/input";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
@@ -23,7 +23,7 @@ export const SkeletonOutboundConnectionIntention: React.FC = () => {
 					isIconOnly
 					isDisabled
 				>
-					<UnlinkIcon size={24} />
+					<Icon name="unlink" className="size-6" />
 				</Button>
 			}
 		/>
@@ -62,7 +62,7 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					isIconOnly
 					onPress={removeConnection}
 				>
-					<UnlinkIcon size={24} />
+					<Icon name="unlink" className="size-6" />
 				</Button>
 			}
 		/>

@@ -4,7 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "~components/button";
-import { RefreshIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 
 export const RefreshSettings: React.FC = () => {
 	const { t } = useTranslation("settings");
@@ -15,7 +15,7 @@ export const RefreshSettings: React.FC = () => {
 	);
 	return (
 		<Button color="primary" onPress={refetch}>
-			<RefreshIcon />
+			<Icon name="refresh" />
 			{t("refresh.header")}
 		</Button>
 	);

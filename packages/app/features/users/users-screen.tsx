@@ -10,7 +10,7 @@ import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
 } from "~app/hooks/use-navigation";
-import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { Users } from "./users";
@@ -23,7 +23,7 @@ export const UsersScreen: React.FC<{
 	return (
 		<>
 			<PageHeader
-				startContent={<UsersIcon size={36} />}
+				startContent={<Icon name="users" className="size-9" />}
 				aside={
 					<>
 						<ButtonLink
@@ -33,7 +33,7 @@ export const UsersScreen: React.FC<{
 							variant="bordered"
 							isIconOnly
 						>
-							<AddIcon size={24} />
+							<Icon name="add" className="size-6" />
 						</ButtonLink>
 						<AmountBadge useAmount={useConnectionIntentions}>
 							<ButtonLink
@@ -44,7 +44,7 @@ export const UsersScreen: React.FC<{
 								variant="bordered"
 								isIconOnly
 							>
-								<LinkIcon size={24} />
+								<Icon name="link" className="size-6" />
 							</ButtonLink>
 						</AmountBadge>
 					</>

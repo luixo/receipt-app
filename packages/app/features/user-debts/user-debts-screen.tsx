@@ -18,12 +18,7 @@ import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import {
-	AddIcon,
-	ExchangeIcon,
-	PencilIcon,
-	TransferIcon,
-} from "~components/icons";
+import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
@@ -55,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							color="secondary"
 							onPress={openEditModal}
 						>
-							<PencilIcon size={32} />
+							<Icon name="pencil" className="size-6" />
 						</Button>
 						<ButtonLink
 							to="/debts/transfer"
@@ -65,7 +60,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							variant="bordered"
 							isIconOnly
 						>
-							<TransferIcon size={24} />
+							<Icon name="transfer" className="size-6" />
 						</ButtonLink>
 						<ButtonLink
 							color="primary"
@@ -75,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							variant="bordered"
 							isIconOnly
 						>
-							<AddIcon size={24} />
+							<Icon name="add" className="size-6" />
 						</ButtonLink>
 					</View>
 				}
@@ -118,7 +113,7 @@ const UserDebtsGroup = suspendedFallback<{
 						variant="bordered"
 						isIconOnly
 					>
-						<ExchangeIcon />
+						<Icon name="exchange" />
 					</ButtonLink>
 				) : null}
 				{debts.length !== nonResolvedDebts.length ? (

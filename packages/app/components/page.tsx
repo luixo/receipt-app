@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { AmountBadge } from "~app/components/amount-badge";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { usePathname } from "~app/hooks/use-navigation";
+import { Icon, type IconName } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
@@ -14,7 +15,7 @@ type ShowProps = {
 };
 
 export type MenuElement = {
-	Icon: React.FC<{ size: number }>;
+	iconName: IconName;
 	text: string;
 	pathname: FileRouteTypes["to"];
 	useBadgeAmount?: () => number;
@@ -35,7 +36,7 @@ const WithShow = suspendedFallback<React.PropsWithChildren<ShowProps>>(
 );
 
 const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
-	Icon,
+	iconName,
 	pathname,
 	text,
 	useBadgeAmount = useZero,
@@ -47,12 +48,12 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 			key={pathname}
 			to={pathname}
 			className={cn(
-				"flex flex-1 flex-col items-center justify-center text-foreground",
+				"text-foreground flex flex-1 flex-col items-center justify-center",
 				selected ? "text-primary" : undefined,
 			)}
 		>
 			<AmountBadge useAmount={useBadgeAmount}>
-				<Icon size={24} />
+				<Icon name={iconName} className="size-6" />
 			</AmountBadge>
 			<Text className={`text-sm leading-8 ${selected ? "text-primary" : ""}`}>
 				{text}
@@ -79,7 +80,7 @@ export const Page: React.FC<Props> = ({ children, elements }) => {
 		<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
 			{PageWrapper ? <PageWrapper>{slot}</PageWrapper> : slot}
 			<View
-				className="fixed bottom-0 left-0 z-20 w-full flex-row bg-content1 p-2 shadow-lg"
+				className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
 				testID="sticky-menu"
 			>
 				<View className="mx-auto max-w-screen-sm flex-1 flex-row">

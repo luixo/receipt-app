@@ -4,13 +4,13 @@ import { useTranslation } from "react-i18next";
 
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { Button } from "~components/button";
-import { TrashBin } from "~components/icons";
+import { Icon } from "~components/icons";
 
 export const SkeletonRemoveButton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
 	<Button color="danger" {...props}>
-		<TrashBin className="shrink-0" size={24} />
+		<Icon className="size-6" name="trash" />
 		{children}
 	</Button>
 );
@@ -48,9 +48,7 @@ export const RemoveButton: React.FC<Props> = ({
 					isDisabled={props.isDisabled || mutation.isPending}
 					isLoading={props.isLoading || mutation.isPending}
 				>
-					{mutation.isPending ? null : (
-						<TrashBin className="shrink-0" size={24} />
-					)}
+					{mutation.isPending ? null : <Icon className="size-6" name="trash" />}
 					{children}
 				</Button>
 			)}
@@ -62,7 +60,7 @@ export const RemoveButtonSkeleton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
 	<Button color="danger" {...props} isDisabled>
-		<TrashBin className="shrink-0" size={24} />
+		<Icon name="trash" className="size-6" />
 		{children}
 	</Button>
 );

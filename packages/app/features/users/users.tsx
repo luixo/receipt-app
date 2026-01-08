@@ -17,7 +17,7 @@ import type {
 	SearchParamStateDefaulted,
 } from "~app/hooks/use-navigation";
 import { useTRPC } from "~app/utils/trpc";
-import { AddIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink, Link } from "~components/link";
 import type { UserId } from "~db/ids";
 
@@ -73,7 +73,7 @@ export const Users: React.FC<Props> = suspendedFallback(
 									className="mx-2"
 									isIconOnly
 								>
-									<AddIcon size={24} />
+									<Icon name="add" className="size-6" />
 								</ButtonLink>
 							),
 						}}

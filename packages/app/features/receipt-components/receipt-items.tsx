@@ -4,7 +4,7 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
-import { AddIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import type { ReceiptItemId } from "~db/ids";
 import { compare } from "~utils/date";
 
@@ -21,7 +21,7 @@ export const SkeletonAddReceiptItemController = () => {
 				t={t}
 				i18nKey="add.addItemButton"
 				components={{
-					icon: <AddIcon size={24} />,
+					icon: <Icon name="add" className="size-6" />,
 				}}
 			/>
 		</Button>
@@ -48,7 +48,7 @@ const AddReceiptItemController: React.FC = () => {
 				t={t}
 				i18nKey="add.addItemButton"
 				components={{
-					icon: <AddIcon size={24} />,
+					icon: <Icon name="add" className="size-6" />,
 				}}
 			/>
 		</Button>

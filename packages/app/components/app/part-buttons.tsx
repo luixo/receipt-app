@@ -2,7 +2,7 @@ import type React from "react";
 import { View } from "react-native";
 
 import { Button } from "~components/button";
-import { MinusIcon, PlusIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 
 type Props = React.PropsWithChildren<{
 	updatePart: React.Dispatch<React.SetStateAction<number>>;
@@ -24,7 +24,7 @@ export const PartButtons: React.FC<Props> = ({
 			isDisabled={downDisabled}
 			isIconOnly
 		>
-			<MinusIcon size={24} />
+			<Icon name="minus" className="size-6" />
 		</Button>
 		{children}
 		<Button
@@ -34,7 +34,7 @@ export const PartButtons: React.FC<Props> = ({
 			isDisabled={upDisabled}
 			isIconOnly
 		>
-			<PlusIcon size={24} />
+			<Icon name="plus" className="size-6" />
 		</Button>
 	</View>
 );

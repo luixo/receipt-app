@@ -14,7 +14,7 @@ import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { Checkbox } from "~components/checkbox";
-import { InfoIcon, KeyIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -61,12 +61,12 @@ const ReceiptPreviewShape: React.FC<
 					isDisabled={!infoTooltip}
 					className="box-content flex flex-1 p-2"
 				>
-					<InfoIcon
+					<Icon
+						name="info"
 						className={cn(
-							"cursor-pointer self-center text-primary opacity-75",
+							"text-primary size-6 cursor-pointer self-center opacity-75",
 							infoTooltip ? undefined : "hidden",
 						)}
-						size={24}
 					/>
 				</Tooltip>
 				<Text className="flex-[2] flex-row justify-end self-center p-2 text-right">
@@ -158,9 +158,9 @@ export const ReceiptPreview = suspendedFallback<{
 							</Text>
 						</Badge>
 					</Tooltip>
-					{isOwner ? <KeyIcon className="shrink-0" size={12} /> : null}
+					{isOwner ? <Icon name="key" className="size-3" /> : null}
 				</View>
-				<Text className="text-xs text-default-400">
+				<Text className="text-default-400 text-xs">
 					{formatPlainDate(receipt.issued)}
 				</Text>
 			</Link>

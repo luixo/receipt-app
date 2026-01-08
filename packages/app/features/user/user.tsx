@@ -18,7 +18,7 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { TrashBin } from "~components/icons";
+import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import { BackLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
@@ -188,7 +188,7 @@ const UserPublicNameInput = suspendedFallback<PublicNameProps>(
 										color="danger"
 										isIconOnly
 									>
-										<TrashBin size={24} />
+										<Icon name="trash" className="size-6" />
 									</Button>
 								)}
 							</View>

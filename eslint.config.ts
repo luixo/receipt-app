@@ -357,7 +357,7 @@ export default ts.config(
 				},
 			},
 			"better-tailwindcss": {
-				entryPoint: "packages/app/global.css",
+				entryPoint: "apps/web/src/app.css",
 				callees: ["tv", "cn"],
 			},
 			react: {

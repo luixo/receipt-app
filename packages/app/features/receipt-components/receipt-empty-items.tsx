@@ -7,7 +7,7 @@ import { useLocale } from "~app/hooks/use-locale";
 import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
 import { Header } from "~components/header";
-import { ArrowDown } from "~components/icons";
+import { Icon } from "~components/icons";
 import type { ReceiptItemId } from "~db/ids";
 import { round } from "~utils/math";
 
@@ -44,7 +44,7 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 					color="warning"
 					isSelected
 					onChange={() => onEmptyItemClick(item.id)}
-					icon={<ArrowDown />}
+					icon={<Icon name="arrow-down" />}
 				>
 					{`"${item.name}" — ${formatCurrency(
 						locale,

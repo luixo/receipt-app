@@ -5,7 +5,7 @@ import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { Button } from "~components/button";
-import { SyncIcon, UnsyncIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 
 export const skeletonReceiptPreviewSyncIcon = (
@@ -19,19 +19,19 @@ const StatusButton: React.FC<{ type: "synced" | "desynced" | "unsynced" }> = ({
 		case "synced":
 			return (
 				<Button variant="light" isDisabled isIconOnly color="success">
-					<SyncIcon size={24} />
+					<Icon name="sync" className="size-6" />
 				</Button>
 			);
 		case "unsynced":
 			return (
 				<Button variant="light" isDisabled isIconOnly color="warning">
-					<UnsyncIcon size={24} />
+					<Icon name="unsync" className="size-6" />
 				</Button>
 			);
 		case "desynced":
 			return (
 				<Button variant="light" isDisabled isIconOnly color="danger">
-					<UnsyncIcon size={24} />
+					<Icon name="unsync" className="size-6" />
 				</Button>
 			);
 	}

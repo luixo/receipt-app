@@ -21,12 +21,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { FileInput } from "~components/file-input";
-import {
-	CheckMark,
-	CloseIcon,
-	SyncIcon,
-	TrashBinIcon,
-} from "~components/icons";
+import { Icon } from "~components/icons";
 import { Slider } from "~components/slider";
 import { Text } from "~components/text";
 import type { UserId } from "~db/ids";
@@ -281,7 +276,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 								onPress={disableAvatarEdit}
 								isIconOnly
 							>
-								<CloseIcon size={24} />
+								<Icon name="close" className="size-6" />
 							</Button>
 							<ConfirmModal
 								onConfirm={resetAvatar}
@@ -302,7 +297,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 										onPress={openModal}
 										isIconOnly
 									>
-										<TrashBinIcon size={24} />
+										<Icon name="trash" className="size-6" />
 									</OnlyAvatarButton>
 								)}
 							</ConfirmModal>
@@ -320,7 +315,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 											onPress={resetEditor}
 											isIconOnly
 										>
-											<SyncIcon size={24} />
+											<Icon name="sync" className="size-6" />
 										</Button>
 										<Button
 											color="success"
@@ -334,7 +329,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 											type="submit"
 											isIconOnly
 										>
-											<CheckMark size={24} />
+											<Icon name="check" className="size-6" />
 										</Button>
 									</>
 								)}

@@ -1,0 +1,23 @@
+# see https://github.com/lucide-icons/lucide/issues/2743
+diff --git a/package.json b/package.json
+index 29e9a09b18c0c0bc7222586cf472b8c2daf71615..26ac5e87b5db8b2658c216d58df0b897e9575757 100644
+--- a/package.json
++++ b/package.json
+@@ -10,6 +10,17 @@
+     "url": "https://github.com/lucide-icons/lucide.git",
+     "directory": "packages/lucide-react"
+   },
++  "exports": {
++    ".": {
++      "import": "./dist/esm/lucide-react.js",
++      "require": "./dist/cjs/lucide-react.js",
++      "types": "./dist/lucide-react.d.ts"
++    },
++    "./dynamic": {
++      "import": "./dynamic.mjs",
++      "types": "./dynamic.d.ts"
++    }
++  },
+   "keywords": [
+     "Lucide",
+     "React",

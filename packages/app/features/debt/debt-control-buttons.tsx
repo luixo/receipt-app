@@ -9,7 +9,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { SyncIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 import { isFirstEarlier } from "~utils/date";
 
@@ -83,7 +83,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 							color="warning"
 							isIconOnly
 						>
-							<SyncIcon size={24} />
+							<Icon name="sync" className="size-6" />
 						</Button>
 					)}
 				</ConfirmModal>

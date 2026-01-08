@@ -2,7 +2,7 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { SearchIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 
 export const SearchBar: React.FC<
@@ -16,7 +16,7 @@ export const SearchBar: React.FC<
 		<Input
 			startContent={
 				<>
-					<SearchIcon size={20} />
+					<Icon name="search" className="size-5" />
 					{startContent}
 				</>
 			}

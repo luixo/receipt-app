@@ -13,12 +13,7 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from "~components/dropdown";
-import {
-	ChevronDown,
-	FilterIcon,
-	SortDownIcon,
-	SortUpIcon,
-} from "~components/icons";
+import { Icon } from "~components/icons";
 import { Modal, ModalBody, ModalContent } from "~components/modal";
 import { Text } from "~components/text";
 
@@ -42,7 +37,7 @@ export const FilterButton: React.FC<Props> = ({
 			),
 		[setSort],
 	);
-	const SortIcon = sort === "date-desc" ? SortDownIcon : SortUpIcon;
+	const sortIconName = sort === "date-desc" ? "sort-down" : "sort-up";
 
 	const onFilterSelectionChange = React.useCallback(
 		(filterKey: keyof typeof filters, selection: Selection) => {
@@ -71,13 +66,13 @@ export const FilterButton: React.FC<Props> = ({
 	return (
 		<>
 			<Button color="primary" isIconOnly onPress={switchFilterModal}>
-				<FilterIcon size={24} />
+				<Icon name="filter" className="size-6" />
 			</Button>
 			<Modal isOpen={filterModalOpen} onOpenChange={switchFilterModal}>
 				<ModalContent>
 					<ModalBody className="items-center">
 						<Button variant="light" onPress={sortSelectOnPress}>
-							<SortIcon size={24} />
+							<Icon name={sortIconName} className="size-6" />
 							{sort === "date-desc"
 								? t("list.sorting.newestFirst")
 								: t("list.sorting.oldestFirst")}
@@ -91,7 +86,7 @@ export const FilterButton: React.FC<Props> = ({
 								<Button
 									color="primary"
 									variant="flat"
-									startContent={<ChevronDown />}
+									startContent={<Icon name="chevron-down" />}
 								>
 									{filters.ownedByMe === undefined
 										? t("list.filters.ownership.ownedByAnybody")

@@ -23,7 +23,7 @@ import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { MoneyIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
@@ -244,7 +244,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
 						<View className="flex flex-row items-center gap-1">
 							{currentPart ? (
-								<MoneyIcon className="text-secondary" size={24} />
+								<Icon name="money" className="text-secondary size-6" />
 							) : null}
 							<LoadableUser
 								className={

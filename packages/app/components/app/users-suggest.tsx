@@ -24,7 +24,7 @@ import {
 	AutocompleteSection,
 } from "~components/autocomplete";
 import { Button } from "~components/button";
-import { PlusIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import type { UserId } from "~db/ids";
 
@@ -337,7 +337,7 @@ export const UsersSuggest: React.FC<Props> = ({
 							className={value ? undefined : "hidden"}
 							onPress={openAddUser}
 						>
-							<PlusIcon size={24} />
+							<Icon name="plus" className="size-6" />
 						</Button>
 					}
 					{...props}

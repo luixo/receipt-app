@@ -23,7 +23,7 @@ import {
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTRPC } from "~app/utils/trpc";
-import { ReceiptIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = (props) => (
 		startContent={
 			<>
 				<BackLink to="/receipts" />
-				<ReceiptIcon size={36} />
+				<Icon name="receipt" className="size-9" />
 			</>
 		}
 		{...props}

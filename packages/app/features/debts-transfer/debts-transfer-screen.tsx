@@ -33,7 +33,7 @@ import {
 	debtAmountSchemaDecimal,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { BackArrow, TrashBin } from "~components/icons";
+import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
@@ -286,7 +286,7 @@ const DebtsListForm = suspendedFallback<{
 																		color="danger"
 																		isIconOnly
 																	>
-																		<TrashBin className="shrink-0" size={24} />
+																		<Icon className="size-6" name="trash" />
 																	</Button>
 																) : (
 																	<View
@@ -357,7 +357,7 @@ const DebtsListForm = suspendedFallback<{
 							</Text>
 							<SkeletonNumberInput
 								className="flex-[6]"
-								startContent={<View className="size-4 rounded bg-default" />}
+								startContent={<View className="bg-default size-4 rounded" />}
 								defaultValue={0}
 								endContent={
 									<View className="cursor-pointer">
@@ -416,7 +416,7 @@ export const DebtsTransferScreen: React.FC<{
 					setUserNameToInput
 					selectedProps={{ className: "flex flex-row gap-2 items-center" }}
 				/>
-				<BackArrow className="size-10 rotate-180" />
+				<Icon className="size-10" name="arrow-right" />
 				<UsersSuggest
 					label={t("transfer.form.to.label")}
 					selected={toId}

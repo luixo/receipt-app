@@ -13,12 +13,7 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from "~components/dropdown";
-import {
-	ChevronDown,
-	EditorIcon,
-	OwnerIcon,
-	ViewerIcon,
-} from "~components/icons";
+import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import type { AssignableRole } from "~web/handlers/receipts/utils";
 
@@ -76,14 +71,14 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 						receiptDisabled || !isOwner || participant.role === "owner"
 					}
 					isLoading={removeParticipantMutationState?.status === "pending"}
-					startContent={<ChevronDown />}
+					startContent={<Icon name="chevron-down" />}
 				>
 					{participant.role === "owner" ? (
-						<OwnerIcon size={24} />
+						<Icon name="owner" className="size-6" />
 					) : participant.role === "editor" ? (
-						<EditorIcon size={24} />
+						<Icon name="editor" className="size-6" />
 					) : (
-						<ViewerIcon size={24} />
+						<Icon name="viewer" className="size-6" />
 					)}
 				</Button>
 			</DropdownTrigger>

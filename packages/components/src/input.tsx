@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { Input as InputRaw, Textarea } from "@heroui/input";
 
-import { EyeIcon, EyeSlashIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 
 import { Button } from "./button";
@@ -85,9 +85,9 @@ export const Input: React.FC<Props> = ({
 					{props.type === "password" ? (
 						<Button variant="light" isIconOnly>
 							{visible ? (
-								<EyeSlashIcon onClick={switchValue} size={24} />
+								<Icon onClick={switchValue} name="eye-off" className="size-6" />
 							) : (
-								<EyeIcon onClick={switchValue} size={24} />
+								<Icon onClick={switchValue} name="eye" className="size-6" />
 							)}
 						</Button>
 					) : null}

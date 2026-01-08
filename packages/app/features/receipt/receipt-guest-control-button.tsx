@@ -3,7 +3,7 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { DebtIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
@@ -23,7 +23,7 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	}
 
 	const commonProps = {
-		children: <DebtIcon size={24} />,
+		children: <Icon name="money" className="size-6" />,
 		title: t("receipt.controlButton.incomingDebt"),
 		variant: "bordered",
 		color: "primary",

@@ -13,7 +13,7 @@ import { areDebtsSynced } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import type { DebtId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
@@ -60,7 +60,7 @@ export const ReceiptParticipantNoDebtAction: React.FC<
 			color="primary"
 			onPress={addDebt}
 		>
-			<SendIcon size={24} />
+			<Icon name="send" className="size-6" />
 		</Button>
 	);
 };
@@ -138,13 +138,13 @@ export const ReceiptParticipantDebtActions = suspendedFallback<
 						color="primary"
 						onPress={() => updateDebt(participantDebt)}
 					>
-						<SyncIcon size={24} />
+						<Icon name="sync" className="size-6" />
 					</Button>
 				)}
 			</View>
 		);
 	},
-	<SyncIcon size={36} />,
+	<Icon name="sync" className="size-9" />,
 );
 
 export const ReceiptParticipantActions: React.FC<Props> = ({
@@ -154,7 +154,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 }) => (
 	<>
 		{participant.balance === 0 ? (
-			<ZeroIcon data-testid="receipt-zero-icon" size={36} />
+			<Icon name="zero" data-testid="receipt-zero-icon" className="size-9" />
 		) : outcomingDebtId ? (
 			<ReceiptParticipantDebtActions
 				receipt={receipt}

@@ -38,7 +38,7 @@ import {
 	debtNoteSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { ReceiptIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import { BackLink, ButtonLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";
@@ -454,7 +454,7 @@ const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 								color="success"
 								isIconOnly
 							>
-								<ReceiptIcon size={24} />
+								<Icon name="receipt" className="size-6" />
 							</ButtonLink>
 						) : null}
 					</>

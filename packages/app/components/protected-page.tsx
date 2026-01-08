@@ -8,14 +8,6 @@ import { Page } from "~app/components/page";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import { useTRPC } from "~app/utils/trpc";
-import {
-	AccountIcon,
-	AdminIcon,
-	DebtsIcon,
-	ReceiptsIcon,
-	SettingsIcon,
-	UsersIcon,
-} from "~components/icons";
 
 const useShowAdmin = () => {
 	const trpc = useTRPC();
@@ -34,34 +26,34 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
 			elements={React.useMemo(
 				() => [
 					{
-						Icon: ReceiptsIcon,
+						iconName: "receipt",
 						pathname: "/receipts",
 						text: t("navigation.receipts"),
 					},
 					{
-						Icon: DebtsIcon,
+						iconName: "debts",
 						text: t("navigation.debts"),
 						pathname: "/debts",
 						useBadgeAmount: useDebtsIntentions,
 					},
 					{
-						Icon: UsersIcon,
+						iconName: "users",
 						text: t("navigation.users"),
 						pathname: "/users",
 						useBadgeAmount: useConnectionIntentions,
 					},
 					{
-						Icon: AccountIcon,
+						iconName: "user",
 						text: t("navigation.account"),
 						pathname: "/account",
 					},
 					{
-						Icon: SettingsIcon,
+						iconName: "settings",
 						text: t("navigation.settings"),
 						pathname: "/settings",
 					},
 					{
-						Icon: AdminIcon,
+						iconName: "admin",
 						pathname: "/admin",
 						text: t("navigation.admin"),
 						useShow: useShowAdmin,

@@ -7960,7 +7960,7 @@ __metadata:
     "@ra/utils": "workspace:*"
     date-fns: "npm:^3.3.1"
     framer-motion: "npm:^11.11.11"
-    react-icons: "npm:^5.5.0"
+    lucide-react: "npm:^0.562.0"
   languageName: unknown
   linkType: soft
 
@@ -24385,6 +24385,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react@npm:0.562.0":
+  version: 0.562.0
+  resolution: "lucide-react@npm:0.562.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/db75efaadd63fef38d3f4c79cadd26c4773d1a462749385a74dc6ffc1ab6684d20a7c1126faca49dc735f2edd2aae7c3af5e946a9299b1ff50f26d5c3670dab0
+  languageName: node
+  linkType: hard
+
+"lucide-react@patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch":
+  version: 0.562.0
+  resolution: "lucide-react@patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch::version=0.562.0&hash=59e079"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/3640b38b4f25ad2a4b897cd7af9cec0d943df0fe25e5ada1002534ebf516a130c8b50d0187e942d748b19520f6abbd344c6c878b0b8d6e8eb4700747086309e6
+  languageName: node
+  linkType: hard
+
 "luxon@npm:^3.2.1":
   version: 3.6.1
   resolution: "luxon@npm:3.6.1"
@@ -28083,15 +28101,6 @@ __metadata:
     typescript:
       optional: true
   checksum: 10/7e93c2fe408c0a56ce57be4ff87d8cbf58ea181380d4b366f73142e45ddc10b3a435feb76447ad3c5e5320e7fc10d61596113405e89b97bc23e140613f5b19a4
-  languageName: node
-  linkType: hard
-
-"react-icons@npm:^5.5.0":
-  version: 5.5.0
-  resolution: "react-icons@npm:5.5.0"
-  peerDependencies:
-    react: "*"
-  checksum: 10/67d5b311c23f74829cb90d58b78ddc87959d2087eda7f29b78d1ab6e337b04b0358a00724d73ab60652469d9a2c66ba3c034b8b7d4f32caae942592f92f59a84
   languageName: node
   linkType: hard
 

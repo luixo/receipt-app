@@ -18,7 +18,7 @@ import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { AccountIcon } from "~components/icons";
+import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import { SaveButton } from "~components/save-button";
 import { options as accountChangeNameOptions } from "~mutations/account/change-name";
@@ -91,12 +91,12 @@ const AccountHeader: React.FC = suspendedFallback(
 		const trpc = useTRPC();
 		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
 		return (
-			<PageHeader startContent={<AccountIcon size={36} />}>
+			<PageHeader startContent={<Icon name="user" className="size-9" />}>
 				{account.user.name}
 			</PageHeader>
 		);
 	},
-	<SkeletonPageHeader startContent={<AccountIcon size={36} />} />,
+	<SkeletonPageHeader startContent={<Icon name="user" className="size-9" />} />,
 );
 
 export const AccountScreen: React.FC = () => {
