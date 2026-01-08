@@ -22,7 +22,7 @@ export const Text = React.memo<
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		{...(props as any)}
 		className={cn(
-			"m-0 font-sans text-base leading-6 font-normal text-foreground",
+			"text-foreground m-0 font-sans text-base leading-6 font-normal",
 			className,
 		)}
 	/>

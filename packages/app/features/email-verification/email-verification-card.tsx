@@ -32,7 +32,7 @@ export const EmailVerificationCard = suspendedFallback(
 		return (
 			<Card className="min-w-fit self-center" shadow="md">
 				<CardHeader>
-					<Text className="text-center text-2xl text-warning">
+					<Text className="text-warning text-center text-2xl">
 						{t("components.emailVerification.header")}
 					</Text>
 				</CardHeader>
