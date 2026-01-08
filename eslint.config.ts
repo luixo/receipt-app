@@ -156,11 +156,7 @@ const overriddenRules = {
 		// Custom devDependencies
 		"import-x/no-extraneous-dependencies": [
 			"error",
-			getExtraneousDependenciesConfig(undefined, [
-				"vitest.config.ts",
-				"eslint.config.ts",
-				"kysely-codegen.config.ts",
-			]),
+			getExtraneousDependenciesConfig(undefined, ["*.config.ts"]),
 		],
 		// Custom order
 		"import-x/order": [
@@ -510,20 +506,6 @@ export default ts.config(
 		},
 	},
 	{
-		files: ["apps/mobile/metro.config.js", "apps/mobile/babel.config.js"],
-		rules: {
-			// We still have some CJS files in the project
-			"@typescript-eslint/no-require-imports": "off",
-		},
-		languageOptions: {
-			globals: {
-				...globals.commonjs,
-				...globals.node,
-				...globals.builtin,
-			},
-		},
-	},
-	{
 		...packageJson.configs.recommended,
 		languageOptions: {
 			parserOptions: {
@@ -600,6 +582,8 @@ export default ts.config(
 			"**/*.gen.ts",
 			"**/uniwind-types.d.ts",
 			"apps/mobile/ios",
+			"metro.config.js",
+			"babel.config.js",
 		],
 	},
 );
