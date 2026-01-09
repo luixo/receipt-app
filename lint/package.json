@@ -1,0 +1,33 @@
+{
+	"name": "@ra/lint",
+	"version": "0.0.0",
+	"sideEffects": false,
+	"type": "module",
+	"main": "eslint.config.ts",
+	"scripts": {
+		"lint": "yarn --cwd .. eslint --max-warnings=0 --cache"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.32.0",
+		"@stylistic/eslint-plugin": "^5.2.2",
+		"@tanstack/eslint-plugin-router": "^1.129.7",
+		"@types/eslint-plugin-jsx-a11y": "^6.10.0",
+		"eslint-config-airbnb-extended": "^2.1.2",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-import-resolver-typescript": "^4.4.4",
+		"eslint-plugin-better-tailwindcss": "^3.7.9",
+		"eslint-plugin-import-x": "^4.16.1",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-n": "^17.21.0",
+		"eslint-plugin-package-json": "^0.47.0",
+		"eslint-plugin-playwright": "^2.2.0",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^6.0.0-rc.1",
+		"eslint-plugin-unicorn": "^60.0.0",
+		"eslint-plugin-vitest": "^0.5.4",
+		"globals": "^16.3.0",
+		"jiti": "^2.5.1",
+		"jsonc-eslint-parser": "^2.4.0",
+		"typescript-eslint": "^8.38.0"
+	}
+}
