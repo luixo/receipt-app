@@ -391,8 +391,6 @@ const createApiManager = async (
 		mockFirst: (key, handler) => mock(key, handler, "append"),
 		mockLast: (key, handler) => mock(key, handler, "prepend"),
 		createPause: () => {
-			// Our version is ^22.0.0 which means we usually get `withResolvers`.
-			// eslint-disable-next-line n/no-unsupported-features/es-syntax
 			const promise = Promise.withResolvers<void>();
 			controller.paused.push(promise);
 			return promise;

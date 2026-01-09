@@ -27,8 +27,5 @@
 	},
 	"include": ["**/*", "**/package.json"],
 	"exclude": ["**/prettify.js"],
-	"extends": "expo/tsconfig.base",
-	"ts-node": {
-		"require": ["tsconfig-paths/register"]
-	}
+	"extends": "expo/tsconfig.base"
 }

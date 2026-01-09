@@ -18,7 +18,11 @@ import path from "node:path";
 import { entries, fromEntries, omit } from "remeda";
 import ts from "typescript-eslint";
 
-const nodeVersion = await readFile(".nvmrc", "utf8");
+const nvmrc = await readFile(".nvmrc", "utf8");
+const nodeVersion = nvmrc
+	.toString()
+	.split("\n")
+	.find((line) => !line.startsWith("#"));
 
 const getExtraneousDependenciesConfig = (
 	packageJsonDir = "",
@@ -364,7 +368,7 @@ export default ts.config(
 				version: "detect",
 			},
 			node: {
-				version: nodeVersion.toString(),
+				version: nodeVersion,
 			},
 		},
 	},
