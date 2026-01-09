@@ -1,4 +1,6 @@
-export default {
+import type { AppJSONConfig } from "expo/config";
+
+const config: AppJSONConfig = {
 	expo: {
 		name: "receipt-app",
 		slug: "receipt-app",
@@ -7,16 +9,17 @@ export default {
 		platforms: ["ios", "android"],
 		icon: "app-icon.png",
 		ios: {
-			bundleIdentifier: "ru.luixo.receipt",
+			bundleIdentifier: "me.luixo.receipt",
 			buildNumber: "4",
 		},
 		android: {
-			package: "ru.luixo.receipt",
+			package: "me.luixo.receipt",
 		},
 		extra: {
 			host: process.env.BACKEND_HOST,
 		},
-		plugins: ["expo-router"],
+		plugins: [["expo-router", { root: "./app" }]],
 		userInterfaceStyle: "automatic",
 	},
 };
+export default config;

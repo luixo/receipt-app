@@ -441,7 +441,7 @@ export default ts.config(
 					"**/*.spec.ts",
 				],
 			],
-			["apps/mobile"],
+			["apps/mobile", "babel.config.js"],
 			["packages/components"],
 			["packages/mutations"],
 			["packages/queries"],
@@ -582,7 +582,6 @@ export default ts.config(
 			"**/*.gen.ts",
 			"**/uniwind-types.d.ts",
 			"apps/mobile/ios",
-			"**/*.config.js",
 		],
 	},
 );

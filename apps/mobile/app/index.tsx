@@ -2,8 +2,8 @@ import React from "react";
 import { Text, View } from "react-native";
 
 const Wrapper = () => (
-	<View>
-		<Text>Hello world</Text>
+	<View className="bg-blue-300">
+		<Text className="text-red-500">Hello world</Text>
 	</View>
 );
 
