@@ -7983,9 +7983,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/lint@workspace:lint":
+"@ra/lint@workspace:utils/lint":
   version: 0.0.0-use.local
-  resolution: "@ra/lint@workspace:lint"
+  resolution: "@ra/lint@workspace:utils/lint"
   dependencies:
     "@eslint/js": "npm:^9.39.2"
     "@stylistic/eslint-plugin": "npm:^5.7.0"
@@ -8068,9 +8068,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/scripts@workspace:scripts":
+"@ra/scripts@workspace:utils/scripts":
   version: 0.0.0-use.local
-  resolution: "@ra/scripts@workspace:scripts"
+  resolution: "@ra/scripts@workspace:utils/scripts"
   dependencies:
     "@ra/utils": "workspace:*"
     concurrently: "npm:^8.2.2"

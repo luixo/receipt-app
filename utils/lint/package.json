@@ -5,7 +5,7 @@
 	"type": "module",
 	"main": "eslint.config.ts",
 	"scripts": {
-		"lint": "yarn --cwd .. eslint --max-warnings=0 --cache"
+		"lint": "yarn --cwd ../.. eslint --max-warnings=0 --cache"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.39.2",

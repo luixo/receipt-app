@@ -37,7 +37,7 @@ export default defineConfig({
 				path.resolve(rootPath, "packages/components/**/*"),
 				path.resolve(rootPath, "packages/mutations/**/*"),
 				path.resolve(rootPath, "packages/db/!(src)/**/*"),
-				path.resolve(rootPath, "scripts/**/*"),
+				path.resolve(rootPath, "utils/**/*"),
 				path.resolve(rootPath, "testing/playwright/**/*"),
 				path.resolve(vitestRoot, "**/*"),
 			],

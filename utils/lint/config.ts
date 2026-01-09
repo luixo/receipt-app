@@ -455,8 +455,9 @@ export const getConfig = async (rootDir: string) => {
 				["packages/utils"],
 				["packages/db", ["scripts/**/*", "**/*.test.ts", "vitest.config.ts"]],
 				["packages/app", ["**/*.spec.ts", "**/__tests__/**"]],
-				["scripts", true],
-				["lint", true],
+				["utils/scripts", true],
+				["utils/lint", true],
+				["utils/format", true],
 				["testing/vitest", true],
 				["testing/playwright", true],
 			] satisfies Parameters<typeof getExtraneousDependenciesConfig>[]

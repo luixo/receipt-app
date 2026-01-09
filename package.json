@@ -5,10 +5,9 @@
 	"type": "module",
 	"workspaces": [
 		"apps/*",
-		"lint",
 		"packages/*",
-		"scripts",
-		"testing/*"
+		"testing/*",
+		"utils/*"
 	],
 	"scripts": {
 		"backend:test": "NODE_OPTIONS='--import tsx' vitest",

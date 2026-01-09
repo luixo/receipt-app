@@ -6,7 +6,7 @@ runs:
       id: ngrok-version
       # Outputs something like 1.0.0
       run: |
-        VERSION=$(npm pkg --prefix scripts get devDependencies.ngrok | cut -d '"' -f 2)
+        VERSION=$(npm pkg --prefix utils/scripts get devDependencies.ngrok | cut -d '"' -f 2)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
       shell: bash
     - name: Cache ngrok module
