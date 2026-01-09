@@ -47,6 +47,7 @@ test("'auth.register' mutation", async ({
 	await fillValidFields();
 	await registerButton.click();
 	await awaitCacheKey("auth.register", { errored: 1 });
+	await clearToasts();
 
 	// TODO: Figure out what error should look like on register action
 	// await expectScreenshotWithSchemes("error.png");
@@ -58,7 +59,7 @@ test("'auth.register' mutation", async ({
 	});
 	await registerButton.click();
 
-	await clearToasts(2);
+	await clearToasts();
 	await expectScreenshotWithSchemes("loading.png");
 });
 
