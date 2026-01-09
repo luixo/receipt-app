@@ -31,8 +31,8 @@ const validateOffset = ({
 
 export const useCursorPaging = <
 	K extends TRPCInfiniteQueryKey,
-	P extends
-		TRPCDecoratedInfiniteQueryProcedure<K> = TRPCDecoratedInfiniteQueryProcedure<K>,
+	P extends TRPCDecoratedInfiniteQueryProcedure<K> =
+		TRPCDecoratedInfiniteQueryProcedure<K>,
 	I extends Exclude<Parameters<P["queryOptions"]>[0], SkipToken> = Exclude<
 		Parameters<P["queryOptions"]>[0],
 		SkipToken

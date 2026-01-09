@@ -1,8 +1,8 @@
 /* see https://github.com/tailwindlabs/tailwindcss/discussions/17127 */
 @import "../../../packages/app/global.css";
 
-@plugin '../../../packages/app/heroui.ts';
-@source '../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@plugin "../../../packages/app/heroui.ts";
+@source "../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
 /**

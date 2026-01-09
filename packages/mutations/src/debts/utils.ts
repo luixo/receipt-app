@@ -12,8 +12,8 @@ type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 const isUpdateSyncable = (update: DebtUpdateObject) =>
 	Boolean(
 		update.amount !== undefined ||
-			update.timestamp !== undefined ||
-			update.currencyCode !== undefined,
+		update.timestamp !== undefined ||
+		update.currencyCode !== undefined,
 	);
 
 export const applySumUpdate =

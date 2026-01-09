@@ -48,11 +48,8 @@ type Dataloaders<
 	Path extends TRPCMutationKey,
 	OuterContext = undefined,
 	LifecycleContext = unknown,
-	Options extends OptionsLocal<
-		Path,
-		OuterContext,
-		LifecycleContext
-	> = OptionsLocal<Path, OuterContext, LifecycleContext>,
+	Options extends OptionsLocal<Path, OuterContext, LifecycleContext> =
+		OptionsLocal<Path, OuterContext, LifecycleContext>,
 > = {
 	mutateDataloader: Dataloader<
 		Pick<Options, MutateOptionsKey>,
@@ -123,11 +120,8 @@ export const getMutationToaster = <
 	Path extends TRPCMutationKey,
 	OuterContext = undefined,
 	LifecycleContext = unknown,
-	Options extends OptionsLocal<
-		Path,
-		OuterContext,
-		LifecycleContext
-	> = OptionsLocal<Path, OuterContext, LifecycleContext>,
+	Options extends OptionsLocal<Path, OuterContext, LifecycleContext> =
+		OptionsLocal<Path, OuterContext, LifecycleContext>,
 >(
 	key: Path,
 	toastContext: ToastContext,

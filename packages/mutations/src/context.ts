@@ -78,10 +78,8 @@ export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,
 	OuterContext = undefined,
 	LifecycleContext = unknown,
-	Options extends TRPCMutationOptions<
-		Path,
-		LifecycleContext
-	> = TRPCMutationOptions<Path, LifecycleContext>,
+	Options extends TRPCMutationOptions<Path, LifecycleContext> =
+		TRPCMutationOptions<Path, LifecycleContext>,
 	MutationOptionsWithUpdateFns extends TRPCMutationOptions<
 		Path,
 		LifecycleContextWithUpdateFns<LifecycleContext>

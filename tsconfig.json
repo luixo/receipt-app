@@ -10,6 +10,7 @@
 		"esModuleInterop": true,
 		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true,
+		"allowImportingTsExtensions": true,
 		"allowJs": false,
 		"paths": {
 			"~app/*": ["./packages/app/*"],

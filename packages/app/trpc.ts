@@ -49,8 +49,8 @@ type TRPCOptionsProxyNoPath<TRouter extends AnyTRPCRouter> = OmitDeep<
 type ProceduresValues<
 	Router extends AnyTRPCRouter,
 	Type extends TypeKey,
-	Procedures extends
-		Router["_def"]["procedures"] = Router["_def"]["procedures"],
+	Procedures extends Router["_def"]["procedures"] =
+		Router["_def"]["procedures"],
 	ProcedureKeys extends keyof Procedures = keyof Procedures,
 > = {
 	[K in ProcedureKeys]: Procedures[K] extends AnyTRPCQueryProcedure

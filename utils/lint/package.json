@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"sideEffects": false,
 	"type": "module",
-	"main": "eslint.config.ts",
+	"main": "config.ts",
 	"scripts": {
 		"lint": "yarn --cwd ../.. eslint --max-warnings=0 --cache"
 	},

@@ -52,7 +52,7 @@ export type GetLinksOptions = {
 	headers?: Headers;
 	captureError: (error: Error) => string;
 	source: // Client-side rendering
-	| "csr"
+		| "csr"
 		// Client-side rendering via loader
 		| "csr-loader"
 		// Server-side rendering
