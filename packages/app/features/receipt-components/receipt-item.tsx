@@ -70,7 +70,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 			addItemConsumer(item.id, participantId, 1);
 		});
 	}, [addItemConsumer, item.id, notAddedParticipantsIds]);
-	const sortedConsumers = item.consumers.sort(SORT_USERS);
+	const sortedConsumers = item.consumers.toSorted(SORT_USERS);
 
 	return (
 		<Card ref={ref}>

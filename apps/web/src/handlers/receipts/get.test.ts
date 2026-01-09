@@ -45,7 +45,7 @@ const getItems = (
 					part: Number(consumer.part),
 					createdAt: consumer.createdAt,
 				}))
-				.sort((a, b) => {
+				.toSorted((a, b) => {
 					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
 					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 				}),
@@ -56,12 +56,12 @@ const getItems = (
 					part: Number(payer.part),
 					createdAt: payer.createdAt,
 				}))
-				.sort((a, b) => {
+				.toSorted((a, b) => {
 					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
 					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 				}),
 		}))
-		.sort((a, b) => {
+		.toSorted((a, b) => {
 			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
 			return delta === 0 ? a.id.localeCompare(b.id) : delta;
 		});
@@ -75,7 +75,7 @@ const getParticipants = (
 			role: participant.role,
 			createdAt: participant.createdAt,
 		}))
-		.sort((a, b) => {
+		.toSorted((a, b) => {
 			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 		});
@@ -87,7 +87,7 @@ const getPayers = (payers: Awaited<ReturnType<typeof insertReceiptPayer>>[]) =>
 			part: Number(payer.part),
 			createdAt: payer.createdAt,
 		}))
-		.sort((a, b) => {
+		.toSorted((a, b) => {
 			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 		});
@@ -382,7 +382,7 @@ describe("receipts.get", () => {
 								id: debt.id,
 								userId: debt.userId,
 							}))
-							.sort((a, b) => a.id.localeCompare(b.id)),
+							.toSorted((a, b) => a.id.localeCompare(b.id)),
 					},
 					items: [],
 					participants: [],

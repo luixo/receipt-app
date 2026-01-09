@@ -136,7 +136,7 @@ describe("debt-intenions.getAll", () => {
 						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
-				].sort((a, b) => compare.zonedDateTime(b.updatedAt, a.updatedAt)),
+				].toSorted((a, b) => compare.zonedDateTime(b.updatedAt, a.updatedAt)),
 			);
 		});
 	});

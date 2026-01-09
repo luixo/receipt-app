@@ -228,7 +228,7 @@ describe("receipts.add", () => {
 							}),
 						"PRECONDITION_FAILED",
 						new RegExp(
-							`User "${fakeUserIds[0]}" doesn't participate in receipt "[a-fA-F0-9-]{36}". \\(\\+1 errors\\)`,
+							String.raw`User "${fakeUserIds[0]}" doesn't participate in receipt "[a-fA-F0-9-]{36}". \(\+1 errors\)`,
 						),
 					),
 				);

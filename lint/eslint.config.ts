@@ -340,6 +340,7 @@ export const getConfig = async (rootDir: string) => {
 		.toString()
 		.split("\n")
 		.find((line) => !line.startsWith("#"));
+	// eslint-disable-next-line @typescript-eslint/no-deprecated
 	return ts.config(
 		{ files: ["**/*.{js,jsx,ts,tsx}"] },
 		{
@@ -376,7 +377,7 @@ export const getConfig = async (rootDir: string) => {
 		importPlugin.flatConfigs.react,
 		importPlugin.flatConfigs["react-native"],
 		importPlugin.flatConfigs["stage-0"],
-		reactHooksPlugin.configs["recommended-latest"],
+		reactHooksPlugin.configs.flat["recommended-latest"],
 		eslintPluginUnicorn.configs.recommended,
 		airbnbPlugin.plugins.stylistic,
 		airbnbPlugin.plugins.node,
@@ -424,12 +425,14 @@ export const getConfig = async (rootDir: string) => {
 		temporaryDisabledRules,
 		// Disabling stylistic rules as it is Prettier's matter
 		{
+			name: "stylistic-disabled",
 			rules: fromEntries(
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				entries(airbnbPlugin.rules.base.stylistic.rules!).map(([key]) => [
-					key,
-					"off" as const,
-				]),
+				[
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					...entries(airbnbPlugin.rules.base.stylistic.rules!),
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					...entries(airbnbPlugin.rules.typescript.stylistic.rules!),
+				].map(([key]) => [key, "off" as const]),
 			),
 		},
 		...(

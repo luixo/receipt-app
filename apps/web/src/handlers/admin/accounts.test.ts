@@ -52,7 +52,7 @@ describe("admin.accounts", () => {
 						},
 						user: { id: foreignUser.id, name: foreignUser.name },
 					},
-				].sort((a, b) => b.account.email.localeCompare(a.account.email)),
+				].toSorted((a, b) => b.account.email.localeCompare(a.account.email)),
 			);
 		});
 	});

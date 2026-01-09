@@ -45,22 +45,24 @@ export const useParticipants = (
 			fromUnitToSubunit,
 			fromSubunitToUnit,
 		);
-		return receipt.participants.sort(SORT_PARTICIPANTS).map((participant) => {
-			const matchedParticipant = participantsSums.find(
-				({ userId }) => userId === participant.userId,
-			);
-			if (!matchedParticipant) {
-				throw new Error(
-					"Expected to have matched participant on getting their sums",
+		return receipt.participants
+			.toSorted(SORT_PARTICIPANTS)
+			.map((participant) => {
+				const matchedParticipant = participantsSums.find(
+					({ userId }) => userId === participant.userId,
 				);
-			}
-			return {
-				...participant,
-				debt: matchedParticipant.debt,
-				payment: matchedParticipant.payment,
-				balance: matchedParticipant.balance,
-			};
-		});
+				if (!matchedParticipant) {
+					throw new Error(
+						"Expected to have matched participant on getting their sums",
+					);
+				}
+				return {
+					...participant,
+					debt: matchedParticipant.debt,
+					payment: matchedParticipant.payment,
+					balance: matchedParticipant.balance,
+				};
+			});
 	}, [fromSubunitToUnit, fromUnitToSubunit, receipt]);
 };
 

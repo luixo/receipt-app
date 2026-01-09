@@ -30,7 +30,7 @@ const mapUsers = (
 ) =>
 	userDebts
 		.map(({ user }) => user)
-		.sort((userA, userB) => userA.name.localeCompare(userB.name))
+		.toSorted((userA, userB) => userA.name.localeCompare(userB.name))
 		.map(({ id }) => id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
@@ -139,7 +139,7 @@ describe("debts.getUsersPaged", () => {
 				[foreignAccountId, foreignToSelfUserId],
 			);
 			const userDebts = await Promise.all([
-				syncedDebt,
+				Promise.resolve(syncedDebt),
 				insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, user.id, { currencyCode: "EUR" }),
 				insertDebt(ctx, foreignAccountId, foreignToSelfUserId),

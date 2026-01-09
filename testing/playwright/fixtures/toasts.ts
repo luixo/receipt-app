@@ -31,13 +31,13 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 						"Currently, only 4 toasts are visible at the moment, please create a test with less toasts",
 					);
 				}
-				const expectedTexts = textsArray.sort((a, b) => a.localeCompare(b));
+				const expectedTexts = textsArray.toSorted((a, b) => a.localeCompare(b));
 
 				await expect(async () => {
 					const actualTexts = await toast
 						.locator(`.${DESCRIPTION_CLASSNAME}`)
 						.allInnerTexts();
-					const sortedActualTexts = actualTexts.sort((a, b) =>
+					const sortedActualTexts = actualTexts.toSorted((a, b) =>
 						a.localeCompare(b),
 					);
 					expect(sortedActualTexts, {

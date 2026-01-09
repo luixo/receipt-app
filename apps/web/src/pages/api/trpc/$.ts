@@ -104,7 +104,9 @@ const redirectTestHandler = async (
 		"cookie",
 		cookieHeader
 			.replace(
-				new RegExp(`(?:^|;\\s*)(${apiCookieNames.proxyPort}=[^;]+)(?=;|$)`),
+				new RegExp(
+					String.raw`(?:^|;\s*)(${apiCookieNames.proxyPort}=[^;]+)(?=;|$)`,
+				),
 				"",
 			)
 			.replace(/^;/, "") || "",
@@ -122,17 +124,15 @@ const callback: Callback = async ({ request, ...rest }) => {
 		return redirectTestHandler(request, cookieHeader, proxyPort);
 	}
 	if (import.meta.env.MODE === "test" && Boolean(process.env.PLAYWRIGHT)) {
-		return new Response(
-			JSON.stringify({
-				error: transformer.serialize({
-					code: 400,
-					message: [
-						"Unexpected test mode tRPC fetch for url",
-						decodeURIComponent(request.url),
-					].join("\n"),
-				}),
+		return Response.json({
+			error: transformer.serialize({
+				code: 400,
+				message: [
+					"Unexpected test mode tRPC fetch for url",
+					decodeURIComponent(request.url),
+				].join("\n"),
 			}),
-		);
+		});
 	}
 	return fetchRequestHandler({
 		endpoint: DEFAULT_TRPC_ENDPOINT,

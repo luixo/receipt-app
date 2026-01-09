@@ -29,7 +29,7 @@ import { procedure } from "./get-by-user-paged";
 
 const mapDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 	debts
-		.sort((a, b) => {
+		.toSorted((a, b) => {
 			const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
 			if (timestampSort !== 0) {
 				return timestampSort;

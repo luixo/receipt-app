@@ -21,7 +21,7 @@ import { runInBand } from "~web/handlers/utils.test";
 import { procedure } from "./get-paged";
 
 const mapUsers = (users: Awaited<ReturnType<typeof insertUser>>[]) =>
-	users.sort((a, b) => a.name.localeCompare(b.name)).map(({ id }) => id);
+	users.toSorted((a, b) => a.name.localeCompare(b.name)).map(({ id }) => id);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -204,7 +204,7 @@ describe("users.getPaged", () => {
 				limit: 5,
 				cursor: 0,
 			});
-			const sortedIds = [...result.items].sort();
+			const sortedIds = [...result.items].toSorted();
 			expect(result.items).toStrictEqual(sortedIds);
 		});
 

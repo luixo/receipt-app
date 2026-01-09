@@ -124,7 +124,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 		const allCurrencyCodes = unique([
 			...nonResolvedDebts.map((debt) => debt.currencyCode),
 			selectedCurrencyCode,
-		]).sort((currencyCodeA, currencyCodeB) => {
+		]).toSorted((currencyCodeA, currencyCodeB) => {
 			if (currencyCodeA === selectedCurrencyCode) {
 				return 1;
 			}

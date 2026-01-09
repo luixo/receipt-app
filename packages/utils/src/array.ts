@@ -95,7 +95,7 @@ export const mergeIntervals = (
 	connectAdjacentInts = false,
 ) =>
 	intervals
-		.sort((a, b) => a[0] - b[0])
+		.toSorted((a, b) => a[0] - b[0])
 		.reduce<Interval[]>((acc, [from, to]) => {
 			const lastInterval = acc.at(-1);
 			if (

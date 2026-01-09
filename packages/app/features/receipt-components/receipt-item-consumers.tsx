@@ -127,7 +127,7 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 					.filter((id) => notAddedParticipantsIds.has(id))
 					.forEach((id) => addItemConsumer(item.id, id, 1));
 			}}
-			items={participants.sort(SORT_USERS)}
+			items={participants.toSorted(SORT_USERS)}
 			{...props}
 		>
 			{({ userId }) => (

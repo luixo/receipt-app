@@ -90,7 +90,7 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 						))}
 				</AvatarGroup>
 			)}
-			items={participants.sort(SORT_USERS)}
+			items={participants.toSorted(SORT_USERS)}
 			{...props}
 		>
 			{({ userId }) => (

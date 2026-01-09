@@ -209,7 +209,7 @@ const DebtAmountInput = suspendedFallback<{
 				variant="bordered"
 				endContent={
 					<Button variant="light" isIconOnly>
-						{"USD"}
+						USD
 					</Button>
 				}
 			/>

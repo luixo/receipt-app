@@ -71,7 +71,7 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 			[hiddenCurrencies, currencies],
 		);
 		onLoad?.(codes, topCurrencyCodes);
-		const sortedCodes = codes.sort(
+		const sortedCodes = codes.toSorted(
 			(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
 		);
 		const formattedCurrencies = sortedCodes.map((currencyCode) => ({

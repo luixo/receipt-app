@@ -30,7 +30,7 @@ import { procedure } from "./get-paged";
 
 type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const sortReceipts = (receipts: MockReceipt[]) =>
-	receipts.sort((a, b) => compare.plainDate(b.issued, a.issued));
+	receipts.toSorted((a, b) => compare.plainDate(b.issued, a.issued));
 
 const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
 	id: receipt.id,
@@ -363,7 +363,7 @@ describe("receipts.getPaged", () => {
 				modifyInput: (input) => ({ ...input, orderBy: "date-asc" }),
 				modifyOutput: (receipts) =>
 					receipts
-						.sort((a, b) => compare.plainDate(a.issued, b.issued))
+						.toSorted((a, b) => compare.plainDate(a.issued, b.issued))
 						.map(mapReceipt),
 			});
 		});
@@ -498,8 +498,9 @@ describe("receipts.getPaged", () => {
 			test("success", async ({ ctx }) => {
 				const { sessionId, receipts } = await mockData(ctx);
 
-				const descReceipts = sortReceipts(receipts).map(mapReceipt);
-				const ascReceipts = receipts.toReversed().map(mapReceipt);
+				const sortedReceipts = sortReceipts(receipts);
+				const descReceipts = sortedReceipts.map(mapReceipt);
+				const ascReceipts = sortedReceipts.toReversed().map(mapReceipt);
 
 				const limit = 2;
 				const caller = createCaller(await createAuthContext(ctx, sessionId));

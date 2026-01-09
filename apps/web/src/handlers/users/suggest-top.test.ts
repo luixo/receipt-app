@@ -184,7 +184,7 @@ describe("users.suggestTop", () => {
 						publicNamedUser,
 					]
 						.map(({ id }) => id)
-						.sort(),
+						.toSorted(),
 				});
 			});
 
@@ -306,7 +306,7 @@ describe("users.suggestTop", () => {
 					options: { type: "not-connected" },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: [user, publicNamedUser].map(({ id }) => id).sort(),
+					items: [user, publicNamedUser].map(({ id }) => id).toSorted(),
 				});
 			});
 
@@ -457,7 +457,7 @@ describe("users.suggestTop", () => {
 				expect(result).toStrictEqual<typeof result>({
 					items: [user, publicNamedUser, connectedUser]
 						.map(({ id }) => id)
-						.sort(),
+						.toSorted(),
 				});
 			});
 

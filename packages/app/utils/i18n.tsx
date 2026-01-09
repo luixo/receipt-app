@@ -48,7 +48,7 @@ const getHeaderLanguages = (request: Request | null) =>
 						q: Number(q),
 					};
 				})
-				.sort((a, b) => b.q - a.q)
+				.toSorted((a, b) => b.q - a.q)
 				.flatMap(({ fullTag, baseTag }) => [fullTag, baseTag])
 		: // eslint-disable-next-line n/no-unsupported-features/node-builtins
 			window.navigator.languages;

@@ -56,11 +56,11 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			}, {});
 			return entries(
 				mapValues(intentionsByUser, (userIntentions) =>
-					userIntentions.sort((intentionA, intentionB) =>
+					userIntentions.toSorted((intentionA, intentionB) =>
 						compare.plainDate(intentionA.timestamp, intentionB.timestamp),
 					),
 				),
-			).sort(([, groupedIntentionsA], [, groupedIntentionsB]) => {
+			).toSorted(([, groupedIntentionsA], [, groupedIntentionsB]) => {
 				const latestA = getLatestIntention(groupedIntentionsA);
 				const latestB = getLatestIntention(groupedIntentionsB);
 				if (!latestA) {

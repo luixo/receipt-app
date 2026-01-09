@@ -148,7 +148,7 @@ const getReceiptDebts = (
 	if (receiptOwnerAccountId === selfAccountId) {
 		const outcomingDebt = debts
 			.filter((debt) => debt.ownerAccountId === selfAccountId)
-			.sort((a, b) => a.debtId.localeCompare(b.debtId))
+			.toSorted((a, b) => a.debtId.localeCompare(b.debtId))
 			.map((debt) => ({ id: debt.debtId, userId: debt.userId }));
 		return {
 			direction: "outcoming",

@@ -15,4 +15,4 @@ const getBaseUrl = () => {
 	return envBaseUrl || "";
 };
 
-export const useBaseUrl = () => React.useRef(getBaseUrl()).current;
+export const useBaseUrl = () => React.useMemo(() => getBaseUrl(), []);

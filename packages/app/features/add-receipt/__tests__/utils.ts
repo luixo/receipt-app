@@ -32,7 +32,10 @@ export const test = originalTest.extend<Fixtures>({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),
 			}));
-			api.mockFirst("currency.top", topCurrencies);
+			api.mockFirst(
+				"currency.top",
+				topCurrencies.toSorted((a, b) => a.count - b.count),
+			);
 			return { topCurrencies, ...auth };
 		}),
 

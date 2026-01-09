@@ -162,7 +162,7 @@ type RawQueryKey = [
 
 const mapQueries = (queries: DehydratedState["queries"]) =>
 	queries
-		.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
+		.toSorted((a, b) => a.queryHash.localeCompare(b.queryHash))
 		.map(({ queryKey, ...query }) => {
 			const typedQueryKey = queryKey as RawQueryKey;
 			return {
@@ -265,7 +265,7 @@ const remapActions = (
 				},
 				{},
 			),
-		).sort(([aKey], [bKey]) => aKey.localeCompare(bKey)),
+		).toSorted(([aKey], [bKey]) => aKey.localeCompare(bKey)),
 	);
 
 export const getMutationsByKey = <T extends TRPCMutationKey>(

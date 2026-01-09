@@ -28,7 +28,7 @@ export type GeneralInput = { cursor: number; limit: number };
 export type GeneralOutput<T> = { cursor: number; items: T[] };
 
 const mergeInputs = <I extends GeneralInput>(inputs: I[]): Map<I, I> => {
-	const sorted = [...inputs].sort((a, b) => a.cursor - b.cursor);
+	const sorted = [...inputs].toSorted((a, b) => a.cursor - b.cursor);
 
 	const groups = sorted.reduce<(I & { members: I[] })[]>((acc, element) => {
 		const lastGroup = acc.at(-1);

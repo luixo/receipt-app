@@ -28,7 +28,7 @@ const mapUsers = (
 	users: Awaited<ReturnType<typeof insertUser>>[],
 ) =>
 	users
-		.sort((a, b) => {
+		.toSorted((a, b) => {
 			if (term.length < 3) {
 				const sortedByName = a.name.localeCompare(b.name);
 				if (sortedByName !== 0) {

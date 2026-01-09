@@ -149,8 +149,8 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
-					[...currenciesTo].sort(),
+				expect(keys(result).toSorted()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
 					currenciesTo.reduce(
@@ -192,8 +192,8 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
-					[...currenciesTo].sort(),
+				expect(keys(result).toSorted()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
 					currenciesTo.reduce(
@@ -241,8 +241,8 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
-					[...currenciesTo].sort(),
+				expect(keys(result).toSorted()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
 					currenciesTo.reduce(
@@ -273,8 +273,8 @@ describe("currency.rates", () => {
 				from: currencyFrom,
 				to: currenciesTo,
 			});
-			expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
-				[...currenciesTo].map((code) => code.toUpperCase()).sort(),
+			expect(keys(result).toSorted()).toStrictEqual<typeof currenciesTo>(
+				[...currenciesTo].map((code) => code.toUpperCase()).toSorted(),
 			);
 		});
 	});

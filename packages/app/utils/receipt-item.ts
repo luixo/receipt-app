@@ -113,7 +113,7 @@ const distributeLeftovers = (
 		throw new Error("Unexpected lucky leftover bigger than users left");
 	}
 
-	const notReimbursedOrder = entries(notReimbursedByUsers).sort(
+	const notReimbursedOrder = entries(notReimbursedByUsers).toSorted(
 		([userA, userANotReimbursed], [userB, userBNotReimbursed]) => {
 			const notReimbursedDelta = userBNotReimbursed - userANotReimbursed;
 			return notReimbursedDelta || sortUsers(userA, userB);
