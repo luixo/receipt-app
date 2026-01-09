@@ -147,3 +147,4 @@ blob-report/
 test-results/
 
 .vercel/
+.eslintcache
