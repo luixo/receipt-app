@@ -9,10 +9,14 @@
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@ra/web": "workspace:*",
+		"@trpc/client": "catalog:",
+		"@trpc/server": "catalog:",
 		"deep-object-diff": "^1.1.9",
 		"h3": "^1.15.3",
 		"kysely": "^0.28.7",
 		"mock-http": "^1.1.1",
-		"timekeeper": "^2.3.1"
+		"testcontainers": "^10.11.0",
+		"timekeeper": "catalog:",
+		"zod": "catalog:"
 	}
 }

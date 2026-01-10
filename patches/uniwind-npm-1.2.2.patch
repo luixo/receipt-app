@@ -1,0 +1,28 @@
+# Removing this will cause error "The entry point "uniwind" cannot be marked as external" while running `yarn web:dev`
+# No idea how to fix it otherwise
+diff --git a/dist/vite/index.cjs b/dist/vite/index.cjs
+index d967eb7417e502d38e4f1a0884dff0027213838b..d62c40c8e37922b023c06c6733cadb235fe672cb 100644
+--- a/dist/vite/index.cjs
++++ b/dist/vite/index.cjs
+@@ -38,7 +38,7 @@ const uniwind = ({
+         }
+       },
+       optimizeDeps: {
+-        exclude: [common.name, "react-native"]
++        exclude: ["react-native"]
+       },
+       resolve: {
+         alias: [
+diff --git a/dist/vite/index.mjs b/dist/vite/index.mjs
+index 83eafb90af2464b569ffdf82245d36b2272e1358..8ac351c341ade72b158b4c26e123c4c4bfe2a116 100644
+--- a/dist/vite/index.mjs
++++ b/dist/vite/index.mjs
+@@ -32,7 +32,7 @@ const uniwind = ({
+         }
+       },
+       optimizeDeps: {
+-        exclude: [name, "react-native"]
++        exclude: ["react-native"]
+       },
+       resolve: {
+         alias: [

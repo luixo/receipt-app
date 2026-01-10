@@ -12,13 +12,18 @@
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@ra/web": "workspace:*",
+		"@tanstack/react-query": "catalog:",
+		"@trpc/client": "catalog:",
+		"@trpc/server": "catalog:",
+		"@types/uuid": "catalog:",
 		"async-await-queue": "^2.1.4",
 		"colors": "^1.4.0",
 		"deep-object-diff": "^1.1.9",
 		"join-images": "^1.1.5",
 		"playwright": "^1.53.0",
-		"sharp": "^0.32.6",
-		"timekeeper": "^2.3.1",
-		"uuid": "^9.0.0"
+		"sharp": "catalog:",
+		"timekeeper": "catalog:",
+		"uuid": "catalog:",
+		"zod": "catalog:"
 	}
 }
