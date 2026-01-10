@@ -15,6 +15,7 @@
 		"db:migrate": "yarn workspace @ra/db db:migrate",
 		"dev": "yarn workspace @ra/scripts dev",
 		"format": "yarn workspace @ra/format write",
+		"format:prepare": "yarn workspace @ra/format collect-ignore-rules",
 		"format:verify": "yarn workspace @ra/format check",
 		"frontend:test": "yarn workspace @ra/playwright test",
 		"install:immutable": "yarn --immutable",

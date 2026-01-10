@@ -1,14 +1,16 @@
 {
 	"name": "@ra/format",
 	"version": "0.0.0",
-	"sideEffects": false,
 	"type": "module",
 	"main": "config.ts",
 	"scripts": {
 		"check": "yarn --cwd ../.. prettier --check .",
+		"collect-ignore-rules": "node ./collect-ignores.ts",
 		"write": "yarn --cwd ../.. prettier --write ."
 	},
 	"devDependencies": {
+		"@types/ignore-walk": "^4.0.3",
+		"ignore-walk": "^8.0.0",
 		"prettier-plugin-packagejson": "^2.5.20",
 		"prettier-plugin-tailwindcss": "^0.7.2"
 	}

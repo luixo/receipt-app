@@ -25,8 +25,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
+      - name: Prepare ignore file
+        run: yarn format:prepare
       - name: Run code formatting verification
-        run: npm run format:verify
+        run: yarn format:verify
 
   typecheck:
     name: Typecheck

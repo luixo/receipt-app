@@ -7980,6 +7980,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/format@workspace:utils/format"
   dependencies:
+    "@types/ignore-walk": "npm:^4.0.3"
+    ignore-walk: "npm:^8.0.0"
     prettier-plugin-packagejson: "npm:^2.5.20"
     prettier-plugin-tailwindcss: "npm:^0.7.2"
   languageName: unknown
@@ -13282,6 +13284,15 @@ __metadata:
   version: 4.0.1
   resolution: "@types/http-cache-semantics@npm:4.0.1"
   checksum: 10/d059bf8a15d5163cc60da51ba00d17620507f968d0b792cd55f62043016344a5f0e1aa94fa411089d41114035fcd0ea656f968bda7eabb6663a97787e3445a1c
+  languageName: node
+  linkType: hard
+
+"@types/ignore-walk@npm:^4.0.3":
+  version: 4.0.3
+  resolution: "@types/ignore-walk@npm:4.0.3"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10/db3ed05326c89725e9cc4a22615ed2c2725fff9749be42c1e2f27ed3de36852cb64584b22b39e92ce7b7dd01bb557e521f0a1bdf210854b77a7f8c6412c19530
   languageName: node
   linkType: hard
 
@@ -22082,6 +22093,15 @@ __metadata:
   version: 1.2.1
   resolution: "ieee754@npm:1.2.1"
   checksum: 10/d9f2557a59036f16c282aaeb107832dc957a93d73397d89bbad4eb1130560560eb695060145e8e6b3b498b15ab95510226649a0b8f52ae06583575419fe10fc4
+  languageName: node
+  linkType: hard
+
+"ignore-walk@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "ignore-walk@npm:8.0.0"
+  dependencies:
+    minimatch: "npm:^10.0.3"
+  checksum: 10/694a66d481ca7073a85569d9751c0fcc4e4e0e08f69ba7e5bceed5ac3eef9bfa9184585327053be612022ea961033bfad1003d66058efdfb55bfab07dff23bba
   languageName: node
   linkType: hard
 
