@@ -1,17 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
-import { getQueryStates } from "~app/hooks/use-navigation";
-import { userIdSchema } from "~app/utils/validation";
+import { getQueryStates, searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	userId: userIdSchema.optional().catch(undefined),
-});
+const [validateSearch, stripDefaults] = searchParamsWithDefaults(
+	searchParamsMapping["/debts/add"],
+);
 
 const Wrapper = () => {
-	const { useQueryState } = getQueryStates(Route);
+	const { useQueryState } = getQueryStates(Route.fullPath);
 	return <AddDebtScreen userIdState={useQueryState("userId")} />;
 };
 

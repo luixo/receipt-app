@@ -15,7 +15,7 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
-} from "~app/hooks/use-navigation";
+} from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Icon } from "~components/icons";
 import { ButtonLink, Link } from "~components/link";

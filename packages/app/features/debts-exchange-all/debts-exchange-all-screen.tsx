@@ -11,11 +11,11 @@ import {
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { SearchParamState } from "~app/hooks/use-navigation";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { CurrencyCode } from "~app/utils/currency";
+import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { BackLink } from "~components/link";
@@ -58,6 +58,7 @@ export const DebtsExchangeAllScreen: React.FC<{
 		},
 		[closeModal, setSelectedCurrencyCode],
 	);
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	const back = React.useCallback(() => {
 		navigate({

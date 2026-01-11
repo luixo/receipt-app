@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
-import { voidAccountTokenSchema } from "~app/utils/validation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	token: voidAccountTokenSchema.optional().catch(undefined),
-});
+const [validateSearch, stripDefaults] = searchParamsWithDefaults(
+	searchParamsMapping["/void-account"],
+);
 
 const Wrapper = () => {
 	const { token } = Route.useSearch();

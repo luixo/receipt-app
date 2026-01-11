@@ -3,8 +3,8 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useLocale } from "~app/hooks/use-locale";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
@@ -39,6 +39,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const { t } = useTranslation("debts");
 	const locale = useLocale();
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 
 	const acceptMutation = useMutation(

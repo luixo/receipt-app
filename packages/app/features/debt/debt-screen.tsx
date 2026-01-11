@@ -21,9 +21,9 @@ import {
 	RemoveButtonSkeleton,
 } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import {
 	type CurrencyCode,
@@ -338,6 +338,7 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = suspendedFallback(
 		const { data: debt } = useSuspenseQuery(
 			trpc.debts.get.queryOptions({ id: debtId }),
 		);
+		const { useNavigate } = React.use(NavigationContext);
 		const navigate = useNavigate();
 		const removeMutation = useMutation(
 			trpc.debts.remove.mutationOptions(

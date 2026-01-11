@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ConfirmEmailScreen } from "~app/features/confirm-email/confirm-email-screen";
-import { confirmEmailTokenSchema } from "~app/utils/validation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	token: confirmEmailTokenSchema.optional().catch(undefined),
-});
+const [validateSearch, stripDefaults] = searchParamsWithDefaults(
+	searchParamsMapping["/confirm-email"],
+);
 
 const Wrapper = () => {
 	const { token } = Route.useSearch();

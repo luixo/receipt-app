@@ -10,9 +10,9 @@ import { z } from "zod";
 
 import { PageHeader, SkeletonPageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { ChangePasswordScreen } from "~app/features/account/change-password";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
@@ -102,6 +102,7 @@ const AccountHeader: React.FC = suspendedFallback(
 export const AccountScreen: React.FC = () => {
 	const { t } = useTranslation("account");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 

@@ -13,11 +13,11 @@ import {
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import type { SearchParamState } from "~app/hooks/use-navigation";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
+import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
@@ -47,6 +47,7 @@ export const AddDebtScreen: React.FC<{
 }> = ({ userIdState: [userId, setUserId] }) => {
 	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 
 	const addMutation = useMutation(

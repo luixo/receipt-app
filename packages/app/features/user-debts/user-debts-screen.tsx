@@ -11,10 +11,10 @@ import {
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -32,6 +32,7 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ userId }) => {
 	const { t } = useTranslation("debts");
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
 		useBooleanState();

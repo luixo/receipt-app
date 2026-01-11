@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import type { SearchParamState } from "~app/hooks/use-navigation";
+import type { SearchParamState } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 

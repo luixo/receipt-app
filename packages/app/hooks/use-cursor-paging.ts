@@ -3,11 +3,11 @@ import React from "react";
 import type { SkipToken } from "@tanstack/react-query";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import type { SearchParamState } from "~app/hooks/use-navigation";
 import type {
 	TRPCDecoratedInfiniteQueryProcedure,
 	TRPCInfiniteQueryKey,
 } from "~app/trpc";
+import type { SearchParamState } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
 
 const validateOffset = ({

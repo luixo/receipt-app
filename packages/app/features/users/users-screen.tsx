@@ -9,7 +9,7 @@ import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
-} from "~app/hooks/use-navigation";
+} from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 

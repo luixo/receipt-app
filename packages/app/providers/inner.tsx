@@ -6,6 +6,7 @@ import {
 	LinksContext,
 	type LinksContextType,
 } from "~app/contexts/links-context";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { StoreContext } from "~app/contexts/store-context";
 import type { StoreContextType } from "~app/contexts/store-context";
 
@@ -19,6 +20,7 @@ type Props = {
 	storeContext: StoreContextType;
 	persister: Persister;
 	linksContext: LinksContextType;
+	navigationContext: NavigationContext;
 	DevToolsProvider: React.ComponentType<React.PropsWithChildren>;
 };
 
@@ -27,22 +29,24 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	storeContext,
 	persister,
 	linksContext,
+	navigationContext,
 	DevToolsProvider,
 }) => (
 	<ThemeProvider>
-		<LinksContext value={linksContext}>
-			<StoreContext value={storeContext}>
-				<StoredDataProvider>
-					<QueryProviderWithPretend>
-						<ShimsProvider>
-							<PersisterProvider persister={persister}>
-								{/* {children} */}
-								<DevToolsProvider>{children}</DevToolsProvider>
-							</PersisterProvider>
-						</ShimsProvider>
-					</QueryProviderWithPretend>
-				</StoredDataProvider>
-			</StoreContext>
-		</LinksContext>
+		<NavigationContext value={navigationContext}>
+			<LinksContext value={linksContext}>
+				<StoreContext value={storeContext}>
+					<StoredDataProvider>
+						<QueryProviderWithPretend>
+							<ShimsProvider>
+								<PersisterProvider persister={persister}>
+									<DevToolsProvider>{children}</DevToolsProvider>
+								</PersisterProvider>
+							</ShimsProvider>
+						</QueryProviderWithPretend>
+					</StoredDataProvider>
+				</StoreContext>
+			</LinksContext>
+		</NavigationContext>
 	</ThemeProvider>
 );

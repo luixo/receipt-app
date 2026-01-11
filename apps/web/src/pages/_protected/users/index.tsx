@@ -2,21 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { UsersScreen } from "~app/features/users/users-screen";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getQueryStates } from "~app/hooks/use-navigation";
+import { getQueryStates, searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
-import { limitSchema, offsetSchema } from "~app/utils/validation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	limit: limitSchema.optional().catch(undefined),
-	offset: offsetSchema.catch(0),
-});
+const [validateSearch, stripDefaults] = searchParamsWithDefaults(
+	searchParamsMapping["/users"],
+);
 
 const Wrapper = () => {
-	const { useQueryState, useDefaultedQueryState } = getQueryStates(Route);
+	const { useQueryState, useDefaultedQueryState } = getQueryStates(
+		Route.fullPath,
+	);
 	return (
 		<UsersScreen
 			limitState={useDefaultedQueryState("limit", useDefaultLimit())}

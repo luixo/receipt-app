@@ -1,9 +1,9 @@
-import type React from "react";
+import React from "react";
 import { View } from "react-native";
 
 import { AmountBadge } from "~app/components/amount-badge";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { usePathname } from "~app/hooks/use-navigation";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { Icon } from "~components/icons";
 import type { IconName } from "~components/icons.base";
 import { Link } from "~components/link";
@@ -72,6 +72,7 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ children, elements }) => {
+	const { usePathname } = React.use(NavigationContext);
 	const pathname = usePathname();
 	const PageWrapper = elements.find(
 		(element) => element.pathname === pathname,

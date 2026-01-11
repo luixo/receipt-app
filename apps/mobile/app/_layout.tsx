@@ -14,6 +14,7 @@ import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
+import { navigationContext } from "~mobile/utils/navigation";
 import { persister } from "~mobile/utils/persister";
 import { storeContext } from "~mobile/utils/store";
 
@@ -47,6 +48,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 				storeContext={storeContext}
 				persister={persister}
 				linksContext={linksContext}
+				navigationContext={navigationContext}
 				DevToolsProvider={QueryDevToolsProvider}
 			>
 				{children}

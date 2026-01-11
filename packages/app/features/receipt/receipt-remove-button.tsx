@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { RemoveButton } from "~app/components/remove-button";
-import { useNavigate } from "~app/hooks/use-navigation";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
@@ -22,6 +22,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	const removeReceiptMutation = useMutation(
 		trpc.receipts.remove.mutationOptions(

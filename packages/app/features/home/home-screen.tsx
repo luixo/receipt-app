@@ -1,10 +1,11 @@
 import React from "react";
 
-import { useNavigate } from "~app/hooks/use-navigation";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 
 export const HomeScreen: React.FC = () => {
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	React.useEffect(() => {
 		navigate({ to: "/receipts", replace: true });

@@ -20,12 +20,12 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
-import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,

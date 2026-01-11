@@ -18,6 +18,7 @@ import type z from "zod";
 import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import {
 	ActionsHooksContext,
 	ReceiptContext,
@@ -28,7 +29,6 @@ import {
 } from "~app/features/receipt-components/receipt-items";
 import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
 import type { Payer } from "~app/features/receipt-components/state";
-import { useNavigate } from "~app/hooks/use-navigation";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm, useTypedValues } from "~app/utils/forms";
@@ -123,6 +123,7 @@ const ContextedAddReceipt = suspendedFallback<{
 export const AddReceipt = () => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 
 	const queryClient = useQueryClient();

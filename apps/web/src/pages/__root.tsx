@@ -13,7 +13,6 @@ import { serverOnly } from "@tanstack/react-start";
 import { getHeaders } from "@tanstack/react-start/server";
 import { serialize } from "cookie";
 import { keys, omit } from "remeda";
-import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
@@ -23,6 +22,7 @@ import {
 } from "~app/hooks/use-color-modes";
 import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
 import type { StoreValues } from "~app/utils/store-data";
@@ -38,7 +38,10 @@ import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
+import {
+	navigationContext,
+	searchParamsWithDefaults,
+} from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
 
 const GlobalHooksComponent: React.FC = () => {
@@ -133,6 +136,7 @@ const RootComponent = () => {
 			linksContext={linksContext}
 			storeContext={storeContext}
 			persister={persister}
+			navigationContext={navigationContext}
 			DevToolsProvider={DevToolsProvider}
 		>
 			<RootDocument>
@@ -169,10 +173,10 @@ export type ExternalRouterContext = Pick<
 	"initialValues" | "isTest"
 >;
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults({
-	debug: z.coerce.boolean().optional().catch(false),
-	redirect: z.string().optional().catch(""),
-});
+const [validateSearch, stripDefaults] = searchParamsWithDefaults(
+	// eslint-disable-next-line no-underscore-dangle
+	searchParamsMapping.__root__,
+);
 
 const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 	createRootRouteWithContext,

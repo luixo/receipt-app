@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -6,7 +6,7 @@ import { omit } from "remeda";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
-import { useNavigate } from "~app/hooks/use-navigation";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
@@ -29,6 +29,7 @@ type Form = z.infer<typeof formSchema>;
 export const RegisterScreen: React.FC = () => {
 	const { t } = useTranslation("register");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 

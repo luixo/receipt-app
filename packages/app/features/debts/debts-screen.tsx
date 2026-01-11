@@ -6,7 +6,7 @@ import { AmountBadge } from "~app/components/amount-badge";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import type { SearchParamState } from "~app/hooks/use-navigation";
+import type { SearchParamState } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 

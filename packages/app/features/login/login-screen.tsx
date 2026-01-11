@@ -1,12 +1,12 @@
-import type React from "react";
+import React from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useHistoryPush } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
@@ -25,7 +25,8 @@ export const LoginScreen: React.FC<{ redirectUrl: string }> = ({
 }) => {
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
-	const pushHistory = useHistoryPush();
+	const { usePush } = React.use(NavigationContext);
+	const push = usePush();
 	const queryClient = useQueryClient();
 
 	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
@@ -36,7 +37,7 @@ export const LoginScreen: React.FC<{ redirectUrl: string }> = ({
 			useTrpcMutationOptions(authLoginOptions, {
 				onSuccess: () => {
 					void queryClient.resetQueries();
-					pushHistory(redirectUrl);
+					push(redirectUrl);
 				},
 				trpc: { context: noBatchContext },
 			}),

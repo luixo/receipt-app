@@ -1,4 +1,4 @@
-import type React from "react";
+import React from "react";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,7 @@ import { EmptyCard } from "~app/components/empty-card";
 import { ErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useNavigate } from "~app/hooks/use-navigation";
+import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
@@ -48,6 +48,7 @@ type Props = {
 const ResetPassword: React.FC<Props> = ({ token }) => {
 	const { t } = useTranslation("reset-password");
 	const trpc = useTRPC();
+	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 
 	const changePasswordMutation = useMutation(

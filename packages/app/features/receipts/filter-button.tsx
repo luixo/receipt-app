@@ -4,7 +4,7 @@ import type { Selection } from "@react-types/shared";
 import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { SearchParamState } from "~app/hooks/use-navigation";
+import type { SearchParamState } from "~app/utils/navigation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import {
