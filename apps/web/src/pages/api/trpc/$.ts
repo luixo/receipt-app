@@ -6,6 +6,7 @@ import {
 	createServerFileRoute,
 	proxyRequest,
 } from "@tanstack/react-start/server";
+import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
@@ -151,6 +152,20 @@ const callback: Callback = async ({ request, ...rest }) => {
 				return;
 			}
 			/* c8 ignore stop */
+			if (error instanceof TRPCError && !error.message) {
+				const errors =
+					error.cause instanceof AggregateError ? error.cause.errors : [error];
+				const internalConnectionError = errors.find(
+					(subError) =>
+						subError.syscall === "connect" && subError.code === "ECONNREFUSED",
+				);
+				if (internalConnectionError) {
+					throw new TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: `Can't connect to the ${internalConnectionError.address}:${internalConnectionError.port}`,
+					});
+				}
+			}
 			if (error.code === "UNAUTHORIZED" && path === "account.get") {
 				// Do not log an attempt to fetch the account without a cookie
 				return;
