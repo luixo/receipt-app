@@ -23,7 +23,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		"**/*.cjs",
-		"package.json"
+		"package.json",
+		"../../packages/app/providers/pretend-user.tsx"
 	],
 	"exclude": ["node_modules"]
 }

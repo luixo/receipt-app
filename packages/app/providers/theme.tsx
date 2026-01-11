@@ -1,13 +1,13 @@
 import React from "react";
-import * as ReactNative from "react-native";
+import { useColorScheme } from "react-native";
 
 import { useLastColorMode } from "~app/hooks/use-color-modes";
 
-export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
+export const ThemeProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const [, setLastColorMode] = useLastColorMode();
-	const colorScheme = ReactNative.useColorScheme();
+	const colorScheme = useColorScheme();
 	React.useEffect(() => {
 		if (!colorScheme) {
 			return;

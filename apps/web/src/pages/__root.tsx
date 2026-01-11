@@ -17,15 +17,14 @@ import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
-import { Provider } from "~app/providers/index";
+import {
+	useLastColorMode,
+	useSelectedColorMode,
+} from "~app/hooks/use-color-modes";
+import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
-import type { ColorMode } from "~app/utils/store/color-modes";
-import {
-	LAST_COLOR_MODE_STORE_NAME,
-	SELECTED_COLOR_MODE_STORE_NAME,
-} from "~app/utils/store/color-modes";
 import type { StoreValues } from "~app/utils/store-data";
 import { ToastProvider, defaultToastProps } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
@@ -38,7 +37,6 @@ import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
-import { ThemeProvider } from "~web/providers/client/theme";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
@@ -61,7 +59,7 @@ type NativeWebAppRegistry = typeof AppRegistry & {
 };
 
 const getNativeCss = () => {
-	AppRegistry.registerComponent("App", () => Provider);
+	AppRegistry.registerComponent("App", () => InnerProvider);
 	// see https://github.com/necolas/react-native-web/issues/832#issuecomment-1229676492
 	const { getStyleElement } = (
 		AppRegistry as NativeWebAppRegistry
@@ -71,22 +69,32 @@ const getNativeCss = () => {
 	return getStyleElement({ suppressHydrationWarning: true });
 };
 
-const RootDocument: React.FC<
-	React.PropsWithChildren<{
-		colorMode: ColorMode;
-	}>
-> = ({ children, colorMode }) => (
-	<html lang="en" className={colorMode}>
-		<head>
-			{getNativeCss()}
-			<HeadContent />
-		</head>
-		<body>
-			<main className="font-sans">{children}</main>
-			<Scripts />
-		</body>
-	</html>
-);
+const RootDocument: React.FC<React.PropsWithChildren> = ({ children }) => {
+	const [selectedColorMode] = useSelectedColorMode();
+	const [lastColorMode] = useLastColorMode();
+	const colorMode = selectedColorMode || lastColorMode;
+	React.useEffect(() => {
+		const html = document.querySelector("html");
+		if (!html) {
+			return;
+		}
+		html.dataset.theme = colorMode;
+		html.classList.add(colorMode);
+		html.classList.remove(colorMode === "dark" ? "light" : "dark");
+	}, [colorMode]);
+	return (
+		<html lang="en" className={colorMode}>
+			<head>
+				{getNativeCss()}
+				<HeadContent />
+			</head>
+			<body>
+				<main className="font-sans">{children}</main>
+				<Scripts />
+			</body>
+		</html>
+	);
+};
 
 const RootComponent = () => {
 	const data = Route.useLoaderData();
@@ -120,27 +128,21 @@ const RootComponent = () => {
 			),
 		[data.initialValues, data.nowTimestamp],
 	);
-	const colorMode =
-		data.initialValues[SELECTED_COLOR_MODE_STORE_NAME] ||
-		data.initialValues[LAST_COLOR_MODE_STORE_NAME];
 	return (
-		<RootDocument colorMode={colorMode}>
-			<Provider
-				linksContext={linksContext}
-				storeContext={storeContext}
-				persister={persister}
-			>
-				<ThemeProvider>
-					<NavigationProvider>
-						<DevToolsProvider>
-							<Outlet />
-							<GlobalHooksComponent />
-							<ToastProvider toastProps={defaultToastProps} />
-						</DevToolsProvider>
-					</NavigationProvider>
-				</ThemeProvider>
-			</Provider>
-		</RootDocument>
+		<InnerProvider
+			linksContext={linksContext}
+			storeContext={storeContext}
+			persister={persister}
+			DevToolsProvider={DevToolsProvider}
+		>
+			<RootDocument>
+				<NavigationProvider>
+					<Outlet />
+					<ToastProvider toastProps={defaultToastProps} />
+					<GlobalHooksComponent />
+				</NavigationProvider>
+			</RootDocument>
+		</InnerProvider>
 	);
 };
 

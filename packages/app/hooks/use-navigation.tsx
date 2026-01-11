@@ -40,14 +40,10 @@ export const useHistoryPush = () => {
 	return (url: string) => router.history.push(url);
 };
 
-// Refactor this to add base path or similar
-export const useHref = () => (url: string) => url;
-
 type RouteKey = keyof FileRoutesByFullPath;
 type RouteByKey<K extends RouteKey> = FileRoutesByFullPath[K];
-export type OutputRouteSearchParams<R extends AnyRoute> =
-	R["types"]["searchSchema"];
-export type InputRouteSearchParams<R extends AnyRoute> =
+type OutputRouteSearchParams<R extends AnyRoute> = R["types"]["searchSchema"];
+type InputRouteSearchParams<R extends AnyRoute> =
 	R["types"]["searchSchemaInput"];
 
 type SearchParamStateByRoute<

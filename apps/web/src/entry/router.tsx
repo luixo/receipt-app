@@ -16,13 +16,11 @@ import { getWebRequest } from "@tanstack/react-start/server";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
 import { LinksContext } from "~app/contexts/links-context";
-import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
-	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
-import { QueryProvider } from "~app/providers/query";
+import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
@@ -113,30 +111,24 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		Wrap: ({ children }) => {
 			const pretendEmail =
 				externalContext.initialValues[PRETEND_USER_STORE_NAME].email;
-			// We're doing useState instead of useMemo
-			// Because we don't want to rerender Wrap on every queryClient change
-			// eslint-disable-next-line react/hook-use-state
-			const queryClientsState = React.useState<QueryClientsRecord>(() => {
-				const localQueryClient = getLocalQueryClient(queryClient);
-				return pretendEmail
-					? {
-							[pretendEmail]: localQueryClient,
-							[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
-						}
-					: {
-							[SELF_QUERY_CLIENT_KEY]: localQueryClient,
-						};
-			});
 			return (
-				<i18nContext.Provider>
-					<QueryClientsContext value={queryClientsState}>
-						<QueryProvider
-							queryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
-						>
-							{children}
-						</QueryProvider>
-					</QueryClientsContext>
-				</i18nContext.Provider>
+				<OuterProvider
+					getQueryClientsRecord={React.useCallback(() => {
+						const localQueryClient = getLocalQueryClient(queryClient);
+						return pretendEmail
+							? {
+									[pretendEmail]: localQueryClient,
+									[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+								}
+							: {
+									[SELF_QUERY_CLIENT_KEY]: localQueryClient,
+								};
+					}, [pretendEmail])}
+					initialQueryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
+					i18nContext={i18nContext}
+				>
+					{children}
+				</OuterProvider>
 			);
 		},
 		InnerWrap: ({ children }) => (

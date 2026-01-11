@@ -4,7 +4,7 @@ import { useRouter } from "@tanstack/react-router";
 
 import { HeroUIProvider } from "~components/utils";
 
-export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
+export const NavigationProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const router = useRouter();

@@ -5,17 +5,21 @@ import { Stack } from "expo-router";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import {
-	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
 import "~mobile/app.css";
-import { Provider } from "~app/providers/index";
+import { InnerProvider } from "~app/providers/inner";
+import { OuterProvider } from "~app/providers/outer";
+import { createI18nContext } from "~app/utils/i18n";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
-import { ThemeProvider } from "~mobile/providers/theme";
 import { persister } from "~mobile/utils/persister";
 import { storeContext } from "~mobile/utils/store";
+
+const getMobileQueryClientsRecord = () => ({
+	[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+});
 
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const baseUrl = useBaseUrl();
@@ -30,22 +34,24 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		}),
 		[baseLinksContext.url, baseUrl],
 	);
-	// eslint-disable-next-line react/hook-use-state
-	const queryClientsState = React.useState(() => ({
-		[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
-	}));
+	const i18nContext = createI18nContext({
+		getLanguage: () => "en",
+	});
 	return (
-		<QueryClientsContext value={queryClientsState}>
-			<Provider
+		<OuterProvider
+			getQueryClientsRecord={getMobileQueryClientsRecord}
+			initialQueryClientKey={SELF_QUERY_CLIENT_KEY}
+			i18nContext={i18nContext}
+		>
+			<InnerProvider
 				storeContext={storeContext}
 				persister={persister}
 				linksContext={linksContext}
+				DevToolsProvider={QueryDevToolsProvider}
 			>
-				<ThemeProvider>
-					<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
-				</ThemeProvider>
-			</Provider>
-		</QueryClientsContext>
+				{children}
+			</InnerProvider>
+		</OuterProvider>
 	);
 };
 
