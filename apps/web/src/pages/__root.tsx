@@ -12,15 +12,13 @@ import {
 import { serverOnly } from "@tanstack/react-start";
 import { getHeaders } from "@tanstack/react-start/server";
 import { serialize } from "cookie";
-import type { i18n as i18nType } from "i18next";
 import { keys, omit } from "remeda";
 import { z } from "zod";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import { Provider } from "~app/providers/index";
-import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
-import type { Language } from "~app/utils/i18n-data";
+import type { I18nContext } from "~app/utils/i18n";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
 import type { ColorMode } from "~app/utils/store/color-modes";
@@ -41,6 +39,7 @@ import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
+import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
 
@@ -148,19 +147,18 @@ const RootComponent = () => {
 type EphemeralContext = {
 	request: Request | null;
 	queryClient: QueryClient;
-	i18n: i18nType;
+	i18nContext: I18nContext;
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 	request: true,
 	queryClient: true,
-	i18n: true,
+	i18nContext: true,
 };
 
 export type RouterContext = {
 	baseUrl: string;
 	nowTimestamp: TemporalInputMapping["zonedDateTime"];
 	initialValues: StoreValues;
-	initialLanguage: Language;
 	isTest: boolean;
 } & EphemeralContext;
 
@@ -182,14 +180,13 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
 	staleTime: Infinity,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "default");
+		await ctx.context.i18nContext.loadNamespaces("default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
 	search: { middlewares: [stripDefaults] },
 	validateSearch,
 	head: ({ match }) => {
-		const t = getServerSideT(match.context, "default");
-		const title = t("titles.index");
+		const title = getTitle(match.context.i18nContext, "index");
 		return {
 			meta: [
 				// eslint-disable-next-line unicorn/text-encoding-identifier-case

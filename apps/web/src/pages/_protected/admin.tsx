@@ -1,13 +1,13 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import { AdminScreen } from "~app/features/admin/admin-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/_protected/admin")({
 	component: AdminScreen,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "admin");
+		await ctx.context.i18nContext.loadNamespaces("admin");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		const account = await ctx.context.queryClient.fetchQuery(
 			trpc.account.get.queryOptions(),
@@ -18,6 +18,6 @@ export const Route = createFileRoute("/_protected/admin")({
 		}
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "admin") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "admin") }],
 	}),
 });

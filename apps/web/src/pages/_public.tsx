@@ -5,7 +5,6 @@ import { TRPCClientError } from "@trpc/client";
 
 import { PublicPage } from "~app/components/public-page";
 import type { TRPCError } from "~app/trpc";
-import { ensureI18nInitialized } from "~app/utils/i18n";
 import { Spinner } from "~components/spinner";
 import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -38,7 +37,6 @@ export const Route = createFileRoute("/_public")({
 			throw error;
 		}
 		// If we do get an account - we're authorized and we need to get to the app page
-		await ensureI18nInitialized(context);
 		// eslint-disable-next-line @typescript-eslint/only-throw-error
 		throw redirect({ to: search.redirect || "/receipts" });
 	},

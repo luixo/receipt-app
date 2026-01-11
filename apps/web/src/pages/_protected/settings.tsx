@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SettingsScreen } from "~app/features/settings/settings-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 import { prefetchQueries } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
@@ -13,10 +13,10 @@ export const Route = createFileRoute("/_protected/settings")({
 			ctx,
 			trpc.accountSettings.get.queryOptions(),
 		);
-		await loadNamespaces(ctx.context, "settings");
+		await ctx.context.i18nContext.loadNamespaces("settings");
 		return { prefetched };
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "settings") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "settings") }],
 	}),
 });

@@ -21,6 +21,7 @@ import type resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json"
 import type settingsRu from "@ra/web/public/locales/ru/settings.json";
 import type usersRu from "@ra/web/public/locales/ru/users.json";
 import type voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
+import { keys } from "remeda";
 
 import type { AssertAllEqual } from "~utils/types";
 
@@ -31,6 +32,9 @@ export const languages: Record<Language, true> = {
 	en: true,
 	ru: true,
 };
+
+export const isLanguage = (input: string): input is Language =>
+	keys(languages).includes(input as Language);
 
 // To add a namespace add name in the list, namespace json, import at (*) and verification at (**)
 export type Namespace =

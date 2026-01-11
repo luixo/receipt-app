@@ -23,6 +23,7 @@
 		"boring-avatars": "^1.10.1",
 		"cookie": "catalog:",
 		"dataloader": "catalog:",
+		"i18next": "catalog:",
 		"idb-keyval": "^6.2.1",
 		"react-easy-crop": "^5.4.2",
 		"react-i18next": "catalog:",
@@ -36,7 +37,6 @@
 		"@playwright/test": "^1.53.0",
 		"@ra/playwright": "workspace:*",
 		"@react-types/shared": "^3.18.1",
-		"@types/uuid": "catalog:",
-		"i18next": "catalog:"
+		"@types/uuid": "catalog:"
 	}
 }

@@ -3,9 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { UsersScreen } from "~app/features/users/users-screen";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { limitSchema, offsetSchema } from "~app/utils/validation";
+import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_protected/users/")({
 		limit,
 	}),
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "users");
+		await ctx.context.i18nContext.loadNamespaces("users");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		const prefetched = await prefetchQueriesWith(
 			ctx,
@@ -50,6 +50,6 @@ export const Route = createFileRoute("/_protected/users/")({
 		return { prefetched };
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "users") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "users") }],
 	}),
 });

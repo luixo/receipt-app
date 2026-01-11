@@ -13,9 +13,6 @@ import {
 } from "@tanstack/react-router";
 import { serverOnly } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
-import i18n from "i18next";
-import { I18nextProvider } from "react-i18next";
-import { clone } from "remeda";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
 import { LinksContext } from "~app/contexts/links-context";
@@ -26,19 +23,14 @@ import {
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
 import { QueryProvider } from "~app/providers/query";
-import {
-	ensureI18nInitialized,
-	getBackendModule,
-	getLanguageFromRequest,
-	i18nInitOptions,
-} from "~app/utils/i18n";
-import type { Language } from "~app/utils/i18n-data";
+import { createI18nContext } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { getNow, serialize } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
+import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
 import { HydrationBoundary } from "~web/utils/ssr";
 import { getHostUrl } from "~web/utils/url";
 
@@ -82,20 +74,19 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 export const createRouter = (externalContext: ExternalRouterContext) => {
 	const request = import.meta.env.SSR ? serverOnly(getWebRequest)() : null;
 	const queryClient = getQueryClient();
-	const i18nInstance = i18n
-		// Options are cloned because i18next mutates properties inline
-		// causing different request to get same e.g. namespaces
-		.createInstance(clone(i18nInitOptions))
-		.use(getBackendModule());
 	const initialLanguage = getLanguageFromRequest(request);
+	const i18nContext = createI18nContext({
+		getLanguage: () => initialLanguage,
+		beforeInit: (instance) => instance.use(getBackendModule()),
+	});
+	void i18nContext.initialize({ language: initialLanguage });
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
 			request,
 			baseUrl: request ? getHostUrl(request.url) : "",
-			initialLanguage,
-			i18n: i18nInstance,
+			i18nContext,
 			queryClient,
 			nowTimestamp: serialize<"zonedDateTime">(getNow.zonedDateTime()),
 		},
@@ -109,17 +100,10 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			dehydratedState: dehydrate(queryClient, {
 				serializeData: transformer.serialize,
 			}),
-			i18n: {
-				language: i18nInstance.language as Language,
-				data: i18nInstance.store.data,
-			},
+			i18n: i18nContext.serializeContext(),
 		}),
 		hydrate: async (dehydratedData) => {
-			await ensureI18nInitialized({
-				i18n: i18nInstance,
-				initialLanguage: dehydratedData.i18n.language,
-				resources: dehydratedData.i18n.data,
-			});
+			await i18nContext.initialize(dehydratedData.i18n);
 			hydrate(queryClient, dehydratedData.dehydratedState, {
 				defaultOptions: {
 					deserializeData: transformer.deserialize,
@@ -144,7 +128,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 						};
 			});
 			return (
-				<I18nextProvider i18n={i18nInstance}>
+				<i18nContext.Provider>
 					<QueryClientsContext value={queryClientsState}>
 						<QueryProvider
 							queryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
@@ -152,7 +136,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 							{children}
 						</QueryProvider>
 					</QueryClientsContext>
-				</I18nextProvider>
+				</i18nContext.Provider>
 			);
 		},
 		InnerWrap: ({ children }) => (

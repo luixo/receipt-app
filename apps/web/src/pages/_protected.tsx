@@ -7,7 +7,6 @@ import { serialize } from "cookie";
 import { ProtectedPage } from "~app/components/protected-page";
 import type { TRPCError } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import { ensureI18nInitialized } from "~app/utils/i18n";
 import { Spinner } from "~components/spinner";
 import { getNow } from "~utils/date";
 import { captureSentryError } from "~web/utils/sentry";
@@ -35,7 +34,6 @@ export const Route = createFileRoute("/_protected")({
 			if (error instanceof TRPCClientError) {
 				const castedError = error as TRPCError;
 				if (castedError.data?.code === "UNAUTHORIZED") {
-					await ensureI18nInitialized(context);
 					// eslint-disable-next-line @typescript-eslint/only-throw-error
 					throw redirect({
 						to: "/login",

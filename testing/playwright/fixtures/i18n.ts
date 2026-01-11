@@ -2,13 +2,13 @@ import { test } from "@playwright/test";
 import fs from "node:fs/promises";
 import url from "node:url";
 
-import { COOKIE_LANGUAGE_NAME } from "~app/utils/i18n";
 import {
 	type Language,
 	type Namespace,
 	type Resources,
 	baseLanguage,
 } from "~app/utils/i18n-data";
+import { COOKIE_LANGUAGE_NAME } from "~web/utils/i18n";
 
 type Fixtures = {
 	setLanguageCookie: (language: Language) => Promise<void>;

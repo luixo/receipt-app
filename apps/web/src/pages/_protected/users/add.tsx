@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AddUserScreen } from "~app/features/add-user/add-user-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 
 export const Route = createFileRoute("/_protected/users/add")({
 	component: AddUserScreen,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "users");
+		await ctx.context.i18nContext.loadNamespaces("users");
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "addUser") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "addUser") }],
 	}),
 });

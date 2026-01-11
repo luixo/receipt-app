@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import {
 	limitSchema,
@@ -11,6 +10,7 @@ import {
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
+import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/_protected/receipts/")({
 		sort,
 	}),
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "receipts");
+		await ctx.context.i18nContext.loadNamespaces("receipts");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		const prefetched = await prefetchQueriesWith(
 			ctx,
@@ -65,6 +65,6 @@ export const Route = createFileRoute("/_protected/receipts/")({
 		return { prefetched };
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "receipts") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "receipts") }],
 	}),
 });

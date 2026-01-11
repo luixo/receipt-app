@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { LoginScreen } from "~app/features/login/login-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 
 const Wrapper = () => {
 	const searchParams = Route.useSearch();
@@ -11,9 +11,9 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_public/login")({
 	component: Wrapper,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "login");
+		await ctx.context.i18nContext.loadNamespaces("login");
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "login") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "login") }],
 	}),
 });

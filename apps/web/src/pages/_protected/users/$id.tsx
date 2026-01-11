@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserScreen } from "~app/features/user/user-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const Wrapper = () => {
@@ -12,11 +12,13 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_protected/users/$id")({
 	component: Wrapper,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "users");
+		await ctx.context.i18nContext.loadNamespaces("users");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		await ctx.context.queryClient.prefetchQuery(
 			trpc.users.get.queryOptions({ id: ctx.params.id }),
 		);
 	},
-	head: ({ match }) => ({ meta: [{ title: getTitle(match.context, "user") }] }),
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context.i18nContext, "user") }],
+	}),
 });

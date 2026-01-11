@@ -2,8 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsTransferScreen } from "~app/features/debts-transfer/debts-transfer-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { userIdSchema } from "~app/utils/validation";
+import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_protected/debts/transfer")({
 	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { to, from } }) => ({ to, from }),
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "debts");
+		await ctx.context.i18nContext.loadNamespaces("debts");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		await Promise.all(
 			[ctx.deps.to, ctx.deps.from].map(async (userId) => {
@@ -41,6 +41,6 @@ export const Route = createFileRoute("/_protected/debts/transfer")({
 		);
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "transferDebts") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "transferDebts") }],
 	}),
 });

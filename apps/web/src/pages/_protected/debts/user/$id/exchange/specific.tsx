@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
+import { getTitle } from "~web/utils/i18n";
 
 const Wrapper = () => null;
 
@@ -9,9 +9,9 @@ export const Route = createFileRoute(
 )({
 	component: Wrapper,
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "debts");
+		await ctx.context.i18nContext.loadNamespaces("debts");
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "exchangeDebts") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "exchangeDebts") }],
 	}),
 });

@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
-import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { voidAccountTokenSchema } from "~app/utils/validation";
+import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 const [validateSearch, stripDefaults] = searchParamsWithDefaults({
@@ -19,9 +19,9 @@ export const Route = createFileRoute("/_public/void-account")({
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	loader: async (ctx) => {
-		await loadNamespaces(ctx.context, "void-account");
+		await ctx.context.i18nContext.loadNamespaces("void-account");
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context, "voidAccount") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "voidAccount") }],
 	}),
 });
