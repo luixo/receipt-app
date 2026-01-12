@@ -48,8 +48,8 @@
 		"vite@npm:6.1.4": "^6.0.0"
 	},
 	"dependencies": {
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0",
+		"react": "catalog:",
+		"react-dom": "catalog:",
 		"react-native": "^0.81.4",
 		"remeda": "^2.25.0"
 	},
