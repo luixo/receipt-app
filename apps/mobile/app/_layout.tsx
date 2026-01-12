@@ -3,9 +3,10 @@ import React from "react";
 import * as Sentry from "@sentry/react-native";
 import { fetch } from "expo/fetch";
 import { getLocales } from "expo-localization";
-import { Stack } from "expo-router";
+import { type ErrorBoundaryProps, Stack } from "expo-router";
 import { isNonNullish } from "remeda";
 
+import { ErrorComponent } from "~app/components/suspense-wrapper";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import {
@@ -26,6 +27,11 @@ import { captureSentryError } from "~mobile/utils/sentry";
 import { storeContext } from "~mobile/utils/store";
 
 import "../app.css";
+
+export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
+	error,
+	retry,
+}) => <ErrorComponent error={error} reset={retry} />;
 
 const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {
