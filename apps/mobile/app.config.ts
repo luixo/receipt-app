@@ -13,9 +13,6 @@ export default {
 		android: {
 			package: "ru.luixo.receipt",
 		},
-		extra: {
-			host: process.env.BACKEND_HOST,
-		},
 		plugins: ["expo-router"],
 		userInterfaceStyle: "automatic",
 	},
