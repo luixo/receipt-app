@@ -7091,6 +7091,7 @@ __metadata:
     "@babel/core": "npm:^7.26.0"
     "@expo-google-fonts/inter": "npm:^0.4.2"
     "@ra/app": "workspace:*"
+    "@ra/components": "workspace:*"
     "@ra/utils": "workspace:*"
     "@react-native-async-storage/async-storage": "npm:~2.2.0"
     "@sentry/react-native": "npm:~7.2.0"

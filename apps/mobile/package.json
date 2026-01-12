@@ -7,6 +7,7 @@
 	"dependencies": {
 		"@expo-google-fonts/inter": "^0.4.2",
 		"@ra/app": "workspace:*",
+		"@ra/components": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@react-native-async-storage/async-storage": "~2.2.0",
 		"@sentry/react-native": "~7.2.0",
