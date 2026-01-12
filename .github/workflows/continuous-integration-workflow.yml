@@ -250,3 +250,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           current-stats-json-path: ./stats/current/stats.json
           base-stats-json-path: ./stats/base/stats.json
+
+  verify-native-health:
+    name: Check native health
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-env
+      - name: Run linter
+        run: yarn native:doctor

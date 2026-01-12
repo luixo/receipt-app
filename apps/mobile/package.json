@@ -4,20 +4,12 @@
 	"private": true,
 	"type": "module",
 	"main": "./entry.ts",
-	"scripts": {
-		"android:dev": "expo run:android",
-		"dev": "expo start",
-		"ios:build": "eas build -p=ios",
-		"ios:dev": "expo run:ios",
-		"ios:publish": "eas submit --platform ios",
-		"ios:update-version": "yarn workspace @ra/scripts expo:update-ios-version"
-	},
 	"dependencies": {
 		"@expo-google-fonts/inter": "^0.4.2",
 		"@ra/app": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@react-native-async-storage/async-storage": "~2.2.0",
-		"@sentry/react-native": "^7.8.0",
+		"@sentry/react-native": "~7.2.0",
 		"@tanstack/query-async-storage-persister": "catalog:",
 		"@tanstack/react-query": "catalog:",
 		"@tanstack/react-router": "catalog:",
