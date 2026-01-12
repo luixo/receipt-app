@@ -20,7 +20,7 @@
 			"~db/migration/*": ["./packages/db/migration/*"],
 			"~mutations/*": ["./packages/mutations/src/*"],
 			"~web/*": ["./apps/web/src/*"],
-			"~mobile/*": ["./apps/mobile/*"],
+			"~mobile/*": ["./apps/mobile/src/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],
 			"~tests/frontend/*": ["./testing/playwright/*"],
 			"~tests/utils/*": ["./testing/utils/src/*"]

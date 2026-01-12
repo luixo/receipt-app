@@ -8,7 +8,6 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
-import "~mobile/app.css";
 import { InnerProvider } from "~app/providers/inner";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
@@ -17,6 +16,8 @@ import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
 import { navigationContext } from "~mobile/utils/navigation";
 import { persister } from "~mobile/utils/persister";
 import { storeContext } from "~mobile/utils/store";
+
+import "../app.css";
 
 const getMobileQueryClientsRecord = () => ({
 	[SELF_QUERY_CLIENT_KEY]: getQueryClient(),

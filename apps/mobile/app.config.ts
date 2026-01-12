@@ -5,7 +5,7 @@ export default {
 		version: "1.0.0",
 		scheme: "receipt-app",
 		platforms: ["ios", "android"],
-		icon: "app-icon.png",
+		icon: "assets/app-icon.png",
 		ios: {
 			bundleIdentifier: "ru.luixo.receipt",
 			buildNumber: "4",
