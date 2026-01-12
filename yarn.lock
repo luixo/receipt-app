@@ -7994,9 +7994,12 @@ __metadata:
     "@tanstack/react-router": "catalog:"
     expo: "npm:^50.0.7"
     expo-constants: "npm:^15.4.5"
+    expo-device: "npm:^8.0.10"
     expo-linking: "npm:^8.0.11"
     expo-router: "npm:^3.4.7"
-    react-query-native-devtools: "npm:^4.0.0"
+    expo-secure-store: "npm:^15.0.8"
+    react-query-external-sync: "npm:^2.2.3"
+    socket.io-client: "npm:^4.8.3"
   languageName: unknown
   linkType: soft
 
@@ -11848,6 +11851,13 @@ __metadata:
     "@smithy/types": "npm:^2.7.0"
     tslib: "npm:^2.5.0"
   checksum: 10/87d0b08720461e651be0cd35784292c3bf5cfd88a64acd78185b1d2c5dcf66d5c6ea068d1416c33e276c9e4aef14fb93441f80843987ca5901716a5bd35cf271
+  languageName: node
+  linkType: hard
+
+"@socket.io/component-emitter@npm:~3.1.0":
+  version: 3.1.2
+  resolution: "@socket.io/component-emitter@npm:3.1.2"
+  checksum: 10/89888f00699eb34e3070624eb7b8161fa29f064aeb1389a48f02195d55dd7c52a504e52160016859f6d6dffddd54324623cdd47fd34b3d46f9ed96c18c456edc
   languageName: node
   linkType: hard
 
@@ -17106,7 +17116,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^4.4.3":
+"debug@npm:^4.4.3, debug@npm:~4.4.1":
   version: 4.4.3
   resolution: "debug@npm:4.4.3"
   dependencies:
@@ -17801,6 +17811,26 @@ __metadata:
   dependencies:
     once: "npm:^1.4.0"
   checksum: 10/530a5a5a1e517e962854a31693dbb5c0b2fc40b46dad2a56a2deec656ca040631124f4795823acc68238147805f8b021abbe221f4afed5ef3c8e8efc2024908b
+  languageName: node
+  linkType: hard
+
+"engine.io-client@npm:~6.6.1":
+  version: 6.6.4
+  resolution: "engine.io-client@npm:6.6.4"
+  dependencies:
+    "@socket.io/component-emitter": "npm:~3.1.0"
+    debug: "npm:~4.4.1"
+    engine.io-parser: "npm:~5.2.1"
+    ws: "npm:~8.18.3"
+    xmlhttprequest-ssl: "npm:~2.1.1"
+  checksum: 10/1e45a6f5453d7112173ab593c791f1d17f7fba73774309adc9049428ab8318f71b5dd9b362aa5a05a11d1de338d46ef7b9777602357aa14894abdc100a50802d
+  languageName: node
+  linkType: hard
+
+"engine.io-parser@npm:~5.2.1":
+  version: 5.2.3
+  resolution: "engine.io-parser@npm:5.2.3"
+  checksum: 10/eb0023fff5766e7ae9d59e52d92df53fea06d472cfd7b52e5d2c36b4c1dbf78cab5fde1052bcb3d4bb85bdb5aee10ae85d8a1c6c04676dac0c6cdf16bcba6380
   languageName: node
   linkType: hard
 
@@ -19441,6 +19471,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-device@npm:^8.0.10":
+  version: 8.0.10
+  resolution: "expo-device@npm:8.0.10"
+  dependencies:
+    ua-parser-js: "npm:^0.7.33"
+  peerDependencies:
+    expo: "*"
+  checksum: 10/2f4d0198bef084c7eb8378a97aa779698f43d0102510b893d901daa2262400875dcfc3b8b871095b3461edca42137ddb59d1ef094327b7448141d05a44c0696a
+  languageName: node
+  linkType: hard
+
 "expo-file-system@npm:~16.0.0, expo-file-system@npm:~16.0.7":
   version: 16.0.7
   resolution: "expo-file-system@npm:16.0.7"
@@ -19538,6 +19579,15 @@ __metadata:
     react-native-reanimated:
       optional: true
   checksum: 10/c8fe551c1cd1d9c05707e6d1938ad0c32db6bdf668cac0bc62aaf0b741f275aa02c8337572ef1c75d6be7ba2f6fd209ca03cf9530006537aa5d33caafb6486ed
+  languageName: node
+  linkType: hard
+
+"expo-secure-store@npm:^15.0.8":
+  version: 15.0.8
+  resolution: "expo-secure-store@npm:15.0.8"
+  peerDependencies:
+    expo: "*"
+  checksum: 10/822af991ed80b32cf0c37f6f37e8fac30c654492d4074e70fb123361fe6ce0297178b6c7e55108670c75485e5062a39cf089fd8aee415467c3e4a6749c69d65d
   languageName: node
   linkType: hard
 
@@ -19995,7 +20045,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"flatted@npm:^3.2.4, flatted@npm:^3.2.9":
+"flatted@npm:^3.2.9":
   version: 3.3.1
   resolution: "flatted@npm:3.3.1"
   checksum: 10/7b8376061d5be6e0d3658bbab8bde587647f68797cf6bfeae9dea0e5137d9f27547ab92aaff3512dd9d1299086a6d61be98e9d48a56d17531b634f77faadbc49
@@ -27370,15 +27420,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query-native-devtools@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "react-query-native-devtools@npm:4.0.0"
-  dependencies:
-    flatted: "npm:^3.2.4"
+"react-query-external-sync@npm:^2.2.3":
+  version: 2.2.3
+  resolution: "react-query-external-sync@npm:2.2.3"
   peerDependencies:
-    react-native-flipper: ^0.127.0
-    react-query: ^3.34.6
-  checksum: 10/7da16b14a59ac19805c315a25ab2c090cc277afe22aee412a743eda5296f282a91c0b35a269d015fbf27781e9c8b65c1a642a6fd5fc258a9318821a27c6da652
+    "@tanstack/react-query": ^4.0.0 || ^5.0.0
+    react: ^18 || ^19
+    socket.io-client: "*"
+  peerDependenciesMeta:
+    "@react-native-async-storage/async-storage":
+      optional: true
+    react-native:
+      optional: true
+    socket.io-client:
+      optional: true
+  checksum: 10/4d5d1830895ecefae7e798032691afa3ff6dff69d1c3a9a2a8dfd50b89c45628de4e5972e816085900a35d8c622f999f48f652011676ee75b4be1ac98ee1ca16
   languageName: node
   linkType: hard
 
@@ -29105,6 +29161,28 @@ __metadata:
   version: 1.5.0
   resolution: "smob@npm:1.5.0"
   checksum: 10/a1ea453bcea89989062626ea30a1fcb42c62e96255619c8641ffa1d7ab42baf415975c67c718127036901b9e487d8bf4c46219e50cec54295412c1227700b8fe
+  languageName: node
+  linkType: hard
+
+"socket.io-client@npm:^4.8.3":
+  version: 4.8.3
+  resolution: "socket.io-client@npm:4.8.3"
+  dependencies:
+    "@socket.io/component-emitter": "npm:~3.1.0"
+    debug: "npm:~4.4.1"
+    engine.io-client: "npm:~6.6.1"
+    socket.io-parser: "npm:~4.2.4"
+  checksum: 10/ee83c08cb3a6f6c450e484b03036a0d853ceb62825f8f1093146298b63eccf86c7fdd1958d68940f8b7a8766b80bb4b30c7815b2811733edda74b21ff002e1d4
+  languageName: node
+  linkType: hard
+
+"socket.io-parser@npm:~4.2.4":
+  version: 4.2.5
+  resolution: "socket.io-parser@npm:4.2.5"
+  dependencies:
+    "@socket.io/component-emitter": "npm:~3.1.0"
+    debug: "npm:~4.4.1"
+  checksum: 10/612b3ba068327cbdca043d07f8d96da587a18e0b3e00f002b6476c22410c891abafc44a3f009abd014f2de42b348032f465a7b19771151728f6361ed116423d2
   languageName: node
   linkType: hard
 
@@ -30986,6 +31064,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ua-parser-js@npm:^0.7.33":
+  version: 0.7.41
+  resolution: "ua-parser-js@npm:0.7.41"
+  bin:
+    ua-parser-js: script/cli.js
+  checksum: 10/e41306332d8ace098d51a644a3ba95522ddfc04243727a3c0419efcdf486c8f868c3af8e6a56f6aa86bdc26e6b893abb0b2bde0c9e1a1625a183dfdf839cac82
+  languageName: node
+  linkType: hard
+
 "ua-parser-js@npm:^1.0.35":
   version: 1.0.35
   resolution: "ua-parser-js@npm:1.0.35"
@@ -32472,7 +32559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.3":
+"ws@npm:^8.18.3, ws@npm:~8.18.3":
   version: 8.18.3
   resolution: "ws@npm:8.18.3"
   peerDependencies:
@@ -32546,6 +32633,13 @@ __metadata:
   version: 11.0.1
   resolution: "xmlbuilder@npm:11.0.1"
   checksum: 10/c8c3d208783718db5b285101a736cd8e6b69a5c265199a0739abaa93d1a1b7de5489fd16df4e776e18b2c98cb91f421a7349e99fd8c1ebeb44ecfed72a25091a
+  languageName: node
+  linkType: hard
+
+"xmlhttprequest-ssl@npm:~2.1.1":
+  version: 2.1.2
+  resolution: "xmlhttprequest-ssl@npm:2.1.2"
+  checksum: 10/708a177fe41c6c8cd4ec7c04d965b4c01801d87f44383ec639be58bdc14418142969841659e0850db44feee8bec0a3d3e7d33fed22519415f3d0daab04d3f160
   languageName: node
   linkType: hard
 

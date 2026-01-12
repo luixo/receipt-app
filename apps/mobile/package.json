@@ -21,10 +21,13 @@
 		"@tanstack/react-router": "catalog:",
 		"expo": "^50.0.7",
 		"expo-constants": "^15.4.5",
+		"expo-device": "^8.0.10",
 		"expo-linking": "^8.0.11",
-		"expo-router": "^3.4.7"
+		"expo-router": "^3.4.7",
+		"expo-secure-store": "^15.0.8"
 	},
 	"devDependencies": {
-		"react-query-native-devtools": "^4.0.0"
+		"react-query-external-sync": "^2.2.3",
+		"socket.io-client": "^4.8.3"
 	}
 }
