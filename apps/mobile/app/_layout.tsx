@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as Sentry from "@sentry/react-native";
+import { fetch } from "expo/fetch";
 import { getLocales } from "expo-localization";
 import { Stack } from "expo-router";
 import { isNonNullish } from "remeda";
@@ -66,6 +67,8 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		() => ({
 			searchParams: {},
 			url: `${baseUrl}${baseLinksContext.url}`,
+			// @ts-expect-error Types diverge a bit, but it works
+			fetch,
 			useBatch: true,
 			source: "native",
 			captureError: captureSentryError,

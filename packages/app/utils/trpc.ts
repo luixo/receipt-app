@@ -50,6 +50,7 @@ export type GetLinksOptions = {
 	useBatch?: boolean;
 	keepError?: boolean;
 	headers?: Headers;
+	fetch?: Parameters<typeof httpLink>[0]["fetch"];
 	captureError: (error: Error) => string;
 	source: // Client-side rendering
 		| "csr"
@@ -77,6 +78,7 @@ export const getLinks = ({
 	source,
 	captureError,
 	headers: extraHeaders,
+	fetch,
 }: GetLinksOptions): TRPCLink<AppRouter>[] => {
 	// we omit to not let stringified "undefined" get passed to the server
 	const headers = omitBy(
@@ -89,18 +91,19 @@ export const getLinks = ({
 	);
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
-		true: httpLink({ url, headers, transformer }),
+		true: httpLink({ url, fetch, headers, transformer }),
 		false: splitLink({
 			condition: (op) =>
 				Boolean(useBatch && op.context.batch !== noBatchContext.batch),
 			true: httpBatchStreamLink({
 				url,
+				fetch,
 				headers,
 				transformer,
 				// Experimentally: 15k is ok
 				maxURLLength: 14000,
 			}),
-			false: httpLink({ url, headers, transformer }),
+			false: httpLink({ url, fetch, headers, transformer }),
 		}),
 	});
 	if (keepError) {
