@@ -14,18 +14,18 @@ const fonts = [
 
 const config: AppJSONConfig = {
 	expo: {
-		name: "receipt-app",
-		slug: "receipt-app",
+		name: "Checkalka",
+		slug: "checkalka-app",
 		version: "1.0.0",
-		scheme: "receipt-app",
+		scheme: "me.luixo.receipt",
 		platforms: ["ios", "android"],
 		icon: "assets/app-icon.png",
 		ios: {
-			bundleIdentifier: "ru.luixo.receipt",
+			bundleIdentifier: "me.luixo.receipt",
 			buildNumber: "4",
 		},
 		android: {
-			package: "ru.luixo.receipt",
+			package: "me.luixo.receipt",
 		},
 		plugins: [
 			"expo-localization",
