@@ -448,7 +448,7 @@ export const getConfig = async (rootDir: string) => {
 						"**/*.spec.ts",
 					],
 				],
-				["apps/mobile"],
+				["apps/mobile", ["babel.config.js", "metro.config.ts"]],
 				["packages/components"],
 				["packages/mutations"],
 				["packages/queries"],
@@ -591,7 +591,6 @@ export const getConfig = async (rootDir: string) => {
 				"**/*.gen.ts",
 				"**/uniwind-types.d.ts",
 				"apps/mobile/ios",
-				"**/*.config.js",
 			],
 		},
 	);

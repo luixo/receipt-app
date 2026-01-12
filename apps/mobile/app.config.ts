@@ -1,3 +1,5 @@
+import type { AppJSONConfig } from "expo/config";
+
 const fonts = [
 	"100Thin",
 	"200ExtraLight",
@@ -10,7 +12,7 @@ const fonts = [
 	"900Black",
 ];
 
-export default {
+const config: AppJSONConfig = {
 	expo: {
 		name: "receipt-app",
 		slug: "receipt-app",
@@ -53,3 +55,4 @@ export default {
 		userInterfaceStyle: "automatic",
 	},
 };
+export default config;
