@@ -28,7 +28,8 @@
 		"expo-linking": "^8.0.11",
 		"expo-localization": "^17.0.8",
 		"expo-router": "^3.4.7",
-		"expo-secure-store": "^15.0.8"
+		"expo-secure-store": "^15.0.8",
+		"expo-splash-screen": "^31.0.13"
 	},
 	"devDependencies": {
 		"react-query-external-sync": "^2.2.3",

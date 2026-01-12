@@ -16,6 +16,7 @@ import { InnerProvider } from "~app/providers/inner";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
+import { SplashScreenManager } from "~mobile/components/splash-screen-manager";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { DevToolsProvider } from "~mobile/providers/devtools";
 import { resources } from "~mobile/utils/i18n";
@@ -88,6 +89,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 				navigationContext={navigationContext}
 				DevToolsProvider={DevToolsProvider}
 			>
+				<SplashScreenManager timeout={2000} />
 				{children}
 			</InnerProvider>
 		</OuterProvider>

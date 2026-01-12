@@ -37,6 +37,18 @@ export default {
 					),
 				},
 			],
+			[
+				"expo-splash-screen",
+				{
+					backgroundColor: "#ffffff",
+					image: "./assets/app-icon.png",
+					dark: {
+						image: "./assets/app-icon.png",
+						backgroundColor: "#000000",
+					},
+					imageWidth: 200,
+				},
+			],
 		],
 		userInterfaceStyle: "automatic",
 	},
