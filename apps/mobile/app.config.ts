@@ -26,6 +26,7 @@ export default {
 			package: "ru.luixo.receipt",
 		},
 		plugins: [
+			"expo-localization",
 			"expo-router",
 			[
 				"expo-font",

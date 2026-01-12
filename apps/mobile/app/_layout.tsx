@@ -1,7 +1,9 @@
 import React from "react";
 
 import * as Sentry from "@sentry/react-native";
+import { getLocales } from "expo-localization";
 import { Stack } from "expo-router";
+import { isNonNullish } from "remeda";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
@@ -12,8 +14,10 @@ import {
 import { InnerProvider } from "~app/providers/inner";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
+import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { DevToolsProvider } from "~mobile/providers/devtools";
+import { resources } from "~mobile/utils/i18n";
 import { navigationContext } from "~mobile/utils/navigation";
 import { persister } from "~mobile/utils/persister";
 import { captureSentryError } from "~mobile/utils/sentry";
@@ -44,6 +48,17 @@ const getMobileQueryClientsRecord = () => ({
 	[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
 });
 
+const language =
+	getLocales()
+		.map((locale) => locale.languageCode)
+		.filter(isNonNullish)
+		.find(isLanguage) ?? baseLanguage;
+const i18nContext = createI18nContext({
+	getLanguage: () => language,
+});
+// We don't use backend module so initialization is actually sync
+void i18nContext.initialize({ language, data: resources });
+
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const baseUrl = useBaseUrl();
 	const baseLinksContext = React.use(LinksContext);
@@ -57,9 +72,6 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		}),
 		[baseLinksContext.url, baseUrl],
 	);
-	const i18nContext = createI18nContext({
-		getLanguage: () => "en",
-	});
 	return (
 		<OuterProvider
 			getQueryClientsRecord={getMobileQueryClientsRecord}
