@@ -1,1 +1,43 @@
 @import "../../packages/app/global.css";
+
+@theme {
+	/* Sync this with app.config.ts */
+	--font-sans-thin: "Inter-Thin";
+	--font-sans-extra-light: "Inter-ExtraLight";
+	--font-sans-light: "Inter-Light";
+	--font-sans-regular: "Inter-Regular";
+	--font-sans-medium: "Inter-Medium";
+	--font-sans-semi-bold: "Inter-SemiBold";
+	--font-sans-bold: "Inter-Bold";
+	--font-sans-extra-bold: "Inter-ExtraBold";
+	--font-sans-black: "Inter-Black";
+}
+@layer base {
+	.font-thin {
+		font-family: --font-sans-thin;
+	}
+	.font-extralight {
+		font-family: --font-sans-extra-light;
+	}
+	.font-light {
+		font-family: --font-sans-light;
+	}
+	.font-normal {
+		font-family: --font-sans-regular;
+	}
+	.font-medium {
+		font-family: --font-sans-medium;
+	}
+	.font-semibold {
+		font-family: --font-sans-semi-bold;
+	}
+	.font-bold {
+		font-family: --font-sans-bold;
+	}
+	.font-extrabold {
+		font-family: --font-sans-extra-bold;
+	}
+	.font-black {
+		font-family: --font-sans-black;
+	}
+}

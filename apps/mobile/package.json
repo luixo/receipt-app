@@ -13,6 +13,7 @@
 		"ios:update-version": "yarn workspace @ra/scripts expo:update-ios-version"
 	},
 	"dependencies": {
+		"@expo-google-fonts/inter": "^0.4.2",
 		"@ra/app": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@react-native-async-storage/async-storage": "^2.2.0",
@@ -23,6 +24,7 @@
 		"expo": "^50.0.7",
 		"expo-constants": "^15.4.5",
 		"expo-device": "^8.0.10",
+		"expo-font": "^14.0.10",
 		"expo-linking": "^8.0.11",
 		"expo-router": "^3.4.7",
 		"expo-secure-store": "^15.0.8"

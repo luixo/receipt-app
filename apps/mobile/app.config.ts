@@ -1,3 +1,15 @@
+const fonts = [
+	"100Thin",
+	"200ExtraLight",
+	"300Light",
+	"400Regular",
+	"500Medium",
+	"600SemiBold",
+	"700Bold",
+	"800ExtraBold",
+	"900Black",
+];
+
 export default {
 	expo: {
 		name: "receipt-app",
@@ -13,7 +25,18 @@ export default {
 		android: {
 			package: "ru.luixo.receipt",
 		},
-		plugins: ["expo-router"],
+		plugins: [
+			"expo-router",
+			[
+				"expo-font",
+				{
+					fonts: fonts.map(
+						(font) =>
+							`node_modules/@expo-google-fonts/inter/${font}/Inter_${font}.ttf`,
+					),
+				},
+			],
+		],
 		userInterfaceStyle: "automatic",
 	},
 };
