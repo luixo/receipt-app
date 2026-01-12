@@ -591,6 +591,7 @@ export const getConfig = async (rootDir: string) => {
 				"**/*.gen.ts",
 				"**/uniwind-types.d.ts",
 				"apps/mobile/ios",
+				"apps/mobile/android",
 			],
 		},
 	);
