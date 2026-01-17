@@ -38,14 +38,12 @@
 		"@heroui/toast@npm:2.0.16": "patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch",
 		"@internationalized/date": "^3.10.0",
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
-		"@tanstack/react-query@^5.80.6": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
+		"@tanstack/react-query@catalog:": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
 		"@tanstack/start-plugin-core@npm:1.131.49": "patch:@tanstack/start-plugin-core@npm%3A1.131.49#~/patches/@tanstack-start-plugin-core-npm-1.131.49.patch",
 		"framer-motion@npm:^11.11.11": "patch:framer-motion@npm%3A11.11.11#~/patches/framer-motion-npm-11.11.11.patch",
-		"h3@npm:1.13.0": "^1.13.0",
 		"lucide-react@npm:^0.562.0": "patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch",
 		"react-native-web@npm:^0.21.1": "patch:react-native-web@npm%3A0.21.1#~/patches/react-native-web-npm-0.21.1.patch",
-		"uniwind@npm:^1.2.2": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch",
-		"vite@npm:6.1.4": "^6.0.0"
+		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch"
 	},
 	"dependencies": {
 		"react": "catalog:",
