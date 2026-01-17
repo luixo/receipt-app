@@ -74,7 +74,6 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		() => ({
 			searchParams: {},
 			url: `${baseUrl}${baseLinksContext.url}`,
-			// @ts-expect-error Types diverge a bit, but it works
 			fetch,
 			useBatch: true,
 			source: "native",
