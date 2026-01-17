@@ -7026,6 +7026,8 @@ __metadata:
     date-fns: "npm:^3.3.1"
     framer-motion: "npm:^11.11.11"
     lucide-react: "npm:^0.562.0"
+    lucide-react-native: "npm:^0.562.0"
+    react-native-svg: "npm:^15.15.1"
   languageName: unknown
   linkType: soft
 
@@ -16162,6 +16164,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"css-tree@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "css-tree@npm:1.1.3"
+  dependencies:
+    mdn-data: "npm:2.0.14"
+    source-map: "npm:^0.6.1"
+  checksum: 10/29710728cc4b136f1e9b23ee1228ec403ec9f3d487bc94a9c5dbec563c1e08c59bc917dd6f82521a35e869ff655c298270f43ca673265005b0cd05b292eb05ab
+  languageName: node
+  linkType: hard
+
 "css-what@npm:^6.1.0":
   version: 6.2.2
   resolution: "css-what@npm:6.2.2"
@@ -22693,6 +22705,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lucide-react-native@npm:^0.562.0":
+  version: 0.562.0
+  resolution: "lucide-react-native@npm:0.562.0"
+  peerDependencies:
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-native: "*"
+    react-native-svg: ^12.0.0 || ^13.0.0 || ^14.0.0 || ^15.0.0
+  checksum: 10/4cb423feca62c9b4f6d3ec27971fb801694674a85d42ebea3badf34a0672ff95f37b7d3c5d346e137a2041ca9ad67e6d2ec24b80f3c98d722d8128eb52a33bcc
+  languageName: node
+  linkType: hard
+
 "lucide-react@npm:0.562.0":
   version: 0.562.0
   resolution: "lucide-react@npm:0.562.0"
@@ -22808,6 +22831,13 @@ __metadata:
   version: 1.1.0
   resolution: "math-intrinsics@npm:1.1.0"
   checksum: 10/11df2eda46d092a6035479632e1ec865b8134bdfc4bd9e571a656f4191525404f13a283a515938c3a8de934dbfd9c09674d9da9fa831e6eb7e22b50b197d2edd
+  languageName: node
+  linkType: hard
+
+"mdn-data@npm:2.0.14":
+  version: 2.0.14
+  resolution: "mdn-data@npm:2.0.14"
+  checksum: 10/64c629fcf14807e30d6dc79f97cbcafa16db066f53a294299f3932b3beb0eb0d1386d3a7fe408fc67348c449a4e0999360c894ba4c81eb209d7be4e36503de0e
   languageName: node
   linkType: hard
 
@@ -26029,6 +26059,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-svg@npm:^15.15.1":
+  version: 15.15.1
+  resolution: "react-native-svg@npm:15.15.1"
+  dependencies:
+    css-select: "npm:^5.1.0"
+    css-tree: "npm:^1.1.3"
+    warn-once: "npm:0.1.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/3a5dbbee0c6a81b3feb2b91a5a617a1a25e01c908686af479fab4fe6661376253ba0e0e1d3eda36f27eab9b2cd2c4c17b68423cfca465df255f20cacc1ba384d
+  languageName: node
+  linkType: hard
+
 "react-native-web@npm:0.21.1":
   version: 0.21.1
   resolution: "react-native-web@npm:0.21.1"
@@ -28006,7 +28050,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.6.0, source-map@npm:~0.6.1":
+"source-map@npm:^0.6.0, source-map@npm:^0.6.1, source-map@npm:~0.6.1":
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 10/59ef7462f1c29d502b3057e822cdbdae0b0e565302c4dd1a95e11e793d8d9d62006cdc10e0fd99163ca33ff2071360cf50ee13f90440806e7ed57d81cba2f7ff
@@ -30642,7 +30686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"warn-once@npm:^0.1.0, warn-once@npm:^0.1.1":
+"warn-once@npm:0.1.1, warn-once@npm:^0.1.0, warn-once@npm:^0.1.1":
   version: 0.1.1
   resolution: "warn-once@npm:0.1.1"
   checksum: 10/e6a5a1f5a8dba7744399743d3cfb571db4c3947897875d4962a7c5b1bf2195ab4518c838cb4cea652e71729f21bba2e98dc75686f5fccde0fabbd894e2ed0c0d

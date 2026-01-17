@@ -10,6 +10,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
+import { Icon } from "~components/icons";
 import { cn } from "~components/utils";
 import { getNow } from "~utils/date";
 
@@ -29,6 +30,7 @@ const Wrapper = () => {
 	const [formSwitch, setFormSwitch] = React.useState(false);
 	const formId = React.useId();
 	const [formSwitchById, setFormSwitchById] = React.useState(false);
+	const [iconName, setIconName] = React.useState("none");
 	return (
 		<View className="flex gap-2 rounded-md bg-blue-300 p-2">
 			<Text className="text-red-500">{t("titles.index")}</Text>
@@ -58,6 +60,17 @@ const Wrapper = () => {
 					Hello {className}
 				</Text>
 			))}
+			<View className="flex flex-row gap-2">
+				{(["eye", "plus", "login"] as const).map((name) => (
+					<Icon
+						key={name}
+						name={name}
+						className="size-8 text-sky-700"
+						onClick={() => setIconName(name)}
+					/>
+				))}
+				<Text>Selected icon: {iconName}</Text>
+			</View>
 			<Button onClick={() => navigate({ to: "/debts" })}>
 				Go to another page
 			</Button>
