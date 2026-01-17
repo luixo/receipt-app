@@ -1,5 +1,6 @@
 import React from "react";
 
+// @ts-expect-error: migrate autofocus to context
 export const useAutofocus = <T extends HTMLElement>({
 	shouldFocus,
 }: {

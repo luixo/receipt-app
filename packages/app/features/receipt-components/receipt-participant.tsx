@@ -196,6 +196,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		},
 	});
 	useAutosaveEffect(form, { state: eagerToSubmitState });
+	// @ts-expect-error: Autofocus element
 	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
 		shouldFocus: true,
 	});

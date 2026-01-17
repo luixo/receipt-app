@@ -16,10 +16,9 @@ const SIZE_CLASSNAME = {
 	xl: "text-4xl",
 };
 
-type Props = React.PropsWithChildren<{
+type Props = {
 	size?: "sm" | "md" | "lg" | "xl";
-}> &
-	Omit<React.ComponentProps<typeof Text>, "children">;
+} & React.ComponentProps<typeof Text>;
 
 const getComponent = (size: NonNullable<Props["size"]>) => {
 	// TODO: Get back components from `@expo/html-elements`

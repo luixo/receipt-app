@@ -73,6 +73,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		},
 	});
 	useAutosaveEffect(form, { state: eagerToSubmitState });
+	// @ts-expect-error: add TextInput
 	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
 		shouldFocus: isEditing,
 	});

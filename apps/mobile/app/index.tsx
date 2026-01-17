@@ -58,7 +58,7 @@ const Wrapper = () => {
 					Hello {className}
 				</Text>
 			))}
-			<Button onClick={() => navigate({ to: "/debts" })}>
+			<Button onClick={() => navigate({ to: "/register" })}>
 				Go to another page
 			</Button>
 			<HighlightedText>Hightlighted</HighlightedText>

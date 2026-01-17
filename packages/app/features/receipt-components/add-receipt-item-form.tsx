@@ -35,6 +35,7 @@ export const AddReceiptItemForm: React.FC = () => {
 		(vars) => vars.receiptId === receiptId,
 	);
 	const isPending = addItemMutationState?.status === "pending";
+	// @ts-expect-error: add TextInput
 	const nameFieldRef = React.useRef<HTMLInputElement & HTMLTextAreaElement>(
 		null,
 	);

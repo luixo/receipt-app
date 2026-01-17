@@ -82,7 +82,6 @@ export const UsersSuggest: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("default");
 	const trpc = useTRPC();
-	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
 	const queryEnabled = debouncedValue.length >= 1;
@@ -310,7 +309,6 @@ export const UsersSuggest: React.FC<Props> = ({
 					// This is needed to reset the Autocomplete state on selected user change
 					// Otherwise the dropdown will popup after user select
 					key={selectedUserIds[0] ?? null}
-					ref={inputRef}
 					inputValue={value}
 					onInputChange={setValue}
 					label={t("components.usersSuggest.label")}
