@@ -13,6 +13,7 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
+import htmlTags from "html-tags";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { entries, fromEntries, omit } from "remeda";
@@ -150,6 +151,19 @@ const overriddenRules = {
 		// `void foo` is a mark of deliberately floating promise
 		"no-void": ["error", { allowAsStatement: true }],
 		"no-restricted-syntax": ["error", ...getNoRestrictedSyntax()],
+		"no-restricted-globals": [
+			"error",
+			{
+				name: "window",
+				message:
+					"Move this code to `web` package or create a context for this action",
+			},
+			{
+				name: "document",
+				message:
+					"Move this code to `web` package or create a context for this action",
+			},
+		],
 
 		// Custom devDependencies
 		"import-x/no-extraneous-dependencies": [
@@ -193,6 +207,17 @@ const overriddenRules = {
 		],
 		// Allow expressions for stuff like `<>{children}</>
 		"react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
+		// We forbid all HTML elements for react-native
+		"react/forbid-elements": [
+			"error",
+			{
+				forbid: htmlTags.map((tag) => ({
+					element: tag,
+					message:
+						"Move this code to `web` package and provide native alternative",
+				})),
+			},
+		],
 
 		// 'warn' recommended, also additionalHooks
 		"react-hooks/exhaustive-deps": [
@@ -488,6 +513,13 @@ export const getConfig = async (rootDir: string) => {
 			files: ["apps/web/src/email/**/*"],
 			rules: {
 				"better-tailwindcss/no-unregistered-classes": "off",
+			},
+		},
+		{
+			files: ["apps/web/**/*", "testing/**/*", "**/*.web.ts{,x}"],
+			rules: {
+				"react/forbid-elements": "off",
+				"no-restricted-globals": "off",
 			},
 		},
 		{

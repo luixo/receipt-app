@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -7,6 +7,9 @@ import { useTranslation } from "react-i18next";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
+import { Button } from "~components/button";
+import { Form } from "~components/form";
+import { HighlightedText } from "~components/highlighted-text";
 import { cn } from "~components/utils";
 import { getNow } from "~utils/date";
 
@@ -23,6 +26,9 @@ const Wrapper = () => {
 	const format = useFormat();
 	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
+	const [formSwitch, setFormSwitch] = React.useState(false);
+	const formId = React.useId();
+	const [formSwitchById, setFormSwitchById] = React.useState(false);
 	return (
 		<View className="flex gap-2 rounded-md bg-blue-300 p-2">
 			<Text className="text-red-500">{t("titles.index")}</Text>
@@ -52,10 +58,24 @@ const Wrapper = () => {
 					Hello {className}
 				</Text>
 			))}
-			<Button
-				onPress={() => navigate({ to: "/debts" })}
-				title="Go to another page"
-			/>
+			<Button onClick={() => navigate({ to: "/debts" })}>
+				Go to another page
+			</Button>
+			<HighlightedText>Hightlighted</HighlightedText>
+			<Form onSubmit={() => setFormSwitch((prev) => !prev)}>
+				<Button type="submit">Submit inline</Button>
+				<View>
+					<Text>Form switch: {formSwitch.toString()}</Text>
+				</View>
+			</Form>
+			<Form onSubmit={() => setFormSwitchById((prev) => !prev)} id={formId}>
+				<View>
+					<Text>Form switch 2: {formSwitchById.toString()}</Text>
+				</View>
+			</Form>
+			<Button type="submit" form={formId}>
+				Submit by id
+			</Button>
 		</View>
 	);
 };

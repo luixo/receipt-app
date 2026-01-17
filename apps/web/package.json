@@ -32,6 +32,7 @@
 		"dataloader": "catalog:",
 		"fetch-to-node": "^2.1.0",
 		"i18next": "catalog:",
+		"idb-keyval": "^6.2.1",
 		"kysely": "^0.28.7",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",

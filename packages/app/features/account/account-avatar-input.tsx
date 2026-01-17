@@ -2,8 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
-import type { Area, Point } from "react-easy-crop";
-import Cropper from "react-easy-crop";
 import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
 import { z } from "zod";
@@ -22,55 +20,13 @@ import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { FileInput } from "~components/file-input";
 import { Icon } from "~components/icons";
+import { ImageCropper, getFormData } from "~components/image-cropper";
 import { Slider } from "~components/slider";
 import { Text } from "~components/text";
 import type { UserId } from "~db/ids";
 import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
-import {
-	MAX_AVATAR_SIDE_SIZE,
-	convertDataUrlToImageElement,
-	convertFileToDataUrl,
-} from "~utils/images";
 
 const MAX_ZOOM = 5;
-
-const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
-	const image = await convertDataUrlToImageElement(imageSrc);
-	const canvas = document.createElement("canvas");
-	const ctx = canvas.getContext("2d");
-	if (!ctx) {
-		throw new Error("Expected to get 2d context for canvas");
-	}
-
-	canvas.width = image.width;
-	canvas.height = image.height;
-
-	ctx.drawImage(image, 0, 0);
-
-	const croppedCanvas = document.createElement("canvas");
-	const croppedCtx = croppedCanvas.getContext("2d");
-	if (!croppedCtx) {
-		throw new Error("Expected to get 2d context for cropped canvas");
-	}
-
-	const constrainedWidth = Math.min(pixelCrop.width, MAX_AVATAR_SIDE_SIZE);
-	const constrainedHeight = Math.min(pixelCrop.height, MAX_AVATAR_SIDE_SIZE);
-	croppedCanvas.width = constrainedWidth;
-	croppedCanvas.height = constrainedHeight;
-
-	croppedCtx.drawImage(
-		canvas,
-		pixelCrop.x,
-		pixelCrop.y,
-		pixelCrop.width,
-		pixelCrop.height,
-		0,
-		0,
-		constrainedWidth,
-		constrainedHeight,
-	);
-	return croppedCanvas;
-};
 
 const OnlyAvatarButton = suspendedFallback<React.ComponentProps<typeof Button>>(
 	(props) => {
@@ -150,21 +106,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 			onSubmit: formSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
-			const formData = new FormData();
-			const croppedCanvas = await getCroppedCanvas(
-				value.avatar,
-				value.croppedArea,
-			);
-			const croppedBlob = await new Promise<File>((resolve) => {
-				const type = "image/png";
-				croppedCanvas.toBlob(
-					// It is not clear in which case `file` in `null`
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					(file) => resolve(new File([file!], "avatar.png", { type })),
-					type,
-				);
-			});
-			formData.append("avatar", croppedBlob);
+			const formData = await getFormData(value.avatar, value.croppedArea);
 			updateAvatarMutation.mutate(formData, {
 				onSuccess: () => formApi.reset(),
 			});
@@ -183,7 +125,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 	);
 
 	const [zoom, setZoom] = React.useState(1);
-	const [crop, setCrop] = React.useState<Point>({ x: 0, y: 0 });
+	const [crop, setCrop] = React.useState<
+		React.ComponentProps<typeof ImageCropper>["crop"]
+	>({ x: 0, y: 0 });
 	const inputClickRef = React.useRef<() => void>(doNothing);
 	const onInputButtonClick = React.useCallback(() => {
 		inputClickRef.current();
@@ -195,7 +139,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 	const resetEditor = React.useCallback(() => form.reset(), [form]);
 	const avatar = <UserAvatar onClick={enableAvatarEdit} />;
 	const onCropChange = React.useCallback<
-		React.ComponentProps<typeof Cropper>["onCropChange"]
+		React.ComponentProps<typeof ImageCropper>["onCropChange"]
 	>(
 		(nextCrop) => {
 			if (updateAvatarMutation.isPending || removeAvatarMutation.isPending) {
@@ -231,22 +175,16 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 								selectedAvatar ? (
 									<form.AppField name="croppedArea">
 										{(field) => (
-											<Cropper
+											<ImageCropper
 												image={selectedAvatar}
 												crop={crop}
 												zoom={zoom}
 												maxZoom={MAX_ZOOM}
-												aspect={1}
 												onCropChange={onCropChange}
 												onCropComplete={(_area, areaPixels) =>
 													field.setValue(areaPixels)
 												}
 												onZoomChange={setZoom}
-												classes={{
-													cropAreaClassName:
-														"rounded-full !text-background !text-opacity-50",
-													mediaClassName: "rounded-lg",
-												}}
 											/>
 										)}
 									</form.AppField>
@@ -346,9 +284,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 				<form.AppField name="avatar">
 					{(field) => (
 						<FileInput
-							onFileUpdate={async (file) =>
-								field.setValue(await convertFileToDataUrl(file))
-							}
+							onFileUpdate={(dataUrl) => field.setValue(dataUrl)}
 							onClickRef={inputClickRef}
 						/>
 					)}

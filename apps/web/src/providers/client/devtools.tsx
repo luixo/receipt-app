@@ -6,7 +6,7 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useHotkey } from "~app/hooks/use-hotkey";
+import { useHotkey } from "~web/hooks/use-hotkey";
 
 export const DevToolsProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

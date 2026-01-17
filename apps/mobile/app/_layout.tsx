@@ -22,8 +22,8 @@ import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { DevToolsProvider } from "~mobile/providers/devtools";
 import { resources } from "~mobile/utils/i18n";
 import { navigationContext } from "~mobile/utils/navigation";
-import { persister } from "~mobile/utils/persister";
 import { captureSentryError } from "~mobile/utils/sentry";
+import { storage } from "~mobile/utils/storage";
 import { storeContext } from "~mobile/utils/store";
 
 import "../app.css";
@@ -90,7 +90,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		>
 			<InnerProvider
 				storeContext={storeContext}
-				persister={persister}
+				storage={storage}
 				linksContext={linksContext}
 				navigationContext={navigationContext}
 				DevToolsProvider={DevToolsProvider}

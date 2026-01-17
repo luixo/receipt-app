@@ -23,8 +23,6 @@ import {
 import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
 import { searchParamsMapping } from "~app/utils/navigation";
-import { persister } from "~app/utils/persister";
-import { getStoreContext } from "~app/utils/store";
 import type { StoreValues } from "~app/utils/store-data";
 import { ToastProvider, defaultToastProps } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
@@ -43,6 +41,8 @@ import {
 	searchParamsWithDefaults,
 } from "~web/utils/navigation";
 import { captureSentryError } from "~web/utils/sentry";
+import { storage } from "~web/utils/storage";
+import { getStoreContext } from "~web/utils/store";
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
@@ -135,7 +135,7 @@ const RootComponent = () => {
 		<InnerProvider
 			linksContext={linksContext}
 			storeContext={storeContext}
-			persister={persister}
+			storage={storage}
 			navigationContext={navigationContext}
 			DevToolsProvider={DevToolsProvider}
 		>

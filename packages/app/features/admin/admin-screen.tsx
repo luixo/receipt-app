@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -62,7 +63,7 @@ const SkeletonAdminUserCard: React.FC<React.PropsWithChildren> = ({
 	<Card>
 		<CardBody className="flex-row items-start justify-between">
 			<SkeletonUser />
-			<div>{children}</div>
+			<View>{children}</View>
 		</CardBody>
 	</Card>
 );
@@ -78,7 +79,7 @@ const AdminUserCard: React.FC<
 				connectedAccount={account}
 				dimmed={!user}
 			/>
-			<div>{children}</div>
+			<View>{children}</View>
 		</CardBody>
 	</Card>
 );
@@ -133,7 +134,7 @@ const AdminScreenInner = suspendedFallback(
 		return (
 			<Tabs variant="underlined">
 				<Tab key="become" title={t("pretend.tabName")}>
-					<div className="flex flex-col items-stretch gap-2">
+					<View className="flex flex-col items-stretch gap-2">
 						{pretendUserAccount ? (
 							<>
 								<AdminUserCard {...pretendUserAccount} />
@@ -163,7 +164,7 @@ const AdminScreenInner = suspendedFallback(
 							email={modalEmail || "unknown"}
 							setMockedEmail={setPretendEmail}
 						/>
-					</div>
+					</View>
 				</Tab>
 			</Tabs>
 		);
@@ -171,13 +172,13 @@ const AdminScreenInner = suspendedFallback(
 	<TabsSkeleton
 		tabsAmount={1}
 		content={
-			<div className="flex flex-col items-stretch gap-2 px-1 py-3">
+			<View className="flex flex-col items-stretch gap-2 px-1 py-3">
 				<SkeletonAdminUserCard />
 				<Divider />
 				<SkeletonAdminUserCard />
 				<SkeletonAdminUserCard />
 				<SkeletonAdminUserCard />
-			</div>
+			</View>
 		}
 	/>,
 );
@@ -187,9 +188,9 @@ export const AdminScreen: React.FC = () => {
 	return (
 		<>
 			<PageHeader>{t("pageHeader")}</PageHeader>
-			<div>
+			<View>
 				<AdminScreenInner />
-			</div>
+			</View>
 		</>
 	);
 };

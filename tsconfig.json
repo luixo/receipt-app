@@ -12,6 +12,7 @@
 		"allowSyntheticDefaultImports": true,
 		"allowImportingTsExtensions": true,
 		"allowJs": false,
+		"moduleSuffixes": [".web", ""],
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],

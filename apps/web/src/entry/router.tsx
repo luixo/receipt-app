@@ -76,6 +76,7 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 	const i18nContext = createI18nContext({
 		getLanguage: () => initialLanguage,
 		beforeInit: (instance) => instance.use(getBackendModule()),
+		isInitializable: typeof window === "undefined",
 	});
 	void i18nContext.initialize({ language: initialLanguage });
 	return createTanStackRouter({

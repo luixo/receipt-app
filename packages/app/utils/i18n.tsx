@@ -98,9 +98,11 @@ const id = <T,>(a: T): T => a;
 export const createI18nContext = ({
 	getLanguage,
 	beforeInit = id,
+	isInitializable,
 }: {
 	getLanguage: () => Language;
 	beforeInit?: (instance: I18n) => I18n;
+	isInitializable?: boolean;
 }) => {
 	const initialLanguage = getLanguage();
 	const instance = beforeInit(
@@ -118,7 +120,7 @@ export const createI18nContext = ({
 				instance.on("initialized", () => resolve());
 			});
 		}
-		if (typeof window === "undefined") {
+		if (isInitializable) {
 			return instance.init({ lng: initialLanguage }, () =>
 				addFormatters(instance),
 			);

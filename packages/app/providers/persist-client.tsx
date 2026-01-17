@@ -1,7 +1,8 @@
 import React from "react";
 
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { useQueryClient } from "@tanstack/react-query";
-import type { Persister } from "@tanstack/react-query-persist-client";
+import type { AsyncStorage } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
@@ -25,17 +26,17 @@ const PERSISTED_QUERIES: Readonly<TRPCSplitQueryKey>[] = [
 	["currency", "getList"],
 ];
 
-export const PersisterProvider: React.FC<
-	React.PropsWithChildren<{
-		persister: Persister;
-	}>
-> = ({ persister, children }) => {
+export type Props = React.PropsWithChildren<{
+	storage?: AsyncStorage;
+}>;
+
+export const PersisterProvider: React.FC<Props> = ({ storage, children }) => {
 	const queryClient = useQueryClient();
 	const persistOptions = React.useMemo<
 		React.ComponentProps<typeof PersistQueryClientProvider>["persistOptions"]
 	>(
 		() => ({
-			persister,
+			persister: createAsyncStoragePersister({ storage }),
 			maxAge: serializeDuration({ months: 1 }),
 			dehydrateOptions: {
 				shouldDehydrateQuery: (query) => {
@@ -46,7 +47,7 @@ export const PersisterProvider: React.FC<
 				},
 			},
 		}),
-		[persister],
+		[storage],
 	);
 	return (
 		<PersistQueryClientProvider

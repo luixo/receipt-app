@@ -11,7 +11,6 @@
 		"@ra/utils": "workspace:*",
 		"@react-native-async-storage/async-storage": "~2.2.0",
 		"@sentry/react-native": "~7.2.0",
-		"@tanstack/query-async-storage-persister": "catalog:",
 		"@tanstack/react-query": "catalog:",
 		"@tanstack/react-router": "catalog:",
 		"babel-preset-expo": "~54.0.9",

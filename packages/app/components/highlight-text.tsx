@@ -1,6 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
 
+import { HighlightedText } from "~components/highlighted-text";
 import type { Interval } from "~utils/array";
 
 const getInterlacedResult = (intervals: Interval[], input: string) => {
@@ -46,7 +47,7 @@ export const HighlightText: React.FC<
 				if (index % 2 === 0) {
 					return <React.Fragment key={index}>{element}</React.Fragment>;
 				}
-				return <mark key={index}>{element}</mark>;
+				return <HighlightedText key={index}>{element}</HighlightedText>;
 				/* eslint-enable react/no-array-index-key */
 			})}
 		</Text>

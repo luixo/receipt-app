@@ -6990,7 +6990,7 @@ __metadata:
     "@ra/playwright": "workspace:*"
     "@ra/utils": "workspace:*"
     "@react-types/shared": "npm:^3.18.1"
-    "@tanstack/query-async-storage-persister": "catalog:"
+    "@tanstack/query-async-storage-persister": "npm:5.80.6"
     "@tanstack/react-form": "npm:^1.23.7"
     "@tanstack/react-pacer": "npm:^0.16.3"
     "@tanstack/react-query": "catalog:"
@@ -7006,7 +7006,6 @@ __metadata:
     cookie: "catalog:"
     dataloader: "catalog:"
     i18next: "catalog:"
-    idb-keyval: "npm:^6.2.1"
     react-easy-crop: "npm:^5.4.2"
     react-i18next: "catalog:"
     tailwindcss: "catalog:"
@@ -7078,6 +7077,7 @@ __metadata:
     eslint-plugin-unicorn: "npm:^62.0.0"
     eslint-plugin-vitest: "npm:^0.5.4"
     globals: "npm:^17.0.0"
+    html-tags: "npm:^5.1.0"
     jiti: "npm:^2.6.1"
     jsonc-eslint-parser: "npm:^2.4.2"
     typescript-eslint: "npm:^8.52.0"
@@ -7095,7 +7095,6 @@ __metadata:
     "@ra/utils": "workspace:*"
     "@react-native-async-storage/async-storage": "npm:~2.2.0"
     "@sentry/react-native": "npm:~7.2.0"
-    "@tanstack/query-async-storage-persister": "catalog:"
     "@tanstack/react-query": "catalog:"
     "@tanstack/react-router": "catalog:"
     babel-preset-expo: "npm:~54.0.9"
@@ -7242,6 +7241,7 @@ __metadata:
     dataloader: "catalog:"
     fetch-to-node: "npm:^2.1.0"
     i18next: "catalog:"
+    idb-keyval: "npm:^6.2.1"
     kysely: "npm:^0.28.7"
     module-alias: "npm:^2.2.3"
     pino: "npm:^8.14.1"
@@ -20447,6 +20447,13 @@ __metadata:
   dependencies:
     void-elements: "npm:3.1.0"
   checksum: 10/8743b76cc50e46d1956c1ad879d18eb9613b0d2d81e24686d633f9f69bb26b84676f64a926973de793cca479997017a63219278476d617b6c42d68246d7c07fe
+  languageName: node
+  linkType: hard
+
+"html-tags@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "html-tags@npm:5.1.0"
+  checksum: 10/73d0448496ad9ac4a905427717908a3e72b8676d514e077437aaa9310deb43fd9f3eda58ac6b01b651db7431f3ddcc914e1f8e24052375dfe11d3ddfe4a20de7
   languageName: node
   linkType: hard
 

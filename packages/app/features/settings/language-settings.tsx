@@ -50,13 +50,13 @@ export const LanguageSettings: React.FC = () => {
 				>
 					{keys(LANGUAGE_TEXT).map((language) => (
 						<DropdownItem key={language} textValue={LANGUAGE_TEXT[language]}>
-							<div
+							<View
 								className={
 									language === currentLanguage ? "font-bold" : undefined
 								}
 							>
 								{LANGUAGE_TEXT[language]}
-							</div>
+							</View>
 						</DropdownItem>
 					))}
 				</DropdownMenu>
