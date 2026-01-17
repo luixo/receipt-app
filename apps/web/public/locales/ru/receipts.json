@@ -107,7 +107,8 @@
 	},
 	"item": {
 		"noParticipantsItemsSection": {
-			"label": "Позиции без участников"
+			"label": "Позиции без участников",
+			"itemLabel": "{{name}} — {{amount}}"
 		},
 		"quantityPostfix": "x {{quantity}} штук/кг",
 		"form": {

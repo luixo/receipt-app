@@ -107,7 +107,8 @@
 	},
 	"item": {
 		"noParticipantsItemsSection": {
-			"label": "Items with no participants"
+			"label": "Items with no participants",
+			"itemLabel": "{{name}} — {{amount}}"
 		},
 		"quantityPostfix": "x {{quantity}} unit",
 		"form": {

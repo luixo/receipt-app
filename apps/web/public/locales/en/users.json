@@ -65,6 +65,7 @@
 		}
 	},
 	"intentions": {
+		"header": "Connection intentions",
 		"emptyTitle": "All done 👍",
 		"inboundTitle": "Inbound connections",
 		"outboundTitle": "Outbound connections",

@@ -84,12 +84,15 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 	</View>,
 );
 
-export const ConnectionIntentionsScreen: React.FC = () => (
-	<>
-		<EmailVerificationCard />
-		<PageHeader startContent={<BackLink to="/users" />}>
-			Connection intentions
-		</PageHeader>
-		<ConnectionIntentions />
-	</>
-);
+export const ConnectionIntentionsScreen: React.FC = () => {
+	const { t } = useTranslation("users");
+	return (
+		<>
+			<EmailVerificationCard />
+			<PageHeader startContent={<BackLink to="/users" />}>
+				{t("intentions.header")}
+			</PageHeader>
+			<ConnectionIntentions />
+		</>
+	);
+};

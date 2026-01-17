@@ -46,11 +46,14 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 					onChange={() => onEmptyItemClick(item.id)}
 					icon={<Icon name="arrow-down" />}
 				>
-					{`"${item.name}" — ${formatCurrency(
-						locale,
-						currencyCode,
-						round(item.quantity * item.price),
-					)}`}
+					{t("item.noParticipantsItemsSection.itemLabel", {
+						name: item.name,
+						amount: formatCurrency(
+							locale,
+							currencyCode,
+							round(item.quantity * item.price),
+						),
+					})}
 				</Checkbox>
 			))}
 		</View>
