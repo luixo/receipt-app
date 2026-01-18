@@ -55,7 +55,7 @@ const ReceiptPreviewShape: React.FC<
 				<View className="flex items-center justify-center">
 					{checkboxComponent}
 				</View>
-				<Text className="flex-[6] overflow-hidden p-2">{title}</Text>
+				<View className="flex-[6] overflow-hidden p-2">{title}</View>
 				<Tooltip
 					content={infoTooltip}
 					isDisabled={!infoTooltip}
@@ -69,9 +69,9 @@ const ReceiptPreviewShape: React.FC<
 						)}
 					/>
 				</Tooltip>
-				<Text className="flex-[2] flex-row justify-end self-center p-2 text-right">
+				<View className="flex-[2] flex-row justify-end self-center p-2 text-right">
 					{sum}
-				</Text>
+				</View>
 				<View className="flex-1 flex-row items-center justify-center p-2 max-sm:hidden">
 					{icon}
 				</View>
@@ -147,15 +147,13 @@ export const ReceiptPreview = suspendedFallback<{
 							isDot
 							className="translate-x-full"
 						>
-							<Text>
-								{filterQuery ? (
-									<HighlightText intervals={highlights}>
-										{receipt.name}
-									</HighlightText>
-								) : (
-									receipt.name
-								)}
-							</Text>
+							{filterQuery ? (
+								<HighlightText intervals={highlights}>
+									{receipt.name}
+								</HighlightText>
+							) : (
+								<Text>{receipt.name}</Text>
+							)}
 						</Badge>
 					</Tooltip>
 					{isOwner ? <Icon name="key" className="size-3" /> : null}
@@ -198,17 +196,22 @@ export const ReceiptPreview = suspendedFallback<{
 									}
 									return (
 										<Text key={itemId}>
-											<Trans
-												t={t}
-												i18nKey="receipt.matchedItem.found"
-												components={{
-													name: (
-														<HighlightText intervals={itemHighlights}>
-															{matchedItem.name}
-														</HighlightText>
-													),
-												}}
-											/>
+											{
+												(
+													<Trans
+														t={t}
+														i18nKey="receipt.matchedItem.found"
+														components={{
+															name: (
+																<HighlightText intervals={itemHighlights}>
+																	{matchedItem.name}
+																</HighlightText>
+															),
+														}}
+													/> // This is intentional, text can be rendered inside text
+												) as // It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
+												unknown as string
+											}
 										</Text>
 									);
 								},

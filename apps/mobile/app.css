@@ -1,4 +1,5 @@
 @import "../../packages/app/global.css";
+@source "../../packages/components";
 
 @theme {
 	/* Sync this with app.config.ts */

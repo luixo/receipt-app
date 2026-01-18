@@ -19,7 +19,6 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
-import { Header } from "~components/header";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
@@ -131,7 +130,11 @@ export const Receipts = suspendedFallback<Props>(
 
 		if (!data.count) {
 			if (values(filters).filter(isNonNullish).length === 0) {
-				return <Header className="text-center">{t("list.noResults")}</Header>;
+				return (
+					<Text variant="h3" className="text-center">
+						{t("list.noResults")}
+					</Text>
+				);
 			}
 			return (
 				<EmptyCard title={t("list.empty.title")}>

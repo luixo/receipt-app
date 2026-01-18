@@ -15,7 +15,6 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
-import { Header } from "~components/header";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
@@ -25,8 +24,7 @@ import {
 	UserDebtsPreviewSkeleton,
 } from "./user-debts-preview";
 
-// eslint-disable-next-line jsx-a11y/heading-has-content
-const bigText = <Text className="text-xl" />;
+const bigText = <Text className="text-xl">?</Text>;
 
 const DebtsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
 	<View className="gap-2">{children}</View>
@@ -53,7 +51,9 @@ export const Debts = suspendedFallback<Props>(
 		if (!data.count) {
 			if (values(filters).filter(isNonNullish).length === 0) {
 				return (
-					<Header className="text-center">{t("list.filters.noResults")}</Header>
+					<Text variant="h3" className="text-center">
+						{t("list.filters.noResults")}
+					</Text>
 				);
 			}
 			return (

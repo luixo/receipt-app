@@ -39,7 +39,7 @@ import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
 
 type HeaderProps = Omit<
-	Partial<React.ComponentProps<typeof PageHeader>>,
+	React.ComponentProps<typeof PageHeader>,
 	"backHref" | "startContent"
 >;
 
@@ -155,9 +155,7 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 		const { t } = useTranslation("receipts");
 		return (
 			<>
-				<Header>
-					<Text className="text-3xl">{t("receipt.loading")}</Text>
-				</Header>
+				<Header>{t("receipt.loading")}</Header>
 				<View className="items-start gap-2">
 					<View className="flex w-full flex-row items-start justify-between gap-2">
 						<SkeletonDateInput />

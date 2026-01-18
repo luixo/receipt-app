@@ -14,9 +14,9 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Header } from "~components/header";
 import { Input } from "~components/input";
 import { Skeleton } from "~components/skeleton";
+import { Text } from "~components/text";
 import { options as authResetPasswordOptions } from "~mutations/auth/reset-password";
 
 const formSchema = z
@@ -36,7 +36,7 @@ const ResetPasswordHeader = suspendedFallback<{ token: string }>(
 		const { data: intention } = useSuspenseQuery(
 			trpc.resetPasswordIntentions.get.queryOptions({ token }),
 		);
-		return <Header>{intention.email}</Header>;
+		return <Text variant="h4">{intention.email}</Text>;
 	},
 	<Skeleton className="h-8 w-60 rounded" />,
 );

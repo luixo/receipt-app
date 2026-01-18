@@ -20,10 +20,9 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 	const locale = useLocale();
 	return (
 		<Text
-			numberOfLines={1}
 			key={currencyCode}
 			testID="debts-group-element"
-			className={cn(sum >= 0 ? "text-success" : "text-danger")}
+			className={cn("line-clamp-1", sum >= 0 ? "text-success" : "text-danger")}
 		>
 			{formatCurrency(locale, currencyCode, round(Math.abs(sum)))}
 		</Text>

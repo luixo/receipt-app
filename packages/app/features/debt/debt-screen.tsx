@@ -53,7 +53,7 @@ import { DebtControlButtons } from "./debt-control-buttons";
 
 type HeaderProps = {
 	userId?: UserId;
-} & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "startContent">;
+} & Omit<React.ComponentProps<typeof PageHeader>, "startContent">;
 
 const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
 	<PageHeader

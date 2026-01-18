@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
-import { Header } from "~components/header";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Text } from "~components/text";
 
 type Props = {
 	onConfirm: () => void;
@@ -13,7 +13,7 @@ type Props = {
 	isLoading?: boolean;
 	title: string;
 	subtitle?: React.ReactNode;
-	confirmText: React.ReactNode;
+	confirmText: string;
 	yesText?: React.ReactNode;
 	noText?: React.ReactNode;
 	children: (controls: { openModal: () => void }) => React.ReactNode;
@@ -56,11 +56,15 @@ export const ConfirmModal: React.FC<Props> = ({
 			>
 				<ModalContent>
 					<ModalHeader className="flex-col items-center">
-						<Header>{confirmText}</Header>
+						<Text variant="h3">{confirmText}</Text>
 						{subtitle ? (
-							<Header size="sm" className="text-warning mt-2">
-								{subtitle}
-							</Header>
+							typeof subtitle === "string" ? (
+								<Text variant="h4" className="text-warning mt-2">
+									{subtitle}
+								</Text>
+							) : (
+								subtitle
+							)
 						) : null}
 					</ModalHeader>
 					<ModalBody className="flex-row justify-center gap-2">
