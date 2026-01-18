@@ -11,7 +11,6 @@ import type { TRPCError } from "~app/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody, CardFooter, CardHeader } from "~components/card";
 import { Divider } from "~components/divider";
-import { Header } from "~components/header";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 
@@ -30,9 +29,9 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => {
 			<CardHeader>
 				<View className="text-danger flex flex-row gap-2">
 					<Icon name="warning" className="size-8" />
-					<Header className="text-danger">
+					<Text variant="h3" className="text-danger">
 						{t("components.errorMessage.error")}
-					</Header>
+					</Text>
 				</View>
 			</CardHeader>
 			<Divider />

@@ -1,7 +1,8 @@
-import React from "react";
-import { Text } from "react-native";
+import type React from "react";
+import { View } from "react-native";
 
 import { HighlightedText } from "~components/highlighted-text";
+import { Text } from "~components/text";
 import type { Interval } from "~utils/array";
 
 const getInterlacedResult = (intervals: Interval[], input: string) => {
@@ -34,22 +35,22 @@ const getInterlacedResult = (intervals: Interval[], input: string) => {
 };
 
 export const HighlightText: React.FC<
-	Omit<React.ComponentProps<typeof Text>, "children"> & {
+	Omit<React.ComponentProps<typeof View>, "children"> & {
 		intervals: Interval[];
 		children: string;
 	}
 > = ({ intervals, children, ...props }) => {
 	const interlacedResult = getInterlacedResult(intervals, children);
 	return (
-		<Text {...props}>
+		<View {...props}>
 			{interlacedResult.map((element, index) => {
 				/* eslint-disable react/no-array-index-key */
 				if (index % 2 === 0) {
-					return <React.Fragment key={index}>{element}</React.Fragment>;
+					return <Text key={index}>{element}</Text>;
 				}
 				return <HighlightedText key={index}>{element}</HighlightedText>;
 				/* eslint-enable react/no-array-index-key */
 			})}
-		</Text>
+		</View>
 	);
 };

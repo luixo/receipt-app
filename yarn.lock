@@ -3822,13 +3822,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/html-elements@npm:^0.5.1":
-  version: 0.5.1
-  resolution: "@expo/html-elements@npm:0.5.1"
-  checksum: 10/f623d8f0dcb9280111f81b67e66aa2ee7bccb575ffcf6758e668afdaa3b62a69d3b5ec00cc366e4cf7de7255d628c3dfd7daa2dd5b0cbff3e148b5b90970de93
-  languageName: node
-  linkType: hard
-
 "@expo/image-utils@npm:^0.8.8":
   version: 0.8.8
   resolution: "@expo/image-utils@npm:0.8.8"
@@ -7020,9 +7013,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/components@workspace:packages/components"
   dependencies:
-    "@expo/html-elements": "npm:^0.5.1"
     "@heroui/react": "npm:^2.8.4"
     "@ra/utils": "workspace:*"
+    class-variance-authority: "npm:0.7.1"
     date-fns: "npm:^3.3.1"
     framer-motion: "npm:^11.11.11"
     lucide-react: "npm:^0.562.0"
@@ -15504,6 +15497,15 @@ __metadata:
   version: 1.3.1
   resolution: "cjs-module-lexer@npm:1.3.1"
   checksum: 10/6629188d5ce74b57e5dce2222db851b5496a8d65b533a05957fb24089a3cec8d769378013c375a954c5a0f7522cde6a36d5a65bfd88f5575cb2de3176046fa8e
+  languageName: node
+  linkType: hard
+
+"class-variance-authority@npm:0.7.1":
+  version: 0.7.1
+  resolution: "class-variance-authority@npm:0.7.1"
+  dependencies:
+    clsx: "npm:^2.1.1"
+  checksum: 10/27a1face3f5ee88caa7813743461977aef5110830dc8e8960e7c9570598b37ffb8b2760b4e5d738dc827b0eb9058ddd204e9002e9af0ef39b6851f6ea9aa82c1
   languageName: node
   linkType: hard
 

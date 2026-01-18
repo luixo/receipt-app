@@ -8,8 +8,8 @@ import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Header } from "~components/header";
 import { ButtonLink } from "~components/link";
+import { Text } from "~components/text";
 import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
 
 type Props = {
@@ -31,10 +31,10 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	if (voidMutation.status === "success") {
 		return (
 			<>
-				<Header>{voidMutation.data.email}</Header>
-				<Header size="sm" className="text-success">
+				<Text variant="h3">{voidMutation.data.email}</Text>
+				<Text variant="h4" className="text-success">
 					{t("success.message")}
-				</Header>
+				</Text>
 				<ButtonLink color="primary" to="/login">
 					{t("success.toLogin")}
 				</ButtonLink>
@@ -44,7 +44,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	const { isPending } = voidMutation;
 	return (
 		<>
-			<Header>{t("confirmation.question")}</Header>
+			<Text variant="h3">{t("confirmation.question")}</Text>
 			<View className="flex-row gap-2">
 				<Button
 					className="flex-1"

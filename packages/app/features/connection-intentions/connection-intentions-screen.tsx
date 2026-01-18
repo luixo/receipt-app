@@ -9,8 +9,8 @@ import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useTRPC } from "~app/utils/trpc";
-import { Header } from "~components/header";
 import { BackLink } from "~components/link";
+import { Text } from "~components/text";
 
 import {
 	InboundConnectionIntention,
@@ -27,13 +27,13 @@ const ConnectionsWrapper: React.FC<
 	const { t } = useTranslation("users");
 	return (
 		<View className="flex flex-col gap-4">
-			<Header>
+			<Text variant="h3">
 				{t(
 					type === "inbound"
 						? "intentions.inboundTitle"
 						: "intentions.outboundTitle",
 				)}
-			</Header>
+			</Text>
 			<View className="flex flex-col gap-12">{children}</View>
 		</View>
 	);

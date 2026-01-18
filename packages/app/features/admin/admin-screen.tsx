@@ -14,10 +14,10 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { Divider } from "~components/divider";
-import { Header } from "~components/header";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
+import { Text } from "~components/text";
 import type { UserId } from "~db/ids";
 
 type ModalProps = {
@@ -42,7 +42,7 @@ const BecomeModal: React.FC<ModalProps> = ({
 		<Modal isOpen={isModalOpen} onOpenChange={closeModal}>
 			<ModalContent>
 				<ModalHeader>
-					<Header>{t("pretend.modal.title", { email })}</Header>
+					<Text variant="h3">{t("pretend.modal.title", { email })}</Text>
 				</ModalHeader>
 				<ModalBody className="flex-row gap-4 p-4">
 					<Button color="warning" onPress={becomeAccount} className="flex-1">

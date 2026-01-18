@@ -352,9 +352,7 @@ const DebtsListForm = suspendedFallback<{
 					{Array.from({ length: 3 }).map((_, index) => (
 						// eslint-disable-next-line react/no-array-index-key
 						<View className="flex items-center gap-2 sm:flex-row" key={index}>
-							<Text className="flex-[2]">
-								<Skeleton className="h-6 w-8 rounded-md" />
-							</Text>
+							<Skeleton className="h-6 w-8 flex-[2] rounded-md" />
 							<SkeletonNumberInput
 								className="flex-[6]"
 								startContent={<View className="bg-default size-4 rounded" />}

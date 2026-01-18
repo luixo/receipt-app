@@ -1,15 +1,16 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { Header } from "~components/header";
 import { Skeleton } from "~components/skeleton";
+import { Text } from "~components/text";
 import { cn } from "~components/utils";
 
 type Props = {
 	aside?: React.ReactNode;
 	startContent?: React.ReactNode;
 	endContent?: React.ReactNode;
-} & React.ComponentProps<typeof View>;
+	children: React.ReactNode;
+} & Omit<React.ComponentProps<typeof View>, "children">;
 
 export const PageHeader: React.FC<Props> = ({
 	aside,
@@ -21,9 +22,11 @@ export const PageHeader: React.FC<Props> = ({
 	<View className="flex-row flex-wrap justify-between gap-4">
 		<View className="flex-1 flex-row items-center gap-4" {...props}>
 			{startContent}
-			<Header size="xl" className="text-4xl font-medium">
-				{children}
-			</Header>
+			{typeof children === "string" ? (
+				<Text variant="h1">{children}</Text>
+			) : (
+				children
+			)}
 			{endContent}
 		</View>
 		<View
@@ -36,7 +39,7 @@ export const PageHeader: React.FC<Props> = ({
 );
 
 export const SkeletonPageHeader: React.FC<
-	React.ComponentProps<typeof PageHeader>
+	Omit<React.ComponentProps<typeof PageHeader>, "children">
 > = ({ className, ...props }) => (
 	<PageHeader {...props}>
 		<Skeleton className={cn("h-10 w-40 rounded-md", className)} />

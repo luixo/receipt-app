@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
 import { useLocale } from "~app/hooks/use-locale";
 import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
-import { Header } from "~components/header";
 import { Icon } from "~components/icons";
+import { Text } from "~components/text";
 import type { ReceiptItemId } from "~db/ids";
 import { round } from "~utils/math";
 
@@ -37,7 +37,7 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 	}
 	return (
 		<View className="gap-2">
-			<Header size="sm">{t("item.noParticipantsItemsSection.label")}</Header>
+			<Text variant="h4">{t("item.noParticipantsItemsSection.label")}</Text>
 			{emptyItems.map((item) => (
 				<Checkbox
 					key={item.id}

@@ -1,14 +1,15 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Header } from "~components/header";
+import { Text } from "~components/text";
 import { cn } from "~components/utils";
 
 type Props = {
 	title: string;
 	startContent?: React.ReactNode;
 	endContent?: React.ReactNode;
-} & React.ComponentProps<typeof View>;
+	children?: React.ReactNode;
+} & Omit<React.ComponentProps<typeof View>, "children">;
 
 export const EmptyCard = React.memo<Props>(
 	({ title, children, startContent, endContent, className, ...props }) => (
@@ -18,12 +19,18 @@ export const EmptyCard = React.memo<Props>(
 			testID="empty-card"
 		>
 			{startContent}
-			<Header size="lg" className="text-center">
+			<Text variant="h2" className="text-center">
 				{title}
-			</Header>
-			<Header size="md" className="text-center">
-				{children}
-			</Header>
+			</Text>
+			{children ? (
+				typeof children === "string" ? (
+					<Text variant="h3" className="text-center">
+						{children}
+					</Text>
+				) : (
+					children
+				)
+			) : null}
 			{endContent}
 		</View>
 	),

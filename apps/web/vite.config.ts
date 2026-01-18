@@ -22,7 +22,6 @@ addAlias("react-native", "react-native-web");
 
 const optimizedDeps = [
 	"react-native-web",
-	"@expo/html-elements",
 	"expo-modules-core",
 	"uniwind",
 	"react-native-safe-area-context",

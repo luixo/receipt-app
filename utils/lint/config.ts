@@ -60,6 +60,15 @@ const restrictedImports = [
 			},
 		],
 	},
+	{
+		from: "react-native",
+		imports: [
+			{
+				actual: "Text",
+				message: "Please use Text from `components `package",
+			},
+		],
+	},
 ];
 
 type NoRestrictedSyntaxElement = {
@@ -90,12 +99,18 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 			"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
 	},
 	...restrictedImports.flatMap(({ from, imports }) =>
-		imports.map(({ actual, expected }) => ({
-			selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
-				actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
-			}]`,
-			message: `Prefer renaming '${actual.toString()}' to '${expected}'`,
-		})),
+		imports.map(({ actual, ...importValue }) => {
+			const message =
+				"expected" in importValue
+					? `Prefer renaming '${actual.toString()}' to '${importValue.expected}'`
+					: importValue.message;
+			return {
+				selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
+					actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
+				}]`,
+				message,
+			};
+		}),
 	),
 	{
 		selector: "ImportDeclaration[source.value='~web/handlers/validation']",
