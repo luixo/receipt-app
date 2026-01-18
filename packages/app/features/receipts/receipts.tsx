@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 import { useMutation } from "@tanstack/react-query";
@@ -22,6 +21,8 @@ import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
@@ -29,7 +30,9 @@ import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
 const SEARCH_UPDATE_DEBOUNCE = 1000;
 
-const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+const ReceiptsWrapper: React.FC<{ children: ViewReactNode }> = ({
+	children,
+}) => {
 	const { t } = useTranslation("receipts");
 	return (
 		<>
@@ -142,6 +145,8 @@ export const Receipts = suspendedFallback<Props>(
 						t={t}
 						i18nKey="list.empty.message"
 						components={{
+							// eslint-disable-next-line jsx-a11y/heading-has-content
+							text: <Text variant="h3" />,
 							icon: (
 								<ButtonLink
 									color="primary"

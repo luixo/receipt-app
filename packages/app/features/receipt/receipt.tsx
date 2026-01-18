@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -26,7 +25,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
@@ -38,17 +37,15 @@ import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
 
-type HeaderProps = Omit<
-	React.ComponentProps<typeof PageHeader>,
-	"backHref" | "startContent"
->;
+type HeaderProps = Omit<React.ComponentProps<typeof PageHeader>, "backHref">;
 
-const Header: React.FC<HeaderProps> = (props) => (
+const Header: React.FC<HeaderProps> = ({ startContent, ...props }) => (
 	<PageHeader
 		startContent={
 			<>
 				<BackLink to="/receipts" />
 				<Icon name="receipt" className="size-9" />
+				{startContent}
 			</>
 		}
 		{...props}
@@ -63,7 +60,7 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 		);
 
 		const [deleteLoading, setDeleteLoading] = React.useState(false);
-		const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+		const [isEditing, { setFalse: unsetEditing, setTrue: setEditing }] =
 			useBooleanState();
 		const isOwner = receipt.selfUserId === receipt.ownerUserId;
 		const disabled = !isOwner || deleteLoading;
@@ -99,21 +96,19 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 							/>
 						) : null
 					}
+					endContent={
+						disabled ? null : isEditing ? (
+							<ReceiptNameInput
+								receipt={receipt}
+								isLoading={deleteLoading}
+								unsetEditing={unsetEditing}
+							/>
+						) : (
+							<Icon name="pencil" className="size-6" onClick={setEditing} />
+						)
+					}
 				>
-					{isEditing ? (
-						<ReceiptNameInput
-							receipt={receipt}
-							isLoading={deleteLoading}
-							unsetEditing={unsetEditing}
-						/>
-					) : (
-						<View
-							onClick={disabled ? undefined : switchEditing}
-							className={disabled ? undefined : "cursor-pointer"}
-						>
-							<Text className="text-3xl">{receipt.name}</Text>
-						</View>
-					)}
+					{isEditing ? undefined : receipt.name}
 				</Header>
 
 				<ReceiptContext value={getReceiptContext}>

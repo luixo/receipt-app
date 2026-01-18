@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -15,6 +14,7 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 

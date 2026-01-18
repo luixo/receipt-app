@@ -1,15 +1,16 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 type Props = {
-	aside?: React.ReactNode;
-	startContent?: React.ReactNode;
-	endContent?: React.ReactNode;
-	children: React.ReactNode;
+	aside?: ViewReactNode;
+	startContent?: ViewReactNode;
+	endContent?: ViewReactNode;
+	children?: string;
 } & Omit<React.ComponentProps<typeof View>, "children">;
 
 export const PageHeader: React.FC<Props> = ({
@@ -22,11 +23,7 @@ export const PageHeader: React.FC<Props> = ({
 	<View className="flex-row flex-wrap justify-between gap-4">
 		<View className="flex-1 flex-row items-center gap-4" {...props}>
 			{startContent}
-			{typeof children === "string" ? (
-				<Text variant="h1">{children}</Text>
-			) : (
-				children
-			)}
+			{children ? <Text variant="h1">{children}</Text> : null}
 			{endContent}
 		</View>
 		<View
@@ -41,7 +38,10 @@ export const PageHeader: React.FC<Props> = ({
 export const SkeletonPageHeader: React.FC<
 	Omit<React.ComponentProps<typeof PageHeader>, "children">
 > = ({ className, ...props }) => (
-	<PageHeader {...props}>
-		<Skeleton className={cn("h-10 w-40 rounded-md", className)} />
-	</PageHeader>
+	<PageHeader
+		{...props}
+		startContent={
+			<Skeleton className={cn("h-10 w-40 rounded-md", className)} />
+		}
+	/>
 );

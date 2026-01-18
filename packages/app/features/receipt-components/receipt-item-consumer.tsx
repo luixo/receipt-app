@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
@@ -8,6 +7,7 @@ import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";

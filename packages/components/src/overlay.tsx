@@ -1,8 +1,10 @@
 import type React from "react";
-import { View } from "react-native";
+
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 type Props = {
-	overlay?: React.ReactNode;
+	overlay?: ViewReactNode;
 } & React.ComponentProps<typeof View>;
 
 export const Overlay: React.FC<Props> = ({ children, overlay, ...props }) => (

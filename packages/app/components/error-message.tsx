@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import type {
 	QueryObserverLoadingErrorResult,
@@ -13,6 +12,7 @@ import { Card, CardBody, CardFooter, CardHeader } from "~components/card";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 type Props = {
 	message: string;

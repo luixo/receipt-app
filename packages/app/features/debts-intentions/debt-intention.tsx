@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
@@ -10,8 +9,10 @@ import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
-export const SkeletonDebtIntention: React.FC<React.PropsWithChildren> = ({
+export const SkeletonDebtIntention: React.FC<{ children?: ViewReactNode }> = ({
 	children,
 }) => (
 	<Card>
@@ -39,7 +40,7 @@ type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
 
 type Props = {
 	intention: Intentions[number];
-	children?: React.ReactNode;
+	children?: ViewReactNode;
 };
 
 export const DebtIntention: React.FC<Props> = ({ intention, children }) => {

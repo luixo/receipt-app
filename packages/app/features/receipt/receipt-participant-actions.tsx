@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -14,6 +13,7 @@ import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
+import { View } from "~components/view";
 import type { DebtId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";

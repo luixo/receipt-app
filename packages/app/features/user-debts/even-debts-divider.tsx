@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +7,7 @@ import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 
 type Props = {
 	currencyCode: CurrencyCode;

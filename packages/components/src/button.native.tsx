@@ -1,7 +1,9 @@
 import React from "react";
-import { Button as ButtonRaw, View } from "react-native";
+import { Button as ButtonRaw } from "react-native";
 
 import { omit } from "remeda";
+
+import { View } from "~components/view";
 
 import type { ButtonGroupProps, ButtonProps } from "./button";
 import { FormContext, formHandlersById } from "./form.native";

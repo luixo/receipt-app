@@ -1,10 +1,10 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
 import { Button } from "~components/button";
 import { Spinner } from "~components/spinner";
+import { View } from "~components/view";
 
 export type Direction = "+" | "-";
 

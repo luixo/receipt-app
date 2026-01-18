@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -16,6 +15,7 @@ import type { TRPCMutationResult, TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input, SkeletonInput } from "~components/input";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
 import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";

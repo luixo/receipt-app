@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -22,6 +21,7 @@ import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
 import { BackLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as usersRemoveOptions } from "~mutations/users/remove";
 import { options as usersUpdateOptions } from "~mutations/users/update";
@@ -259,9 +259,10 @@ export const User: React.FC<{ id: UserId; onRemove: () => void }> = ({
 
 	return (
 		<>
-			<PageHeader startContent={<BackLink to="/users" />}>
-				<LoadableUser id={id} />
-			</PageHeader>
+			<PageHeader
+				startContent={<BackLink to="/users" />}
+				endContent={<LoadableUser id={id} />}
+			/>
 			<UserNameInput id={id} isLoading={deleteLoading} />
 			<UserPublicNameInput id={id} isLoading={deleteLoading} />
 			<UserConnectionInput id={id} isLoading={deleteLoading} />

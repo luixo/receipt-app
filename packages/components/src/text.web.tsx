@@ -13,7 +13,7 @@ type MaybeText = string | number | undefined;
 
 export type Props = {
 	className?: string;
-	children: MaybeText | MaybeText[];
+	children?: MaybeText | MaybeText[];
 	variant?: TextVariant;
 	testID?: string;
 };

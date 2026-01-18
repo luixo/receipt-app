@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -23,6 +22,7 @@ import { Icon } from "~components/icons";
 import { ImageCropper, getFormData } from "~components/image-cropper";
 import { Slider } from "~components/slider";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +7,7 @@ import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import { round } from "~utils/math";
 
 const DebtGroupElementSkeleton = () => (

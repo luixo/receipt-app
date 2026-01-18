@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
@@ -15,6 +14,7 @@ import {
 } from "~components/dropdown";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { AssignableRole } from "~web/handlers/receipts/utils";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -90,7 +90,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			>
 				{keys(ROLES).map((pickRole) => (
 					<DropdownItem key={pickRole}>
-						<View onClick={() => changeRole(pickRole)}>
+						<View onPress={() => changeRole(pickRole)}>
 							<Text>{roleTexts[pickRole]}</Text>
 						</View>
 					</DropdownItem>

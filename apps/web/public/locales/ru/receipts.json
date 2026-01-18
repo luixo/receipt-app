@@ -4,7 +4,7 @@
 		"addButton": "Добавить чек",
 		"empty": {
 			"title": "У вас нет чеков",
-			"message": "Нажмите <icon /> чтобы добавить чек"
+			"message": "<text>Нажмите </text><icon /><text> чтобы добавить чек</text>"
 		},
 		"noResults": "Нет чеков по заданным фильтрам",
 		"table": {

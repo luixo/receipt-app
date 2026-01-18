@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -12,6 +11,8 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
+import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { compare } from "~utils/date";
 
@@ -75,7 +76,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 		if (intentions.length === 0) {
 			return (
 				<EmptyCard title={t("intentions.empty.title")}>
-					{t("intentions.empty.description")}
+					<Text variant="h3">{t("intentions.empty.description")}</Text>
 				</EmptyCard>
 			);
 		}

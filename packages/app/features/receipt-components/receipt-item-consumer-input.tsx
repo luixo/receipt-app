@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -15,6 +14,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";

@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -10,6 +9,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
 
 type Props = {

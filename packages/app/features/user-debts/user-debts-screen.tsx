@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -22,6 +21,7 @@ import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 import { UserDebtsList } from "./user-debts-list";
@@ -75,9 +75,8 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 						</ButtonLink>
 					</View>
 				}
-			>
-				<LoadableUser id={userId} />
-			</PageHeader>
+				endContent={<LoadableUser id={userId} />}
+			/>
 
 			<Modal isOpen={editModalOpen} onOpenChange={closeEditModal}>
 				<ModalContent>

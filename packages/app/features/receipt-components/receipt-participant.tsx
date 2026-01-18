@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { skipToken, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import type { TFunction } from "i18next";
@@ -27,6 +26,7 @@ import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
+import { View } from "~components/view";
 import type { DebtId } from "~db/ids";
 import { round } from "~utils/math";
 

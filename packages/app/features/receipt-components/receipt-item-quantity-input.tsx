@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -11,6 +10,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { quantitySchema, quantitySchemaDecimal } from "~app/utils/validation";
 import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
@@ -56,10 +56,8 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	if (!isEditing) {
 		return (
 			<View
-				className={`${
-					isDisabled ? undefined : "cursor-pointer"
-				} flex-row items-center gap-1`}
-				onClick={isDisabled ? undefined : switchEditing}
+				className="flex-row items-center gap-1"
+				onPress={isDisabled ? undefined : switchEditing}
 			>
 				<Text>{t("item.quantityPostfix", { quantity: item.quantity })}</Text>
 			</View>

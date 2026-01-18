@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -15,6 +14,7 @@ import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import { rotate } from "~utils/array";
 import { getIndexByString } from "~utils/hash";
 

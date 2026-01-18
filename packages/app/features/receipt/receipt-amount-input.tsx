@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation } from "@tanstack/react-query";
 
@@ -11,6 +10,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
 
@@ -56,10 +56,7 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	return (
 		<View className="flex flex-row gap-2">
 			<Text className="text-2xl leading-9">{sum}</Text>
-			<View
-				className={disabled ? undefined : "cursor-pointer"}
-				onClick={disabled ? undefined : openModal}
-			>
+			<View onPress={disabled ? undefined : openModal}>
 				<Text className="text-2xl leading-9">
 					{getCurrencySymbol(locale, receipt.currencyCode)}
 				</Text>

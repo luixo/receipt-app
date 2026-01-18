@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -11,6 +10,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
+import { View } from "~components/view";
 
 const DebtsAggregatedInner = suspendedFallback(
 	() => {

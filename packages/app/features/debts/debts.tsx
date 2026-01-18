@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
@@ -18,15 +17,15 @@ import { useTRPC } from "~app/utils/trpc";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 import {
 	UserDebtsPreview,
 	UserDebtsPreviewSkeleton,
 } from "./user-debts-preview";
 
-const bigText = <Text className="text-xl">?</Text>;
-
-const DebtsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
+const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 	<View className="gap-2">{children}</View>
 );
 
@@ -64,7 +63,8 @@ export const Debts = suspendedFallback<Props>(
 								t={t}
 								i18nKey="list.empty.description"
 								components={{
-									text: bigText,
+									// eslint-disable-next-line jsx-a11y/heading-has-content
+									text: <Text className="text-xl" />,
 									button: (
 										<ButtonLink
 											to="/debts/add"

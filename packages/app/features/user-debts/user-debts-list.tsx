@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import {
 	skipToken,
@@ -30,6 +29,8 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 
@@ -199,7 +200,7 @@ const useConsecutiveDebtIds = ({
 	return debtIds;
 };
 
-const UserDebtsListWrapper: React.FC<React.PropsWithChildren> = ({
+const UserDebtsListWrapper: React.FC<{ children: ViewReactNode }> = ({
 	children,
 }) => <View>{children}</View>;
 

@@ -109,5 +109,14 @@ export type Props = Pick<
 
 export const Icon = ({ name, className, ...props }: Props) => {
 	const Component = mapping[name];
-	return <Component className={cn("shrink-0", className)} {...props} />;
+	return (
+		<Component
+			className={cn(
+				"shrink-0",
+				props.onClick ? "cursor-pointer" : undefined,
+				className,
+			)}
+			{...props}
+		/>
+	);
 };

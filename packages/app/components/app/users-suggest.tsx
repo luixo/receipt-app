@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 import {
@@ -26,6 +25,7 @@ import {
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/input";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 import { AddUserModal } from "./add-user-modal";

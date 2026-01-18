@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +7,7 @@ import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { ReceiptItemId } from "~db/ids";
 import { round } from "~utils/math";
 

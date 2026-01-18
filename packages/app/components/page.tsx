@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { AmountBadge } from "~app/components/amount-badge";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
@@ -9,6 +8,8 @@ import type { IconName } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
 
 type ShowProps = {
@@ -64,7 +65,7 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 );
 
 type Props = {
-	children?: React.ReactNode;
+	children?: ViewReactNode;
 	elements: (MenuElement & {
 		ItemWrapper?: React.FC<React.PropsWithChildren>;
 		PageWrapper?: React.FC<React.PropsWithChildren>;

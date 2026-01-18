@@ -1,14 +1,16 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
-type Props = React.PropsWithChildren<{
+type Props = {
 	updatePart: React.Dispatch<React.SetStateAction<number>>;
 	downDisabled?: boolean;
 	upDisabled?: boolean;
-}>;
+	children?: ViewReactNode;
+};
 
 export const PartButtons: React.FC<Props> = ({
 	updatePart,

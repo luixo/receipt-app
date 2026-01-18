@@ -1,5 +1,6 @@
 import React from "react";
-import { View } from "react-native";
+
+import { View } from "~components/view";
 
 import type { Props } from "./form";
 

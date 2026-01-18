@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { Trans, useTranslation } from "react-i18next";
 
@@ -15,13 +14,12 @@ import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
 import { ReceiptParticipant } from "./receipt-participant";
-
-const bigText = <Text className="text-2xl leading-9">?</Text>;
 
 const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	switchModal,
@@ -41,16 +39,14 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 			: payerParticipants;
 	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
-		<View
-			className="flex cursor-pointer flex-col gap-2 xs:flex-row"
-			onClick={switchModal}
-		>
+		<View className="flex flex-col gap-2 xs:flex-row" onPress={switchModal}>
 			<View className="flex flex-row gap-2">
 				<Trans
 					t={t}
 					i18nKey="participants.payedBy"
 					components={{
-						text: bigText,
+						// eslint-disable-next-line jsx-a11y/heading-has-content
+						text: <Text variant="h4" />,
 						by: (
 							<AvatarGroup className="ml-2">
 								{surePayerParticipants.map((participant) => (
@@ -73,8 +69,9 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						t={t}
 						i18nKey="participants.payedFor"
 						components={{
+							// eslint-disable-next-line jsx-a11y/heading-has-content
+							text: <Text variant="h4" />,
 							// Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0`
-							text: bigText,
 							for: (
 								<AvatarGroup className="ml-2">
 									{debtParticipants.map((participant) => (
@@ -114,7 +111,8 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					t={t}
 					i18nKey="participants.payedBy"
 					components={{
-						text: bigText,
+						// eslint-disable-next-line jsx-a11y/heading-has-content
+						text: <Text variant="h4" />,
 						by: (
 							<AvatarGroup className="ml-2">
 								<SkeletonUser onlyAvatar dimmed />
@@ -128,8 +126,9 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					t={t}
 					i18nKey="participants.payedFor"
 					components={{
+						// eslint-disable-next-line jsx-a11y/heading-has-content
+						text: <Text variant="h4" />,
 						// Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0`
-						text: bigText,
 						for: (
 							<AvatarGroup className="ml-2">
 								{skeletonParticipants.map((index) => (

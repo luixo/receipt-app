@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -15,6 +14,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody } from "~components/card";
 import { CardLink } from "~components/link";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 const baseClassName =

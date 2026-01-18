@@ -18,9 +18,10 @@ export const UserScreen: React.FC<{ id: UserId }> = ({ id }) => {
 
 	return (
 		<>
-			<PageHeader startContent={<BackLink to="/users" />}>
-				<LoadableUser id={id} />
-			</PageHeader>
+			<PageHeader
+				startContent={<BackLink to="/users" />}
+				endContent={<LoadableUser id={id} />}
+			/>
 			<User id={id} onRemove={onUserRemove} />
 		</>
 	);

@@ -4,7 +4,7 @@
 		"addButton": "Add receipt",
 		"empty": {
 			"title": "You have no receipts",
-			"message": "Press <icon /> to add a receipt"
+			"message": "<text>Press </text><icon /><text> to add a receipt</text>"
 		},
 		"noResults": "No receipts under given filters",
 		"table": {

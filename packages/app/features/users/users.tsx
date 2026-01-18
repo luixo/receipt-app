@@ -19,6 +19,7 @@ import type {
 import { useTRPC } from "~app/utils/trpc";
 import { Icon } from "~components/icons";
 import { ButtonLink, Link } from "~components/link";
+import { Text } from "~components/text";
 import type { UserId } from "~db/ids";
 
 const UserPreview = suspendedFallback<{
@@ -64,6 +65,8 @@ export const Users: React.FC<Props> = suspendedFallback(
 						t={t}
 						i18nKey="list.empty.message"
 						components={{
+							// eslint-disable-next-line jsx-a11y/heading-has-content
+							text: <Text variant="h3" />,
 							icon: (
 								<ButtonLink
 									color="primary"

@@ -15,6 +15,8 @@ import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
+import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view.web";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-consumers/add";
 import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-consumers/remove";
@@ -379,7 +381,7 @@ export type ReceiptContext = {
 
 	renderParticipantActions: (
 		participant: ReturnType<typeof useParticipants>[number],
-	) => React.ReactNode;
+	) => ViewReactNode;
 	getUsersSuggestOptions: () => TRPCQueryInput<"users.suggest">["options"];
 	emptyReceiptElement: React.ReactNode;
 };
@@ -407,7 +409,9 @@ export const useGetReceiptContext = (
 		}),
 		emptyReceiptElement: (
 			<EmptyCard title={t("empty.items.title")}>
-				{t("empty.items.message")}
+				<Text variant="h3" className="text-center">
+					{t("empty.items.message")}
+				</Text>
 			</EmptyCard>
 		),
 	};

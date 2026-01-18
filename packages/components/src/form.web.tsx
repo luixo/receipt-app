@@ -1,10 +1,11 @@
 import React from "react";
 
-export type Props = React.PropsWithChildren<
-	Pick<React.ComponentProps<"form">, "className" | "id"> & {
-		onSubmit?: () => void;
-	}
->;
+import type { ViewReactNode } from "~components/view";
+
+export type Props = Pick<React.ComponentProps<"form">, "className" | "id"> & {
+	onSubmit?: () => void;
+	children: ViewReactNode;
+};
 
 export const Form: React.FC<Props> = ({
 	className,

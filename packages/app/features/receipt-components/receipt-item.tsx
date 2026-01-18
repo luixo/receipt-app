@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -15,6 +14,7 @@ import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";

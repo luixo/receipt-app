@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
@@ -9,6 +8,7 @@ import { areDebtsSynced } from "~app/utils/debts";
 import { Icon } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import { compare } from "~utils/date";
 
 type Debt = TRPCQueryOutput<"debts.get">;

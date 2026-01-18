@@ -1,8 +1,8 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { HighlightedText } from "~components/highlighted-text";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { Interval } from "~utils/array";
 
 const getInterlacedResult = (intervals: Interval[], input: string) => {

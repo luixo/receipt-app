@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +8,8 @@ import { Checkbox } from "~components/checkbox";
 import { Pagination } from "~components/pagination";
 import { Select, SelectItem } from "~components/select";
 import { cn } from "~components/utils";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 type ShapeProps<T> = {
 	limit: number;
@@ -23,7 +24,7 @@ type ShapeProps<T> = {
 		setSelectedItems: React.Dispatch<React.SetStateAction<T[]>>;
 	};
 	search?: React.ComponentProps<typeof SearchBar>;
-	endContent?: React.ReactNode;
+	endContent?: ViewReactNode;
 };
 
 // eslint-disable-next-line react/function-component-definition

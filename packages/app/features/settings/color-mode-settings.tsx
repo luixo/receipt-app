@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +10,7 @@ import { Checkbox } from "~components/checkbox";
 import { Icon } from "~components/icons";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 export const ColorModeSettings: React.FC = () => {
 	const { t } = useTranslation("settings");

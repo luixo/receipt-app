@@ -1,10 +1,11 @@
 import React from "react";
-import { View } from "react-native";
 
 import { Input as InputRaw, Textarea } from "@heroui/input";
 
 import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 import { Button } from "./button";
 import type { FieldError, MutationsProp } from "./utils";
@@ -35,8 +36,9 @@ export const SkeletonInput: React.FC<
 
 type Props = Omit<
 	React.ComponentProps<typeof InputRaw | typeof Textarea>,
-	"ref"
+	"ref" | "endContent"
 > & {
+	endContent?: ViewReactNode;
 	ref?: React.Ref<HTMLInputElement & HTMLTextAreaElement>;
 	fieldError?: FieldError;
 	mutation?: MutationsProp;

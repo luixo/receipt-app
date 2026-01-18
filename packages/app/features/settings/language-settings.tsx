@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
@@ -15,6 +14,7 @@ import {
 	DropdownTrigger,
 } from "~components/dropdown";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 const LANGUAGE_TEXT: Record<Language, string> = {
 	en: "English",
@@ -55,7 +55,7 @@ export const LanguageSettings: React.FC = () => {
 									language === currentLanguage ? "font-bold" : undefined
 								}
 							>
-								{LANGUAGE_TEXT[language]}
+								<Text>{LANGUAGE_TEXT[language]}</Text>
 							</View>
 						</DropdownItem>
 					))}

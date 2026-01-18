@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
@@ -20,6 +19,8 @@ import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
 import type { Interval } from "~utils/array";
 import { round } from "~utils/math";
@@ -31,10 +32,10 @@ import {
 
 const ReceiptPreviewShape: React.FC<
 	{
-		title: React.ReactNode;
-		checkbox: React.ReactNode;
-		sum: React.ReactNode;
-		icon: React.ReactNode;
+		title: ViewReactNode;
+		checkbox: ViewReactNode;
+		sum: ViewReactNode;
+		icon: ViewReactNode;
 		infoTooltip?: React.ReactNode;
 	} & React.ComponentProps<typeof View>
 > = ({ title, checkbox, sum, icon, className, infoTooltip, ...props }) => {
@@ -209,8 +210,8 @@ export const ReceiptPreview = suspendedFallback<{
 															),
 														}}
 													/> // This is intentional, text can be rendered inside text
-												) as // It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
-												unknown as string
+													// It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
+												) as unknown as string
 											}
 										</Text>
 									);

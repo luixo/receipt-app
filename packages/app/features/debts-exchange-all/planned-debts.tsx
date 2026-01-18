@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useStore } from "@tanstack/react-form";
 import { hashKey, useMutation, useSuspenseQuery } from "@tanstack/react-query";
@@ -29,6 +28,7 @@ import { Button } from "~components/button";
 import { SkeletonNumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow } from "~utils/date";

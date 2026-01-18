@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -11,6 +10,8 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/link";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 
 import {
 	InboundConnectionIntention,
@@ -21,9 +22,10 @@ import {
 	SkeletonOutboundConnectionIntention,
 } from "./outbound-connection-intention";
 
-const ConnectionsWrapper: React.FC<
-	React.PropsWithChildren<{ type: "inbound" | "outbound" }>
-> = ({ type, children }) => {
+const ConnectionsWrapper: React.FC<{
+	type: "inbound" | "outbound";
+	children: ViewReactNode;
+}> = ({ type, children }) => {
 	const { t } = useTranslation("users");
 	return (
 		<View className="flex flex-col gap-4">

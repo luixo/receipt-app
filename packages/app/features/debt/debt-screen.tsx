@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -43,6 +42,7 @@ import { SkeletonInput } from "~components/input";
 import { BackLink, ButtonLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";
 import { SaveButton } from "~components/save-button";
+import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";

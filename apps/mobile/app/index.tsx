@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView } from "react-native";
 
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,7 @@ import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import { getNow } from "~utils/date";
 
 const Wrapper = () => {
@@ -70,6 +71,9 @@ const Wrapper = () => {
 						Variant {variant}
 					</Text>
 				))}
+				<View className="text-2xl text-amber-500">
+					<Text>This should be amber and big from ancestor</Text>
+				</View>
 				<View className="flex flex-row gap-2">
 					{(["eye", "plus", "login"] as const).map((name) => (
 						<Icon

@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,8 @@ import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
 import { Text } from "~components/text";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 type ModalProps = {
@@ -57,19 +58,16 @@ const BecomeModal: React.FC<ModalProps> = ({
 	);
 };
 
-const SkeletonAdminUserCard: React.FC<React.PropsWithChildren> = ({
-	children,
-}) => (
+const SkeletonAdminUserCard: React.FC = () => (
 	<Card>
 		<CardBody className="flex-row items-start justify-between">
 			<SkeletonUser />
-			<View>{children}</View>
 		</CardBody>
 	</Card>
 );
 
 const AdminUserCard: React.FC<
-	React.PropsWithChildren<TRPCQueryOutput<"admin.accounts">[number]>
+	TRPCQueryOutput<"admin.accounts">[number] & { children?: ViewReactNode }
 > = ({ user, account, children }) => (
 	<Card>
 		<CardBody className="flex-row items-start justify-between">

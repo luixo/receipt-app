@@ -73,9 +73,8 @@ export const DebtsExchangeAllScreen: React.FC<{
 				startContent={
 					<BackLink to="/debts/user/$id/exchange" params={{ id: userId }} />
 				}
-			>
-				<LoadableUser id={userId} />
-			</PageHeader>
+				endContent={<LoadableUser id={userId} />}
+			/>
 			<ExchangeDebtsGroup userId={userId} />
 			<CurrenciesGroup
 				userId={userId}

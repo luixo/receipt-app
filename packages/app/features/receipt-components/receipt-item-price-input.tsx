@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
@@ -13,6 +12,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { priceSchema, priceSchemaDecimal } from "~app/utils/validation";
 import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
@@ -59,10 +59,8 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	if (!isEditing) {
 		return (
 			<View
-				className={`${
-					isDisabled ? undefined : "cursor-pointer"
-				} flex-row items-center gap-1`}
-				onClick={isDisabled ? undefined : switchEditing}
+				onPress={isDisabled ? undefined : switchEditing}
+				className="flex-row items-center gap-1"
 			>
 				<Text>{formatCurrency(locale, currencyCode, item.price)}</Text>
 			</View>

@@ -1,11 +1,11 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { Divider } from "~components/divider";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 
 import { ColorModeSettings } from "./color-mode-settings";
 import { DefaultLimitOption } from "./default-limit-option";

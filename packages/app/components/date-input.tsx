@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
@@ -8,6 +7,7 @@ import { Calendar } from "~components/calendar";
 import { Input, SkeletonInput } from "~components/input";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
+import { View } from "~components/view";
 import { type Temporal, parsers } from "~utils/date";
 
 type Props = {

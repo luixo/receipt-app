@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import {
 	hashKey,
@@ -39,6 +38,7 @@ import { SkeletonNumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow } from "~utils/date";
@@ -261,6 +261,14 @@ const DebtsListForm = suspendedFallback<{
 															}
 															startContent={
 																<View
+																	onPress={
+																		field.state.value
+																			? () =>
+																					field.setValue(
+																						(prevValue) => -prevValue,
+																					)
+																			: undefined
+																	}
 																	className={cn(
 																		"size-4 rounded",
 																		!field.state.value
@@ -268,13 +276,7 @@ const DebtsListForm = suspendedFallback<{
 																			: field.state.value > 0
 																				? "bg-success"
 																				: "bg-danger",
-																		!field.state.value
-																			? undefined
-																			: "cursor-pointer",
 																	)}
-																	onClick={() =>
-																		field.setValue((prevValue) => -prevValue)
-																	}
 																/>
 															}
 															endContent={
@@ -289,10 +291,7 @@ const DebtsListForm = suspendedFallback<{
 																		<Icon className="size-6" name="trash" />
 																	</Button>
 																) : (
-																	<View
-																		className="cursor-pointer"
-																		onClick={() => field.setValue(sum)}
-																	>
+																	<View onPress={() => field.setValue(sum)}>
 																		<Text>{t("transfer.form.max")}</Text>
 																	</View>
 																)

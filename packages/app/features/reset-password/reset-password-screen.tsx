@@ -149,7 +149,9 @@ export const ResetPasswordScreen: React.FC<{
 			{token ? (
 				<ResetPassword token={token} />
 			) : (
-				<EmptyCard title={t("noToken.title")}>{t("noToken.message")}</EmptyCard>
+				<EmptyCard title={t("noToken.title")}>
+					<Text variant="h3">{t("noToken.message")}</Text>
+				</EmptyCard>
 			)}
 		</>
 	);

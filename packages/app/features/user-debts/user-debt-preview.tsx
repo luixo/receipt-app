@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -15,14 +14,16 @@ import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import type { ViewReactNode } from "~components/view";
+import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 
 type DebtShape = {
-	amount: React.ReactNode;
-	timestamp: React.ReactNode;
-	synced: React.ReactNode;
-	note: React.ReactNode;
-	startContent?: React.ReactNode;
+	amount: ViewReactNode;
+	timestamp: ViewReactNode;
+	synced: ViewReactNode;
+	note: ViewReactNode;
+	startContent?: ViewReactNode;
 };
 
 const UserDebtPreviewShape: React.FC<

@@ -1,5 +1,4 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -12,6 +11,7 @@ import { AvatarGroup } from "~components/avatar";
 import { Select, SelectItem } from "~components/select";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
