@@ -1,0 +1,107 @@
+# Remove when https://github.com/uni-stack/uniwind/issues/305 is fixed
+diff --git a/dist/chunk-7ZMFUXZH.mjs b/dist/chunk-7ZMFUXZH.mjs
+index e4d8b61736adbc004dabf9e4ef4e5b692d59c6e8..5afbaa0e4bc4eebeda60f44b261411e8062eb3e9 100644
+--- a/dist/chunk-7ZMFUXZH.mjs
++++ b/dist/chunk-7ZMFUXZH.mjs
+@@ -35,7 +35,7 @@ import deepMerge from "deepmerge";
+ import { omit, kebabCase, mapKeys } from "@heroui/shared-utils";
+ var DEFAULT_PREFIX = "heroui";
+ var parsedColorsCache = {};
+-var resolveConfig = (themes = {}, defaultTheme, prefix) => {
++var resolveConfig = (themes = {}, defaultTheme, prefix, skipColorspace) => {
+   const resolved = {
+     variants: [],
+     utilities: {},
+@@ -62,7 +62,7 @@ var resolveConfig = (themes = {}, defaultTheme, prefix) => {
+       definition: [`&.${themeName}`, `&[data-theme='${themeName}']`]
+     });
+     for (const [colorName, colorValue] of Object.entries(flatColors)) {
+-      if (!colorValue) return;
++      if (!colorValue || skipColorspace) continue;
+       try {
+         const parsedColor = parsedColorsCache[colorValue] || Color(colorValue).hsl().round(2).array();
+         parsedColorsCache[colorValue] = parsedColor;
+@@ -93,16 +93,18 @@ var resolveConfig = (themes = {}, defaultTheme, prefix) => {
+   }
+   return resolved;
+ };
+-var corePlugin = (themes = {}, defaultTheme, prefix, addCommonColors) => {
+-  const resolved = resolveConfig(themes, defaultTheme, prefix);
++var corePlugin = (themes = {}, defaultTheme, prefix, addCommonColors, skipColorspace) => {
++  const resolved = resolveConfig(themes, defaultTheme, prefix, skipColorspace);
+   const createStripeGradient = (stripeColor, backgroundColor) => `linear-gradient(45deg,  hsl(var(--${prefix}-${stripeColor})) 25%,  hsl(var(--${prefix}-${backgroundColor})) 25%,  hsl(var(--${prefix}-${backgroundColor})) 50%,  hsl(var(--${prefix}-${stripeColor})) 50%,  hsl(var(--${prefix}-${stripeColor})) 75%,  hsl(var(--${prefix}-${backgroundColor})) 75%,  hsl(var(--${prefix}-${backgroundColor})))`;
+   return plugin(
+     ({ addBase, addUtilities, addVariant }) => {
+-      addBase({
+-        [":root, [data-theme]"]: {
+-          ...baseStyles(prefix)
+-        }
+-      });
++      if (!skipColorspace) {
++        addBase({
++          [":root, [data-theme]"]: {
++            ...baseStyles(prefix)
++          }
++        });
++      }
+       addBase({ ...resolved == null ? void 0 : resolved.baseStyles });
+       addUtilities({ ...resolved == null ? void 0 : resolved.utilities, ...utilities });
+       resolved == null ? void 0 : resolved.variants.forEach((variant) => {
+@@ -154,7 +156,7 @@ var corePlugin = (themes = {}, defaultTheme, prefix, addCommonColors) => {
+           backgroundSize: {
+             "stripe-size": "1.25rem 1.25rem"
+           },
+-          backgroundImage: {
++          backgroundImage: skipColorspace ? {} : {
+             "stripe-gradient-default": createStripeGradient("default-200", "default-400"),
+             "stripe-gradient-primary": createStripeGradient("primary-200", "primary"),
+             "stripe-gradient-secondary": createStripeGradient("secondary-200", "secondary"),
+@@ -185,7 +187,8 @@ var heroui = (config = {}) => {
+     layout: userLayout,
+     defaultExtendTheme = "light",
+     prefix: defaultPrefix = DEFAULT_PREFIX,
+-    addCommonColors = false
++    addCommonColors = false,
++    skipColorspace = false
+   } = config;
+   const userLightColors = ((_a = themeObject == null ? void 0 : themeObject.light) == null ? void 0 : _a.colors) || {};
+   const userDarkColors = ((_b = themeObject == null ? void 0 : themeObject.dark) == null ? void 0 : _b.colors) || {};
+@@ -221,7 +224,7 @@ var heroui = (config = {}) => {
+     dark,
+     ...otherThemes
+   };
+-  return corePlugin(themes, defaultTheme, defaultPrefix, addCommonColors);
++  return corePlugin(themes, defaultTheme, defaultPrefix, addCommonColors, skipColorspace);
+ };
+ 
+ export {
+diff --git a/dist/chunk-POSTVCTR.mjs b/dist/chunk-POSTVCTR.mjs
+index 50baf389d1b4735e0a82f33cd75b8acb271b5712..3b0788a1d9535d03890c405d49ba024fe1ad1e91 100644
+--- a/dist/chunk-POSTVCTR.mjs
++++ b/dist/chunk-POSTVCTR.mjs
+@@ -2,7 +2,8 @@
+ var animation_default = {
+   /** Animation Utilities */
+   ".spinner-bar-animation": {
+-    "animation-delay": "calc(-1.2s + (0.1s * var(--bar-index)))",
++    // Remove when https://github.com/uni-stack/uniwind/issues/306 is fixed
++    // "animation-delay": "calc(-1.2s + (0.1s * var(--bar-index)))",
+     transform: "rotate(calc(30deg * var(--bar-index)))translate(140%)"
+   },
+   ".spinner-dot-animation": {
+diff --git a/dist/types.d.ts b/dist/types.d.ts
+index 9c328a451b9e0472096bf273e9b0c88d7fd98267..f5dfc35e18a1853c6da0ce1b12f251ddf97c2718 100644
+--- a/dist/types.d.ts
++++ b/dist/types.d.ts
+@@ -133,6 +133,11 @@ type HeroUIPluginConfig = {
+      * @default "light"
+      */
+     defaultExtendTheme?: DefaultThemeType;
++    /**
++     * Skipping colorspace (needed for Uniwing atm)
++     * @default "false"
++     */
++    skipColorspace?: boolean;
+ };
+ 
+ export type { BaseThemeUnit, ConfigTheme, ConfigThemes, DefaultThemeType, FontThemeUnit, HeroUIPluginConfig, LayoutTheme };

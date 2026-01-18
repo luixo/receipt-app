@@ -1,5 +1,10 @@
 @import "../../packages/app/global.css";
 @source "../../packages/components";
+/* Move this to a general heroui.ts from `packages/app` when bug below is fixed */
+@plugin "./heroui.ts";
+/* Remove this and @heroui/theme patch when https://github.com/uni-stack/uniwind/issues/305 is resolved */
+@plugin "./heroui-override.ts";
+@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 
 @theme {
 	/* Sync this with app.config.ts */

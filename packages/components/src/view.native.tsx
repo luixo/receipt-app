@@ -2,6 +2,7 @@ import React from "react";
 import { Pressable, View as RawView } from "react-native";
 
 import { TextClassContext } from "~components/text.native";
+import { cn } from "~components/utils";
 
 import type { Props } from "./view";
 
@@ -44,10 +45,16 @@ const matches = new Set([
 	"stacked-fractions",
 ]);
 
-export const View = React.memo<Props>(({ onPress, ...props }) => {
+export const View = React.memo<Props>(({ onPress, className, ...props }) => {
 	const Component = onPress ? Pressable : RawView;
-	const view = <Component {...props} />;
-	const styles = (props.className || "")
+	const view = (
+		<Component
+			className={cn("active:opacity-hover active:scale-95", className)}
+			onPress={onPress}
+			{...props}
+		/>
+	);
+	const styles = (className || "")
 		.trim()
 		.split(" ")
 		.filter((classNameElement) => {

@@ -1,9 +1,12 @@
-import type React from "react";
+import React from "react";
 import { TouchableOpacity } from "react-native";
 
 import * as lucideIcons from "lucide-react-native";
 import type { SFSymbol } from "sf-symbols-typescript";
 import { withUniwind } from "uniwind";
+
+import { TextClassContext } from "~components/text.native";
+import { cn } from "~components/utils";
 
 import type { IconName, Props } from "./icons";
 
@@ -89,10 +92,13 @@ const getComponent = (icon: IconName) => {
 const emptySize: undefined = null;
 
 export const Icon = ({ name, className, onClick }: Props) => {
+	const textClass = React.useContext(TextClassContext);
 	const Component = getComponent(name);
 	// These are actually created only once
-	// eslint-disable-next-line react-hooks/static-components
-	const element = <Component className={className} size={emptySize} />;
+	 
+	const element = (
+		<Component className={cn(textClass, className)} size={emptySize} />
+	);
 	if (onClick) {
 		return (
 			<TouchableOpacity onPress={onClick} style={{ pointerEvents: "box-only" }}>

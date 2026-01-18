@@ -5,18 +5,11 @@ import {
 	Button as ButtonRaw,
 } from "@heroui/button";
 
-export type ButtonProps = Omit<
-	React.ComponentProps<typeof ButtonRaw>,
-	"onClick"
-> & {
-	onClick?: () => void;
-};
+import type { ButtonGroupProps, ButtonProps } from "./button.base";
 
 export const Button: React.FC<ButtonProps> = (props) => (
 	<ButtonRaw {...props} />
 );
-
-export type ButtonGroupProps = React.ComponentProps<typeof ButtonGroupRaw>;
 
 export const ButtonGroup: React.FC<ButtonGroupProps> = (props) => (
 	<ButtonGroupRaw {...props} />

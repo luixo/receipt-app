@@ -1,11 +1,11 @@
 import React from "react";
-import { Button } from "react-native";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTRPC } from "~app/utils/trpc";
+import { Button } from "~components/button";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 

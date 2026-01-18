@@ -4,7 +4,6 @@ import { ScrollView } from "react-native";
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -27,14 +26,12 @@ const Wrapper = () => {
 		],
 	});
 	const format = useFormat();
-	const { useNavigate } = React.use(NavigationContext);
-	const navigate = useNavigate();
 	const [formSwitch, setFormSwitch] = React.useState(false);
 	const formId = React.useId();
 	const [formSwitchById, setFormSwitchById] = React.useState(false);
 	const [iconName, setIconName] = React.useState("none");
 	return (
-		<ScrollView className="bg-blue-300">
+		<ScrollView className="bg-background">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
 				<View className="flex rounded-md bg-blue-500 p-2">
@@ -44,6 +41,34 @@ const Wrapper = () => {
 							{status}: {data}
 						</Text>
 					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					{(
+						[
+							"flat",
+							"solid",
+							"bordered",
+							"light",
+							"faded",
+							"shadow",
+							"ghost",
+						] as const
+					).map((variant) =>
+						(
+							[
+								"default",
+								"success",
+								"primary",
+								"secondary",
+								"warning",
+								"danger",
+							] as const
+						).map((color) => (
+							<Button key={variant + color} variant={variant} color={color}>
+								{variant}/{color}
+							</Button>
+						)),
+					)}
 				</View>
 				<Text className="whitespace-pre text-red-500">
 					Current time in tz:{" "}
@@ -85,9 +110,6 @@ const Wrapper = () => {
 					))}
 					<Text>Selected icon: {iconName}</Text>
 				</View>
-				<Button onClick={() => navigate({ to: "/debts" })}>
-					Go to another page
-				</Button>
 				<HighlightedText>Hightlighted</HighlightedText>
 				<Form onSubmit={() => setFormSwitch((prev) => !prev)}>
 					<Button type="submit">Submit inline</Button>

@@ -71,6 +71,10 @@ const restrictedImports = [
 				actual: "View",
 				message: "Please use View from `components `package",
 			},
+			{
+				actual: "Button",
+				message: "Please use Button from `components `package",
+			},
 		],
 	},
 ];
