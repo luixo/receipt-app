@@ -36,7 +36,7 @@ const ResetPasswordHeader = suspendedFallback<{ token: string }>(
 		const { data: intention } = useSuspenseQuery(
 			trpc.resetPasswordIntentions.get.queryOptions({ token }),
 		);
-		return <Text variant="h4">{intention.email}</Text>;
+		return <Text variant="h3">{intention.email}</Text>;
 	},
 	<Skeleton className="h-8 w-60 rounded" />,
 );
