@@ -1,9 +1,0 @@
-.history
-apps/mobile/.expo
-ios/
-android/
-**/*-snapshots/**/*.json
-**/*.gen.ts
-.output/
-.nitro/
-**/uniwind-types.d.ts
