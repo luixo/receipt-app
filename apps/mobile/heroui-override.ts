@@ -1,12 +1,12 @@
+/* eslint-disable import-x/no-extraneous-dependencies */
 import {
 	type ColorScale,
 	type ThemeColors,
 	semanticColors,
 } from "@heroui/theme";
 import { entries, fromEntries, mapKeys, mapValues, omitBy } from "remeda";
-// This is a temporarily solution, will be removed soon
-// eslint-disable-next-line import-x/no-extraneous-dependencies
 import createPlugin from "tailwindcss/plugin";
+/* eslint-enable import-x/no-extraneous-dependencies */
 
 type ColorKey =
 	| keyof ThemeColors

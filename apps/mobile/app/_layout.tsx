@@ -4,6 +4,8 @@ import * as Sentry from "@sentry/react-native";
 import { fetch } from "expo/fetch";
 import { getLocales } from "expo-localization";
 import { type ErrorBoundaryProps, Stack } from "expo-router";
+import { HeroUINativeProvider } from "heroui-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { isNonNullish } from "remeda";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
@@ -102,9 +104,13 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 const App: React.FC = () => (
-	<ClientProvider>
-		<Stack />
-	</ClientProvider>
+	<GestureHandlerRootView style={{ flex: 1 }}>
+		<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
+			<ClientProvider>
+				<Stack />
+			</ClientProvider>
+		</HeroUINativeProvider>
+	</GestureHandlerRootView>
 );
 
 export default Sentry.wrap(App);

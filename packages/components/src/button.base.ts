@@ -19,11 +19,10 @@ export type ButtonProps = Pick<
 	| "isLoading"
 	| "startContent"
 	| "endContent"
+	| "title"
 	| "as"
-	| "spinnerPlacement"
 	| "type"
 	| "form"
-	| "title"
 > &
 	Omit<ViewProps, "children">;
 

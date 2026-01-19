@@ -95,8 +95,9 @@ export const Icon = ({ name, className, onClick }: Props) => {
 	const textClass = React.useContext(TextClassContext);
 	const Component = getComponent(name);
 	// These are actually created only once
-	 
+
 	const element = (
+		// eslint-disable-next-line react-hooks/static-components
 		<Component className={cn(textClass, className)} size={emptySize} />
 	);
 	if (onClick) {

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
+import { Button, ButtonGroup } from "~components/button";
 import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
@@ -43,6 +43,11 @@ const Wrapper = () => {
 					))}
 				</View>
 				<View className="flex flex-row flex-wrap gap-2">
+					<ButtonGroup variant="solid" color="primary">
+						<Button>First</Button>
+						<Button>Second</Button>
+						<Button>Third</Button>
+					</ButtonGroup>
 					{(
 						[
 							"flat",

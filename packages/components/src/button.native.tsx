@@ -1,40 +1,69 @@
-import React, { Children } from "react";
+import React from "react";
 
-import { ButtonGroupProvider, useButtonGroupContext } from "@heroui/react";
-import { button, buttonGroup } from "@heroui/theme";
+import {
+	ButtonGroupProvider,
+	button,
+	buttonGroup,
+	useButtonGroupContext,
+} from "@heroui/react";
+import { Button as ButtonRaw } from "heroui-native";
 
 import { Text } from "~components/text";
+import { TextWrapper } from "~components/text.native";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 
 import type { ButtonGroupProps, ButtonProps } from "./button.base";
 import { FormContext, formHandlersById } from "./form.native";
 
-export const Button: React.FC<ButtonProps> = ({
-	children,
-	onPress: onPressRaw,
-	type,
-	form,
-	size,
-	color,
-	variant,
-	radius,
-	fullWidth,
-	isDisabled,
-	isIconOnly,
-	className,
-	as,
-	isLoading,
-	spinnerPlacement = "start",
-	startContent,
-	endContent,
-	...props
-}) => {
+const baseButtonClasses = button.base;
+
+// This is needed for tailwind to find `rounded-s-medimm` -> `rounded-l-medium` change
+// rounded-s and rounded-e are not supported on native yet
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const classesNeeded = [
+	"rounded-l-none",
+	"rounded-r-none",
+	"rounded-l-small",
+	"rounded-r-small",
+	"rounded-l-medium",
+	"rounded-r-medium",
+	"rounded-l-large",
+	"rounded-r-large",
+];
+
+const ButtonGroupIndexContent = React.createContext<{
+	index: number;
+	total: number;
+}>({ index: 0, total: 0 });
+
+export const Button: React.FC<ButtonProps> = (props) => {
+	const {
+		children,
+		onPress: onPressRaw,
+		type,
+		form,
+		size,
+		color,
+		variant,
+		radius,
+		fullWidth,
+		isDisabled: isDisabledRaw,
+		isIconOnly,
+		className: rawClassName,
+		as,
+		isLoading,
+		startContent,
+		endContent,
+		...viewProps
+	} = props;
 	const formContext = React.use(FormContext);
-	const groupContext = useButtonGroupContext();
 	// Types actually lie
-	const sureGroupContext =
-		(groupContext as typeof groupContext | undefined) || {};
+	const groupContext = useButtonGroupContext() as
+		| ReturnType<typeof useButtonGroupContext>
+		| undefined;
+	const sureGroupContext = groupContext || {};
+	const childContext = React.use(ButtonGroupIndexContent);
 	const onPress = React.useCallback(() => {
 		if (type === "submit") {
 			if (form) {
@@ -46,37 +75,73 @@ export const Button: React.FC<ButtonProps> = ({
 		onPressRaw?.();
 	}, [onPressRaw, formContext, type, form]);
 	const spinner = <View className="size-4 rounded-full bg-red-500" />;
-	const Component = as ?? View;
+	if (as) {
+		const Component = as;
+		return <Component {...props} />;
+	}
+	const isDisabled = isDisabledRaw ?? sureGroupContext.isDisabled;
+	const className = button({
+		variant: variant ?? sureGroupContext.variant,
+		color: color ?? sureGroupContext.color,
+		fullWidth: fullWidth ?? sureGroupContext.fullWidth,
+		radius: radius ?? sureGroupContext.radius ?? "md",
+		isInGroup: Boolean(groupContext),
+		isDisabled,
+		className: rawClassName,
+		// We forcefully want to ignore size properties of a web heroui button
+		size: "undefined" as unknown as undefined,
+		isIconOnly: false,
+	})
+		.split(" ")
+		.filter((element) => !baseButtonClasses.includes(element))
+		.filter((element) => {
+			if (childContext.total === 0) {
+				return true;
+			}
+			if (childContext.index === 0) {
+				return !element.includes("last:");
+			}
+			if (childContext.index === childContext.total - 1) {
+				return !element.includes("first:");
+			}
+			return !element.includes("last:") && !element.includes("first:");
+		})
+		.map((element) =>
+			element
+				.replace("border-medium", "border-2")
+				.replace("data-[hover=true]", "active")
+				.replace("first:", "")
+				.replace("last:", "")
+				.replace("rounded-s", "rounded-l")
+				.replace("rounded-e", "rounded-r"),
+		)
+		.join(" ");
 	return (
-		<Component
-			className={button({
-				size: sureGroupContext.size || size,
-				color: sureGroupContext.color || color,
-				variant: sureGroupContext.variant || variant,
-				radius: sureGroupContext.radius || radius,
-				fullWidth,
-				isDisabled: sureGroupContext.isDisabled || isDisabled,
-				isInGroup: Boolean(groupContext),
-				isIconOnly: sureGroupContext.isIconOnly || isIconOnly,
-				className: cn("flex-row", className),
-			})}
-			role="button"
+		<ButtonRaw
+			size={size ?? sureGroupContext.size}
+			isDisabled={isDisabled}
+			isIconOnly={isIconOnly ?? sureGroupContext.isIconOnly}
 			onPress={isDisabled ? undefined : onPress}
-			{...props}
+			pressableFeedbackVariant="ripple"
+			className={className}
+			{...viewProps}
 		>
-			{startContent}
-			{isLoading && spinnerPlacement === "start" ? spinner : null}
-			{isLoading && isIconOnly ? null : typeof children === "string" ||
-			  Children.toArray(children).every(
-					(child) => typeof child === "string",
-			  ) ? (
-				<Text>{children as string}</Text>
-			) : (
-				children
-			)}
-			{isLoading && spinnerPlacement === "end" ? spinner : null}
-			{endContent}
-		</Component>
+			<TextWrapper className={className}>
+				{startContent}
+				{isLoading ? spinner : null}
+				{isLoading && isIconOnly ? null : typeof children === "string" ||
+				  React.Children.toArray(children).every(
+						(child) => typeof child === "string",
+				  ) ? (
+					<ButtonRaw.Label>
+						<Text>{children as string}</Text>
+					</ButtonRaw.Label>
+				) : (
+					children
+				)}
+				{endContent}
+			</TextWrapper>
+		</ButtonRaw>
 	);
 };
 
@@ -90,20 +155,33 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 	fullWidth,
 	className,
 	children,
-}) => (
-	<View className={buttonGroup({ fullWidth, className })}>
-		<ButtonGroupProvider
-			value={{
-				size,
-				color,
-				variant,
-				radius,
-				isDisabled,
-				isIconOnly,
+}) => {
+	const totalChildren = React.Children.count(children);
+	return (
+		<View
+			className={buttonGroup({
 				fullWidth,
-			}}
+				className: cn("flex-row", className),
+			})}
 		>
-			{children}
-		</ButtonGroupProvider>
-	</View>
-);
+			<ButtonGroupProvider
+				value={{
+					size,
+					color,
+					variant,
+					radius,
+					isDisabled,
+					isIconOnly,
+					fullWidth,
+				}}
+			>
+				{React.Children.map(children, (child, index) => (
+					// eslint-disable-next-line react/jsx-no-constructed-context-values
+					<ButtonGroupIndexContent value={{ index, total: totalChildren }}>
+						{child}
+					</ButtonGroupIndexContent>
+				))}
+			</ButtonGroupProvider>
+		</View>
+	);
+};

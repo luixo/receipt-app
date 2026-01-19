@@ -1,10 +1,106 @@
-@import "../../packages/app/global.css";
-@source "../../packages/components";
+/* remove this section when https://github.com/heroui-inc/heroui-native/issues/133 is fixed */
+@import "tailwindcss";
+@import "uniwind";
+/* end of remove section */
+@import "heroui-native/styles";
+
 /* Move this to a general heroui.ts from `packages/app` when bug below is fixed */
 @plugin "./heroui.ts";
 /* Remove this and @heroui/theme patch when https://github.com/uni-stack/uniwind/issues/305 is resolved */
 @plugin "./heroui-override.ts";
+
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+@source "../../packages/components";
+@source "../../node_modules/heroui-native/lib";
+
+@layer theme {
+	:root {
+		@variant light {
+			/* Base Colors */
+			--background: var(--heroui-background);
+			--foreground: var(--heroui-foreground);
+			/* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+			--surface: var(--heroui-content1);
+			--surface-foreground: var(--heroui-foreground);
+			/* Overlay: Used for floating/overlay components (dialogs, popovers, modals, menus) - lighter for contrast */
+			--overlay: var(--heroui-content1);
+			--overlay-foreground: var(--heroui-foreground);
+			--muted: var(--heroui-default-600);
+			--default: var(--heroui-default);
+			--default-foreground: var(--heroui-default-foreground);
+			--accent: var(--heroui-primary);
+			--accent-foreground: var(--heroui-primary-foreground);
+			/* Form Field Defaults - Colors */
+			--field-background: var(--heroui-default-100);
+			--field-foreground: var(--heroui-default-foreground);
+			--field-placeholder: var(--heroui-foreground-500);
+			--field-border: transparent; /* no border by default on form fields */
+			/* Status Colors */
+			--success: var(--heroui-success);
+			--success-foreground: var(--heroui-success-foreground);
+			--warning: var(--heroui-warning);
+			--warning-foreground: var(--heroui-foreground);
+			--danger: var(--heroui-danger);
+			--danger-foreground: var(--heroui-danger-foreground);
+			/* Component Colors */
+			--segment: var(--heroui-default);
+			--segment-foreground: var(--heroui-default-foreground);
+			/* Misc Colors */
+			--border: var(--heroui-default-200);
+			--divider: var(--heroui-divider);
+			--link: var(--heroui-foreground);
+			/* Shadows */
+			--surface-shadow:
+				0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+				0 0 1px 0 rgba(0, 0, 0, 0.06);
+			/* Overlay shadow */
+			--overlay-shadow:
+				0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
+			--field-shadow:
+				0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+				0 0 1px 0 rgba(0, 0, 0, 0.06);
+		}
+		@variant dark {
+			/* Base Colors */
+			--background: var(--heroui-background);
+			--foreground: var(--heroui-foreground);
+			/* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+			--surface: var(--heroui-content1);
+			--surface-foreground: var(--heroui-foreground);
+			/* Overlay: Used for floating/overlay components (dialogs, popovers, modals, menus) - lighter for contrast */
+			--overlay: var(--heroui-content1);
+			--overlay-foreground: var(--heroui-foreground);
+			--muted: var(--heroui-default-600);
+			--default: var(--heroui-default);
+			--default-foreground: var(--heroui-default-foreground);
+			--accent: var(--heroui-primary);
+			--accent-foreground: var(--heroui-primary-foreground);
+			/* Form Field Defaults - Colors */
+			--field-background: var(--heroui-default-200);
+			--field-foreground: var(--heroui-default-foreground);
+			--field-placeholder: var(--heroui-foreground-500);
+			--field-border: transparent; /* no border by default on form fields */
+			/* Status Colors */
+			--success: var(--heroui-success);
+			--success-foreground: var(--heroui-success-foreground);
+			--warning: var(--heroui-warning);
+			--warning-foreground: var(--heroui-foreground);
+			--danger: var(--heroui-danger);
+			--danger-foreground: var(--heroui-danger-foreground);
+			/* Component Colors */
+			--segment: var(--heroui-default);
+			--segment-foreground: var(--heroui-default-foreground);
+			/* Misc Colors */
+			--border: var(--heroui-default-100);
+			--divider: var(--heroui-divider);
+			--link: var(--heroui-foreground);
+			/* Shadows */
+			--surface-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
+			--overlay-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
+			--field-shadow: 0 0 0 0 transparent inset; /* Transparent shadow to allow ring utilities to work */
+		}
+	}
+}
 
 @theme {
 	/* Sync this with app.config.ts */

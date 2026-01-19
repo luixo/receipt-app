@@ -2697,6 +2697,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@egjs/hammerjs@npm:^2.0.17":
+  version: 2.0.17
+  resolution: "@egjs/hammerjs@npm:2.0.17"
+  dependencies:
+    "@types/hammerjs": "npm:^2.0.36"
+  checksum: 10/f695129d45edfcfd6c5f2d1d36186da36ffade013991972ce23721a6b7ad7f214ce282abc4023e3f6b63062620852a63e897b523f247804afc7acd188fee9d9d
+  languageName: node
+  linkType: hard
+
 "@emnapi/core@npm:^1.4.3":
   version: 1.4.3
   resolution: "@emnapi/core@npm:1.4.3"
@@ -4110,6 +4119,40 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: 10/8888151cb5c271df03e1bba8babb6cc48f5c34e2784c511fff4ed014726a1ab30b9282688ce272585907ef92dfc24e48c76f3604f219a82bc1a79622a2edfd5c
+  languageName: node
+  linkType: hard
+
+"@gorhom/bottom-sheet@npm:^5.2.8":
+  version: 5.2.8
+  resolution: "@gorhom/bottom-sheet@npm:5.2.8"
+  dependencies:
+    "@gorhom/portal": "npm:1.0.14"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    "@types/react": "*"
+    "@types/react-native": "*"
+    react: "*"
+    react-native: "*"
+    react-native-gesture-handler: ">=2.16.1"
+    react-native-reanimated: "*"
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-native":
+      optional: true
+  checksum: 10/b237f04dfd2b7ea2a24b12d2186f38b8debf95a5ef660802f7c2a19998ec8a7f7d599cd9079b9ba5bba2c6958cee2040d3d1adc3d3ace8c4964a469c751f4a5a
+  languageName: node
+  linkType: hard
+
+"@gorhom/portal@npm:1.0.14":
+  version: 1.0.14
+  resolution: "@gorhom/portal@npm:1.0.14"
+  dependencies:
+    nanoid: "npm:^3.3.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/e0fa06be88b850cccdc6a1417a86e5ac21d82e3bfd1cec7eb05eccf7f3b595babe305541f278fdcbde34f3a9db465097dca2c785445c28bafb83b744e235da0c
   languageName: node
   linkType: hard
 
@@ -7036,6 +7079,7 @@ __metadata:
     class-variance-authority: "npm:0.7.1"
     date-fns: "npm:^3.3.1"
     framer-motion: "npm:^11.11.11"
+    heroui-native: "catalog:"
     lucide-react: "npm:^0.562.0"
     lucide-react-native: "npm:^0.562.0"
     react-native-svg: "npm:^15.15.1"
@@ -7103,6 +7147,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.26.0"
     "@expo-google-fonts/inter": "npm:^0.4.2"
+    "@gorhom/bottom-sheet": "npm:^5.2.8"
     "@ra/app": "workspace:*"
     "@ra/components": "workspace:*"
     "@ra/utils": "workspace:*"
@@ -7123,14 +7168,17 @@ __metadata:
     expo-secure-store: "npm:^15.0.8"
     expo-splash-screen: "npm:^31.0.13"
     expo-system-ui: "npm:^6.0.9"
+    heroui-native: "catalog:"
     react: "catalog:"
     react-i18next: "catalog:"
+    react-native-gesture-handler: "npm:^2.28.0"
     react-native-reanimated: "npm:~4.1.1"
     react-native-safe-area-context: "npm:^5.6.2"
     react-native-screens: "npm:~4.16.0"
     react-native-worklets: "npm:0.5.1"
     react-query-external-sync: "npm:^2.2.3"
     socket.io-client: "npm:^4.8.3"
+    tailwind-variants: "npm:^3.2.2"
     uniwind: "catalog:"
   languageName: unknown
   linkType: soft
@@ -12752,6 +12800,13 @@ __metadata:
   dependencies:
     "@types/node": "npm:*"
   checksum: 10/79d746a8f053954bba36bd3d94a90c78de995d126289d656fb3271dd9f1229d33f678da04d10bce6be440494a5a73438e2e363e92802d16b8315b051036c5256
+  languageName: node
+  linkType: hard
+
+"@types/hammerjs@npm:^2.0.36":
+  version: 2.0.46
+  resolution: "@types/hammerjs@npm:2.0.46"
+  checksum: 10/1b6502d668f45ca49fb488c01f7938d3aa75e989d70c64801c8feded7d659ca1a118f745c1b604d220efe344c93231767d5cc68c05e00e069c14539b6143cfd9
   languageName: node
   linkType: hard
 
@@ -20441,7 +20496,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.2":
+"heroui-native@npm:^1.0.0-beta.12":
+  version: 1.0.0-beta.12
+  resolution: "heroui-native@npm:1.0.0-beta.12"
+  peerDependencies:
+    "@gorhom/bottom-sheet": ^5
+    react: ">=19.0.0"
+    react-native: ">=0.81.0"
+    react-native-reanimated: ~4.1.1
+    react-native-safe-area-context: ~5.6.0
+    react-native-screens: ">=4"
+    react-native-svg: 15.12.1
+    react-native-worklets: 0.5.1
+    tailwind-merge: ^3.4.0
+    tailwind-variants: ^3.2.2
+  checksum: 10/b148a90fac849c68299811fe44a38f3b299b3540f4ba025db3163b1e62ee6a9a84a9bd19d90cf11359f8d17a2e9046c24082894e283a9a2d9c69cfd88a19a277
+  languageName: node
+  linkType: hard
+
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -23782,7 +23855,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.11, nanoid@npm:^3.3.8":
+"nanoid@npm:^3.3.1, nanoid@npm:^3.3.11, nanoid@npm:^3.3.8":
   version: 3.3.11
   resolution: "nanoid@npm:3.3.11"
   bin:
@@ -26027,6 +26100,20 @@ __metadata:
   version: 19.2.3
   resolution: "react-is@npm:19.2.3"
   checksum: 10/547ac397308204742447b5e4cf556cf09aa97f4cc1c95c4a28e4b2e73a7efab03e59d7b89b4a01f67bf9bf0ca87348a7f0e88bc87c0af6be458aaac1dec5e132
+  languageName: node
+  linkType: hard
+
+"react-native-gesture-handler@npm:^2.28.0":
+  version: 2.30.0
+  resolution: "react-native-gesture-handler@npm:2.30.0"
+  dependencies:
+    "@egjs/hammerjs": "npm:^2.0.17"
+    hoist-non-react-statics: "npm:^3.3.0"
+    invariant: "npm:^2.2.4"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/242b1eb29202bc9fc7bf0271c3da102559adc9f2810441465b6d78c1a8ed8f65bdd91335957c841a4716f796be3e7b87d1d55629d6803ea12e1be832d89c946c
   languageName: node
   linkType: hard
 
@@ -28769,6 +28856,19 @@ __metadata:
     tailwind-merge:
       optional: true
   checksum: 10/d49f6eaaea7527d5c709089e86f76c400b8ad23ecc182fe12d4551023759af0da2420e9c16631b5b7b48766655856463451a59939c6a728042ee0f83d4c2ee81
+  languageName: node
+  linkType: hard
+
+"tailwind-variants@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "tailwind-variants@npm:3.2.2"
+  peerDependencies:
+    tailwind-merge: ">=3.0.0"
+    tailwindcss: "*"
+  peerDependenciesMeta:
+    tailwind-merge:
+      optional: true
+  checksum: 10/a9f7b339472eb945369249c3a364ebd16a2ab068c759c507a6d4fe089c92e8c81bccdda1af7d831c515e2e88357fa1735775e3255d09db392abecbf7fa002108
   languageName: node
   linkType: hard
 
