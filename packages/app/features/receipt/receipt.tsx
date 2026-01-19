@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUserAvatar } from "~app/components/app/user-avatar";
-import { SkeletonDateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import {
@@ -22,6 +21,7 @@ import {
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTRPC } from "~app/utils/trpc";
+import { SkeletonDateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";

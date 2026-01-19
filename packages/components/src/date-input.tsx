@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Calendar } from "@heroui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
@@ -39,6 +39,8 @@ export const DateInput: React.FC<Props> = ({
 			isTriggerDisabled={isDisabled}
 		>
 			<PopoverTrigger>
+				{/* We will replace this in a native component */}
+				{/* eslint-disable-next-line react/forbid-elements */}
 				<div>
 					<Input
 						value={value ? formatPlainDate(value) : ""}
@@ -50,7 +52,7 @@ export const DateInput: React.FC<Props> = ({
 								),
 							);
 						}}
-						isReadOnly
+						isReadOnly={import.meta.env.MODE !== "test"}
 						label={label || t("components.dateInput.label")}
 						mutation={mutation}
 						type="text"

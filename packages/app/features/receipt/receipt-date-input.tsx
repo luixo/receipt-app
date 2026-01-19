@@ -2,10 +2,10 @@ import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
 
-import { DateInput } from "~app/components/date-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
+import { DateInput } from "~components/date-input";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import type { Temporal } from "~utils/date";
 import { areEqual } from "~utils/date";

@@ -35,6 +35,7 @@
 		"lint-staged"
 	],
 	"resolutions": {
+		"@heroui/theme@npm:2.4.22": "patch:@heroui/theme@npm%3A2.4.22#~/patches/@heroui-theme-npm-2.4.22.patch",
 		"@heroui/toast@npm:2.0.16": "patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch",
 		"@internationalized/date": "^3.10.0",
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
@@ -43,8 +44,7 @@
 		"framer-motion@npm:^11.11.11": "patch:framer-motion@npm%3A11.11.11#~/patches/framer-motion-npm-11.11.11.patch",
 		"lucide-react@npm:^0.562.0": "patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch",
 		"react-native-web@npm:^0.21.1": "patch:react-native-web@npm%3A0.21.1#~/patches/react-native-web-npm-0.21.1.patch",
-		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch",
-		"@heroui/theme@npm:2.4.22": "patch:@heroui/theme@npm%3A2.4.22#~/patches/@heroui-theme-npm-2.4.22.patch"
+		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch"
 	},
 	"dependencies": {
 		"react": "catalog:",

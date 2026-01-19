@@ -13,7 +13,6 @@ import {
 	SkeletonSignButtonGroup,
 } from "~app/components/app/sign-button-group";
 import { SkeletonUser } from "~app/components/app/user";
-import { DateInput, SkeletonDateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import {
 	RemoveButton,
@@ -37,6 +36,7 @@ import {
 	debtNoteSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { DateInput, SkeletonDateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";

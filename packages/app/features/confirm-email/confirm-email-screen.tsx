@@ -73,7 +73,9 @@ export const ConfirmEmailScreen: React.FC<{
 				<ConfirmEmail confirmMutation={confirmEmailMutation} token={token} />
 			) : (
 				<EmptyCard title={t("confirm.error.title")}>
-					<Text variant="h3">{t("confirm.error.description")}</Text>
+					<Text variant="h3" className="text-center">
+						{t("confirm.error.description")}
+					</Text>
 				</EmptyCard>
 			)}
 		</>

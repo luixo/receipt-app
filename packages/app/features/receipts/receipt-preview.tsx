@@ -197,6 +197,8 @@ export const ReceiptPreview = suspendedFallback<{
 									}
 									return (
 										<Text key={itemId}>
+											{/* This casting intentional, text can be rendered inside text */}
+											{/* It's a rare case so once-in-a-while casting is cheaper than expanding Text children type */}
 											{
 												(
 													<Trans
@@ -209,9 +211,8 @@ export const ReceiptPreview = suspendedFallback<{
 																</HighlightText>
 															),
 														}}
-													/> // This is intentional, text can be rendered inside text
-												) as // It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
-												unknown as string
+													/>
+												) as unknown as string
 											}
 										</Text>
 									);

@@ -257,5 +257,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
-      - name: Run linter
+      - name: Run Expo doctor
         run: yarn native:doctor

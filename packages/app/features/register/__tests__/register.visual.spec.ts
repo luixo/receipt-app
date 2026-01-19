@@ -36,7 +36,9 @@ test("'auth.register' mutation", async ({
 	clearToasts,
 }) => {
 	api.mockUtils.noAuthPage();
-	api.mockFirst("auth.register", () => {
+	const registerErrorPause = api.createPause();
+	api.mockFirst("auth.register", async () => {
+		await registerErrorPause.promise;
 		throw new TRPCError({
 			code: "CONFLICT",
 			message: "Email already exist",
@@ -46,6 +48,8 @@ test("'auth.register' mutation", async ({
 	await page.goto("/register");
 	await fillValidFields();
 	await registerButton.click();
+	await clearToasts();
+	registerErrorPause.resolve();
 	await awaitCacheKey("auth.register", { errored: 1 });
 	await clearToasts();
 
@@ -58,8 +62,8 @@ test("'auth.register' mutation", async ({
 		return next();
 	});
 	await registerButton.click();
-
 	await clearToasts();
+
 	await expectScreenshotWithSchemes("loading.png");
 });
 

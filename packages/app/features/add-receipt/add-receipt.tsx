@@ -16,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import type z from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
-import { DateInput } from "~app/components/date-input";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import {
@@ -34,6 +33,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm, useTypedValues } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
+import { DateInput } from "~components/date-input";
 import type { UserId } from "~db/ids";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getNow } from "~utils/date";

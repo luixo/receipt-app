@@ -21,21 +21,6 @@ export const SkeletonCurrencyInput = () => {
 	return <SkeletonInput label={t("components.currencyInput.currency")} />;
 };
 
-type InnerProps = {
-	value: CurrencyCode;
-	onValueChange: (currencyCode: CurrencyCode) => void;
-	mutation?: MutationsProp;
-	onClick: () => void;
-} & Omit<
-	React.ComponentProps<typeof Input>,
-	"value" | "onChange" | "onValueChange"
->;
-
-const InnerInput: React.FC<InnerProps> = ({ value, ...props }) => {
-	const locale = useLocale();
-	return <Input value={getCurrencyDescription(locale, value)} {...props} />;
-};
-
 const useAutoLoadCurrency = (
 	topQueryOptions: React.ComponentProps<
 		typeof CurrenciesPicker
@@ -77,6 +62,7 @@ export const CurrencyInput: React.FC<Props> = ({
 	value,
 	onValueChange,
 }) => {
+	const locale = useLocale();
 	const { t } = useTranslation("default");
 	const [
 		modalOpen,
@@ -118,14 +104,14 @@ export const CurrencyInput: React.FC<Props> = ({
 	return (
 		<>
 			{value ? (
-				<InnerInput
-					value={value}
+				<Input
+					value={getCurrencyDescription(locale, value)}
 					onValueChange={onValueChange}
 					label={t("components.currencyInput.currency")}
 					name="currency"
 					mutation={mutation}
 					isReadOnly
-					onClick={openModal}
+					onPress={openModal}
 				/>
 			) : (
 				<Button

@@ -11,7 +11,6 @@ import {
 	SignButtonGroup,
 } from "~app/components/app/sign-button-group";
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
@@ -27,6 +26,7 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { DateInput } from "~components/date-input";
 import { BackLink } from "~components/link";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow, temporalSchemas } from "~utils/date";
