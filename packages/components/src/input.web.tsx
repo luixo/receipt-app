@@ -31,6 +31,7 @@ export type Props = Pick<
 > & {
 	autoCapitalize?: "none" | "sentences" | "words" | "characters";
 	onBlur?: () => void;
+	onPress?: () => void;
 	errorMessage?: string;
 	ref?: React.RefObject<InputHandler>;
 	label?: string;
@@ -49,6 +50,7 @@ export const Input: React.FC<Props> = ({
 	mutation,
 	multiline,
 	ref,
+	onPress,
 	...props
 }) => {
 	const innerRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -72,6 +74,7 @@ export const Input: React.FC<Props> = ({
 			as={multiline ? Textarea : undefined}
 			ref={innerRef as React.RefObject<HTMLInputElement | null>}
 			{...props}
+			onClick={onPress}
 			isDisabled={isDisabled}
 			color={color}
 			description={description}

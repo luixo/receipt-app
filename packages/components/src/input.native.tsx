@@ -173,6 +173,7 @@ const InnerInput = ({
 	size,
 	autoFocus,
 	autoCapitalize,
+	onPress,
 }: Omit<Props, "ref" | "mutation" | "fieldError"> & {
 	ref?: React.RefObject<TextInput | null>;
 }) => {
@@ -193,7 +194,7 @@ const InnerInput = ({
 		>
 			{labelPlacement === "inside" ? null : labelElement}
 			<View className="flex-1">
-				<View className="relative flex flex-1 flex-col">
+				<View className="relative flex flex-1 flex-col" onPress={onPress}>
 					{labelPlacement === "inside" ? (
 						<View
 							onLayout={(layout) => setTopContentHeight(layout.height)}

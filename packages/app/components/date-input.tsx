@@ -1,9 +1,11 @@
-import type React from "react";
+import React from "react";
 
+import { Calendar } from "@heroui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { useTranslation } from "react-i18next";
 
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormat } from "~app/hooks/use-format";
-import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
 import type { MutationsProp } from "~components/utils";
@@ -27,30 +29,47 @@ export const DateInput: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("default");
 	const { formatPlainDate } = useFormat();
+	const [open, { switchValue: switchOpen, setFalse: setClose }] =
+		useBooleanState(false);
+	const isDisabled = getMutationLoading(mutation);
 	return (
-		<Calendar
-			value={value}
-			onChange={(nextValue) => onValueChange(nextValue)}
-			isDisabled={getMutationLoading(mutation) || props.isDisabled}
+		<Popover
+			isOpen={open}
+			onOpenChange={switchOpen}
+			isTriggerDisabled={isDisabled}
 		>
-			<View>
-				<Input
-					value={value ? formatPlainDate(value) : ""}
-					onValueChange={(nextValue) => {
-						// Manual update - or by automation tool
-						onValueChange(
-							parsers.plainDate(
-								nextValue as Parameters<typeof parsers.plainDate>[0],
-							),
-						);
+			<PopoverTrigger>
+				<div>
+					<Input
+						value={value ? formatPlainDate(value) : ""}
+						onValueChange={(nextValue) => {
+							// Manual update - or by automation tool
+							onValueChange(
+								parsers.plainDate(
+									nextValue as Parameters<typeof parsers.plainDate>[0],
+								),
+							);
+						}}
+						isReadOnly
+						label={label || t("components.dateInput.label")}
+						mutation={mutation}
+						type="text"
+						{...props}
+					/>
+				</div>
+			</PopoverTrigger>
+			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
+				<Calendar<Temporal.PlainDate>
+					onChange={(nextValue) => {
+						onValueChange(nextValue);
+						setClose();
 					}}
-					label={label || t("components.dateInput.label")}
-					mutation={mutation}
-					type="text"
-					{...props}
+					showMonthAndYearPickers
+					value={value}
+					isDisabled={isDisabled}
 				/>
-			</View>
-		</Calendar>
+			</PopoverContent>
+		</Popover>
 	);
 };
 
