@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { useFormat } from "~app/hooks/use-format";
 import { Calendar } from "~components/calendar";
-import { Input, SkeletonInput } from "~components/input";
+import { Input } from "~components/input";
+import { SkeletonInput } from "~components/skeleton-input";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
 import { View } from "~components/view";

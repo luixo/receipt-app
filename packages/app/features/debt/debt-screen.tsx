@@ -38,10 +38,10 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
-import { SkeletonInput } from "~components/input";
 import { BackLink, ButtonLink } from "~components/link";
 import { SkeletonNumberInput } from "~components/number-input";
 import { SaveButton } from "~components/save-button";
+import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";

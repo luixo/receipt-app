@@ -1,5 +1,9 @@
 import React from "react";
-import { View as RawView } from "react-native";
+import {
+	type LayoutRectangle,
+	View as RawView,
+	type ViewStyle,
+} from "react-native";
 
 import { cn } from "~components/utils";
 
@@ -13,12 +17,17 @@ export type Props = {
 	children?: ViewReactNode;
 	testID?: string;
 	onPress?: () => void;
+	onLayout?: (rect: LayoutRectangle) => void;
+	style?: ViewStyle;
 };
 
-export const View = React.memo<Props>(({ onPress, className, ...props }) => (
-	<RawView
-		{...props}
-		onClick={onPress}
-		className={cn(onPress ? "cursor-pointer" : undefined, className)}
-	/>
-));
+export const View = React.memo<Props>(
+	({ onPress, className, onLayout, ...props }) => (
+		<RawView
+			{...props}
+			onClick={onPress}
+			onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
+			className={cn(onPress ? "cursor-pointer" : undefined, className)}
+		/>
+	),
+);

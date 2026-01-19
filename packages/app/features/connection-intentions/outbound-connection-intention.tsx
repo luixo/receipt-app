@@ -8,7 +8,8 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
-import { Input, SkeletonInput } from "~components/input";
+import { Input } from "~components/input";
+import { SkeletonInput } from "~components/skeleton-input";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {

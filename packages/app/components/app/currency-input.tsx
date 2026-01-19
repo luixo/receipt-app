@@ -12,7 +12,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input, SkeletonInput } from "~components/input";
+import { Input } from "~components/input";
+import { SkeletonInput } from "~components/skeleton-input";
 import { type MutationsProp, getMutationLoading } from "~components/utils";
 
 export const SkeletonCurrencyInput = () => {
@@ -30,19 +31,9 @@ type InnerProps = {
 	"value" | "onChange" | "onValueChange"
 >;
 
-const InnerInput: React.FC<InnerProps> = ({
-	value,
-	onValueChange,
-	...props
-}) => {
+const InnerInput: React.FC<InnerProps> = ({ value, ...props }) => {
 	const locale = useLocale();
-	return (
-		<Input
-			value={getCurrencyDescription(locale, value)}
-			onChange={(e) => onValueChange(e.currentTarget.value)}
-			{...props}
-		/>
-	);
+	return <Input value={getCurrencyDescription(locale, value)} {...props} />;
 };
 
 const useAutoLoadCurrency = (

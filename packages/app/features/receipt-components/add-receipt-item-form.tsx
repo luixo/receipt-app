@@ -14,6 +14,7 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import type { InputHandler } from "~components/input";
 import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -35,9 +36,7 @@ export const AddReceiptItemForm: React.FC = () => {
 		(vars) => vars.receiptId === receiptId,
 	);
 	const isPending = addItemMutationState?.status === "pending";
-	const nameFieldRef = React.useRef<HTMLInputElement & HTMLTextAreaElement>(
-		null,
-	);
+	const nameFieldRef = React.useRef<InputHandler>({ focus: () => {} });
 
 	const defaultValues: Partial<Form> = {
 		name: "",
@@ -57,7 +56,7 @@ export const AddReceiptItemForm: React.FC = () => {
 						{ ...(defaultValues as Form), price: 0 },
 						{ keepDefaultValues: true },
 					);
-					nameFieldRef.current?.focus();
+					nameFieldRef.current.focus();
 				},
 			});
 		},

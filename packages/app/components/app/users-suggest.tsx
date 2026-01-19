@@ -24,7 +24,7 @@ import {
 } from "~components/autocomplete";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
-import { SkeletonInput } from "~components/input";
+import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 

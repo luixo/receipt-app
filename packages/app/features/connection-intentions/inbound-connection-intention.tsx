@@ -14,7 +14,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationResult, TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Input, SkeletonInput } from "~components/input";
+import { Input } from "~components/input";
+import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
@@ -29,7 +30,6 @@ export const SkeletonInboundConnectionIntention = () => {
 					className="max-w-xs"
 					size="sm"
 					label={t("intentions.form.email.label")}
-					variant="bordered"
 					skeletonClassName="w-48"
 				/>
 				<Button color="warning" variant="bordered" isDisabled>
@@ -138,7 +138,6 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					defaultValue={intention.account.email}
 					label={t("intentions.form.email.label")}
 					type="email"
-					variant="bordered"
 				/>
 				<Button
 					color="warning"

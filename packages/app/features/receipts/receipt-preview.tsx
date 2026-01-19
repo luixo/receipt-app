@@ -210,8 +210,8 @@ export const ReceiptPreview = suspendedFallback<{
 															),
 														}}
 													/> // This is intentional, text can be rendered inside text
-													// It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
-												) as unknown as string
+												) as // It's a rare case so once-in-a-while casting is cheaper than expanding Text children type
+												unknown as string
 											}
 										</Text>
 									);

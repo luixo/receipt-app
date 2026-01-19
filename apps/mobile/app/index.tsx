@@ -10,6 +10,7 @@ import { Button, ButtonGroup } from "~components/button";
 import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
+import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
@@ -30,6 +31,7 @@ const Wrapper = () => {
 	const formId = React.useId();
 	const [formSwitchById, setFormSwitchById] = React.useState(false);
 	const [iconName, setIconName] = React.useState("none");
+	const [value, setValue] = React.useState("?");
 	return (
 		<ScrollView className="bg-background">
 			<View className="flex gap-2 rounded-md p-2">
@@ -42,6 +44,25 @@ const Wrapper = () => {
 						</Text>
 					))}
 				</View>
+				{(["inside", "outside", "outside-left", "outside-top"] as const).map(
+					(placement) =>
+						(["sm", "md", "lg"] as const).map((size) => (
+							<Input
+								key={placement + size}
+								startContent={<Icon name="search" className="size-5" />}
+								endContent={<Icon name="search" className="size-5" />}
+								value={value}
+								isRequired
+								labelPlacement={placement}
+								label={`${placement}/${size} label`}
+								size={size}
+								onValueChange={setValue}
+								placeholder="This is placeholder"
+								isClearable
+								description={`This is a ${placement}/${size}`}
+							/>
+						)),
+				)}
 				<View className="flex flex-row flex-wrap gap-2">
 					<ButtonGroup variant="solid" color="primary">
 						<Button>First</Button>

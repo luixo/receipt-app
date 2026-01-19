@@ -13,6 +13,7 @@ import { LinksContext } from "~app/contexts/links-context";
 
 export const ErrorComponent: ErrorRouteComponent = ({
 	error,
+	info,
 	reset: resetBoundary,
 }) => {
 	const { t } = useTranslation("default");
@@ -23,6 +24,7 @@ export const ErrorComponent: ErrorRouteComponent = ({
 	return (
 		<ErrorMessage
 			message={error.message}
+			stack={info?.componentStack}
 			button={{
 				text: t("components.errorMessage.refetch"),
 				onPress: resetBoundary,

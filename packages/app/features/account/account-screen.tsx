@@ -19,8 +19,8 @@ import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
-import { SkeletonInput } from "~components/input";
 import { SaveButton } from "~components/save-button";
+import { SkeletonInput } from "~components/skeleton-input";
 import { options as accountChangeNameOptions } from "~mutations/account/change-name";
 import { options as accountLogoutOptions } from "~mutations/account/logout";
 

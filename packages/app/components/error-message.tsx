@@ -16,13 +16,14 @@ import { View } from "~components/view";
 
 type Props = {
 	message: string;
+	stack?: string;
 	button?: {
 		text: string;
 		onPress: () => void;
 	};
 };
 
-export const ErrorMessage: React.FC<Props> = ({ message, button }) => {
+export const ErrorMessage: React.FC<Props> = ({ message, stack, button }) => {
 	const { t } = useTranslation("default");
 	return (
 		<Card data-testid="error-message">
@@ -37,6 +38,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => {
 			<Divider />
 			<CardBody>
 				<Text className="whitespace-pre-wrap">{message}</Text>
+				<Text className="text-sm whitespace-pre-wrap">{stack}</Text>
 			</CardBody>
 			{button ? (
 				<>
