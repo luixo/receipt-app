@@ -57,24 +57,24 @@ const Wrapper = () => {
 				>
 					Set color mode to {selectedColorMode === "dark" ? "light" : "dark"}
 				</Button>
-				{(["inside", "outside", "outside-left", "outside-top"] as const).map(
-					(placement) =>
-						(["sm", "md", "lg"] as const).map((size) => (
-							<Input
-								key={placement + size}
-								startContent={<Icon name="search" className="size-5" />}
-								endContent={<Icon name="search" className="size-5" />}
-								value={value}
-								isRequired
-								labelPlacement={placement}
-								label={`${placement}/${size} label`}
-								size={size}
-								onValueChange={setValue}
-								placeholder="This is placeholder"
-								isClearable
-								description={`This is a ${placement}/${size}`}
-							/>
-						)),
+				{(["inside", "outside", "outside-left"] as const).map((placement) =>
+					(["sm", "md", "lg"] as const).map((size) => (
+						<Input
+							key={placement + size}
+							startContent={<Icon name="search" className="size-5" />}
+							endContent={<Icon name="search" className="size-5" />}
+							value={value}
+							isRequired
+							labelPlacement={placement}
+							label={`${placement}/${size} label`}
+							size={size}
+							onValueChange={setValue}
+							placeholder="This is placeholder"
+							isClearable
+							description={`This is a ${placement}/${size}`}
+							// errorMessage={`Error in ${placement}/${size}`}
+						/>
+					)),
 				)}
 				<View className="flex flex-row flex-wrap gap-2">
 					<ButtonGroup variant="solid" color="primary">

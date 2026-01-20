@@ -10,6 +10,7 @@ import {
 	useMutationErrors,
 	usePasswordVisibility,
 } from "~components/input.base";
+import { Text } from "~components/text";
 import { View } from "~components/view";
 
 import type { Props } from "./input";
@@ -17,10 +18,11 @@ import type { Props } from "./input";
 const input = tv({
 	slots: {
 		base: "",
-		input: "flex-1",
-		sideContent:
-			"absolute top-0 bottom-0 z-10 flex-row items-start justify-center gap-2",
-		topContent: "absolute top-0 left-0 z-10 -mx-1",
+		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
+		wrapper:
+			"bg-field border-field shadow-field justify-center rounded-2xl border-2 px-3",
+		innerWrapper: "flex-row items-center justify-center",
+		sideContent: "flex-row items-start justify-center gap-2",
 		label: "text-normal",
 	},
 	variants: {
@@ -28,26 +30,37 @@ const input = tv({
 			outside: {},
 			"outside-left": {
 				base: "flex-row",
-				label: "py-3",
 			},
 			"outside-top": {},
 			inside: {
 				label: "text-muted text-sm",
 			},
 		},
+		isFocus: {
+			true: {
+				wrapper: "border-accent",
+			},
+			false: {},
+		},
+		isInvalid: {
+			true: {
+				wrapper: "border-danger",
+			},
+			false: {},
+		},
 		size: {
 			sm: {
-				input: "text-sm",
-				sideContent: "py-3",
+				wrapper: "h-10 py-1.5",
+				input: "text-sm leading-[18px]",
 			},
 			md: {
-				input: "text-base",
-				sideContent: "py-5",
+				wrapper: "h-12 py-2",
+				input: "text-base leading-[20px]",
 			},
 			lg: {
+				wrapper: "h-15 py-2.5",
 				label: "text-lg",
-				input: "text-xl",
-				sideContent: "py-7",
+				input: "text-xl leading-[24px]",
 			},
 		},
 		color: {
@@ -86,19 +99,34 @@ const input = tv({
 			},
 			false: {},
 		},
-		location: {
-			start: {
-				sideContent: "left-0 pl-3",
-			},
-			end: {
-				sideContent: "right-0 pr-3",
-			},
-		},
 	},
 	defaultVariants: {
 		color: "default",
 		multiline: false,
 	},
+	compoundVariants: [
+		{
+			size: "sm",
+			labelPlacement: "inside",
+			class: {
+				wrapper: "h-14",
+			},
+		},
+		{
+			size: "md",
+			labelPlacement: "inside",
+			class: {
+				wrapper: "h-16",
+			},
+		},
+		{
+			size: "lg",
+			labelPlacement: "inside",
+			class: {
+				wrapper: "h-19",
+			},
+		},
+	],
 });
 
 const keyboardTypeMapping: Partial<
@@ -177,90 +205,84 @@ const InnerInput = ({
 }: Omit<Props, "ref" | "mutation" | "fieldError"> & {
 	ref?: React.RefObject<TextInput | null>;
 }) => {
-	const [startContentWidth, setStartContentWidth] = React.useState(0);
-	const [endContentWidth, setEndContentWidth] = React.useState(0);
-	const [topContentHeight, setTopContentHeight] = React.useState(0);
-	const slots = input({ color, labelPlacement, size });
+	const [focus, setFocus] = React.useState(autoFocus ?? false);
+	const isInvalid = Boolean(errorMessage);
+	const slots = input({
+		color,
+		labelPlacement,
+		size,
+		isFocus: focus,
+		isInvalid,
+		multiline,
+	});
 	const labelElement = label ? (
-		<TextField.Label className={slots.label()}>{label}</TextField.Label>
+		<TextField.Label>
+			<Text className={slots.label()}>{label}</Text>
+		</TextField.Label>
 	) : null;
-	const padding = size === "lg" ? 18 : size === "md" ? 12 : 8;
+	const shouldRenderClearable = isClearable && Platform.OS !== "ios";
 	return (
 		<TextField
 			isRequired={isRequired}
 			isDisabled={isDisabled}
-			isInvalid={Boolean(errorMessage)}
+			isInvalid={isInvalid}
 			className={slots.base({ className })}
 		>
 			{labelPlacement === "inside" ? null : labelElement}
 			<View className="flex-1">
-				<View className="relative flex flex-1 flex-col" onPress={onPress}>
-					{labelPlacement === "inside" ? (
-						<View
-							onLayout={(layout) => setTopContentHeight(layout.height)}
-							className={slots.topContent()}
-							style={{ marginStart: startContentWidth }}
-						>
-							{labelElement}
+				<View onPress={onPress}>
+					<View className={slots.wrapper()}>
+						{labelPlacement === "inside" ? labelElement : null}
+						<View className={slots.innerWrapper()}>
+							{startContent ? (
+								<View className={slots.sideContent({ className: "pr-1.5" })}>
+									{startContent}
+								</View>
+							) : null}
+							<TextField.Input
+								ref={ref}
+								placeholder={placeholder}
+								multiline={multiline}
+								numberOfLines={4}
+								value={value}
+								readOnly={isReadOnly}
+								onChangeText={onValueChange}
+								defaultValue={defaultValue}
+								className={slots.input()}
+								clearButtonMode={isClearable ? "while-editing" : undefined}
+								onBlur={() => {
+									onBlur?.();
+									setFocus(false);
+								}}
+								onFocus={() => setFocus(true)}
+								autoComplete={autoComplete}
+								autoFocus={autoFocus}
+								autoCapitalize={autoCapitalize}
+								{...(type ? keyboardTypeMapping[type] : {})}
+							/>
+							{endContent || shouldRenderClearable ? (
+								<View className={slots.sideContent({ className: "pl-1.5" })}>
+									{shouldRenderClearable ? (
+										<Icon
+											name="close"
+											className="size-6"
+											onClick={() => onValueChange?.("")}
+										/>
+									) : null}
+									{endContent}
+								</View>
+							) : null}
 						</View>
-					) : null}
-					<View className="relative flex flex-1 flex-row">
-						{startContent ? (
-							<View
-								onLayout={(layout) => setStartContentWidth(layout.width)}
-								className={slots.sideContent({ location: "start" })}
-								style={{ marginTop: topContentHeight }}
-							>
-								{startContent}
-								<View />
-							</View>
-						) : null}
-						<TextField.Input
-							ref={ref}
-							placeholder={placeholder}
-							multiline={multiline}
-							numberOfLines={4}
-							value={value}
-							readOnly={isReadOnly}
-							onChangeText={onValueChange}
-							defaultValue={defaultValue}
-							className={slots.input({ multiline })}
-							clearButtonMode={isClearable ? "while-editing" : undefined}
-							style={{
-								paddingStart: startContentWidth,
-								paddingEnd: endContentWidth,
-								paddingTop: padding + topContentHeight,
-								paddingBottom: padding,
-							}}
-							onBlur={onBlur}
-							autoComplete={autoComplete}
-							autoFocus={autoFocus}
-							autoCapitalize={autoCapitalize}
-							{...(type ? keyboardTypeMapping[type] : {})}
-						/>
-						{endContent ? (
-							<View
-								onLayout={(layout) => setEndContentWidth(layout.width)}
-								className={slots.sideContent({ location: "end" })}
-								style={{ marginTop: topContentHeight }}
-							>
-								<View />
-								{isClearable && Platform.OS !== "ios" ? (
-									<Icon
-										name="close"
-										className="size-6"
-										onClick={() => onValueChange?.("")}
-									/>
-								) : null}
-								{endContent}
-							</View>
-						) : null}
 					</View>
 					{description ? (
-						<TextField.Description>{description}</TextField.Description>
+						<TextField.Description>
+							<Text>{description}</Text>
+						</TextField.Description>
 					) : null}
 					{errorMessage ? (
-						<TextField.ErrorMessage>{errorMessage}</TextField.ErrorMessage>
+						<TextField.ErrorMessage>
+							<Text>{errorMessage}</Text>
+						</TextField.ErrorMessage>
 					) : null}
 				</View>
 			</View>

@@ -38,7 +38,7 @@ export const test = originalTest.extend<Fixtures>({
 	fillInvalidFields: ({ fields }, use) =>
 		use(async () => {
 			// Length is longer than expected
-			await fields.email.fill("test".repeat(100));
+			await fields.email.fill("this-is-not-email-address");
 			// Length is shorter than expected
 			await fields.name.fill("t");
 			// Password is shorter than expected
