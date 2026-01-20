@@ -12,7 +12,10 @@ export const View = React.memo<Props>(
 		return (
 			<TextWrapper className={className}>
 				<Component
-					className={cn("active:opacity-hover active:scale-95", className)}
+					className={cn(
+						onPress ? "active:opacity-hover active:scale-95" : undefined,
+						className,
+					)}
 					onPress={onPress}
 					onLayout={
 						onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined
