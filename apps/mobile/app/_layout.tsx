@@ -7,6 +7,7 @@ import { type ErrorBoundaryProps, Stack } from "expo-router";
 import { HeroUINativeProvider } from "heroui-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { isNonNullish } from "remeda";
+import { Uniwind } from "uniwind";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
 import type { LinksContextType } from "~app/contexts/links-context";
@@ -96,6 +97,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 				linksContext={linksContext}
 				navigationContext={navigationContext}
 				DevToolsProvider={DevToolsProvider}
+				applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
 			>
 				<SplashScreenManager timeout={2000} />
 				{children}

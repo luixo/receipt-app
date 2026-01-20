@@ -22,6 +22,7 @@ type Props = {
 	storage: PersisterProps["storage"];
 	linksContext: LinksContextType;
 	navigationContext: NavigationContext;
+	applyColorMode: React.ComponentProps<typeof ThemeProvider>["applyColorMode"];
 	DevToolsProvider: React.ComponentType<React.PropsWithChildren>;
 };
 
@@ -32,12 +33,13 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	linksContext,
 	navigationContext,
 	DevToolsProvider,
+	applyColorMode,
 }) => (
-	<ThemeProvider>
-		<NavigationContext value={navigationContext}>
-			<LinksContext value={linksContext}>
-				<StoreContext value={storeContext}>
-					<StoredDataProvider>
+	<NavigationContext value={navigationContext}>
+		<LinksContext value={linksContext}>
+			<StoreContext value={storeContext}>
+				<StoredDataProvider>
+					<ThemeProvider applyColorMode={applyColorMode}>
 						<QueryProviderWithPretend>
 							<ShimsProvider>
 								<PersisterProvider storage={storage}>
@@ -45,9 +47,9 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 								</PersisterProvider>
 							</ShimsProvider>
 						</QueryProviderWithPretend>
-					</StoredDataProvider>
-				</StoreContext>
-			</LinksContext>
-		</NavigationContext>
-	</ThemeProvider>
+					</ThemeProvider>
+				</StoredDataProvider>
+			</StoreContext>
+		</LinksContext>
+	</NavigationContext>
 );

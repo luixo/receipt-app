@@ -15,10 +15,7 @@ import { keys, omit } from "remeda";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
-import {
-	useLastColorMode,
-	useSelectedColorMode,
-} from "~app/hooks/use-color-modes";
+import { useColorModes } from "~app/hooks/use-color-modes";
 import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
 import { searchParamsMapping } from "~app/utils/navigation";
@@ -72,18 +69,11 @@ const getNativeCss = () => {
 };
 
 const RootDocument: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const [selectedColorMode] = useSelectedColorMode();
-	const [lastColorMode] = useLastColorMode();
+	const {
+		selected: [selectedColorMode],
+		last: [lastColorMode],
+	} = useColorModes();
 	const colorMode = selectedColorMode || lastColorMode;
-	React.useEffect(() => {
-		const html = document.querySelector("html");
-		if (!html) {
-			return;
-		}
-		html.dataset.theme = colorMode;
-		html.classList.add(colorMode);
-		html.classList.remove(colorMode === "dark" ? "light" : "dark");
-	}, [colorMode]);
 	return (
 		<html lang="en" className={colorMode}>
 			<head>
@@ -136,6 +126,15 @@ const RootComponent = () => {
 			storage={storage}
 			navigationContext={navigationContext}
 			DevToolsProvider={DevToolsProvider}
+			applyColorMode={(colorMode) => {
+				const html = document.querySelector("html");
+				if (!html) {
+					return;
+				}
+				html.dataset.theme = colorMode;
+				html.classList.add(colorMode);
+				html.classList.remove(colorMode === "dark" ? "light" : "dark");
+			}}
 		>
 			<RootDocument>
 				<NavigationProvider>
