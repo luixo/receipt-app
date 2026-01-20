@@ -6,6 +6,7 @@ import { getLocales } from "expo-localization";
 import { type ErrorBoundaryProps, Stack } from "expo-router";
 import { HeroUINativeProvider } from "heroui-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaListener } from "react-native-safe-area-context";
 import { isNonNullish } from "remeda";
 import { Uniwind } from "uniwind";
 
@@ -107,12 +108,16 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 const App: React.FC = () => (
-	<GestureHandlerRootView style={{ flex: 1 }}>
+	<GestureHandlerRootView>
 		<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
 			<ClientProvider>
-				<View className="bg-background text-foreground flex-1">
-					<Stack />
-				</View>
+				<SafeAreaListener
+					onChange={({ insets }) => Uniwind.updateInsets(insets)}
+				>
+					<View className="bg-background text-foreground flex-1 p-safe">
+						<Stack screenOptions={{ headerShown: false }} />
+					</View>
+				</SafeAreaListener>
 			</ClientProvider>
 		</HeroUINativeProvider>
 	</GestureHandlerRootView>
