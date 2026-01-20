@@ -88,7 +88,10 @@ export const TextWrapper: React.FC<
 	if (styles.length === 0) {
 		return children;
 	}
+	const previousContext = React.use(TextClassContext);
 	return (
-		<TextClassContext value={styles.join(" ")}>{children}</TextClassContext>
+		<TextClassContext value={cn(previousContext, styles.join(" "))}>
+			{children}
+		</TextClassContext>
 	);
 };

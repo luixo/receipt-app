@@ -19,6 +19,7 @@ import { InnerProvider } from "~app/providers/inner";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
+import { View } from "~components/view";
 import { SplashScreenManager } from "~mobile/components/splash-screen-manager";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { DevToolsProvider } from "~mobile/providers/devtools";
@@ -107,7 +108,9 @@ const App: React.FC = () => (
 	<GestureHandlerRootView style={{ flex: 1 }}>
 		<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
 			<ClientProvider>
-				<Stack />
+				<View className="bg-background text-foreground flex-1">
+					<Stack />
+				</View>
 			</ClientProvider>
 		</HeroUINativeProvider>
 	</GestureHandlerRootView>

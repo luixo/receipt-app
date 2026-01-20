@@ -3,7 +3,7 @@ import type { Role } from "react-native";
 
 import { type VariantProps, cva } from "class-variance-authority";
 
-export const textVariants = cva("text-foreground m-0 font-sans", {
+export const textVariants = cva("m-0 font-sans", {
 	variants: {
 		variant: {
 			span: "text-base font-normal",
