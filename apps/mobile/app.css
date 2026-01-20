@@ -3,6 +3,7 @@
 @import "uniwind";
 /* end of remove section */
 @import "heroui-native/styles";
+@import "./variables.css";
 
 /* Move this to a general heroui.ts from `packages/app` when bug below is fixed */
 @plugin "./heroui.ts";

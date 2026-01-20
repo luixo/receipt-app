@@ -27,7 +27,7 @@ const flattenColors = (themeColors: ThemeColors) =>
 		),
 	) as Record<ColorKey, string>;
 
-const { light, dark } = mapValues(semanticColors, flattenColors);
+export const { light, dark } = mapValues(semanticColors, flattenColors);
 
 export default createPlugin(
 	async ({ addBase, addUtilities, config }) => {

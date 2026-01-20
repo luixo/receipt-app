@@ -4,6 +4,9 @@
 	"private": true,
 	"type": "module",
 	"main": "./entry.ts",
+	"scripts": {
+		"css:prepare": "tsx generate-colors.ts"
+	},
 	"dependencies": {
 		"@expo-google-fonts/inter": "^0.4.2",
 		"@gorhom/bottom-sheet": "^5.2.8",
@@ -43,6 +46,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
 		"react-query-external-sync": "^2.2.3",
-		"socket.io-client": "^4.8.3"
+		"socket.io-client": "^4.8.3",
+		"tsx": "catalog:"
 	}
 }

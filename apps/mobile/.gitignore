@@ -4,3 +4,6 @@
 # Expo builds
 android/
 ios/
+
+# Generated variables.css
+variables.css

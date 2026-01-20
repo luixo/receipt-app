@@ -4,6 +4,7 @@ import { ScrollView } from "react-native";
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
@@ -32,6 +33,9 @@ const Wrapper = () => {
 	const [formSwitchById, setFormSwitchById] = React.useState(false);
 	const [iconName, setIconName] = React.useState("none");
 	const [value, setValue] = React.useState("?");
+	const {
+		selected: [selectedColorMode, setSelectedColorMode],
+	} = useColorModes();
 	return (
 		<ScrollView className="bg-background">
 			<View className="flex gap-2 rounded-md p-2">
@@ -44,6 +48,15 @@ const Wrapper = () => {
 						</Text>
 					))}
 				</View>
+				<Button
+					onPress={() =>
+						setSelectedColorMode((nextColorMode) =>
+							nextColorMode === "dark" ? "light" : "dark",
+						)
+					}
+				>
+					Set color mode to {selectedColorMode === "dark" ? "light" : "dark"}
+				</Button>
 				{(["inside", "outside", "outside-left", "outside-top"] as const).map(
 					(placement) =>
 						(["sm", "md", "lg"] as const).map((size) => (

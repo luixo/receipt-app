@@ -7181,6 +7181,7 @@ __metadata:
     react-query-external-sync: "npm:^2.2.3"
     socket.io-client: "npm:^4.8.3"
     tailwind-variants: "npm:^3.2.2"
+    tsx: "catalog:"
     uniwind: "catalog:"
   languageName: unknown
   linkType: soft
