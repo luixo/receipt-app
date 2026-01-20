@@ -1,4 +1,4 @@
-import type { serialize as serializeType } from "cookie";
+import { serialize } from "cookie";
 
 import type { StoreContextType } from "~app/contexts/store-context";
 import type { StoreValues } from "~app/utils/store-data";
@@ -6,11 +6,10 @@ import type { Temporal } from "~utils/date";
 import { serializeDuration } from "~utils/date";
 
 export const getStoreContext = (
-	serialize: typeof serializeType,
 	nowTimestamp: Temporal.ZonedDateTime,
 	initialValues: StoreValues,
 ): StoreContextType => ({
-	getInitialItems: () => ({ nowTimestamp, values: initialValues }),
+	getInitialItems: () => ({ ...initialValues, nowTimestamp }),
 	setItem: (key, value) => {
 		// Switch to cookie store whenever it's widespread enough
 		// eslint-disable-next-line unicorn/no-document-cookie

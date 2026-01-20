@@ -1,29 +1,25 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createMMKV } from "react-native-mmkv";
+import { fromEntries } from "remeda";
 
 import type { StoreContextType } from "~app/contexts/store-context";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import { getNow } from "~utils/date";
 
-const COOKIE_PREFIX = "__cookie:";
-
-const getValues = async () => {
-	const keys = await AsyncStorage.getAllKeys();
-	const filteredKeys = keys.filter((key) => key.startsWith(COOKIE_PREFIX));
-	const values = await AsyncStorage.multiGet(filteredKeys);
-	return getStoreValuesFromInitialValues(
-		values.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {}),
-	);
-};
+const storage = createMMKV({ id: "cookie-jar" });
 
 export const storeContext: StoreContextType = {
 	getInitialItems: () => ({
+		...getStoreValuesFromInitialValues(
+			fromEntries(
+				storage.getAllKeys().map((key) => [key, storage.getString(key)]),
+			),
+		),
 		nowTimestamp: getNow.zonedDateTime(),
-		values: getValues(),
 	}),
-	setItem: async (key, value) => {
-		await AsyncStorage.setItem(`${COOKIE_PREFIX}${key}`, JSON.stringify(value));
+	setItem: (key, value) => {
+		storage.set(key, JSON.stringify(value));
 	},
-	deleteItem: async (key) => {
-		await AsyncStorage.removeItem(`${COOKIE_PREFIX}${key}`);
+	deleteItem: (key) => {
+		storage.remove(key);
 	},
 };

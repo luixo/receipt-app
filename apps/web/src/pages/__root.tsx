@@ -11,7 +11,6 @@ import {
 } from "@tanstack/react-router";
 import { serverOnly } from "@tanstack/react-start";
 import { getHeaders } from "@tanstack/react-start/server";
-import { serialize } from "cookie";
 import { keys, omit } from "remeda";
 
 import type { LinksContextType } from "~app/contexts/links-context";
@@ -125,7 +124,6 @@ const RootComponent = () => {
 	const storeContext = React.useMemo(
 		() =>
 			getStoreContext(
-				serialize,
 				parsers.zonedDateTime(data.nowTimestamp),
 				data.initialValues,
 			),

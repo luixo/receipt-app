@@ -5,11 +5,7 @@ import { fromEntries, keys } from "remeda";
 import { StoreContext } from "~app/contexts/store-context";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { StoreStates, StoreValues } from "~app/utils/store-data";
-import {
-	getStoreStatesFromValues,
-	getStoreValuesFromInitialValues,
-	schemas,
-} from "~app/utils/store-data";
+import { getStoreStatesFromValues, schemas } from "~app/utils/store-data";
 import { updateSetStateAction } from "~utils/react";
 
 const resolveState = (values: StoreValues) =>
@@ -29,36 +25,22 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const { setItem, deleteItem, getInitialItems } = React.use(StoreContext);
-	const { nowTimestamp, values } = getInitialItems();
+	const initialItems = getInitialItems();
 	const [mounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
-	const [ssrState, setSsrState] = React.useState<StoreValues | undefined>(() =>
-		values instanceof Promise ? undefined : resolveState(values),
+	const [ssrState, setSsrState] = React.useState<StoreValues>(() =>
+		resolveState(initialItems),
 	);
-	React.useEffect(() => {
-		if (values instanceof Promise) {
-			void values.then((resolvedValues) => {
-				if (!ssrState) {
-					setSsrState(resolveState(resolvedValues));
-				}
-			});
-		}
-	}, [values, ssrState]);
 	const updateValue = React.useCallback(
 		<K extends StoreKey>(key: K) =>
-			(
-				setStateAction: React.SetStateAction<NonNullable<typeof ssrState>[K]>,
-			) => {
+			(setStateAction: React.SetStateAction<(typeof ssrState)[K]>) => {
 				setSsrState((prevState) => {
-					if (!prevState) {
-						return prevState;
-					}
 					const nextState = updateSetStateAction(
 						setStateAction,
 						prevState[key],
 					);
 					// Updating a store value and updating local state in the same time
-					void setItem(key, nextState);
+					setItem(key, nextState);
 					return { ...prevState, [key]: nextState };
 				});
 			},
@@ -68,11 +50,8 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 		<K extends StoreKey>(key: K) =>
 			() => {
 				setSsrState((prevState) => {
-					if (!prevState) {
-						return prevState;
-					}
 					// Removing a store value and updating local state in the same time
-					void deleteItem(key);
+					deleteItem(key);
 					return { ...prevState, [key]: schemas[key].parse(undefined) };
 				});
 			},
@@ -95,7 +74,7 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	const ssrStates = React.useMemo(
 		() =>
 			getStoreStatesFromValues(
-				ssrState || getStoreValuesFromInitialValues(),
+				ssrState,
 				(key) => ssrSetValues[key],
 				(key) => ssrDeleteValues[key],
 			),
@@ -104,8 +83,12 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	return (
 		<StoreDataContext
 			value={React.useMemo(
-				() => ({ isFirstRender: !mounted, nowTimestamp, ...ssrStates }),
-				[ssrStates, nowTimestamp, mounted],
+				() => ({
+					isFirstRender: !mounted,
+					nowTimestamp: initialItems.nowTimestamp,
+					...ssrStates,
+				}),
+				[ssrStates, initialItems.nowTimestamp, mounted],
 			)}
 		>
 			{children}
