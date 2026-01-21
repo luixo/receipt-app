@@ -6,8 +6,9 @@ import { ErrorMessage } from "~app/components/error-message";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
+import { SkeletonSwitch } from "~components/skeleton-switch";
 import { Spinner } from "~components/spinner";
-import { SkeletonSwitch, Switch } from "~components/switch";
+import { Switch } from "~components/switch";
 import { options as accountSettingsUpdateOptions } from "~mutations/account-settings/update";
 
 export const ManualAcceptDebtsOption = suspendedFallback(

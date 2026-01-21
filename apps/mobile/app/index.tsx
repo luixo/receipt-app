@@ -13,6 +13,7 @@ import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
+import { Switch } from "~components/switch";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
@@ -34,6 +35,7 @@ const Wrapper = () => {
 	const [formSwitchById, setFormSwitchById] = React.useState(false);
 	const [iconName, setIconName] = React.useState("none");
 	const [value, setValue] = React.useState("?");
+	const [switchValue, setSwitchValue] = React.useState(true);
 	const {
 		selected: [selectedColorMode, setSelectedColorMode],
 	} = useColorModes();
@@ -47,6 +49,30 @@ const Wrapper = () => {
 						<Text key={index} className="whitespace-pre text-red-500">
 							{status}: {data}
 						</Text>
+					))}
+				</View>
+				<View className="flex flex-row flex-wrap items-center gap-2">
+					<Switch isSelected={switchValue} onValueChange={setSwitchValue} />
+					<Switch
+						isSelected={switchValue}
+						onValueChange={setSwitchValue}
+						className="bg-red-500"
+						thumbClassName="bg-amber-500"
+					/>
+					<Switch
+						isSelected={switchValue}
+						onValueChange={setSwitchValue}
+						thumbIcon={<Icon name="sun" className="size-4" />}
+					/>
+					<Switch isSelected isDisabled />
+					<Switch isSelected isReadOnly />
+					{(["sm", "md", "lg"] as const).map((size) => (
+						<Switch
+							key={size}
+							size={size}
+							isSelected={switchValue}
+							onValueChange={setSwitchValue}
+						/>
 					))}
 				</View>
 				<View className="flex flex-row items-center gap-2">

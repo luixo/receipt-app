@@ -50,10 +50,15 @@ export const ColorModeSettings: React.FC = () => {
 			<Switch
 				isSelected={isSelected}
 				onValueChange={setColorMode}
-				thumbIcon={isSelected ? <Icon name="moon" /> : <Icon name="sun" />}
+				thumbIcon={
+					<Icon
+						name={isSelected ? "moon" : "sun"}
+						className="text-foreground"
+					/>
+				}
 				isDisabled={selectedColorMode === undefined}
 				size="lg"
-				classNames={{ thumb: "bg-background", thumbIcon: "text-foreground" }}
+				thumbClassName="bg-background"
 			/>
 		</View>
 	);
