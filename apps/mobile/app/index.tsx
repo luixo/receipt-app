@@ -12,6 +12,7 @@ import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
+import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
@@ -46,6 +47,11 @@ const Wrapper = () => {
 						<Text key={index} className="whitespace-pre text-red-500">
 							{status}: {data}
 						</Text>
+					))}
+				</View>
+				<View className="flex flex-row items-center gap-2">
+					{(["xs", "sm", "md", "lg"] as const).map((size) => (
+						<Spinner key={size} size={size} />
 					))}
 				</View>
 				<Button

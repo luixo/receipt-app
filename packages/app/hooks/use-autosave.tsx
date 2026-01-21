@@ -10,11 +10,9 @@ import { cn } from "~components/utils";
 
 export const useAutosave = ({
 	isUpdatePending,
-	className = "",
 	submitDebounceMs = 2000,
 }: {
 	isUpdatePending: boolean;
-	className?: string;
 	submitDebounceMs?: number;
 }) => {
 	const [eagerToSubmit, setEagerToSubmit] = React.useState(false);
@@ -30,18 +28,17 @@ export const useAutosave = ({
 	const updateElement = React.useMemo(
 		() =>
 			isUpdatePending ? (
-				<Spinner size="sm" classNames={{ wrapper: `size-3 ${className}` }} />
+				<Spinner size="xs" />
 			) : (
 				<Icon
 					name="check"
 					className={cn(
 						"text-success size-3 transition-opacity duration-500",
 						justSaved ? "opacity-100" : "opacity-0",
-						className,
 					)}
 				/>
 			),
-		[isUpdatePending, justSaved, className],
+		[isUpdatePending, justSaved],
 	);
 	return {
 		onSuccess,
