@@ -3,5 +3,6 @@
 	"typescript.preferences.importModuleSpecifier": "non-relative",
 	"i18n-ally.localesPaths": ["apps/web/public/locales"],
 	"i18n-ally.namespace": true,
-	"i18n-ally.keystyle": "nested"
+	"i18n-ally.keystyle": "nested",
+	"tailwindCSS.experimental.configFile": "apps/web/src/app.css"
 }
