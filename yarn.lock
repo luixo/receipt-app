@@ -7161,7 +7161,7 @@ __metadata:
     expo-dev-client: "npm:^6.0.20"
     expo-device: "npm:^8.0.10"
     expo-doctor: "npm:^1.17.14"
-    expo-font: "npm:^14.0.11"
+    expo-font: "npm:~14.0.11"
     expo-linking: "npm:~8.0.11"
     expo-localization: "npm:^17.0.8"
     expo-router: "npm:~6.0.22"
@@ -18873,7 +18873,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:^14.0.11":
+"expo-font@npm:~14.0.10, expo-font@npm:~14.0.11":
   version: 14.0.11
   resolution: "expo-font@npm:14.0.11"
   dependencies:
@@ -18883,19 +18883,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10/80acffecdbd49a2ba1d7ecd8727f355bf47c39873d92f5959ff3bf7fd1de3e6ac10ebe2a77b8238287c3f2b7d033df40b562505fec370f82d9444400e19d7518
-  languageName: node
-  linkType: hard
-
-"expo-font@npm:~14.0.10":
-  version: 14.0.10
-  resolution: "expo-font@npm:14.0.10"
-  dependencies:
-    fontfaceobserver: "npm:^2.1.0"
-  peerDependencies:
-    expo: "*"
-    react: "*"
-    react-native: "*"
-  checksum: 10/3fb7d87c75c818c3c8503d43f9e13b3d237f2e128bcb59e09b8fdad3eaf1aece2ab89030d5cffbeb5b172d7b030df627e4319b0fdd97e6f6d57e27bbdb520f22
   languageName: node
   linkType: hard
 
