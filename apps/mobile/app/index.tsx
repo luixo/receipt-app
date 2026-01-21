@@ -12,6 +12,7 @@ import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
+import { Skeleton } from "~components/skeleton";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
@@ -51,6 +52,7 @@ const Wrapper = () => {
 						</Text>
 					))}
 				</View>
+				<Skeleton className="h-6 w-20 rounded-md" />
 				<View className="flex flex-row flex-wrap items-center gap-2">
 					<Switch isSelected={switchValue} onValueChange={setSwitchValue} />
 					<Switch
