@@ -135,7 +135,7 @@ export const ReceiptPreview = suspendedFallback<{
 				to="/receipts/$id"
 				params={{ id: receipt.id }}
 			>
-				<View className="flex flex-row items-center gap-2">
+				<View className="text-foreground flex flex-row items-center gap-2">
 					<Tooltip
 						content={t("receipt.emptyItems", { amount: emptyItems.length })}
 						isDisabled={emptyItems.length === 0}
@@ -157,7 +157,7 @@ export const ReceiptPreview = suspendedFallback<{
 							)}
 						</Badge>
 					</Tooltip>
-					{isOwner ? <Icon name="key" className="size-3" /> : null}
+					{isOwner ? <Icon name="key" className="text-primary size-3" /> : null}
 				</View>
 				<Text className="text-default-400 text-xs">
 					{formatPlainDate(receipt.issued)}
