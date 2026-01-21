@@ -7155,16 +7155,16 @@ __metadata:
     "@sentry/react-native": "npm:~7.2.0"
     "@tanstack/react-query": "catalog:"
     "@tanstack/react-router": "catalog:"
-    babel-preset-expo: "npm:~54.0.9"
+    babel-preset-expo: "npm:~54.0.10"
     expo: "npm:~54.0.31"
     expo-constants: "npm:~18.0.13"
     expo-dev-client: "npm:^6.0.20"
     expo-device: "npm:^8.0.10"
     expo-doctor: "npm:^1.17.14"
-    expo-font: "npm:^14.0.10"
+    expo-font: "npm:^14.0.11"
     expo-linking: "npm:~8.0.11"
     expo-localization: "npm:^17.0.8"
-    expo-router: "npm:~6.0.21"
+    expo-router: "npm:~6.0.22"
     expo-secure-store: "npm:^15.0.8"
     expo-splash-screen: "npm:^31.0.13"
     expo-system-ui: "npm:^6.0.9"
@@ -14759,6 +14759,45 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-preset-expo@npm:~54.0.10":
+  version: 54.0.10
+  resolution: "babel-preset-expo@npm:54.0.10"
+  dependencies:
+    "@babel/helper-module-imports": "npm:^7.25.9"
+    "@babel/plugin-proposal-decorators": "npm:^7.12.9"
+    "@babel/plugin-proposal-export-default-from": "npm:^7.24.7"
+    "@babel/plugin-syntax-export-default-from": "npm:^7.24.7"
+    "@babel/plugin-transform-class-static-block": "npm:^7.27.1"
+    "@babel/plugin-transform-export-namespace-from": "npm:^7.25.9"
+    "@babel/plugin-transform-flow-strip-types": "npm:^7.25.2"
+    "@babel/plugin-transform-modules-commonjs": "npm:^7.24.8"
+    "@babel/plugin-transform-object-rest-spread": "npm:^7.24.7"
+    "@babel/plugin-transform-parameters": "npm:^7.24.7"
+    "@babel/plugin-transform-private-methods": "npm:^7.24.7"
+    "@babel/plugin-transform-private-property-in-object": "npm:^7.24.7"
+    "@babel/plugin-transform-runtime": "npm:^7.24.7"
+    "@babel/preset-react": "npm:^7.22.15"
+    "@babel/preset-typescript": "npm:^7.23.0"
+    "@react-native/babel-preset": "npm:0.81.5"
+    babel-plugin-react-compiler: "npm:^1.0.0"
+    babel-plugin-react-native-web: "npm:~0.21.0"
+    babel-plugin-syntax-hermes-parser: "npm:^0.29.1"
+    babel-plugin-transform-flow-enums: "npm:^0.0.2"
+    debug: "npm:^4.3.4"
+    resolve-from: "npm:^5.0.0"
+  peerDependencies:
+    "@babel/runtime": ^7.20.0
+    expo: "*"
+    react-refresh: ">=0.14.0 <1.0.0"
+  peerDependenciesMeta:
+    "@babel/runtime":
+      optional: true
+    expo:
+      optional: true
+  checksum: 10/210493e87fb2566fbf774a2bf20a0cfd552eb83f7d3fb71aa4b576ebeed6d367a1d7eda64cec8d166859efde6594789946676bae0d26176a45e4be9fac2fd6a4
+  languageName: node
+  linkType: hard
+
 "babel-preset-expo@npm:~54.0.9":
   version: 54.0.9
   resolution: "babel-preset-expo@npm:54.0.9"
@@ -18834,7 +18873,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:^14.0.10, expo-font@npm:~14.0.10":
+"expo-font@npm:^14.0.11":
+  version: 14.0.11
+  resolution: "expo-font@npm:14.0.11"
+  dependencies:
+    fontfaceobserver: "npm:^2.1.0"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 10/80acffecdbd49a2ba1d7ecd8727f355bf47c39873d92f5959ff3bf7fd1de3e6ac10ebe2a77b8238287c3f2b7d033df40b562505fec370f82d9444400e19d7518
+  languageName: node
+  linkType: hard
+
+"expo-font@npm:~14.0.10":
   version: 14.0.10
   resolution: "expo-font@npm:14.0.10"
   dependencies:
@@ -18928,9 +18980,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-router@npm:~6.0.21":
-  version: 6.0.21
-  resolution: "expo-router@npm:6.0.21"
+"expo-router@npm:~6.0.22":
+  version: 6.0.22
+  resolution: "expo-router@npm:6.0.22"
   dependencies:
     "@expo/metro-runtime": "npm:^6.1.2"
     "@expo/schema-utils": "npm:^0.1.8"
@@ -18960,7 +19012,7 @@ __metadata:
     "@react-navigation/drawer": ^7.5.0
     "@testing-library/react-native": ">= 12.0.0"
     expo: "*"
-    expo-constants: ^18.0.12
+    expo-constants: ^18.0.13
     expo-linking: ^8.0.11
     react: "*"
     react-dom: "*"
@@ -18986,7 +19038,7 @@ __metadata:
       optional: true
     react-server-dom-webpack:
       optional: true
-  checksum: 10/d4a07a686ab98df6c7fb84adfd52a0d2c99a76dc5453e37d1c3acf24a7941ad7d4729f556f678fbf1cd051117f53ca6ff6b037a0c0966d7d2b12d47fe1975e64
+  checksum: 10/cc25d9fc6728c85aaf21e7c5034fcb584fcabe9fa3819d83077adf38d0708af5719dbd99b9cd2123b54fec1cb93bed4d17bfb008bf6795778b6d4938328f53b6
   languageName: node
   linkType: hard
 
