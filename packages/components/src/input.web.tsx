@@ -80,9 +80,9 @@ export const Input: React.FC<Props> = ({
 		fieldError,
 		continuousMutations,
 	});
+	const Component = (multiline ? Textarea : InputRaw) as typeof InputRaw;
 	return (
-		<InputRaw
-			as={multiline ? Textarea : undefined}
+		<Component
 			ref={innerRef as React.RefObject<HTMLInputElement | null>}
 			{...props}
 			onClick={onPress}
@@ -96,7 +96,7 @@ export const Input: React.FC<Props> = ({
 					color === "warning" ? "text-warning" : undefined,
 				),
 			}}
-			type={type}
+			type={type ?? "text"}
 			endContent={endContent}
 		/>
 	);
