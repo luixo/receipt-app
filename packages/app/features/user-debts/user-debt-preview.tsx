@@ -109,6 +109,7 @@ export const UserDebtPreview = suspendedFallback<{
 					"overflow-hidden py-2 first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
 					isSelected ? "bg-secondary/20" : "",
 				)}
+				color="foreground"
 			>
 				<UserDebtPreviewShape
 					startContent={

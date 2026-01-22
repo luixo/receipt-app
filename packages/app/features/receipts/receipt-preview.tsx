@@ -134,8 +134,9 @@ export const ReceiptPreview = suspendedFallback<{
 				className="flex flex-col items-start"
 				to="/receipts/$id"
 				params={{ id: receipt.id }}
+				color="foreground"
 			>
-				<View className="text-foreground flex flex-row items-center gap-2">
+				<View className="flex flex-row items-center gap-2">
 					<Tooltip
 						content={t("receipt.emptyItems", { amount: emptyItems.length })}
 						isDisabled={emptyItems.length === 0}

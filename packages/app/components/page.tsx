@@ -7,7 +7,6 @@ import { Icon } from "~components/icons";
 import type { IconName } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
-import { cn } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
@@ -49,10 +48,8 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 		<Link
 			key={pathname}
 			to={pathname}
-			className={cn(
-				"text-foreground flex flex-1 flex-col items-center justify-center",
-				selected ? "text-primary" : undefined,
-			)}
+			className="flex flex-1 flex-col items-center justify-center"
+			color={selected ? "primary" : "foreground"}
 		>
 			<AmountBadge useAmount={useBadgeAmount}>
 				<Icon name={iconName} className="size-6" />
