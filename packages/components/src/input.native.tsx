@@ -19,27 +19,31 @@ const input = tv({
 	slots: {
 		base: "",
 		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
-		wrapper:
-			"bg-field border-field shadow-field justify-center rounded-2xl border-2 px-3",
+		wrapper: "bg-field border-field justify-center rounded-2xl border-2 px-3",
 		innerWrapper: "flex-row items-center justify-center",
 		sideContent: "flex-row items-start justify-center gap-2",
 		label: "text-normal",
 	},
 	variants: {
+		variant: {
+			bordered: {
+				wrapper: "border-default-200",
+			},
+			flat: {
+				wrapper: "shadow-field",
+			},
+		},
 		labelPlacement: {
 			outside: {},
 			"outside-left": {
 				base: "flex-row",
 			},
-			"outside-top": {},
 			inside: {
 				label: "text-muted text-sm",
 			},
 		},
 		isFocus: {
-			true: {
-				wrapper: "border-accent",
-			},
+			true: {},
 			false: {},
 		},
 		isInvalid: {
@@ -68,28 +72,35 @@ const input = tv({
 				input: "group-data-[has-value=true]:text-default-foreground",
 			},
 			primary: {
-				input:
-					"bg-primary-100 border-primary-100 active:bg-primary-50 text-primary focus:bg-primary-50 placeholder:text-primary",
+				wrapper:
+					"bg-primary-100 border-primary-100 active:bg-primary-50 focus:bg-primary-50",
+				input: "text-primary placeholder:text-primary",
 				label: "text-primary",
 			},
 			secondary: {
-				input:
-					"bg-secondary-100 border-secondary-100 text-secondary active:bg-secondary-50 focus:bg-secondary-50 placeholder:text-secondary",
+				wrapper:
+					"bg-secondary-100 border-secondary-100 active:bg-secondary-50 focus:bg-secondary-50",
+				input: "text-secondary placeholder:text-secondary",
 				label: "text-secondary",
 			},
 			success: {
+				wrapper: "bg-success-100 border-success-100",
 				input:
-					"bg-success-100 border-success-100 text-success-600 dark:text-success active:bg-success-50 focus:bg-success-50 placeholder:text-success-600 dark:placeholder:text-success",
+					"text-success-600 dark:text-success placeholder:text-success-600 dark:placeholder:text-success",
 				label: "text-success-600 dark:text-success",
 			},
 			warning: {
+				wrapper:
+					"bg-warning-100 border-warning-100 active:bg-warning-50 focus:bg-warning-50",
 				input:
-					"bg-warning-100 border-warning-100 text-warning-600 dark:text-warning placeholder:text-warning-600 dark:placeholder:text-warning active:bg-warning-50 focus:bg-warning-50 placeholder:text-warning-600 dark:placeholder:text-warning",
+					"text-warning-600 dark:text-warning placeholder:text-warning-600 dark:placeholder:text-warning",
 				label: "text-warning-600 dark:text-warning",
 			},
 			danger: {
+				wrapper:
+					"bg-danger-100 border-danger-100 active:bg-danger-50 focus:bg-danger-50",
 				input:
-					"bg-danger-100 border-danger-100 text-danger dark:text-danger-500 placeholder:text-danger dark:placeholder:text-danger-500 active:bg-danger-50 focus:bg-danger-50 placeholder:text-danger dark:placeholder:text-danger-500",
+					"text-danger dark:text-danger-500 placeholder:text-danger dark:placeholder:text-danger-500",
 				label: "text-danger dark:text-danger-500",
 			},
 		},
@@ -101,8 +112,11 @@ const input = tv({
 		},
 	},
 	defaultVariants: {
+		size: "md",
 		color: "default",
 		multiline: false,
+		labelPlacement: "inside",
+		variant: "flat",
 	},
 	compoundVariants: [
 		{
@@ -124,6 +138,102 @@ const input = tv({
 			labelPlacement: "inside",
 			class: {
 				wrapper: "h-19",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "default",
+			class: {
+				wrapper: "border-default-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "primary",
+			class: {
+				wrapper: "border-primary-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "secondary",
+			class: {
+				wrapper: "border-secondary-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "success",
+			class: {
+				wrapper: "border-success-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "warning",
+			class: {
+				wrapper: "border-warning-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "bordered",
+			color: "danger",
+			class: {
+				wrapper: "border-danger-400",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "default",
+			class: {
+				wrapper: "bg-default-200 border-default-200",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "primary",
+			class: {
+				wrapper: "bg-primary-200 border-primary-200",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "secondary",
+			class: {
+				wrapper: "bg-secondary-200 border-secondary-200",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "success",
+			class: {
+				wrapper: "bg-success-200 border-success-200",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "warning",
+			class: {
+				wrapper: "bg-warning-200 border-warning-200",
+			},
+		},
+		{
+			isFocus: true,
+			variant: "flat",
+			color: "danger",
+			class: {
+				wrapper: "bg-danger-200 border-danger-200",
 			},
 		},
 	],
@@ -202,6 +312,9 @@ const InnerInput = ({
 	autoFocus,
 	autoCapitalize,
 	onPress,
+	onKeyPress,
+	"aria-label": ariaLabel,
+	variant,
 }: Omit<Props, "ref" | "mutation" | "fieldError"> & {
 	ref?: React.RefObject<TextInput | null>;
 }) => {
@@ -214,6 +327,7 @@ const InnerInput = ({
 		isFocus: focus,
 		isInvalid,
 		multiline,
+		variant,
 	});
 	const labelElement = label ? (
 		<TextField.Label>
@@ -241,6 +355,7 @@ const InnerInput = ({
 							) : null}
 							<TextField.Input
 								ref={ref}
+								aria-label={ariaLabel}
 								placeholder={placeholder}
 								multiline={multiline}
 								numberOfLines={4}
@@ -254,6 +369,7 @@ const InnerInput = ({
 									onBlur?.();
 									setFocus(false);
 								}}
+								onKeyPress={(e) => onKeyPress?.(e.nativeEvent.key)}
 								onFocus={() => setFocus(true)}
 								autoComplete={autoComplete}
 								autoFocus={autoFocus}
@@ -296,9 +412,18 @@ export const Input: React.FC<Props> = ({
 	ref,
 	endContent,
 	type,
+	continuousMutations,
 	...props
 }) => {
 	const innerRef = React.useRef<TextInput>(null);
+	React.useImperativeHandle(
+		ref,
+		() => ({
+			focus: () => innerRef.current?.focus(),
+			blur: () => innerRef.current?.blur(),
+		}),
+		[],
+	);
 	const passwordVisibilityProps = usePasswordVisibility({
 		type,
 		endContent,
@@ -309,12 +434,8 @@ export const Input: React.FC<Props> = ({
 		description: props.description,
 		mutation,
 		fieldError,
+		continuousMutations,
 	});
-	React.useImperativeHandle(
-		ref,
-		() => ({ focus: () => innerRef.current?.focus() }),
-		[],
-	);
 	return (
 		<InnerInput
 			ref={innerRef}

@@ -10,6 +10,7 @@ import { cn } from "./utils";
 
 export type InputHandler = {
 	focus: () => void;
+	blur: () => void;
 };
 
 export type Props = Pick<
@@ -19,7 +20,6 @@ export type Props = Pick<
 	| "className"
 	| "placeholder"
 	| "color"
-	| "labelPlacement"
 	| "isDisabled"
 	| "isReadOnly"
 	| "isRequired"
@@ -28,10 +28,12 @@ export type Props = Pick<
 	| "name"
 	| "size"
 	| "autoFocus"
+	| "aria-label"
 > & {
 	autoCapitalize?: "none" | "sentences" | "words" | "characters";
 	onBlur?: () => void;
 	onPress?: () => void;
+	onKeyPress?: (key: string) => void;
 	errorMessage?: string;
 	ref?: React.RefObject<InputHandler>;
 	label?: string;
@@ -43,6 +45,9 @@ export type Props = Pick<
 	multiline?: boolean;
 	type?: React.ComponentProps<"input">["type"];
 	autoComplete?: "email" | "name" | "new-password" | "username";
+	continuousMutations?: boolean;
+	labelPlacement?: "outside" | "inside" | "outside-left";
+	variant?: "flat" | "bordered";
 };
 
 export const Input: React.FC<Props> = ({
@@ -51,9 +56,19 @@ export const Input: React.FC<Props> = ({
 	multiline,
 	ref,
 	onPress,
+	onKeyPress,
+	continuousMutations,
 	...props
 }) => {
 	const innerRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
+	React.useImperativeHandle(
+		ref,
+		() => ({
+			focus: () => innerRef.current?.focus(),
+			blur: () => innerRef.current?.blur(),
+		}),
+		[],
+	);
 	const { endContent, type } = usePasswordVisibility({
 		type: props.type,
 		endContent: props.endContent,
@@ -63,18 +78,15 @@ export const Input: React.FC<Props> = ({
 		color: props.color,
 		mutation,
 		fieldError,
+		continuousMutations,
 	});
-	React.useImperativeHandle(
-		ref,
-		() => ({ focus: () => innerRef.current?.focus() }),
-		[],
-	);
 	return (
 		<InputRaw
 			as={multiline ? Textarea : undefined}
 			ref={innerRef as React.RefObject<HTMLInputElement | null>}
 			{...props}
 			onClick={onPress}
+			onKeyDown={(e) => onKeyPress?.(e.key)}
 			isDisabled={isDisabled}
 			color={color}
 			description={description}

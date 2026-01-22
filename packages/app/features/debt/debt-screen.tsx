@@ -39,7 +39,7 @@ import { Button } from "~components/button";
 import { DateInput, SkeletonDateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
-import { SkeletonNumberInput } from "~components/number-input";
+import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { SaveButton } from "~components/save-button";
 import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";

@@ -15,6 +15,7 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import type { InputHandler } from "~components/input";
+import { emptyInputHandler } from "~components/input.base";
 import { View } from "~components/view";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -36,7 +37,7 @@ export const AddReceiptItemForm: React.FC = () => {
 		(vars) => vars.receiptId === receiptId,
 	);
 	const isPending = addItemMutationState?.status === "pending";
-	const nameFieldRef = React.useRef<InputHandler>({ focus: () => {} });
+	const nameFieldRef = React.useRef<InputHandler>(emptyInputHandler);
 
 	const defaultValues: Partial<Form> = {
 		name: "",

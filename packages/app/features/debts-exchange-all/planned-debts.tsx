@@ -25,7 +25,7 @@ import {
 	currencyRateSchemaDecimal,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { SkeletonNumberInput } from "~components/number-input";
+import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -257,7 +257,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 																? field.state.meta.errors
 																: undefined
 														}
-														min="0"
+														minValue={0}
 														fractionDigits={currencyRateSchemaDecimal}
 														aria-label={currencyCode}
 														isRequired

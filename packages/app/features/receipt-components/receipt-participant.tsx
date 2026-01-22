@@ -23,6 +23,7 @@ import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
+import { InputHandler } from "~components/input";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
@@ -196,7 +197,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		},
 	});
 	useAutosaveEffect(form, { state: eagerToSubmitState });
-	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
+	const { ref: inputRef, onKeyDownBlur } = useAutofocus({
 		shouldFocus: true,
 	});
 
@@ -324,7 +325,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 																	? field.state.meta.errors
 																	: undefined
 															}
-															onKeyDown={onKeyDownBlur}
+															onKeyPress={onKeyDownBlur}
 															className="w-28"
 															aria-label={t("participant.form.payerPart.label")}
 															mutation={[

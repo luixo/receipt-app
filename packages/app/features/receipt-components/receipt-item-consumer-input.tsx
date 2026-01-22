@@ -73,7 +73,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		},
 	});
 	useAutosaveEffect(form, { state: eagerToSubmitState });
-	const { ref: inputRef, onKeyDownBlur } = useAutofocus<HTMLInputElement>({
+	const { ref: inputRef, onKeyDownBlur } = useAutofocus({
 		shouldFocus: isEditing,
 	});
 
@@ -136,7 +136,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						fieldError={
 							field.state.meta.isDirty ? field.state.meta.errors : undefined
 						}
-						onKeyDown={onKeyDownBlur}
+						onKeyPress={onKeyDownBlur}
 						fractionDigits={partSchemaDecimal}
 						className="w-28"
 						aria-label={t("item.form.consumer.label")}

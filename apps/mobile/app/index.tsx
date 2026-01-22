@@ -19,6 +19,7 @@ import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { getNow } from "~utils/date";
+import { NumberInput } from "~components/number-input";
 
 const Wrapper = () => {
 	const { t } = useTranslation();
@@ -40,6 +41,7 @@ const Wrapper = () => {
 	const {
 		selected: [selectedColorMode, setSelectedColorMode],
 	} = useColorModes();
+	const [numberValue, setNumberValue] = React.useState(0);
 	return (
 		<ScrollView className="bg-background">
 			<View className="flex gap-2 rounded-md p-2">
@@ -52,6 +54,13 @@ const Wrapper = () => {
 						</Text>
 					))}
 				</View>
+				<NumberInput
+					value={numberValue}
+					onValueChange={setNumberValue}
+					fractionDigits={2}
+					isRequired
+					minValue={0}
+				/>
 				<Skeleton className="h-6 w-20 rounded-md" />
 				<View className="flex flex-row flex-wrap items-center gap-2">
 					<Switch isSelected={switchValue} onValueChange={setSwitchValue} />
@@ -91,22 +100,31 @@ const Wrapper = () => {
 				>
 					Set color mode to {selectedColorMode === "dark" ? "light" : "dark"}
 				</Button>
-				{(["inside", "outside", "outside-left"] as const).map((placement) =>
-					(["sm", "md", "lg"] as const).map((size) => (
+				{(["bordered", "flat"] as const).map((variant) =>
+					(
+						[
+							"default",
+							"primary",
+							"secondary",
+							"danger",
+							"warning",
+							"success",
+						] as const
+					).map((color) => (
 						<Input
-							key={placement + size}
+							key={variant + color}
 							startContent={<Icon name="search" className="size-5" />}
 							endContent={<Icon name="search" className="size-5" />}
 							value={value}
 							isRequired
-							labelPlacement={placement}
-							label={`${placement}/${size} label`}
-							size={size}
+							color={color}
+							label={`${color} / ${variant} label`}
+							variant={variant}
 							onValueChange={setValue}
 							placeholder="This is placeholder"
 							isClearable
-							description={`This is a ${placement}/${size}`}
-							// errorMessage={`Error in ${placement}/${size}`}
+							description={`This is a ${variant}`}
+							// errorMessage={`Error in ${placement}/${variant}`}
 						/>
 					)),
 				)}
