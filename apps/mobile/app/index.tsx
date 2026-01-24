@@ -16,6 +16,7 @@ import { NumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
+import { Divider } from "~components/divider";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
@@ -54,6 +55,7 @@ const Wrapper = () => {
 						</Text>
 					))}
 				</View>
+				<Divider className="my-2" />
 				<NumberInput
 					value={numberValue}
 					onValueChange={setNumberValue}
