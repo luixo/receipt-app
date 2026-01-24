@@ -12,6 +12,7 @@ import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
+import { NumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
@@ -19,7 +20,6 @@ import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { getNow } from "~utils/date";
-import { NumberInput } from "~components/number-input";
 
 const Wrapper = () => {
 	const { t } = useTranslation();

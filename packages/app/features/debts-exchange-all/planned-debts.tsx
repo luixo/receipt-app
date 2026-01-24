@@ -25,8 +25,8 @@ import {
 	currencyRateSchemaDecimal,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Skeleton } from "~components/skeleton";
+import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";

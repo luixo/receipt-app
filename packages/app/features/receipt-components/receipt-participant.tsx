@@ -23,7 +23,6 @@ import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
-import { InputHandler } from "~components/input";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { getMutationLoading } from "~components/utils";
