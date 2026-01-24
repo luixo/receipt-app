@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
@@ -12,19 +12,24 @@ type Props = {
 	children?: ViewReactNode;
 } & Omit<React.ComponentProps<typeof View>, "children">;
 
-export const EmptyCard = React.memo<Props>(
-	({ title, children, startContent, endContent, className, ...props }) => (
-		<View
-			{...props}
-			className={cn("m-10 gap-4 self-center md:max-w-lg", className)}
-			testID="empty-card"
-		>
-			{startContent}
-			<Text variant="h2" className="text-center">
-				{title}
-			</Text>
-			{children}
-			{endContent}
-		</View>
-	),
+export const EmptyCard: React.FC<Props> = ({
+	title,
+	children,
+	startContent,
+	endContent,
+	className,
+	...props
+}) => (
+	<View
+		{...props}
+		className={cn("m-10 gap-4 self-center md:max-w-lg", className)}
+		testID="empty-card"
+	>
+		{startContent}
+		<Text variant="h2" className="text-center">
+			{title}
+		</Text>
+		{children}
+		{endContent}
+	</View>
 );

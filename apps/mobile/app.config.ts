@@ -53,6 +53,9 @@ const config: AppJSONConfig = {
 			],
 		],
 		userInterfaceStyle: "automatic",
+		experiments: {
+			reactCompiler: true,
+		},
 	},
 };
 export default config;

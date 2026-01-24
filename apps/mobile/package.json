@@ -45,6 +45,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.26.0",
+		"babel-plugin-react-compiler": "catalog:",
 		"react-query-external-sync": "^2.2.3",
 		"socket.io-client": "^4.8.3",
 		"tsx": "catalog:"

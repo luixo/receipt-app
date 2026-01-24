@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import {
 	type LayoutRectangle,
 	View as RawView,
@@ -21,13 +21,16 @@ export type Props = {
 	style?: ViewStyle;
 };
 
-export const View = React.memo<Props>(
-	({ onPress, className, onLayout, ...props }) => (
-		<RawView
-			{...props}
-			onClick={onPress}
-			onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
-			className={cn(onPress ? "cursor-pointer" : undefined, className)}
-		/>
-	),
+export const View: React.FC<Props> = ({
+	onPress,
+	className,
+	onLayout,
+	...props
+}) => (
+	<RawView
+		{...props}
+		onClick={onPress}
+		onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
+		className={cn(onPress ? "cursor-pointer" : undefined, className)}
+	/>
 );

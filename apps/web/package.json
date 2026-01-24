@@ -54,7 +54,7 @@
 		"@types/pg": "^8.10.2",
 		"@types/uuid": "catalog:",
 		"@vitejs/plugin-react": "^5.0.3",
-		"babel-plugin-react-compiler": "^19.1.0-rc.2",
+		"babel-plugin-react-compiler": "catalog:",
 		"module-alias": "^2.2.3",
 		"vite": "^7.1.7",
 		"vite-bundle-analyzer": "^1.2.3",

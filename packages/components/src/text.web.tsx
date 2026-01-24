@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { cn } from "@heroui/react";
 
@@ -18,18 +18,21 @@ export type Props = {
 	testID?: string;
 };
 
-export const Text = React.memo<Props>(
-	({ className, variant = "span", testID, children }) => {
-		const Variant = variant;
-		return (
-			<Variant
-				className={cn(textVariants({ variant, className }))}
-				data-testid={testID}
-				role={ROLE[variant]}
-				aria-level={ARIA_LEVEL[variant]}
-			>
-				{children}
-			</Variant>
-		);
-	},
-);
+export const Text: React.FC<Props> = ({
+	className,
+	variant = "span",
+	testID,
+	children,
+}) => {
+	const Variant = variant;
+	return (
+		<Variant
+			className={cn(textVariants({ variant, className }))}
+			data-testid={testID}
+			role={ROLE[variant]}
+			aria-level={ARIA_LEVEL[variant]}
+		>
+			{children}
+		</Variant>
+	);
+};

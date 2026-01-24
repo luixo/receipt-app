@@ -146,6 +146,10 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		message:
 			"Using `Date` type is forbidden, use '~utils/date' Temporal types.",
 	},
+	{
+		selector: "MemberExpression[object.name='React'][property.name='memo']",
+		message: "No need to use `React.memo`, we have a react compiler turned on",
+	},
 ] as const;
 
 const getNoRestrictedSyntax = (...omittedTags: string[]) =>
