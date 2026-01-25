@@ -13,6 +13,7 @@
 		"@ra/app": "workspace:*",
 		"@ra/components": "workspace:*",
 		"@ra/db": "workspace:*",
+		"@ra/mobile": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@sentry/tanstackstart-react": "^9.15.0",
 		"@tanstack/devtools-vite": "^0.3.6",

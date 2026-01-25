@@ -22,6 +22,7 @@
 			"~mutations/*": ["./packages/mutations/src/*"],
 			"~web/*": ["./apps/web/src/*"],
 			"~mobile/*": ["./apps/mobile/src/*"],
+			"~mobile/app/*": ["./apps/mobile/app/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],
 			"~tests/frontend/*": ["./testing/playwright/*"],
 			"~tests/utils/*": ["./testing/utils/src/*"]

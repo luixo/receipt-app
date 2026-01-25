@@ -7152,7 +7152,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/mobile@workspace:apps/mobile":
+"@ra/mobile@workspace:*, @ra/mobile@workspace:apps/mobile":
   version: 0.0.0-use.local
   resolution: "@ra/mobile@workspace:apps/mobile"
   dependencies:
@@ -7290,6 +7290,7 @@ __metadata:
     "@ra/app": "workspace:*"
     "@ra/components": "workspace:*"
     "@ra/db": "workspace:*"
+    "@ra/mobile": "workspace:*"
     "@ra/playwright": "workspace:*"
     "@ra/utils": "workspace:*"
     "@ra/vitest": "workspace:*"
