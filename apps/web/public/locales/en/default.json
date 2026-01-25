@@ -90,7 +90,10 @@
 			"perPage": "{{limit}} / page"
 		},
 		"dateInput": {
-			"label": "Date"
+			"label": "Date",
+			"placeholder": "Click to pick date",
+			"confirmText": "Confirm",
+			"cancelText": "Cancel"
 		},
 		"currencyInput": {
 			"currency": "Currency",

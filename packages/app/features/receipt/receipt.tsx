@@ -20,11 +20,11 @@ import {
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTRPC } from "~app/utils/trpc";
-import { SkeletonDateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
+import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
 

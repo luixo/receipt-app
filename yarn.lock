@@ -7092,6 +7092,7 @@ __metadata:
     lucide-react: "npm:^0.562.0"
     lucide-react-native: "npm:^0.562.0"
     react-native-color-matrix-image-filters: "npm:^8.0.2"
+    react-native-date-picker: "npm:^5.0.13"
     react-native-svg: "npm:^15.15.1"
   languageName: unknown
   linkType: soft
@@ -26142,6 +26143,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10/e638e04c3eccedf451683f5abb133709b0f4f7a48ebb65caf4ba78d6257a15445ecc5d08b29e5db967bd83a5eee992cc3fbe82138b9aafdce46d31c2a81a9b3a
+  languageName: node
+  linkType: hard
+
+"react-native-date-picker@npm:^5.0.13":
+  version: 5.0.13
+  resolution: "react-native-date-picker@npm:5.0.13"
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+  checksum: 10/3a61bc300e005f9f0dc64bb8de10ea2aa0b53a430d259a615d7aa393d88c9b82c5967b393c0e0eb15a4d61cd210d7b529a526a92cb40645dddec822f305b7ace
   languageName: node
   linkType: hard
 

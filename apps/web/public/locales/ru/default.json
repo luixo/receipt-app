@@ -90,7 +90,10 @@
 			"perPage": "{{limit}} / страницу"
 		},
 		"dateInput": {
-			"label": "Дата"
+			"label": "Дата",
+			"placeholder": "Нажми сюда чтобы выбрать дату",
+			"confirmText": "Сохранить",
+			"cancelText": "Отмена"
 		},
 		"currencyInput": {
 			"currency": "Валюта",

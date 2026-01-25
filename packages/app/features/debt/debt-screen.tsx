@@ -36,10 +36,11 @@ import {
 	debtNoteSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { DateInput, SkeletonDateInput } from "~components/date-input";
+import { DateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
+import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { SkeletonInput } from "~components/skeleton-input";
 import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { View } from "~components/view";

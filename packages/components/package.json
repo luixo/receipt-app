@@ -14,6 +14,7 @@
 		"lucide-react": "^0.562.0",
 		"lucide-react-native": "^0.562.0",
 		"react-native-color-matrix-image-filters": "^8.0.2",
+		"react-native-date-picker": "^5.0.13",
 		"react-native-svg": "^15.15.1"
 	}
 }

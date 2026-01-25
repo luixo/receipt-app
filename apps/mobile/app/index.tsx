@@ -12,6 +12,7 @@ import { Avatar, AvatarGroup } from "~components/avatar";
 import { Button, ButtonGroup } from "~components/button";
 import { Checkbox } from "~components/checkbox";
 import { Chip } from "~components/chip";
+import { DateInput } from "~components/date-input";
 import { Divider } from "~components/divider";
 import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
@@ -26,7 +27,7 @@ import { Text } from "~components/text";
 import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
-import { getNow } from "~utils/date";
+import { type Temporal, getNow } from "~utils/date";
 
 const Wrapper = () => {
 	const { t } = useTranslation();
@@ -48,6 +49,11 @@ const Wrapper = () => {
 	const {
 		selected: [selectedColorMode, setSelectedColorMode],
 	} = useColorModes();
+	// This is false positive
+	// eslint-disable-next-line react/hook-use-state
+	const [date, changeDate] = React.useState<Temporal.PlainDate | undefined>(
+		undefined,
+	);
 	const [numberValue, setNumberValue] = React.useState(0);
 	return (
 		<ScrollView className="bg-background">
@@ -60,6 +66,9 @@ const Wrapper = () => {
 							{status}: {data}
 						</Text>
 					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					<DateInput value={date} onValueChange={changeDate} />
 				</View>
 				<View className="flex flex-row flex-wrap gap-2">
 					{(
@@ -190,9 +199,22 @@ const Wrapper = () => {
 							label={`${color} / ${variant} label`}
 							variant={variant}
 							onValueChange={setValue}
+							labelPlacement={
+								color === "primary"
+									? "outside"
+									: color === "secondary"
+										? "outside-left"
+										: undefined
+							}
 							placeholder="This is placeholder"
 							isClearable
-							description={`This is a ${variant}`}
+							description={`This is a ${variant}/${
+								color === "primary"
+									? "outside"
+									: color === "secondary"
+										? "outside-left"
+										: "inside"
+							}`}
 							// errorMessage={`Error in ${placement}/${variant}`}
 						/>
 					)),

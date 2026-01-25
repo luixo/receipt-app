@@ -17,6 +17,7 @@ import type { Props } from "./input";
 
 const input = tv({
 	slots: {
+		outer: "min-w-[320px]",
 		base: "",
 		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
 		wrapper: "bg-field border-field justify-center rounded-2xl border-2 px-3",
@@ -306,7 +307,7 @@ const InnerInput = ({
 	type,
 	isClearable,
 	autoComplete,
-	labelPlacement,
+	labelPlacement = "inside",
 	onBlur,
 	size,
 	autoFocus,
@@ -315,6 +316,7 @@ const InnerInput = ({
 	onKeyPress,
 	"aria-label": ariaLabel,
 	variant,
+	inputClassName,
 }: Omit<Props, "ref" | "mutation" | "fieldError"> & {
 	ref?: React.RefObject<TextInput | null>;
 }) => {
@@ -336,15 +338,15 @@ const InnerInput = ({
 	) : null;
 	const shouldRenderClearable = isClearable && Platform.OS !== "ios";
 	return (
-		<TextField
-			isRequired={isRequired}
-			isDisabled={isDisabled}
-			isInvalid={isInvalid}
-			className={slots.base({ className })}
-		>
-			{labelPlacement === "inside" ? null : labelElement}
-			<View className="flex-1">
-				<View onPress={onPress}>
+		<View onPress={onPress} className={slots.outer({ className })}>
+			<TextField
+				isRequired={isRequired}
+				isDisabled={isDisabled}
+				isInvalid={isInvalid}
+				className={slots.base()}
+			>
+				{labelPlacement === "inside" ? null : labelElement}
+				<View className="flex-1 shrink-0">
 					<View className={slots.wrapper()}>
 						{labelPlacement === "inside" ? labelElement : null}
 						<View className={slots.innerWrapper()}>
@@ -363,12 +365,13 @@ const InnerInput = ({
 								readOnly={isReadOnly}
 								onChangeText={onValueChange}
 								defaultValue={defaultValue}
-								className={slots.input()}
+								className={slots.input({ className: inputClassName })}
 								clearButtonMode={isClearable ? "while-editing" : undefined}
 								onBlur={() => {
 									onBlur?.();
 									setFocus(false);
 								}}
+								onPress={onPress}
 								onKeyPress={(e) => onKeyPress?.(e.nativeEvent.key)}
 								onFocus={() => setFocus(true)}
 								autoComplete={autoComplete}
@@ -401,8 +404,8 @@ const InnerInput = ({
 						</TextField.ErrorMessage>
 					) : null}
 				</View>
-			</View>
-		</TextField>
+			</TextField>
+		</View>
 	);
 };
 

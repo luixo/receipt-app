@@ -48,6 +48,7 @@ export type Props = Pick<
 	continuousMutations?: boolean;
 	labelPlacement?: "outside" | "inside" | "outside-left";
 	variant?: "flat" | "bordered";
+	inputClassName?: string;
 };
 
 export const Input: React.FC<Props> = ({
@@ -58,6 +59,7 @@ export const Input: React.FC<Props> = ({
 	onPress,
 	onKeyPress,
 	continuousMutations,
+	inputClassName,
 	...props
 }) => {
 	const innerRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -95,6 +97,7 @@ export const Input: React.FC<Props> = ({
 					"whitespace-pre",
 					color === "warning" ? "text-warning" : undefined,
 				),
+				input: inputClassName,
 			}}
 			type={type ?? "text"}
 			endContent={endContent}
