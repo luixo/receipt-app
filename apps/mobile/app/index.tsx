@@ -21,6 +21,7 @@ import { Spinner } from "~components/spinner";
 import { User } from "~components/user";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
+import { Chip } from "~components/chip";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { getNow } from "~utils/date";
@@ -57,6 +58,15 @@ const Wrapper = () => {
 						<Text key={index} className="whitespace-pre text-red-500">
 							{status}: {data}
 						</Text>
+					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					{(
+						["default", "primary", "success", "warning", "danger"] as const
+					).map((color) => (
+						<Chip key={color} color={color}>
+							{color}
+						</Chip>
 					))}
 				</View>
 				<View className="flex flex-row flex-wrap gap-2">

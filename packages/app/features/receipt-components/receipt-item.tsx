@@ -80,9 +80,9 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
 						{notAddedParticipantsIds.length > 1 ? (
 							<Chip
-								color="secondary"
+								color="primary"
 								className="cursor-pointer"
-								onClick={onAddEveryItemParticipant}
+								onPress={onAddEveryItemParticipant}
 							>
 								{t("item.participants.everyone")}
 							</Chip>
