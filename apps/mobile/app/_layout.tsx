@@ -21,6 +21,7 @@ import { InnerProvider } from "~app/providers/inner";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
+import { ToastProvider } from "~components/toast";
 import { View } from "~components/view";
 import { SplashScreenManager } from "~mobile/components/splash-screen-manager";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
@@ -98,6 +99,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 				linksContext={linksContext}
 				navigationContext={navigationContext}
 				DevToolsProvider={DevToolsProvider}
+				ToastProvider={ToastProvider}
 				applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
 			>
 				<SplashScreenManager timeout={2000} />

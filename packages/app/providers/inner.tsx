@@ -24,6 +24,7 @@ type Props = {
 	navigationContext: NavigationContext;
 	applyColorMode: React.ComponentProps<typeof ThemeProvider>["applyColorMode"];
 	DevToolsProvider: React.ComponentType<React.PropsWithChildren>;
+	ToastProvider: React.ComponentType<React.PropsWithChildren>;
 };
 
 export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
@@ -33,6 +34,7 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	linksContext,
 	navigationContext,
 	DevToolsProvider,
+	ToastProvider,
 	applyColorMode,
 }) => (
 	<NavigationContext value={navigationContext}>
@@ -43,7 +45,9 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 						<QueryProviderWithPretend>
 							<ShimsProvider>
 								<PersisterProvider storage={storage}>
-									<DevToolsProvider>{children}</DevToolsProvider>
+									<DevToolsProvider>
+										<ToastProvider>{children}</ToastProvider>
+									</DevToolsProvider>
 								</PersisterProvider>
 							</ShimsProvider>
 						</QueryProviderWithPretend>

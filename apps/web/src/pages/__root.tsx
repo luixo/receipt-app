@@ -20,7 +20,7 @@ import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
 import { searchParamsMapping } from "~app/utils/navigation";
 import type { StoreValues } from "~app/utils/store-data";
-import { ToastProvider, defaultToastProps } from "~components/toast";
+import { ToastProvider } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
 import { parsers } from "~utils/date";
 import appCss from "~web/app.css?url";
@@ -126,6 +126,7 @@ const RootComponent = () => {
 			storage={storage}
 			navigationContext={navigationContext}
 			DevToolsProvider={DevToolsProvider}
+			ToastProvider={ToastProvider}
 			applyColorMode={(colorMode) => {
 				const html = document.querySelector("html");
 				if (!html) {
@@ -139,7 +140,6 @@ const RootComponent = () => {
 			<RootDocument>
 				<NavigationProvider>
 					<Outlet />
-					<ToastProvider toastProps={defaultToastProps} />
 					<GlobalHooksComponent />
 				</NavigationProvider>
 			</RootDocument>

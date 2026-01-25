@@ -1,6 +1,6 @@
 import React from "react";
 
-import { closeAll, getToastQueue } from "~components/toast";
+import { closeAllToasts, getToastsAmount } from "~components/toast";
 
 declare global {
 	// external interface extension
@@ -13,8 +13,8 @@ declare global {
 export const useToastHelper = () => {
 	React.useEffect(() => {
 		window.removeToasts = () => {
-			const currentToastAmount = getToastQueue().visibleToasts.length;
-			closeAll({ disableAnimation: true });
+			const currentToastAmount = getToastsAmount();
+			closeAllToasts({ disableAnimation: true });
 			return currentToastAmount;
 		};
 	}, []);

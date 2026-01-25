@@ -2,7 +2,7 @@ import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
 import { getNow } from "~utils/date";
-import { DESCRIPTION_CLASSNAME } from "~utils/toast";
+import { DESCRIPTION_CLASSNAME, MAX_VISIBLE_TOASTS } from "~utils/toast";
 
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 const SKIP_TOAST_TIMEOUT = 5000;
@@ -26,9 +26,9 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 					? textOrTexts
 					: [textOrTexts];
 
-				if (textsArray.length > 4) {
+				if (textsArray.length > MAX_VISIBLE_TOASTS) {
 					throw new Error(
-						"Currently, only 4 toasts are visible at the moment, please create a test with less toasts",
+						`Currently, only ${MAX_VISIBLE_TOASTS} toasts are visible at the moment, please create a test with less toasts`,
 					);
 				}
 				const expectedTexts = textsArray.toSorted((a, b) => a.localeCompare(b));

@@ -1,7 +1,7 @@
 import Dataloader from "dataloader";
 
 import type { TRPCMutationKey } from "~app/trpc";
-import { addToast, getToastQueue } from "~components/toast";
+import { addToast, closeToastById } from "~components/toast";
 import type {
 	LifecycleContextWithUpdateFns,
 	TRPCMutationOptions,
@@ -211,7 +211,7 @@ export const getMutationToaster = <
 					}
 					toastObject.count -= inputs.length;
 					if (toastObject.count === 0) {
-						getToastQueue().close(toastObject.id);
+						closeToastById(toastObject.id);
 					}
 				},
 			),
@@ -246,7 +246,7 @@ export const getMutationToaster = <
 					}
 					toastObject.count -= inputs.length;
 					if (toastObject.count === 0) {
-						getToastQueue().close(toastObject.id);
+						closeToastById(toastObject.id);
 					}
 				},
 			),
