@@ -89,9 +89,7 @@ export const ReceiptPreviewSkeleton = () => (
 				<Skeleton className="h-4 w-14 rounded" />
 			</View>
 		}
-		checkbox={
-			<Checkbox isDisabled color="secondary" classNames={{ wrapper: "me-0" }} />
-		}
+		checkbox={<Checkbox isDisabled color="secondary" />}
 		sum={<Skeleton className="h-5 w-16 rounded" />}
 		icon={skeletonReceiptPreviewSyncIcon}
 	/>
@@ -178,7 +176,6 @@ export const ReceiptPreview = suspendedFallback<{
 						onValueChange={isRemoving ? undefined : onValueChange}
 						isDisabled={isRemoving}
 						color="secondary"
-						classNames={{ wrapper: "me-0" }}
 					/>
 				}
 				infoTooltip={

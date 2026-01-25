@@ -4,11 +4,14 @@ import { ScrollView } from "react-native";
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { SkeletonUser } from "~app/components/app/user";
 import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Avatar, AvatarGroup } from "~components/avatar";
 import { Button, ButtonGroup } from "~components/button";
+import { Checkbox } from "~components/checkbox";
+import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
@@ -18,14 +21,12 @@ import { NumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Spinner } from "~components/spinner";
-import { User } from "~components/user";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
-import { Chip } from "~components/chip";
+import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { getNow } from "~utils/date";
-import { SkeletonUser } from "~app/components/app/user";
 
 const Wrapper = () => {
 	const { t } = useTranslation();
@@ -59,6 +60,32 @@ const Wrapper = () => {
 							{status}: {data}
 						</Text>
 					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					{(
+						["default", "primary", "success", "warning", "danger"] as const
+					).map((color) => (
+						<Checkbox
+							key={color}
+							color={color}
+							size={
+								color === "primary" ? "lg" : color === "success" ? "sm" : "md"
+							}
+							isSelected={color === "primary" ? !switchValue : switchValue}
+							isIndeterminate={color === "success"}
+							isDisabled={color === "warning"}
+							onValueChange={setSwitchValue}
+						>
+							{color}
+						</Checkbox>
+					))}
+					<Checkbox isSelected />
+					<Checkbox
+						icon={<Icon name="arrow-down" className="size-4" />}
+						isSelected={switchValue}
+						onValueChange={setSwitchValue}
+					/>
+					<Checkbox />
 				</View>
 				<View className="flex flex-row flex-wrap gap-2">
 					{(

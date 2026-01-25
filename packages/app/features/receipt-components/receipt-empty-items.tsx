@@ -43,8 +43,8 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 					key={item.id}
 					color="warning"
 					isSelected
-					onChange={() => onEmptyItemClick(item.id)}
-					icon={<Icon name="arrow-down" />}
+					onValueChange={() => onEmptyItemClick(item.id)}
+					icon={<Icon name="arrow-down" className="text-foreground size-4" />}
 				>
 					{t("item.noParticipantsItemsSection.itemLabel", {
 						name: item.name,

@@ -78,7 +78,6 @@ export function PaginationBlockShape<T>({
 									)
 								}
 								color="secondary"
-								classNames={{ wrapper: "me-0" }}
 							/>
 						</View>
 					) : null}

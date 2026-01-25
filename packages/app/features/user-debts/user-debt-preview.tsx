@@ -56,11 +56,7 @@ export const UserDebtPreviewSkeleton = () => (
 	<UserDebtPreviewShape
 		startContent={
 			<View className="size-6 shrink-0">
-				<Checkbox
-					isDisabled
-					color="secondary"
-					classNames={{ wrapper: "me-0" }}
-				/>
+				<Checkbox isDisabled color="secondary" />
 			</View>
 		}
 		amount={<Skeleton className="h-6 w-16 rounded" />}
@@ -119,7 +115,6 @@ export const UserDebtPreview = suspendedFallback<{
 								onValueChange={isRemoving ? undefined : onValueChange}
 								isDisabled={isRemoving}
 								color="secondary"
-								classNames={{ wrapper: "me-0" }}
 							/>
 						</View>
 					}
