@@ -24,13 +24,11 @@ const baseClassName =
 export const UserDebtsPreviewSkeleton: React.FC<{ userId?: UserId }> = ({
 	userId,
 }) => (
-	<Card>
-		<CardBody className={cn(baseClassName, userId ? "opacity-50" : undefined)}>
-			{userId ? <LoadableUser id={userId} /> : <SkeletonUser />}
-			<View className="flex flex-row items-center justify-center gap-2">
-				<DebtsGroupSkeleton className="shrink-0" amount={3} />
-			</View>
-		</CardBody>
+	<Card bodyClassName={cn(baseClassName, userId ? "opacity-50" : undefined)}>
+		{userId ? <LoadableUser id={userId} /> : <SkeletonUser />}
+		<View className="flex flex-row items-center justify-center gap-2">
+			<DebtsGroupSkeleton className="shrink-0" amount={3} />
+		</View>
 	</Card>
 );
 
