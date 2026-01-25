@@ -24,7 +24,7 @@ export type ButtonProps = Pick<
 	| "type"
 	| "form"
 > &
-	Omit<ViewProps, "children" | "style">;
+	Omit<ViewProps, "children" | "style" | "ref">;
 
 export type ButtonGroupProps = Pick<
 	RawButtonGroupProps,

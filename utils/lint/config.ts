@@ -75,6 +75,10 @@ const restrictedImports = [
 				actual: "Button",
 				message: "Please use Button from `components `package",
 			},
+			{
+				actual: "ScrollView",
+				message: "Please use ScrollView from `components `package",
+			},
 		],
 	},
 ];

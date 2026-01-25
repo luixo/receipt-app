@@ -7,12 +7,16 @@ import {
 
 import { cn } from "~components/utils";
 
+import type { ViewHandle } from "./view.base";
+import { useScrollView } from "./view.base";
+
 export type ViewReactNode =
 	| React.JSX.Element
 	| (ViewReactNode | undefined)[]
 	| null;
 
 export type Props = {
+	ref?: React.Ref<ViewHandle | null>;
 	className?: string;
 	children?: ViewReactNode;
 	testID?: string;
@@ -25,12 +29,17 @@ export const View: React.FC<Props> = ({
 	onPress,
 	className,
 	onLayout,
+	ref,
 	...props
-}) => (
-	<RawView
-		{...props}
-		onClick={onPress}
-		onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
-		className={cn(onPress ? "cursor-pointer" : undefined, className)}
-	/>
-);
+}) => {
+	const innerRef = useScrollView(ref);
+	return (
+		<RawView
+			ref={innerRef}
+			{...props}
+			onClick={onPress}
+			onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
+			className={cn(onPress ? "cursor-pointer" : undefined, className)}
+		/>
+	);
+};

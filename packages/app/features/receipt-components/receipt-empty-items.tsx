@@ -8,13 +8,14 @@ import { Checkbox } from "~components/checkbox";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { View } from "~components/view";
+import type { ViewHandle } from "~components/view.base";
 import type { ReceiptItemId } from "~db/ids";
 import { round } from "~utils/math";
 
 import { useReceiptContext } from "./context";
 
 type InnerProps = {
-	itemsRef: React.RefObject<Record<ReceiptItemId, HTMLDivElement | null>>;
+	itemsRef: React.RefObject<Record<ReceiptItemId, ViewHandle | null>>;
 };
 
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {

@@ -1,5 +1,4 @@
 import React from "react";
-import { ScrollView } from "react-native";
 
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -19,6 +18,7 @@ import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { NumberInput } from "~components/number-input";
+import { ScrollView } from "~components/scroll-view";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Spinner } from "~components/spinner";

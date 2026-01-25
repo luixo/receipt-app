@@ -5,6 +5,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
+import type { ViewHandle } from "~components/view.base";
 import type { ReceiptItemId } from "~db/ids";
 import { compare } from "~utils/date";
 
@@ -57,9 +58,7 @@ const AddReceiptItemController: React.FC = () => {
 
 export const ReceiptItems: React.FC = () => {
 	const { items, emptyReceiptElement } = useReceiptContext();
-	const itemsRef = React.useRef<Record<ReceiptItemId, HTMLDivElement | null>>(
-		{},
-	);
+	const itemsRef = React.useRef<Record<ReceiptItemId, ViewHandle | null>>({});
 	const sortedItems = React.useMemo(
 		() =>
 			items.toSorted((a, b) => compare.zonedDateTime(a.createdAt, b.createdAt)),
