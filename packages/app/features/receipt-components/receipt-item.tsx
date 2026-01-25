@@ -8,7 +8,7 @@ import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
-import { Card, CardBody, CardHeader } from "~components/card";
+import { Card } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
@@ -75,94 +75,99 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 
 	return (
 		<View ref={ref}>
-			<Card>
-				<CardHeader className="flex flex-col items-start justify-between gap-4">
-					<View className="flex w-full flex-row justify-between gap-4">
-						<View className="flex flex-row items-center gap-4">
-							<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
-							{notAddedParticipantsIds.length > 1 ? (
-								<Chip
-									color="primary"
-									className="cursor-pointer"
-									onPress={onAddEveryItemParticipant}
-								>
-									{t("item.participants.everyone")}
-								</Chip>
-							) : null}
-						</View>
-						{!canEdit ? null : (
-							<RemoveButton
-								onRemove={() => removeItem(item.id)}
-								mutation={{ isPending: isRemovalPending }}
-								subtitle={t("item.removeButton.confirmSubtitle")}
-								noConfirm={item.consumers.length === 0}
-								isIconOnly
-							/>
-						)}
-					</View>
-					{canEdit ? (
-						<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
-							<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
-							<Icon
-								name="arrow-right"
-								className="size-9 rotate-90 sm:rotate-0"
-							/>
-							<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
-						</View>
-					) : null}
-				</CardHeader>
-				<Divider />
-				<CardBody className="gap-2">
-					<View className="flex-row flex-wrap items-center gap-2">
-						<ReceiptItemPriceInput
-							item={item}
-							isDisabled={isRemovalPending}
-							className="w-full shrink-0 sm:w-36"
-						/>
-						<ReceiptItemQuantityInput
-							item={item}
-							isDisabled={isRemovalPending}
-							className="w-full shrink-0 sm:w-36"
-						/>
-						<Text>
-							={" "}
-							{formatCurrency(
-								locale,
-								currencyCode,
-								round(item.quantity * item.price),
+			<Card
+				headerClassName="flex flex-col items-start justify-between gap-4"
+				header={
+					<>
+						<View className="flex w-full flex-row justify-between gap-4">
+							<View className="flex flex-row items-center gap-4">
+								<ReceiptItemNameInput
+									item={item}
+									isDisabled={isRemovalPending}
+								/>
+								{notAddedParticipantsIds.length > 1 ? (
+									<Chip
+										color="primary"
+										className="cursor-pointer"
+										onPress={onAddEveryItemParticipant}
+									>
+										{t("item.participants.everyone")}
+									</Chip>
+								) : null}
+							</View>
+							{!canEdit ? null : (
+								<RemoveButton
+									onRemove={() => removeItem(item.id)}
+									mutation={{ isPending: isRemovalPending }}
+									subtitle={t("item.removeButton.confirmSubtitle")}
+									noConfirm={item.consumers.length === 0}
+									isIconOnly
+								/>
 							)}
-						</Text>
-					</View>
-					{sortedConsumers.length === 0 ? null : (
-						<>
-							<Divider />
-							{sortedConsumers.map((consumer) => {
-								const matchedParticipant = participants.find(
-									(participant) => participant.userId === consumer.userId,
-								);
-								if (!matchedParticipant) {
-									return (
-										<ErrorMessage
-											key={consumer.userId}
-											message={t("item.participants.orphanedError", {
-												userId: consumer.userId,
-											})}
-										/>
-									);
-								}
+						</View>
+						{canEdit ? (
+							<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
+								<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
+								<Icon
+									name="arrow-right"
+									className="size-9 rotate-90 sm:rotate-0"
+								/>
+								<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
+							</View>
+						) : null}
+					</>
+				}
+				bodyClassName="gap-2"
+			>
+				<View className="flex-row flex-wrap items-center gap-2">
+					<ReceiptItemPriceInput
+						item={item}
+						isDisabled={isRemovalPending}
+						className="w-full shrink-0 sm:w-36"
+					/>
+					<ReceiptItemQuantityInput
+						item={item}
+						isDisabled={isRemovalPending}
+						className="w-full shrink-0 sm:w-36"
+					/>
+					<Text>
+						={" "}
+						{formatCurrency(
+							locale,
+							currencyCode,
+							round(item.quantity * item.price),
+						)}
+					</Text>
+				</View>
+				{sortedConsumers.length === 0 ? null : (
+					<>
+						<Divider />
+						{sortedConsumers.map((consumer) => {
+							const matchedParticipant = participants.find(
+								(participant) => participant.userId === consumer.userId,
+							);
+							if (!matchedParticipant) {
 								return (
-									<ReceiptItemConsumer
+									<ErrorMessage
 										key={consumer.userId}
-										consumer={consumer}
-										item={item}
-										participant={matchedParticipant}
-										isDisabled={isRemovalPending}
+										message={t("item.participants.orphanedError", {
+											userId: consumer.userId,
+										})}
 									/>
 								);
-							})}
-						</>
-					)}
-				</CardBody>
+							}
+							return (
+								<ReceiptItemConsumer
+									key={consumer.userId}
+									consumer={consumer}
+									item={item}
+									participant={matchedParticipant}
+									isDisabled={isRemovalPending}
+								/>
+							);
+						})}
+					</>
+				)}
 			</Card>
 		</View>
 	);
@@ -171,23 +176,21 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 const consumersSkeletonItems = new Array(2).fill(null).map((_, index) => index);
 
 export const ReceiptItemSkeleton: React.FC = () => (
-	<Card>
-		<CardHeader className="justify-between gap-4">
-			<Skeleton className="h-7 w-24 rounded-md" />
-		</CardHeader>
+	<Card
+		header={<Skeleton className="h-7 w-24 rounded-md" />}
+		headerClassName="justify-between gap-4"
+		bodyClassName="gap-2"
+	>
+		<View className="flex-row items-center gap-2">
+			<Skeleton className="h-7 w-12 rounded-md" />
+			<Text>x</Text>
+			<Skeleton className="h-7 w-12 rounded-md" />
+			<Text>=</Text>
+			<Skeleton className="h-7 w-12 rounded-md" />
+		</View>
 		<Divider />
-		<CardBody className="gap-2">
-			<View className="flex-row items-center gap-2">
-				<Skeleton className="h-7 w-12 rounded-md" />
-				<Text>x</Text>
-				<Skeleton className="h-7 w-12 rounded-md" />
-				<Text>=</Text>
-				<Skeleton className="h-7 w-12 rounded-md" />
-			</View>
-			<Divider />
-			{consumersSkeletonItems.map((index) => (
-				<ReceiptItemConsumerSkeleton key={index} />
-			))}
-		</CardBody>
+		{consumersSkeletonItems.map((index) => (
+			<ReceiptItemConsumerSkeleton key={index} />
+		))}
 	</Card>
 );

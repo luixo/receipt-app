@@ -7,8 +7,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Card, CardBody, CardHeader } from "~components/card";
-import { Divider } from "~components/divider";
+import { Card } from "~components/card";
 import { Text } from "~components/text";
 import { options as accountResendEmailOptions } from "~mutations/account/resend-email";
 
@@ -30,32 +29,32 @@ export const EmailVerificationCard = suspendedFallback(
 			return null;
 		}
 		return (
-			<Card className="min-w-fit self-center" shadow="md">
-				<CardHeader>
+			<Card
+				className="min-w-fit self-center"
+				header={
 					<Text className="text-warning text-center text-2xl">
 						{t("components.emailVerification.header")}
 					</Text>
-				</CardHeader>
-				<Divider />
-				<CardBody className="gap-4">
-					<Text>{t("components.emailVerification.text")}</Text>
-					{resendEmailMutation.status === "success" ? (
-						<Text className="text-center text-2xl">
-							{t("components.emailVerification.success", {
-								email: resendEmailMutation.data.email,
-							})}
-						</Text>
-					) : (
-						<Button
-							color="primary"
-							onPress={resendEmail}
-							isDisabled={resendEmailMutation.isPending}
-							isLoading={resendEmailMutation.isPending}
-						>
-							{t("components.emailVerification.resendButton")}
-						</Button>
-					)}
-				</CardBody>
+				}
+				bodyClassName="gap-4"
+			>
+				<Text>{t("components.emailVerification.text")}</Text>
+				{resendEmailMutation.status === "success" ? (
+					<Text className="text-center text-2xl">
+						{t("components.emailVerification.success", {
+							email: resendEmailMutation.data.email,
+						})}
+					</Text>
+				) : (
+					<Button
+						color="primary"
+						onPress={resendEmail}
+						isDisabled={resendEmailMutation.isPending}
+						isLoading={resendEmailMutation.isPending}
+					>
+						{t("components.emailVerification.resendButton")}
+					</Button>
+				)}
 			</Card>
 		);
 	},

@@ -13,7 +13,7 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { Avatar } from "~components/avatar";
 import { Button } from "~components/button";
-import { Card, CardBody } from "~components/card";
+import { Card } from "~components/card";
 import { FileInput } from "~components/file-input";
 import { Icon } from "~components/icons";
 import { ImageCropper, getFormData } from "~components/image-cropper";
@@ -190,16 +190,15 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 										)}
 									</form.AppField>
 								) : (
-									<Card className="w-full">
-										<CardBody
-											className="cursor-pointer items-center justify-center"
-											onClick={onInputButtonClick}
-										>
-											<View className="absolute top-0 left-0 m-4 opacity-30">
-												{avatar}
-											</View>
-											<Text>{t("avatar.uploadImage.text")}</Text>
-										</CardBody>
+									<Card
+										className="w-full"
+										bodyClassName="cursor-pointer items-center justify-center"
+										onPress={onInputButtonClick}
+									>
+										<View className="absolute top-0 left-0 m-4 opacity-30">
+											{avatar}
+										</View>
+										<Text>{t("avatar.uploadImage.text")}</Text>
 									</Card>
 								)
 							}

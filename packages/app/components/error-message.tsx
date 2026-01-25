@@ -8,8 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import type { TRPCError } from "~app/trpc";
 import { Button } from "~components/button";
-import { Card, CardBody, CardFooter, CardHeader } from "~components/card";
-import { Divider } from "~components/divider";
+import { Card } from "~components/card";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -26,30 +25,27 @@ type Props = {
 export const ErrorMessage: React.FC<Props> = ({ message, stack, button }) => {
 	const { t } = useTranslation("default");
 	return (
-		<Card data-testid="error-message">
-			<CardHeader>
+		<Card
+			testID="error-message"
+			header={
 				<View className="text-danger flex flex-row gap-2">
 					<Icon name="warning" className="size-8" />
 					<Text variant="h3" className="text-danger">
 						{t("components.errorMessage.error")}
 					</Text>
 				</View>
-			</CardHeader>
-			<Divider />
-			<CardBody>
-				<Text className="whitespace-pre-wrap">{message}</Text>
-				<Text className="text-sm whitespace-pre-wrap">{stack}</Text>
-			</CardBody>
-			{button ? (
-				<>
-					<Divider />
-					<CardFooter className="flex flex-row justify-end">
-						<Button color="primary" onPress={button.onPress}>
-							{button.text}
-						</Button>
-					</CardFooter>
-				</>
-			) : null}
+			}
+			footerClassName="flex flex-row justify-end"
+			footer={
+				button ? (
+					<Button color="primary" onPress={button.onPress}>
+						{button.text}
+					</Button>
+				) : null
+			}
+		>
+			<Text className="whitespace-pre-wrap">{message}</Text>
+			<Text className="text-sm whitespace-pre-wrap">{stack}</Text>
 		</Card>
 	);
 };

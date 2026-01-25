@@ -85,7 +85,7 @@ const Wrapper = () => {
 		setToastIds((prevIds) => prevIds.filter((id) => id !== lastId));
 	};
 	return (
-		<ScrollView className="bg-background">
+		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
 				<View className="flex rounded-md bg-blue-500 p-2">

@@ -11,7 +11,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Card, CardBody } from "~components/card";
+import { Card } from "~components/card";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
@@ -59,26 +59,22 @@ const BecomeModal: React.FC<ModalProps> = ({
 };
 
 const SkeletonAdminUserCard: React.FC = () => (
-	<Card>
-		<CardBody className="flex-row items-start justify-between">
-			<SkeletonUser />
-		</CardBody>
+	<Card bodyClassName="flex-row items-start justify-between">
+		<SkeletonUser />
 	</Card>
 );
 
 const AdminUserCard: React.FC<
 	TRPCQueryOutput<"admin.accounts">[number] & { children?: ViewReactNode }
 > = ({ user, account, children }) => (
-	<Card>
-		<CardBody className="flex-row items-start justify-between">
-			<User
-				id={user ? user.id : (account.id as UserId)}
-				name={user ? user.name : account.email}
-				connectedAccount={account}
-				avatarProps={{ dimmed: !user }}
-			/>
-			<View>{children}</View>
-		</CardBody>
+	<Card bodyClassName="flex-row items-start justify-between">
+		<User
+			id={user ? user.id : (account.id as UserId)}
+			name={user ? user.name : account.email}
+			connectedAccount={account}
+			avatarProps={{ dimmed: !user }}
+		/>
+		<View>{children}</View>
 	</Card>
 );
 

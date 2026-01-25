@@ -1,5 +1,6 @@
 import type React from "react";
 
+import { CardBody } from "@heroui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
@@ -11,7 +12,7 @@ import { SkeletonUser } from "~app/components/app/user";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
-import { Card, CardBody } from "~components/card";
+import { Card } from "~components/card";
 import { CardLink } from "~components/link";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
