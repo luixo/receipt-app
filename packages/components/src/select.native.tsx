@@ -7,7 +7,7 @@ import { cn } from "~components/utils";
 
 import type { Props } from "./select";
 
-export const Select = <T extends object>({
+export const Select = <T extends object, K extends string>({
 	placeholder,
 	selectionMode,
 	items,
@@ -20,7 +20,8 @@ export const Select = <T extends object>({
 	children,
 	getKey,
 	getTextValue: getTextValueRaw,
-}: Props<T>) => {
+	disallowEmptySelection,
+}: Props<T, K>) => {
 	const selectedMatches = items.filter((item) =>
 		selectedKeys.includes(getKey(item)),
 	);
@@ -39,20 +40,23 @@ export const Select = <T extends object>({
 						}
 					: undefined
 			}
-			onValueChange={(nextValue) => {
-				if (!nextValue) {
-					onSelectionChange([]);
+			onValueChange={(nextSelection) => {
+				if (!nextSelection) {
+					if (!disallowEmptySelection) {
+						onSelectionChange([]);
+					}
 					return;
 				}
-				if (selectedKeys.includes(nextValue.value)) {
-					onSelectionChange(
-						selectedKeys.filter((key) => key !== nextValue.value),
-					);
+				const nextValue = nextSelection.value as K;
+				if (selectedKeys.includes(nextValue)) {
+					if (!disallowEmptySelection || selectedKeys.length !== 0) {
+						onSelectionChange(selectedKeys.filter((key) => key !== nextValue));
+					}
 				} else {
 					onSelectionChange(
 						selectionMode === "multiple"
-							? [...selectedKeys, nextValue.value]
-							: [nextValue.value],
+							? ([...selectedKeys, nextValue] as K[])
+							: ([nextValue] as K[]),
 					);
 				}
 			}}

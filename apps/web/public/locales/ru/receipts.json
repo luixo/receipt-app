@@ -21,8 +21,7 @@
 				"label": "Фильтр принадлежности мне",
 				"ownedByAnybody": "Принадлежит кому угодно",
 				"ownedByMe": "Принадлежит мне",
-				"ownedNotByMe": "Не принадлежит мне",
-				"ownedByAnybodyButMe": "Принадлежит кому угодно, кроме меня"
+				"ownedNotByMe": "Принадлежит кому угодно, кроме меня"
 			}
 		}
 	},
@@ -88,7 +87,11 @@
 		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
 		"role": {
 			"viewer": "Читатель",
-			"editor": "Писатель"
+			"editor": "Писатель",
+			"owner": "Владелец",
+			"select": {
+				"label": "Выбери роль"
+			}
 		},
 		"form": {
 			"payerPart": {

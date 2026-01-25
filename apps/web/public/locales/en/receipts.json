@@ -21,8 +21,7 @@
 				"label": "Owned by me filter",
 				"ownedByAnybody": "Owned by anybody",
 				"ownedByMe": "Owned by me",
-				"ownedNotByMe": "Owned not by me",
-				"ownedByAnybodyButMe": "Owned by anybody but me"
+				"ownedNotByMe": "Owned by anybody but me"
 			}
 		}
 	},
@@ -88,7 +87,11 @@
 		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
 		"role": {
 			"viewer": "Viewer",
-			"editor": "Editor"
+			"editor": "Editor",
+			"owner": "Owner",
+			"select": {
+				"label": "Pick role"
+			}
 		},
 		"form": {
 			"payerPart": {

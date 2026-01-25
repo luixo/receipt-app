@@ -1,18 +1,12 @@
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { keys } from "remeda";
+import { entries } from "remeda";
 
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { Language } from "~app/utils/i18n-data";
 import { LOCALE_STORE_NAME } from "~app/utils/store/locale";
-import { Button } from "~components/button";
-import {
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-} from "~components/dropdown";
+import { Select } from "~components/select";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 
@@ -40,27 +34,25 @@ export const LanguageSettings: React.FC = () => {
 	return (
 		<View className="flex-row items-center gap-4">
 			<Text className="text-xl">{t("languages.header")}</Text>
-			<Dropdown>
-				<DropdownTrigger>
-					<Button variant="bordered">{LANGUAGE_TEXT[currentLanguage]}</Button>
-				</DropdownTrigger>
-				<DropdownMenu
-					aria-label={t("languages.dropdownLabel")}
-					onAction={(key) => onChange(key as Language)}
-				>
-					{keys(LANGUAGE_TEXT).map((language) => (
-						<DropdownItem key={language} textValue={LANGUAGE_TEXT[language]}>
-							<View
-								className={
-									language === currentLanguage ? "font-bold" : undefined
-								}
-							>
-								<Text>{LANGUAGE_TEXT[language]}</Text>
-							</View>
-						</DropdownItem>
-					))}
-				</DropdownMenu>
-			</Dropdown>
+			<Select
+				items={entries(LANGUAGE_TEXT).map(([language, text]) => ({
+					language,
+					text,
+				}))}
+				label={t("languages.dropdown.label")}
+				placeholder={t("languages.dropdown.placeholder")}
+				renderValue={(values) => values.map((value) => value.text).join(", ")}
+				onSelectionChange={(key) => onChange(key[0] as Language)}
+				getKey={({ language }) => language}
+			>
+				{({ language, text }) => (
+					<Text
+						className={language === currentLanguage ? "font-bold" : undefined}
+					>
+						{text}
+					</Text>
+				)}
+			</Select>
 		</View>
 	);
 };

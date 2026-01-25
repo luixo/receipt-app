@@ -5,17 +5,11 @@ import { keys } from "remeda";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import {
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-} from "~components/dropdown";
 import { Icon } from "~components/icons";
+import { Select } from "~components/select";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import type { AssignableRole } from "~web/handlers/receipts/utils";
+import type { AssignableRole, Role } from "~web/handlers/receipts/utils";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
@@ -53,49 +47,45 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 		},
 		[participant.role, participant.userId, updateParticipantRole],
 	);
-	const roleTexts = React.useMemo<Record<AssignableRole, string>>(
+	const roleTexts = React.useMemo<Record<Role, string>>(
 		() => ({
 			viewer: t("participant.role.viewer"),
 			editor: t("participant.role.editor"),
+			owner: t("participant.role.owner"),
 		}),
 		[t],
 	);
 
 	return (
-		<Dropdown>
-			<DropdownTrigger>
-				<Button
-					variant="flat"
-					size="sm"
-					isDisabled={
-						receiptDisabled || !isOwner || participant.role === "owner"
-					}
-					isLoading={removeParticipantMutationState?.status === "pending"}
-					startContent={<Icon name="chevron-down" />}
-				>
-					{participant.role === "owner" ? (
-						<Icon name="owner" className="size-6" />
-					) : participant.role === "editor" ? (
-						<Icon name="editor" className="size-6" />
-					) : (
-						<Icon name="viewer" className="size-6" />
-					)}
-				</Button>
-			</DropdownTrigger>
-			<DropdownMenu
-				aria-label="Roles"
-				variant="shadow"
-				selectionMode="single"
-				selectedKeys={[participant.role]}
-			>
-				{keys(ROLES).map((pickRole) => (
-					<DropdownItem key={pickRole}>
-						<View onPress={() => changeRole(pickRole)}>
-							<Text>{roleTexts[pickRole]}</Text>
-						</View>
-					</DropdownItem>
-				))}
-			</DropdownMenu>
-		</Dropdown>
+		<Select
+			items={keys(ROLES).map((role) => ({ role }))}
+			label={t("participant.role.select.label")}
+			placeholder=""
+			isDisabled={
+				receiptDisabled ||
+				!isOwner ||
+				participant.role === "owner" ||
+				removeParticipantMutationState?.status === "pending"
+			}
+			className="min-w-[160px]"
+			renderValue={() => (
+				<View className="flex flex-row gap-2">
+					<Icon className="size-6" name={participant.role} />
+					<Text>{roleTexts[participant.role]}</Text>
+				</View>
+			)}
+			selectedKeys={[
+				participant.role === "owner" ? "viewer" : participant.role,
+			]}
+			onSelectionChange={(nextKeys) => {
+				if (!nextKeys[0]) {
+					return;
+				}
+				changeRole(nextKeys[0]);
+			}}
+			getKey={({ role }) => role}
+		>
+			{({ role }) => <Text>{roleTexts[role]}</Text>}
+		</Select>
 	);
 };

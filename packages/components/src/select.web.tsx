@@ -3,24 +3,25 @@ import type React from "react";
 import { SelectItem, Select as SelectRaw } from "@heroui/select";
 import { isNonNullish } from "remeda";
 
-export type Props<T extends object> = {
+export type Props<T extends object, K extends string> = {
 	label?: string;
 	placeholder: string;
 	selectionMode?: "multiple" | "single";
 	items: T[];
-	selectedKeys?: string[];
-	disabledKeys?: string[];
+	selectedKeys?: K[];
+	disabledKeys?: K[];
 	renderValue: (selectedValues: T[]) => React.ReactNode;
-	onSelectionChange: (selectedKeys: string[]) => void;
+	onSelectionChange: (selectedKeys: K[]) => void;
 	className?: string;
 	isDisabled?: boolean;
 	children: (item: T) => React.ReactNode;
-	getKey: (item: T) => string;
+	getKey: (item: T) => K;
 	getTextValue?: (item: T) => string;
+	disallowEmptySelection?: boolean;
 };
 
 // eslint-disable-next-line react/function-component-definition
-export function Select<T extends object>({
+export function Select<T extends object, K extends string>({
 	children,
 	getKey,
 	getTextValue,
@@ -28,7 +29,7 @@ export function Select<T extends object>({
 	onSelectionChange,
 	label,
 	...props
-}: Props<T>) {
+}: Props<T, K>) {
 	return (
 		<SelectRaw<T>
 			{...props}
@@ -38,9 +39,7 @@ export function Select<T extends object>({
 			}
 			onSelectionChange={(keys) => {
 				onSelectionChange(
-					keys === "all"
-						? props.items.map(getKey)
-						: (Array.from(keys) as string[]),
+					keys === "all" ? props.items.map(getKey) : (Array.from(keys) as K[]),
 				);
 			}}
 		>

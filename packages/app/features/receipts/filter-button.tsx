@@ -1,20 +1,14 @@
 import React from "react";
 
-import type { Selection } from "@react-types/shared";
 import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { SearchParamState } from "~app/utils/navigation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import {
-	Dropdown,
-	DropdownItem,
-	DropdownMenu,
-	DropdownTrigger,
-} from "~components/dropdown";
 import { Icon } from "~components/icons";
 import { Modal, ModalBody, ModalContent } from "~components/modal";
+import { Select } from "~components/select";
 import { Text } from "~components/text";
 
 type Props = {
@@ -38,13 +32,14 @@ export const FilterButton: React.FC<Props> = ({
 		[setSort],
 	);
 	const sortIconName = sort === "date-desc" ? "sort-down" : "sort-up";
+	const filterOwnerOptions: Record<"true" | "false" | "undefined", string> = {
+		undefined: t("list.filters.ownership.ownedByAnybody"),
+		true: t("list.filters.ownership.ownedByMe"),
+		false: t("list.filters.ownership.ownedNotByMe"),
+	};
 
 	const onFilterSelectionChange = React.useCallback(
-		(filterKey: keyof typeof filters, selection: Selection) => {
-			if (selection === "all") {
-				return;
-			}
-			const key = [...selection.values()][0];
+		(filterKey: keyof typeof filters, key: keyof typeof filterOwnerOptions) => {
 			switch (key) {
 				case "true":
 					void setFilters((prev) => ({ ...prev, [filterKey]: true }));
@@ -58,8 +53,10 @@ export const FilterButton: React.FC<Props> = ({
 		},
 		[setFilters],
 	);
+
 	const onOwnedFilterSelectionChange = React.useCallback(
-		(selection: Selection) => onFilterSelectionChange("ownedByMe", selection),
+		(selection: keyof typeof filterOwnerOptions) =>
+			onFilterSelectionChange("ownedByMe", selection),
 		[onFilterSelectionChange],
 	);
 
@@ -81,38 +78,35 @@ export const FilterButton: React.FC<Props> = ({
 						<Text className="text-2xl font-medium">
 							{t("list.filters.title")}
 						</Text>
-						<Dropdown>
-							<DropdownTrigger>
-								<Button
-									color="primary"
-									variant="flat"
-									startContent={<Icon name="chevron-down" />}
-								>
-									{filters.ownedByMe === undefined
-										? t("list.filters.ownership.ownedByAnybody")
-										: filters.ownedByMe
-											? t("list.filters.ownership.ownedByMe")
-											: t("list.filters.ownership.ownedByAnybodyButMe")}
-								</Button>
-							</DropdownTrigger>
-							<DropdownMenu
-								aria-label={t("list.filters.ownership.label")}
-								disallowEmptySelection
-								selectionMode="single"
-								selectedKeys={new Set([String(filters.ownedByMe)])}
-								onSelectionChange={onOwnedFilterSelectionChange}
-							>
-								<DropdownItem key="undefined">
-									{t("list.filters.ownership.ownedByAnybody")}
-								</DropdownItem>
-								<DropdownItem key="true">
-									{t("list.filters.ownership.ownedByMe")}
-								</DropdownItem>
-								<DropdownItem key="false">
-									{t("list.filters.ownership.ownedNotByMe")}
-								</DropdownItem>
-							</DropdownMenu>
-						</Dropdown>
+						<Select
+							items={(["true", "false", "undefined"] as const).map(
+								(position) => ({ position }),
+							)}
+							label={t("list.filters.ownership.label")}
+							placeholder=""
+							renderValue={(values) =>
+								values.map(({ position }) => (
+									<Text key={position}>{filterOwnerOptions[position]}</Text>
+								))
+							}
+							selectedKeys={[
+								filters.ownedByMe === undefined
+									? "undefined"
+									: filters.ownedByMe
+										? "true"
+										: "false",
+							]}
+							onSelectionChange={(nextKeys) => {
+								if (!nextKeys[0]) {
+									return;
+								}
+								onOwnedFilterSelectionChange(nextKeys[0]);
+							}}
+							disallowEmptySelection
+							getKey={({ position }) => position}
+						>
+							{({ position }) => <Text>{filterOwnerOptions[position]}</Text>}
+						</Select>
 					</ModalBody>
 				</ModalContent>
 			</Modal>
