@@ -22,12 +22,8 @@ export const usePasswordVisibility = ({
 			<View className="flex-row gap-2">
 				{endContent}
 				{type === "password" ? (
-					<Button variant="light" isIconOnly>
-						<Icon
-							onClick={switchVisible}
-							name={visible ? "eye-off" : "eye"}
-							className="size-6"
-						/>
+					<Button variant="light" isIconOnly onPress={switchVisible}>
+						<Icon name={visible ? "eye-off" : "eye"} className="size-6" />
 					</Button>
 				) : null}
 			</View>

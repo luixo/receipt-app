@@ -9,7 +9,7 @@ import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
-import { Select, SelectItem } from "~components/select";
+import { Select } from "~components/select";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
@@ -21,12 +21,10 @@ import { SORT_USERS } from "./utils";
 
 type Props = {
 	item: Item;
-} & Omit<
-	React.ComponentProps<typeof Select>,
-	"items" | "selectedKeys" | "disabledKeys" | "children"
->;
+	className?: string;
+};
 
-export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
+export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 	const { t } = useTranslation("receipts");
 	const { participants } = useReceiptContext();
 	const { addItemConsumer, removeItemConsumer } = useActionsHooksContext();
@@ -74,7 +72,8 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 
 	return (
 		<Select
-			aria-label={t("item.consumer.label")}
+			className={className}
+			label={t("item.consumer.label")}
 			placeholder={t("item.consumer.placeholder")}
 			selectionMode="multiple"
 			selectedKeys={addedParticipantsIds}
@@ -88,7 +87,7 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 			].filter(isNonNullish)}
 			renderValue={(selectedParticipants) => {
 				const userIds = selectedParticipants
-					.map((participant) => participant.data?.userId)
+					.map((participant) => participant.userId)
 					.filter(isNonNullish);
 				return (
 					<View className="flex-row items-center gap-2">
@@ -115,10 +114,7 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 					</View>
 				);
 			}}
-			onSelectionChange={(selection) => {
-				const nextSelected = (
-					selection === "all" ? allParticipantsIds : [...selection.values()]
-				) as UserId[];
+			onSelectionChange={(nextSelected) => {
 				addedParticipantsIds
 					.filter((id) => !nextSelected.includes(id))
 					.forEach((id) => removeItemConsumer(item.id, id));
@@ -127,13 +123,9 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 					.forEach((id) => addItemConsumer(item.id, id, 1));
 			}}
 			items={participants.toSorted(SORT_USERS)}
-			{...props}
+			getKey={({ userId }) => userId}
 		>
-			{({ userId }) => (
-				<SelectItem key={userId} textValue={userId}>
-					<LoadableUser id={userId} foreign={!isOwner} />
-				</SelectItem>
-			)}
+			{({ userId }) => <LoadableUser id={userId} foreign={!isOwner} />}
 		</Select>
 	);
 };

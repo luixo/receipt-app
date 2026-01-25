@@ -7,8 +7,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
-import { Select, SelectItem } from "~components/select";
-import type { UserId } from "~db/ids";
+import { Select } from "~components/select";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
@@ -17,12 +16,10 @@ import { SORT_USERS } from "./utils";
 
 type Props = {
 	item: Item;
-} & Omit<
-	React.ComponentProps<typeof Select>,
-	"items" | "selectedKeys" | "disabledKeys" | "children"
->;
+	className?: string;
+};
 
-export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
+export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 	const { t } = useTranslation("receipts");
 	const { participants } = useReceiptContext();
 	const { addItemPayer, removeItemPayer } = useActionsHooksContext();
@@ -51,7 +48,8 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 
 	return (
 		<Select
-			aria-label={t("item.payer.label")}
+			className={className}
+			label={t("item.payer.label")}
 			placeholder={t("item.payer.placeholder")}
 			selectedKeys={item.payers.map(({ userId }) => userId)}
 			disabledKeys={
@@ -65,10 +63,7 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 									!item.payers.some((payer) => payer.userId === userId),
 							)
 			}
-			onSelectionChange={(selection) => {
-				const nextSelected = (
-					selection === "all" ? allParticipantsIds : [...selection.values()]
-				) as UserId[];
+			onSelectionChange={(nextSelected) => {
 				addedParticipantsIds
 					.filter((id) => !nextSelected.includes(id))
 					.forEach((id) => removeItemPayer(item.id, id));
@@ -82,7 +77,7 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 					size="sm"
 				>
 					{selectedParticipants
-						.map((participant) => participant.data?.userId)
+						.map((participant) => participant.userId)
 						.filter(isNonNullish)
 						.map((userId) => (
 							<LoadableUser key={userId} id={userId} foreign={!isOwner} />
@@ -90,13 +85,9 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 				</AvatarGroup>
 			)}
 			items={participants.toSorted(SORT_USERS)}
-			{...props}
+			getKey={({ userId }) => userId}
 		>
-			{({ userId }) => (
-				<SelectItem key={userId} textValue={userId}>
-					<LoadableUser id={userId} foreign={!isOwner} />
-				</SelectItem>
-			)}
+			{({ userId }) => <LoadableUser id={userId} foreign={!isOwner} />}
 		</Select>
 	);
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 
 import * as lucideIcons from "lucide-react-native";
+import type { ResponderProps } from "react-native-svg";
 import type { SFSymbol } from "sf-symbols-typescript";
 import { withUniwind } from "uniwind";
 
@@ -78,6 +79,7 @@ const componentsCache: Partial<
 		React.ComponentType<
 			lucideIcons.LucideProps & {
 				className?: string;
+				pointerEvents?: ResponderProps["pointerEvents"];
 			}
 		>
 	>
@@ -98,7 +100,11 @@ export const Icon = ({ name, className, onClick }: Props) => {
 
 	const element = (
 		// eslint-disable-next-line react-hooks/static-components
-		<Component className={cn(textClass, className)} size={emptySize} />
+		<Component
+			className={cn(textClass, className)}
+			size={emptySize}
+			pointerEvents="none"
+		/>
 	);
 	if (onClick) {
 		return (

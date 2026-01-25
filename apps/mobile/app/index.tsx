@@ -20,6 +20,7 @@ import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { NumberInput } from "~components/number-input";
 import { ScrollView } from "~components/scroll-view";
+import { Select } from "~components/select";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Spinner } from "~components/spinner";
@@ -30,6 +31,8 @@ import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { type Temporal, getNow } from "~utils/date";
+
+const SELECT_ITEMS = ["foo", "bar", "baz"];
 
 const Wrapper = () => {
 	const { t } = useTranslation();
@@ -85,10 +88,37 @@ const Wrapper = () => {
 		closeToastById(lastId);
 		setToastIds((prevIds) => prevIds.filter((id) => id !== lastId));
 	};
+	const [selectedKeys, setSelectedKeys] = React.useState<string[]>([]);
 	return (
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Select
+					label="Select label"
+					className="max-w-40 shrink-0 justify-self-end"
+					selectedKeys={selectedKeys}
+					onSelectionChange={setSelectedKeys}
+					renderValue={(items) => (
+						<AvatarGroup size="sm">
+							{items.map(({ item }) => (
+								<Avatar key={item} hashId={item} />
+							))}
+						</AvatarGroup>
+					)}
+					disabledKeys={["bar"]}
+					items={SELECT_ITEMS.map((item) => ({ item }))}
+					getKey={({ item }) => item}
+					getTextValue={({ item }) => item}
+					placeholder="Label placeholder"
+					selectionMode="multiple"
+				>
+					{({ item }) => (
+						<View key={item} className="flex flex-row items-center gap-2">
+							<Avatar hashId={item} size="sm" />
+							<Text>{`${item} child`}</Text>
+						</View>
+					)}
+				</Select>
 				<Card
 					testID="error-message"
 					header={

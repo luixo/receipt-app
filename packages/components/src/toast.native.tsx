@@ -119,7 +119,7 @@ export const addToast = ({
 						</Toast.Description>
 					</View>
 					<View className="p-4" onPress={close}>
-						<Icon name="close" className={slots.icon()} onClick={close} />
+						<Icon name="close" className={slots.icon()} />
 					</View>
 				</Toast>
 			);

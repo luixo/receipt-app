@@ -17,13 +17,18 @@ export const Text = ({
 	children,
 }: Props) => {
 	const textClass = React.useContext(TextClassContext);
-
+	const finalClassName = textVariants({
+		variant,
+		className: cn(textClass, className),
+	});
+	const shouldTruncate = finalClassName.includes("truncate");
 	return (
 		<RawText
-			className={textVariants({ variant, className: cn(textClass, className) })}
+			className={cn(finalClassName, shouldTruncate ? "shrink-1" : undefined)}
 			role={ROLE[variant]}
 			aria-level={ARIA_LEVEL[variant]}
 			testID={testID}
+			numberOfLines={shouldTruncate ? 1 : undefined}
 		>
 			{children}
 		</RawText>

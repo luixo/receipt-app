@@ -1,12 +1,10 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
-
 import { SearchBar } from "~app/components/search-bar";
-import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
+import { LimitOption } from "~app/features/settings/limit-options";
+import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { Checkbox } from "~components/checkbox";
 import { Pagination } from "~components/pagination";
-import { Select, SelectItem } from "~components/select";
 import { cn } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
@@ -39,7 +37,6 @@ export function PaginationBlockShape<T>({
 	endContent,
 	search,
 }: ShapeProps<T>) {
-	const { t } = useTranslation("default");
 	const selectedStatus = selection
 		? selection.selectedItems.length === selection.items.length
 			? "selected-full"
@@ -109,30 +106,11 @@ export function PaginationBlockShape<T>({
 					) : null}
 					{endContent}
 					{totalCount <= DEFAULT_LIMIT ? null : (
-						<Select
-							aria-label={t("components.pagination.label")}
-							className="max-w-40 shrink-0 justify-self-end"
-							selectedKeys={[limit.toString()]}
-							onSelectionChange={(selected) =>
-								onLimitChange?.(
-									selected instanceof Set
-										? Number(Array.from(selected)[0])
-										: DEFAULT_LIMIT,
-								)
-							}
+						<LimitOption
+							limit={limit}
+							onChange={onLimitChange}
 							isDisabled={isDisabled}
-						>
-							{LIMITS.map((limitItem) => (
-								<SelectItem
-									key={limitItem}
-									textValue={t("components.pagination.perPage", {
-										limit: limitItem,
-									})}
-								>
-									{limitItem}
-								</SelectItem>
-							))}
-						</Select>
+						/>
 					)}
 				</View>
 			</View>
