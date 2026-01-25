@@ -11,7 +11,7 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -128,26 +128,18 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	const { t } = useTranslation("default");
 	return (
 		<Modal
-			aria-label={t("components.currenciesPicker.label")}
+			label={t("components.currenciesPicker.label")}
 			isOpen={modalOpen}
 			onOpenChange={switchModalOpen}
-			scrollBehavior="inside"
-			classNames={{ base: "mb-24 sm:mb-32 max-w-xl" }}
-			data-testid="currencies-picker"
+			className="mb-24 max-w-xl sm:mb-32"
+			testID="currencies-picker"
+			header={
+				<Text className="text-2xl font-medium">
+					{t("components.currenciesPicker.title")}
+				</Text>
+			}
 		>
-			<ModalContent>
-				<ModalHeader>
-					<Text className="text-2xl font-medium">
-						{t("components.currenciesPicker.title")}
-					</Text>
-				</ModalHeader>
-				<ModalBody>
-					<CurrenciesPickerLoader
-						topQueryOptions={topQueryOptions}
-						{...props}
-					/>
-				</ModalBody>
-			</ModalContent>
+			<CurrenciesPickerLoader topQueryOptions={topQueryOptions} {...props} />
 		</Modal>
 	);
 };

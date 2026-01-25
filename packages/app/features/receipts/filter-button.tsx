@@ -7,7 +7,7 @@ import type { SearchParamState } from "~app/utils/navigation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
-import { Modal, ModalBody, ModalContent } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Select } from "~components/select";
 import { Text } from "~components/text";
 
@@ -65,50 +65,48 @@ export const FilterButton: React.FC<Props> = ({
 			<Button color="primary" isIconOnly onPress={switchFilterModal}>
 				<Icon name="filter" className="size-6" />
 			</Button>
-			<Modal isOpen={filterModalOpen} onOpenChange={switchFilterModal}>
-				<ModalContent>
-					<ModalBody className="items-center">
-						<Button variant="light" onPress={sortSelectOnPress}>
-							<Icon name={sortIconName} className="size-6" />
-							{sort === "date-desc"
-								? t("list.sorting.newestFirst")
-								: t("list.sorting.oldestFirst")}
-						</Button>
-						<Divider />
-						<Text className="text-2xl font-medium">
-							{t("list.filters.title")}
-						</Text>
-						<Select
-							items={(["true", "false", "undefined"] as const).map(
-								(position) => ({ position }),
-							)}
-							label={t("list.filters.ownership.label")}
-							placeholder=""
-							renderValue={(values) =>
-								values.map(({ position }) => (
-									<Text key={position}>{filterOwnerOptions[position]}</Text>
-								))
-							}
-							selectedKeys={[
-								filters.ownedByMe === undefined
-									? "undefined"
-									: filters.ownedByMe
-										? "true"
-										: "false",
-							]}
-							onSelectionChange={(nextKeys) => {
-								if (!nextKeys[0]) {
-									return;
-								}
-								onOwnedFilterSelectionChange(nextKeys[0]);
-							}}
-							disallowEmptySelection
-							getKey={({ position }) => position}
-						>
-							{({ position }) => <Text>{filterOwnerOptions[position]}</Text>}
-						</Select>
-					</ModalBody>
-				</ModalContent>
+			<Modal
+				isOpen={filterModalOpen}
+				onOpenChange={switchFilterModal}
+				bodyClassName="items-center"
+			>
+				<Button variant="light" onPress={sortSelectOnPress}>
+					<Icon name={sortIconName} className="size-6" />
+					{sort === "date-desc"
+						? t("list.sorting.newestFirst")
+						: t("list.sorting.oldestFirst")}
+				</Button>
+				<Divider />
+				<Text className="text-2xl font-medium">{t("list.filters.title")}</Text>
+				<Select
+					items={(["true", "false", "undefined"] as const).map((position) => ({
+						position,
+					}))}
+					label={t("list.filters.ownership.label")}
+					placeholder=""
+					renderValue={(values) =>
+						values.map(({ position }) => (
+							<Text key={position}>{filterOwnerOptions[position]}</Text>
+						))
+					}
+					selectedKeys={[
+						filters.ownedByMe === undefined
+							? "undefined"
+							: filters.ownedByMe
+								? "true"
+								: "false",
+					]}
+					onSelectionChange={(nextKeys) => {
+						if (!nextKeys[0]) {
+							return;
+						}
+						onOwnedFilterSelectionChange(nextKeys[0]);
+					}}
+					disallowEmptySelection
+					getKey={({ position }) => position}
+				>
+					{({ position }) => <Text>{filterOwnerOptions[position]}</Text>}
+				</Select>
 			</Modal>
 		</>
 	);

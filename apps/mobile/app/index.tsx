@@ -18,6 +18,7 @@ import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
+import { Modal } from "~components/modal";
 import { NumberInput } from "~components/number-input";
 import { ScrollView } from "~components/scroll-view";
 import { Select } from "~components/select";
@@ -54,6 +55,7 @@ const Wrapper = () => {
 	const {
 		selected: [selectedColorMode, setSelectedColorMode],
 	} = useColorModes();
+	const [modalOpen, setModalOpen] = React.useState(false);
 	// This is false positive
 	// eslint-disable-next-line react/hook-use-state
 	const [date, changeDate] = React.useState<Temporal.PlainDate | undefined>(
@@ -93,6 +95,26 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Button onPress={() => setModalOpen(true)}>Open modal</Button>
+				<Modal
+					closeButton
+					label="Modal label"
+					isOpen={modalOpen}
+					onOpenChange={setModalOpen}
+					headerClassName="flex-col items-center"
+					header={
+						<>
+							<Text variant="h3">Do you want to?</Text>
+							<Text variant="h4" className="text-warning mt-2">
+								Subtitle
+							</Text>
+						</>
+					}
+					bodyClassName="flex-row justify-center gap-2"
+				>
+					<Button color="danger">Yes</Button>
+					<Button color="primary">No</Button>
+				</Modal>
 				<Select
 					label="Select label"
 					className="max-w-40 shrink-0 justify-self-end"

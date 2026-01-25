@@ -13,7 +13,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
 import { Divider } from "~components/divider";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
 import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
 import { Text } from "~components/text";
@@ -40,20 +40,18 @@ const BecomeModal: React.FC<ModalProps> = ({
 		closeModal();
 	}, [setMockedEmail, closeModal, email]);
 	return (
-		<Modal isOpen={isModalOpen} onOpenChange={closeModal}>
-			<ModalContent>
-				<ModalHeader>
-					<Text variant="h3">{t("pretend.modal.title", { email })}</Text>
-				</ModalHeader>
-				<ModalBody className="flex-row gap-4 p-4">
-					<Button color="warning" onPress={becomeAccount} className="flex-1">
-						{t("pretend.modal.yes")}
-					</Button>
-					<Button color="default" onPress={closeModal} className="flex-1">
-						{t("pretend.modal.no")}
-					</Button>
-				</ModalBody>
-			</ModalContent>
+		<Modal
+			isOpen={isModalOpen}
+			onOpenChange={closeModal}
+			header={<Text variant="h3">{t("pretend.modal.title", { email })}</Text>}
+			bodyClassName="flex-row gap-4 p-4"
+		>
+			<Button color="warning" onPress={becomeAccount} className="flex-1">
+				{t("pretend.modal.yes")}
+			</Button>
+			<Button color="default" onPress={closeModal} className="flex-1">
+				{t("pretend.modal.no")}
+			</Button>
 		</Modal>
 	);
 };

@@ -10,7 +10,7 @@ import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Text } from "~components/text";
 import { options as resetPasswordIntentionsAddOptions } from "~mutations/reset-password-intentions/add";
 
@@ -85,23 +85,20 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		),
 	);
 	return (
-		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>
-			<ModalContent>
-				<ModalHeader>
-					<Text variant="h3">{t("forgotPassword.modal.header")}</Text>
-				</ModalHeader>
-				<ModalBody>
-					{resetPasswordMutation.status === "success" ? (
-						<Text>
-							{t("forgotPassword.modal.success", {
-								email: resetPasswordMutation.variables.email,
-							})}
-						</Text>
-					) : (
-						<ResetPasswordModalForm mutation={resetPasswordMutation} />
-					)}
-				</ModalBody>
-			</ModalContent>
+		<Modal
+			isOpen={isModalOpen}
+			onOpenChange={switchModalOpen}
+			header={<Text variant="h3">{t("forgotPassword.modal.header")}</Text>}
+		>
+			{resetPasswordMutation.status === "success" ? (
+				<Text>
+					{t("forgotPassword.modal.success", {
+						email: resetPasswordMutation.variables.email,
+					})}
+				</Text>
+			) : (
+				<ResetPasswordModalForm mutation={resetPasswordMutation} />
+			)}
 		</Modal>
 	);
 };

@@ -11,7 +11,7 @@ import { AvatarGroup } from "~components/avatar";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -174,59 +174,53 @@ export const ReceiptParticipants: React.FC<{
 		<>
 			<ReceiptParticipantsPreview switchModal={switchModalOpen} />
 			<Modal
-				aria-label={t("participants.picker.label")}
+				label={t("participants.picker.label")}
 				isOpen={isModalOpen}
 				onOpenChange={switchModalOpen}
-				scrollBehavior="inside"
-				classNames={{ base: "mb-24 sm:mb-32 max-w-xl" }}
-				data-testid="participants-picker"
+				className="mb-24 max-w-xl sm:mb-32"
+				testID="participants-picker"
+				header={
+					<View className="flex-row gap-2">
+						<Icon name="user" className="size-6" />
+						<Text className="text-xl">{t("participants.picker.title")}</Text>
+					</View>
+				}
+				bodyClassName="flex flex-col gap-4 py-6"
 			>
-				<ModalContent>
-					<ModalHeader>
-						<View className="flex-row gap-2">
-							<Icon name="user" className="size-6" />
-							<Text className="text-xl">{t("participants.picker.title")}</Text>
+				{participants.length === 0 ? null : (
+					<>
+						<View className="flex flex-col gap-2 max-sm:gap-4">
+							{participants.map((participant) => (
+								<ReceiptParticipant
+									key={participant.userId}
+									participant={participant}
+									outcomingDebtId={
+										debts?.direction === "outcoming"
+											? debts.debts.find(
+													({ userId }) => participant.userId === userId,
+												)?.id
+											: undefined
+									}
+								/>
+							))}
 						</View>
-					</ModalHeader>
-					<ModalBody className="flex flex-col gap-4 py-6">
-						{participants.length === 0 ? null : (
-							<>
-								<View className="flex flex-col gap-2 max-sm:gap-4">
-									{participants.map((participant) => (
-										<ReceiptParticipant
-											key={participant.userId}
-											participant={participant}
-											outcomingDebtId={
-												debts?.direction === "outcoming"
-													? debts.debts.find(
-															({ userId }) => participant.userId === userId,
-														)?.id
-													: undefined
-											}
-										/>
-									))}
-								</View>
-								<Divider />
-							</>
-						)}
-						{isOwner ? (
-							<UsersSuggest
-								filterIds={participants.map(
-									(participant) => participant.userId,
-								)}
-								selected={localFilterIds}
-								multiselect
-								additionalIds={isSelfAdded ? [] : [selfUserId]}
-								onUserClick={onUserClick}
-								isDisabled={receiptDisabled}
-								options={suggestOptions}
-								label={t("participants.picker.addLabel")}
-							/>
-						) : participants.length === 0 ? (
-							<EmptyCard title={t("participants.empty")} />
-						) : null}
-					</ModalBody>
-				</ModalContent>
+						<Divider />
+					</>
+				)}
+				{isOwner ? (
+					<UsersSuggest
+						filterIds={participants.map((participant) => participant.userId)}
+						selected={localFilterIds}
+						multiselect
+						additionalIds={isSelfAdded ? [] : [selfUserId]}
+						onUserClick={onUserClick}
+						isDisabled={receiptDisabled}
+						options={suggestOptions}
+						label={t("participants.picker.addLabel")}
+					/>
+				) : participants.length === 0 ? (
+					<EmptyCard title={t("participants.empty")} />
+				) : null}
 			</Modal>
 		</>
 	);

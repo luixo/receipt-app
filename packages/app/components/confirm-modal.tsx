@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Text } from "~components/text";
 
 type Props = {
@@ -50,12 +50,12 @@ export const ConfirmModal: React.FC<Props> = ({
 			{children({ openModal })}
 			<Modal
 				closeButton
-				aria-label={title}
+				label={title}
 				isOpen={isModalOpen}
 				onOpenChange={switchModalOpen}
-			>
-				<ModalContent>
-					<ModalHeader className="flex-col items-center">
+				headerClassName="flex-col items-center"
+				header={
+					<>
 						<Text variant="h3">{confirmText}</Text>
 						{subtitle ? (
 							typeof subtitle === "string" ? (
@@ -66,21 +66,21 @@ export const ConfirmModal: React.FC<Props> = ({
 								subtitle
 							)
 						) : null}
-					</ModalHeader>
-					<ModalBody className="flex-row justify-center gap-2">
-						<Button
-							color="danger"
-							onPress={onYesClick}
-							isDisabled={isLoading}
-							isLoading={isLoading}
-						>
-							{defaultYesText}
-						</Button>
-						<Button color="primary" onPress={onNoClick} isDisabled={isLoading}>
-							{defaultNoText}
-						</Button>
-					</ModalBody>
-				</ModalContent>
+					</>
+				}
+				bodyClassName="flex-row justify-center gap-2"
+			>
+				<Button
+					color="danger"
+					onPress={onYesClick}
+					isDisabled={isLoading}
+					isLoading={isLoading}
+				>
+					{defaultYesText}
+				</Button>
+				<Button color="primary" onPress={onNoClick} isDisabled={isLoading}>
+					{defaultNoText}
+				</Button>
 			</Modal>
 		</>
 	);

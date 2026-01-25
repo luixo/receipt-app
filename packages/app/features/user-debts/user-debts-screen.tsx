@@ -19,7 +19,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
-import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Modal } from "~components/modal";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
@@ -78,15 +78,13 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 				endContent={<LoadableUser id={userId} />}
 			/>
 
-			<Modal isOpen={editModalOpen} onOpenChange={closeEditModal}>
-				<ModalContent>
-					<ModalHeader>
-						<Text className="text-xl">{t("user.modal.editTitle")}</Text>
-					</ModalHeader>
-					<ModalBody className="flex flex-col gap-4 py-6">
-						<User id={userId} onRemove={onUserRemove} />
-					</ModalBody>
-				</ModalContent>
+			<Modal
+				isOpen={editModalOpen}
+				onOpenChange={closeEditModal}
+				header={<Text className="text-xl">{t("user.modal.editTitle")}</Text>}
+				bodyClassName="flex flex-col gap-4 py-6"
+			>
+				<User id={userId} onRemove={onUserRemove} />
 			</Modal>
 		</>
 	);
