@@ -9,6 +9,7 @@ import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Avatar, AvatarGroup } from "~components/avatar";
 import { Button, ButtonGroup } from "~components/button";
+import { Card } from "~components/card";
 import { Checkbox } from "~components/checkbox";
 import { Chip } from "~components/chip";
 import { DateInput } from "~components/date-input";
@@ -88,6 +89,22 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Card
+					testID="error-message"
+					header={
+						<View className="text-danger flex flex-row gap-2">
+							<Icon name="warning" className="size-8" />
+							<Text variant="h3" className="text-danger">
+								Card title
+							</Text>
+						</View>
+					}
+					footerClassName="flex flex-row justify-end"
+					footer={<Button color="primary">Footer button</Button>}
+				>
+					<Text className="whitespace-pre-wrap">Card content</Text>
+					<Text className="text-sm whitespace-pre-wrap">Card description</Text>
+				</Card>
 				<View className="flex rounded-md bg-blue-500 p-2">
 					{elements.map(({ data, status }, index) => (
 						// eslint-disable-next-line react/no-array-index-key
