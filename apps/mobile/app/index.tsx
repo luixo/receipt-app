@@ -24,6 +24,7 @@ import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
+import { addToast, closeToastById } from "~components/toast";
 import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
@@ -55,6 +56,34 @@ const Wrapper = () => {
 		undefined,
 	);
 	const [numberValue, setNumberValue] = React.useState(0);
+	const [toastIds, setToastIds] = React.useState<string[]>([]);
+	const runToast = () => {
+		const nextId = addToast({
+			title: "Hello test toast",
+			description: "Test toast description",
+			color:
+				toastIds.length === 0
+					? "default"
+					: toastIds.length === 1
+						? "success"
+						: "danger",
+		});
+		setTimeout(() => {
+			if (nextId) {
+				setToastIds((prevIds) => prevIds.filter((id) => id !== nextId));
+			}
+		}, 3000);
+		setToastIds((prevIds) => (nextId ? [...prevIds, nextId] : prevIds));
+	};
+	const closeLast = () => {
+		if (toastIds.length === 0) {
+			return;
+		}
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const lastId = toastIds.at(-1)!;
+		closeToastById(lastId);
+		setToastIds((prevIds) => prevIds.filter((id) => id !== lastId));
+	};
 	return (
 		<ScrollView className="bg-background">
 			<View className="flex gap-2 rounded-md p-2">
@@ -66,6 +95,12 @@ const Wrapper = () => {
 							{status}: {data}
 						</Text>
 					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					<Button onPress={runToast}>Run toast</Button>
+					{toastIds.length !== 0 ? (
+						<Button onPress={closeLast}>Close last</Button>
+					) : null}
 				</View>
 				<View className="flex flex-row flex-wrap gap-2">
 					<DateInput value={date} onValueChange={changeDate} />
