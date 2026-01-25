@@ -20,7 +20,6 @@
 		"@trpc/server": "catalog:",
 		"@trpc/tanstack-react-query": "catalog:",
 		"array.prototype.tosorted": "^1.1.2",
-		"boring-avatars": "^1.10.1",
 		"cookie": "catalog:",
 		"dataloader": "catalog:",
 		"i18next": "catalog:",

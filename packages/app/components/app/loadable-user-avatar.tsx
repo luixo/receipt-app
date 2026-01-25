@@ -2,20 +2,18 @@ import type React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { SkeletonUser, User } from "~app/components/app/user";
+import { UserAvatar } from "~app/components/app/user-avatar";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useTRPC } from "~app/utils/trpc";
+import { SkeletonAvatar } from "~components/skeleton-avatar";
 import type { UserId } from "~db/ids";
 
-type Props = Omit<
-	React.ComponentProps<typeof User>,
-	"id" | "name" | "connectedAccount"
-> & {
+type Props = React.ComponentProps<typeof UserAvatar> & {
 	id: UserId;
 	foreign?: boolean;
 };
 
-export const LoadableUser = suspendedFallback<Props>(
+export const LoadableUserAvatar = suspendedFallback<Props>(
 	({ foreign, id, ...props }) => {
 		const trpc = useTRPC();
 		const options = foreign
@@ -26,23 +24,11 @@ export const LoadableUser = suspendedFallback<Props>(
 			queryFn: options.queryFn,
 		});
 		if ("remoteId" in data) {
-			return (
-				<User
-					id={data.remoteId}
-					name={data.name}
-					{...props}
-					avatarProps={{ ...props.avatarProps, dimmed: true }}
-				/>
-			);
+			return <UserAvatar id={data.remoteId} dimmed {...props} />;
 		}
 		return (
-			<User
-				id={data.id}
-				name={data.name}
-				connectedAccount={data.connectedAccount}
-				{...props}
-			/>
+			<UserAvatar id={id} connectedAccount={data.connectedAccount} {...props} />
 		);
 	},
-	SkeletonUser,
+	SkeletonAvatar,
 );

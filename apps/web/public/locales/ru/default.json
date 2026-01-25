@@ -96,9 +96,6 @@
 			"currency": "Валюта",
 			"pickButton": "Выбрать валюту"
 		},
-		"avatar": {
-			"alt": "Аватар"
-		},
 		"debtsGroup": {
 			"noDebtsYet": "Долгов пока нет"
 		},

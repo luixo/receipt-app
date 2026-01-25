@@ -2,8 +2,7 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { SkeletonUser } from "~app/components/app/user";
+import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -13,6 +12,7 @@ import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
@@ -48,13 +48,12 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
 						by: (
-							<AvatarGroup className="ml-2">
+							<AvatarGroup>
 								{surePayerParticipants.map((participant) => (
-									<LoadableUser
+									<LoadableUserAvatar
 										key={participant.userId}
 										id={participant.userId}
 										foreign={!isOwner && payerParticipants.length !== 0}
-										onlyAvatar
 										dimmed={payerParticipants.length === 0}
 									/>
 								))}
@@ -71,15 +70,13 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						components={{
 							// eslint-disable-next-line jsx-a11y/heading-has-content
 							text: <Text variant="h4" />,
-							// Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0`
 							for: (
-								<AvatarGroup className="ml-2">
+								<AvatarGroup>
 									{debtParticipants.map((participant) => (
-										<LoadableUser
+										<LoadableUserAvatar
 											key={participant.userId}
 											id={participant.userId}
 											foreign={!isOwner}
-											onlyAvatar
 										/>
 									))}
 								</AvatarGroup>
@@ -114,8 +111,8 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
 						by: (
-							<AvatarGroup className="ml-2">
-								<SkeletonUser onlyAvatar dimmed />
+							<AvatarGroup>
+								<SkeletonAvatar dimmed />
 							</AvatarGroup>
 						),
 					}}
@@ -128,11 +125,10 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					components={{
 						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
-						// Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0`
 						for: (
-							<AvatarGroup className="ml-2">
+							<AvatarGroup>
 								{skeletonParticipants.map((index) => (
-									<SkeletonUser key={index} onlyAvatar />
+									<SkeletonAvatar key={index} />
 								))}
 							</AvatarGroup>
 						),

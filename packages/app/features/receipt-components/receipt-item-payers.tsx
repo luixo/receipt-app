@@ -8,7 +8,6 @@ import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
 import { Select, SelectItem } from "~components/select";
-import { cn } from "~components/utils";
 import type { UserId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -79,7 +78,7 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, ...props }) => {
 			}}
 			renderValue={(selectedParticipants) => (
 				<AvatarGroup
-					className={cn("ml-2", canEdit ? "cursor-pointer" : undefined)}
+					className={canEdit ? "cursor-pointer" : undefined}
 					size="sm"
 				>
 					{selectedParticipants

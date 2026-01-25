@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
+import { Avatar, AvatarGroup } from "~components/avatar";
 import { Button, ButtonGroup } from "~components/button";
 import { Divider } from "~components/divider";
 import { Form } from "~components/form";
@@ -15,12 +16,15 @@ import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { NumberInput } from "~components/number-input";
 import { Skeleton } from "~components/skeleton";
+import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Spinner } from "~components/spinner";
+import { User } from "~components/user";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { getNow } from "~utils/date";
+import { SkeletonUser } from "~app/components/app/user";
 
 const Wrapper = () => {
 	const { t } = useTranslation();
@@ -54,6 +58,32 @@ const Wrapper = () => {
 							{status}: {data}
 						</Text>
 					))}
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					<User name="Ivan" description="Serious man" />
+					<SkeletonUser />
+				</View>
+				<View className="flex flex-row flex-wrap gap-2">
+					<AvatarGroup size="sm">
+						<Avatar hashId="a" />
+						<Avatar hashId="b" />
+						<Avatar hashId="c" />
+						<Avatar hashId="b" />
+						<Avatar hashId="c" />
+						<Avatar hashId="b" />
+						<Avatar hashId="c" />
+					</AvatarGroup>
+					<Avatar
+						hashId="b"
+						dimmed
+						image={{
+							url: "https://storage.yandexcloud.net/receipts-production/avatars/9652419b-b5f3-46c9-9a44-40c197cba11d.png",
+							alt: "Avatar",
+						}}
+					/>
+					<Avatar hashId="c" size="sm" />
+					<Avatar hashId="d" size="lg" />
+					<SkeletonAvatar />
 				</View>
 				<Divider className="my-2" />
 				<NumberInput

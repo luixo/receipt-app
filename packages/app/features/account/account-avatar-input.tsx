@@ -5,25 +5,22 @@ import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
 import { z } from "zod";
 
-import {
-	SkeletonUserAvatar,
-	UserAvatar as UserAvatarRaw,
-} from "~app/components/app/user-avatar";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
+import { Avatar } from "~components/avatar";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { FileInput } from "~components/file-input";
 import { Icon } from "~components/icons";
 import { ImageCropper, getFormData } from "~components/image-cropper";
+import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Slider } from "~components/slider";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
 import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
 
 const MAX_ZOOM = 5;
@@ -49,16 +46,20 @@ const UserAvatar = suspendedFallback<{ onClick: () => void }>(
 			data: { account },
 		} = useSuspenseQuery(trpc.account.get.queryOptions());
 		return (
-			<UserAvatarRaw
-				id={account.id as UserId}
-				connectedAccount={account}
-				onClick={onClick}
+			<Avatar
+				hashId={account.id}
+				image={
+					account.avatarUrl
+						? { url: account.avatarUrl, alt: account.email }
+						: undefined
+				}
+				onPress={onClick}
 				size="lg"
 				className="cursor-pointer"
 			/>
 		);
 	},
-	<SkeletonUserAvatar size="lg" />,
+	<SkeletonAvatar size="lg" />,
 );
 
 const formSchema = z.strictObject({

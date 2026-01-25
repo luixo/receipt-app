@@ -1,0 +1,14 @@
+# see https://github.com/iyegoroff/react-native-color-matrix-image-filters/issues/144
+diff --git a/ios/CMIFColorMatrixImageFilter.mm b/ios/CMIFColorMatrixImageFilter.mm
+index 5943b642e4fa485c113f614c82226b3eff10fa91..350b3d1cae5bf139c35e424e7593015138734a8f 100644
+--- a/ios/CMIFColorMatrixImageFilter.mm
++++ b/ios/CMIFColorMatrixImageFilter.mm
+@@ -271,4 +271,8 @@ Class<RCTComponentViewProtocol> CMIFColorMatrixImageFilterCls(void)
+ }
+ #endif
+ 
++- (void)setMatrix:(NSArray<NSNumber *> *)matrix {
++  [self updateFilter:matrix];
++}
++
+ @end

@@ -25,6 +25,7 @@ import {
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/skeleton-input";
+import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
@@ -292,10 +293,12 @@ export const UsersSuggest: React.FC<Props> = ({
 							: t("components.usersSuggest.addUser.empty")
 					}
 					avatarProps={{
-						fallback: null,
-						getInitials: () => "+",
 						size: "sm",
-						classNames: { name: "text-2xl", base: "border" },
+						fallback: (
+							<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
+								<Text className="text-default-500 flex text-2xl">+</Text>
+							</View>
+						),
 					}}
 				/>
 			</AutocompleteItem>
@@ -348,7 +351,7 @@ export const UsersSuggest: React.FC<Props> = ({
 						<LoadableUser
 							key={userId}
 							id={userId}
-							onClick={() => onUserClick(userId)}
+							onPress={() => onUserClick(userId)}
 							{...userProps}
 						/>
 					))}

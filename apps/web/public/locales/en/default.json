@@ -96,9 +96,6 @@
 			"currency": "Currency",
 			"pickButton": "Pick currency"
 		},
-		"avatar": {
-			"alt": "Avatar"
-		},
 		"debtsGroup": {
 			"noDebtsYet": "No debts yet"
 		},

@@ -3,8 +3,7 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { SkeletonUserAvatar } from "~app/components/app/user-avatar";
+import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import {
@@ -25,6 +24,7 @@ import { SkeletonDateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
+import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
 
@@ -117,7 +117,7 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 							<View className="flex w-full flex-row items-start justify-between gap-2">
 								<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 								<View className="flex flex-row gap-2">
-									<LoadableUser id={receipt.ownerUserId} onlyAvatar />
+									<LoadableUserAvatar id={receipt.ownerUserId} />
 									{isOwner ? (
 										<ReceiptSyncButton
 											key={
@@ -154,7 +154,7 @@ export const Receipt = suspendedFallback<{ id: ReceiptId }>(
 				<View className="items-start gap-2">
 					<View className="flex w-full flex-row items-start justify-between gap-2">
 						<SkeletonDateInput />
-						<SkeletonUserAvatar />
+						<SkeletonAvatar />
 					</View>
 					<View className="flex flex-col justify-center gap-2 sm:flex-row">
 						<Skeleton className="h-7 w-12 self-center rounded-md" />

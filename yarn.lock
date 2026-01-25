@@ -7056,7 +7056,6 @@ __metadata:
     "@trpc/tanstack-react-query": "catalog:"
     "@types/uuid": "catalog:"
     array.prototype.tosorted: "npm:^1.1.2"
-    boring-avatars: "npm:^1.10.1"
     cookie: "catalog:"
     dataloader: "catalog:"
     i18next: "catalog:"
@@ -7082,6 +7081,7 @@ __metadata:
     heroui-native: "catalog:"
     lucide-react: "npm:^0.562.0"
     lucide-react-native: "npm:^0.562.0"
+    react-native-color-matrix-image-filters: "npm:^8.0.2"
     react-native-svg: "npm:^15.15.1"
   languageName: unknown
   linkType: soft
@@ -14973,13 +14973,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"boring-avatars@npm:^1.10.1":
-  version: 1.10.1
-  resolution: "boring-avatars@npm:1.10.1"
-  checksum: 10/aaa29543c270e21e79ccc9d2be0f0fd1296e69034f2427c6bd39e09e4f838195272bf674fa0842a9689b1c604508833097f0e97720789ca5620fdf2d53112924
-  languageName: node
-  linkType: hard
-
 "bowser@npm:^2.11.0":
   version: 2.11.0
   resolution: "bowser@npm:2.11.0"
@@ -15607,6 +15600,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"clamp@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "clamp@npm:1.0.1"
+  checksum: 10/3890dee9c43dc247c7a01b59e041e51e49251b7cea5e9396534b78534f6356d38f950fe2b4450ed8b6613170ce0476f7d9a46936abb755b5d7a5ad3419087aa1
+  languageName: node
+  linkType: hard
+
 "class-variance-authority@npm:0.7.1":
   version: 0.7.1
   resolution: "class-variance-authority@npm:0.7.1"
@@ -15962,6 +15962,15 @@ __metadata:
   version: 3.1.0
   resolution: "compute-scroll-into-view@npm:3.1.0"
   checksum: 10/cc5211d49bced5ad23385da5c2eaf69b6045628581b0dcb9f4dd407bfee51bbd26d2bce426be26edf2feaf8c243706f5a7c3759827d89cc5a01a5cf7d299a5eb
+  languageName: node
+  linkType: hard
+
+"concat-color-matrices@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "concat-color-matrices@npm:1.0.0"
+  dependencies:
+    invariant: "npm:^2.2.4"
+  checksum: 10/f67c2cad8281e89f6acfb5b82e8c62445a16142756ef80e73ecd142f682496ef0d21fc81abb65c901b4fea43fd0fcaf2ad6d3f727973d2bcf07e6e54928b4eeb
   languageName: node
   linkType: hard
 
@@ -26137,6 +26146,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-color-matrix-image-filters@npm:8.0.2":
+  version: 8.0.2
+  resolution: "react-native-color-matrix-image-filters@npm:8.0.2"
+  dependencies:
+    concat-color-matrices: "npm:^1.0.0"
+    rn-color-matrices: "npm:^4.1.0"
+    ts-tiny-invariant: "npm:^2.0.5"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/dc00927a369725306bd784ced9014d7ff9621f7ad7011f3dba5f6d5980e94f43e8a71f2d795d2e2ddef5d0a930bbbe1416333921e6a5035d46007f637c24ca17
+  languageName: node
+  linkType: hard
+
+"react-native-color-matrix-image-filters@patch:react-native-color-matrix-image-filters@npm%3A8.0.2#~/patches/react-native-color-matrix-image-filters-npm-8.0.2.patch":
+  version: 8.0.2
+  resolution: "react-native-color-matrix-image-filters@patch:react-native-color-matrix-image-filters@npm%3A8.0.2#~/patches/react-native-color-matrix-image-filters-npm-8.0.2.patch::version=8.0.2&hash=f95f24"
+  dependencies:
+    concat-color-matrices: "npm:^1.0.0"
+    rn-color-matrices: "npm:^4.1.0"
+    ts-tiny-invariant: "npm:^2.0.5"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/e638e04c3eccedf451683f5abb133709b0f4f7a48ebb65caf4ba78d6257a15445ecc5d08b29e5db967bd83a5eee992cc3fbe82138b9aafdce46d31c2a81a9b3a
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:~2.28.0":
   version: 2.28.0
   resolution: "react-native-gesture-handler@npm:2.28.0"
@@ -27118,6 +27155,17 @@ __metadata:
   bin:
     rimraf: bin.js
   checksum: 10/063ffaccaaaca2cfd0ef3beafb12d6a03dd7ff1260d752d62a6077b5dfff6ae81bea571f655bb6b589d366930ec1bdd285d40d560c0dae9b12f125e54eb743d5
+  languageName: node
+  linkType: hard
+
+"rn-color-matrices@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "rn-color-matrices@npm:4.1.0"
+  dependencies:
+    clamp: "npm:^1.0.1"
+  peerDependencies:
+    react-native: "*"
+  checksum: 10/4d273c4ef84f2ff0469d895e7493b7e4455e8507b6fe399bf2fe97583b94df9f7e71e7331fc7f5934d66f41f6d83c236e02fde287a3b62143e12758378b26d7f
   languageName: node
   linkType: hard
 
@@ -29464,6 +29512,13 @@ __metadata:
     "@ts-morph/common": "npm:~0.28.1"
     code-block-writer: "npm:^13.0.3"
   checksum: 10/b9bd8ed86d4b76ca23446d3f808787cfe95a3bcb2316769a2f3fa262ea9ab4043bb76bf8aef677f9be0d758576f074df2926e701a535f84fd21946fdbf465148
+  languageName: node
+  linkType: hard
+
+"ts-tiny-invariant@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "ts-tiny-invariant@npm:2.0.5"
+  checksum: 10/6a07ade2cd63ee0abfa458974fa4c8e7ec038b9f821dc60c99e8dc3453f85729984191d496beec8f87e342e564c8b0b48fa690284db4329456d6feae061d24c6
   languageName: node
   linkType: hard
 

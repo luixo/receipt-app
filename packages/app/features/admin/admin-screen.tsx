@@ -75,7 +75,7 @@ const AdminUserCard: React.FC<
 				id={user ? user.id : (account.id as UserId)}
 				name={user ? user.name : account.email}
 				connectedAccount={account}
-				dimmed={!user}
+				avatarProps={{ dimmed: !user }}
 			/>
 			<View>{children}</View>
 		</CardBody>

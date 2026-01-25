@@ -5,12 +5,12 @@ import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
 import { Select, SelectItem } from "~components/select";
 import { Text } from "~components/text";
-import { cn } from "~components/utils";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 
@@ -93,16 +93,15 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, ...props }) => {
 				return (
 					<View className="flex-row items-center gap-2">
 						<AvatarGroup
-							className={cn("ml-2", canEdit ? "cursor-pointer" : undefined)}
+							className={canEdit ? "cursor-pointer" : undefined}
 							size="sm"
 							max={3}
 						>
 							{userIds.map((userId) => (
-								<LoadableUser
+								<LoadableUserAvatar
 									key={userId}
 									id={userId}
 									foreign={!isOwner}
-									onlyAvatar
 								/>
 							))}
 						</AvatarGroup>
