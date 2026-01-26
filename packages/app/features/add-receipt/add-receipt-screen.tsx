@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { BackLink } from "~components/link";
+import { BackLink } from "~components/back-link";
 
 import { AddReceipt } from "./add-receipt";
 

@@ -6,7 +6,7 @@ import { PageHeader } from "~app/components/page-header";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { TRPCMutationOutput } from "~app/trpc";
-import { BackLink } from "~components/link";
+import { BackLink } from "~components/back-link";
 
 import { AddUserForm } from "./add-user-form";
 

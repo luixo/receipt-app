@@ -8,7 +8,7 @@ import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useTRPC } from "~app/utils/trpc";
-import { BackLink } from "~components/link";
+import { BackLink } from "~components/back-link";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";

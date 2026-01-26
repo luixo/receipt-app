@@ -12,7 +12,8 @@ import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTRPC } from "~app/utils/trpc";
-import { BackLink, ButtonLink } from "~components/link";
+import { BackLink } from "~components/back-link";
+import { ButtonLink } from "~components/link";
 import type { UserId } from "~db/ids";
 
 const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(

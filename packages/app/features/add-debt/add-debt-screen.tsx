@@ -25,9 +25,9 @@ import {
 	debtNoteSchema,
 	userIdSchema,
 } from "~app/utils/validation";
+import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
 import { DateInput } from "~components/date-input";
-import { BackLink } from "~components/link";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getNow, temporalSchemas } from "~utils/date";
 

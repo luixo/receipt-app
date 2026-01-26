@@ -35,10 +35,11 @@ import {
 	debtAmountSchemaDecimal,
 	debtNoteSchema,
 } from "~app/utils/validation";
+import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
 import { DateInput } from "~components/date-input";
 import { Icon } from "~components/icons";
-import { BackLink, ButtonLink } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
 import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { SkeletonInput } from "~components/skeleton-input";

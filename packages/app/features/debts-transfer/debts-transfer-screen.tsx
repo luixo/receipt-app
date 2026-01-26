@@ -31,9 +31,9 @@ import {
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
 } from "~app/utils/validation";
+import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
-import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Text } from "~components/text";

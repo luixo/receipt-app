@@ -20,8 +20,8 @@ import {
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTRPC } from "~app/utils/trpc";
+import { BackLink } from "~components/back-link";
 import { Icon } from "~components/icons";
-import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { SkeletonDateInput } from "~components/skeleton-date-input";

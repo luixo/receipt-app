@@ -9,8 +9,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
@@ -40,9 +39,9 @@ export const ConfirmEmail: React.FC<{
 				<>
 					<Text variant="h3">{confirmMutation.data.email}</Text>
 					<Text variant="h4">{t("confirm.success.header")}</Text>
-					<Link to="/">
-						<Button color="primary">{t("confirm.success.home")}</Button>
-					</Link>
+					<ButtonLink to="/" color="primary">
+						{t("confirm.success.home")}
+					</ButtonLink>
 				</>
 			);
 	}

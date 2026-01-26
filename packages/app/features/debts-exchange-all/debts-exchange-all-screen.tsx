@@ -17,8 +17,8 @@ import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { SearchParamState } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
+import { BackLink } from "~components/back-link";
 import { Divider } from "~components/divider";
-import { BackLink } from "~components/link";
 import type { UserId } from "~db/ids";
 
 import { CurrenciesGroup } from "./currencies-group";
