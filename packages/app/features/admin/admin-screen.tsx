@@ -15,7 +15,6 @@ import { Card } from "~components/card";
 import { Divider } from "~components/divider";
 import { Modal } from "~components/modal";
 import { Skeleton } from "~components/skeleton";
-import { Tab, Tabs, TabsSkeleton } from "~components/tabs";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
@@ -124,55 +123,46 @@ const AdminScreenInner = suspendedFallback(
 			? accounts.find((element) => element.account.email === pretendUser.email)
 			: null;
 		return (
-			<Tabs variant="underlined">
-				<Tab key="become" title={t("pretend.tabName")}>
-					<View className="flex flex-col items-stretch gap-2">
-						{pretendUserAccount ? (
-							<>
-								<AdminUserCard {...pretendUserAccount} />
-								<Button onPress={resetPretendUser} color="primary">
-									{t("pretend.resetToSelfButton")}
-								</Button>
-							</>
-						) : (
-							<AdminCard />
-						)}
-						<Divider />
-						{accounts
-							.filter((element) => pretendUser.email !== element.account.email)
-							.map((element) => (
-								<AdminUserCard key={element.account.id} {...element}>
-									<Button
-										onPress={setModalEmailCurried(element.account.email)}
-										color="warning"
-									>
-										{t("pretend.becomeButton")}
-									</Button>
-								</AdminUserCard>
-							))}
-						<BecomeModal
-							isModalOpen={Boolean(modalEmail)}
-							closeModal={closeModal}
-							email={modalEmail || "unknown"}
-							setMockedEmail={setPretendEmail}
-						/>
-					</View>
-				</Tab>
-			</Tabs>
+			<View className="flex flex-col items-stretch gap-2">
+				{pretendUserAccount ? (
+					<>
+						<AdminUserCard {...pretendUserAccount} />
+						<Button onPress={resetPretendUser} color="primary">
+							{t("pretend.resetToSelfButton")}
+						</Button>
+					</>
+				) : (
+					<AdminCard />
+				)}
+				<Divider />
+				{accounts
+					.filter((element) => pretendUser.email !== element.account.email)
+					.map((element) => (
+						<AdminUserCard key={element.account.id} {...element}>
+							<Button
+								onPress={setModalEmailCurried(element.account.email)}
+								color="warning"
+							>
+								{t("pretend.becomeButton")}
+							</Button>
+						</AdminUserCard>
+					))}
+				<BecomeModal
+					isModalOpen={Boolean(modalEmail)}
+					closeModal={closeModal}
+					email={modalEmail || "unknown"}
+					setMockedEmail={setPretendEmail}
+				/>
+			</View>
 		);
 	},
-	<TabsSkeleton
-		tabsAmount={1}
-		content={
-			<View className="flex flex-col items-stretch gap-2 px-1 py-3">
-				<SkeletonAdminUserCard />
-				<Divider />
-				<SkeletonAdminUserCard />
-				<SkeletonAdminUserCard />
-				<SkeletonAdminUserCard />
-			</View>
-		}
-	/>,
+	<View className="flex flex-col items-stretch gap-2 px-1 py-3">
+		<SkeletonAdminUserCard />
+		<Divider />
+		<SkeletonAdminUserCard />
+		<SkeletonAdminUserCard />
+		<SkeletonAdminUserCard />
+	</View>,
 );
 
 export const AdminScreen: React.FC = () => {
