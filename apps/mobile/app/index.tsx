@@ -23,6 +23,7 @@ import { Input } from "~components/input";
 import { ButtonLink, CardLink, Link } from "~components/link";
 import { Modal } from "~components/modal";
 import { NumberInput } from "~components/number-input";
+import { Overlay } from "~components/overlay";
 import { ScrollView } from "~components/scroll-view";
 import { Select } from "~components/select";
 import { Skeleton } from "~components/skeleton";
@@ -180,22 +181,26 @@ const Wrapper = () => {
 						</View>
 					)}
 				</Select>
-				<Card
-					testID="error-message"
-					header={
-						<View className="text-danger flex flex-row gap-2">
-							<Icon name="warning" className="size-8" />
-							<Text variant="h3" className="text-danger">
-								Card title
-							</Text>
-						</View>
-					}
-					footerClassName="flex flex-row justify-end"
-					footer={<Button color="primary">Footer button</Button>}
-				>
-					<Text className="whitespace-pre-wrap">Card content</Text>
-					<Text className="text-sm whitespace-pre-wrap">Card description</Text>
-				</Card>
+				<Overlay overlay={<Spinner size="lg" />}>
+					<Card
+						testID="error-message"
+						header={
+							<View className="text-danger flex flex-row gap-2">
+								<Icon name="warning" className="size-8" />
+								<Text variant="h3" className="text-danger">
+									Card title
+								</Text>
+							</View>
+						}
+						footerClassName="flex flex-row justify-end"
+						footer={<Button color="primary">Footer button</Button>}
+					>
+						<Text className="whitespace-pre-wrap">Card content</Text>
+						<Text className="text-sm whitespace-pre-wrap">
+							Card description
+						</Text>
+					</Card>
+				</Overlay>
 				<View className="flex rounded-md bg-blue-500 p-2">
 					{elements.map(({ data, status }, index) => (
 						// eslint-disable-next-line react/no-array-index-key
