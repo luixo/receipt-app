@@ -32,7 +32,21 @@ const getExtraneousDependenciesConfig = (
 	packageDir: [".", packageJsonDir].filter(Boolean),
 });
 
-const restrictedImports = [
+const restrictedImports: ((
+	| {
+			from: string | RegExp;
+			imports: ({ actual: string | RegExp } & (
+				| { expected: string }
+				| { message: string }
+			))[];
+	  }
+	| {
+			from: string | RegExp;
+			message: string;
+	  }
+) & {
+	omitTags?: string[];
+})[] = [
 	{
 		// see https://eslint.org/docs/latest/extend/selectors#known-issues
 		from: String.raw`~mutations\u002F.*`,
@@ -81,12 +95,17 @@ const restrictedImports = [
 			},
 		],
 	},
+	{
+		from: "^@heroui",
+		message: "Please use heroui-native in native components",
+		omitTags: ["web-only"],
+	},
 ];
 
 type NoRestrictedSyntaxElement = {
 	selector: string;
 	message: string;
-	tags?: string[];
+	omitTags?: string[];
 };
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
@@ -110,25 +129,36 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		message:
 			"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
 	},
-	...restrictedImports.flatMap(({ from, imports }) =>
-		imports.map(({ actual, ...importValue }) => {
+	...restrictedImports.flatMap(({ from, omitTags, ...rest }) => {
+		if ("message" in rest) {
+			return {
+				selector: `ImportDeclaration[importKind!='type'][source.value=/${from}/]`,
+				message: rest.message,
+				omitTags,
+			};
+		}
+		return rest.imports.map(({ actual, ...importValue }) => {
 			const message =
 				"expected" in importValue
 					? `Prefer renaming '${actual.toString()}' to '${importValue.expected}'`
 					: importValue.message;
+			const actualExpression = actual
+				? `ImportSpecifier[local.name=${
+						actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
+					}]`
+				: undefined;
 			return {
-				selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
-					actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
-				}]`,
+				selector: `ImportDeclaration[source.value=/${from}/]${actualExpression ? ` > ${actualExpression}` : ""}`,
 				message,
+				omitTags,
 			};
-		}),
-	),
+		});
+	}),
 	{
 		selector: "ImportDeclaration[source.value='~web/handlers/validation']",
 		message:
 			"Do not import from we validation, it includes heavy currency data!",
-		tags: ["client-only"],
+		omitTags: ["client-only"],
 	},
 	{
 		selector: "ExportAllDeclaration",
@@ -159,11 +189,11 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 const getNoRestrictedSyntax = (...omittedTags: string[]) =>
 	noRestrictedSyntaxGeneral
 		.filter((element) =>
-			element.tags
-				? !element.tags.some((tag) => omittedTags.includes(tag))
+			element.omitTags
+				? !element.omitTags.some((tag) => omittedTags.includes(tag))
 				: true,
 		)
-		.map(omit(["tags"]));
+		.map(omit(["omitTags"]));
 
 const overriddenRules = {
 	name: "local/overridden",
@@ -629,6 +659,13 @@ export const getConfig = async (rootDir: string) => {
 					"error",
 					...getNoRestrictedSyntax("client-only"),
 				],
+			},
+		},
+		{
+			// Web-only components are the only place where web-only imports are allowed
+			files: ["**/*.web.ts{,x}"],
+			rules: {
+				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
 			},
 		},
 		{

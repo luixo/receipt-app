@@ -1,4 +1,6 @@
 /* eslint-disable import-x/no-extraneous-dependencies */
+// We intentionally copy semantic colors from the theme
+// eslint-disable-next-line no-restricted-syntax
 import {
 	type ColorScale,
 	type ThemeColors,

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 import {
 	keepPreviousData,
 	useInfiniteQuery,
@@ -15,6 +14,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { User } from "~app/components/app/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
+import { useInfiniteScroll } from "~app/hooks/use-infinite-scroll";
 import type { TRPCQueryInput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import {
@@ -220,7 +220,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		],
 	);
 
-	const [, scrollerRef] = useInfiniteScroll({
+	const scrollerRef = useInfiniteScroll({
 		hasMore: query.hasNextPage,
 		isEnabled: queryEnabled,
 		shouldUseLoader: false,

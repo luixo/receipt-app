@@ -2,8 +2,8 @@ import React from "react";
 import type { TextInput } from "react-native";
 import { Platform } from "react-native";
 
-import { tv } from "@heroui/react";
 import { TextField } from "heroui-native";
+import { tv } from "tailwind-variants";
 
 import { Icon } from "~components/icons";
 import {

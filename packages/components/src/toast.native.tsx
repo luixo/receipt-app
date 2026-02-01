@@ -1,11 +1,11 @@
 import React from "react";
 
-import { tv } from "@heroui/react";
 import {
 	Toast,
 	ToastProvider as ToastProviderRaw,
 	useToast,
 } from "heroui-native";
+import { tv } from "tailwind-variants";
 
 import { Icon, type IconName } from "~components/icons";
 import type { AddProps, ToastProviderProps } from "~components/toast";

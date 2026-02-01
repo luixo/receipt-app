@@ -1,11 +1,8 @@
 import React from "react";
 
-import {
-	ButtonGroupProvider,
-	button,
-	buttonGroup,
-	useButtonGroupContext,
-} from "@heroui/react";
+// We currently reuse the styles from button / buttonGroup of the web components
+// eslint-disable-next-line no-restricted-syntax
+import { button, buttonGroup } from "@heroui/react";
 import { Button as ButtonRaw } from "heroui-native";
 
 import { Text } from "~components/text";
@@ -15,6 +12,17 @@ import { View } from "~components/view";
 
 import type { ButtonGroupProps, ButtonProps } from "./button.base";
 import { FormContext, formHandlersById } from "./form.native";
+
+const ButtonGroupProvider = React.createContext<Pick<
+	ButtonProps,
+	| "size"
+	| "color"
+	| "variant"
+	| "radius"
+	| "isDisabled"
+	| "isIconOnly"
+	| "fullWidth"
+> | null>(null);
 
 const baseButtonClasses = button.base;
 
@@ -59,10 +67,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		...viewProps
 	} = props;
 	const formContext = React.use(FormContext);
-	// Types actually lie
-	const groupContext = useButtonGroupContext() as
-		| ReturnType<typeof useButtonGroupContext>
-		| undefined;
+	const groupContext = React.use(ButtonGroupProvider);
 	const sureGroupContext = groupContext || {};
 	const childContext = React.use(ButtonGroupIndexContent);
 	const onPress = React.useCallback(() => {
@@ -167,15 +172,18 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 			})}
 		>
 			<ButtonGroupProvider
-				value={{
-					size,
-					color,
-					variant,
-					radius,
-					isDisabled,
-					isIconOnly,
-					fullWidth,
-				}}
+				value={React.useMemo(
+					() => ({
+						size,
+						color,
+						variant,
+						radius,
+						isDisabled,
+						isIconOnly,
+						fullWidth,
+					}),
+					[size, color, variant, radius, isDisabled, isIconOnly, fullWidth],
+				)}
 			>
 				{React.Children.map(children, (child, index) => (
 					// eslint-disable-next-line react/jsx-no-constructed-context-values

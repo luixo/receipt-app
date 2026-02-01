@@ -1,7 +1,6 @@
 import React from "react";
 import { Image, Pressable } from "react-native";
 
-import { AvatarGroupProvider, useAvatarGroupContext } from "@heroui/avatar";
 import { Avatar as AvatarRaw } from "heroui-native";
 import { Grayscale } from "react-native-color-matrix-image-filters";
 import * as svg from "react-native-svg";
@@ -12,6 +11,10 @@ import { cn } from "~components/utils";
 import { View } from "~components/view";
 
 import type { GroupProps, Props } from "./avatar";
+
+const AvatarGroupProvider = React.createContext<{
+	size?: Props["size"];
+} | null>(null);
 
 const avatarComponents: React.ComponentProps<typeof BeamAvatar>["components"] =
 	{
@@ -33,10 +36,7 @@ export const Avatar: React.FC<Props> = ({
 	hashId,
 	onPress,
 }) => {
-	// This context is actually optional
-	const avatarGroupContext = useAvatarGroupContext() as
-		| ReturnType<typeof useAvatarGroupContext>
-		| undefined;
+	const avatarGroupContext = React.use(AvatarGroupProvider);
 	const contextSize = avatarGroupContext?.size ?? size;
 	const ref = React.useRef<HTMLSpanElement>(null);
 	const [actualSize, setActualSize] = React.useState(0);
@@ -98,7 +98,7 @@ export const AvatarGroup: React.FC<GroupProps> = ({
 	const childrenCount = React.Children.count(children);
 	return (
 		<View className="ml-2 flex flex-row">
-			<AvatarGroupProvider value={{ size }}>
+			<AvatarGroupProvider value={React.useMemo(() => ({ size }), [size])}>
 				{React.Children.map(children, (child, index) =>
 					index >= max ? null : child,
 				)}

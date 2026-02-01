@@ -1,4 +1,5 @@
-import { tv } from "@heroui/react";
+import { tv } from "tailwind-variants";
+
 import type { Props } from "~components/badge";
 import { Text } from "~components/text";
 import { View } from "~components/view";
