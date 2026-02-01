@@ -7046,7 +7046,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/app@workspace:packages/app"
   dependencies:
-    "@heroui/react": "npm:^2.8.4"
     "@heroui/use-infinite-scroll": "npm:^2.2.11"
     "@playwright/test": "npm:^1.53.0"
     "@ra/components": "workspace:*"

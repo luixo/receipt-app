@@ -1,21 +1,7 @@
-import type React from "react";
+import { getDummy } from "~components/dummy";
 
-import type { RightJoinProps } from "@heroui/react";
-import { Card, Link as LinkRaw } from "@heroui/react";
-import type { CreateLinkProps } from "@tanstack/react-router";
-import { createLink } from "@tanstack/react-router";
+export type { Props } from "./link.web";
 
-import { Button } from "~components/button";
-
-export const Link = createLink(LinkRaw);
-
-export const ButtonLink = createLink(
-	(
-		props: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof Button>>,
-	) => <Button as={Link} {...props} />,
-);
-export const CardLink = createLink(
-	(
-		props: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof Card>>,
-	) => <Card as={Link} {...props} />,
-);
+export const Link = getDummy("Link");
+export const ButtonLink = getDummy("ButtonLink");
+export const CardLink = getDummy("CardLink");

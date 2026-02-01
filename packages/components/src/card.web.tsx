@@ -20,7 +20,9 @@ export type Props = React.PropsWithChildren<{
 	onPress?: () => void;
 }>;
 
-export const Card: React.FC<Props> = ({
+export const Card: React.FC<
+	Props & { as?: React.ComponentProps<typeof CardRaw>["as"] }
+> = ({
 	className,
 	testID,
 	bodyClassName,
@@ -30,8 +32,9 @@ export const Card: React.FC<Props> = ({
 	footerClassName,
 	onPress,
 	children,
+	as,
 }) => (
-	<CardRaw data-testid={testID} className={className} onPress={onPress}>
+	<CardRaw data-testid={testID} className={className} onPress={onPress} as={as}>
 		{header ? (
 			<>
 				<CardHeader className={headerClassName}>{header}</CardHeader>

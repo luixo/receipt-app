@@ -1,6 +1,5 @@
 import type React from "react";
 
-import { CardBody } from "@heroui/react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
@@ -43,18 +42,18 @@ export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 			? userDebts
 			: userDebts.filter(({ sum }) => sum !== 0);
 		return (
-			<CardLink to="/debts/user/$id" params={{ id: userId }}>
-				<CardBody
-					className={cn(
-						baseClassName,
-						userDebts.every(({ sum }) => sum === 0) ? "opacity-50" : undefined,
-					)}
-				>
-					<LoadableUser id={userId} />
-					<View className="flex flex-row items-center justify-center gap-2">
-						<DebtsGroup className="shrink-0" debts={debts} />
-					</View>
-				</CardBody>
+			<CardLink
+				to="/debts/user/$id"
+				params={{ id: userId }}
+				bodyClassName={cn(
+					baseClassName,
+					userDebts.every(({ sum }) => sum === 0) ? "opacity-50" : undefined,
+				)}
+			>
+				<LoadableUser id={userId} />
+				<View className="flex flex-row items-center justify-center gap-2">
+					<DebtsGroup className="shrink-0" debts={debts} />
+				</View>
 			</CardLink>
 		);
 	},

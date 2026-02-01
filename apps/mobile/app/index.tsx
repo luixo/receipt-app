@@ -18,6 +18,7 @@ import { Form } from "~components/form";
 import { HighlightedText } from "~components/highlighted-text";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
+import { ButtonLink, CardLink, Link } from "~components/link";
 import { Modal } from "~components/modal";
 import { NumberInput } from "~components/number-input";
 import { ScrollView } from "~components/scroll-view";
@@ -96,6 +97,11 @@ const Wrapper = () => {
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
 				<Button onPress={() => setModalOpen(true)}>Open modal</Button>
+				<ButtonLink to="/debts">Link to another page</ButtonLink>
+				<CardLink to="/debts">
+					<Text className="whitespace-pre-wrap">Link to another page</Text>
+				</CardLink>
+				<Link to="/debts">Link to another page</Link>
 				<Modal
 					closeButton
 					label="Modal label"
