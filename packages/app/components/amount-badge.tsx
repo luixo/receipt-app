@@ -1,9 +1,8 @@
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { Badge } from "~components/badge";
+import { ViewReactNode } from "~components/view.web";
 
-type Children =
-	| React.ReactNode
-	| ((props: { amount: number }) => React.ReactNode);
+type Children = ViewReactNode | ((props: { amount: number }) => ViewReactNode);
 const renderChildren = (children: Children, amount: number) =>
 	typeof children === "function" ? children({ amount }) : children;
 
@@ -17,7 +16,7 @@ export const AmountBadge = suspendedFallback<{
 			return <>{renderChildren(children, amount)}</>;
 		}
 		return (
-			<Badge content={amount} color="danger" placement="top-right" size="lg">
+			<Badge content={amount} color="danger">
 				{renderChildren(children, amount)}
 			</Badge>
 		);

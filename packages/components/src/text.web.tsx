@@ -9,7 +9,7 @@ import {
 	textVariants,
 } from "~components/text.base";
 
-type MaybeText = string | number | undefined;
+export type MaybeText = string | number | undefined;
 
 export type Props = {
 	className?: string;

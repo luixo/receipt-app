@@ -8,6 +8,8 @@ import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Avatar, AvatarGroup } from "~components/avatar";
+import { Accordion, AccordionItem } from "~components/accordion";
+import { Badge } from "~components/badge";
 import { Button, ButtonGroup } from "~components/button";
 import { Card } from "~components/card";
 import { Checkbox } from "~components/checkbox";
@@ -33,7 +35,6 @@ import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { type Temporal, getNow } from "~utils/date";
-import { Accordion, AccordionItem } from "~components/accordion";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 
@@ -97,6 +98,15 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Badge content={3} color="danger" className="flex">
+					<Text>{t("titles.index")}</Text>
+				</Badge>
+				<Badge content={555} color="warning" className="flex">
+					<Text>{t("titles.index")}</Text>
+				</Badge>
+				<Badge color="warning" className="flex">
+					<Text>{t("titles.index")}</Text>
+				</Badge>
 				<Accordion>
 					<AccordionItem
 						key="foo"

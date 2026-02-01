@@ -140,11 +140,8 @@ export const ReceiptPreview = suspendedFallback<{
 						isDisabled={emptyItems.length === 0}
 					>
 						<Badge
-							content=""
 							color="warning"
-							placement="top-right"
 							isInvisible={emptyItems.length === 0}
-							isDot
 							className="translate-x-full"
 						>
 							{filterQuery ? (
