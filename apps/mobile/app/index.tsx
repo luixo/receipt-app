@@ -33,6 +33,7 @@ import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { type Temporal, getNow } from "~utils/date";
+import { Accordion, AccordionItem } from "~components/accordion";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 
@@ -96,6 +97,28 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Accordion>
+					<AccordionItem
+						key="foo"
+						textValue="Accordion foo header"
+						title={<Text>This is an accordion foo header</Text>}
+					>
+						<View className="flex gap-3">
+							<Text>This is text one (foo)</Text>
+							<Text>This is text two (foo)</Text>
+						</View>
+					</AccordionItem>
+					<AccordionItem
+						key="bar"
+						textValue="Accordion bar header"
+						title={<Text>This is an accordion bar header</Text>}
+					>
+						<View className="flex gap-3">
+							<Text>This is text one (bar)</Text>
+							<Text>This is text two (bar)</Text>
+						</View>
+					</AccordionItem>
+				</Accordion>
 				<Button onPress={() => setModalOpen(true)}>Open modal</Button>
 				<ButtonLink to="/debts">Link to another page</ButtonLink>
 				<CardLink to="/debts">
