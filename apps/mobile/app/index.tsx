@@ -37,6 +37,7 @@ import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { type Temporal, getNow } from "~utils/date";
+import { Tooltip } from "~components/tooltip";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 
@@ -101,6 +102,14 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Tooltip
+					content="This is the inner content of the tooltip"
+					isDisabled={!switchValue}
+				>
+					<View>
+						<Text className="text-red-500">Hover me for tooltip!</Text>
+					</View>
+				</Tooltip>
 				<Pagination
 					className="self-center"
 					isDisabled={false}
