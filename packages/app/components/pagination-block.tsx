@@ -81,9 +81,6 @@ export function PaginationBlockShape<T>({
 					{totalCount > limit ? (
 						<Pagination
 							className="self-center"
-							color="primary"
-							size="lg"
-							variant="bordered"
 							isDisabled={isDisabled}
 							total={Math.ceil(totalCount / limit)}
 							page={totalCount === 0 ? 0 : offset / limit + 1}

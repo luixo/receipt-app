@@ -10,7 +10,7 @@ import { SafeAreaListener } from "react-native-safe-area-context";
 import { isNonNullish } from "remeda";
 import { Uniwind } from "uniwind";
 
-import { ErrorComponent } from "~app/components/suspense-wrapper";
+import { ErrorMessage } from "~app/components/error-message";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import {
@@ -37,7 +37,22 @@ import "../app.css";
 export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 	error,
 	retry,
-}) => <ErrorComponent error={error} reset={retry} />;
+}) => (
+	<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
+		<View className="flex size-full items-center justify-center">
+			<ErrorMessage
+				title="Global error"
+				message={error.message}
+				button={{
+					text: "Reset",
+					onPress: () => {
+						void retry();
+					},
+				}}
+			/>
+		</View>
+	</HeroUINativeProvider>
+);
 
 const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {

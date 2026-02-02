@@ -14,6 +14,7 @@ import {
 	ChevronDown,
 	CircleOff,
 	Coins,
+	Ellipsis,
 	Eye,
 	EyeOff,
 	HandCoins,
@@ -95,6 +96,7 @@ const mapping = {
 	exchange: ChartCandlestick,
 	eye: Eye,
 	"eye-off": EyeOff,
+	ellipsis: Ellipsis,
 } satisfies Record<string, typeof ArrowLeft>;
 
 export type IconName = keyof typeof mapping;

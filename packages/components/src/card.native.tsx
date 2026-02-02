@@ -29,33 +29,35 @@ export const Card: React.FC<Props> = ({
 	children,
 }) => {
 	const slots = toast();
-	return (
-		<TouchableOpacity onPress={onPress} style={{ pointerEvents: "box-only" }}>
-			<CardRaw className={slots.wrapper({ className })} testID={testID}>
-				{header ? (
-					<>
-						<CardRaw.Header
-							className={slots.header({ className: headerClassName })}
-						>
-							{header}
-						</CardRaw.Header>
-						<Divider />
-					</>
-				) : null}
-				<CardRaw.Body className={slots.body({ className: bodyClassName })}>
-					{children}
-				</CardRaw.Body>
-				{footer ? (
-					<>
-						<Divider />
-						<CardRaw.Footer
-							className={slots.footer({ className: footerClassName })}
-						>
-							{footer}
-						</CardRaw.Footer>
-					</>
-				) : null}
-			</CardRaw>
-		</TouchableOpacity>
+	const card = (
+		<CardRaw className={slots.wrapper({ className })} testID={testID}>
+			{header ? (
+				<>
+					<CardRaw.Header
+						className={slots.header({ className: headerClassName })}
+					>
+						{header}
+					</CardRaw.Header>
+					<Divider />
+				</>
+			) : null}
+			<CardRaw.Body className={slots.body({ className: bodyClassName })}>
+				{children}
+			</CardRaw.Body>
+			{footer ? (
+				<>
+					<Divider />
+					<CardRaw.Footer
+						className={slots.footer({ className: footerClassName })}
+					>
+						{footer}
+					</CardRaw.Footer>
+				</>
+			) : null}
+		</CardRaw>
 	);
+	if (onPress) {
+		return <TouchableOpacity onPress={onPress}>{card}</TouchableOpacity>;
+	}
+	return card;
 };

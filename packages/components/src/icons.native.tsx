@@ -8,6 +8,7 @@ import { withUniwind } from "uniwind";
 
 import { TextClassContext } from "~components/text.native";
 import { cn } from "~components/utils";
+import { View } from "~components/view";
 
 import type { IconName, Props } from "./icons";
 
@@ -58,6 +59,7 @@ const localMapping = {
 	exchange: "ChartCandlestick",
 	eye: "Eye",
 	"eye-off": "EyeOff",
+	ellipsis: "Ellipsis",
 } satisfies Record<IconName, keyof typeof lucideIcons>;
 
 export const sfMapping: Partial<
@@ -97,15 +99,26 @@ export const Icon = ({ name, className, onClick }: Props) => {
 	const textClass = React.useContext(TextClassContext);
 	const Component = getComponent(name);
 	// These are actually created only once
+	const finalClassNames = cn(textClass, className).split(" ");
+	const transformClassNames = finalClassNames.filter(
+		(lookupName) =>
+			lookupName.includes("transform-") || lookupName.includes("rotate-"),
+	);
+	const restClassNames = finalClassNames.filter(
+		(lookupName) => !transformClassNames.includes(lookupName),
+	);
 
-	const element = (
+	let element = (
 		// eslint-disable-next-line react-hooks/static-components
 		<Component
-			className={cn(textClass, className)}
+			className={restClassNames.join(" ")}
 			size={emptySize}
 			pointerEvents="none"
 		/>
 	);
+	if (transformClassNames.length !== 0) {
+		element = <View className={transformClassNames.join(" ")}>{element}</View>;
+	}
 	if (onClick) {
 		return (
 			<TouchableOpacity onPress={onClick} style={{ pointerEvents: "box-only" }}>

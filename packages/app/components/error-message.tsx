@@ -14,6 +14,7 @@ import { Text } from "~components/text";
 import { View } from "~components/view";
 
 type Props = {
+	title?: string;
 	message: string;
 	stack?: string;
 	button?: {
@@ -22,7 +23,12 @@ type Props = {
 	};
 };
 
-export const ErrorMessage: React.FC<Props> = ({ message, stack, button }) => {
+export const ErrorMessage: React.FC<Props> = ({
+	title,
+	message,
+	stack,
+	button,
+}) => {
 	const { t } = useTranslation("default");
 	return (
 		<Card
@@ -31,7 +37,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, stack, button }) => {
 				<View className="text-danger flex flex-row gap-2">
 					<Icon name="warning" className="size-8" />
 					<Text variant="h3" className="text-danger">
-						{t("components.errorMessage.error")}
+						{title || t("components.errorMessage.error")}
 					</Text>
 				</View>
 			}

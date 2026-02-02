@@ -24,6 +24,7 @@ import { ButtonLink, CardLink, Link } from "~components/link";
 import { Modal } from "~components/modal";
 import { NumberInput } from "~components/number-input";
 import { Overlay } from "~components/overlay";
+import { Pagination } from "~components/pagination";
 import { ScrollView } from "~components/scroll-view";
 import { Select } from "~components/select";
 import { Skeleton } from "~components/skeleton";
@@ -66,6 +67,7 @@ const Wrapper = () => {
 		undefined,
 	);
 	const [numberValue, setNumberValue] = React.useState(0);
+	const [currentPage, setCurrentPage] = React.useState(1);
 	const [toastIds, setToastIds] = React.useState<string[]>([]);
 	const runToast = () => {
 		const nextId = addToast({
@@ -99,6 +101,13 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Pagination
+					className="self-center"
+					isDisabled={false}
+					total={20}
+					page={currentPage}
+					onChange={setCurrentPage}
+				/>
 				<Badge content={3} color="danger" className="flex">
 					<Text>{t("titles.index")}</Text>
 				</Badge>
