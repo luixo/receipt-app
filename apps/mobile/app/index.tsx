@@ -29,6 +29,7 @@ import { ScrollView } from "~components/scroll-view";
 import { Select } from "~components/select";
 import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
+import { Slider } from "~components/slider";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
@@ -69,6 +70,7 @@ const Wrapper = () => {
 	);
 	const [numberValue, setNumberValue] = React.useState(0);
 	const [currentPage, setCurrentPage] = React.useState(1);
+	const [sliderValue, setSliderValue] = React.useState(1);
 	const [toastIds, setToastIds] = React.useState<string[]>([]);
 	const runToast = () => {
 		const nextId = addToast({
@@ -102,6 +104,14 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Slider
+					label="Slider"
+					minValue={1}
+					maxValue={10}
+					step={0.01}
+					value={sliderValue}
+					onChange={setSliderValue}
+				/>
 				<Tooltip
 					content="This is the inner content of the tooltip"
 					isDisabled={!switchValue}

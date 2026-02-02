@@ -158,17 +158,13 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 					<View className="h-80 flex-1 flex-row justify-between gap-4">
 						<Slider
 							className="z-10 h-full"
-							aria-label={t("avatar.slider.label")}
+							label={t("avatar.slider.label")}
 							minValue={1}
 							maxValue={MAX_ZOOM}
 							step={0.01}
 							orientation="vertical"
 							value={zoom}
-							onChange={
-								setZoom as React.Dispatch<
-									React.SetStateAction<number | number[]>
-								>
-							}
+							onChange={setZoom}
 						/>
 
 						<form.Subscribe selector={(state) => state.values.avatar}>
