@@ -105,7 +105,7 @@ test.describe("'auth.confirmEmail' mutation", () => {
 	});
 });
 
-test("Nagivating back to the home page", async ({ page, api, faker }) => {
+test("Navigating back to the home page", async ({ page, api, faker }) => {
 	const { unmockAccount } = api.mockUtils.noAuthPage();
 	const confirmEmailPause = api.createPause();
 	api.mockFirst("auth.confirmEmail", async ({ headers }) => {
@@ -121,6 +121,6 @@ test("Nagivating back to the home page", async ({ page, api, faker }) => {
 	await api.mockUtils.authPage({ page });
 	api.mockFirst("receipts.getPaged", { items: [], count: 0, cursor: 0 });
 	confirmEmailPause.resolve();
-	await page.locator("button", { hasText: "To home page" }).click();
+	await page.getByRole("button", { name: "To home page" }).click();
 	await expect(page).toHaveURL("/receipts");
 });

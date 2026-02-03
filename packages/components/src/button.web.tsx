@@ -7,8 +7,8 @@ import {
 
 import type { ButtonGroupProps, ButtonProps } from "./button.base";
 
-export const Button: React.FC<ButtonProps> = (props) => (
-	<ButtonRaw {...props} />
+export const Button: React.FC<ButtonProps> = ({ testID, ...props }) => (
+	<ButtonRaw {...props} data-testid={testID} />
 );
 
 export const ButtonGroup: React.FC<ButtonGroupProps> = (props) => (

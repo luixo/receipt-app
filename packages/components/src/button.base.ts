@@ -24,7 +24,7 @@ export type ButtonProps = Pick<
 	| "type"
 	| "form"
 > &
-	Omit<ViewProps, "children" | "style" | "ref">;
+	Pick<ViewProps, "onPress" | "testID">;
 
 export type ButtonGroupProps = Pick<
 	RawButtonGroupProps,

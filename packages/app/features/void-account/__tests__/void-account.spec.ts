@@ -26,7 +26,7 @@ test("On load with token", async ({
 	await expect(cancelButton).toHaveText("No");
 });
 
-test("nagivating back to the home page", async ({
+test("Navigating back to the home page", async ({
 	page,
 	api,
 	cancelButton,

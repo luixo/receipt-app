@@ -63,7 +63,6 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		isLoading,
 		startContent,
 		endContent,
-		onLayout,
 		...viewProps
 	} = props;
 	const formContext = React.use(FormContext);
@@ -130,7 +129,6 @@ export const Button: React.FC<ButtonProps> = (props) => {
 			onPress={isDisabled ? undefined : onPress}
 			pressableFeedbackVariant="ripple"
 			className={className}
-			onLayout={onLayout ? (e) => onLayout(e.nativeEvent.layout) : undefined}
 			{...viewProps}
 		>
 			<TextWrapper className={className}>
