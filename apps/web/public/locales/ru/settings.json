@@ -4,7 +4,7 @@
 		"header": "Язык",
 		"dropdown": {
 			"label": "Язык",
-			"placeholder": "Нажми что выбрать язык"
+			"placeholder": "Нажми чтобы выбрать язык"
 		}
 	},
 	"colorMode": {

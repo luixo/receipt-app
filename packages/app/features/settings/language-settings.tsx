@@ -42,6 +42,7 @@ export const LanguageSettings: React.FC = () => {
 				label={t("languages.dropdown.label")}
 				placeholder={t("languages.dropdown.placeholder")}
 				renderValue={(values) => values.map((value) => value.text).join(", ")}
+				selectedKeys={[currentLanguage]}
 				onSelectionChange={(key) => onChange(key[0] as Language)}
 				getKey={({ language }) => language}
 			>

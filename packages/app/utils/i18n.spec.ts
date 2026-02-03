@@ -141,7 +141,7 @@ test.describe("Client-side translations", () => {
 		await expect(page.locator("h1")).toHaveText(en.header);
 
 		await page.locator("button", { hasText: "English" }).click();
-		await page.getByRole("menuitem", { name: "Русский" }).click();
+		await page.getByRole("option", { name: "Русский" }).click();
 
 		const ru = await getI18nResource("ru", "settings");
 		await expect(page.locator("h1")).toHaveText(ru.header);
