@@ -43,7 +43,7 @@ type TypeKey = "queries" | "mutations";
 type TRPCOptionsProxyNoPath<TRouter extends AnyTRPCRouter> = OmitDeep<
 	TRPCOptionsProxy<TRouter>,
 	{ "~types": unknown },
-	keyof DecorateRouterKeyable
+	keyof DecorateRouterKeyable<{ keyPrefix: false }>
 >;
 
 type ProceduresValues<

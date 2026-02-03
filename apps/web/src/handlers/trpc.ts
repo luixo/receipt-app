@@ -207,37 +207,40 @@ const queueSession = queueCallFactory<
 	},
 );
 
-export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
-	const authToken = getAuthToken(ctx);
-	if (typeof authToken !== "string" || !authToken) {
-		throw new TRPCError({
-			code: "UNAUTHORIZED",
-			message: "No token provided",
+export const authProcedure = unauthProcedure.use(
+	async ({ ctx, next, path }) => {
+		const authToken = getAuthToken(ctx);
+		if (typeof authToken !== "string" || !authToken) {
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "No token provided",
+			});
+		}
+		const uuidVerification = sessionIdSchema.safeParse(authToken);
+		if (!uuidVerification.success) {
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "Session id mismatch",
+			});
+		}
+		const { realAuth, auth, role } = await queueSession({
+			path,
+			ctx,
+			input: { authToken },
+			signal: new AbortController().signal,
 		});
-	}
-	const uuidVerification = sessionIdSchema.safeParse(authToken);
-	if (!uuidVerification.success) {
-		throw new TRPCError({
-			code: "UNAUTHORIZED",
-			message: "Session id mismatch",
+		return next({
+			ctx: {
+				...ctx,
+				logger: ctx.logger.child({ accountId: auth.accountId }),
+				realAuth,
+				auth,
+				authToken,
+				role,
+			},
 		});
-	}
-	const { realAuth, auth, role } = await queueSession({
-		ctx,
-		input: { authToken },
-		signal: new AbortController().signal,
-	});
-	return next({
-		ctx: {
-			...ctx,
-			logger: ctx.logger.child({ accountId: auth.accountId }),
-			realAuth,
-			auth,
-			authToken,
-			role,
-		},
-	});
-});
+	},
+);
 
 export const adminProcedure = authProcedure.use(async ({ ctx, next }) => {
 	if (ctx.role !== "admin") {

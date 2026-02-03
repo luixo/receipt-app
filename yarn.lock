@@ -12609,50 +12609,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/client@npm:^11.4.3":
-  version: 11.4.3
-  resolution: "@trpc/client@npm:11.4.3"
+"@trpc/client@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "@trpc/client@npm:11.9.0"
   peerDependencies:
-    "@trpc/server": 11.4.3
+    "@trpc/server": 11.9.0
     typescript: ">=5.7.2"
-  checksum: 10/c0669432e7d034ee30c16066b1c8e19b21eca5a2a35ca6f31239e7023751bdf7d8840a81466aebfcd2b5f61b8ec030fbf3523dfbaacb7390f6603857b17bf5e5
+  checksum: 10/a91c6a650f4bbf43699f0c03b327df0db1f1206f81728bbac254552f2cf7f310db4464acf00672c61df099d660c770e13e59b257409cd86841277c38ae96a5d8
   languageName: node
   linkType: hard
 
-"@trpc/react-query@npm:^11.4.3":
-  version: 11.4.3
-  resolution: "@trpc/react-query@npm:11.4.3"
+"@trpc/react-query@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "@trpc/react-query@npm:11.9.0"
   peerDependencies:
     "@tanstack/react-query": ^5.80.3
-    "@trpc/client": 11.4.3
-    "@trpc/server": 11.4.3
+    "@trpc/client": 11.9.0
+    "@trpc/server": 11.9.0
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
     typescript: ">=5.7.2"
-  checksum: 10/da6f448dd20796aca2b377116e8c19c71f2e98e57c1b9064a9137fea8a8ce8d7165f71890b2c32bd1d8956859732c1cca338abad791187e81c90e879e04646d0
+  checksum: 10/d90d33e67e8c8109c10d1c100706edcc98ebed263446be3dbf864b776424e5e8cbe61c5e84bbefb1c42247155b732d91a0618e2909776318e6dfe848df28e8a3
   languageName: node
   linkType: hard
 
-"@trpc/server@npm:^11.4.3":
-  version: 11.4.3
-  resolution: "@trpc/server@npm:11.4.3"
+"@trpc/server@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "@trpc/server@npm:11.9.0"
   peerDependencies:
     typescript: ">=5.7.2"
-  checksum: 10/0f1438624f6ded77b51dc1139a90d64a301428150acef9ed6a3eb8f0569485723e29ac1079fd4cc06f926c840f985dc1689f88167cf8f0d77ff691ad54d69c42
+  checksum: 10/e91db2f4c244e4a02470d3da7069598da73ffb0e5ed31b64c6e5d42d28bb54c90a7c1db8fa1ba473e7ed87e776a0d3da9e68138ea5eedda1bb5e62ff55f74cb9
   languageName: node
   linkType: hard
 
-"@trpc/tanstack-react-query@npm:^11.4.3":
-  version: 11.4.3
-  resolution: "@trpc/tanstack-react-query@npm:11.4.3"
+"@trpc/tanstack-react-query@npm:^11.9.0":
+  version: 11.9.0
+  resolution: "@trpc/tanstack-react-query@npm:11.9.0"
   peerDependencies:
     "@tanstack/react-query": ^5.80.3
-    "@trpc/client": 11.4.3
-    "@trpc/server": 11.4.3
+    "@trpc/client": 11.9.0
+    "@trpc/server": 11.9.0
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
     typescript: ">=5.7.2"
-  checksum: 10/7d4b204316a6e7013d0a80743bb285de676c7138b4246ea03b0ddeafb3c3a384c55f88ea3654c768fd1de79cdddad456a76e6abe0579a763fe73cd0f32c498aa
+  checksum: 10/add27c87de944c1a947112ad08512fb089ad9413a0935241999b2617999a6761f3ce6ebc5ed45123b3ac9f23c49d4d7b33ca09fcd66a481be2c4f1e1223763c1
   languageName: node
   linkType: hard
 
