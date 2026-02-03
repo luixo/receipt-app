@@ -5,17 +5,21 @@ import {
 	findNodeHandle,
 } from "react-native";
 
-export const ScrollContext = React.createContext<{
+export type ScrollHandle = {
 	getHandle: () => number | null;
 	getRef: () => ScrollViewRaw | null;
-}>({ getHandle: () => 0, getRef: () => null });
+};
+export const ScrollContext = React.createContext<ScrollHandle>({
+	getHandle: () => 0,
+	getRef: () => null,
+});
 
 export type Props = {
-	className?: string;
 	children?: React.ReactNode;
-};
+	ref?: React.RefObject<ScrollHandle | null>;
+} & Omit<React.ComponentProps<typeof ScrollViewRaw>, "children" | "ref">;
 
-export const ScrollView: React.FC<Props> = ({ children, ...props }) => {
+export const ScrollView: React.FC<Props> = ({ children, ref, ...props }) => {
 	const scrollRef = React.useRef<ScrollViewRaw>(null);
 	const context = React.useMemo<React.ContextType<typeof ScrollContext>>(() => {
 		if (Platform.OS === "web") {
@@ -29,6 +33,7 @@ export const ScrollView: React.FC<Props> = ({ children, ...props }) => {
 			getRef: () => scrollRef.current,
 		};
 	}, []);
+	React.useImperativeHandle(ref, () => context, [context]);
 	return (
 		<ScrollViewRaw ref={scrollRef} {...props}>
 			<ScrollContext value={context}>{children}</ScrollContext>

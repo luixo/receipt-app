@@ -309,6 +309,7 @@ const InnerInput = ({
 	autoComplete,
 	labelPlacement = "inside",
 	onBlur,
+	onFocus,
 	size,
 	autoFocus,
 	autoCapitalize,
@@ -371,9 +372,12 @@ const InnerInput = ({
 									onBlur?.();
 									setFocus(false);
 								}}
-								onPress={onPress}
+								onFocus={() => {
+									onFocus?.();
+									setFocus(true);
+								}}
+								onPressIn={() => onPress?.()}
 								onKeyPress={(e) => onKeyPress?.(e.nativeEvent.key)}
-								onFocus={() => setFocus(true)}
 								autoComplete={autoComplete}
 								autoFocus={autoFocus}
 								autoCapitalize={autoCapitalize}

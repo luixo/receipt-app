@@ -8,6 +8,7 @@ import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
 import { useTRPC } from "~app/utils/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
+import { Autocomplete } from "~components/autocomplete";
 import { Avatar, AvatarGroup } from "~components/avatar";
 import { Badge } from "~components/badge";
 import { Button, ButtonGroup } from "~components/button";
@@ -34,11 +35,11 @@ import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
 import { Text } from "~components/text";
 import { addToast, closeToastById } from "~components/toast";
+import { Tooltip } from "~components/tooltip";
 import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 import { type Temporal, getNow } from "~utils/date";
-import { Tooltip } from "~components/tooltip";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 
@@ -104,6 +105,72 @@ const Wrapper = () => {
 		<ScrollView className="bg-background h-full">
 			<View className="flex gap-2 rounded-md p-2">
 				<Text className="text-red-500">{t("titles.index")}</Text>
+				<Autocomplete
+					inputValue={value}
+					onInputChange={setValue}
+					label={t("components.usersSuggest.label")}
+					emptyContent={t("components.usersSuggest.noResults")}
+					placeholder={t("components.usersSuggest.placeholder")}
+					selectedKey={selectedKeys[0] ?? null}
+					onSelectionChange={(nextValue) =>
+						setSelectedKeys(nextValue ? [String(nextValue)] : [])
+					}
+					onClear={() => setValue("")}
+					endContent={
+						<Button
+							isIconOnly
+							variant="light"
+							radius="full"
+							size="sm"
+							className={value ? undefined : "hidden"}
+						>
+							<Icon name="plus" className="size-6" />
+						</Button>
+					}
+				>
+					{[
+						{
+							key: "old",
+							title: "Old users",
+							items: SELECT_ITEMS.map((item) => ({
+								key: item,
+								textValue: item,
+								children: <User name={item} avatarProps={{ hashId: item }} />,
+							})),
+						},
+						{
+							key: "new",
+							title: "New user",
+							items: [
+								{
+									key: "new-key",
+									textValue: "New user",
+									children: (
+										<User
+											name={
+												value.length > 2
+													? t("components.usersSuggest.addUser.withName", {
+															name: value,
+														})
+													: t("components.usersSuggest.addUser.empty")
+											}
+											avatarProps={{
+												size: "sm",
+												fallback: (
+													<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
+														<Text className="text-default-500 flex text-2xl">
+															+
+														</Text>
+													</View>
+												),
+											}}
+										/>
+									),
+								},
+							],
+						},
+					]}
+				</Autocomplete>
 				<Slider
 					label="Slider"
 					minValue={1}

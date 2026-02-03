@@ -32,6 +32,7 @@ export type Props = Pick<
 > & {
 	autoCapitalize?: "none" | "sentences" | "words" | "characters";
 	onBlur?: () => void;
+	onFocus?: () => void;
 	onPress?: () => void;
 	onKeyPress?: (key: string) => void;
 	errorMessage?: string;

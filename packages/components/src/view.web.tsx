@@ -15,7 +15,10 @@ export type ViewReactNode =
 	| (ViewReactNode | undefined)[]
 	| null;
 
-export type Props = Pick<React.ComponentProps<typeof RawView>, "role"> & {
+export type Props = Pick<
+	React.ComponentProps<typeof RawView>,
+	"role" | "pointerEvents"
+> & {
 	ref?: React.Ref<ViewHandle | null>;
 	className?: string;
 	children?: ViewReactNode;

@@ -14,14 +14,9 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { User } from "~app/components/app/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
-import { useInfiniteScroll } from "~app/hooks/use-infinite-scroll";
 import type { TRPCQueryInput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
-import {
-	Autocomplete,
-	AutocompleteItem,
-	AutocompleteSection,
-} from "~components/autocomplete";
+import { Autocomplete } from "~components/autocomplete";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/skeleton-input";
@@ -60,9 +55,11 @@ type Props = {
 	wrapperProps?: React.ComponentProps<typeof View>;
 	setUserNameToInput?: boolean;
 	selectedProps?: React.ComponentProps<typeof View>;
-} & Omit<
-	React.ComponentProps<typeof Autocomplete>,
-	"items" | "defaultItems" | "children"
+} & Partial<
+	Omit<
+		React.ComponentProps<typeof Autocomplete>,
+		"items" | "defaultItems" | "children"
+	>
 >;
 
 export const UsersSuggest: React.FC<Props> = ({
@@ -99,7 +96,7 @@ export const UsersSuggest: React.FC<Props> = ({
 			{ placeholderData: keepPreviousData },
 		),
 	);
-	const query = useInfiniteQuery(
+	const { data, hasNextPage, isFetching, fetchNextPage } = useInfiniteQuery(
 		trpc.users.suggest.infiniteQueryOptions(
 			{
 				limit,
@@ -150,10 +147,8 @@ export const UsersSuggest: React.FC<Props> = ({
 	);
 
 	const fetchedUserIds = (
-		query.data?.pages.reduce<UserId[]>(
-			(acc, page) => [...acc, ...page.items],
-			[],
-		) ?? []
+		data?.pages.reduce<UserId[]>((acc, page) => [...acc, ...page.items], []) ??
+		[]
 	).filter(
 		(userId) =>
 			!filterIds.includes(userId) &&
@@ -220,89 +215,68 @@ export const UsersSuggest: React.FC<Props> = ({
 		],
 	);
 
-	const scrollerRef = useInfiniteScroll({
-		hasMore: query.hasNextPage,
-		isEnabled: queryEnabled,
-		shouldUseLoader: false,
-		onLoadMore: () => {
-			void query.fetchNextPage();
+	const sections: React.ComponentProps<typeof Autocomplete>["children"] = [
+		additionalIds && additionalIds.length !== 0
+			? {
+					key: "self",
+					items: additionalIds.map((userId) => ({
+						key: userId,
+						textValue: userId,
+						children: <LoadableUser id={userId} avatarProps={{ size: "sm" }} />,
+					})),
+				}
+			: null,
+		filteredTopFetchedUserIds.length === 0
+			? null
+			: {
+					title: t("components.usersSuggest.recentlyUsed"),
+					key: "recent",
+					items: filteredTopFetchedUserIds.map((userId) => ({
+						key: userId,
+						textValue: userId,
+						children: <LoadableUser id={userId} avatarProps={{ size: "sm" }} />,
+					})),
+				},
+		queryEnabled && fetchedUserIds.length !== 0
+			? {
+					title: t("components.usersSuggest.lookup"),
+					key: "lookup",
+					items: fetchedUserIds.map((userId) => ({
+						key: userId,
+						textValue: userId,
+						children: <LoadableUser id={userId} avatarProps={{ size: "sm" }} />,
+					})),
+				}
+			: null,
+		{
+			key: "new",
+			items: [
+				{
+					key: NEW_USER_KEY,
+					textValue: t("components.usersSuggest.addUser.title"),
+					children: (
+						<User
+							id="new-user"
+							name={
+								value.length > 2
+									? t("components.usersSuggest.addUser.withName", {
+											name: value,
+										})
+									: t("components.usersSuggest.addUser.empty")
+							}
+							avatarProps={{
+								size: "sm",
+								fallback: (
+									<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
+										<Text className="text-default-500 flex text-2xl">+</Text>
+									</View>
+								),
+							}}
+						/>
+					),
+				},
+			],
 		},
-	});
-
-	const sections = [
-		additionalIds && additionalIds.length !== 0 ? (
-			<AutocompleteSection key="self">
-				{additionalIds.map((userId) => (
-					<AutocompleteItem
-						key={userId}
-						className="p-1"
-						textValue={userId}
-						classNames={{ title: "flex" }}
-					>
-						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
-					</AutocompleteItem>
-				))}
-			</AutocompleteSection>
-		) : null,
-		filteredTopFetchedUserIds.length === 0 ? null : (
-			<AutocompleteSection
-				title={t("components.usersSuggest.recentlyUsed")}
-				key="recent"
-			>
-				{filteredTopFetchedUserIds.map((userId) => (
-					<AutocompleteItem
-						key={userId}
-						className="p-1"
-						textValue={userId}
-						classNames={{ title: "flex" }}
-					>
-						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
-					</AutocompleteItem>
-				))}
-			</AutocompleteSection>
-		),
-		queryEnabled && fetchedUserIds.length !== 0 ? (
-			<AutocompleteSection
-				title={t("components.usersSuggest.lookup")}
-				key="lookup"
-			>
-				{fetchedUserIds.map((userId) => (
-					<AutocompleteItem
-						key={userId}
-						className="p-1"
-						textValue={userId}
-						classNames={{ title: "flex" }}
-					>
-						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
-					</AutocompleteItem>
-				))}
-			</AutocompleteSection>
-		) : null,
-		<AutocompleteSection key="new">
-			<AutocompleteItem
-				key={NEW_USER_KEY}
-				className="p-1"
-				textValue={t("components.usersSuggest.addUser.title")}
-				classNames={{ title: "flex" }}
-			>
-				<User
-					id="new-user"
-					name={
-						value.length > 2
-							? t("components.usersSuggest.addUser.withName", { name: value })
-							: t("components.usersSuggest.addUser.empty")
-					}
-					avatarProps={{
-						size: "sm",
-						fallback: (
-							<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
-								<Text className="text-default-500 flex text-2xl">+</Text>
-							</View>
-						),
-					}}
-				/>
-			</AutocompleteItem>
-		</AutocompleteSection>,
 	].filter(isNonNull);
 
 	return (
@@ -315,20 +289,18 @@ export const UsersSuggest: React.FC<Props> = ({
 					inputValue={value}
 					onInputChange={setValue}
 					label={t("components.usersSuggest.label")}
-					labelPlacement="outside"
+					emptyContent={t("components.usersSuggest.noResults")}
 					placeholder={t("components.usersSuggest.placeholder")}
-					variant="bordered"
-					scrollRef={scrollerRef}
-					items={[]}
+					scroll={{
+						hasMore: hasNextPage,
+						isDisabled: !queryEnabled || isFetching,
+						loadMore: () => {
+							void fetchNextPage();
+						},
+					}}
 					selectedKey={selectedUserIds[0] ?? null}
 					onSelectionChange={onSelectionChange}
-					clearButtonProps={{
-						onPress: () => setValue(""),
-					}}
-					listboxProps={{
-						classNames: { list: "m-0" },
-						emptyContent: t("components.usersSuggest.noResults"),
-					}}
+					onClear={() => setValue("")}
 					endContent={
 						<Button
 							isIconOnly
