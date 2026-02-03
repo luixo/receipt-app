@@ -2,9 +2,7 @@
 	"compilerOptions": {
 		"baseUrl": ".",
 		"strict": true,
-		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
-		"useUnknownInCatchVariables": true,
 		"jsx": "react-jsx",
 		"module": "esnext",
 		"esModuleInterop": true,
@@ -13,6 +11,11 @@
 		"allowImportingTsExtensions": true,
 		"allowJs": false,
 		"moduleSuffixes": [".web", ""],
+		"lib": ["DOM", "ESNext"],
+		"noEmit": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"target": "ESNext",
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],
@@ -28,7 +31,5 @@
 			"~tests/utils/*": ["./testing/utils/src/*"]
 		}
 	},
-	"include": ["**/*", "**/package.json"],
-	"exclude": ["**/prettify.js"],
-	"extends": "expo/tsconfig.base"
+	"include": ["**/*", "**/package.json"]
 }
