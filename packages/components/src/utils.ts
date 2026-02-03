@@ -1,9 +1,11 @@
 import type { StandardSchemaV1Issue } from "@tanstack/react-form";
+import clsx, { type ClassValue } from "clsx";
 import { isNonNullish } from "remeda";
+import { twMerge } from "tailwind-merge";
 
 import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";
 
-export { cn, HeroUIProvider } from "@heroui/react";
+export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
 export type FieldError =
 	| (StandardSchemaV1Issue | undefined)

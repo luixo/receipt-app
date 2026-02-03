@@ -32,20 +32,25 @@ const getExtraneousDependenciesConfig = (
 	packageDir: [".", packageJsonDir].filter(Boolean),
 });
 
+type RestrictedTag =
+	// These can be used in web environment
+	| "web-only"
+	// These can be used in server environment
+	| "client-only";
+
 const restrictedImports: ((
 	| {
-			from: string | RegExp;
 			imports: ({ actual: string | RegExp } & (
 				| { expected: string }
 				| { message: string }
 			))[];
 	  }
 	| {
-			from: string | RegExp;
 			message: string;
 	  }
 ) & {
-	omitTags?: string[];
+	from: string | RegExp;
+	omitTags?: RestrictedTag[];
 })[] = [
 	{
 		// see https://eslint.org/docs/latest/extend/selectors#known-issues
@@ -96,16 +101,22 @@ const restrictedImports: ((
 		],
 	},
 	{
-		from: "^@heroui",
+		from: /^@heroui/,
 		message: "Please use heroui-native in native components",
 		omitTags: ["web-only"],
+	},
+	{
+		from: "~web/handlers/validation",
+		message:
+			"Do not import from web validation, it includes heavy currency data!",
+		omitTags: ["client-only"],
 	},
 ];
 
 type NoRestrictedSyntaxElement = {
 	selector: string;
 	message: string;
-	omitTags?: string[];
+	omitTags?: RestrictedTag[];
 };
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
@@ -135,36 +146,48 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		omitTags: ["web-only"],
 	},
 	...restrictedImports.flatMap(({ from, omitTags, ...rest }) => {
+		const getSelector = (input: string | RegExp) =>
+			input instanceof RegExp
+				? `/${input.source.replaceAll("/", String.raw`u002F`)}/`
+				: `'${input}'`;
+		const valueSelector = getSelector(from);
 		if ("message" in rest) {
-			return {
-				selector: `ImportDeclaration[importKind!='type'][source.value=/${from}/]`,
-				message: rest.message,
-				omitTags,
-			};
+			return [
+				{
+					selector: `ImportDeclaration[importKind!='type'][source.value=${valueSelector}]`,
+					message: rest.message,
+					omitTags,
+				},
+				{
+					selector: `ExportNamedDeclaration[exportKind!='type'][source.value=${valueSelector}]`,
+					message: rest.message,
+					omitTags,
+				},
+			];
 		}
-		return rest.imports.map(({ actual, ...importValue }) => {
+		return rest.imports.flatMap(({ actual, ...importValue }) => {
 			const message =
 				"expected" in importValue
 					? `Prefer renaming '${actual.toString()}' to '${importValue.expected}'`
 					: importValue.message;
+			const importSelector = getSelector(actual);
 			const actualExpression = actual
-				? `ImportSpecifier[local.name=${
-						actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
-					}]`
+				? `ImportSpecifier[local.name=${importSelector}]`
 				: undefined;
-			return {
-				selector: `ImportDeclaration[source.value=/${from}/]${actualExpression ? ` > ${actualExpression}` : ""}`,
-				message,
-				omitTags,
-			};
+			return [
+				{
+					selector: `ImportDeclaration[source.value=${valueSelector}]${actualExpression ? ` > ${actualExpression}` : ""}`,
+					message,
+					omitTags,
+				},
+				{
+					selector: `ExportNamedDeclaration[source.value=${valueSelector}]${actualExpression ? ` > ${actualExpression}` : ""}`,
+					message,
+					omitTags,
+				},
+			];
 		});
 	}),
-	{
-		selector: "ImportDeclaration[source.value='~web/handlers/validation']",
-		message:
-			"Do not import from we validation, it includes heavy currency data!",
-		omitTags: ["client-only"],
-	},
 	{
 		selector: "ExportAllDeclaration",
 		message: "Do not use barrel export, prefer named export",
@@ -191,7 +214,7 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	},
 ] as const;
 
-const getNoRestrictedSyntax = (...omittedTags: string[]) =>
+const getNoRestrictedSyntax = (...omittedTags: RestrictedTag[]) =>
 	noRestrictedSyntaxGeneral
 		.filter((element) =>
 			element.omitTags
@@ -657,6 +680,13 @@ export const getConfig = async (rootDir: string) => {
 			},
 		},
 		{
+			// Web-only components are the only place where web-only imports are allowed
+			files: ["**/*.web.ts{,x}", "apps/web/**/*"],
+			rules: {
+				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
+			},
+		},
+		{
 			// Handlers is the only place where handlers validation is allowed to be imported from
 			files: ["apps/web/src/handlers/**/*"],
 			rules: {
@@ -664,13 +694,6 @@ export const getConfig = async (rootDir: string) => {
 					"error",
 					...getNoRestrictedSyntax("client-only"),
 				],
-			},
-		},
-		{
-			// Web-only components are the only place where web-only imports are allowed
-			files: ["**/*.web.ts{,x}"],
-			rules: {
-				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
 			},
 		},
 		{

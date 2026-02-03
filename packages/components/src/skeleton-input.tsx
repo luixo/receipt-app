@@ -2,8 +2,7 @@ import type React from "react";
 
 import { Input } from "~components/input";
 import { Skeleton } from "~components/skeleton";
-
-import { cn } from "./utils";
+import { cn } from "~components/utils";
 
 export const SkeletonInput: React.FC<
 	Pick<

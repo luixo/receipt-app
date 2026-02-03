@@ -7082,7 +7082,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/components@workspace:packages/components"
   dependencies:
-    "@heroui/react": "npm:^2.8.4"
+    "@heroui/react": "catalog:"
     "@ra/utils": "workspace:*"
     class-variance-authority: "npm:0.7.1"
     date-fns: "npm:^3.3.1"
@@ -7286,6 +7286,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-s3": "npm:^3.470.0"
     "@faker-js/faker": "npm:^8.0.2"
+    "@heroui/react": "catalog:"
     "@ra/app": "workspace:*"
     "@ra/components": "workspace:*"
     "@ra/db": "workspace:*"

@@ -1,8 +1,7 @@
 import type React from "react";
 
+import { HeroUIProvider } from "@heroui/react";
 import { useRouter } from "@tanstack/react-router";
-
-import { HeroUIProvider } from "~components/utils";
 
 export const NavigationProvider: React.FC<React.PropsWithChildren> = ({
 	children,

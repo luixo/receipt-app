@@ -5,7 +5,7 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"dependencies": {
-		"@heroui/react": "^2.8.4",
+		"@heroui/react": "catalog:",
 		"@ra/utils": "workspace:*",
 		"class-variance-authority": "0.7.1",
 		"date-fns": "^3.3.1",
