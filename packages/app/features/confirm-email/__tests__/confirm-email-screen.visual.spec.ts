@@ -59,10 +59,16 @@ test.describe("States", () => {
 	}) => {
 		api.mockUtils.noAuthPage();
 		api.mockLast("receipts.getPaged", { count: 0, cursor: 0, items: [] });
-		api.mockFirst("auth.confirmEmail", { email: faker.internet.email() });
+		const confirmPause = api.createPause();
+		api.mockFirst("auth.confirmEmail", async () => {
+			await confirmPause.promise;
+			return { email: faker.internet.email() };
+		});
 		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
 		await api.mockUtils.authPage({ page });
-		await clearToasts(2);
+		await clearToasts(1);
+		confirmPause.resolve();
+		await clearToasts(1);
 		await expectScreenshotWithSchemes("success.png");
 	});
 });
