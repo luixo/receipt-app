@@ -33,12 +33,16 @@ const getExtraneousDependenciesConfig = (
 });
 
 type RestrictedTag =
-	// These can be used in web environment
-	| "web-only"
 	// These can be used in server environment
 	| "client-only"
+	// These can be used in web environment
+	| "web-only"
+	// These can be used in .web files
+	| "strict-web-only"
 	// These can be used in native environment
-	| "native-only";
+	| "native-only"
+	// These can be used in .native files
+	| "strict-native-only";
 
 const restrictedImports: ((
 	| {
@@ -117,6 +121,16 @@ const restrictedImports: ((
 		message:
 			"Do not import from web validation, it includes heavy currency data!",
 		omitTags: ["client-only"],
+	},
+	{
+		from: /\.web/,
+		message: "Don't import from `./foo.web`, import from `./foo`",
+		omitTags: ["strict-web-only"],
+	},
+	{
+		from: /\.native/,
+		message: "Don't import from `./foo.native`, import from `./native`",
+		omitTags: ["strict-native-only"],
 	},
 ];
 
@@ -687,19 +701,39 @@ export const getConfig = async (rootDir: string) => {
 			},
 		},
 		{
-			// Web-only components are the only place where web-only imports are allowed
-			files: ["**/*.web.ts{,x}", "apps/web/**/*"],
+			// Web-only imports can be used in web app..
+			files: ["apps/web/**/*"],
 			rules: {
 				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
 			},
 		},
 		{
-			// Native files are allowed to use native imports
-			files: ["**/*.native.ts{,x}", "apps/mobile/**/*"],
+			// ..and in .web files (that also can import other .web files)
+			files: ["**/*.web.ts{,x}"],
+			rules: {
+				"no-restricted-syntax": [
+					"error",
+					...getNoRestrictedSyntax("web-only", "strict-web-only"),
+				],
+			},
+		},
+		{
+			// Native-only imports can be used in native app..
+			files: ["apps/mobile/**/*"],
 			rules: {
 				"no-restricted-syntax": [
 					"error",
 					...getNoRestrictedSyntax("native-only"),
+				],
+			},
+		},
+		{
+			// ..and in .native files (that also can import other .native files)
+			files: ["**/*.native.ts{,x}"],
+			rules: {
+				"no-restricted-syntax": [
+					"error",
+					...getNoRestrictedSyntax("native-only", "strict-native-only"),
 				],
 			},
 		},

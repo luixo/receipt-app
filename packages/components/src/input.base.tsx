@@ -1,13 +1,12 @@
 import type React from "react";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import type { InputHandler, Props } from "~components/input";
 import { getErrorState, getMutationLoading } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
-
-import { Button } from "./button.web";
 
 export const usePasswordVisibility = ({
 	type,
