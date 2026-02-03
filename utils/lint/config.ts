@@ -36,7 +36,9 @@ type RestrictedTag =
 	// These can be used in web environment
 	| "web-only"
 	// These can be used in server environment
-	| "client-only";
+	| "client-only"
+	// These can be used in native environment
+	| "native-only";
 
 const restrictedImports: ((
 	| {
@@ -102,8 +104,13 @@ const restrictedImports: ((
 	},
 	{
 		from: /^@heroui/,
-		message: "Please use heroui-native in native components",
+		message: "Please use ~components or heroui-native in native components",
 		omitTags: ["web-only"],
+	},
+	{
+		from: "heroui-native",
+		message: "Please use ~components or @heroui/react in web components",
+		omitTags: ["native-only"],
 	},
 	{
 		from: "~web/handlers/validation",
@@ -684,6 +691,16 @@ export const getConfig = async (rootDir: string) => {
 			files: ["**/*.web.ts{,x}", "apps/web/**/*"],
 			rules: {
 				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
+			},
+		},
+		{
+			// Native files are allowed to use native imports
+			files: ["**/*.native.ts{,x}", "apps/mobile/**/*"],
+			rules: {
+				"no-restricted-syntax": [
+					"error",
+					...getNoRestrictedSyntax("native-only"),
+				],
 			},
 		},
 		{
