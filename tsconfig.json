@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": ".",
 		"strict": true,
 		"noUncheckedIndexedAccess": true,
 		"jsx": "react-jsx",
@@ -16,6 +15,7 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"target": "ESNext",
+		"types": ["node"],
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],

@@ -43,7 +43,6 @@ export const options: UseContextedMutationOptions<
 						getSumRevert(currDebt.amount, updateObject.update),
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
-				// @ts-expect-error update when changing resolved list?
 				getByUserPaged: (controller) => {
 					// Updating currency code or amount might change resolved list status
 					if (updateObject.update.currencyCode || updateObject.update.amount) {
@@ -55,6 +54,7 @@ export const options: UseContextedMutationOptions<
 					if (updateObject.update.timestamp) {
 						controller.invalidate(currDebt.userId);
 					}
+					return undefined;
 				},
 				get: (controller) =>
 					controller.update(

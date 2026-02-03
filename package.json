@@ -67,7 +67,7 @@
 		"prettier": "^3.7.4",
 		"sharp": "catalog:",
 		"tsx": "^4.21.0",
-		"typescript": "5.8.3",
+		"typescript": "6.0.0-dev.20260203",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.2.4"
 	},

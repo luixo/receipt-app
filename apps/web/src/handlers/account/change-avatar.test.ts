@@ -1,3 +1,4 @@
+import { File } from "node:buffer";
 import Sharp from "sharp";
 import { assert, describe, expect } from "vitest";
 
@@ -16,10 +17,10 @@ import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-const getFormData = (bits?: BlobPart[]) => {
+const getFormData = (bits?: Buffer[]) => {
 	const formData = new FormData();
 	if (bits) {
-		formData.append("avatar", new File(bits, "avatar.png"));
+		formData.append("avatar", new File(bits, "avatar.png") as Blob);
 	}
 	return formData;
 };

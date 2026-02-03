@@ -26666,7 +26666,7 @@ __metadata:
     remeda: "npm:^2.25.0"
     sharp: "catalog:"
     tsx: "npm:^4.21.0"
-    typescript: "npm:5.8.3"
+    typescript: "npm:6.0.0-dev.20260203"
     vite-tsconfig-paths: "npm:^5.1.4"
     vitest: "npm:^3.2.4"
   languageName: unknown
@@ -29856,7 +29856,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.8.3, typescript@npm:^5.7.3":
+"typescript@npm:6.0.0-dev.20260203":
+  version: 6.0.0-dev.20260203
+  resolution: "typescript@npm:6.0.0-dev.20260203"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10/02625c43443c426e643b7a814976ccf80690c77332c6e3af0b04bc085bdb3515b96de42283b83b75ae9442a75344485a5e845ef903603173a5dca740d4b92422
+  languageName: node
+  linkType: hard
+
+"typescript@npm:^5.7.3":
   version: 5.8.3
   resolution: "typescript@npm:5.8.3"
   bin:
@@ -29866,7 +29876,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.7.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A6.0.0-dev.20260203#optional!builtin<compat/typescript>":
+  version: 6.0.0-dev.20260203
+  resolution: "typescript@patch:typescript@npm%3A6.0.0-dev.20260203#optional!builtin<compat/typescript>::version=6.0.0-dev.20260203&hash=5786d5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10/3d7ba03306e7ddd037b608b90bf2fa0843e6f53751140467ccbe77fb978201405fec17d6aef7eeff6f85c622c638b83cb7b2cdc19ea5efd8a73141a51aa4baae
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A^5.7.3#optional!builtin<compat/typescript>":
   version: 5.8.3
   resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
   bin:
