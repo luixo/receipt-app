@@ -129,6 +129,11 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		message:
 			"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
 	},
+	{
+		selector: "JSXAttribute[name.name='data-testid']",
+		message: "Use testID from react-native instead",
+		omitTags: ["web-only"],
+	},
 	...restrictedImports.flatMap(({ from, omitTags, ...rest }) => {
 		if ("message" in rest) {
 			return {

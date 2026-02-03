@@ -11,7 +11,7 @@ import { View } from "~components/view";
 import { round } from "~utils/math";
 
 const DebtGroupElementSkeleton = () => (
-	<Skeleton className="h-6 w-20 rounded" data-testid="debt-group-element" />
+	<Skeleton className="h-6 w-20 rounded" testID="debt-group-element" />
 );
 
 type DebtElement = { currencyCode: CurrencyCode; sum: number };

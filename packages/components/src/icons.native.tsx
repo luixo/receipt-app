@@ -95,7 +95,7 @@ const getComponent = (icon: IconName) => {
 // @ts-expect-error We need to override size with empty, but `undefined` will be substituted by a default value
 const emptySize: undefined = null;
 
-export const Icon = ({ name, className, onClick }: Props) => {
+export const Icon = ({ name, className, testID, onClick }: Props) => {
 	const textClass = React.useContext(TextClassContext);
 	const Component = getComponent(name);
 	// These are actually created only once
@@ -114,6 +114,9 @@ export const Icon = ({ name, className, onClick }: Props) => {
 			className={restClassNames.join(" ")}
 			size={emptySize}
 			pointerEvents="none"
+			// Lucide specifically supports `data-testid` in native package
+			// eslint-disable-next-line no-restricted-syntax
+			data-testid={testID}
 		/>
 	);
 	if (transformClassNames.length !== 0) {

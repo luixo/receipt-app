@@ -90,7 +90,7 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 							variant="flat"
 							color={code === selectedCurrencyCode ? "success" : "primary"}
 							title={code}
-							data-testid="currency-button"
+							testID="currency-button"
 						>
 							{description}
 						</Button>

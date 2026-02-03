@@ -154,7 +154,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 }) => (
 	<>
 		{participant.balance === 0 ? (
-			<Icon name="zero" data-testid="receipt-zero-icon" className="size-9" />
+			<Icon name="zero" testID="receipt-zero-icon" className="size-9" />
 		) : outcomingDebtId ? (
 			<ReceiptParticipantDebtActions
 				receipt={receipt}
