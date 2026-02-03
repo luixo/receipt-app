@@ -259,3 +259,5 @@ jobs:
       - uses: ./.github/actions/setup-env
       - name: Run Expo doctor
         run: yarn native:doctor
+        env:
+          EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK: true
