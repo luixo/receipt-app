@@ -33,8 +33,15 @@ export const Card: React.FC<
 	onPress,
 	children,
 	as,
+	...props
 }) => (
-	<CardRaw data-testid={testID} className={className} onPress={onPress} as={as}>
+	<CardRaw
+		data-testid={testID}
+		className={className}
+		onPress={onPress}
+		as={as}
+		{...props}
+	>
 		{header ? (
 			<>
 				<CardHeader className={headerClassName}>{header}</CardHeader>
