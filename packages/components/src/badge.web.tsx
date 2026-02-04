@@ -19,7 +19,6 @@ export const Badge: React.FC<Props> = ({ content = "", ...props }) => (
 		size="lg"
 		content={content}
 		isDot={!content}
-		classNames={{ base: "self-start" }}
 		{...props}
 	/>
 );
