@@ -1,0 +1,14 @@
+# see https://github.com/expo/expo/issues/42854
+diff --git a/build/src/utils/tsconfig/loadTsConfigPaths.js b/build/src/utils/tsconfig/loadTsConfigPaths.js
+index 2ad46f4236ba6dd688e1efc7913ab1df1c547337..ecc35b55dfc8ff1a53e0f6d6555d16fe81ebdb5b 100644
+--- a/build/src/utils/tsconfig/loadTsConfigPaths.js
++++ b/build/src/utils/tsconfig/loadTsConfigPaths.js
+@@ -45,7 +45,7 @@ async function loadTsConfigPathsAsync(dir) {
+         const [, config] = options;
+         return {
+             paths: (_config_compilerOptions = config.compilerOptions) == null ? void 0 : _config_compilerOptions.paths,
+-            baseUrl: ((_config_compilerOptions1 = config.compilerOptions) == null ? void 0 : _config_compilerOptions1.baseUrl) ? _path().default.resolve(dir, config.compilerOptions.baseUrl) : undefined
++            baseUrl: (((_config_compilerOptions1 = config.compilerOptions) == null ? void 0 : _config_compilerOptions1.baseUrl) ? _path().default.resolve(dir, config.compilerOptions.baseUrl) : undefined) || config.compilerOptions.pathsBasePath
+         };
+     }
+     return null;

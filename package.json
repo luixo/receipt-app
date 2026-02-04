@@ -46,7 +46,8 @@
 		"lucide-react@npm:^0.562.0": "patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch",
 		"react-native-color-matrix-image-filters@npm:^8.0.2": "patch:react-native-color-matrix-image-filters@npm%3A8.0.2#~/patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
 		"react-native-web@npm:^0.21.1": "patch:react-native-web@npm%3A0.21.1#~/patches/react-native-web-npm-0.21.1.patch",
-		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch"
+		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch",
+		"@expo/cli@npm:54.0.22": "patch:@expo/cli@npm%3A54.0.22#~/patches/@expo-cli-npm-54.0.22.patch"
 	},
 	"dependencies": {
 		"react": "catalog:",
