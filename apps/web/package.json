@@ -40,7 +40,7 @@
 		"pino-pretty": "^10.1.0",
 		"postmark": "^3.0.18",
 		"react-i18next": "catalog:",
-		"react-native-web": "^0.21.1",
+		"react-native-web": "^0.21.2",
 		"sharp": "catalog:",
 		"tailwindcss": "catalog:",
 		"uniwind": "catalog:",

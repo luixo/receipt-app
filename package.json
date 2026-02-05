@@ -36,6 +36,7 @@
 		"lint-staged"
 	],
 	"resolutions": {
+		"@expo/cli@npm:55.0.6": "patch:@expo/cli@npm%3A55.0.6#~/patches/@expo-cli-npm-55.0.6.patch",
 		"@heroui/theme@npm:2.4.22": "patch:@heroui/theme@npm%3A2.4.22#~/patches/@heroui-theme-npm-2.4.22.patch",
 		"@heroui/toast@npm:2.0.16": "patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch",
 		"@internationalized/date": "^3.10.0",
@@ -45,21 +46,18 @@
 		"framer-motion@npm:^11.11.11": "patch:framer-motion@npm%3A11.11.11#~/patches/framer-motion-npm-11.11.11.patch",
 		"lucide-react@npm:^0.562.0": "patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch",
 		"react-native-color-matrix-image-filters@npm:^8.0.2": "patch:react-native-color-matrix-image-filters@npm%3A8.0.2#~/patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
-		"react-native-web@npm:^0.21.1": "patch:react-native-web@npm%3A0.21.1#~/patches/react-native-web-npm-0.21.1.patch",
-		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch",
-		"@expo/cli@npm:54.0.22": "patch:@expo/cli@npm%3A54.0.22#~/patches/@expo-cli-npm-54.0.22.patch"
+		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch"
 	},
 	"dependencies": {
 		"react": "catalog:",
 		"react-dom": "catalog:",
-		"react-native": "~0.81.5",
+		"react-native": "0.83.1",
 		"remeda": "^2.25.0"
 	},
 	"devDependencies": {
 		"@types/node": "^24.1.0",
-		"@types/react": "^19.1.6",
-		"@types/react-dom": "^19.1.6",
-		"@types/react-native": "^0.73.0",
+		"@types/react": "^19.2.11",
+		"@types/react-dom": "^19.2.3",
 		"@typescript/native-preview": "7.0.0-dev.20260203.1",
 		"@vitest/coverage-v8": "^3.2.2",
 		"eslint": "^9.39.2",

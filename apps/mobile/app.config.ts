@@ -35,7 +35,7 @@ const config: AppJSONConfig = {
 				{
 					fonts: fonts.map(
 						(font) =>
-							`node_modules/@expo-google-fonts/inter/${font}/Inter_${font}.ttf`,
+							`../../node_modules/@expo-google-fonts/inter/${font}/Inter_${font}.ttf`,
 					),
 				},
 			],
