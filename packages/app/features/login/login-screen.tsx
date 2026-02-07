@@ -70,6 +70,7 @@ export const LoginScreen: React.FC<{ redirectUrl: string }> = ({
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								mutation={loginMutation}
+								type="email"
 							/>
 						)}
 					</form.AppField>
