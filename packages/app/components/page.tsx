@@ -1,12 +1,12 @@
 import React from "react";
 
 import { AmountBadge } from "~app/components/amount-badge";
+import { PageWrapper } from "~app/components/page-wrapper";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { Icon } from "~components/icons";
 import type { IconName } from "~components/icons";
 import { Link } from "~components/link";
-import { ScrollView } from "~components/scroll-view";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
@@ -16,7 +16,7 @@ type ShowProps = {
 	useShow?: () => boolean;
 };
 
-export type MenuElement = {
+type MenuElement = {
 	iconName: IconName;
 	text: string;
 	pathname: FileRouteTypes["to"];
@@ -73,17 +73,12 @@ type Props = {
 export const Page: React.FC<Props> = ({ children, elements }) => {
 	const { usePathname } = React.use(NavigationContext);
 	const pathname = usePathname();
-	const PageWrapper = elements.find(
+	const Wrapper = elements.find(
 		(element) => element.pathname === pathname,
 	)?.PageWrapper;
-	const slot = <View className="gap-4">{children}</View>;
 	return (
 		<>
-			<ScrollView className="mx-auto h-full max-w-screen-md p-1 sm:p-2 md:p-4">
-				{PageWrapper ? <PageWrapper>{slot}</PageWrapper> : slot}
-				{/* Placeholder for page content not to get under the menu */}
-				<View className="h-[72px]" />
-			</ScrollView>
+			<PageWrapper wrapper={Wrapper}>{children}</PageWrapper>
 			<View
 				className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
 				testID="sticky-menu"
