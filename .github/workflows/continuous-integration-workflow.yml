@@ -261,3 +261,12 @@ jobs:
         run: yarn native:doctor
         env:
           EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK: true
+
+  verify-routes-match:
+    name: Check routes match between web and native
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-env
+      - name: Run routes verification
+        run: yarn verify-routes

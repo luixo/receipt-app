@@ -1,6 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
+import { createIconSet } from "@expo/vector-icons";
+import lucideGlyphMap from "@react-native-vector-icons/lucide/glyphmaps/Lucide.json";
 import * as lucideIcons from "lucide-react-native";
 import type { ResponderProps } from "react-native-svg";
 import type { SFSymbol } from "sf-symbols-typescript";
@@ -11,6 +13,14 @@ import { cn } from "~components/utils";
 import { View } from "~components/view";
 
 import type { IconName, Props } from "./icons";
+
+export const iconFamily = createIconSet(
+	lucideGlyphMap,
+	"lucide",
+	// This seems to be the expected way to import a font
+	// eslint-disable-next-line n/global-require, @typescript-eslint/no-require-imports
+	require("@react-native-vector-icons/lucide/fonts/Lucide.ttf"),
+);
 
 const localMapping = {
 	refresh: "RefreshCw",
@@ -61,6 +71,56 @@ const localMapping = {
 	"eye-off": "EyeOff",
 	ellipsis: "Ellipsis",
 } satisfies Record<IconName, keyof typeof lucideIcons>;
+
+export const glyphMapping = {
+	refresh: "refresh-cw",
+	sync: "refresh-cw",
+	unsync: "refresh-cw-off",
+	incoming: "arrow-left-from-line",
+	outcoming: "arrow-right-from-line",
+	debts: "hand-coins",
+	add: "plus",
+	link: "link",
+	pencil: "pencil",
+	unlink: "unlink",
+	receipt: "receipt-text",
+	send: "send",
+	zero: "circle-off",
+	info: "info",
+	filter: "list-filter",
+	admin: "shield-user",
+	key: "key-round",
+	money: "coins",
+	transfer: "arrow-left-right",
+	search: "search",
+	editor: "user-pen",
+	owner: "user-star",
+	viewer: "user-round",
+	warning: "triangle-alert",
+	trash: "trash",
+	check: "check",
+	close: "x",
+	inbox: "inbox",
+	minus: "minus",
+	plus: "plus",
+	moon: "moon",
+	sun: "sun",
+	users: "users-round",
+	user: "user-round",
+	"arrow-left": "arrow-left",
+	"arrow-right": "arrow-right",
+	"arrow-down": "arrow-down",
+	"chevron-down": "chevron-down",
+	settings: "settings",
+	login: "log-in",
+	register: "user-round-plus",
+	"sort-down": "arrow-down-1-0",
+	"sort-up": "arrow-down-0-1",
+	exchange: "chart-candlestick",
+	eye: "eye",
+	"eye-off": "eye-off",
+	ellipsis: "ellipsis",
+} satisfies Record<IconName, keyof (typeof iconFamily)["glyphMap"]>;
 
 export const sfMapping: Partial<
 	Record<IconName, SFSymbol | { default: SFSymbol; selected: SFSymbol }>

@@ -26,7 +26,7 @@
 		"expo-font": "~55.0.3",
 		"expo-linking": "~55.0.3",
 		"expo-localization": "~55.0.4",
-		"expo-router": "~55.0.0-preview.6",
+		"expo-router": "catalog:",
 		"expo-secure-store": "~55.0.4",
 		"expo-splash-screen": "~55.0.4",
 		"expo-system-ui": "~55.0.4",

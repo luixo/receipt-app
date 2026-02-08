@@ -3,7 +3,7 @@ import React from "react";
 import * as Sentry from "@sentry/react-native";
 import { fetch } from "expo/fetch";
 import { getLocales } from "expo-localization";
-import { type ErrorBoundaryProps, Stack } from "expo-router";
+import type { ErrorBoundaryProps } from "expo-router";
 import { HeroUINativeProvider } from "heroui-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaListener } from "react-native-safe-area-context";
@@ -24,6 +24,7 @@ import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
 import { ToastProvider } from "~components/toast";
 import { View } from "~components/view";
 import { SplashScreenManager } from "~mobile/components/splash-screen-manager";
+import { Stack } from "~mobile/components/stack";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { DevToolsProvider } from "~mobile/providers/devtools";
 import { resources } from "~mobile/utils/i18n";
@@ -132,7 +133,7 @@ const App: React.FC = () => (
 					onChange={({ insets }) => Uniwind.updateInsets(insets)}
 				>
 					<View className="bg-background text-foreground flex-1 p-safe">
-						<Stack screenOptions={{ headerShown: false }} />
+						<Stack />
 					</View>
 				</SafeAreaListener>
 			</ClientProvider>

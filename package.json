@@ -27,6 +27,7 @@
 		"native:run:android": "yarn workspace @ra/mobile css:prepare && yarn workspace @ra/mobile expo run:android",
 		"native:run:ios": "yarn workspace @ra/mobile css:prepare && yarn workspace @ra/mobile expo run:ios",
 		"typecheck": "tsgo --noEmit",
+		"verify-routers": "yarn workspace @ra/scripts verify-routers",
 		"web:build": "yarn workspace @ra/web build",
 		"web:dev": "yarn workspace @ra/web dev",
 		"web:start": "yarn workspace @ra/web start"

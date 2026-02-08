@@ -32,7 +32,6 @@ const main = async () => {
 			console.log(`${command.name} shut down`);
 		});
 		console.log("All processes shut down");
-		// eslint-disable-next-line n/no-process-exit
 		process.exit(0);
 	});
 };

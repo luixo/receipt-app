@@ -2,6 +2,7 @@ import React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
+import { PageWrapper } from "~app/components/page-wrapper";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { HomeScreen } from "~app/features/home/home-screen";
@@ -25,6 +26,10 @@ const RedirectPage: React.FC = suspendedFallback(
 	},
 );
 
-const Wrapper = () => <RedirectPage />;
+const Wrapper = () => (
+	<PageWrapper>
+		<RedirectPage />
+	</PageWrapper>
+);
 
 export default Wrapper;

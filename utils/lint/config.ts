@@ -439,6 +439,9 @@ const disabledRules = {
 		"@typescript-eslint/promise-function-async": "off",
 		// This doesn't fit with us spreading options to the routes
 		"@tanstack/router/create-route-property-order": "off",
+		// There's no need to limit us to throwing Errors in node.js env
+		"n/no-process-exit": "off",
+		"unicorn/no-process-exit": "off",
 	},
 } satisfies Linter.Config;
 

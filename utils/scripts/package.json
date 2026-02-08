@@ -5,11 +5,13 @@
 	"type": "module",
 	"scripts": {
 		"dev": "tsx dev.ts",
-		"expo:update-ios-version": "tsx update-version.ts"
+		"expo:update-ios-version": "tsx update-version.ts",
+		"verify-routers": "node verify-routers.ts"
 	},
 	"devDependencies": {
 		"@ra/utils": "workspace:*",
 		"concurrently": "^9.2.1",
+		"diff": "^8.0.2",
 		"ts-morph": "^27.0.2"
 	}
 }

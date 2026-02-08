@@ -7301,6 +7301,7 @@ __metadata:
     "@ra/mutations": "workspace:*"
     "@ra/playwright": "workspace:*"
     "@ra/utils": "workspace:*"
+    "@react-native-vector-icons/lucide": "npm:^12.4.0"
     "@react-types/shared": "npm:^3.18.1"
     "@tanstack/query-async-storage-persister": "npm:5.80.6"
     "@tanstack/react-form": "npm:^1.23.7"
@@ -7316,6 +7317,7 @@ __metadata:
     array.prototype.tosorted: "npm:^1.1.2"
     cookie: "catalog:"
     dataloader: "catalog:"
+    expo-router: "catalog:"
     i18next: "catalog:"
     react-easy-crop: "npm:^5.4.2"
     react-i18next: "catalog:"
@@ -7424,7 +7426,7 @@ __metadata:
     expo-font: "npm:~55.0.3"
     expo-linking: "npm:~55.0.3"
     expo-localization: "npm:~55.0.4"
-    expo-router: "npm:~55.0.0-preview.6"
+    expo-router: "catalog:"
     expo-secure-store: "npm:~55.0.4"
     expo-splash-screen: "npm:~55.0.4"
     expo-system-ui: "npm:~55.0.4"
@@ -7486,6 +7488,7 @@ __metadata:
   dependencies:
     "@ra/utils": "workspace:*"
     concurrently: "npm:^9.2.1"
+    diff: "npm:^8.0.2"
     ts-morph: "npm:^27.0.2"
   languageName: unknown
   linkType: soft
@@ -8871,6 +8874,38 @@ __metadata:
   peerDependencies:
     react-native: ^0.0.0-0 || >=0.65 <1.0
   checksum: 10/625e42134f0c487acfd4ba9b3ba182e6f6f29581485004cc658850ef024372cdb7381b7399393f4416fda39df2d822e3008427d7671d635a7363f9a65430a2dd
+  languageName: node
+  linkType: hard
+
+"@react-native-vector-icons/common@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@react-native-vector-icons/common@npm:12.4.0"
+  dependencies:
+    find-up: "npm:^7.0.0"
+    picocolors: "npm:^1.1.1"
+    plist: "npm:^3.1.0"
+  peerDependencies:
+    "@react-native-vector-icons/get-image": ^12.3.0
+    react: "*"
+    react-native: "*"
+  peerDependenciesMeta:
+    "@react-native-vector-icons/get-image":
+      optional: true
+  bin:
+    rnvi-update-plist: lib/commonjs/scripts/updatePlist.js
+  checksum: 10/9c59a8c21f98106621320f77b89e9ea11a2d59d70d61576742ffb65e7426537d3b218de46dd997c63422ff37347d44513e64d3305625423a21ec9a21581c8d94
+  languageName: node
+  linkType: hard
+
+"@react-native-vector-icons/lucide@npm:^12.4.0":
+  version: 12.4.0
+  resolution: "@react-native-vector-icons/lucide@npm:12.4.0"
+  dependencies:
+    "@react-native-vector-icons/common": "npm:^12.4.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10/f6160b6d68ad923e43920e0d576a472047011f150383c7466f45279b6f647be12f56eba6241e259deabc448d11b00763ac06ba68ed60e3d0deef5705c7137751
   languageName: node
   linkType: hard
 
@@ -25284,7 +25319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"plist@npm:^3.0.5":
+"plist@npm:^3.0.5, plist@npm:^3.1.0":
   version: 3.1.0
   resolution: "plist@npm:3.1.0"
   dependencies:
