@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserDebtsScreen } from "~app/features/user-debts/user-debts-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { getTitle } from "~web/utils/i18n";
@@ -9,14 +8,9 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/debts"],
-);
-
 export const Route = createFileRoute("/_protected/debts/user/$id/")({
 	component: UserDebtsScreen,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/debts"),
 	loaderDeps: ({ search: { offset, limit } }) => ({
 		offset,
 		limit,

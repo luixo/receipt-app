@@ -18,7 +18,6 @@ import { LinksContext } from "~app/contexts/links-context";
 import { useColorModes } from "~app/hooks/use-color-modes";
 import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
-import { searchParamsMapping } from "~app/utils/navigation";
 import type { StoreValues } from "~app/utils/store-data";
 import { ToastProvider } from "~components/toast";
 import type { TemporalInputMapping } from "~utils/date";
@@ -170,11 +169,6 @@ export type ExternalRouterContext = Pick<
 	"initialValues" | "isTest"
 >;
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	// eslint-disable-next-line no-underscore-dangle
-	searchParamsMapping.__root__,
-);
-
 const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 	createRootRouteWithContext,
 );
@@ -186,8 +180,7 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 		await ctx.context.i18nContext.loadNamespaces("default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
-	search: { middlewares: [stripDefaults] },
-	validateSearch,
+	...searchParamsWithDefaults("__root__"),
 	head: ({ match }) => {
 		const title = getTitle(match.context.i18nContext, "index");
 		return {

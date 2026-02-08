@@ -1,18 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/debts/add"],
-);
-
 export const Route = createFileRoute("/_protected/debts/add")({
 	component: AddDebtScreen,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/debts/add"),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
 	},

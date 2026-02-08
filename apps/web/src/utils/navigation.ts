@@ -13,6 +13,7 @@ import type { z } from "zod";
 
 import type { NavigationContext } from "~app/contexts/navigation-context";
 import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
 
 declare module "@react-types/shared" {
@@ -71,17 +72,28 @@ export const navigationContext: NavigationContext = {
 	},
 };
 
-export const searchParamsWithDefaults = <S extends Record<string, z.ZodCatch>>(
-	shape: z.ZodObject<S>,
+export const searchParamsWithDefaults = <
+	K extends keyof typeof searchParamsMapping,
+>(
+	key: K,
 ) => {
+	const shape = searchParamsMapping[key];
+	type ResultSchema = z.ZodObject<
+		typeof shape extends z.ZodObject<
+			infer Shape extends Record<string, z.ZodCatch>
+		>
+			? { [S in keyof Shape]: z.ZodDefault<Shape[S]> }
+			: never
+	>;
 	const defaultValues = mapValues(shape.shape, (value) =>
 		// `catchValue` doesn't actually do anything with it's argument
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		value.def.catchValue({} as any),
 	) as z.input<ResultSchema>;
-	type ResultSchema = z.ZodObject<{ [K in keyof S]: z.ZodDefault<S[K]> }>;
-	return [
-		shape as unknown as ResultSchema,
-		stripSearchParams<z.input<ResultSchema>>(defaultValues),
-	] as const;
+	return {
+		validateSearch: shape as unknown as ResultSchema,
+		search: {
+			middlewares: [stripSearchParams<z.input<ResultSchema>>(defaultValues)],
+		},
+	};
 };

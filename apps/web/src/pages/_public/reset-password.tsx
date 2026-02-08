@@ -1,19 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ResetPasswordScreen } from "~app/features/reset-password/reset-password-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/reset-password"],
-);
-
 export const Route = createFileRoute("/_public/reset-password")({
 	component: ResetPasswordScreen,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/reset-password"),
 	loaderDeps: (opts) => ({ token: opts.search.token }),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("reset-password");

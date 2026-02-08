@@ -437,6 +437,8 @@ const disabledRules = {
 		"@typescript-eslint/explicit-module-boundary-types": "off",
 		// This is replaced by @typescript-eslint/no-floating-promises
 		"@typescript-eslint/promise-function-async": "off",
+		// This doesn't fit with us spreading options to the routes
+		"@tanstack/router/create-route-property-order": "off",
 	},
 } satisfies Linter.Config;
 

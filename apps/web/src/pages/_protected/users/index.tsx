@@ -1,21 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UsersScreen } from "~app/features/users/users-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/users"],
-);
-
 export const Route = createFileRoute("/_protected/users/")({
 	component: UsersScreen,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/users"),
 	loaderDeps: ({ search: { offset, limit } }) => ({
 		offset,
 		limit,

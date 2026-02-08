@@ -1,22 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { prefetchQueriesWith } from "~web/utils/ssr";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/receipts"],
-);
-
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: ReceiptsScreen,
 	staleTime: Infinity,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/receipts"),
 	loaderDeps: ({ search: { offset, limit, filters, sort } }) => ({
 		offset,
 		limit,

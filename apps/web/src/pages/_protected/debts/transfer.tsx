@@ -1,19 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsTransferScreen } from "~app/features/debts-transfer/debts-transfer-screen";
-import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const [validateSearch, stripDefaults] = searchParamsWithDefaults(
-	searchParamsMapping["/debts/transfer"],
-);
-
 export const Route = createFileRoute("/_protected/debts/transfer")({
 	component: DebtsTransferScreen,
-	validateSearch,
-	search: { middlewares: [stripDefaults] },
+	...searchParamsWithDefaults("/debts/transfer"),
 	loaderDeps: ({ search: { to, from } }) => ({ to, from }),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
