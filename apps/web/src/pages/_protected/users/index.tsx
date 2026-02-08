@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { UsersScreen } from "~app/features/users/users-screen";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getQueryStates, searchParamsMapping } from "~app/utils/navigation";
+import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
@@ -14,9 +14,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 );
 
 const Wrapper = () => {
-	const { useQueryState, useDefaultedQueryState } = getQueryStates(
-		Route.fullPath,
-	);
+	const { useQueryState, useDefaultedQueryState } =
+		getPathHooks("/_protected/users/");
 	return (
 		<UsersScreen
 			limitState={useDefaultedQueryState("limit", useDefaultLimit())}

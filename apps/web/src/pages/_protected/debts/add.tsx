@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
-import { getQueryStates, searchParamsMapping } from "~app/utils/navigation";
+import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
@@ -10,7 +10,7 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 );
 
 const Wrapper = () => {
-	const { useQueryState } = getQueryStates(Route.fullPath);
+	const { useQueryState } = getPathHooks("/_protected/debts/add");
 	return <AddDebtScreen userIdState={useQueryState("userId")} />;
 };
 

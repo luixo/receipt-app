@@ -1,7 +1,9 @@
 import React from "react";
 
+import type { RegisteredRouter, RouteById } from "@tanstack/react-router";
 import type {
 	NavigateOptions,
+	RouteIds,
 	ValidateNavigateOptions,
 } from "@tanstack/router-core";
 import { z } from "zod";
@@ -18,7 +20,10 @@ import {
 	userIdSchema,
 	voidAccountTokenSchema,
 } from "~app/utils/validation";
-import type { FileRoutesByFullPath } from "~web/entry/routeTree.gen";
+import type {
+	FileRoutesByFullPath,
+	FileRoutesById,
+} from "~web/entry/routeTree.gen";
 import type { TreeRouter } from "~web/entry/router";
 
 declare module "@react-types/shared" {
@@ -28,15 +33,19 @@ declare module "@react-types/shared" {
 	}
 }
 
-export type RouteKey = keyof FileRoutesByFullPath;
-type RouteByKey<K extends RouteKey> = FileRoutesByFullPath[K];
-export type OutputRouteSearchParams<K extends RouteKey> =
-	RouteByKey<K>["types"]["searchSchema"];
-export type InputRouteSearchParams<K extends RouteKey> =
-	RouteByKey<K>["types"]["searchSchemaInput"];
+export type RouteId = RouteIds<RegisteredRouter["routeTree"]>;
+export type RoutePath = keyof FileRoutesByFullPath;
+export type PathParams<K extends RouteId> = RouteById<
+	RegisteredRouter["routeTree"],
+	K
+>["types"]["allParams"];
+export type OutputRouteSearchParams<K extends RouteId> =
+	FileRoutesById[K]["types"]["searchSchema"];
+export type InputRouteSearchParams<K extends RouteId> =
+	FileRoutesById[K]["types"]["searchSchemaInput"];
 
 export type SearchParamStateByRoute<
-	K extends RouteKey,
+	K extends RouteId,
 	P extends keyof OutputRouteSearchParams<K>,
 > = [
 	OutputRouteSearchParams<K>[P],
@@ -50,17 +59,17 @@ export type SearchParamStateByRoute<
 	) => void,
 ];
 export type SearchParamState<
-	K extends RouteKey,
+	K extends RouteId,
 	P extends keyof OutputRouteSearchParams<K>,
 > = SearchParamStateByRoute<K, P>;
 
 export type SearchParamStateDefaulted<
-	K extends RouteKey,
+	K extends RouteId,
 	P extends keyof OutputRouteSearchParams<K>,
 	O extends OutputRouteSearchParams<K>[P],
 > = [O, SearchParamState<K, P>[1]];
 
-export const getQueryStates = <K extends RouteKey>(rawKey: K) => {
+export const getPathHooks = <K extends RouteId>(rawKey: K) => {
 	// Tanstack Start for some reason provides a key with a trailing slash
 	const key = rawKey.replace(/\/$/, "") as K;
 	const useQueryState = <P extends keyof OutputRouteSearchParams<K>>(
@@ -89,7 +98,11 @@ export const getQueryStates = <K extends RouteKey>(rawKey: K) => {
 			SearchParamStateByRoute<K, P>[1],
 		];
 	};
-	return { useQueryState, useDefaultedQueryState };
+	const useParams = () => {
+		const { useParams: useParamsRaw } = React.use(NavigationContext);
+		return useParamsRaw<K>(rawKey);
+	};
+	return { useQueryState, useDefaultedQueryState, useParams };
 };
 
 export const searchParamsMapping = {
@@ -130,4 +143,4 @@ export const searchParamsMapping = {
 	"/debts/user/$id/exchange/all": z.object({
 		from: currencyCodeSchema.optional().catch(undefined),
 	}),
-} satisfies Partial<Record<RouteKey | "__root__", z.ZodType>>;
+} satisfies Partial<Record<RoutePath | "__root__", z.ZodType>>;

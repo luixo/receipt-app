@@ -40,7 +40,7 @@ export const useCursorPaging = <
 >(
 	procedure: P,
 	input: Omit<I, "cursor">,
-	offsetState: SearchParamState<"/receipts", "offset">,
+	offsetState: SearchParamState<"/_protected/receipts/", "offset">,
 ) => {
 	const { limit } = input;
 	const [offset, setOffset] = offsetState;

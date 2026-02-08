@@ -311,8 +311,8 @@ const filters = {};
 
 export const UserDebtsList = suspendedFallback<{
 	userId: UserId;
-	limitState: SearchParamState<"/debts/user/$id", "limit">;
-	offsetState: SearchParamState<"/debts/user/$id", "offset">;
+	limitState: SearchParamState<"/_protected/debts/user/$id/", "limit">;
+	offsetState: SearchParamState<"/_protected/debts/user/$id/", "offset">;
 }>(
 	({ userId, limitState: [limit, setLimit], offsetState }) => {
 		const { t } = useTranslation("debts");

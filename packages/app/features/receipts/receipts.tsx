@@ -98,10 +98,10 @@ const RemoveReceiptsButton: React.FC<{
 };
 
 type Props = {
-	sort: SearchParamState<"/receipts", "sort">[0];
-	filtersState: SearchParamState<"/receipts", "filters">;
-	limitState: SearchParamState<"/receipts", "limit">;
-	offsetState: SearchParamState<"/receipts", "offset">;
+	sort: SearchParamState<"/_protected/receipts/", "sort">[0];
+	filtersState: SearchParamState<"/_protected/receipts/", "filters">;
+	limitState: SearchParamState<"/_protected/receipts/", "limit">;
+	offsetState: SearchParamState<"/_protected/receipts/", "offset">;
 };
 
 export const Receipts = suspendedFallback<Props>(

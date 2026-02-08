@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsExchangeAllScreen } from "~app/features/debts-exchange-all/debts-exchange-all-screen";
-import { getQueryStates, searchParamsMapping } from "~app/utils/navigation";
+import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -11,10 +11,14 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 );
 
 const Wrapper = () => {
-	const { id } = Route.useParams();
-	const { useQueryState } = getQueryStates(Route.fullPath);
+	const { useQueryState, useParams } = getPathHooks(
+		"/_protected/debts/user/$id/exchange/all",
+	);
 	return (
-		<DebtsExchangeAllScreen userId={id} fromState={useQueryState("from")} />
+		<DebtsExchangeAllScreen
+			userId={useParams().id}
+			fromState={useQueryState("from")}
+		/>
 	);
 };
 

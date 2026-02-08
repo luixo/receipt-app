@@ -43,7 +43,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const AddDebtScreen: React.FC<{
-	userIdState: SearchParamState<"/debts/add", "userId">;
+	userIdState: SearchParamState<"/_protected/debts/add", "userId">;
 }> = ({ userIdState: [userId, setUserId] }) => {
 	const { t } = useTranslation("debts");
 	const trpc = useTRPC();

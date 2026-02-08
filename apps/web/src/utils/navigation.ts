@@ -2,6 +2,7 @@ import React from "react";
 
 import {
 	stripSearchParams,
+	useParams,
 	useNavigate as useRawNavigate,
 	useRouter,
 	useRouterState,
@@ -11,7 +12,7 @@ import { mapValues } from "remeda";
 import type { z } from "zod";
 
 import type { NavigationContext } from "~app/contexts/navigation-context";
-import type { OutputRouteSearchParams, RouteKey } from "~app/utils/navigation";
+import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
 
 declare module "@react-types/shared" {
@@ -36,12 +37,19 @@ export const navigationContext: NavigationContext = {
 		const router = useRouter();
 		return () => router.history.back();
 	},
+	useParams: (key) => useParams({ from: key }),
 	usePathname: () => useRouterState().location.pathname,
-	useSearchParams: <K extends RouteKey>(key: K) => {
+	useSearchParams: <K extends RouteId>(key: K) => {
 		const router = useRouter();
-		return router.routesByPath[key].useSearch();
+		const keyWithSlash = key.endsWith("/") ? key : (`${key}/` as K);
+		const keyWithoutSlash = key.endsWith("/") ? (key.slice(0, -1) as K) : key;
+		const route =
+			// There's inconsistency with generated types in Tanstack Router, this is an attempt to fix that
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			router.routesById[keyWithSlash] || router.routesById[keyWithoutSlash];
+		return route.useSearch();
 	},
-	useUpdateSearchParam: <K extends RouteKey>() => {
+	useUpdateSearchParam: <K extends RouteId>() => {
 		const navigate = useRawNavigate();
 		return React.useCallback(
 			(param) =>

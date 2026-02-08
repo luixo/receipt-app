@@ -12,10 +12,10 @@ import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: React.FC<{
-	sortState: SearchParamState<"/receipts", "sort">;
-	filtersState: SearchParamState<"/receipts", "filters">;
-	limitState: SearchParamState<"/receipts", "limit">;
-	offsetState: SearchParamState<"/receipts", "offset">;
+	sortState: SearchParamState<"/_protected/receipts/", "sort">;
+	filtersState: SearchParamState<"/_protected/receipts/", "filters">;
+	limitState: SearchParamState<"/_protected/receipts/", "limit">;
+	offsetState: SearchParamState<"/_protected/receipts/", "offset">;
 }> = ({ sortState, filtersState, limitState, offsetState }) => {
 	const { t } = useTranslation("receipts");
 	return (

@@ -374,8 +374,8 @@ const DebtsListForm = suspendedFallback<{
 );
 
 export const DebtsTransferScreen: React.FC<{
-	fromIdState: SearchParamState<"/debts/transfer", "from">;
-	toIdState: SearchParamState<"/debts/transfer", "to">;
+	fromIdState: SearchParamState<"/_protected/debts/transfer", "from">;
+	toIdState: SearchParamState<"/_protected/debts/transfer", "to">;
 }> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
 	const { t } = useTranslation("debts");
 	const onFromClick = React.useCallback(

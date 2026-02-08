@@ -5,11 +5,16 @@ import {
 	defaultStringifySearch,
 } from "@tanstack/react-router";
 import { openURL } from "expo-linking";
-import { useLocalSearchParams, usePathname, useRouter } from "expo-router";
+import {
+	useLocalSearchParams,
+	usePathname,
+	useRouter,
+	useSegments,
+} from "expo-router";
 import { fromEntries, mapValues } from "remeda";
 
 import type { NavigationContext } from "~app/contexts/navigation-context";
-import type { OutputRouteSearchParams, RouteKey } from "~app/utils/navigation";
+import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
 import { searchParamsMapping } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
 
@@ -21,7 +26,7 @@ const webToNative = (pathname: string) =>
 	pathname.replaceAll(/\$([A-Za-z_$][\w$]*)/g, "[$1]");
 
 const deserializeSearchParams = (
-	key: RouteKey,
+	key: RouteId,
 	searchParams: Partial<SearchParams>,
 ) => {
 	const mappedSearchParams = defaultParseSearch(
@@ -81,6 +86,14 @@ export const navigationContext: NavigationContext = {
 	usePathname: () => {
 		const pathname = usePathname();
 		return nativeToWeb(pathname);
+	},
+	useParams: () => {
+		const params = useLocalSearchParams();
+		const segments = useSegments();
+		const segmentKeys = segments
+			.filter((segment) => segment.startsWith("[") && segment.endsWith("]"))
+			.map((segment) => segment.slice(1, -1));
+		return fromEntries(segmentKeys.map((key) => [key, params[key]]));
 	},
 	useSearchParams: (key) => {
 		const searchParams = useLocalSearchParams();

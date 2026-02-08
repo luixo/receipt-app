@@ -12,8 +12,8 @@ import { Select } from "~components/select";
 import { Text } from "~components/text";
 
 type Props = {
-	sortState: SearchParamState<"/receipts", "sort">;
-	filtersState: SearchParamState<"/receipts", "filters">;
+	sortState: SearchParamState<"/_protected/receipts/", "sort">;
+	filtersState: SearchParamState<"/_protected/receipts/", "filters">;
 };
 
 export const FilterButton: React.FC<Props> = ({

@@ -30,8 +30,8 @@ const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 );
 
 type Props = {
-	limitState: SearchParamState<"/debts", "limit">;
-	offsetState: SearchParamState<"/debts", "offset">;
+	limitState: SearchParamState<"/_protected/debts/", "limit">;
+	offsetState: SearchParamState<"/_protected/debts/", "offset">;
 };
 
 export const Debts = suspendedFallback<Props>(

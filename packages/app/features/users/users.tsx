@@ -44,8 +44,8 @@ const UserPreview = suspendedFallback<{
 );
 
 type Props = {
-	limitState: SearchParamStateDefaulted<"/users", "limit", number>;
-	offsetState: SearchParamState<"/users", "offset">;
+	limitState: SearchParamStateDefaulted<"/_protected/users/", "limit", number>;
+	offsetState: SearchParamState<"/_protected/users/", "offset">;
 };
 
 export const Users: React.FC<Props> = suspendedFallback(

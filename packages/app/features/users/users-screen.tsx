@@ -16,8 +16,8 @@ import { ButtonLink } from "~components/link";
 import { Users } from "./users";
 
 export const UsersScreen: React.FC<{
-	limitState: SearchParamStateDefaulted<"/users", "limit", number>;
-	offsetState: SearchParamState<"/users", "offset">;
+	limitState: SearchParamStateDefaulted<"/_protected/users/", "limit", number>;
+	offsetState: SearchParamState<"/_protected/users/", "offset">;
 }> = ({ limitState, offsetState }) => {
 	const { t } = useTranslation("users");
 	return (

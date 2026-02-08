@@ -14,8 +14,8 @@ import { Debts } from "./debts";
 import { DebtsAggregated } from "./debts-aggregated";
 
 export const DebtsScreen: React.FC<{
-	limitState: SearchParamState<"/debts", "limit">;
-	offsetState: SearchParamState<"/debts", "offset">;
+	limitState: SearchParamState<"/_protected/debts/", "limit">;
+	offsetState: SearchParamState<"/_protected/debts/", "offset">;
 }> = ({ limitState, offsetState }) => {
 	const { t } = useTranslation("debts");
 	return (

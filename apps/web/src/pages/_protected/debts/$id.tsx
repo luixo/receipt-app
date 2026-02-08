@@ -1,12 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtScreen } from "~app/features/debt/debt-screen";
+import { getPathHooks } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const Wrapper = () => {
-	const { id } = Route.useParams();
-	return <DebtScreen id={id} />;
+	const { useParams } = getPathHooks("/_protected/debts/$id");
+	return <DebtScreen id={useParams().id} />;
 };
 
 export const Route = createFileRoute("/_protected/debts/$id")({

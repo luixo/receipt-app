@@ -44,7 +44,10 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 
 export const DebtsExchangeAllScreen: React.FC<{
 	userId: UserId;
-	fromState: SearchParamState<"/debts/user/$id/exchange/all", "from">;
+	fromState: SearchParamState<
+		"/_protected/debts/user/$id/exchange/all",
+		"from"
+	>;
 }> = ({ userId, fromState }) => {
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = fromState;
 	const [
