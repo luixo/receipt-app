@@ -22,8 +22,9 @@ const input = tv({
 		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
 		wrapper: "bg-field border-field justify-center rounded-2xl border-2 px-3",
 		innerWrapper: "flex-row items-center justify-center",
-		sideContent: "flex-row items-start justify-center gap-2",
+		sideContent: "max-h-6 flex-row items-center justify-center gap-2",
 		label: "text-normal",
+		description: "",
 	},
 	variants: {
 		variant: {
@@ -50,6 +51,7 @@ const input = tv({
 		isInvalid: {
 			true: {
 				wrapper: "border-danger",
+				errorMessage: "text-warning",
 			},
 			false: {},
 		},
@@ -77,18 +79,21 @@ const input = tv({
 					"bg-primary-100 border-primary-100 active:bg-primary-50 focus:bg-primary-50",
 				input: "text-primary placeholder:text-primary",
 				label: "text-primary",
+				description: "text-primary",
 			},
 			secondary: {
 				wrapper:
 					"bg-secondary-100 border-secondary-100 active:bg-secondary-50 focus:bg-secondary-50",
 				input: "text-secondary placeholder:text-secondary",
 				label: "text-secondary",
+				description: "text-secondary",
 			},
 			success: {
 				wrapper: "bg-success-100 border-success-100",
 				input:
 					"text-success-600 dark:text-success placeholder:text-success-600 dark:placeholder:text-success",
 				label: "text-success-600 dark:text-success",
+				description: "text-success-600 dark:text-success",
 			},
 			warning: {
 				wrapper:
@@ -96,6 +101,7 @@ const input = tv({
 				input:
 					"text-warning-600 dark:text-warning placeholder:text-warning-600 dark:placeholder:text-warning",
 				label: "text-warning-600 dark:text-warning",
+				description: "text-warning-600 dark:text-warning",
 			},
 			danger: {
 				wrapper:
@@ -103,6 +109,7 @@ const input = tv({
 				input:
 					"text-danger dark:text-danger-500 placeholder:text-danger dark:placeholder:text-danger-500",
 				label: "text-danger dark:text-danger-500",
+				description: "text-danger dark:text-danger-500",
 			},
 		},
 		multiline: {
@@ -252,6 +259,7 @@ const keyboardTypeMapping: Partial<
 	email: {
 		keyboardType: "email-address",
 		autoComplete: "email",
+		autoCapitalize: "none",
 	},
 	tel: {
 		keyboardType: "phone-pad",
@@ -399,7 +407,7 @@ const InnerInput = ({
 					</View>
 					{description ? (
 						<TextField.Description>
-							<Text>{description}</Text>
+							<Text className={slots.description()}>{description}</Text>
 						</TextField.Description>
 					) : null}
 					{errorMessage ? (
