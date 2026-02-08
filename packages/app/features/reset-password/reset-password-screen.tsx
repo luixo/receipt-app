@@ -11,6 +11,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -139,9 +140,9 @@ const ResetPassword: React.FC<Props> = ({ token }) => {
 	);
 };
 
-export const ResetPasswordScreen: React.FC<{
-	token: string;
-}> = ({ token }) => {
+export const ResetPasswordScreen = () => {
+	const { useQueryState } = getPathHooks("/_public/reset-password");
+	const [token] = useQueryState("token");
 	const { t } = useTranslation("reset-password");
 	return (
 		<>

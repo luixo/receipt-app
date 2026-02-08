@@ -24,7 +24,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
-import type { SearchParamState } from "~app/utils/navigation";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
@@ -373,10 +373,10 @@ const DebtsListForm = suspendedFallback<{
 	},
 );
 
-export const DebtsTransferScreen: React.FC<{
-	fromIdState: SearchParamState<"/_protected/debts/transfer", "from">;
-	toIdState: SearchParamState<"/_protected/debts/transfer", "to">;
-}> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
+export const DebtsTransferScreen = () => {
+	const { useQueryState } = getPathHooks("/_protected/debts/transfer");
+	const [fromId, setFromId] = useQueryState("from");
+	const [toId, setToId] = useQueryState("to");
 	const { t } = useTranslation("debts");
 	const onFromClick = React.useCallback(
 		(userId: UserId) => {

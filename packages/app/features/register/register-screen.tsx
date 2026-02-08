@@ -26,7 +26,7 @@ const formSchema = z.object({
 });
 type Form = z.infer<typeof formSchema>;
 
-export const RegisterScreen: React.FC = () => {
+export const RegisterScreen = () => {
 	const { t } = useTranslation("register");
 	const trpc = useTRPC();
 	const { useNavigate } = React.use(NavigationContext);

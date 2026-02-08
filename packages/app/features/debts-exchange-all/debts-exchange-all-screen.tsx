@@ -15,7 +15,7 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { SearchParamState } from "~app/utils/navigation";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { Divider } from "~components/divider";
@@ -42,13 +42,12 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 	<DebtsGroupSkeleton amount={3} />,
 );
 
-export const DebtsExchangeAllScreen: React.FC<{
-	userId: UserId;
-	fromState: SearchParamState<
+export const DebtsExchangeAllScreen = () => {
+	const { useParams, useQueryState } = getPathHooks(
 		"/_protected/debts/user/$id/exchange/all",
-		"from"
-	>;
-}> = ({ userId, fromState }) => {
+	);
+	const { id: userId } = useParams();
+	const fromState = useQueryState("from");
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = fromState;
 	const [
 		modalOpen,

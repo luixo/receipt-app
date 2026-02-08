@@ -1,17 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsExchangeScreen } from "~app/features/debts-exchange/debts-exchange-screen";
-import { getPathHooks } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const Wrapper = () => {
-	const { useParams } = getPathHooks("/_protected/debts/user/$id/exchange/");
-	return <DebtsExchangeScreen userId={useParams().id} />;
-};
-
 export const Route = createFileRoute("/_protected/debts/user/$id/exchange/")({
-	component: Wrapper,
+	component: DebtsExchangeScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
 		const trpc = getLoaderTrpcClient(ctx.context);

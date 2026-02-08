@@ -118,7 +118,7 @@ const ChangePasswordForm: React.FC = () => {
 	);
 };
 
-export const ChangePasswordScreen: React.FC = () => {
+export const ChangePasswordScreen = () => {
 	const { t } = useTranslation("account");
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();

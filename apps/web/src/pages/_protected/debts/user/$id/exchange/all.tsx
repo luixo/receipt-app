@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsExchangeAllScreen } from "~app/features/debts-exchange-all/debts-exchange-all-screen";
-import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -10,21 +10,9 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/debts/user/$id/exchange/all"],
 );
 
-const Wrapper = () => {
-	const { useQueryState, useParams } = getPathHooks(
-		"/_protected/debts/user/$id/exchange/all",
-	);
-	return (
-		<DebtsExchangeAllScreen
-			userId={useParams().id}
-			fromState={useQueryState("from")}
-		/>
-	);
-};
-
 export const Route = createFileRoute("/_protected/debts/user/$id/exchange/all")(
 	{
-		component: Wrapper,
+		component: DebtsExchangeAllScreen,
 		validateSearch,
 		search: { middlewares: [stripDefaults] },
 		loaderDeps: ({ search: { from } }) => ({ from }),

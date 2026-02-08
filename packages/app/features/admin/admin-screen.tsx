@@ -165,7 +165,7 @@ const AdminScreenInner = suspendedFallback(
 	</View>,
 );
 
-export const AdminScreen: React.FC = () => {
+export const AdminScreen = () => {
 	const { t } = useTranslation("admin");
 	return (
 		<>

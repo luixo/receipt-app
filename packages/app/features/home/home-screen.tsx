@@ -4,7 +4,7 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 
-export const HomeScreen: React.FC = () => {
+export const HomeScreen = () => {
 	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
 	React.useEffect(() => {

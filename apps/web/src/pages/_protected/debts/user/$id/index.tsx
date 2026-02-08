@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserDebtsScreen } from "~app/features/user-debts/user-debts-screen";
-import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { withDefaultLimit } from "~app/utils/store/limit";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { getTitle } from "~web/utils/i18n";
@@ -14,21 +13,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/debts"],
 );
 
-const Wrapper = () => {
-	const { useQueryState, useDefaultedQueryState, useParams } = getPathHooks(
-		"/_protected/debts/user/$id/",
-	);
-	return (
-		<UserDebtsScreen
-			userId={useParams().id}
-			limitState={useDefaultedQueryState("limit", useDefaultLimit())}
-			offsetState={useQueryState("offset")}
-		/>
-	);
-};
-
 export const Route = createFileRoute("/_protected/debts/user/$id/")({
-	component: Wrapper,
+	component: UserDebtsScreen,
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { offset, limit } }) => ({

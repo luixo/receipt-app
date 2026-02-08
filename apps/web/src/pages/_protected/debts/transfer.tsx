@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsTransferScreen } from "~app/features/debts-transfer/debts-transfer-screen";
-import { getPathHooks, searchParamsMapping } from "~app/utils/navigation";
+import { searchParamsMapping } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -10,18 +10,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/debts/transfer"],
 );
 
-const Wrapper = () => {
-	const { useQueryState } = getPathHooks("/_protected/debts/transfer");
-	return (
-		<DebtsTransferScreen
-			fromIdState={useQueryState("from")}
-			toIdState={useQueryState("to")}
-		/>
-	);
-};
-
 export const Route = createFileRoute("/_protected/debts/transfer")({
-	component: Wrapper,
+	component: DebtsTransferScreen,
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	loaderDeps: ({ search: { to, from } }) => ({ to, from }),

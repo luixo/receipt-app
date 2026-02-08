@@ -86,7 +86,7 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 	</View>,
 );
 
-export const ConnectionIntentionsScreen: React.FC = () => {
+export const ConnectionIntentionsScreen = () => {
 	const { t } = useTranslation("users");
 	return (
 		<>

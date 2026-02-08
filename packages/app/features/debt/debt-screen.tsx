@@ -29,6 +29,7 @@ import {
 	getCurrencySymbol,
 } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import {
 	debtAmountSchema,
@@ -486,9 +487,9 @@ const DebtUser = suspendedFallback<{ debtId: DebtId }>(
 	<SkeletonUser className="self-start" />,
 );
 
-export const DebtScreen: React.FC<{
-	id: DebtId;
-}> = ({ id }) => {
+export const DebtScreen = () => {
+	const { useParams } = getPathHooks("/_protected/debts/$id");
+	const { id } = useParams();
 	const [removing, setRemoving] = React.useState(false);
 
 	return (

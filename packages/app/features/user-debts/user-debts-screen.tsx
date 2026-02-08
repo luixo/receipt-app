@@ -14,7 +14,9 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
@@ -126,15 +128,22 @@ const UserDebtsGroup = suspendedFallback<{
 	</View>,
 );
 
-export const UserDebtsScreen: React.FC<
-	{ userId: UserId } & Pick<
-		React.ComponentProps<typeof UserDebtsList>,
-		"offsetState" | "limitState"
-	>
-> = ({ userId, limitState, ...props }) => (
-	<>
-		<Header userId={userId} />
-		<UserDebtsGroup userId={userId} />
-		<UserDebtsList userId={userId} limitState={limitState} {...props} />
-	</>
-);
+export const UserDebtsScreen = () => {
+	const { useParams, useQueryState, useDefaultedQueryState } = getPathHooks(
+		"/_protected/debts/user/$id/",
+	);
+	const { id: userId } = useParams();
+	const limitState = useDefaultedQueryState("limit", useDefaultLimit());
+	const offsetState = useQueryState("offset");
+	return (
+		<>
+			<Header userId={userId} />
+			<UserDebtsGroup userId={userId} />
+			<UserDebtsList
+				userId={userId}
+				limitState={limitState}
+				offsetState={offsetState}
+			/>
+		</>
+	);
+};

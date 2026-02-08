@@ -8,7 +8,7 @@ import { BackLink } from "~components/back-link";
 
 import { AddReceipt } from "./add-receipt";
 
-export const AddReceiptScreen: React.FC = () => {
+export const AddReceiptScreen = () => {
 	const { t } = useTranslation("receipts");
 
 	return (

@@ -10,7 +10,7 @@ import { BackLink } from "~components/back-link";
 
 import { AddUserForm } from "./add-user-form";
 
-export const AddUserScreen: React.FC = () => {
+export const AddUserScreen = () => {
 	const { t } = useTranslation("users");
 	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();

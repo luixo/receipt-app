@@ -1,12 +1,14 @@
 import React from "react";
 
 import { NavigationContext } from "~app/contexts/navigation-context";
-import type { UserId } from "~db/ids";
+import { getPathHooks } from "~app/utils/navigation";
 
 import { User } from "./user";
 
-export const UserScreen: React.FC<{ id: UserId }> = ({ id }) => {
+export const UserScreen = () => {
 	const { useNavigate } = React.use(NavigationContext);
+	const { useParams } = getPathHooks("/_protected/users/$id");
+	const { id } = useParams();
 	const navigate = useNavigate();
 
 	const onUserRemove = React.useCallback(() => {

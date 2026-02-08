@@ -20,12 +20,11 @@ import { ResetPasswordModal } from "./reset-password-modal";
 const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
-export const LoginScreen: React.FC<{ redirectUrl: string }> = ({
-	redirectUrl,
-}) => {
+export const LoginScreen = () => {
+	const { usePush, useSearchParams } = React.use(NavigationContext);
+	const { redirect: redirectUrl = "/" } = useSearchParams("__root__");
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
-	const { usePush } = React.use(NavigationContext);
 	const push = usePush();
 	const queryClient = useQueryClient();
 

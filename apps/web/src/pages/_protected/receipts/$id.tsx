@@ -1,17 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Receipt } from "~app/features/receipt/receipt";
-import { getPathHooks } from "~app/utils/navigation";
+import { ReceiptScreen } from "~app/features/receipt/receipt-screen";
 import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const Wrapper = () => {
-	const { useParams } = getPathHooks("/_protected/receipts/$id");
-	return <Receipt id={useParams().id} />;
-};
-
 export const Route = createFileRoute("/_protected/receipts/$id")({
-	component: Wrapper,
+	component: ReceiptScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("receipts");
 		const trpc = getLoaderTrpcClient(ctx.context);

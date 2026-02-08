@@ -99,7 +99,7 @@ const AccountHeader: React.FC = suspendedFallback(
 	<SkeletonPageHeader startContent={<Icon name="user" className="size-9" />} />,
 );
 
-export const AccountScreen: React.FC = () => {
+export const AccountScreen = () => {
 	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const { useNavigate } = React.use(NavigationContext);

@@ -6,19 +6,18 @@ import { AmountBadge } from "~app/components/amount-badge";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
-import type {
-	SearchParamState,
-	SearchParamStateDefaulted,
-} from "~app/utils/navigation";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
+import { getPathHooks } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { Users } from "./users";
 
-export const UsersScreen: React.FC<{
-	limitState: SearchParamStateDefaulted<"/_protected/users/", "limit", number>;
-	offsetState: SearchParamState<"/_protected/users/", "offset">;
-}> = ({ limitState, offsetState }) => {
+export const UsersScreen = () => {
+	const { useQueryState, useDefaultedQueryState } =
+		getPathHooks("/_protected/users/");
+	const limitState = useDefaultedQueryState("limit", useDefaultLimit());
+	const offsetState = useQueryState("offset");
 	const { t } = useTranslation("users");
 	return (
 		<>

@@ -9,13 +9,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/void-account"],
 );
 
-const Wrapper = () => {
-	const { token } = Route.useSearch();
-	return <VoidAccountScreen token={token} />;
-};
-
 export const Route = createFileRoute("/_public/void-account")({
-	component: Wrapper,
+	component: VoidAccountScreen,
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	loader: async (ctx) => {

@@ -6,18 +6,20 @@ import { AmountBadge } from "~app/components/amount-badge";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import type { SearchParamState } from "~app/utils/navigation";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
+import { getPathHooks } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { Debts } from "./debts";
 import { DebtsAggregated } from "./debts-aggregated";
 
-export const DebtsScreen: React.FC<{
-	limitState: SearchParamState<"/_protected/debts/", "limit">;
-	offsetState: SearchParamState<"/_protected/debts/", "offset">;
-}> = ({ limitState, offsetState }) => {
+export const DebtsScreen = () => {
 	const { t } = useTranslation("debts");
+	const { useQueryState, useDefaultedQueryState } =
+		getPathHooks("/_protected/debts/");
+	const limitState = useDefaultedQueryState("limit", useDefaultLimit());
+	const offsetState = useQueryState("offset");
 	return (
 		<>
 			<PageHeader

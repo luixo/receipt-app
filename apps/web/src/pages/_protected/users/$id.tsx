@@ -1,17 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserScreen } from "~app/features/user/user-screen";
-import { getPathHooks } from "~app/utils/navigation";
 import { getTitle } from "~web/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
-const Wrapper = () => {
-	const { useParams } = getPathHooks("/_protected/users/$id");
-	return <UserScreen id={useParams().id} />;
-};
-
 export const Route = createFileRoute("/_protected/users/$id")({
-	component: Wrapper,
+	component: UserScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("users");
 		const trpc = getLoaderTrpcClient(ctx.context);

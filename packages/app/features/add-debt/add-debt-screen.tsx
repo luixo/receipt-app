@@ -16,7 +16,7 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
-import type { SearchParamState } from "~app/utils/navigation";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
@@ -42,9 +42,9 @@ const formSchema = z.object({
 
 type Form = z.infer<typeof formSchema>;
 
-export const AddDebtScreen: React.FC<{
-	userIdState: SearchParamState<"/_protected/debts/add", "userId">;
-}> = ({ userIdState: [userId, setUserId] }) => {
+export const AddDebtScreen = () => {
+	const { useQueryState } = getPathHooks("/_protected/debts/add");
+	const [userId, setUserId] = useQueryState("userId");
 	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const { useNavigate } = React.use(NavigationContext);

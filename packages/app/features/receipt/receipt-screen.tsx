@@ -19,6 +19,7 @@ import {
 	ReceiptParticipantsPreviewSkeleton,
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { Icon } from "~components/icons";
@@ -26,7 +27,6 @@ import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { View } from "~components/view";
-import type { ReceiptId } from "~db/ids";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";
@@ -52,8 +52,10 @@ const Header: React.FC<HeaderProps> = ({ startContent, ...props }) => (
 	/>
 );
 
-export const Receipt = suspendedFallback<{ id: ReceiptId }>(
-	({ id }) => {
+export const ReceiptScreen = suspendedFallback(
+	() => {
+		const { useParams } = getPathHooks("/_protected/receipts/$id");
+		const { id } = useParams();
 		const trpc = useTRPC();
 		const { data: receipt } = useSuspenseQuery(
 			trpc.receipts.get.queryOptions({ id }),

@@ -10,13 +10,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/reset-password"],
 );
 
-const Wrapper = () => {
-	const { token } = Route.useSearch();
-	return <ResetPasswordScreen token={token} />;
-};
-
 export const Route = createFileRoute("/_public/reset-password")({
-	component: Wrapper,
+	component: ResetPasswordScreen,
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	loaderDeps: (opts) => ({ token: opts.search.token }),

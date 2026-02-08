@@ -4,19 +4,22 @@ import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import type { SearchParamState } from "~app/utils/navigation";
+import { useDefaultLimit } from "~app/hooks/use-default-limit";
+import { getPathHooks } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";
 
-export const ReceiptsScreen: React.FC<{
-	sortState: SearchParamState<"/_protected/receipts/", "sort">;
-	filtersState: SearchParamState<"/_protected/receipts/", "filters">;
-	limitState: SearchParamState<"/_protected/receipts/", "limit">;
-	offsetState: SearchParamState<"/_protected/receipts/", "offset">;
-}> = ({ sortState, filtersState, limitState, offsetState }) => {
+export const ReceiptsScreen = () => {
+	const { useQueryState, useDefaultedQueryState } = getPathHooks(
+		"/_protected/receipts/",
+	);
+	const sortState = useQueryState("sort");
+	const filtersState = useQueryState("filters");
+	const limitState = useDefaultedQueryState("limit", useDefaultLimit());
+	const offsetState = useQueryState("offset");
 	const { t } = useTranslation("receipts");
 	return (
 		<>

@@ -8,6 +8,7 @@ import { ErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationResult } from "~app/trpc";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { ButtonLink } from "~components/link";
 import { Spinner } from "~components/spinner";
@@ -47,9 +48,9 @@ export const ConfirmEmail: React.FC<{
 	}
 };
 
-export const ConfirmEmailScreen: React.FC<{
-	token?: string;
-}> = ({ token }) => {
+export const ConfirmEmailScreen = () => {
+	const { useQueryState } = getPathHooks("/_public/confirm-email");
+	const [token] = useQueryState("token");
 	const { t } = useTranslation("register");
 	const trpc = useTRPC();
 	const confirmEmailMutation = useMutation(

@@ -7,7 +7,7 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 
 import { DebtIntentions } from "./debts-intentions";
 
-export const DebtsIntentionsScreen: React.FC = () => {
+export const DebtsIntentionsScreen = () => {
 	const { t } = useTranslation("debts");
 	return (
 		<>

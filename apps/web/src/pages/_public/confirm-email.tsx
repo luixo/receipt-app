@@ -9,13 +9,8 @@ const [validateSearch, stripDefaults] = searchParamsWithDefaults(
 	searchParamsMapping["/confirm-email"],
 );
 
-const Wrapper = () => {
-	const { token } = Route.useSearch();
-	return <ConfirmEmailScreen token={token} />;
-};
-
 export const Route = createFileRoute("/_public/confirm-email")({
-	component: Wrapper,
+	component: ConfirmEmailScreen,
 	validateSearch,
 	search: { middlewares: [stripDefaults] },
 	head: ({ match }) => ({

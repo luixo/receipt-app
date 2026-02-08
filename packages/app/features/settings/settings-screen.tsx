@@ -16,7 +16,7 @@ import { ManualAcceptDebtsOption } from "./manual-accept-debts-option";
 import { RefreshSettings } from "./refresh-settings";
 import { ShowResolvedDebtsOption } from "./show-resolved-debts-option";
 
-export const SettingsScreen: React.FC = () => {
+export const SettingsScreen = () => {
 	const { t } = useTranslation("settings");
 	const {
 		[LIMIT_STORE_NAME]: [defaultLimit, onLimitChange],

@@ -1,5 +1,3 @@
-import type React from "react";
-
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
@@ -11,6 +9,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { ButtonLink } from "~components/link";
@@ -36,9 +35,9 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 	<DebtsGroupSkeleton amount={3} />,
 );
 
-export const DebtsExchangeScreen: React.FC<{ userId: UserId }> = ({
-	userId,
-}) => {
+export const DebtsExchangeScreen = () => {
+	const { useParams } = getPathHooks("/_protected/debts/user/$id/exchange/");
+	const { id: userId } = useParams();
 	const { t } = useTranslation("debts");
 	return (
 		<>
