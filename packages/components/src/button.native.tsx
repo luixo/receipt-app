@@ -95,7 +95,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		className: rawClassName,
 		// We forcefully want to ignore size properties of a web heroui button
 		size: "undefined" as unknown as undefined,
-		isIconOnly: false,
+		isIconOnly: !children,
 	})
 		.split(" ")
 		.filter((element) => !baseButtonClasses.includes(element))
@@ -134,7 +134,8 @@ export const Button: React.FC<ButtonProps> = (props) => {
 			<TextWrapper className={className}>
 				{startContent}
 				{isLoading ? spinner : null}
-				{isLoading && isIconOnly ? null : typeof children === "string" ||
+				{isIconOnly && (isLoading || !children) ? null : typeof children ===
+						"string" ||
 				  React.Children.toArray(children).every(
 						(child) => typeof child === "string",
 				  ) ? (

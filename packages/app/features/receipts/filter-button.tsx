@@ -70,8 +70,11 @@ export const FilterButton: React.FC<Props> = ({
 				onOpenChange={switchFilterModal}
 				bodyClassName="items-center"
 			>
-				<Button variant="light" onPress={sortSelectOnPress}>
-					<Icon name={sortIconName} className="size-6" />
+				<Button
+					variant="light"
+					onPress={sortSelectOnPress}
+					startContent={<Icon name={sortIconName} className="size-6" />}
+				>
 					{sort === "date-desc"
 						? t("list.sorting.newestFirst")
 						: t("list.sorting.oldestFirst")}

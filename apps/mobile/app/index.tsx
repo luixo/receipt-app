@@ -419,7 +419,7 @@ const Wrapper = () => {
 						)
 					}
 				>
-					Set color mode to {selectedColorMode === "dark" ? "light" : "dark"}
+					{`Set color mode to ${selectedColorMode === "dark" ? "light" : "dark"}`}
 				</Button>
 				{(["bordered", "flat"] as const).map((variant) =>
 					(
@@ -490,7 +490,7 @@ const Wrapper = () => {
 							] as const
 						).map((color) => (
 							<Button key={variant + color} variant={variant} color={color}>
-								{variant}/{color}
+								{`${variant}/${color}`}
 							</Button>
 						)),
 					)}

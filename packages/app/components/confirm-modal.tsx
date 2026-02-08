@@ -14,8 +14,8 @@ type Props = {
 	title: string;
 	subtitle?: React.ReactNode;
 	confirmText: string;
-	yesText?: React.ReactNode;
-	noText?: React.ReactNode;
+	yesText?: string;
+	noText?: string;
 	children: (controls: { openModal: () => void }) => React.ReactNode;
 };
 

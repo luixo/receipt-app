@@ -65,7 +65,8 @@ export const Select = <T extends object, K extends string>({
 				<Button className="justify-between" isDisabled={isDisabled}>
 					{selectedMatches.length === 0 ? (
 						<Text className="truncate opacity-50">{placeholder}</Text>
-					) : typeof renderedValue === "string" ? (
+					) : typeof renderedValue === "string" ||
+					  typeof renderedValue === "number" ? (
 						<Text className="truncate">{renderedValue}</Text>
 					) : (
 						renderedValue

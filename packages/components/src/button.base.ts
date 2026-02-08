@@ -3,7 +3,8 @@ import type {
 	ButtonProps as RawButtonProps,
 } from "@heroui/react";
 
-import type { Props as ViewProps } from "./view";
+import type { MaybeText } from "./text.web";
+import type { Props as ViewProps, ViewReactNode } from "./view";
 
 export type ButtonProps = Pick<
 	RawButtonProps,
@@ -15,7 +16,6 @@ export type ButtonProps = Pick<
 	| "isDisabled"
 	| "isIconOnly"
 	| "className"
-	| "children"
 	| "isLoading"
 	| "startContent"
 	| "endContent"
@@ -24,7 +24,9 @@ export type ButtonProps = Pick<
 	| "type"
 	| "form"
 > &
-	Pick<ViewProps, "onPress" | "testID">;
+	Pick<ViewProps, "onPress" | "testID"> & {
+		children?: MaybeText | ViewReactNode;
+	};
 
 export type ButtonGroupProps = Pick<
 	RawButtonGroupProps,

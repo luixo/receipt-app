@@ -3,6 +3,9 @@ import type React from "react";
 import { SelectItem, Select as SelectRaw } from "@heroui/select";
 import { isNonNullish } from "remeda";
 
+import type { MaybeText } from "./text.web";
+import type { ViewReactNode } from "./view.web";
+
 export type Props<T extends object, K extends string> = {
 	label?: string;
 	placeholder: string;
@@ -10,7 +13,7 @@ export type Props<T extends object, K extends string> = {
 	items: T[];
 	selectedKeys?: K[];
 	disabledKeys?: K[];
-	renderValue: (selectedValues: T[]) => React.ReactNode;
+	renderValue: (selectedValues: T[]) => MaybeText | ViewReactNode;
 	onSelectionChange: (selectedKeys: K[]) => void;
 	className?: string;
 	isDisabled?: boolean;

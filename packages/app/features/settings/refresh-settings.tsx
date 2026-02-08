@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
+import { Text } from "~components/text";
 
 export const RefreshSettings: React.FC = () => {
 	const { t } = useTranslation("settings");
@@ -16,7 +17,7 @@ export const RefreshSettings: React.FC = () => {
 	return (
 		<Button color="primary" onPress={refetch}>
 			<Icon name="refresh" />
-			{t("refresh.header")}
+			<Text>{t("refresh.header")}</Text>
 		</Button>
 	);
 };

@@ -9,8 +9,12 @@ import { Icon } from "~components/icons";
 export const SkeletonRemoveButton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
-	<Button color="danger" {...props}>
-		<Icon className="size-6" name="trash" />
+	<Button
+		color="danger"
+		{...props}
+		startContent={<Icon className="size-6" name="trash" />}
+		isIconOnly={!children}
+	>
 		{children}
 	</Button>
 );
@@ -18,10 +22,10 @@ export const SkeletonRemoveButton: React.FC<
 type Props = {
 	mutation: { isPending: boolean };
 	onRemove: () => void;
-	children?: React.ReactNode;
+	children?: string;
 	subtitle?: string;
 	noConfirm?: boolean;
-} & Omit<React.ComponentProps<typeof Button>, "onClick" | "color">;
+} & Omit<React.ComponentProps<typeof Button>, "onClick" | "color" | "children">;
 
 export const RemoveButton: React.FC<Props> = ({
 	mutation,
@@ -47,8 +51,10 @@ export const RemoveButton: React.FC<Props> = ({
 					{...props}
 					isDisabled={props.isDisabled || mutation.isPending}
 					isLoading={props.isLoading || mutation.isPending}
+					startContent={
+						mutation.isPending ? null : <Icon className="size-6" name="trash" />
+					}
 				>
-					{mutation.isPending ? null : <Icon className="size-6" name="trash" />}
 					{children}
 				</Button>
 			)}
@@ -59,8 +65,12 @@ export const RemoveButton: React.FC<Props> = ({
 export const RemoveButtonSkeleton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
-	<Button color="danger" {...props} isDisabled>
-		<Icon name="trash" className="size-6" />
+	<Button
+		color="danger"
+		{...props}
+		isDisabled
+		startContent={<Icon name="trash" className="size-6" />}
+	>
 		{children}
 	</Button>
 );
