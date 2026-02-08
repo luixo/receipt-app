@@ -13,7 +13,7 @@ export const Form: React.FC<Props> = ({
 	id,
 	children,
 }) => {
-	const onSubmit = React.useCallback<React.FormEventHandler<HTMLFormElement>>(
+	const onSubmit = React.useCallback<React.SubmitEventHandler<HTMLFormElement>>(
 		(e) => {
 			e.preventDefault();
 			onSubmitRaw?.();
