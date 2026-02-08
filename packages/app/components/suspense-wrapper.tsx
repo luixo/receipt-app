@@ -4,7 +4,10 @@ import {
 	QueryErrorResetBoundary,
 	useQueryErrorResetBoundary,
 } from "@tanstack/react-query";
-import type { ErrorRouteComponent } from "@tanstack/react-router";
+import type {
+	ErrorComponentProps,
+	ErrorRouteComponent,
+} from "@tanstack/react-router";
 import { CatchBoundary } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -34,8 +37,11 @@ export const ErrorComponent: ErrorRouteComponent = ({
 };
 
 export const SuspenseWrapper: React.FC<
-	React.PropsWithChildren<{ fallback: React.ReactNode }>
-> = ({ children, fallback }) => {
+	React.PropsWithChildren<{
+		fallback: React.ReactNode;
+		errorComponent?: ErrorComponent;
+	}>
+> = ({ children, fallback, errorComponent }) => {
 	const { captureError } = React.use(LinksContext);
 	return (
 		<React.Suspense fallback={fallback}>
@@ -47,7 +53,7 @@ export const SuspenseWrapper: React.FC<
 						// eslint-disable-next-line no-console
 						console.error(error);
 					}}
-					errorComponent={ErrorComponent}
+					errorComponent={errorComponent || ErrorComponent}
 				>
 					{children}
 				</CatchBoundary>
@@ -56,16 +62,20 @@ export const SuspenseWrapper: React.FC<
 	);
 };
 
+type ErrorComponent = (props: ErrorComponentProps) => React.ReactNode;
+
 export const suspendedFallback =
 	<P extends object = Record<string, never>>(
 		Component: React.ComponentType<P>,
 		Fallback: React.ReactNode | React.FC<P>,
+		errorComponent?: ErrorComponent,
 	): React.FC<P> =>
 	(props) => (
 		<SuspenseWrapper
 			fallback={
 				typeof Fallback === "function" ? <Fallback {...props} /> : Fallback
 			}
+			errorComponent={errorComponent}
 		>
 			<Component {...props} />
 		</SuspenseWrapper>

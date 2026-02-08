@@ -11,13 +11,13 @@
 import { createServerRootRoute } from '@tanstack/react-start/server'
 
 import { Route as rootRouteImport } from './../pages/__root'
-import { Route as PlaygroundRouteImport } from './../pages/playground'
 import { Route as PublicRouteImport } from './../pages/_public'
 import { Route as ProtectedRouteImport } from './../pages/_protected'
 import { Route as IndexRouteImport } from './../pages/index'
 import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
 import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
 import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
+import { Route as PublicPlaygroundRouteImport } from './../pages/_public/playground'
 import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
@@ -46,11 +46,6 @@ import { ServerRoute as ApiTrpcSplatServerRouteImport } from './../pages/api/trp
 
 const rootServerRouteImport = createServerRootRoute()
 
-const PlaygroundRoute = PlaygroundRouteImport.update({
-  id: '/playground',
-  path: '/playground',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
   getParentRoute: () => rootRouteImport,
@@ -77,6 +72,11 @@ const PublicResetPasswordRoute = PublicResetPasswordRouteImport.update({
 const PublicRegisterRoute = PublicRegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => PublicRoute,
+} as any)
+const PublicPlaygroundRoute = PublicPlaygroundRouteImport.update({
+  id: '/playground',
+  path: '/playground',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicLoginRoute = PublicLoginRouteImport.update({
@@ -213,12 +213,12 @@ const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/playground': typeof PlaygroundRoute
   '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
+  '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
@@ -241,12 +241,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/playground': typeof PlaygroundRoute
   '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
+  '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
@@ -272,12 +272,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
-  '/playground': typeof PlaygroundRoute
   '/_protected/account': typeof ProtectedAccountRoute
   '/_protected/admin': typeof ProtectedAdminRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
   '/_public/login': typeof PublicLoginRoute
+  '/_public/playground': typeof PublicPlaygroundRoute
   '/_public/register': typeof PublicRegisterRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
   '/_public/void-account': typeof PublicVoidAccountRoute
@@ -302,12 +302,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/playground'
     | '/account'
     | '/admin'
     | '/settings'
     | '/confirm-email'
     | '/login'
+    | '/playground'
     | '/register'
     | '/reset-password'
     | '/void-account'
@@ -330,12 +330,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/playground'
     | '/account'
     | '/admin'
     | '/settings'
     | '/confirm-email'
     | '/login'
+    | '/playground'
     | '/register'
     | '/reset-password'
     | '/void-account'
@@ -360,12 +360,12 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_public'
-    | '/playground'
     | '/_protected/account'
     | '/_protected/admin'
     | '/_protected/settings'
     | '/_public/confirm-email'
     | '/_public/login'
+    | '/_public/playground'
     | '/_public/register'
     | '/_public/reset-password'
     | '/_public/void-account'
@@ -391,7 +391,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
-  PlaygroundRoute: typeof PlaygroundRoute
 }
 export interface FileServerRoutesByFullPath {
   '/api/ping': typeof ApiPingServerRoute
@@ -442,13 +441,6 @@ export interface RootServerRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/playground': {
-      id: '/playground'
-      path: '/playground'
-      fullPath: '/playground'
-      preLoaderRoute: typeof PlaygroundRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_public': {
       id: '/_public'
       path: ''
@@ -489,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof PublicRegisterRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_public/playground': {
+      id: '/_public/playground'
+      path: '/playground'
+      fullPath: '/playground'
+      preLoaderRoute: typeof PublicPlaygroundRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/login': {
@@ -726,6 +725,7 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 interface PublicRouteChildren {
   PublicConfirmEmailRoute: typeof PublicConfirmEmailRoute
   PublicLoginRoute: typeof PublicLoginRoute
+  PublicPlaygroundRoute: typeof PublicPlaygroundRoute
   PublicRegisterRoute: typeof PublicRegisterRoute
   PublicResetPasswordRoute: typeof PublicResetPasswordRoute
   PublicVoidAccountRoute: typeof PublicVoidAccountRoute
@@ -734,6 +734,7 @@ interface PublicRouteChildren {
 const PublicRouteChildren: PublicRouteChildren = {
   PublicConfirmEmailRoute: PublicConfirmEmailRoute,
   PublicLoginRoute: PublicLoginRoute,
+  PublicPlaygroundRoute: PublicPlaygroundRoute,
   PublicRegisterRoute: PublicRegisterRoute,
   PublicResetPasswordRoute: PublicResetPasswordRoute,
   PublicVoidAccountRoute: PublicVoidAccountRoute,
@@ -746,7 +747,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
-  PlaygroundRoute: PlaygroundRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
