@@ -1,0 +1,66 @@
+# Order of CSS rules within Uniwind / RN styles is unspecified
+# We have to set RN styles to `rnw` layer explicitly for this case
+diff --git a/dist/cjs/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js b/dist/cjs/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+index 10618d4abd09be5f046e23a74d6b3c6c4ef7de4c..7df8287ea4d94ede5bb95197628d8eae37dd0a03 100644
+--- a/dist/cjs/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
++++ b/dist/cjs/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+@@ -37,10 +37,16 @@ function createOrderedCSSStyleSheet(sheet) {
+    */
+   if (sheet != null) {
+     var group;
+-    slice.call(sheet.cssRules).forEach((cssRule, i) => {
++    var rules = slice.call(sheet.cssRules).reduce((acc, rule) => {
++      if ('cssRules' in rule) {
++        return acc.concat(slice.call(rule.cssRules));
++      }
++      return acc.concat(rule);
++    }, []);
++    rules.forEach((cssRule, i) => {
+       var cssText = cssRule.cssText;
+       // Create record of existing selectors and rules
+-      if (cssText.indexOf('stylesheet-group') > -1) {
++      if (cssText.indexOf('[stylesheet-group=') === 0) {
+         group = decodeGroupRule(cssRule);
+         groups[group] = {
+           start: i,
+@@ -89,7 +95,7 @@ function createOrderedCSSStyleSheet(sheet) {
+         var marker = rules.shift();
+         rules.sort();
+         rules.unshift(marker);
+-        return rules.join('\n');
++        return ['@layer rnw {', ...rules, '}'].join('\n');
+       }).join('\n');
+     },
+     /**
+diff --git a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+index 86fad4b02c974213f39c53af8333a095ff50b53f..2dbede0c86177fe00fe1994fd643882425736270 100644
+--- a/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
++++ b/dist/exports/StyleSheet/dom/createOrderedCSSStyleSheet.js
+@@ -33,10 +33,16 @@ export default function createOrderedCSSStyleSheet(sheet) {
+    */
+   if (sheet != null) {
+     var group;
+-    slice.call(sheet.cssRules).forEach((cssRule, i) => {
++    var rules = slice.call(sheet.cssRules).reduce((acc, rule) => {
++      if ('cssRules' in rule) {
++        return acc.concat(slice.call(rule.cssRules));
++      }
++      return acc.concat(rule);
++    }, []);
++    rules.forEach((cssRule, i) => {
+       var cssText = cssRule.cssText;
+       // Create record of existing selectors and rules
+-      if (cssText.indexOf('stylesheet-group') > -1) {
++      if (cssText.indexOf('[stylesheet-group=') === 0) {
+         group = decodeGroupRule(cssRule);
+         groups[group] = {
+           start: i,
+@@ -85,7 +91,7 @@ export default function createOrderedCSSStyleSheet(sheet) {
+         var marker = rules.shift();
+         rules.sort();
+         rules.unshift(marker);
+-        return rules.join('\n');
++        return ['@layer rnw {', ...rules, '}'].join('\n');
+       }).join('\n');
+     },
+     /**

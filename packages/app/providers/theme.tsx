@@ -19,7 +19,7 @@ export const ThemeProvider: React.FC<
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => applyColorMode(colorMode), [colorMode]);
 	React.useEffect(() => {
-		if (!colorScheme) {
+		if (colorScheme === "unspecified") {
 			return;
 		}
 		setLastColorMode(colorScheme);
