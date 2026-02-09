@@ -10,7 +10,7 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/_protected/debts/")({
 	component: DebtsScreen,
-	...searchParamsWithDefaults("/debts"),
+	...searchParamsWithDefaults("/_protected/debts/"),
 	loaderDeps: ({ search: { offset, limit } }) => ({
 		offset,
 		limit,

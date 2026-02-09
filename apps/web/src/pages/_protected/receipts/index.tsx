@@ -10,7 +10,7 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: ReceiptsScreen,
 	staleTime: Infinity,
-	...searchParamsWithDefaults("/receipts"),
+	...searchParamsWithDefaults("/_protected/receipts/"),
 	loaderDeps: ({ search: { offset, limit, filters, sort } }) => ({
 		offset,
 		limit,

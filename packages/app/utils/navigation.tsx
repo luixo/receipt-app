@@ -3,7 +3,6 @@ import React from "react";
 import type { RegisteredRouter, RouteById } from "@tanstack/react-router";
 import type {
 	NavigateOptions,
-	RouteIds,
 	ValidateNavigateOptions,
 } from "@tanstack/router-core";
 import { z } from "zod";
@@ -33,7 +32,7 @@ declare module "@react-types/shared" {
 	}
 }
 
-export type RouteId = RouteIds<RegisteredRouter["routeTree"]>;
+export type RouteId = keyof FileRoutesById;
 export type RoutePath = keyof FileRoutesByFullPath;
 export type PathParams<K extends RouteId> = RouteById<
 	RegisteredRouter["routeTree"],
@@ -69,9 +68,7 @@ export type SearchParamStateDefaulted<
 	O extends OutputRouteSearchParams<K>[P],
 > = [O, SearchParamState<K, P>[1]];
 
-export const getPathHooks = <K extends RouteId>(rawKey: K) => {
-	// Tanstack Start for some reason provides a key with a trailing slash
-	const key = rawKey.replace(/\/$/, "") as K;
+export const getPathHooks = <K extends RouteId>(key: K) => {
 	const useQueryState = <P extends keyof OutputRouteSearchParams<K>>(
 		param: P,
 	) => {
@@ -100,7 +97,7 @@ export const getPathHooks = <K extends RouteId>(rawKey: K) => {
 	};
 	const useParams = () => {
 		const { useParams: useParamsRaw } = React.use(NavigationContext);
-		return useParamsRaw<K>(rawKey);
+		return useParamsRaw<K>(key);
 	};
 	return { useQueryState, useDefaultedQueryState, useParams };
 };
@@ -110,37 +107,41 @@ export const searchParamsMapping = {
 		debug: z.coerce.boolean().optional().catch(false),
 		redirect: z.string().optional().catch(""),
 	}),
-	"/void-account": z.object({
+	"/_public/void-account": z.object({
 		token: voidAccountTokenSchema.optional().catch(undefined),
 	}),
-	"/reset-password": z.object({
+	"/_public/reset-password": z.object({
 		token: resetPasswordTokenSchema.optional().catch(undefined),
 	}),
-	"/confirm-email": z.object({
+	"/_public/confirm-email": z.object({
 		token: confirmEmailTokenSchema.optional().catch(undefined),
 	}),
-	"/users": z.object({
+	"/_protected/users/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.catch(0),
 	}),
-	"/receipts": z.object({
+	"/_protected/receipts/": z.object({
 		sort: receiptsOrderBySchema.catch("date-desc"),
 		filters: receiptsFiltersSchema.catch({}),
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.catch(0),
 	}),
-	"/debts/transfer": z.object({
+	"/_protected/debts/transfer": z.object({
 		to: userIdSchema.optional().catch(undefined),
 		from: userIdSchema.optional().catch(undefined),
 	}),
-	"/debts": z.object({
+	"/_protected/debts/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.catch(0),
 	}),
-	"/debts/add": z.object({
+	"/_protected/debts/user/$id/": z.object({
+		limit: limitSchema.optional().catch(undefined),
+		offset: offsetSchema.catch(0),
+	}),
+	"/_protected/debts/add": z.object({
 		userId: userIdSchema.optional().catch(undefined),
 	}),
-	"/debts/user/$id/exchange/all": z.object({
+	"/_protected/debts/user/$id/exchange/all": z.object({
 		from: currencyCodeSchema.optional().catch(undefined),
 	}),
-} satisfies Partial<Record<RoutePath | "__root__", z.ZodType>>;
+} satisfies Partial<Record<RouteId, z.ZodType>>;

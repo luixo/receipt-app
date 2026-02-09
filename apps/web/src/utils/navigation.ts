@@ -42,13 +42,7 @@ export const navigationContext: NavigationContext = {
 	usePathname: () => useRouterState().location.pathname,
 	useSearchParams: <K extends RouteId>(key: K) => {
 		const router = useRouter();
-		const keyWithSlash = key.endsWith("/") ? key : (`${key}/` as K);
-		const keyWithoutSlash = key.endsWith("/") ? (key.slice(0, -1) as K) : key;
-		const route =
-			// There's inconsistency with generated types in Tanstack Router, this is an attempt to fix that
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			router.routesById[keyWithSlash] || router.routesById[keyWithoutSlash];
-		return route.useSearch();
+		return router.routesById[key].useSearch();
 	},
 	useUpdateSearchParam: <K extends RouteId>() => {
 		const navigate = useRawNavigate();

@@ -7,7 +7,7 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/_protected/debts/transfer")({
 	component: DebtsTransferScreen,
-	...searchParamsWithDefaults("/debts/transfer"),
+	...searchParamsWithDefaults("/_protected/debts/transfer"),
 	loaderDeps: ({ search: { to, from } }) => ({ to, from }),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");

@@ -6,7 +6,7 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 export const Route = createFileRoute("/_protected/debts/add")({
 	component: AddDebtScreen,
-	...searchParamsWithDefaults("/debts/add"),
+	...searchParamsWithDefaults("/_protected/debts/add"),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
 	},

@@ -7,7 +7,7 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/_public/reset-password")({
 	component: ResetPasswordScreen,
-	...searchParamsWithDefaults("/reset-password"),
+	...searchParamsWithDefaults("/_public/reset-password"),
 	loaderDeps: (opts) => ({ token: opts.search.token }),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("reset-password");

@@ -6,7 +6,7 @@ import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 export const Route = createFileRoute("/_public/void-account")({
 	component: VoidAccountScreen,
-	...searchParamsWithDefaults("/void-account"),
+	...searchParamsWithDefaults("/_public/void-account"),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("void-account");
 	},
