@@ -21,7 +21,7 @@ type Props = {
 
 export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 	const { t } = useTranslation("receipts");
-	const { participants } = useReceiptContext();
+	const { participants, ownerUserId } = useReceiptContext();
 	const { addItemPayer, removeItemPayer } = useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const canEdit = useCanEdit();
@@ -46,12 +46,16 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 			({ itemId }) => itemId === item.id,
 		);
 
+	const defaultOwnerOnly = item.payers.length === 0;
+	const selectedKeys = defaultOwnerOnly
+		? [ownerUserId]
+		: item.payers.map(({ userId }) => userId);
 	return (
 		<Select
 			className={className}
 			label={t("item.payer.label")}
 			placeholder={t("item.payer.placeholder")}
-			selectedKeys={item.payers.map(({ userId }) => userId)}
+			selectedKeys={selectedKeys}
 			disabledKeys={
 				addConsumerMutationStates.some(({ status }) => status === "pending") ||
 				removeConsumerMutationStates.some(({ status }) => status === "pending")
@@ -71,19 +75,34 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 					.filter((id) => notAddedParticipantsIds.has(id))
 					.forEach((id) => addItemPayer(item.id, id, 1));
 			}}
-			renderValue={(selectedParticipants) => (
-				<AvatarGroup
-					className={canEdit ? "cursor-pointer" : undefined}
-					size="sm"
-				>
-					{selectedParticipants
-						.map((participant) => participant.userId)
-						.filter(isNonNullish)
-						.map((userId) => (
-							<LoadableUser key={userId} id={userId} foreign={!isOwner} />
-						))}
-				</AvatarGroup>
-			)}
+			renderValue={(selectedParticipants) => {
+				if (selectedParticipants.length === 1) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					const { userId } = selectedParticipants[0]!;
+					return (
+						<LoadableUser
+							key={userId}
+							className={canEdit ? "cursor-pointer" : undefined}
+							avatarProps={{ size: "sm", dimmed: defaultOwnerOnly }}
+							id={userId}
+							foreign={!isOwner}
+						/>
+					);
+				}
+				return (
+					<AvatarGroup
+						className={canEdit ? "cursor-pointer" : undefined}
+						size="sm"
+					>
+						{selectedParticipants
+							.map((participant) => participant.userId)
+							.filter(isNonNullish)
+							.map((userId) => (
+								<LoadableUser key={userId} id={userId} foreign={!isOwner} />
+							))}
+					</AvatarGroup>
+				);
+			}}
 			items={participants.toSorted(SORT_USERS)}
 			getKey={({ userId }) => userId}
 		>

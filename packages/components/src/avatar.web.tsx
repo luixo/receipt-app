@@ -75,7 +75,7 @@ export const useAvatarProps = ({
 			base: cn(
 				// The hover=true is needed to remove default translation of avatars in avatar group
 				"shrink-0 bg-transparent data-[hover=true]:translate-x-0",
-				// dimmed ? "grayscale" : undefined,
+				dimmed ? "grayscale" : undefined,
 				className,
 			),
 		},
