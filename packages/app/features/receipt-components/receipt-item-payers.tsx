@@ -21,16 +21,21 @@ type Props = {
 
 export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 	const { t } = useTranslation("receipts");
-	const { participants, ownerUserId } = useReceiptContext();
+	const { participants } = useReceiptContext();
 	const { addItemPayer, removeItemPayer } = useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const canEdit = useCanEdit();
 	const trpc = useTRPC();
 
-	const allParticipantsIds = participants.map(({ userId }) => userId);
+	const ownerUserIds = participants
+		.filter((participant) => participant.role === "owner")
+		.map(({ userId }) => userId);
+	const possibleParticipantIds = participants
+		.map(({ userId }) => userId)
+		.filter((participantId) => !ownerUserIds.includes(participantId));
 	const addedParticipantsIds = item.payers.map(({ userId }) => userId);
 	const notAddedParticipantsIds = new Set(
-		allParticipantsIds.filter(
+		possibleParticipantIds.filter(
 			(participantId) => !addedParticipantsIds.includes(participantId),
 		),
 	);
@@ -47,25 +52,21 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 		);
 
 	const defaultOwnerOnly = item.payers.length === 0;
-	const selectedKeys = defaultOwnerOnly
-		? [ownerUserId]
-		: item.payers.map(({ userId }) => userId);
 	return (
 		<Select
 			className={className}
 			label={t("item.payer.label")}
 			placeholder={t("item.payer.placeholder")}
-			selectedKeys={selectedKeys}
+			selectedKeys={
+				defaultOwnerOnly
+					? ownerUserIds
+					: item.payers.map(({ userId }) => userId)
+			}
 			disabledKeys={
 				addConsumerMutationStates.some(({ status }) => status === "pending") ||
 				removeConsumerMutationStates.some(({ status }) => status === "pending")
-					? allParticipantsIds
-					: item.payers.length === 0
-						? undefined
-						: allParticipantsIds.filter(
-								(userId) =>
-									!item.payers.some((payer) => payer.userId === userId),
-							)
+					? possibleParticipantIds
+					: undefined
 			}
 			onSelectionChange={(nextSelected) => {
 				addedParticipantsIds
