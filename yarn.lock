@@ -17079,9 +17079,9 @@ __metadata:
   linkType: hard
 
 "dnssd-advertise@npm:^1.1.1":
-  version: 1.1.2
-  resolution: "dnssd-advertise@npm:1.1.2"
-  checksum: 10/9ad1f78804bb65701566d8e3864762e9ed8af8bf166003bd5f4d87afc374fce73962f6d15b01ca59d24ffc4a1800f9e92fd789437d45e3986c8374bd07462d03
+  version: 1.1.3
+  resolution: "dnssd-advertise@npm:1.1.3"
+  checksum: 10/76cb498953c7e455d85b2092a977eba7c347ba7b14892d812b2a089587c97e72d87d47967c5c77e64cdbe6706a8153b848e9df790c91b15cc829e2415e1afa6e
   languageName: node
   linkType: hard
 
