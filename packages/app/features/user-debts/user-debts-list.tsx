@@ -33,6 +33,7 @@ import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
+import { round } from "~utils/math";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
@@ -98,7 +99,7 @@ const useDividers = (debts: TRPCQueryOutput<"debts.get">[], userId: UserId) => {
 		}>(
 			(acc, debt) => {
 				const prevCurrencySum = acc.sums[debt.currencyCode] ?? 0;
-				const nextCurrencySum = prevCurrencySum + debt.amount;
+				const nextCurrencySum = round(prevCurrencySum + debt.amount);
 				const nextResolvedCurrencies =
 					prevCurrencySum === 0
 						? [...acc.resolvedCurrencies, debt.currencyCode]
