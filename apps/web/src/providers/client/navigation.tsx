@@ -15,6 +15,7 @@ export const NavigationProvider: React.FC<React.PropsWithChildren> = ({
 			validationBehavior="native"
 			disableAnimation={import.meta.env.MODE === "test"}
 			disableRipple={import.meta.env.MODE === "test"}
+			className="h-full"
 		>
 			{children}
 		</HeroUIProvider>
