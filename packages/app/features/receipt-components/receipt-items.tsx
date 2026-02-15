@@ -5,6 +5,7 @@ import { Trans, useTranslation } from "react-i18next";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
+import { Text } from "~components/text";
 import type { ViewHandle } from "~components/view.base";
 import type { ReceiptItemId } from "~db/ids";
 import { compare } from "~utils/date";
@@ -23,6 +24,8 @@ export const SkeletonAddReceiptItemController = () => {
 				i18nKey="add.addItemButton"
 				components={{
 					icon: <Icon name="add" className="size-6" />,
+					// eslint-disable-next-line jsx-a11y/heading-has-content
+					text: <Text />,
 				}}
 			/>
 		</Button>
@@ -50,6 +53,8 @@ const AddReceiptItemController: React.FC = () => {
 				i18nKey="add.addItemButton"
 				components={{
 					icon: <Icon name="add" className="size-6" />,
+					// eslint-disable-next-line jsx-a11y/heading-has-content
+					text: <Text />,
 				}}
 			/>
 		</Button>

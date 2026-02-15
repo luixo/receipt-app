@@ -28,7 +28,7 @@
 	"add": {
 		"header": "Add receipt",
 		"saveButton": "Add receipt",
-		"addItemButton": "<icon/> Item"
+		"addItemButton": "<icon/><text> Item</text>"
 	},
 	"receipt": {
 		"loading": "Loading receipt...",
