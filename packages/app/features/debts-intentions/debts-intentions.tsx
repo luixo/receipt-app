@@ -11,7 +11,6 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { compare } from "~utils/date";
@@ -74,11 +73,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			});
 		}, [intentions]);
 		if (intentions.length === 0) {
-			return (
-				<EmptyCard title={t("intentions.empty.title")}>
-					<Text variant="h3">{t("intentions.empty.description")}</Text>
-				</EmptyCard>
-			);
+			return <EmptyCard title={t("intentions.empty.title")} />;
 		}
 		return (
 			<View className="flex gap-8">

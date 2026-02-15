@@ -66,8 +66,7 @@
 		"acceptAllButton": "Accept all intentions",
 		"title": "Inbound debts",
 		"empty": {
-			"title": "You have no incoming sync requests",
-			"description": "You have no incoming sync requests"
+			"title": "You have no incoming sync requests"
 		},
 		"buttons": {
 			"accept": "Accept",
