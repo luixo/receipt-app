@@ -55,6 +55,14 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 	</HeroUINativeProvider>
 );
 
+const WrappedToastProvider: React.FC<React.PropsWithChildren> = ({
+	children,
+}) => (
+	<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
+		<ToastProvider>{children}</ToastProvider>
+	</HeroUINativeProvider>
+);
+
 const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {
 	Sentry.init({
@@ -115,7 +123,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 				linksContext={linksContext}
 				navigationContext={navigationContext}
 				DevToolsProvider={DevToolsProvider}
-				ToastProvider={ToastProvider}
+				ToastProvider={WrappedToastProvider}
 				applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
 			>
 				<SplashScreenManager timeout={2000} />
@@ -127,17 +135,13 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
 const App: React.FC = () => (
 	<GestureHandlerRootView>
-		<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
-			<ClientProvider>
-				<SafeAreaListener
-					onChange={({ insets }) => Uniwind.updateInsets(insets)}
-				>
-					<View className="bg-background text-foreground flex-1 p-safe">
-						<Stack />
-					</View>
-				</SafeAreaListener>
-			</ClientProvider>
-		</HeroUINativeProvider>
+		<ClientProvider>
+			<SafeAreaListener onChange={({ insets }) => Uniwind.updateInsets(insets)}>
+				<View className="bg-background text-foreground flex-1 p-safe">
+					<Stack />
+				</View>
+			</SafeAreaListener>
+		</ClientProvider>
 	</GestureHandlerRootView>
 );
 

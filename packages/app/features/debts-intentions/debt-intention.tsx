@@ -28,7 +28,7 @@ export const SkeletonDebtIntention: React.FC<{ children?: ViewReactNode }> = ({
 				<Icon name="sync" className="size-6" />
 				<Skeleton className="h-6 w-32 rounded-md" />
 			</View>
-			<View className="max-md:hidden">{children}</View>
+			<View className="hidden md:flex">{children}</View>
 		</View>
 		<View className="self-end md:hidden">{children}</View>
 	</Card>
@@ -59,7 +59,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 	return (
 		<Card bodyClassName="gap-4">
 			{intention.current ? (
-				<View className="flex-row gap-2 max-sm:flex-col">
+				<View className="flex-col gap-2 sm:flex-row">
 					<View className="flex-row gap-2">
 						<Text
 							className={
@@ -100,7 +100,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 					<Icon name="sync" className="size-6" />
 					<Text>{formatZonedDateTime(intention.updatedAt)}</Text>
 				</View>
-				<View className="max-md:hidden">{children}</View>
+				<View className="hidden md:flex">{children}</View>
 			</View>
 			<View className="self-end md:hidden">{children}</View>
 		</Card>

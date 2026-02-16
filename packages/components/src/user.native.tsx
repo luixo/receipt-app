@@ -15,7 +15,7 @@ export const User: React.FC<Props> = ({
 	onPress,
 }) => (
 	<View
-		className={cn("flex flex-row items-center justify-center gap-2", className)}
+		className={cn("flex flex-row items-center gap-2", className)}
 		onPress={onPress}
 		testID={testID}
 	>

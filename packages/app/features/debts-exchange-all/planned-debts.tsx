@@ -266,7 +266,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 											</form.AppField>
 										)}
 									</View>
-									<View className="flex-1 justify-center max-md:hidden">
+									<View className="hidden flex-1 justify-center md:flex">
 										<Text>{debt.note}</Text>
 									</View>
 								</View>
@@ -308,7 +308,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 							<View className="flex-1">
 								<SkeletonNumberInput />
 							</View>
-							<View className="flex-1 justify-center max-md:hidden">
+							<View className="hidden flex-1 justify-center md:flex">
 								<Skeleton className="h-6 w-48 rounded-md" />
 							</View>
 						</View>

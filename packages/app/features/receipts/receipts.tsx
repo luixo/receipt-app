@@ -43,7 +43,7 @@ const ReceiptsWrapper: React.FC<{ children: ViewReactNode }> = ({
 				<View className="flex-[2] p-2">
 					<Text className="self-end">{t("list.table.sum")}</Text>
 				</View>
-				<View className="flex-1 p-2 max-sm:hidden" />
+				<View className="hidden flex-1 p-2 sm:flex" />
 			</View>
 			<Divider />
 			<View>{children}</View>

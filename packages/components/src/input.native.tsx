@@ -131,21 +131,21 @@ const input = tv({
 			size: "sm",
 			labelPlacement: "inside",
 			class: {
-				wrapper: "h-14",
+				wrapper: "h-8",
 			},
 		},
 		{
 			size: "md",
 			labelPlacement: "inside",
 			class: {
-				wrapper: "h-16",
+				wrapper: "h-10",
 			},
 		},
 		{
 			size: "lg",
 			labelPlacement: "inside",
 			class: {
-				wrapper: "h-19",
+				wrapper: "h-12",
 			},
 		},
 		{

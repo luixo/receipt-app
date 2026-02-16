@@ -11,7 +11,7 @@ const pagination = tv({
 	slots: {
 		base: "overflow-x-scroll p-2.5",
 		wrapper: "rounded-medium flex flex-row gap-1",
-		item: "border-default text-default-foreground text-medium rounded-medium box-border flex h-10 min-w-10 items-center justify-center truncate border-[2px] bg-transparent shadow-xs",
+		item: "border-default text-foreground rounded-medium box-border flex h-10 min-w-10 items-center justify-center truncate border-[2px] bg-transparent shadow-xs",
 	},
 	variants: {
 		isDisabled: {
@@ -22,7 +22,7 @@ const pagination = tv({
 		},
 		isSelected: {
 			true: {
-				item: "text-primary-foreground bg-primary border-primary",
+				item: "light:text-primary-foreground bg-primary border-primary",
 			},
 			false: {},
 		},

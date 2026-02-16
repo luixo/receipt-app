@@ -12,6 +12,7 @@
 
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @source "../../packages/components";
+@source "../../packages/app";
 @source "../../node_modules/heroui-native/lib";
 
 @layer theme {

@@ -94,8 +94,7 @@ export function PaginationBlockShape<T>({
 					{searchBar ? (
 						<View
 							className={cn(
-								"block",
-								totalCount <= limit ? "max-sm:hidden" : "sm:hidden",
+								totalCount <= limit ? "hidden sm:flex" : "flex sm:hidden",
 							)}
 						>
 							{searchBar}

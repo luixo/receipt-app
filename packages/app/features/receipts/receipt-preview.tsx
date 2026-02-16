@@ -56,7 +56,7 @@ const ReceiptPreviewShape: React.FC<
 				<View className="flex items-center justify-center">
 					{checkboxComponent}
 				</View>
-				<View className="flex-[6] overflow-hidden p-2">{title}</View>
+				<View className="grow-6 overflow-hidden p-2">{title}</View>
 				<Tooltip
 					content={infoTooltip}
 					isDisabled={!infoTooltip}
@@ -73,7 +73,7 @@ const ReceiptPreviewShape: React.FC<
 				<View className="flex-[2] flex-row justify-end self-center p-2 text-right">
 					{sum}
 				</View>
-				<View className="flex-1 flex-row items-center justify-center p-2 max-sm:hidden">
+				<View className="hidden flex-1 flex-row items-center justify-center p-2 sm:flex">
 					{icon}
 				</View>
 			</View>

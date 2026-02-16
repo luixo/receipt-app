@@ -189,7 +189,7 @@ export const ReceiptParticipants: React.FC<{
 			>
 				{participants.length === 0 ? null : (
 					<>
-						<View className="flex flex-col gap-2 max-sm:gap-4">
+						<View className="flex flex-col gap-4 sm:gap-2">
 							{participants.map((participant) => (
 								<ReceiptParticipant
 									key={participant.userId}

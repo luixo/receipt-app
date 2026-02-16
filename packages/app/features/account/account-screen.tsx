@@ -21,6 +21,7 @@ import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SaveButton } from "~components/save-button";
 import { SkeletonInput } from "~components/skeleton-input";
+import { View } from "~components/view";
 import { options as accountChangeNameOptions } from "~mutations/account/change-name";
 import { options as accountLogoutOptions } from "~mutations/account/logout";
 
@@ -129,15 +130,16 @@ export const AccountScreen = () => {
 				<AccountNameInput />
 			</AccountAvatarInput>
 			<ChangePasswordScreen />
-			<Button
-				className="mt-4 self-end"
-				isDisabled={logoutMutation.isPending}
-				onPress={logout}
-				color="warning"
-				isLoading={logoutMutation.isPending}
-			>
-				{t("logoutButton")}
-			</Button>
+			<View className="flex items-end pt-4">
+				<Button
+					isDisabled={logoutMutation.isPending}
+					onPress={logout}
+					color="warning"
+					isLoading={logoutMutation.isPending}
+				>
+					{t("logoutButton")}
+				</Button>
+			</View>
 		</>
 	);
 };

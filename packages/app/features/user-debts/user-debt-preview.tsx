@@ -41,12 +41,12 @@ const UserDebtPreviewShape: React.FC<
 		className={cn("flex flex-1 flex-col items-stretch", className)}
 		{...props}
 	>
-		<View className="flex-1 flex-row gap-2 p-2 max-sm:p-3">
+		<View className="flex-1 flex-row gap-2 p-3 sm:p-2">
 			{startContent}
 			<View className="flex-[2]">{amount}</View>
 			<View className="flex-[2]">{timestamp}</View>
 			<View className="flex-1 empty:hidden">{synced}</View>
-			<View className="flex-[3] max-sm:hidden">{note}</View>
+			<View className="hidden flex-[3] sm:flex">{note}</View>
 		</View>
 		<View className="p-3 pb-5 sm:hidden">{note}</View>
 	</View>
