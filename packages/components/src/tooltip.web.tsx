@@ -10,5 +10,6 @@ export type Props = Pick<
 > & {
 	children?: ViewReactNode;
 	infoClassName?: string;
+	skipMobile?: boolean;
 };
 export const Tooltip: React.FC<Props> = (props) => <TooltipRaw {...props} />;

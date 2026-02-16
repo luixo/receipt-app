@@ -198,6 +198,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 					count: emptyItemsAmount,
 				})}
 				placement="bottom-end"
+				skipMobile
 			>
 				{button}
 			</Tooltip>

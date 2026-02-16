@@ -16,8 +16,12 @@ export const Tooltip: React.FC<Props> = ({
 	className,
 	isDisabled,
 	infoClassName,
+	skipMobile,
 }) => {
 	const textContext = React.use(TextClassContext);
+	if (skipMobile) {
+		return children;
+	}
 	return (
 		<Popover isDisabled={isDisabled}>
 			<Popover.Trigger asChild isDisabled={isDisabled}>

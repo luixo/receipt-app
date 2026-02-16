@@ -61,6 +61,7 @@ const ReceiptPreviewShape: React.FC<
 					content={infoTooltip}
 					isDisabled={!infoTooltip}
 					className="box-content flex flex-1 p-2"
+					skipMobile
 				>
 					<Icon
 						name="info"
@@ -138,6 +139,7 @@ export const ReceiptPreview = suspendedFallback<{
 					<Tooltip
 						content={t("receipt.emptyItems", { amount: emptyItems.length })}
 						isDisabled={emptyItems.length === 0}
+						skipMobile
 					>
 						<Badge
 							color="warning"
