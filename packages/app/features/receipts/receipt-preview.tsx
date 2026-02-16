@@ -52,29 +52,31 @@ const ReceiptPreviewShape: React.FC<
 			)}
 			{...props}
 		>
-			<View className="flex-row gap-2">
-				<View className="flex items-center justify-center">
-					{checkboxComponent}
+			<View className="flex-row justify-between gap-2">
+				<View className="flex-row gap-2">
+					<View className="items-center justify-center">
+						{checkboxComponent}
+					</View>
+					<View className="min-w-0 truncate overflow-hidden p-2">{title}</View>
+					<Tooltip
+						content={infoTooltip}
+						isDisabled={!infoTooltip}
+						className="box-content flex p-2"
+						skipMobile
+					>
+						<Icon
+							name="info"
+							className={cn(
+								"text-primary size-6 cursor-pointer self-center opacity-75",
+								infoTooltip ? undefined : "hidden",
+							)}
+						/>
+					</Tooltip>
 				</View>
-				<View className="grow-6 overflow-hidden p-2">{title}</View>
-				<Tooltip
-					content={infoTooltip}
-					isDisabled={!infoTooltip}
-					className="box-content flex flex-1 p-2"
-					skipMobile
-				>
-					<Icon
-						name="info"
-						className={cn(
-							"text-primary size-6 cursor-pointer self-center opacity-75",
-							infoTooltip ? undefined : "hidden",
-						)}
-					/>
-				</Tooltip>
-				<View className="flex-[2] flex-row justify-end self-center p-2 text-right">
+				<View className="flex-row justify-end self-center p-2 text-right">
 					{sum}
 				</View>
-				<View className="hidden flex-1 flex-row items-center justify-center p-2 sm:flex">
+				<View className="hidden flex-row items-center justify-center p-2 sm:flex">
 					{icon}
 				</View>
 			</View>
