@@ -8,9 +8,11 @@ export const PageWrapper: React.FC<{
 	wrapper?: React.FC<React.PropsWithChildren>;
 	children?: ViewReactNode;
 }> = ({ wrapper: Wrapper, children }) => {
-	const slot = <View className="gap-4">{children}</View>;
+	const slot = (
+		<View className="w-full max-w-screen-md gap-4 web:mx-auto">{children}</View>
+	);
 	return (
-		<ScrollView className="h-full max-w-screen-md p-2 md:p-4 web:mx-auto">
+		<ScrollView className="h-full p-2 md:p-4">
 			{Wrapper ? <Wrapper>{slot}</Wrapper> : slot}
 			{/* Placeholder for page content not to get under the menu */}
 			<View className="h-[72px]" />

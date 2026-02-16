@@ -73,11 +73,13 @@ const ReceiptPreviewShape: React.FC<
 						/>
 					</Tooltip>
 				</View>
-				<View className="flex-row justify-end self-center p-2 text-right">
-					{sum}
-				</View>
-				<View className="hidden flex-row items-center justify-center p-2 sm:flex">
-					{icon}
+				<View className="flex-row gap-2">
+					<View className="flex-row justify-end self-center p-2 text-right">
+						{sum}
+					</View>
+					<View className="hidden flex-row items-center justify-center p-2 sm:flex">
+						{icon}
+					</View>
 				</View>
 			</View>
 		</View>
