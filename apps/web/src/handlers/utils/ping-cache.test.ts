@@ -10,15 +10,13 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("utils.pingCache", () => {
 	describe("functionality", () => {
-		test("cache database ping sent", async ({ ctx }) => {
+		test("cache database is retrieved", async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock;
 			const caller = createCaller(await createContext(ctx));
 			await caller.procedure();
 			const dbMessages = dbMock.getMessages();
 			// Removing ping message
-			expect(dbMessages).toStrictEqual<typeof dbMessages>([
-				["ping", [], { result: "pong" }],
-			]);
+			expect(dbMessages).toStrictEqual<typeof dbMessages>([]);
 		});
 	});
 });

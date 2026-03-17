@@ -7644,7 +7644,6 @@ __metadata:
     "@types/module-alias": "npm:^2.0.4"
     "@types/pg": "npm:^8.10.2"
     "@types/uuid": "catalog:"
-    "@upstash/redis": "npm:^1.22.0"
     "@vitejs/plugin-react": "npm:^5.0.3"
     babel-plugin-react-compiler: "catalog:"
     cookie: "catalog:"
@@ -7659,6 +7658,7 @@ __metadata:
     postmark: "npm:^3.0.18"
     react-i18next: "catalog:"
     react-native-web: "npm:^0.21.2"
+    redis: "npm:^5.11.0"
     sharp: "catalog:"
     tailwindcss: "catalog:"
     uniwind: "catalog:"
@@ -10349,6 +10349,56 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
   checksum: 10/50d1beea407a7e58ef8e3638c2517d8c90f6b15777d396b4adf7cffbd80d38dfb7d68d6a38127ed130bfe7b0c3116c5d499de3f7b6353f54d022a22739e0141d
+  languageName: node
+  linkType: hard
+
+"@redis/bloom@npm:5.11.0":
+  version: 5.11.0
+  resolution: "@redis/bloom@npm:5.11.0"
+  peerDependencies:
+    "@redis/client": ^5.11.0
+  checksum: 10/09a3211166ef68da510c311d8ce93c94041e00cd1075ee190e8654b4af8775ad71879f4d38675886167e8e862bce51d156d6ba18c7fcc091881cc49d0bb39bcf
+  languageName: node
+  linkType: hard
+
+"@redis/client@npm:5.11.0":
+  version: 5.11.0
+  resolution: "@redis/client@npm:5.11.0"
+  dependencies:
+    cluster-key-slot: "npm:1.1.2"
+  peerDependencies:
+    "@node-rs/xxhash": ^1.1.0
+  peerDependenciesMeta:
+    "@node-rs/xxhash":
+      optional: true
+  checksum: 10/34ef7c0fb2ae20dc90a4863ef78948d6b8b8b925b4f381c05e767184301db769ef2117de165ecbc10a310a8e393e0cd05e8f2caf9ec9fd7e1284d4db28773767
+  languageName: node
+  linkType: hard
+
+"@redis/json@npm:5.11.0":
+  version: 5.11.0
+  resolution: "@redis/json@npm:5.11.0"
+  peerDependencies:
+    "@redis/client": ^5.11.0
+  checksum: 10/b8218bf858415b9e1accaae86136855fb5fccdb6e9240342ba1798e6a949b91cef98cba42393c78b877683d73f2b044f21604b05d0f7e4fee7fb23279c8b248c
+  languageName: node
+  linkType: hard
+
+"@redis/search@npm:5.11.0":
+  version: 5.11.0
+  resolution: "@redis/search@npm:5.11.0"
+  peerDependencies:
+    "@redis/client": ^5.11.0
+  checksum: 10/164b8eff19768d037df79b0844fba66235f16fcd66d03c88180f4024b4cfad1308c28a8e3b0a005578b045feaa1b3f1523be603bd04ef7a3ec80fb34e351fc9b
+  languageName: node
+  linkType: hard
+
+"@redis/time-series@npm:5.11.0":
+  version: 5.11.0
+  resolution: "@redis/time-series@npm:5.11.0"
+  peerDependencies:
+    "@redis/client": ^5.11.0
+  checksum: 10/f42d1422f54ea8b64f9df180717b3d5e1bc3a299e3be8523b908858b62a8280e38fe8caef98445bb044f095567c282b131212dd65d5161aa053ca9314b2018ed
   languageName: node
   linkType: hard
 
@@ -13920,15 +13970,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@upstash/redis@npm:^1.22.0":
-  version: 1.22.0
-  resolution: "@upstash/redis@npm:1.22.0"
-  dependencies:
-    isomorphic-fetch: "npm:^3.0.0"
-  checksum: 10/5600385edaf55f1a4403047650ea39f5b81c3391174773b4f879ef51e44075f6cd33821d7c8ece098c1cd8776d7bc7d9cd6ec0ae1054e7aa89bffcbbd3f997cd
-  languageName: node
-  linkType: hard
-
 "@vercel/nft@npm:0.29.4, @vercel/nft@npm:^0.29.4":
   version: 0.29.4
   resolution: "@vercel/nft@npm:0.29.4"
@@ -16025,7 +16066,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cluster-key-slot@npm:^1.1.0":
+"cluster-key-slot@npm:1.1.2, cluster-key-slot@npm:^1.1.0":
   version: 1.1.2
   resolution: "cluster-key-slot@npm:1.1.2"
   checksum: 10/516ed8b5e1a14d9c3a9c96c72ef6de2d70dfcdbaa0ec3a90bc7b9216c5457e39c09a5775750c272369070308542e671146120153062ab5f2f481bed5de2c925f
@@ -21919,16 +21960,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-fetch@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "isomorphic-fetch@npm:3.0.0"
-  dependencies:
-    node-fetch: "npm:^2.6.1"
-    whatwg-fetch: "npm:^3.4.1"
-  checksum: 10/568fe0307528c63405c44dd3873b7b6c96c0d19ff795cb15846e728b6823bdbc68cc8c97ac23324509661316f12f551e43dac2929bc7030b8bc4d6aa1158b857
-  languageName: node
-  linkType: hard
-
 "istanbul-lib-coverage@npm:^3.0.0":
   version: 3.2.0
   resolution: "istanbul-lib-coverage@npm:3.2.0"
@@ -24148,7 +24179,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7":
+"node-fetch@npm:^2.6.12, node-fetch@npm:^2.6.7":
   version: 2.6.12
   resolution: "node-fetch@npm:2.6.12"
   dependencies:
@@ -26664,6 +26695,19 @@ __metadata:
   dependencies:
     redis-errors: "npm:^1.0.0"
   checksum: 10/b10846844b4267f19ce1a6529465819c3d78c3e89db7eb0c3bb4eb19f83784797ec411274d15a77dbe08038b48f95f76014b83ca366dc955a016a3a0a0234650
+  languageName: node
+  linkType: hard
+
+"redis@npm:^5.11.0":
+  version: 5.11.0
+  resolution: "redis@npm:5.11.0"
+  dependencies:
+    "@redis/bloom": "npm:5.11.0"
+    "@redis/client": "npm:5.11.0"
+    "@redis/json": "npm:5.11.0"
+    "@redis/search": "npm:5.11.0"
+    "@redis/time-series": "npm:5.11.0"
+  checksum: 10/200b0a29ee0646ed30bc19fccdb8bc61405512b4c17582c01068becce414e8e859848ed2e0fabe3a80ff4042954cdbcaa347c10469dac468bb1444b95715849d
   languageName: node
   linkType: hard
 
@@ -30824,7 +30868,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"whatwg-fetch@npm:^3.0.0, whatwg-fetch@npm:^3.4.1":
+"whatwg-fetch@npm:^3.0.0":
   version: 3.6.17
   resolution: "whatwg-fetch@npm:3.6.17"
   checksum: 10/27c9930b82c6cae976c3b3bee232d2318cd20ff63e956c80cece6e86088318869196523ece4ce5973a7569725f06987ae33e6ea23dca0154b984d0ac96923904

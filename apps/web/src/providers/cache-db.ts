@@ -1,46 +1,64 @@
-import type { Requester } from "@upstash/redis/with-fetch";
-import { Redis } from "@upstash/redis/with-fetch";
+import { createClient } from "redis";
 
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export type CacheDbOptions = {
-	mock?: Requester;
+	mock?: CacheInstance;
 };
 
-let redisInstance: Redis | undefined;
-
-const getDatabase = (ctx: UnauthorizedContext): Redis => {
-	if (ctx.cacheDbOptions.mock) {
-		return new Redis(ctx.cacheDbOptions.mock);
-	}
-	if (!redisInstance) {
-		if (!process.env.REDIS_DATABASE_URL) {
-			throw new Error(
-				"Expected to have process.env.REDIS_DATABASE_URL variable!",
-			);
-		}
-		if (!process.env.REDIS_DATABASE_TOKEN) {
-			throw new Error(
-				"Expected to have process.env.REDIS_DATABASE_TOKEN variable!",
-			);
-		}
-		redisInstance = new Redis({
-			url: process.env.REDIS_DATABASE_URL,
-			token: process.env.REDIS_DATABASE_TOKEN,
-			retry: { retries: 0 },
-		});
-	}
-	return redisInstance;
+export type CacheInstance = {
+	getValue: (key: string) => Promise<string | null>;
+	setValue: (
+		key: string,
+		value: string,
+		opts?: { expiryInS?: number },
+	) => Promise<void>;
 };
 
-export const getCacheDatabase = async (
-	ctx: UnauthorizedContext,
-): Promise<Redis> => {
-	const database = getDatabase(ctx);
+const getRedisInstance = async (): Promise<CacheInstance> => {
+	if (!process.env.CACHE_DATABASE_URL) {
+		throw new Error(
+			"Expected to have process.env.CACHE_DATABASE_URL variable!",
+		);
+	}
+	const database = createClient({
+		url: process.env.CACHE_DATABASE_URL,
+		socket: {
+			reconnectStrategy: false,
+		},
+	});
 	try {
-		await database.ping();
-		return database;
+		await database.connect();
+		return {
+			getValue: (key) => database.get(key),
+			setValue: async (key, value, opts) => {
+				if (opts?.expiryInS) {
+					await database.setEx(key, opts.expiryInS, value);
+				}
+				await database.set(key, value);
+			},
+		};
 	} catch {
 		throw new Error(`Cache DB did not response to ping`);
 	}
+};
+
+let cacheInstance: CacheInstance | undefined;
+
+export const getCacheInstance = async (
+	ctx: UnauthorizedContext,
+): Promise<CacheInstance> => {
+	if (ctx.cacheDbOptions.mock) {
+		return ctx.cacheDbOptions.mock;
+	}
+
+	if (!cacheInstance) {
+		try {
+			cacheInstance = await getRedisInstance();
+			return cacheInstance;
+		} catch {
+			throw new Error(`Cache DB did not response to ping`);
+		}
+	}
+	return cacheInstance;
 };

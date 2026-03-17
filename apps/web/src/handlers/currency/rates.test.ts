@@ -67,55 +67,37 @@ describe("currency.rates", () => {
 
 	describe("functionality", () => {
 		describe("cache db throws", () => {
-			test(`on ping request`, async ({ ctx }) => {
+			test(`on getValue request`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
-				dbMock.setResponder("ping", async () => {
-					throw new Error("Pong error");
-				});
-				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
-				// Throwing on ping doesn't affect flow as cache may be skipped
-				await caller.procedure({ from: "USD", to: ["EUR"] });
-				expect(dbMock.getMessages()).toHaveLength(1);
-				const message = dbMock.getMessages()[0];
-				expect(message).toStrictEqual<typeof message>([
-					"ping",
-					[],
-					{ error: "Error: Pong error" },
-				]);
-			});
-
-			test(`on get request`, async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock;
-				dbMock.setResponder("get", async () => {
-					throw new Error('Throw on "get" request');
+				dbMock.setResponder("getValue", async () => {
+					throw new Error('Throw on "getValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ from: "USD", to: ["EUR"] }),
 					"INTERNAL_SERVER_ERROR",
-					'Error: Throw on "get" request',
+					'Throw on "getValue" request',
 				);
 			});
 
-			test(`on setex request`, async ({ ctx }) => {
+			test(`on setValue request`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
-				dbMock.setResponder("get", async () => null);
-				dbMock.setResponder("setex", async () => {
-					throw new Error('Throw on "setex" request');
+				dbMock.setResponder("getValue", async () => null);
+				dbMock.setResponder("setValue", async () => {
+					throw new Error('Throw on "setValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
-				// Throwing on setex doesn't affect flow as result may be discarded
+				// Throwing on setValue doesn't affect flow as result may be discarded
 				await caller.procedure({ from: "USD", to: ["EUR"] });
 			});
 		});
 
 		describe("cache is empty", () => {
 			const respondAsEmptyCache = (dbMock: CacheDbOptionsMock["mock"]) => {
-				dbMock.setResponder("get", async () => null);
-				dbMock.setResponder("setex", async () => "OK" as const);
+				dbMock.setResponder("getValue", async () => null);
+				dbMock.setResponder("setValue", async () => {});
 			};
 
 			test("exchange rate provider throws", async ({ ctx }) => {
@@ -159,17 +141,20 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				// Removing ping message
-				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
+				expect(dbMessages).toStrictEqual<typeof dbMessages>([
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
-						"get",
+						"getValue",
 						[`${currencyFrom}->${currencyTo}`],
 						{ result: null },
 					]),
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
-						"setex",
-						[`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]],
-						{ result: "OK" },
+						"setValue",
+						[
+							`${currencyFrom}->${currencyTo}`,
+							result[currencyTo]?.toString(),
+							{ expiryInS: 1440000 },
+						],
+						{ result: undefined },
 					]),
 				]);
 			});
@@ -180,10 +165,10 @@ describe("currency.rates", () => {
 				const dbMock = ctx.cacheDbOptions.mock;
 				const currencyInCache = "EUR";
 				const fakeRate = getFakeRate();
-				dbMock.setResponder("get", async (key) =>
-					key.includes(currencyInCache) ? fakeRate : null,
+				dbMock.setResponder("getValue", async (key) =>
+					key.includes(currencyInCache) ? fakeRate.toString() : null,
 				);
-				dbMock.setResponder("setex", async () => "OK" as const);
+				dbMock.setResponder("setValue", async () => {});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
@@ -202,18 +187,20 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				// Removing ping message
-				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
+				expect(dbMessages).toStrictEqual<typeof dbMessages>([
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
-						"get",
+						"getValue",
 						[`${currencyFrom}->${currencyTo}`],
-						{ result: currencyTo === currencyInCache ? fakeRate : null },
+						{
+							result:
+								currencyTo === currencyInCache ? fakeRate.toString() : null,
+						},
 					]),
 					...currenciesTo
 						.filter((currencyTo) => currencyTo !== currencyInCache)
 						.map<
 							(typeof dbMessages)[number]
-						>((currencyTo) => ["setex", [`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]], { result: "OK" }]),
+						>((currencyTo) => ["setValue", [`${currencyFrom}->${currencyTo}`, result[currencyTo]?.toString(), { expiryInS: 1440000 }], { result: undefined }]),
 				]);
 			});
 		});
@@ -230,10 +217,10 @@ describe("currency.rates", () => {
 					}),
 					{},
 				);
-				dbMock.setResponder("get", async (key) => {
+				dbMock.setResponder("getValue", async (key) => {
 					const currencyTo = key.split("->")[1];
 					assert(currencyTo, "Expected to have format 'USD->EUR' in key");
-					return fakeRates[currencyTo];
+					return fakeRates[currencyTo]?.toString() ?? null;
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -251,12 +238,11 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				// Removing ping message
-				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>(
+				expect(dbMessages).toStrictEqual<typeof dbMessages>(
 					currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
-						"get",
+						"getValue",
 						[`${currencyFrom}->${currencyTo}`],
-						{ result: fakeRates[currencyTo] },
+						{ result: fakeRates[currencyTo]?.toString() },
 					]),
 				);
 			});
@@ -264,7 +250,7 @@ describe("currency.rates", () => {
 
 		test(`currencyCode casing is ignored`, async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock;
-			dbMock.setResponder("get", async () => getFakeRate());
+			dbMock.setResponder("getValue", async () => getFakeRate().toString());
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const currencyFrom = "uSd";

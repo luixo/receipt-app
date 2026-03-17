@@ -1,11 +1,11 @@
-import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import { entries, keys } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UnauthorizedContext } from "~web/handlers/context";
-import { getCacheDatabase } from "~web/providers/cache-db";
+import type { CacheInstance } from "~web/providers/cache-db";
+import { getCacheInstance } from "~web/providers/cache-db";
 
 export type ExchangeRateOptions = {
 	mock?: {
@@ -201,8 +201,8 @@ const exchangeRateDataloader = new Dataloader<
 	},
 );
 
-// Minutes
-const CACHE_TTL = 24 * 60;
+// Seconds
+const CACHE_TTL = 24 * 60 * 1000;
 
 const getKey = (fromCode: CurrencyCode, toCode: CurrencyCode): string =>
 	`${fromCode}->${toCode}`;
@@ -212,20 +212,20 @@ export const getExchangeRates = async (
 	fromCode: CurrencyCode,
 	toCodes: CurrencyCode[],
 ): Promise<Record<CurrencyCode, number>> => {
-	let cacheDatabase: Redis | null = null;
+	let cacheInstance: CacheInstance | null = null;
 	try {
-		cacheDatabase = await getCacheDatabase(ctx);
+		cacheInstance = await getCacheInstance(ctx);
 	} catch {
 		/* empty */
 	}
 	const rates = await Promise.all(
 		toCodes.map(async (toCode) => {
 			const cacheKey = getKey(fromCode, toCode);
-			const cachedRate = cacheDatabase
-				? await cacheDatabase.get<number>(cacheKey)
+			const cachedRate = cacheInstance
+				? await cacheInstance.getValue(cacheKey)
 				: null;
 			if (cachedRate) {
-				return { toCode, rate: cachedRate };
+				return { toCode, rate: parseFloat(cachedRate) };
 			}
 			const fetchedRate = await (ctx.exchangeRateOptions.mock
 				? ctx.exchangeRateOptions.mock.fn(fromCode, toCode)
@@ -233,10 +233,12 @@ export const getExchangeRates = async (
 						fromCode,
 						toCode,
 					}));
-			cacheDatabase?.setex(cacheKey, CACHE_TTL, fetchedRate).catch((e) => {
-				// Failing on this action doesn't matter much
-				ctx.logger.warn("Cache DB setex action failed", e);
-			});
+			cacheInstance
+				?.setValue(cacheKey, fetchedRate.toString(), { expiryInS: CACHE_TTL })
+				.catch((e) => {
+					// Failing on this action doesn't matter much
+					ctx.logger.warn("Cache DB setex action failed", e);
+				});
 			return { toCode, rate: fetchedRate };
 		}),
 	);
