@@ -7507,7 +7507,7 @@ __metadata:
     expo-font: "npm:~55.0.3"
     expo-linking: "npm:~55.0.4"
     expo-localization: "npm:~55.0.5"
-    expo-router: "npm:~55.0.0-preview.7"
+    expo-router: "catalog:"
     expo-secure-store: "npm:~55.0.5"
     expo-splash-screen: "npm:~55.0.5"
     expo-system-ui: "npm:~55.0.5"
