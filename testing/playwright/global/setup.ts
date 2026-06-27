@@ -11,6 +11,7 @@ import { appRouter } from "./router";
 const globalSetup = async (config: FullConfig) => {
 	const portManagerPort = await getFreePort();
 	process.env.MANAGER_PORT = portManagerPort.toString();
+	process.env.PLAYWRIGHT = "true";
 	const httpServer = createHTTPServer({ router: appRouter });
 	await new Promise<void>((resolve) => {
 		httpServer.listen(portManagerPort, resolve);

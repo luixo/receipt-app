@@ -7683,6 +7683,7 @@ __metadata:
   resolution: "@ra/utils@workspace:packages/utils"
   dependencies:
     "@internationalized/date": "npm:3.10.0"
+    "@t3-oss/env-core": "npm:^0.13.11"
     find-free-ports: "npm:^3.1.1"
     superjson: "npm:^2.2.2"
     zod: "catalog:"
@@ -11956,6 +11957,27 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: 10/4954c4d2dd97bf965e863a10ffa44c3fdaf7653f2fa9ef1a6cf7ffffd67f3f832216588f9751afd75fdeaea60c4688c75c01e2405119c448f1a109c9a7958c54
+  languageName: node
+  linkType: hard
+
+"@t3-oss/env-core@npm:^0.13.11":
+  version: 0.13.11
+  resolution: "@t3-oss/env-core@npm:0.13.11"
+  peerDependencies:
+    arktype: ^2.1.0
+    typescript: ">=5.0.0"
+    valibot: ^1.0.0-beta.7 || ^1.0.0
+    zod: ^3.24.0 || ^4.0.0
+  peerDependenciesMeta:
+    arktype:
+      optional: true
+    typescript:
+      optional: true
+    valibot:
+      optional: true
+    zod:
+      optional: true
+  checksum: 10/35a1f60a55a5c36574543127ac0755d15d417bd8fa6e7c2e25a931a02711172664dfa45f293b23d5970d0c8efe6cc1298b9b91aedc7fcc77dba46ebe4b46461c
   languageName: node
   linkType: hard
 

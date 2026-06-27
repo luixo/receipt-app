@@ -458,9 +458,12 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 			user: { name: selfUser.name },
 		});
 		api.mockLast("accountSettings.get", { manualAcceptDebts: false });
-		api.mockLast("users.get", ({ input, next }) =>
-			selfUser.id === input.id ? selfUser : next(),
-		);
+		api.mockLast("users.get", ({ input, next }) => {
+			if (selfUser.id === input.id) {
+				return selfUser;
+			}
+			return next();
+		});
 		return { user: selfUser, account: selfAccount };
 	},
 	mockUsers: (...users: TRPCQueryOutput<"users.get">[]) => {

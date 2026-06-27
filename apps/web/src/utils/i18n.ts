@@ -5,6 +5,7 @@ import type { BackendModule, ParseKeys, ResourceKey } from "i18next";
 
 import type { I18nContext } from "~app/utils/i18n";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
+import { env } from "~utils/env";
 
 const getCookie = (request: Request | null) =>
 	request ? (request.headers.get("cookie") ?? "") : document.cookie;
@@ -68,7 +69,7 @@ export const getBackendModule = (): BackendModule => ({
 				const url = await import("node:url");
 				const publicPath = import.meta.env.DEV
 					? `../../public`
-					: process.env.VERCEL
+					: env.VERCEL
 						? "./static"
 						: "../../public";
 				const jsonUrl = new url.URL(

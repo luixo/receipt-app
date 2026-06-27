@@ -15,6 +15,7 @@ import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import { getDatabase } from "~db/database";
+import { env } from "~utils/env";
 import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import { router } from "~web/handlers";
@@ -25,28 +26,24 @@ import { getCookie } from "~web/utils/cookies";
 import { getReqHeader } from "~web/utils/headers";
 
 /* c8 ignore start */
-const defaultGetDatabase = (req: Request) => {
-	if (!process.env.DATABASE_URL) {
-		throw new Error("Expected to have process.env.DATABASE_URL variable!");
-	}
-	return getDatabase({
+const defaultGetDatabase = (req: Request) =>
+	getDatabase({
 		logger: req.headers.get("x-debug")
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
-		connectionString: process.env.DATABASE_URL,
+		connectionString: env.DATABASE_URL,
 		sharedKey: "tRPC",
 	});
-};
 const defaultGetEmailOptions = () => {
-	const active = Boolean(process.env.EMAIL_SERVICE_ACTIVE);
-	if (active && !process.env.BASE_URL) {
+	const active = Boolean(env.EMAIL_SERVICE_ACTIVE);
+	if (active && !env.BASE_URL) {
 		throw new Error(
 			`Expected to have env variable BASE_URL while creating context with active email`,
 		);
 	}
 	return {
-		active: Boolean(process.env.EMAIL_SERVICE_ACTIVE),
-		baseUrl: process.env.BASE_URL || "http://example.com/",
+		active: Boolean(env.EMAIL_SERVICE_ACTIVE),
+		baseUrl: env.BASE_URL || "http://example.com/",
 	};
 };
 const createContextRest = (
@@ -124,7 +121,7 @@ const callback: Callback = async ({ request, ...rest }) => {
 	if (proxyPort) {
 		return redirectTestHandler(request, cookieHeader, proxyPort);
 	}
-	if (import.meta.env.MODE === "test" && Boolean(process.env.PLAYWRIGHT)) {
+	if (import.meta.env.MODE === "test" && Boolean(env.PLAYWRIGHT)) {
 		return Response.json({
 			error: transformer.serialize({
 				code: 400,

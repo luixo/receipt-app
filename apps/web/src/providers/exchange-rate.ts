@@ -3,6 +3,7 @@ import { entries, keys } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
+import { env } from "~utils/env";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import type { CacheInstance } from "~web/providers/cache-db";
 import { getCacheInstance } from "~web/providers/cache-db";
@@ -61,9 +62,9 @@ const fetchERARate = async (
 	fromCode: CurrencyCode,
 	toCodes: CurrencyCode[],
 ) => {
-	const { ERA_API_KEY } = process.env;
+	const { ERA_API_KEY } = env;
 	if (!ERA_API_KEY) {
-		throw new Error(`Expected to have process.env.ERA_API_KEY`);
+		throw new Error(`Expected to have env.ERA_API_KEY`);
 	}
 	const fromCodeUpper = fromCode.toUpperCase();
 	const toCodesUpper = toCodes.map((code) => code.toUpperCase());

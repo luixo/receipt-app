@@ -1,5 +1,6 @@
 import { createClient } from "redis";
 
+import { env } from "~utils/env";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export type CacheDbOptions = {
@@ -16,13 +17,8 @@ export type CacheInstance = {
 };
 
 const getRedisInstance = async (): Promise<CacheInstance> => {
-	if (!process.env.CACHE_DATABASE_URL) {
-		throw new Error(
-			"Expected to have process.env.CACHE_DATABASE_URL variable!",
-		);
-	}
 	const database = createClient({
-		url: process.env.CACHE_DATABASE_URL,
+		url: env.CACHE_DATABASE_URL,
 		socket: {
 			reconnectStrategy: false,
 		},

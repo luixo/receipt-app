@@ -500,9 +500,6 @@ const temporaryDisabledRules = {
 	"promise/prefer-await-to-then": "off", // 25 cases
 	"promise/avoid-new": "off", // 20 cases
 	"promise/no-multiple-resolved": "off", // 3 cases
-	// node
-	"node/no-process-env": "off", // 42 cases
-	"node/callback-return": "off", // 3 cases
 	// import
 	"import/no-named-export": "off", // 1292 cases
 	"import/group-exports": "off", // 731 cases
@@ -739,6 +736,12 @@ export default defineConfig({
 			rules: {
 				// We use routes in function components that are defined before the component
 				"no-use-before-define": "off",
+			},
+		},
+		{
+			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*"],
+			rules: {
+				"node/no-process-env": "off",
 			},
 		},
 		...restrictedSyntaxRules.map(([file, tags]) => ({

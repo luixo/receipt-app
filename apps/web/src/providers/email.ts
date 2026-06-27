@@ -1,5 +1,6 @@
 import * as postmark from "postmark";
 
+import { env } from "~utils/env";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export type Email = {
@@ -27,19 +28,19 @@ export const getEmailClient = (ctx: UnauthorizedContext): EmailClient => {
 	if (emailClient) {
 		return emailClient;
 	}
-	const mailSender = process.env.MAILER_SENDER;
-	if (!mailSender) {
-		throw new Error("Expected to have process.env.MAILER_SENDER variable!");
+	const { MAILER_SENDER, MAILER_TOKEN } = env;
+	if (!MAILER_SENDER) {
+		throw new Error("Expected to have env.MAILER_SENDER variable!");
 	}
-	if (!process.env.MAILER_TOKEN) {
-		throw new Error("Expected to have process.env.MAILER_TOKEN variable!");
+	if (!MAILER_TOKEN) {
+		throw new Error("Expected to have env.MAILER_TOKEN variable!");
 	}
 
-	const postmarkClient = new postmark.ServerClient(process.env.MAILER_TOKEN);
+	const postmarkClient = new postmark.ServerClient(MAILER_TOKEN);
 	emailClient = {
 		send: async (email: Email) => {
 			await postmarkClient.sendEmail({
-				From: mailSender,
+				From: MAILER_SENDER,
 				To: email.address,
 				Subject: email.subject,
 				HtmlBody: email.body,
