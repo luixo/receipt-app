@@ -1,4 +1,5 @@
-name: Setup node with .nvmrc
+name: Node.js setup
+description: Setup node with .nvmrc
 runs:
   using: composite
   steps:
@@ -6,7 +7,7 @@ runs:
       run: corepack enable
       shell: bash
     - name: Setup Node.json
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
         node-version-file: .nvmrc
         cache: "yarn"

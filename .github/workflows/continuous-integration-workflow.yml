@@ -23,7 +23,7 @@ jobs:
     name: Prettier
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Prepare ignore file
         run: yarn format:prepare
@@ -34,7 +34,7 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run typecheck
         run: yarn typecheck
@@ -43,7 +43,7 @@ jobs:
     name: Linter
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run linter
         run: yarn lint
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: typecheck
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Build web app
         # Mode needed to inject .env.test file variables into the build
@@ -61,7 +61,7 @@ jobs:
         env:
           ANALYZE_BUNDLE: true
       - name: Upload web build dir
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-build
           path: |
@@ -71,7 +71,7 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
       - name: Upload bundle stats
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-build-stats
           path: dist/stats.json
@@ -84,12 +84,12 @@ jobs:
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run backend tests
         run: yarn backend:test
       - name: Archive code coverage results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: backend-coverage-report
           path: testing/vitest/coverage
@@ -121,10 +121,10 @@ jobs:
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Fetch web build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: web-build
           path: apps/web/.output
@@ -133,7 +133,7 @@ jobs:
         # see https://github.com/microsoft/playwright/issues/6500
         run: HOME=/root yarn frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload Playwright report chunks
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: blob-report-${{ matrix.shardIndex }}
@@ -146,10 +146,10 @@ jobs:
     needs: frontend-test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Download blob reports from GitHub Actions Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: all-blob-reports
           pattern: blob-report-*
@@ -157,7 +157,7 @@ jobs:
       - name: Merge into HTML Report
         run: npx playwright merge-reports --reporter html ./all-blob-reports
       - name: Upload HTML report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: html-report-attempt-${{ github.run_attempt }}
           path: playwright-report
@@ -170,7 +170,7 @@ jobs:
     needs: backend-test
     steps:
       - name: Backend coverage badge
-        uses: schneegans/dynamic-badges-action@v1.7.0
+        uses: schneegans/dynamic-badges-action@v1.8.0
         env:
           branch: ${{ github.ref == 'refs/heads/main' && 'main' || github.event.pull_request.number }}
         with:
@@ -187,7 +187,7 @@ jobs:
     name: Check generated DB types
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run types generation
         run: yarn db:generate-types
@@ -226,10 +226,10 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Download stats from latest successful run on `main`
-        uses: dawidd6/action-download-artifact@v3
+        uses: dawidd6/action-download-artifact@v21
         with:
           workflow: continuous-integration-workflow.yml
           workflow_conclusion: completed
@@ -238,7 +238,7 @@ jobs:
           name: web-build-stats
           path: ./stats/base
       - name: Download stats from current run
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: web-build-stats
           path: ./stats/current
@@ -253,7 +253,7 @@ jobs:
     name: Check native health
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run Expo doctor
         run: yarn native:doctor
@@ -264,7 +264,7 @@ jobs:
     name: Check routers match between web and native
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run routers verification
         run: yarn verify-routers
