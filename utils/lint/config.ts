@@ -1,26 +1,18 @@
-import js from "@eslint/js";
-import pluginRouter from "@tanstack/eslint-plugin-router";
-import type { Linter } from "eslint";
-import * as airbnbPlugin from "eslint-config-airbnb-extended";
-import prettierConfig from "eslint-config-prettier";
+import tanstackRouterPlugin from "@tanstack/eslint-plugin-router";
 import tailwindPlugin from "eslint-plugin-better-tailwindcss";
-import importPlugin from "eslint-plugin-import-x";
-import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
 import packageJson from "eslint-plugin-package-json";
 import playwrightPlugin from "eslint-plugin-playwright";
-import reactPlugin from "eslint-plugin-react";
-import reactHooksPlugin from "eslint-plugin-react-hooks";
-import eslintPluginUnicorn from "eslint-plugin-unicorn";
-import vitestPlugin from "eslint-plugin-vitest";
-import globals from "globals";
 import htmlTags from "html-tags";
-import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { entries, fromEntries, omit } from "remeda";
-import ts from "typescript-eslint";
+import type { DummyRule, DummyRuleMap, OxlintOverride } from "oxlint";
+import { defineConfig } from "oxlint";
+import { fromEntries, keys, omit } from "remeda";
 
+// Currently doesn't work properly
+// see https://github.com/oxc-project/oxc/issues/22364
+// TODO: re-enable when oxc solved package.json problem
 const getExtraneousDependenciesConfig = (
-	packageJsonDir = "",
+	packageJsonDir: string,
 	devDependencies: string[] | boolean = false,
 ) => ({
 	devDependencies:
@@ -141,27 +133,6 @@ type NoRestrictedSyntaxElement = {
 };
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
-		selector: "MemberExpression[object.name='Object'][property.name='keys']",
-		message:
-			"Use strongly typed function `keys` from `remeda` package instead.",
-	},
-	{
-		selector: "MemberExpression[object.name='Object'][property.name='values']",
-		message:
-			"Use strongly typed function `values` from `remeda` package instead.",
-	},
-	{
-		selector: "MemberExpression[object.name='Object'][property.name='entries']",
-		message:
-			"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
-	},
-	{
-		selector:
-			"MemberExpression[object.name='Object'][property.name='fromEntries']",
-		message:
-			"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
-	},
-	{
 		selector: "JSXAttribute[name.name='data-testid']",
 		message: "Use testID from react-native instead",
 		omitTags: ["web-only"],
@@ -235,311 +206,434 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	},
 ] as const;
 
-const getNoRestrictedSyntax = (...omittedTags: RestrictedTag[]) =>
-	noRestrictedSyntaxGeneral
+const getNoRestrictedSyntax = (...omittedTags: RestrictedTag[]): DummyRule => [
+	"error",
+	...noRestrictedSyntaxGeneral
 		.filter((element) =>
 			element.omitTags
 				? !element.omitTags.some((tag) => omittedTags.includes(tag))
 				: true,
 		)
-		.map(omit(["omitTags"]));
+		.map(omit(["omitTags"])),
+];
+
+const restrictedSyntaxRules: [string, RestrictedTag[]][] = [
+	["**/*", []],
+	// Web-only imports can be used in web app..
+	["apps/web/**/*", ["web-only"]],
+	// ..and in .web files (that also can import other .web files)
+	["**/*.web.ts{,x}", ["web-only", "strict-web-only"]],
+	// Native-only imports can be used in native app..
+	["apps/mobile/**/*", ["native-only"]],
+	// ..and in .web files (that also can import other .web files)
+	["**/*.native.ts{,x}", ["native-only", "strict-native-only"]],
+	// Handlers is the only place where handlers validation is allowed to be imported from
+	["apps/web/src/handlers/**/*", ["client-only"]],
+];
 
 const overriddenRules = {
-	name: "local/overridden",
-	rules: {
-		// We assign `ref.current` a lot
-		"no-param-reassign": [
-			"error",
-			{ ignorePropertyModificationsForRegex: ["ref$"] },
-		],
-		// We enjoy sorting imports
-		"sort-imports": ["error", { ignoreDeclarationSort: true }],
-		// 'warn' recommended
-		"no-console": "error",
-		// 'warn' recommended
-		"no-alert": "error",
-		// `void foo` is a mark of deliberately floating promise
-		"no-void": ["error", { allowAsStatement: true }],
-		"no-restricted-syntax": ["error", ...getNoRestrictedSyntax()],
-		"no-restricted-globals": [
-			"error",
-			{
-				name: "window",
-				message:
-					"Move this code to `web` package or create a context for this action",
-			},
-			{
-				name: "document",
-				message:
-					"Move this code to `web` package or create a context for this action",
-			},
-		],
+	// We assign `ref.current` a lot
+	"no-param-reassign": [
+		"error",
+		{ props: true, ignorePropertyModificationsForRegex: ["ref$"] },
+	],
+	// We enjoy sorting imports
+	"sort-imports": ["error", { ignoreDeclarationSort: true }],
+	// 'warn' recommended
+	"no-console": "error",
+	// 'warn' recommended
+	"no-alert": "error",
+	// `void foo` is a mark of deliberately floating promise
+	"no-void": ["error", { allowAsStatement: true }],
+	"no-restricted-properties": [
+		"error",
+		{
+			object: "Object",
+			property: "keys",
+			message:
+				"Use strongly typed function `keys` from `remeda` package instead.",
+		},
+		{
+			object: "Object",
+			property: "values",
+			message:
+				"Use strongly typed function `values` from `remeda` package instead.",
+		},
+		{
+			object: "Object",
+			property: "entries",
+			message:
+				"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
+		},
+		{
+			object: "Object",
+			property: "fromEntries",
+			message:
+				"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
+		},
+	],
 
-		// Custom devDependencies
-		"import-x/no-extraneous-dependencies": [
-			"error",
-			getExtraneousDependenciesConfig(undefined, ["*.config.ts"]),
-		],
-		// Custom order
-		"import-x/order": [
-			"error",
-			{
-				groups: [["builtin", "external"], "internal", "parent", "sibling"],
-				warnOnUnassignedImports: false,
-				"newlines-between": "always",
-				alphabetize: {
-					order: "asc",
+	"no-restricted-globals": [
+		"error",
+		{
+			name: "window",
+			message:
+				"Move this code to `web` package or create a context for this action",
+		},
+		{
+			name: "document",
+			message:
+				"Move this code to `web` package or create a context for this action",
+		},
+	],
+
+	// Custom devDependencies
+	"import-js/no-extraneous-dependencies": [
+		"error",
+		getExtraneousDependenciesConfig("", ["*.config.ts"]),
+	],
+	// Custom order
+	"import-js/order": [
+		"error",
+		{
+			groups: [["builtin", "external"], "internal", "parent", "sibling"],
+			warnOnUnassignedImports: false,
+			"newlines-between": "always",
+			alphabetize: {
+				order: "asc",
+			},
+			pathGroups: [
+				{
+					pattern: "{react,react-native}",
+					group: "builtin",
+					position: "before",
 				},
-				pathGroups: [
-					{
-						pattern: "{react,react-native}",
-						group: "builtin",
-						position: "before",
-					},
-					{
-						pattern: "{~*/**,~*}",
-						group: "internal",
-						position: "before",
-					},
-				],
-				pathGroupsExcludedImportTypes: ["react", "react-native", "{~*/**,~*}"],
-			},
-		],
-		"import-x/no-useless-path-segments": ["error", { noUselessIndex: false }],
-
-		// Airbnb forces them to be functional components
-		"react/function-component-definition": [
-			"error",
-			{
-				namedComponents: "arrow-function",
-				unnamedComponents: "arrow-function",
-			},
-		],
-		// Allow expressions for stuff like `<>{children}</>
-		"react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
-		// We forbid all HTML elements for react-native
-		"react/forbid-elements": [
-			"error",
-			{
-				forbid: htmlTags.map((tag) => ({
-					element: tag,
-					message:
-						"Move this code to `web` package and provide native alternative",
-				})),
-			},
-		],
-
-		// 'warn' recommended, also additionalHooks
-		"react-hooks/exhaustive-deps": [
-			"error",
-			{
-				additionalHooks: "(useWindowSizeChange)",
-			},
-		],
-		"react/jsx-fragments": ["error", "syntax"],
-		"better-tailwindcss/enforce-consistent-important-position": "error",
-		"better-tailwindcss/enforce-consistent-variable-syntax": "error",
-		"better-tailwindcss/enforce-shorthand-classes": "error",
-		"better-tailwindcss/no-duplicate-classes": "error",
-		"better-tailwindcss/no-unnecessary-whitespace": "error",
-		"better-tailwindcss/no-unregistered-classes": "error",
-	},
-} satisfies Linter.Config;
-
-const typescriptFiles = ["ts", "mts", "tsx"].map((ext) => `**/*.${ext}`);
-
-const typescriptOverriddenRules = {
-	name: "local/overridden-disable-type-checked",
-	files: typescriptFiles,
-	rules: {
-		// These 2 are off by default
-		"@typescript-eslint/switch-exhaustiveness-check": [
-			"error",
-			{ considerDefaultExhaustiveForUnions: true },
-		],
-		"@typescript-eslint/consistent-type-imports": "error",
-		// We want to allow `Amount ${amount}` to be used
-		"@typescript-eslint/restrict-template-expressions": [
-			"error",
-			{ allowNumber: true },
-		],
-		// Default option is `interface`
-		"@typescript-eslint/consistent-type-definitions": ["error", "type"],
-		// Allowing `while(true)`
-		"@typescript-eslint/no-unnecessary-condition": [
-			"error",
-			{ allowConstantLoopConditions: true },
-		],
-		// We want to pass `() => Promise<void>` to a prop / arg expecting `() => void`
-		"@typescript-eslint/no-misused-promises": [
-			"error",
-			{
-				checksVoidReturn: {
-					arguments: false,
-					attributes: false,
+				{
+					pattern: "{~*/**,~*}",
+					group: "internal",
+					position: "before",
 				},
+			],
+			pathGroupsExcludedImportTypes: ["react", "react-native", "{~*/**,~*}"],
+		},
+	],
+	"import-js/no-useless-path-segments": ["error", { noUselessIndex: false }],
+
+	// Allow expressions for stuff like `<>{children}</>`
+	"react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
+	// We forbid all HTML elements for react-native
+	"react/forbid-elements": [
+		"error",
+		{
+			forbid: htmlTags.map((tag) => ({
+				element: tag,
+				message:
+					"Move this code to `web` package and provide native alternative",
+			})),
+		},
+	],
+	// 'warn' recommended, also additionalHooks
+	"react/exhaustive-deps": [
+		"error",
+		{
+			additionalHooks: "(useWindowSizeChange)",
+		},
+	],
+	"react/jsx-fragments": ["error", "syntax"],
+
+	// These 2 are off by default
+	"typescript/switch-exhaustiveness-check": [
+		"error",
+		{ considerDefaultExhaustiveForUnions: true },
+	],
+	"typescript/consistent-type-imports": "error",
+	// We want to allow `Amount ${amount}` to be used
+	"typescript/restrict-template-expressions": ["error", { allowNumber: true }],
+	// Default option is `interface`
+	"typescript/consistent-type-definitions": ["error", "type"],
+	// Allowing `while(true)`
+	"typescript/no-unnecessary-condition": [
+		"error",
+		{ allowConstantLoopConditions: true },
+	],
+	// We want to pass `() => Promise<void>` to a prop / arg expecting `() => void`
+	"typescript/no-misused-promises": [
+		"error",
+		{
+			checksVoidReturn: {
+				arguments: false,
+				attributes: false,
 			},
-		],
-		// We need to use React
-		"@typescript-eslint/no-unused-vars": [
-			"error",
-			{ varsIgnorePattern: "React" },
-		],
-		// We want to trigger on deprecated code
-		"@typescript-eslint/no-deprecated": "error",
-		// This catches floating promises instead of @typescript-eslint/promise-function-async
-		"@typescript-eslint/no-floating-promises": "error",
-	},
-} satisfies Linter.Config;
+		},
+	],
+	// We need to use React
+	"no-unused-vars": ["error", { varsIgnorePattern: "React" }],
+	// We want to trigger on deprecated code
+	"typescript/no-deprecated": "error",
+	// This catches floating promises instead of typescript/promise-function-async
+	"typescript/no-floating-promises": "error",
+} satisfies DummyRuleMap;
 
 const disabledRules = {
-	name: "local/disabled",
-	rules: {
-		// We see no evil in nested ternaries
-		"no-nested-ternary": "off",
-		// This is guarded by typescript
-		"consistent-return": "off",
-		// Typescript version is `@typescript-eslint/switch-exhaustiveness-check`
-		"default-case": "off",
-		// Rule is enabled by `eslint-config-airbnb-typescript`
-		// it is deprecated by maintainer, see https://typescript-eslint.io/rules/no-throw-literal/
-		"@typescript-eslint/no-throw-literal": "off",
-		// We don't really need react components names
-		"react/display-name": "off",
-		// Rule doesn't seems to work properly
-		"react/prop-types": "off",
-		// We extensively spread props: `<Foo {...props} />`
-		"react/jsx-props-no-spreading": "off",
-		// We use typescript to validate optional props are used correctly
-		"react/require-default-props": "off",
-		// TODO: enable later and fix
-		"react/jsx-sort-props": "off",
-		// We use mostly named exports
-		"import-x/prefer-default-export": "off",
-		// Maintained by prettier plugin
-		"better-tailwindcss/enforce-consistent-class-order": "off",
-		// `(object | undefined) || number` is assumed incorrect by this rule
-		// it should be `(object | undefined) ?? number`
-		"@typescript-eslint/prefer-nullish-coalescing": "off",
-		// Rule emits false positives on `const fn = <T>(value: T) => {...}`
-		// see https://github.com/typescript-eslint/typescript-eslint/issues/9667
-		"@typescript-eslint/no-unnecessary-type-parameters": "off",
-		// We enjoy confusing fellow developers with void expressions
-		// Mainly used for:
-		// - returning `void` from a function, assigning that to a value and validating value is undefined
-		// - shorthanding functions returns that don't matter (because they're void)
-		"@typescript-eslint/no-confusing-void-expression": "off",
-		// That's a weird thing to forbid
-		"@typescript-eslint/no-dynamic-delete": "off",
-		// We use a few `void` types around
-		"@typescript-eslint/no-invalid-void-type": "off",
-		// We have typescript strict enough to have implicit boundary types
-		"@typescript-eslint/explicit-module-boundary-types": "off",
-		// This is replaced by @typescript-eslint/no-floating-promises
-		"@typescript-eslint/promise-function-async": "off",
-		// This doesn't fit with us spreading options to the routes
-		"@tanstack/router/create-route-property-order": "off",
-		// There's no need to limit us to throwing Errors in node.js env
-		"n/no-process-exit": "off",
-		"unicorn/no-process-exit": "off",
-	},
-} satisfies Linter.Config;
+	// We see no evil in nested ternaries
+	"no-nested-ternary": "off",
+	// This is guarded by typescript
+	"consistent-return": "off",
+	// Typescript version is typescript/switch-exhaustiveness-check
+	"default-case": "off",
+	// We extensively spread props: `<Foo {...props} />`
+	"react/jsx-props-no-spreading": "off",
+	// Maintained by prettier plugin
+	"better-tailwindcss/enforce-consistent-class-order": "off",
+	// `(object | undefined) || number` is assumed incorrect by this rule
+	// it should be `(object | undefined) ?? number`
+	"typescript/prefer-nullish-coalescing": "off",
+	// Rule emits false positives on `const fn = <T>(value: T) => {...}`
+	// see https://github.com/typescript-eslint/typescript-eslint/issues/9667
+	"typescript/no-unnecessary-type-parameters": "off",
+	// We enjoy confusing fellow developers with void expressions
+	// Mainly used for:
+	// - returning `void` from a function, assigning that to a value and validating value is undefined
+	// - shorthanding functions returns that don't matter (because they're void)
+	"typescript/no-confusing-void-expression": "off",
+	// That's a weird thing to forbid
+	"typescript/no-dynamic-delete": "off",
+	// We use a few `void` types around
+	"typescript/no-invalid-void-type": "off",
+	// We have typescript strict enough to have implicit boundary types
+	"typescript/explicit-module-boundary-types": "off",
+	// This is replaced by typescript/no-floating-promises
+	"typescript/promise-function-async": "off",
+	// This doesn't fit with us spreading options to the routes
+	"@tanstack/router/create-route-property-order": "off",
+} satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
-	name: "local/temporary-disabled",
-	rules: {
-		"unicorn/prevent-abbreviations": "off", // 1179 cases
-		"unicorn/no-null": "off", // 168 cases
-		"unicorn/switch-case-braces": "off", // 58 cases
-		"unicorn/no-array-reduce": "off", // 48 cases
-		"unicorn/no-array-callback-reference": "off", // 46 cases
-		"unicorn/catch-error-name": "off", // 41 cases
-		"unicorn/no-array-for-each": "off", // 40 cases
-		"unicorn/explicit-length-check": "off", // 34 cases
-		"unicorn/no-negated-condition": "off", // 25 cases
-		"unicorn/prefer-global-this": "off", // 24 cases
-		"unicorn/prefer-top-level-await": "off", // 19 cases
-		"unicorn/consistent-function-scoping": "off", // 18 cases
-		"unicorn/no-useless-undefined": "off", // 16 cases
-		"unicorn/no-new-array": "off", // 15 cases
-		"unicorn/prefer-object-from-entries": "off", // 13 cases
-		"unicorn/consistent-assert": "off", // 11 cases
-		"unicorn/numeric-separators-style": "off", // 9 cases
-		"unicorn/prefer-number-properties": "off", // 8 cases
-		"unicorn/prefer-spread": "off", // 8 cases
-		"better-tailwindcss/enforce-consistent-line-wrapping": "off",
-		"better-tailwindcss/multiline": "off",
-		"better-tailwindcss/sort-classes": "off",
-		"better-tailwindcss/no-deprecated-classes": "off",
-	},
-} satisfies Linter.Config;
+	"unicorn/no-null": "off", // 168 cases
+	"unicorn/switch-case-braces": "off", // 58 cases
+	"unicorn/no-array-reduce": "off", // 48 cases
+	"unicorn/no-array-callback-reference": "off", // 46 cases
+	"unicorn/catch-error-name": "off", // 41 cases
+	"unicorn/no-array-for-each": "off", // 40 cases
+	"unicorn/explicit-length-check": "off", // 34 cases
+	"unicorn/no-negated-condition": "off", // 25 cases
+	"unicorn/prefer-global-this": "off", // 24 cases
+	"unicorn/prefer-top-level-await": "off", // 19 cases
+	"unicorn/consistent-function-scoping": "off", // 18 cases
+	"unicorn/no-useless-undefined": "off", // 16 cases
+	"unicorn/no-new-array": "off", // 15 cases
+	"unicorn/prefer-object-from-entries": "off", // 13 cases
+	"unicorn/consistent-assert": "off", // 11 cases
+	"unicorn/numeric-separators-style": "off", // 9 cases
+	"unicorn/prefer-number-properties": "off", // 8 cases
+	"unicorn/prefer-spread": "off", // 8 cases
+	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
+	"better-tailwindcss/no-deprecated-classes": "off",
+	// new oxc violations
+	"typescript/prefer-readonly-parameter-types": "off", // 4266 cases
+	"eslint/sort-keys": "off", // 1693 cases
+	"oxc/no-async-await": "off", // 1324 cases
+	"import/no-named-export": "off", // 1292 cases
+	"eslint/no-magic-numbers": "off", // 1240 cases
+	"typescript/explicit-function-return-type": "off", // 1205 cases
+	"import/group-exports": "off", // 731 cases
+	"eslint/id-length": "off", // 672 cases
+	"eslint/no-ternary": "off", // 653 cases
+	"react/forbid-component-props": "off", // 595 cases
+	"oxc/no-rest-spread-properties": "off", // 440 cases
+	"eslint/max-lines-per-function": "off", // 413 cases
+	"eslint/no-undefined": "off", // 385 cases
+	"import/prefer-default-export": "off", // 369 cases
+	"react/jsx-max-depth": "off", // 329 cases
+	"vitest/no-standalone-expect": "off", // 324 cases
+	"typescript/strict-boolean-expressions": "off", // 289 cases
+	"react/jsx-filename-extension": "off", // 247 cases
+	"import/exports-last": "off", // 229 cases
+	"typescript/no-unsafe-type-assertion": "off", // 206 cases
+	"oxc/no-optional-chaining": "off", // 196 cases
+	"eslint/capitalized-comments": "off", // 182 cases
+	"eslint/max-statements": "off", // 181 cases
+	"eslint/no-duplicate-imports": "off", // 151 cases
+	"react-perf/jsx-no-new-function-as-prop": "off", // 135 cases
+	"react-perf/jsx-no-new-object-as-prop": "off", // 133 cases
+	"import/no-relative-parent-imports": "off", // 129 cases
+	"import/max-dependencies": "off", // 113 cases
+	"react-perf/jsx-no-jsx-as-prop": "off", // 105 cases
+	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
+	"vitest/require-hook": "off", // 101 cases
+	"promise/prefer-await-to-callbacks": "off", // 98 cases
+	"vitest/no-conditional-in-test": "off", // 93 cases
+	"react/react-in-jsx-scope": "off", // 89 cases
+	"unicorn/max-nested-calls": "off", // 83 cases
+	"vitest/no-importing-vitest-globals": "off", // 83 cases
+	"typescript/strict-void-return": "off", // 77 cases
+	"eslint/require-await": "off", // 73 cases
+	"eslint/require-unicode-regexp": "off", // 64 cases
+	"react/react-compiler": "off", // 64 cases
+	"eslint/max-params": "off", // 62 cases
+	"react/no-multi-comp": "off", // 61 cases
+	"import/no-default-export": "off", // 59 cases
+	"import/consistent-type-specifier-style": "off", // 48 cases
+	"react/only-export-components": "off", // 47 cases
+	"react/jsx-no-literals": "off", // 46 cases
+	"eslint/no-inline-comments": "off", // 42 cases
+	"import/no-namespace": "off", // 42 cases
+	"node/no-process-env": "off", // 42 cases
+	"import/no-nodejs-modules": "off", // 41 cases
+	"eslint/max-lines": "off", // 40 cases
+	"vitest/prefer-strict-equal": "off", // 40 cases
+	"react/jsx-handler-names": "off", // 39 cases
+	"import-js/no-extraneous-dependencies": "off", // 34 cases
+	"typescript/require-await": "off", // 32 cases
+	"unicorn/no-nested-ternary": "off", // 30 cases
+	"typescript/no-unsafe-assignment": "off", // 29 cases
+	"eslint/no-negated-condition": "off", // 28 cases
+	"eslint/no-param-reassign": "off", // 26 cases
+	"typescript/no-unsafe-member-access": "off", // 26 cases
+	"promise/prefer-await-to-then": "off", // 25 cases
+	"vitest/consistent-test-filename": "off", // 23 cases
+	"eslint/prefer-destructuring": "off", // 23 cases
+	"react-perf/jsx-no-new-array-as-prop": "off", // 23 cases
+	"oxc/no-accumulating-spread": "off", // 23 cases
+	"promise/avoid-new": "off", // 20 cases
+	"typescript/no-unnecessary-type-conversion": "off", // 20 cases
+	"import/no-unassigned-import": "off", // 18 cases
+	"oxc/no-map-spread": "off", // 14 cases
+	"typescript/explicit-member-accessibility": "off", // 14 cases
+	"vitest/prefer-to-have-length": "off", // 12 cases
+	"eslint/no-empty-pattern": "off", // 11 cases
+	"typescript/no-unsafe-call": "off", // 11 cases
+	"eslint/new-cap": "off", // 10 cases
+	"eslint/no-empty-function": "off", // 9 cases
+	"unicorn/prefer-number-coercion": "off", // 9 cases
+	"eslint/init-declarations": "off", // 8 cases
+	"vitest/prefer-to-be-truthy": "off", // 8 cases
+	"eslint/prefer-named-capture-group": "off", // 7 cases
+	"import/no-named-as-default-member": "off", // 7 cases
+	"typescript/no-meaningless-void-operator": "off", // 7 cases
+	"eslint/no-warning-comments": "off", // 6 cases
+	"typescript/no-unsafe-argument": "off", // 6 cases
+	"eslint/array-callback-return": "off", // 5 cases
+	"vitest/prefer-to-be": "off", // 5 cases
+	"vitest/max-expects": "off", // 5 cases
+	"react/no-react-children": "off", // 5 cases
+	"unicorn/prefer-module": "off", // 4 cases
+	"eslint/func-style": "off", // 4 cases
+	"vitest/require-top-level-describe": "off", // 4 cases
+	"node/callback-return": "off", // 3 cases
+	"promise/no-multiple-resolved": "off", // 3 cases
+	"vitest/no-hooks": "off", // 3 cases
+	"vitest/no-alias-methods": "off", // 3 cases
+	"vitest/no-conditional-expect": "off", // 3 cases
+	"jsx-a11y/prefer-tag-over-role": "off", // 3 cases
+	"react/jsx-no-constructed-context-values": "off", // 3 cases
+	"typescript/unbound-method": "off", // 3 cases
+	"unicorn/no-abusive-eslint-disable": "off", // 2 cases
+	"import/unambiguous": "off", // 2 cases
+	"typescript/ban-types": "off", // 2 cases
+	"unicorn/prefer-import-meta-properties": "off", // 2 cases
+	"vitest/prefer-lowercase-title": "off", // 2 cases
+	"vitest/prefer-called-once": "off", // 2 cases
+	"jsx-a11y/no-autofocus": "off", // 2 cases
+	"react/no-object-type-as-default-prop": "off", // 2 cases
+	"jsx-a11y/control-has-associated-label": "off", // 2 cases
+	"vitest/prefer-snapshot-hint": "off", // 2 cases
+	"typescript/no-useless-default-assignment": "off", // 2 cases
+	"eslint/complexity": "off", // 1 cases
+	"eslint/no-implicit-globals": "off", // 1 cases
+	"eslint/no-redeclare": "off", // 1 cases
+	"eslint/no-useless-assignment": "off", // 1 cases
+	"unicorn/custom-error-definition": "off", // 1 cases
+	"vitest/prefer-called-times": "off", // 1 cases
+	"vitest/require-mock-type-parameters": "off", // 1 cases
+	"vitest/prefer-import-in-mock": "off", // 1 cases
+	"vitest/prefer-strict-boolean-matchers": "off", // 1 cases
+	"vitest/require-to-throw-message": "off", // 1 cases
+	"eslint/logical-assignment-operators": "off", // 1 cases
+	"vitest/require-test-timeout": "off", // 1 cases
+	"vitest/prefer-expect-assertions": "off", // 1 cases
+	"vitest/prefer-expect-resolves": "off", // 1 cases
+	"vitest/prefer-to-be-falsy": "off", // 1 cases
+	"eslint/no-implicit-coercion": "off", // 1 cases
+	"typescript/no-var-requires": "off", // 1 cases
+	"import/no-commonjs": "off", // 1 cases
+	"typescript/non-nullable-type-assertion-style": "off", // 1 cases
+	"better-tailwindcss/enforce-logical-properties": "off",
+} satisfies DummyRuleMap;
 
-export const getConfig = async (rootDir: string) => {
-	const nvmrc = await readFile(path.join(rootDir, ".nvmrc"), "utf8");
-	const nodeVersion = nvmrc
-		.toString()
-		.split("\n")
-		.find((line) => !line.startsWith("#"));
-	// eslint-disable-next-line @typescript-eslint/no-deprecated
-	return ts.config(
-		{ files: ["**/*.{js,jsx,ts,tsx}"] },
+export default defineConfig({
+	options: {
+		typeAware: true,
+		reportUnusedDisableDirectives: "error",
+		denyWarnings: true,
+	},
+	plugins: [
+		"eslint",
+		"typescript",
+		"unicorn",
+		"oxc",
+		"import",
+		"vitest",
+		"jsx-a11y",
+		"react",
+		"react-perf",
+		"promise",
+		"node",
+	],
+	categories: {
+		correctness: "error",
+		suspicious: "error",
+		pedantic: "error",
+		perf: "error",
+		style: "error",
+		restriction: "error",
+		nursery: "error",
+	},
+	jsPlugins: [
+		{ name: "import-js", specifier: "eslint-plugin-import" },
+		{ name: "eslint-js", specifier: "oxlint-plugin-eslint" },
 		{
-			languageOptions: {
-				globals: {
-					...globals.browser,
-					...globals.es2017,
-					...globals.node,
-				},
-				parserOptions: {
-					projectService: true,
-					tsconfigRootDir: rootDir,
-				},
-			},
-			settings: {
-				"import-x/resolver": {
-					typescript: {
-						project: true,
-					},
-				},
-				"better-tailwindcss": {
-					entryPoint: "apps/web/src/app.css",
-					callees: ["tv", "cn"],
-				},
-				react: {
-					version: "detect",
-				},
-				node: {
-					version: nodeVersion,
-				},
+			name: "better-tailwindcss",
+			specifier: "eslint-plugin-better-tailwindcss",
+		},
+		{ name: "@tanstack/router", specifier: "@tanstack/eslint-plugin-router" },
+		{ name: "playwright", specifier: "eslint-plugin-playwright" },
+		{ name: "package-json", specifier: "eslint-plugin-package-json" },
+	],
+	env: {
+		browser: true,
+		es2017: true,
+		node: true,
+	},
+	settings: {
+		"import-js/resolver": {
+			typescript: {
+				project: true,
 			},
 		},
-		importPlugin.flatConfigs.recommended,
-		importPlugin.flatConfigs.react,
-		importPlugin.flatConfigs["react-native"],
-		importPlugin.flatConfigs["stage-0"],
-		reactHooksPlugin.configs.flat["recommended-latest"],
-		eslintPluginUnicorn.configs.recommended,
-		airbnbPlugin.plugins.stylistic,
-		airbnbPlugin.plugins.node,
-		airbnbPlugin.configs.base.recommended,
-		airbnbPlugin.rules.base.strict,
-		airbnbPlugin.configs.node.recommended,
-		airbnbPlugin.configs.react.recommended,
-		airbnbPlugin.rules.react.strict,
-		{
-			plugins: { [tailwindPlugin.meta.name]: tailwindPlugin },
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			rules: tailwindPlugin.configs.recommended!.rules,
+		"better-tailwindcss": {
+			entryPoint: "apps/web/src/app.css",
+			callees: ["tv", "cn"],
 		},
-		jsxAccessibilityPlugin.flatConfigs.recommended,
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		reactPlugin.configs.flat.recommended!,
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		reactPlugin.configs.flat["jsx-runtime"]!,
-		js.configs.recommended,
-		prettierConfig,
+		react: {
+			version: "19.2.0",
+		},
+	},
+	rules: {
+		...fromEntries(
+			keys(tailwindPlugin.rules).map((key) => [
+				`better-tailwindcss/${key}`,
+				"error",
+			]),
+		),
+		...tanstackRouterPlugin.configs["flat/recommended"][0]?.rules,
+		...packageJson.configs.recommended.rules,
+		...overriddenRules,
+		...disabledRules,
+		...temporaryDisabledRules,
+	},
+	overrides: [
 		{
-			...playwrightPlugin.configs["flat/recommended"],
 			files: ["testing/playwright/**/*", "**/__tests__/**"],
 			rules: {
 				...playwrightPlugin.configs["flat/recommended"].rules,
@@ -549,33 +643,7 @@ export const getConfig = async (rootDir: string) => {
 				],
 			},
 		},
-		...pluginRouter.configs["flat/recommended"],
-		/* Typescript section */
-		ts.configs.strictTypeChecked,
-		ts.configs.stylisticTypeChecked,
-		ts.configs.disableTypeChecked,
-		importPlugin.flatConfigs.typescript,
-		airbnbPlugin.configs.base.typescript,
-		airbnbPlugin.rules.typescript.typescriptEslintStrict,
-		airbnbPlugin.configs.react.typescript,
-		/* Overrides section */
-		overriddenRules,
-		typescriptOverriddenRules,
-		disabledRules,
-		temporaryDisabledRules,
-		// Disabling stylistic rules as it is Prettier's matter
-		{
-			name: "stylistic-disabled",
-			rules: fromEntries(
-				[
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					...entries(airbnbPlugin.rules.base.stylistic.rules!),
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					...entries(airbnbPlugin.rules.typescript.stylistic.rules!),
-				].map(([key]) => [key, "off" as const]),
-			),
-		},
-		...(
+		...((
 			[
 				[
 					"apps/web",
@@ -604,34 +672,34 @@ export const getConfig = async (rootDir: string) => {
 		).map(([dir, devDependencies]) => ({
 			files: [`${dir}/**/*`],
 			rules: {
-				"import-x/no-extraneous-dependencies": [
+				"import-js/no-extraneous-dependencies": [
 					"error",
 					getExtraneousDependenciesConfig(dir, devDependencies),
-				] satisfies Linter.RuleSeverityAndOptions,
+				],
 			},
-		})),
+		})) satisfies OxlintOverride[]),
 		{
-			files: [`packages/components/src/*`],
+			files: ["packages/components/src/*"],
 			rules: {
-				"import-x/no-extraneous-dependencies": ["off"],
+				"import-js/no-extraneous-dependencies": "off",
 			},
-		},
-		{
-			files: ["**/*.{mjs,js,jsx}"],
-			...ts.configs.disableTypeChecked,
 		},
 		{
 			files: ["**/scripts/**/*"],
-			rules: { "no-console": "off" },
+			rules: {
+				"no-console": "off",
+				// There's no need to limit us to throwing Errors in node.js env
+				"unicorn/no-process-exit": "off",
+			},
 		},
 		{
 			files: ["apps/web/src/email/**/*"],
 			rules: {
-				"better-tailwindcss/no-unregistered-classes": "off",
+				"better-tailwindcss/no-unknown-classes": "off",
 			},
 		},
 		{
-			files: ["apps/web/**/*", "testing/**/*", "**/*.web.ts{,x}"],
+			files: ["apps/web/**/*", "testing/**/*", "**/*.web.ts", "**/*.web.tsx"],
 			rules: {
 				"react/forbid-elements": "off",
 				"no-restricted-globals": "off",
@@ -641,42 +709,13 @@ export const getConfig = async (rootDir: string) => {
 			files: ["packages/db/src/models/*"],
 			rules: {
 				// DB types are generated via interfaces
-				"@typescript-eslint/consistent-type-definitions": "off",
+				"typescript/consistent-type-definitions": "off",
 			},
 		},
 		{
 			files: ["testing/vitest/**", "*.test.ts"],
-			plugins: {
-				vitest: vitestPlugin,
-			},
 			rules: {
-				...vitestPlugin.configs.recommended.rules,
-				"vitest/valid-title": "off",
-			},
-		},
-		{
-			files: ["apps/web/src/email/*"],
-			rules: {
-				// see https://github.com/typescript-eslint/typescript-eslint/issues/8324
-				"@typescript-eslint/consistent-type-imports": "off",
-			},
-		},
-		{
-			...packageJson.configs.recommended,
-			languageOptions: {
-				parserOptions: {
-					projectService: {},
-					tsconfigRootDir: rootDir,
-				},
-			},
-		},
-		{
-			files: ["**/package.json"],
-			rules: {
-				// Remove when `eslint-plugin-package-json` migrates to a proper parser
-				// Also, remove `jsonc-eslint-parser` package from the project
-				// see https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/655
-				"@typescript-eslint/no-unused-expressions": "off",
+				"vitest/valid-title": ["error", { allowArguments: true }],
 			},
 		},
 		{
@@ -684,99 +723,42 @@ export const getConfig = async (rootDir: string) => {
 				"**/__tests__/**",
 				"testing/playwright/**",
 				"testing/vitest/**",
-				"**/*.spec.ts{,x}",
+				"**/*.spec.ts",
+				"**/*.spec.tsx",
 			],
 			rules: {
 				// We use `use` function in Playwright tests which clashes with this rule
-				"react-hooks/rules-of-hooks": "off",
-			},
-		},
-		{
-			files: ["testing/playwright/**"],
-			rules: {
-				// We use `expect`s inside fixtures and this is not supported by the rule
-				"playwright/no-standalone-expect": "off",
+				"react/rules-of-hooks": "off",
 			},
 		},
 		{
 			files: ["apps/web/src/pages/**"],
 			rules: {
 				// We use routes in function components that are defined before the component
-				"@typescript-eslint/no-use-before-define": "off",
+				"no-use-before-define": "off",
 			},
 		},
-		{
-			// Web-only imports can be used in web app..
-			files: ["apps/web/**/*"],
+		...restrictedSyntaxRules.map(([file, tags]) => ({
+			files: [file],
 			rules: {
-				"no-restricted-syntax": ["error", ...getNoRestrictedSyntax("web-only")],
+				"eslint-js/no-restricted-syntax": getNoRestrictedSyntax(...tags),
 			},
-		},
-		{
-			// ..and in .web files (that also can import other .web files)
-			files: ["**/*.web.ts{,x}"],
-			rules: {
-				"no-restricted-syntax": [
-					"error",
-					...getNoRestrictedSyntax("web-only", "strict-web-only"),
-				],
-			},
-		},
-		{
-			// Native-only imports can be used in native app..
-			files: ["apps/mobile/**/*"],
-			rules: {
-				"no-restricted-syntax": [
-					"error",
-					...getNoRestrictedSyntax("native-only"),
-				],
-			},
-		},
-		{
-			// ..and in .native files (that also can import other .native files)
-			files: ["**/*.native.ts{,x}"],
-			rules: {
-				"no-restricted-syntax": [
-					"error",
-					...getNoRestrictedSyntax("native-only", "strict-native-only"),
-				],
-			},
-		},
-		{
-			// Handlers is the only place where handlers validation is allowed to be imported from
-			files: ["apps/web/src/handlers/**/*"],
-			rules: {
-				"no-restricted-syntax": [
-					"error",
-					...getNoRestrictedSyntax("client-only"),
-				],
-			},
-		},
-		{
-			// Generated files might want to disable eslint rules completely
-			files: ["**/*.gen.ts"],
-			rules: {
-				"unicorn/no-abusive-eslint-disable": "off",
-			},
-		},
-		{
-			// see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignoring-files-with-ignores
-			ignores: [
-				".history/",
-				".yarn/",
-				"**/.output/",
-				"**/.vercel/",
-				"**/.tanstack/",
-				"**/.nitro/",
-				"**/.expo/",
-				"**/coverage/",
-				"**/playwright-report/",
-				"**/test-results/",
-				"**/*.gen.ts",
-				"**/uniwind-types.d.ts",
-				"apps/mobile/ios",
-				"apps/mobile/android",
-			],
-		},
-	);
-};
+		})),
+	],
+	ignorePatterns: [
+		".history/",
+		".yarn/",
+		"**/.output/",
+		"**/.vercel/",
+		"**/.tanstack/",
+		"**/.nitro/",
+		"**/.expo/",
+		"**/coverage/",
+		"**/playwright-report/",
+		"**/test-results/",
+		"**/*.gen.ts",
+		"**/uniwind-types.d.ts",
+		"apps/mobile/ios",
+		"apps/mobile/android",
+	],
+});

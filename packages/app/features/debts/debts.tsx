@@ -63,7 +63,6 @@ export const Debts = suspendedFallback<Props>(
 								t={t}
 								i18nKey="list.empty.description"
 								components={{
-									// eslint-disable-next-line jsx-a11y/heading-has-content
 									text: <Text className="text-xl" />,
 									button: (
 										<ButtonLink

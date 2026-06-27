@@ -1,4 +1,4 @@
-/* eslint-disable import-x/no-extraneous-dependencies */
+/* eslint-disable import-js/no-extraneous-dependencies */
 import accountEn from "@ra/web/public/locales/en/account.json";
 import adminEn from "@ra/web/public/locales/en/admin.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
@@ -21,7 +21,7 @@ import resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import settingsRu from "@ra/web/public/locales/ru/settings.json";
 import usersRu from "@ra/web/public/locales/ru/users.json";
 import voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
-/* eslint-enable import-x/no-extraneous-dependencies */
+/* eslint-enable import-js/no-extraneous-dependencies */
 
 import type { Language, Namespace } from "~app/utils/i18n-data";
 

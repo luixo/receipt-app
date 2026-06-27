@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { Faker, en } from "@faker-js/faker";
 import { test } from "@playwright/test";
 import { mapValues } from "remeda";
@@ -60,6 +59,7 @@ class TemporalModule {
 	};
 }
 
+// oxlint-disable-next-line max-classes-per-file
 export class ExtendedFaker extends Faker {
 	readonly temporal = new TemporalModule(this);
 }
@@ -79,7 +79,7 @@ export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 	},
 	timekeeper: [
 		async ({}, use) => {
-			// eslint-disable-next-line no-restricted-syntax
+			// eslint-disable-next-line eslint-js/no-restricted-syntax
 			timekeeper.freeze(new Date("2020-01-01"));
 			await use();
 			timekeeper.reset();

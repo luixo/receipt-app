@@ -23,7 +23,6 @@ export type Props<T extends object, K extends string> = {
 	disallowEmptySelection?: boolean;
 };
 
-// eslint-disable-next-line react/function-component-definition
 export function Select<T extends object, K extends string>({
 	children,
 	getKey,

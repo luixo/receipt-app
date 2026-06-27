@@ -1,7 +1,7 @@
 import React from "react";
 
 // We currently reuse the styles from button / buttonGroup of the web components
-// eslint-disable-next-line no-restricted-syntax
+// eslint-disable-next-line eslint-js/no-restricted-syntax
 import { button, buttonGroup } from "@heroui/react";
 import { Button as ButtonRaw } from "heroui-native";
 
@@ -185,7 +185,6 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 				)}
 			>
 				{React.Children.map(children, (child, index) => (
-					// eslint-disable-next-line react/jsx-no-constructed-context-values
 					<ButtonGroupIndexContent value={{ index, total: totalChildren }}>
 						{child}
 					</ButtonGroupIndexContent>

@@ -25,7 +25,6 @@ type ShapeProps<T> = {
 	endContent?: ViewReactNode;
 };
 
-// eslint-disable-next-line react/function-component-definition
 export function PaginationBlockShape<T>({
 	limit,
 	totalCount,
@@ -132,7 +131,6 @@ type Props<T> = Omit<ShapeProps<T>, "onLimitChange" | "onPageChange"> & {
 	onPageChange: (page: number) => void;
 };
 
-// eslint-disable-next-line react/function-component-definition
 export function PaginationBlock<T>({
 	totalCount,
 	setLimit,

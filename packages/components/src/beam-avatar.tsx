@@ -135,7 +135,6 @@ export const BeamAvatar = ({
 	const faceRotate = getUnit(nameHash, 10, 3);
 	return (
 		// There are a lot of false positives for `x` and `y`
-		/* eslint-disable @typescript-eslint/no-deprecated */
 		<components.Svg
 			viewBox={`0 0 ${BASE_SIZE} ${BASE_SIZE}`}
 			fill="none"
@@ -235,6 +234,5 @@ export const BeamAvatar = ({
 				</components.G>
 			</components.G>
 		</components.Svg>
-		/* eslint-enable @typescript-eslint/no-deprecated */
 	);
 };

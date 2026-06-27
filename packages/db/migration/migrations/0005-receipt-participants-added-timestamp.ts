@@ -12,7 +12,7 @@ const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 		.updateTable("receiptParticipants")
 		.set({
 			// @ts-expect-error: Database schema has changed
-			// eslint-disable-next-line no-restricted-syntax
+			// eslint-disable-next-line eslint-js/no-restricted-syntax
 			added: sql<Date>`receipts.created + random() * interval '1 hour'`,
 		})
 		.from("receipts")

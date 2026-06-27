@@ -1,6 +1,5 @@
 // Basically, this is a config from `db` package
 // But we have to keep it in the root to make it read env files
-/* eslint-disable import-x/no-extraneous-dependencies */
 import { Kysely, PostgresDialect } from "kysely";
 import { defineConfig } from "kysely-ctl";
 import { Pool } from "pg";

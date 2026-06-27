@@ -169,13 +169,12 @@ export const Icon = ({ name, className, testID, onClick }: Props) => {
 	);
 
 	let element = (
-		// eslint-disable-next-line react-hooks/static-components
 		<Component
 			className={restClassNames.join(" ")}
 			size={emptySize}
 			pointerEvents="none"
 			// Lucide specifically supports `data-testid` in native package
-			// eslint-disable-next-line no-restricted-syntax
+			// eslint-disable-next-line eslint-js/no-restricted-syntax
 			data-testid={testID}
 		/>
 	);

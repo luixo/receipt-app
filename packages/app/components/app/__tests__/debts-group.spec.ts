@@ -15,6 +15,7 @@ const test = mergeTests(debtsTest, debtsGroupFixture);
 const criticalPaths = ["debts.getByUserPaged", "debts.getAllUser"] as const;
 criticalPaths.forEach((path) => {
 	const otherPaths = criticalPaths.filter((lookupPath) => lookupPath !== path);
+
 	test.describe(`'${path}' query`, () => {
 		test("errors", async ({
 			api,

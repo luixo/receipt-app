@@ -46,9 +46,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
       - name: Run linter
-        run: yarn lint --concurrency auto
-        env:
-          NODE_OPTIONS: "--max-old-space-size=4096"
+        run: yarn lint
 
   build:
     name: Build

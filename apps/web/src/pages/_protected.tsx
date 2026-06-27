@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_protected")({
 			if (error instanceof TRPCClientError) {
 				const castedError = error as TRPCError;
 				if (castedError.data?.code === "UNAUTHORIZED") {
-					// eslint-disable-next-line @typescript-eslint/only-throw-error
+					// eslint-disable-next-line typescript/only-throw-error
 					throw redirect({
 						to: "/login",
 						search: { redirect: location.href, ...location.search },

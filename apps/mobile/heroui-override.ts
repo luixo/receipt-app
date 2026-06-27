@@ -1,6 +1,6 @@
-/* eslint-disable import-x/no-extraneous-dependencies */
+/* eslint-disable import-js/no-extraneous-dependencies */
 // We intentionally copy semantic colors from the theme
-// eslint-disable-next-line no-restricted-syntax
+// eslint-disable-next-line eslint-js/no-restricted-syntax
 import {
 	type ColorScale,
 	type ThemeColors,
@@ -8,7 +8,7 @@ import {
 } from "@heroui/theme";
 import { entries, fromEntries, mapKeys, mapValues, omitBy } from "remeda";
 import createPlugin from "tailwindcss/plugin";
-/* eslint-enable import-x/no-extraneous-dependencies */
+/* eslint-enable import-js/no-extraneous-dependencies */
 
 type ColorKey =
 	| keyof ThemeColors

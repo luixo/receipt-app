@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as ExpoDevice from "expo-device";
 import * as SecureStore from "expo-secure-store";
 // This should be redacted in production builds
-// eslint-disable-next-line import-x/no-extraneous-dependencies
+// eslint-disable-next-line import-js/no-extraneous-dependencies
 import { useSyncQueriesExternal } from "react-query-external-sync";
 
 export const DevToolsProvider: React.FC<React.PropsWithChildren<object>> = ({

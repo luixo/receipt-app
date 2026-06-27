@@ -82,7 +82,7 @@ export const verifyIssued = <T>(
 			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				// @ts-expect-error We test an error here
-				// eslint-disable-next-line no-restricted-syntax
+				// eslint-disable-next-line eslint-js/no-restricted-syntax
 				() => runProcedure(context, new Date()),
 				"BAD_REQUEST",
 				`Zod error\n\nAt "${prefix}issued": Input not instance of CalendarDate`,

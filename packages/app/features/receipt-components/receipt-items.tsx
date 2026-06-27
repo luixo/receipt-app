@@ -24,7 +24,6 @@ export const SkeletonAddReceiptItemController = () => {
 				i18nKey="add.addItemButton"
 				components={{
 					icon: <Icon name="add" className="size-6" />,
-					// eslint-disable-next-line jsx-a11y/heading-has-content
 					text: <Text />,
 				}}
 			/>
@@ -53,7 +52,6 @@ const AddReceiptItemController: React.FC = () => {
 				i18nKey="add.addItemButton"
 				components={{
 					icon: <Icon name="add" className="size-6" />,
-					// eslint-disable-next-line jsx-a11y/heading-has-content
 					text: <Text />,
 				}}
 			/>

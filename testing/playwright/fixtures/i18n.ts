@@ -38,7 +38,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 				if (!window.i18n) {
 					throw new Error("Expected to have i18n in window");
 				}
-				// eslint-disable-next-line no-restricted-syntax
+				// eslint-disable-next-line no-restricted-properties
 				return Object.keys(window.i18n.store.data) as Language[];
 			}, []);
 			return languages;
@@ -52,7 +52,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 					if (!window.i18n) {
 						throw new Error("Expected to have i18n in window");
 					}
-					// eslint-disable-next-line no-restricted-syntax
+					// eslint-disable-next-line no-restricted-properties
 					return Object.keys(
 						window.i18n.store.data[languageInner] ?? {},
 					) as Namespace[];

@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_public")({
 			throw error;
 		}
 		// If we do get an account - we're authorized and we need to get to the app page
-		// eslint-disable-next-line @typescript-eslint/only-throw-error
+		// eslint-disable-next-line typescript/only-throw-error
 		throw redirect({ to: search.redirect || "/receipts" });
 	},
 	component: Wrapper,

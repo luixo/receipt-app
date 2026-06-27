@@ -45,7 +45,6 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 					t={t}
 					i18nKey="participants.payedBy"
 					components={{
-						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
 						by: (
 							<AvatarGroup>
@@ -68,7 +67,6 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						t={t}
 						i18nKey="participants.payedFor"
 						components={{
-							// eslint-disable-next-line jsx-a11y/heading-has-content
 							text: <Text variant="h4" />,
 							for: (
 								<AvatarGroup>
@@ -108,7 +106,6 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					t={t}
 					i18nKey="participants.payedBy"
 					components={{
-						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
 						by: (
 							<AvatarGroup>
@@ -123,7 +120,6 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					t={t}
 					i18nKey="participants.payedFor"
 					components={{
-						// eslint-disable-next-line jsx-a11y/heading-has-content
 						text: <Text variant="h4" />,
 						for: (
 							<AvatarGroup>

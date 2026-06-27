@@ -65,7 +65,6 @@ export const Users: React.FC<Props> = suspendedFallback(
 						t={t}
 						i18nKey="list.empty.message"
 						components={{
-							// eslint-disable-next-line jsx-a11y/heading-has-content
 							text: <Text variant="h3" />,
 							icon: (
 								<ButtonLink

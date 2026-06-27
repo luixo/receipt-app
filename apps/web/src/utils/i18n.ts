@@ -23,8 +23,7 @@ const getHeaderLanguages = (request: Request | null) =>
 				})
 				.toSorted((a, b) => b.q - a.q)
 				.flatMap(({ fullTag, baseTag }) => [fullTag, baseTag])
-		: // eslint-disable-next-line n/no-unsupported-features/node-builtins
-			window.navigator.languages;
+		: window.navigator.languages;
 
 type Strategy = "cookie" | "header" | "baseLocale";
 const strategies: Strategy[] = ["cookie", "header", "baseLocale"];

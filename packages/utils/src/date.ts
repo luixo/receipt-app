@@ -106,7 +106,7 @@ export const fromDate = {
 	plainDateTime: (date) => toCalendarDateTime(fromDateRaw(date, localTimeZone)),
 	zonedDateTime: (date) => fromDateRaw(date, localTimeZone),
 } as {
-	// eslint-disable-next-line no-restricted-syntax
+	// eslint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: Date) => TemporalMapping[K];
 };
 export const toDate = {
@@ -116,7 +116,7 @@ export const toDate = {
 	plainDateTime: (input) => input.toDate(localTimeZone),
 	zonedDateTime: (input) => input.toDate(),
 } as {
-	// eslint-disable-next-line no-restricted-syntax
+	// eslint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: TemporalMapping[K]) => Date;
 };
 type ZonedProperties = "timeZone" | "timeZoneName";

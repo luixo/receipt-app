@@ -17,7 +17,6 @@ type ActionChild = {
 
 export type Props = TextChild | ActionChild;
 
-/* eslint-disable react/destructuring-assignment */
 export const Child: React.FC<Props> = (props) => {
 	switch (props.type) {
 		case "text": {
@@ -45,4 +44,3 @@ export const Child: React.FC<Props> = (props) => {
 			return <Button href={props.href} text={props.text} />;
 	}
 };
-/* eslint-enable react/destructuring-assignment */
