@@ -372,6 +372,8 @@ const overriddenRules = {
 	"typescript/no-deprecated": "error",
 	// This catches floating promises instead of typescript/promise-function-async
 	"typescript/no-floating-promises": "error",
+	// We use autoFocus on custom components hence we should ignore them (or better list every component it might be passed to)
+	"jsx-a11y/no-autofocus": ["error", { ignoreNonDOM: true }],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
@@ -501,10 +503,6 @@ const temporaryDisabledRules = {
 	// node
 	"node/no-process-env": "off", // 42 cases
 	"node/callback-return": "off", // 3 cases
-	// a11y
-	"jsx-a11y/prefer-tag-over-role": "off", // 3 cases
-	"jsx-a11y/no-autofocus": "off", // 2 cases
-	"jsx-a11y/control-has-associated-label": "off", // 2 cases
 	// import
 	"import/no-named-export": "off", // 1292 cases
 	"import/group-exports": "off", // 731 cases
@@ -701,6 +699,13 @@ export default defineConfig({
 			rules: {
 				"react/forbid-elements": "off",
 				"no-restricted-globals": "off",
+			},
+		},
+		{
+			files: ["apps/mobile/**/*", "**/*.native.ts", "**/*.native.tsx"],
+			rules: {
+				// There are no tags in native environment
+				"jsx-a11y/prefer-tag-over-role": "off",
 			},
 		},
 		{

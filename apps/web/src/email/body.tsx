@@ -43,6 +43,7 @@ export const Body: React.FC<Props> = ({ children }) => (
 			style={undefined}
 		>
 			<Table.Row>
+				{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
 				<td className="wrapper">
 					<Table>
 						<Table.Row>

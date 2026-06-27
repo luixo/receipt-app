@@ -138,6 +138,7 @@ export const BeamAvatar = ({
 		<components.Svg
 			viewBox={`0 0 ${BASE_SIZE} ${BASE_SIZE}`}
 			fill="none"
+			// eslint-disable-next-line jsx-a11y/prefer-tag-over-role
 			role="img"
 			width={size}
 			height={size}

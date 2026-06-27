@@ -87,6 +87,7 @@ export const Button: React.FC<Props> = ({ href, text }) => {
 			<Table className="btn btn-primary">
 				<tbody>
 					<tr>
+						{/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
 						<td align="left">
 							<Table>
 								<tbody>
