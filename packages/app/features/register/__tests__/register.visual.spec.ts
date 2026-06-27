@@ -14,7 +14,7 @@ test("Regular usage", async ({
 	api.mockUtils.noAuthPage();
 
 	await page.goto("/register");
-	await expect(page.locator("h1")).toHaveText("Register");
+	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Register");
 	await expectScreenshotWithSchemes("empty.png");
 	await fillValidFields();
 	const { password, passwordRetype } = fields;

@@ -81,7 +81,7 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 
 	exchangeAllToOneButton: ({ page }, use) =>
-		use(page.locator("a[role='button'][title='Exchange all to one currency']")),
+		use(page.getByRole("button", { name: "Exchange all to one currency" })),
 	exchangeSpecificButton: ({ page }, use) =>
-		use(page.locator("a[role='button'][title='Exchange specific currency']")),
+		use(page.getByRole("button", { name: "Exchange specific currency" })),
 });

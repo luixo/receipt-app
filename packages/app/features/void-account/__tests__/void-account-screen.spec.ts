@@ -13,7 +13,9 @@ test("On load without token", async ({
 
 	await snapshotQueries(() => page.goto("/void-account"));
 	await expect(page).toHaveTitle("RA - Void account");
-	await expect(page.locator("h2")).toHaveText("Something went wrong");
+	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
+		"Something went wrong",
+	);
 	await expect(voidButton).not.toBeAttached();
 	await expect(cancelButton).not.toBeAttached();
 });

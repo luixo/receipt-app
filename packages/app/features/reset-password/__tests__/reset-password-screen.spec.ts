@@ -14,8 +14,10 @@ test("On load without token", async ({ page, api, faker, snapshotQueries }) => {
 	});
 	await snapshotQueries(() => page.goto("/reset-password"));
 	await expect(page).toHaveTitle("RA - Reset password");
-	await expect(page.locator("h2")).toHaveText("Something went wrong");
-	await expect(page.locator("h3")).toHaveText(
+	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
+		"Something went wrong",
+	);
+	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 		"Please verify you got reset link right or request a new one",
 	);
 });
@@ -77,7 +79,7 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		await snapshotQueries(
 			async () => {
 				await page.goto(`/reset-password?token=${token}`);
-				await expect(page.locator("h3")).toHaveText(email);
+				await expect(page.getByRole("heading", { level: 3 })).toHaveText(email);
 			},
 			{ name: "success", blacklistKeys: ["receipts.getPaged"] },
 		);

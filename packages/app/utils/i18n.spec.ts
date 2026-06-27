@@ -38,7 +38,7 @@ test.describe("Language strategies", () => {
 		await setLanguageCookie("ru");
 		await openSettings();
 		const ru = await getI18nResource("ru", "settings");
-		await expect(page.locator("h1")).toHaveText(ru.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(ru.header);
 	});
 
 	test.describe("Preferred language header", () => {
@@ -46,21 +46,25 @@ test.describe("Language strategies", () => {
 		test("Full tag", async ({ openSettings, page, getI18nResource }) => {
 			await openSettings();
 			const ru = await getI18nResource("ru", "settings");
-			await expect(page.locator("h1")).toHaveText(ru.header);
+			await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+				ru.header,
+			);
 		});
 
 		test.use({ locale: "ru" });
 		test("Short tag", async ({ openSettings, page, getI18nResource }) => {
 			await openSettings();
 			const ru = await getI18nResource("ru", "settings");
-			await expect(page.locator("h1")).toHaveText(ru.header);
+			await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+				ru.header,
+			);
 		});
 	});
 
 	test("Fallback", async ({ openSettings, page, getI18nResource }) => {
 		await openSettings();
 		const en = await getI18nResource("en", "settings");
-		await expect(page.locator("h1")).toHaveText(en.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);
 	});
 
 	test("Invalid language", async ({
@@ -72,7 +76,7 @@ test.describe("Language strategies", () => {
 		await setLanguageCookie("de" as Language);
 		await openSettings();
 		const en = await getI18nResource("en", "settings");
-		await expect(page.locator("h1")).toHaveText(en.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);
 	});
 });
 
@@ -102,7 +106,7 @@ test.describe("Server-side translations", () => {
 		await setLanguageCookie("ru");
 		await openSettings({ awaitCache: false });
 		const ru = await getI18nResource("ru", "settings");
-		await expect(page.locator("h1")).toHaveText(ru.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(ru.header);
 	});
 });
 
@@ -123,7 +127,7 @@ test.describe("Client-side translations", () => {
 	}) => {
 		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
 		await openAccount();
-		await page.locator("a[href='/settings']").click();
+		await page.getByRole("link", { name: "Settings" }).click();
 		await expect
 			.poll(() => getNamespaces())
 			.toEqual(["default", "account", "settings"]);
@@ -138,13 +142,13 @@ test.describe("Client-side translations", () => {
 		await openSettings();
 		expect(await getLanguages()).toEqual(["en"]);
 		const en = await getI18nResource("en", "settings");
-		await expect(page.locator("h1")).toHaveText(en.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);
 
 		await page.locator("button", { hasText: "English" }).click();
 		await page.getByRole("option", { name: "Русский" }).click();
 
 		const ru = await getI18nResource("ru", "settings");
-		await expect(page.locator("h1")).toHaveText(ru.header);
+		await expect(page.getByRole("heading", { level: 1 })).toHaveText(ru.header);
 		await expect.poll(() => getLanguages()).toEqual(["en", "ru"]);
 	});
 });

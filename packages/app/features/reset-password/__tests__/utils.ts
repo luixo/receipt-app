@@ -16,12 +16,18 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	resetPasswordButton: ({ page }, use) =>
-		use(page.locator("button[type=submit]")),
+		use(page.getByRole("button", { name: "Save password" })),
 
 	fields: ({ page }, use) =>
 		use({
-			password: page.getByLabel("New password", { exact: true }),
-			passwordRetype: page.getByLabel("Retype new password", { exact: true }),
+			password: page.getByRole("textbox", {
+				name: "New password",
+				exact: true,
+			}),
+			passwordRetype: page.getByRole("textbox", {
+				name: "Retype new password",
+				exact: true,
+			}),
 		}),
 
 	fillValidFields: ({ fields }, use) =>

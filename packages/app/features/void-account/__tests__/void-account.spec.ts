@@ -17,7 +17,7 @@ test("On load with token", async ({
 	await snapshotQueries(() =>
 		page.goto(`/void-account?token=${faker.string.uuid()}`),
 	);
-	await expect(page.locator("h3")).toHaveText(
+	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 		"Are you sure you want to void your account?",
 	);
 	await expect(voidButton).toBeEnabled();
@@ -96,8 +96,12 @@ test("'auth.voidAccount' mutation", async ({
 		},
 		{ skipQueries: true, name: "success" },
 	);
-	await expect(page.locator("h3")).toHaveText("foo@gmail.com");
-	await expect(page.locator("h4")).toHaveText("Account removed succesfully");
+	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
+		"foo@gmail.com",
+	);
+	await expect(page.getByRole("heading", { level: 4 })).toHaveText(
+		"Account removed succesfully",
+	);
 	await expect(page).toHaveURL(`/void-account?token=${token}`);
 	await page.getByText("To login page").click();
 	await expect(page).toHaveURL("/login");

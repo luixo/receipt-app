@@ -28,7 +28,9 @@ test("Form", async ({
 }) => {
 	await mockBase();
 	await page.goto("/receipts/add");
-	await expect(page.locator("h1")).toHaveText("Add receipt");
+	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+		"Add receipt",
+	);
 	await expectScreenshotWithSchemes("empty.png");
 	await nameInput.fill("Receipt name");
 	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));

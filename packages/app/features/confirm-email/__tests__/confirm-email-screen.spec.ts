@@ -11,13 +11,15 @@ test("On load without token", async ({ page, api, snapshotQueries }) => {
 	await expect(page).toHaveTitle("RA - Confirm email");
 	// see https://github.com/TanStack/router/issues/5383
 	await expect(async () => {
-		const count = await page.locator("h2").count();
+		const count = await page.getByRole("heading", { level: 2 }).count();
 		if (count !== 1) {
 			throw new Error("Expected to have single h2");
 		}
 	}).toPass();
-	await expect(page.locator("h2")).toHaveText("Something went wrong");
-	await expect(page.locator("h3")).toHaveText(
+	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
+		"Something went wrong",
+	);
+	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 		"Please verify you got confirm link right",
 	);
 });
@@ -97,8 +99,10 @@ test.describe("'auth.confirmEmail' mutation", () => {
 			},
 			{ name: "success", blacklistKeys: ["receipts.getPaged"] },
 		);
-		await expect(page.locator("h3")).toHaveText(confirmedEmail);
-		await expect(page.locator("h4")).toHaveText(
+		await expect(page.getByRole("heading", { level: 3 })).toHaveText(
+			confirmedEmail,
+		);
+		await expect(page.getByRole("heading", { level: 4 })).toHaveText(
 			"Email verification successful!",
 		);
 		await expect(page).toHaveURL(`/confirm-email?token=${token}`);

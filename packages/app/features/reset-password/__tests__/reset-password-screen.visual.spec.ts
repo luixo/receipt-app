@@ -51,7 +51,7 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		});
 		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
 		await expectScreenshotWithSchemes("query/success.png", {
-			locator: page.locator("h3"),
+			locator: page.getByRole("heading", { level: 3 }),
 		});
 	});
 });
@@ -77,7 +77,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		await fillValidFields();
 		await resetPasswordButton.click();
 		await expectScreenshotWithSchemes("mutation/loading.png", {
-			mask: [page.locator("h3")],
+			mask: [page.getByRole("heading", { level: 3 })],
 		});
 	});
 
@@ -104,7 +104,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		await resetPasswordButton.click();
 		await clearToasts();
 		await expectScreenshotWithSchemes("mutation/error.png", {
-			mask: [page.locator("h3")],
+			mask: [page.getByRole("heading", { level: 3 })],
 		});
 	});
 });
@@ -123,7 +123,7 @@ test.describe("form", () => {
 		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
 		await fillInvalidFields();
 		await expectScreenshotWithSchemes("invalid.png", {
-			mask: [page.locator("h3")],
+			mask: [page.getByRole("heading", { level: 3 })],
 		});
 	});
 });
