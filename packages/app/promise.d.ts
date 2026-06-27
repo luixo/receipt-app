@@ -1,5 +1,5 @@
 // One can't extend interface with a type
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, no-redeclare
 interface Promise<T> {
 	/**
 	 * Attaches a callback for only the rejection of the Promise.

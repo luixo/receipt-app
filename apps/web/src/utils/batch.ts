@@ -64,14 +64,17 @@ export const queueList = async <
 	inputs: readonly I[],
 	fetchPage: (inputs: I) => Promise<O>,
 ): Promise<(O | TRPCError)[]> => {
-	const mappedInputs = inputs.reduce<Record<string, I[]>>((acc, input) => {
-		const key = hashKey([omit(input, ["cursor", "limit"])]);
-		acc[key] = acc[key] || [];
-		acc[key].push(input);
-		return acc;
-	}, {});
+	const mappedInputs = inputs.reduce<Partial<Record<string, I[]>>>(
+		(acc, input) => {
+			const key = hashKey([omit(input, ["cursor", "limit"])]);
+			acc[key] ||= [];
+			acc[key].push(input);
+			return acc;
+		},
+		{},
+	);
 	const compactInputsMap = new Map<I, I>(
-		values(mappedInputs).flatMap((mappedInput) => {
+		values(mappedInputs).flatMap((mappedInput = []) => {
 			const compactInput = mergeInputs(mappedInput);
 			return mappedInput.map(
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

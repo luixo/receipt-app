@@ -406,16 +406,46 @@ const disabledRules = {
 	"typescript/promise-function-async": "off",
 	// This doesn't fit with us spreading options to the routes
 	"@tanstack/router/create-route-property-order": "off",
+	// It conflicts with vitest/prefer-strict-boolean-matchers
+	"vitest/prefer-to-be-falsy": "off",
+	// We don't need timeouts for every test
+	"vitest/require-test-timeout": "off",
+	// We don't need to know amount of assertions in every test
+	"vitest/prefer-expect-assertions": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
+	// tailwindcss
+	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
+	"better-tailwindcss/no-deprecated-classes": "off",
+	"better-tailwindcss/enforce-logical-properties": "off",
+	// typescript
+	"typescript/prefer-readonly-parameter-types": "off", // 4266 cases
+	"typescript/explicit-function-return-type": "off", // 1205 cases
+	"typescript/strict-boolean-expressions": "off", // 289 cases
+	"typescript/no-unsafe-type-assertion": "off", // 206 cases
+	"typescript/strict-void-return": "off", // 77 cases
+	"typescript/require-await": "off", // 32 cases
+	"typescript/no-unsafe-assignment": "off", // 29 cases
+	"typescript/no-unsafe-member-access": "off", // 26 cases
+	"typescript/no-unnecessary-type-conversion": "off", // 20 cases
+	"typescript/explicit-member-accessibility": "off", // 14 cases
+	"typescript/no-unsafe-call": "off", // 11 cases
+	"typescript/no-meaningless-void-operator": "off", // 7 cases
+	"typescript/no-unsafe-argument": "off", // 6 cases
+	"typescript/unbound-method": "off", // 3 cases
+	"typescript/ban-types": "off", // 2 cases
+	"typescript/no-useless-default-assignment": "off", // 2 cases
+	// unicorn
 	"unicorn/no-null": "off", // 168 cases
+	"unicorn/max-nested-calls": "off", // 83 cases
 	"unicorn/switch-case-braces": "off", // 58 cases
 	"unicorn/no-array-reduce": "off", // 48 cases
 	"unicorn/no-array-callback-reference": "off", // 46 cases
 	"unicorn/catch-error-name": "off", // 41 cases
 	"unicorn/no-array-for-each": "off", // 40 cases
 	"unicorn/explicit-length-check": "off", // 34 cases
+	"unicorn/no-nested-ternary": "off", // 30 cases
 	"unicorn/no-negated-condition": "off", // 25 cases
 	"unicorn/prefer-global-this": "off", // 24 cases
 	"unicorn/prefer-top-level-await": "off", // 19 cases
@@ -425,140 +455,108 @@ const temporaryDisabledRules = {
 	"unicorn/prefer-object-from-entries": "off", // 13 cases
 	"unicorn/consistent-assert": "off", // 11 cases
 	"unicorn/numeric-separators-style": "off", // 9 cases
+	"unicorn/prefer-number-coercion": "off", // 9 cases
 	"unicorn/prefer-number-properties": "off", // 8 cases
 	"unicorn/prefer-spread": "off", // 8 cases
-	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
-	"better-tailwindcss/no-deprecated-classes": "off",
-	// new oxc violations
-	"typescript/prefer-readonly-parameter-types": "off", // 4266 cases
+	"unicorn/prefer-module": "off", // 4 cases
+	"unicorn/no-abusive-eslint-disable": "off", // 2 cases
+	"unicorn/prefer-import-meta-properties": "off", // 2 cases
+	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
-	"oxc/no-async-await": "off", // 1324 cases
-	"import/no-named-export": "off", // 1292 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases
-	"typescript/explicit-function-return-type": "off", // 1205 cases
-	"import/group-exports": "off", // 731 cases
 	"eslint/id-length": "off", // 672 cases
 	"eslint/no-ternary": "off", // 653 cases
-	"react/forbid-component-props": "off", // 595 cases
-	"oxc/no-rest-spread-properties": "off", // 440 cases
 	"eslint/max-lines-per-function": "off", // 413 cases
 	"eslint/no-undefined": "off", // 385 cases
-	"import/prefer-default-export": "off", // 369 cases
-	"react/jsx-max-depth": "off", // 329 cases
-	"vitest/no-standalone-expect": "off", // 324 cases
-	"typescript/strict-boolean-expressions": "off", // 289 cases
-	"react/jsx-filename-extension": "off", // 247 cases
-	"import/exports-last": "off", // 229 cases
-	"typescript/no-unsafe-type-assertion": "off", // 206 cases
-	"oxc/no-optional-chaining": "off", // 196 cases
 	"eslint/capitalized-comments": "off", // 182 cases
 	"eslint/max-statements": "off", // 181 cases
 	"eslint/no-duplicate-imports": "off", // 151 cases
-	"react-perf/jsx-no-new-function-as-prop": "off", // 135 cases
-	"react-perf/jsx-no-new-object-as-prop": "off", // 133 cases
-	"import/no-relative-parent-imports": "off", // 129 cases
-	"import/max-dependencies": "off", // 113 cases
-	"react-perf/jsx-no-jsx-as-prop": "off", // 105 cases
-	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
-	"vitest/require-hook": "off", // 101 cases
-	"promise/prefer-await-to-callbacks": "off", // 98 cases
-	"vitest/no-conditional-in-test": "off", // 93 cases
-	"react/react-in-jsx-scope": "off", // 89 cases
-	"unicorn/max-nested-calls": "off", // 83 cases
-	"vitest/no-importing-vitest-globals": "off", // 83 cases
-	"typescript/strict-void-return": "off", // 77 cases
 	"eslint/require-await": "off", // 73 cases
 	"eslint/require-unicode-regexp": "off", // 64 cases
-	"react/react-compiler": "off", // 64 cases
 	"eslint/max-params": "off", // 62 cases
-	"react/no-multi-comp": "off", // 61 cases
-	"import/no-default-export": "off", // 59 cases
-	"import/consistent-type-specifier-style": "off", // 48 cases
-	"react/only-export-components": "off", // 47 cases
-	"react/jsx-no-literals": "off", // 46 cases
 	"eslint/no-inline-comments": "off", // 42 cases
-	"import/no-namespace": "off", // 42 cases
-	"node/no-process-env": "off", // 42 cases
-	"import/no-nodejs-modules": "off", // 41 cases
 	"eslint/max-lines": "off", // 40 cases
-	"vitest/prefer-strict-equal": "off", // 40 cases
-	"react/jsx-handler-names": "off", // 39 cases
-	"import-js/no-extraneous-dependencies": "off", // 34 cases
-	"typescript/require-await": "off", // 32 cases
-	"unicorn/no-nested-ternary": "off", // 30 cases
-	"typescript/no-unsafe-assignment": "off", // 29 cases
 	"eslint/no-negated-condition": "off", // 28 cases
 	"eslint/no-param-reassign": "off", // 26 cases
-	"typescript/no-unsafe-member-access": "off", // 26 cases
-	"promise/prefer-await-to-then": "off", // 25 cases
-	"vitest/consistent-test-filename": "off", // 23 cases
 	"eslint/prefer-destructuring": "off", // 23 cases
-	"react-perf/jsx-no-new-array-as-prop": "off", // 23 cases
-	"oxc/no-accumulating-spread": "off", // 23 cases
-	"promise/avoid-new": "off", // 20 cases
-	"typescript/no-unnecessary-type-conversion": "off", // 20 cases
-	"import/no-unassigned-import": "off", // 18 cases
-	"oxc/no-map-spread": "off", // 14 cases
-	"typescript/explicit-member-accessibility": "off", // 14 cases
-	"vitest/prefer-to-have-length": "off", // 12 cases
 	"eslint/no-empty-pattern": "off", // 11 cases
-	"typescript/no-unsafe-call": "off", // 11 cases
 	"eslint/new-cap": "off", // 10 cases
 	"eslint/no-empty-function": "off", // 9 cases
-	"unicorn/prefer-number-coercion": "off", // 9 cases
 	"eslint/init-declarations": "off", // 8 cases
-	"vitest/prefer-to-be-truthy": "off", // 8 cases
 	"eslint/prefer-named-capture-group": "off", // 7 cases
-	"import/no-named-as-default-member": "off", // 7 cases
-	"typescript/no-meaningless-void-operator": "off", // 7 cases
 	"eslint/no-warning-comments": "off", // 6 cases
-	"typescript/no-unsafe-argument": "off", // 6 cases
 	"eslint/array-callback-return": "off", // 5 cases
+	"eslint/func-style": "off", // 4 cases
+	// oxc
+	"oxc/no-async-await": "off", // 1324 cases
+	"oxc/no-rest-spread-properties": "off", // 440 cases
+	"oxc/no-optional-chaining": "off", // 196 cases
+	"oxc/no-accumulating-spread": "off", // 23 cases
+	"oxc/no-map-spread": "off", // 14 cases
+	// promise
+	"promise/prefer-await-to-callbacks": "off", // 98 cases
+	"promise/prefer-await-to-then": "off", // 25 cases
+	"promise/avoid-new": "off", // 20 cases
+	"promise/no-multiple-resolved": "off", // 3 cases
+	// node
+	"node/no-process-env": "off", // 42 cases
+	"node/callback-return": "off", // 3 cases
+	// a11y
+	"jsx-a11y/prefer-tag-over-role": "off", // 3 cases
+	"jsx-a11y/no-autofocus": "off", // 2 cases
+	"jsx-a11y/control-has-associated-label": "off", // 2 cases
+	// import
+	"import/no-named-export": "off", // 1292 cases
+	"import/group-exports": "off", // 731 cases
+	"import/prefer-default-export": "off", // 369 cases
+	"import/exports-last": "off", // 229 cases
+	"import/no-relative-parent-imports": "off", // 129 cases
+	"import/max-dependencies": "off", // 113 cases
+	"import/no-default-export": "off", // 59 cases
+	"import/consistent-type-specifier-style": "off", // 48 cases
+	"import/no-namespace": "off", // 42 cases
+	"import/no-nodejs-modules": "off", // 41 cases
+	"import-js/no-extraneous-dependencies": "off", // 34 cases
+	"import/no-unassigned-import": "off", // 18 cases
+	"import/no-named-as-default-member": "off", // 7 cases
+	"import/unambiguous": "off", // 2 cases
+	// react
+	"react/forbid-component-props": "off", // 595 cases
+	"react/jsx-max-depth": "off", // 329 cases
+	"react/jsx-filename-extension": "off", // 247 cases
+	"react/react-in-jsx-scope": "off", // 89 cases
+	"react/react-compiler": "off", // 64 cases
+	"react/no-multi-comp": "off", // 61 cases
+	"react/only-export-components": "off", // 47 cases
+	"react/jsx-no-literals": "off", // 46 cases
+	"react/jsx-handler-names": "off", // 39 cases
+	"react/no-react-children": "off", // 5 cases
+	"react/jsx-no-constructed-context-values": "off", // 3 cases
+	"react/no-object-type-as-default-prop": "off", // 2 cases
+	// react-perf
+	"react-perf/jsx-no-new-function-as-prop": "off", // 135 cases
+	"react-perf/jsx-no-new-object-as-prop": "off", // 133 cases
+	"react-perf/jsx-no-jsx-as-prop": "off", // 105 cases
+	"react-perf/jsx-no-new-array-as-prop": "off", // 23 cases
+	// vitest
+	"vitest/no-standalone-expect": "off", // 324 cases
+	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
+	"vitest/require-hook": "off", // 101 cases
+	"vitest/no-conditional-in-test": "off", // 93 cases
+	"vitest/no-importing-vitest-globals": "off", // 83 cases
+	"vitest/prefer-strict-equal": "off", // 40 cases
+	"vitest/consistent-test-filename": "off", // 23 cases
+	"vitest/prefer-to-have-length": "off", // 12 cases
+	"vitest/prefer-to-be-truthy": "off", // 8 cases
 	"vitest/prefer-to-be": "off", // 5 cases
 	"vitest/max-expects": "off", // 5 cases
-	"react/no-react-children": "off", // 5 cases
-	"unicorn/prefer-module": "off", // 4 cases
-	"eslint/func-style": "off", // 4 cases
 	"vitest/require-top-level-describe": "off", // 4 cases
-	"node/callback-return": "off", // 3 cases
-	"promise/no-multiple-resolved": "off", // 3 cases
 	"vitest/no-hooks": "off", // 3 cases
 	"vitest/no-alias-methods": "off", // 3 cases
 	"vitest/no-conditional-expect": "off", // 3 cases
-	"jsx-a11y/prefer-tag-over-role": "off", // 3 cases
-	"react/jsx-no-constructed-context-values": "off", // 3 cases
-	"typescript/unbound-method": "off", // 3 cases
-	"unicorn/no-abusive-eslint-disable": "off", // 2 cases
-	"import/unambiguous": "off", // 2 cases
-	"typescript/ban-types": "off", // 2 cases
-	"unicorn/prefer-import-meta-properties": "off", // 2 cases
 	"vitest/prefer-lowercase-title": "off", // 2 cases
 	"vitest/prefer-called-once": "off", // 2 cases
-	"jsx-a11y/no-autofocus": "off", // 2 cases
-	"react/no-object-type-as-default-prop": "off", // 2 cases
-	"jsx-a11y/control-has-associated-label": "off", // 2 cases
 	"vitest/prefer-snapshot-hint": "off", // 2 cases
-	"typescript/no-useless-default-assignment": "off", // 2 cases
-	"eslint/complexity": "off", // 1 cases
-	"eslint/no-implicit-globals": "off", // 1 cases
-	"eslint/no-redeclare": "off", // 1 cases
-	"eslint/no-useless-assignment": "off", // 1 cases
-	"unicorn/custom-error-definition": "off", // 1 cases
-	"vitest/prefer-called-times": "off", // 1 cases
-	"vitest/require-mock-type-parameters": "off", // 1 cases
-	"vitest/prefer-import-in-mock": "off", // 1 cases
-	"vitest/prefer-strict-boolean-matchers": "off", // 1 cases
-	"vitest/require-to-throw-message": "off", // 1 cases
-	"eslint/logical-assignment-operators": "off", // 1 cases
-	"vitest/require-test-timeout": "off", // 1 cases
-	"vitest/prefer-expect-assertions": "off", // 1 cases
-	"vitest/prefer-expect-resolves": "off", // 1 cases
-	"vitest/prefer-to-be-falsy": "off", // 1 cases
-	"eslint/no-implicit-coercion": "off", // 1 cases
-	"typescript/no-var-requires": "off", // 1 cases
-	"import/no-commonjs": "off", // 1 cases
-	"typescript/non-nullable-type-assertion-style": "off", // 1 cases
-	"better-tailwindcss/enforce-logical-properties": "off",
 } satisfies DummyRuleMap;
 
 export default defineConfig({

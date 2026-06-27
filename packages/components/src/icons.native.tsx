@@ -18,7 +18,7 @@ export const iconFamily = createIconSet(
 	lucideGlyphMap,
 	"lucide",
 	// This seems to be the expected way to import a font
-	// eslint-disable-next-line n/global-require, @typescript-eslint/no-require-imports
+	// eslint-disable-next-line node/global-require, typescript/no-require-imports, typescript/no-var-requires, import/no-commonjs
 	require("@react-native-vector-icons/lucide/fonts/Lucide.ttf"),
 );
 

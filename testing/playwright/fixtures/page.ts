@@ -33,7 +33,7 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {
 			Date.now = () => mockedTimestamp;
-			// eslint-disable-next-line no-global-assign
+			// eslint-disable-next-line no-global-assign, no-implicit-globals
 			Date = class extends Date {
 				constructor(...args: Parameters<DateConstructor>) {
 					// see https://github.com/microsoft/TypeScript/issues/32164

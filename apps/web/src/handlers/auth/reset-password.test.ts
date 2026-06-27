@@ -134,7 +134,7 @@ describe("auth.resetPassword", () => {
 				.where("id", "=", accountId)
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
-			expect(await getHash(password, passwordSalt)).toBe(passwordHash);
+			await expect(getHash(password, passwordSalt)).resolves.toBe(passwordHash);
 			expect(getResHeaders(context)).toHaveLength(0);
 		});
 	});

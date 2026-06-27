@@ -7,7 +7,9 @@ import { test } from "~tests/backend/utils/test";
 describe("database", () => {
 	test("SQL error logger works", async ({ ctx }) => {
 		const database = assertDatabase(ctx);
-		await expect(() => sql`SELECT foo`.execute(database)).rejects.toThrow();
+		await expect(() => sql`SELECT foo`.execute(database)).rejects.toThrow(
+			"unknown",
+		);
 		const loggedMessages = ctx.logger.getMessages();
 		expect(loggedMessages).toHaveLength(1);
 		assert(loggedMessages[0]);

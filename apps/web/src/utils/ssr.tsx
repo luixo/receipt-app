@@ -42,6 +42,7 @@ class SerializedTRPCError extends Error {
 	errorObject: Error;
 	constructor(queryKey: QueryKey, errorObject: Error) {
 		super(errorObject.message);
+		this.name = "SerializedTRPCError";
 		this.queryKey = queryKey;
 		this.errorObject = errorObject;
 	}

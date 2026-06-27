@@ -43,7 +43,8 @@ export const LanguageSettings: React.FC = () => {
 				placeholder={t("languages.dropdown.placeholder")}
 				renderValue={(values) => values.map((value) => value.text).join(", ")}
 				selectedKeys={[currentLanguage]}
-				onSelectionChange={(key) => onChange(key[0] as Language)}
+				// eslint-disable-next-line typescript/no-non-null-assertion
+				onSelectionChange={(key) => onChange(key[0]!)}
 				getKey={({ language }) => language}
 			>
 				{({ language, text }) => (

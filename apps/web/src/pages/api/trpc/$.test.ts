@@ -20,8 +20,8 @@ import { baseLogger } from "~web/providers/logger";
 
 import { ServerRoute } from "./$";
 
-const proxySpy = vi.hoisted(() => vi.fn());
-vi.mock("@tanstack/react-start/server", async (importOriginal) => ({
+const proxySpy = vi.hoisted(() => vi.fn<() => Promise<void>>());
+vi.mock(import("@tanstack/react-start/server"), async (importOriginal) => ({
 	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 	...(await importOriginal<typeof import("@tanstack/react-start/server")>()),
 	proxyRequest: proxySpy,
@@ -236,7 +236,7 @@ describe("TRPC endpoint", () => {
 				const expectedUrl = new URL(url);
 				expectedUrl.pathname = "query";
 				expectedUrl.searchParams.set("input", serializeInput({ name }));
-				expect(proxySpy).toHaveBeenCalledOnce();
+				expect(proxySpy).toHaveBeenCalledTimes(1);
 				const firstCallArgs = proxySpy.mock.lastCall as
 					| Tail<Parameters<typeof proxyRequest>>
 					| undefined;

@@ -163,7 +163,7 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(result.account.verified).toEqual(false);
+			expect(result.account.verified).toBe(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const message = ctx.emailOptions.mock.getMessages()[0];
 			assert(message);
