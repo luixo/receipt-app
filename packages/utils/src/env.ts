@@ -2,7 +2,6 @@ import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
 export const env = createEnv({
-	skipValidation: Boolean(process.env.PLAYWRIGHT),
 	server: {
 		DATABASE_URL: z.url(),
 		CACHE_DATABASE_URL: z.url(),
@@ -22,6 +21,8 @@ export const env = createEnv({
 	clientPrefix: "VITE_",
 	client: {},
 	// This is the only place it can be used
-	// eslint-disable-next-line node/no-process-env
+	/* eslint-disable node/no-process-env */
 	runtimeEnv: process.env,
+	skipValidation: Boolean(process.env.PLAYWRIGHT || process.env.TEST),
+	/* eslint-enable node/no-process-env */
 });
