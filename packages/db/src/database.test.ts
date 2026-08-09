@@ -8,7 +8,7 @@ describe("database", () => {
 	test("SQL error logger works", async ({ ctx }) => {
 		const database = assertDatabase(ctx);
 		await expect(() => sql`SELECT foo`.execute(database)).rejects.toThrow(
-			"unknown",
+			`column "foo" does not exist`,
 		);
 		const loggedMessages = ctx.logger.getMessages();
 		expect(loggedMessages).toHaveLength(1);
