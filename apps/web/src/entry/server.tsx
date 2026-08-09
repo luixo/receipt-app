@@ -4,24 +4,10 @@ import * as Sentry from "@sentry/tanstackstart-react";
 import {
 	createStartHandler,
 	defaultStreamHandler,
-	parseCookies,
 } from "@tanstack/react-start/server";
-
-import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
-import { apiCookieNames } from "~utils/mocks";
-import type { ExternalRouterContext } from "~web/pages/__root";
 
 import type { TreeRouter } from "./router";
 import { createRouter } from "./router";
-
-const getExternalContext = (): ExternalRouterContext => {
-	const cookies = parseCookies();
-	const initialValues = getStoreValuesFromInitialValues(cookies);
-	return {
-		initialValues,
-		isTest: Boolean(cookies[apiCookieNames.controllerId]),
-	};
-};
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
@@ -32,7 +18,7 @@ const wrappedStreamHandler =
 	Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler);
 
 const eventHandler = createStartHandler<TreeRouter>({
-	createRouter: () => createRouter(getExternalContext()),
+	createRouter: () => createRouter(),
 })(wrappedStreamHandler);
 
 export default eventHandler;

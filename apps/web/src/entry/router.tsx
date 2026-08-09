@@ -10,8 +10,9 @@ import {
 	createRouter as createTanStackRouter,
 	useRouter,
 } from "@tanstack/react-router";
-import { serverOnly } from "@tanstack/react-start";
-import { getWebRequest } from "@tanstack/react-start/server";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getWebRequest, parseCookies } from "@tanstack/react-start/server";
+import { fromEntries } from "remeda";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
 import { LinksContext } from "~app/contexts/links-context";
@@ -22,10 +23,12 @@ import {
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import { getNow, serialize } from "~utils/date";
+import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
 import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
@@ -69,8 +72,40 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 	return hydratedClient;
 };
 
-export const createRouter = (externalContext: ExternalRouterContext) => {
-	const request = import.meta.env.SSR ? serverOnly(getWebRequest)() : null;
+const getUniversalRequest = createIsomorphicFn()
+	.server(() => getWebRequest())
+	.client(() => null);
+
+const getExternalContext = createIsomorphicFn()
+	.server(() => {
+		const cookies = parseCookies();
+		const initialValues = getStoreValuesFromInitialValues(cookies);
+		return {
+			initialValues,
+			isTest: Boolean(cookies[apiCookieNames.controllerId]),
+		} satisfies ExternalRouterContext;
+	})
+	.client(() => {
+		const cookies = fromEntries(
+			document.cookie
+				.split(";")
+				.map(
+					(cookie) =>
+						cookie.trim().split("=").map(decodeURIComponent).slice(0, 2) as [
+							string,
+							string,
+						],
+				),
+		);
+		return {
+			initialValues: getStoreValuesFromInitialValues(cookies),
+			isTest: Boolean(cookies[apiCookieNames.controllerId]),
+		} satisfies ExternalRouterContext;
+	});
+
+export const createRouter = () => {
+	const externalContext = getExternalContext();
+	const request = getUniversalRequest();
 	const queryClient = getQueryClient();
 	const initialLanguage = getLanguageFromRequest(request);
 	const i18nContext = createI18nContext({

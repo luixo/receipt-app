@@ -4,36 +4,10 @@ import React from "react";
 import * as Sentry from "@sentry/tanstackstart-react";
 import { StartClient } from "@tanstack/react-start";
 import { hydrateRoot } from "react-dom/client";
-import { fromEntries } from "remeda";
-
-import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
-import { apiCookieNames } from "~utils/mocks";
-import type { ExternalRouterContext } from "~web/pages/__root";
 
 import { createRouter } from "./router";
 
-const parseCookies = () =>
-	fromEntries(
-		document.cookie
-			.split(";")
-			.map(
-				(cookie) =>
-					cookie.trim().split("=").map(decodeURIComponent).slice(0, 2) as [
-						string,
-						string,
-					],
-			),
-	);
-
-const getContext = (): ExternalRouterContext => {
-	const cookies = parseCookies();
-	return {
-		initialValues: getStoreValuesFromInitialValues(cookies),
-		isTest: Boolean(cookies[apiCookieNames.controllerId]),
-	};
-};
-
-const router = createRouter(getContext());
+const router = createRouter();
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
