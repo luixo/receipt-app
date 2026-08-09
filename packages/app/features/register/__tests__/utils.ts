@@ -24,7 +24,10 @@ export const test = originalTest.extend<Fixtures>({
 		use({
 			email: page.getByRole("textbox", { name: "Email" }),
 			name: page.getByRole("textbox", { name: "Name" }),
-			password: page.getByRole("textbox", { name: "Password", exact: true }),
+			password: page.getByRole("textbox", {
+				name: "New password",
+				exact: true,
+			}),
 			passwordRetype: page.getByRole("textbox", {
 				name: "Retype new password",
 				exact: true,
