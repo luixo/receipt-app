@@ -103,8 +103,8 @@ export const getPathHooks = <K extends RouteId>(key: K) => {
 
 export const searchParamsMapping = {
 	__root__: z.object({
-		debug: z.coerce.boolean().optional().catch(false),
-		redirect: z.string().optional().catch(""),
+		debug: z.coerce.boolean().default(false).catch(false),
+		redirect: z.string().default("").catch(""),
 	}),
 	"/_public/void-account": z.object({
 		token: voidAccountTokenSchema.optional().catch(undefined),
@@ -117,13 +117,13 @@ export const searchParamsMapping = {
 	}),
 	"/_protected/users/": z.object({
 		limit: limitSchema.optional().catch(undefined),
-		offset: offsetSchema.catch(0),
+		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/receipts/": z.object({
-		sort: receiptsOrderBySchema.catch("date-desc"),
-		filters: receiptsFiltersSchema.catch({}),
+		sort: receiptsOrderBySchema.default("date-desc").catch("date-desc"),
+		filters: receiptsFiltersSchema.default({}).catch({}),
 		limit: limitSchema.optional().catch(undefined),
-		offset: offsetSchema.catch(0),
+		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/debts/transfer": z.object({
 		to: userIdSchema.optional().catch(undefined),
@@ -131,11 +131,11 @@ export const searchParamsMapping = {
 	}),
 	"/_protected/debts/": z.object({
 		limit: limitSchema.optional().catch(undefined),
-		offset: offsetSchema.catch(0),
+		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/debts/user/$id/": z.object({
 		limit: limitSchema.optional().catch(undefined),
-		offset: offsetSchema.catch(0),
+		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/debts/add": z.object({
 		userId: userIdSchema.optional().catch(undefined),
