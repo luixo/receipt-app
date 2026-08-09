@@ -14,7 +14,7 @@ const POST = getServerRouteMethod(ServerRoute, "POST");
 const router = t.router({
 	utils: t.router({
 		pingCache: t.procedure.mutation(({ ctx }) => {
-			const errorMessage = ctx.event.node.req.headers["x-error"];
+			const errorMessage = ctx.req.headers["x-error"];
 			if (errorMessage !== undefined) {
 				throw new TRPCError({
 					code: "BAD_REQUEST",

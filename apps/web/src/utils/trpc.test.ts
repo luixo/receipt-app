@@ -11,10 +11,9 @@ import { getApiTrpcClient, getLoaderTrpcClient } from "./trpc";
 
 const router = t.router({
 	getSearch: t.procedure.query(
-		({ ctx }) =>
-			new URL(ctx.event.node.req.url ?? "", "http://localhost/").search,
+		({ ctx }) => new URL(ctx.req.url ?? "", "http://localhost/").search,
 	),
-	getHeaders: t.procedure.query(({ ctx }) => ctx.event.node.req.headers),
+	getHeaders: t.procedure.query(({ ctx }) => ctx.req.headers),
 });
 
 describe("API calls", () => {

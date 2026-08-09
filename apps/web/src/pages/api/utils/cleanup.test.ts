@@ -19,7 +19,7 @@ const removedResetPasswordIntentions = faker.number.int({
 const router = t.router({
 	sessions: t.router({
 		cleanup: t.procedure.mutation(({ ctx }) => {
-			const errorMessage = ctx.event.node.req.headers["x-error"];
+			const errorMessage = ctx.req.headers["x-error"];
 			if (errorMessage !== undefined) {
 				throw new TRPCError({
 					code: "BAD_REQUEST",

@@ -23,6 +23,8 @@ type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
 
 export type NetContext = {
 	event: H3Event;
+	req: H3Event["node"]["req"];
+	res: H3Event["node"]["res"];
 	info: TRPCRequestInfo;
 };
 
@@ -39,8 +41,13 @@ export const createContext = (
 		info,
 	}: { req: IncomingMessage; res: ServerResponse; info: TRPCRequestInfo },
 	testContext: TestContextPicks,
-): UnauthorizedContext => ({
-	info,
-	event: createEvent(req, res),
-	...testContext,
-});
+): UnauthorizedContext => {
+	const event = createEvent(req, res);
+	return {
+		info,
+		event,
+		req,
+		res,
+		...testContext,
+	};
+};

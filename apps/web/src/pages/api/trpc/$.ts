@@ -177,7 +177,7 @@ const callback: Callback = async ({ request, ...rest }) => {
 			status: 200,
 			headers: ctx
 				? fromEntries(
-						entries(ctx.event.node.res.getHeaders()).map(([key, value]) => [
+						entries(ctx.res.getHeaders()).map(([key, value]) => [
 							key,
 							typeof value === "number" ? value.toString() : value,
 						]),
