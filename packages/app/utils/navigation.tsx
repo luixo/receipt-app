@@ -65,8 +65,7 @@ export type SearchParamState<
 export type SearchParamStateDefaulted<
 	K extends RouteId,
 	P extends keyof OutputRouteSearchParams<K>,
-	O extends OutputRouteSearchParams<K>[P],
-> = [O, SearchParamState<K, P>[1]];
+> = [NonNullable<SearchParamState<K, P>[0]>, SearchParamState<K, P>[1]];
 
 export const getPathHooks = <K extends RouteId>(key: K) => {
 	const useQueryState = <P extends keyof OutputRouteSearchParams<K>>(

@@ -15,7 +15,10 @@ import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { SearchParamState } from "~app/utils/navigation";
+import type {
+	SearchParamState,
+	SearchParamStateDefaulted,
+} from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Icon } from "~components/icons";
@@ -100,7 +103,7 @@ const RemoveReceiptsButton: React.FC<{
 type Props = {
 	sort: SearchParamState<"/_protected/receipts/", "sort">[0];
 	filtersState: SearchParamState<"/_protected/receipts/", "filters">;
-	limitState: SearchParamState<"/_protected/receipts/", "limit">;
+	limitState: SearchParamStateDefaulted<"/_protected/receipts/", "limit">;
 	offsetState: SearchParamState<"/_protected/receipts/", "offset">;
 };
 

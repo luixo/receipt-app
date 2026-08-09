@@ -44,7 +44,7 @@ const UserPreview = suspendedFallback<{
 );
 
 type Props = {
-	limitState: SearchParamStateDefaulted<"/_protected/users/", "limit", number>;
+	limitState: SearchParamStateDefaulted<"/_protected/users/", "limit">;
 	offsetState: SearchParamState<"/_protected/users/", "offset">;
 };
 

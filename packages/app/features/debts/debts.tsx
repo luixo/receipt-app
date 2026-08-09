@@ -12,7 +12,10 @@ import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import type { SearchParamState } from "~app/utils/navigation";
+import type {
+	SearchParamState,
+	SearchParamStateDefaulted,
+} from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
@@ -30,7 +33,7 @@ const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 );
 
 type Props = {
-	limitState: SearchParamState<"/_protected/debts/", "limit">;
+	limitState: SearchParamStateDefaulted<"/_protected/debts/", "limit">;
 	offsetState: SearchParamState<"/_protected/debts/", "offset">;
 };
 

@@ -23,7 +23,10 @@ import { useSubscribeToQueryUpdate } from "~app/hooks/use-subscribe-to-query";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { SearchParamState } from "~app/utils/navigation";
+import type {
+	SearchParamState,
+	SearchParamStateDefaulted,
+} from "~app/utils/navigation";
 import { typeQuery } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -312,7 +315,7 @@ const filters = {};
 
 export const UserDebtsList = suspendedFallback<{
 	userId: UserId;
-	limitState: SearchParamState<"/_protected/debts/user/$id/", "limit">;
+	limitState: SearchParamStateDefaulted<"/_protected/debts/user/$id/", "limit">;
 	offsetState: SearchParamState<"/_protected/debts/user/$id/", "offset">;
 }>(
 	({ userId, limitState: [limit, setLimit], offsetState }) => {
