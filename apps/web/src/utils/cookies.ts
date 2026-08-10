@@ -1,7 +1,6 @@
-import { serverOnly } from "@tanstack/react-start";
-import { setCookie as setRawCookie } from "@tanstack/react-start/server";
+import { createServerOnlyFn } from "@tanstack/react-start";
 import type { SerializeOptions } from "cookie";
-import { parse } from "cookie";
+import { parse, serialize } from "cookie";
 
 import type { Temporal } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -27,13 +26,14 @@ export const getOptions = ({ expires, ...opts }: Options) => ({
 	...opts,
 });
 
-export const setCookie = serverOnly(
+export const setCookie = createServerOnlyFn(
 	(
-		{ event }: Pick<UnauthorizedContext, "event">,
+		{ res }: Pick<UnauthorizedContext, "res">,
 		cookieName: string,
 		cookieValue: string,
 		opts: Options,
 	) => {
-		setRawCookie(event, cookieName, cookieValue, getOptions(opts));
+		const newCookie = serialize(cookieName, cookieValue, getOptions(opts));
+		res.appendHeader("Set-Cookie", newCookie);
 	},
 );

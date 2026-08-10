@@ -7,9 +7,9 @@ import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
 import { getServerRouteMethod } from "~web/pages/api/test.utils";
 
-import { ServerRoute } from "./cleanup";
+import { Route } from "./cleanup";
 
-const POST = getServerRouteMethod(ServerRoute, "POST");
+const POST = getServerRouteMethod(Route, "POST");
 
 const removedSessions = faker.number.int({ min: 3000, max: 10000 });
 const removedResetPasswordIntentions = faker.number.int({
@@ -40,7 +40,6 @@ describe("cleanup", () => {
 			await withTestServer(ctx, router, async ({ url }) => {
 				const errorMessage = faker.lorem.sentence();
 				const response = await POST({
-					context: undefined,
 					pathname: "/api/utils/cleanup",
 					request: new Request(url, {
 						headers: { "x-error": errorMessage },
@@ -62,7 +61,6 @@ describe("cleanup", () => {
 	test("success", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
 			const response = await POST({
-				context: undefined,
 				pathname: "/api/utils/cleanup",
 				request: new Request(url),
 				params: {},

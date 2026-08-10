@@ -1,16 +1,12 @@
-import type {
-	ServerFileRoutesByPath,
-	ServerRouteMethodRecordValue,
-} from "@tanstack/react-start/server";
-import {
-	createServerFileRoute,
-	proxyRequest,
-} from "@tanstack/react-start/server";
+import type { AnyRoute } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
+import type { Register, RouteMethodHandlerFn } from "@tanstack/react-start";
+import { proxyRequest } from "@tanstack/react-start/server";
 import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
-import { entries, fromEntries } from "remeda";
+import { fromEntries } from "remeda";
 import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
@@ -23,7 +19,7 @@ import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { getCookie } from "~web/utils/cookies";
-import { getReqHeader } from "~web/utils/headers";
+import { getReqHeader, getResHeaders } from "~web/utils/headers";
 
 /* c8 ignore start */
 const defaultGetDatabase = (req: Request) =>
@@ -60,14 +56,14 @@ const createContextRest = (
 });
 /* c8 ignore stop */
 
-type Callback = Extract<
-	ServerRouteMethodRecordValue<
-		ServerFileRoutesByPath["/api/trpc/$"]["parentRoute"],
-		"/api/trpc/$",
-		undefined
-	>,
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-	Function
+type Callback = RouteMethodHandlerFn<
+	Register,
+	AnyRoute,
+	"/api/trpc/$",
+	unknown,
+	unknown,
+	unknown,
+	unknown
 >;
 
 const getTestRequestHandlerProps = ({
@@ -109,13 +105,17 @@ const redirectTestHandler = async (
 			)
 			.replace(/^;/, "") || "",
 	);
-	await proxyRequest(proxyUrl.toString(), {
-		headers: request.headers,
-	});
-	return new Response();
+	const { body, status, statusText, headers } = await proxyRequest(
+		proxyUrl.toString(),
+		{ headers: request.headers },
+	);
+	return new Response(body, { status, statusText, headers });
 };
 
-const callback: Callback = async ({ request, ...rest }) => {
+const callback = async (
+	request: Request,
+	rest: Omit<Parameters<Callback>[0], "request">,
+) => {
 	const cookieHeader = request.headers.get("cookie") ?? "";
 	const proxyPort = getCookie(cookieHeader, apiCookieNames.proxyPort);
 	if (proxyPort) {
@@ -175,20 +175,17 @@ const callback: Callback = async ({ request, ...rest }) => {
 		},
 		responseMeta: ({ ctx }) => ({
 			status: 200,
-			headers: ctx
-				? fromEntries(
-						entries(ctx.res.getHeaders()).map(([key, value]) => [
-							key,
-							typeof value === "number" ? value.toString() : value,
-						]),
-					)
-				: {},
+			headers: ctx ? fromEntries(getResHeaders(ctx)) : {},
 		}),
 		...getTestRequestHandlerProps(rest),
 	});
 };
 
-export const ServerRoute = createServerFileRoute("/api/trpc/$").methods({
-	GET: callback,
-	POST: callback,
+export const Route = createFileRoute("/api/trpc/$")({
+	server: {
+		handlers: {
+			GET: ({ request, ...rest }) => callback(request, rest),
+			POST: ({ request, ...rest }) => callback(request, rest),
+		},
+	},
 });

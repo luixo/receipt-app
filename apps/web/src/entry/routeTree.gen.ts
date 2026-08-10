@@ -8,12 +8,11 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { createServerRootRoute } from '@tanstack/react-start/server'
-
 import { Route as rootRouteImport } from './../pages/__root'
 import { Route as PublicRouteImport } from './../pages/_public'
 import { Route as ProtectedRouteImport } from './../pages/_protected'
 import { Route as IndexRouteImport } from './../pages/index'
+import { Route as ApiPingRouteImport } from './../pages/api/ping'
 import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
 import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
 import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
@@ -26,6 +25,9 @@ import { Route as ProtectedAccountRouteImport } from './../pages/_protected/acco
 import { Route as ProtectedUsersIndexRouteImport } from './../pages/_protected/users/index'
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
+import { Route as ApiUtilsPingCacheRouteImport } from './../pages/api/utils/ping-cache'
+import { Route as ApiUtilsCleanupRouteImport } from './../pages/api/utils/cleanup'
+import { Route as ApiTrpcSplatRouteImport } from './../pages/api/trpc/$'
 import { Route as ProtectedUsersConnectionsRouteImport } from './../pages/_protected/users/connections'
 import { Route as ProtectedUsersAddRouteImport } from './../pages/_protected/users/add'
 import { Route as ProtectedUsersIdRouteImport } from './../pages/_protected/users/$id'
@@ -39,12 +41,6 @@ import { Route as ProtectedDebtsUserIdIndexRouteImport } from './../pages/_prote
 import { Route as ProtectedDebtsUserIdExchangeIndexRouteImport } from './../pages/_protected/debts/user/$id/exchange/index'
 import { Route as ProtectedDebtsUserIdExchangeSpecificRouteImport } from './../pages/_protected/debts/user/$id/exchange/specific'
 import { Route as ProtectedDebtsUserIdExchangeAllRouteImport } from './../pages/_protected/debts/user/$id/exchange/all'
-import { ServerRoute as ApiPingServerRouteImport } from './../pages/api/ping'
-import { ServerRoute as ApiUtilsPingCacheServerRouteImport } from './../pages/api/utils/ping-cache'
-import { ServerRoute as ApiUtilsCleanupServerRouteImport } from './../pages/api/utils/cleanup'
-import { ServerRoute as ApiTrpcSplatServerRouteImport } from './../pages/api/trpc/$'
-
-const rootServerRouteImport = createServerRootRoute()
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -57,6 +53,11 @@ const ProtectedRoute = ProtectedRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPingRoute = ApiPingRouteImport.update({
+  id: '/api/ping',
+  path: '/api/ping',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicVoidAccountRoute = PublicVoidAccountRouteImport.update({
@@ -118,6 +119,21 @@ const ProtectedDebtsIndexRoute = ProtectedDebtsIndexRouteImport.update({
   id: '/debts/',
   path: '/debts/',
   getParentRoute: () => ProtectedRoute,
+} as any)
+const ApiUtilsPingCacheRoute = ApiUtilsPingCacheRouteImport.update({
+  id: '/api/utils/ping-cache',
+  path: '/api/utils/ping-cache',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiUtilsCleanupRoute = ApiUtilsCleanupRouteImport.update({
+  id: '/api/utils/cleanup',
+  path: '/api/utils/cleanup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedUsersConnectionsRoute =
   ProtectedUsersConnectionsRouteImport.update({
@@ -190,26 +206,6 @@ const ProtectedDebtsUserIdExchangeAllRoute =
     path: '/debts/user/$id/exchange/all',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ApiPingServerRoute = ApiPingServerRouteImport.update({
-  id: '/api/ping',
-  path: '/api/ping',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
-const ApiUtilsPingCacheServerRoute = ApiUtilsPingCacheServerRouteImport.update({
-  id: '/api/utils/ping-cache',
-  path: '/api/utils/ping-cache',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
-const ApiUtilsCleanupServerRoute = ApiUtilsCleanupServerRouteImport.update({
-  id: '/api/utils/cleanup',
-  path: '/api/utils/cleanup',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
-const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootServerRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
+  '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
   '/debts/add': typeof ProtectedDebtsAddRoute
   '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
@@ -231,13 +228,16 @@ export interface FileRoutesByFullPath {
   '/users/$id': typeof ProtectedUsersIdRoute
   '/users/add': typeof ProtectedUsersAddRoute
   '/users/connections': typeof ProtectedUsersConnectionsRoute
-  '/debts': typeof ProtectedDebtsIndexRoute
-  '/receipts': typeof ProtectedReceiptsIndexRoute
-  '/users': typeof ProtectedUsersIndexRoute
-  '/debts/user/$id': typeof ProtectedDebtsUserIdIndexRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
+  '/debts/': typeof ProtectedDebtsIndexRoute
+  '/receipts/': typeof ProtectedReceiptsIndexRoute
+  '/users/': typeof ProtectedUsersIndexRoute
+  '/debts/user/$id/': typeof ProtectedDebtsUserIdIndexRoute
   '/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
   '/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
-  '/debts/user/$id/exchange': typeof ProtectedDebtsUserIdExchangeIndexRoute
+  '/debts/user/$id/exchange/': typeof ProtectedDebtsUserIdExchangeIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -250,6 +250,7 @@ export interface FileRoutesByTo {
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
+  '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
   '/debts/add': typeof ProtectedDebtsAddRoute
   '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
@@ -259,6 +260,9 @@ export interface FileRoutesByTo {
   '/users/$id': typeof ProtectedUsersIdRoute
   '/users/add': typeof ProtectedUsersAddRoute
   '/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
   '/debts': typeof ProtectedDebtsIndexRoute
   '/receipts': typeof ProtectedReceiptsIndexRoute
   '/users': typeof ProtectedUsersIndexRoute
@@ -281,6 +285,7 @@ export interface FileRoutesById {
   '/_public/register': typeof PublicRegisterRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
   '/_public/void-account': typeof PublicVoidAccountRoute
+  '/api/ping': typeof ApiPingRoute
   '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
   '/_protected/debts/add': typeof ProtectedDebtsAddRoute
   '/_protected/debts/intentions': typeof ProtectedDebtsIntentionsRoute
@@ -290,6 +295,9 @@ export interface FileRoutesById {
   '/_protected/users/$id': typeof ProtectedUsersIdRoute
   '/_protected/users/add': typeof ProtectedUsersAddRoute
   '/_protected/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/api/trpc/$': typeof ApiTrpcSplatRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
   '/_protected/debts/': typeof ProtectedDebtsIndexRoute
   '/_protected/receipts/': typeof ProtectedReceiptsIndexRoute
   '/_protected/users/': typeof ProtectedUsersIndexRoute
@@ -311,6 +319,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/void-account'
+    | '/api/ping'
     | '/debts/$id'
     | '/debts/add'
     | '/debts/intentions'
@@ -320,13 +329,16 @@ export interface FileRouteTypes {
     | '/users/$id'
     | '/users/add'
     | '/users/connections'
-    | '/debts'
-    | '/receipts'
-    | '/users'
-    | '/debts/user/$id'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
+    | '/debts/'
+    | '/receipts/'
+    | '/users/'
+    | '/debts/user/$id/'
     | '/debts/user/$id/exchange/all'
     | '/debts/user/$id/exchange/specific'
-    | '/debts/user/$id/exchange'
+    | '/debts/user/$id/exchange/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -339,6 +351,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/void-account'
+    | '/api/ping'
     | '/debts/$id'
     | '/debts/add'
     | '/debts/intentions'
@@ -348,6 +361,9 @@ export interface FileRouteTypes {
     | '/users/$id'
     | '/users/add'
     | '/users/connections'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
     | '/debts'
     | '/receipts'
     | '/users'
@@ -369,6 +385,7 @@ export interface FileRouteTypes {
     | '/_public/register'
     | '/_public/reset-password'
     | '/_public/void-account'
+    | '/api/ping'
     | '/_protected/debts/$id'
     | '/_protected/debts/add'
     | '/_protected/debts/intentions'
@@ -378,6 +395,9 @@ export interface FileRouteTypes {
     | '/_protected/users/$id'
     | '/_protected/users/add'
     | '/_protected/users/connections'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
     | '/_protected/debts/'
     | '/_protected/receipts/'
     | '/_protected/users/'
@@ -391,52 +411,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
-}
-export interface FileServerRoutesByFullPath {
-  '/api/ping': typeof ApiPingServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
-  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
-}
-export interface FileServerRoutesByTo {
-  '/api/ping': typeof ApiPingServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
-  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
-}
-export interface FileServerRoutesById {
-  __root__: typeof rootServerRouteImport
-  '/api/ping': typeof ApiPingServerRoute
-  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
-  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
-}
-export interface FileServerRouteTypes {
-  fileServerRoutesByFullPath: FileServerRoutesByFullPath
-  fullPaths:
-    | '/api/ping'
-    | '/api/trpc/$'
-    | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
-  fileServerRoutesByTo: FileServerRoutesByTo
-  to:
-    | '/api/ping'
-    | '/api/trpc/$'
-    | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
-  id:
-    | '__root__'
-    | '/api/ping'
-    | '/api/trpc/$'
-    | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
-  fileServerRoutesById: FileServerRoutesById
-}
-export interface RootServerRouteChildren {
-  ApiPingServerRoute: typeof ApiPingServerRoute
-  ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
-  ApiUtilsCleanupServerRoute: typeof ApiUtilsCleanupServerRoute
-  ApiUtilsPingCacheServerRoute: typeof ApiUtilsPingCacheServerRoute
+  ApiPingRoute: typeof ApiPingRoute
+  ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
+  ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
+  ApiUtilsPingCacheRoute: typeof ApiUtilsPingCacheRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -444,14 +422,14 @@ declare module '@tanstack/react-router' {
     '/_public': {
       id: '/_public'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected': {
       id: '/_protected'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -460,6 +438,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/ping': {
+      id: '/api/ping'
+      path: '/api/ping'
+      fullPath: '/api/ping'
+      preLoaderRoute: typeof ApiPingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/void-account': {
@@ -528,23 +513,44 @@ declare module '@tanstack/react-router' {
     '/_protected/users/': {
       id: '/_protected/users/'
       path: '/users'
-      fullPath: '/users'
+      fullPath: '/users/'
       preLoaderRoute: typeof ProtectedUsersIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/receipts/': {
       id: '/_protected/receipts/'
       path: '/receipts'
-      fullPath: '/receipts'
+      fullPath: '/receipts/'
       preLoaderRoute: typeof ProtectedReceiptsIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/debts/': {
       id: '/_protected/debts/'
       path: '/debts'
-      fullPath: '/debts'
+      fullPath: '/debts/'
       preLoaderRoute: typeof ProtectedDebtsIndexRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/api/utils/ping-cache': {
+      id: '/api/utils/ping-cache'
+      path: '/api/utils/ping-cache'
+      fullPath: '/api/utils/ping-cache'
+      preLoaderRoute: typeof ApiUtilsPingCacheRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/utils/cleanup': {
+      id: '/api/utils/cleanup'
+      path: '/api/utils/cleanup'
+      fullPath: '/api/utils/cleanup'
+      preLoaderRoute: typeof ApiUtilsCleanupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_protected/users/connections': {
       id: '/_protected/users/connections'
@@ -612,14 +618,14 @@ declare module '@tanstack/react-router' {
     '/_protected/debts/user/$id/': {
       id: '/_protected/debts/user/$id/'
       path: '/debts/user/$id'
-      fullPath: '/debts/user/$id'
+      fullPath: '/debts/user/$id/'
       preLoaderRoute: typeof ProtectedDebtsUserIdIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/debts/user/$id/exchange/': {
       id: '/_protected/debts/user/$id/exchange/'
       path: '/debts/user/$id/exchange'
-      fullPath: '/debts/user/$id/exchange'
+      fullPath: '/debts/user/$id/exchange/'
       preLoaderRoute: typeof ProtectedDebtsUserIdExchangeIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
@@ -636,38 +642,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/debts/user/$id/exchange/all'
       preLoaderRoute: typeof ProtectedDebtsUserIdExchangeAllRouteImport
       parentRoute: typeof ProtectedRoute
-    }
-  }
-}
-declare module '@tanstack/react-start/server' {
-  interface ServerFileRoutesByPath {
-    '/api/ping': {
-      id: '/api/ping'
-      path: '/api/ping'
-      fullPath: '/api/ping'
-      preLoaderRoute: typeof ApiPingServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/api/utils/ping-cache': {
-      id: '/api/utils/ping-cache'
-      path: '/api/utils/ping-cache'
-      fullPath: '/api/utils/ping-cache'
-      preLoaderRoute: typeof ApiUtilsPingCacheServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/api/utils/cleanup': {
-      id: '/api/utils/cleanup'
-      path: '/api/utils/cleanup'
-      fullPath: '/api/utils/cleanup'
-      preLoaderRoute: typeof ApiUtilsCleanupServerRouteImport
-      parentRoute: typeof rootServerRouteImport
-    }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatServerRouteImport
-      parentRoute: typeof rootServerRouteImport
     }
   }
 }
@@ -747,16 +721,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  ApiPingRoute: ApiPingRoute,
+  ApiTrpcSplatRoute: ApiTrpcSplatRoute,
+  ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,
+  ApiUtilsPingCacheRoute: ApiUtilsPingCacheRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-const rootServerRouteChildren: RootServerRouteChildren = {
-  ApiPingServerRoute: ApiPingServerRoute,
-  ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
-  ApiUtilsCleanupServerRoute: ApiUtilsCleanupServerRoute,
-  ApiUtilsPingCacheServerRoute: ApiUtilsPingCacheServerRoute,
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
 }
-export const serverRouteTree = rootServerRouteImport
-  ._addFileChildren(rootServerRouteChildren)
-  ._addFileTypes<FileServerRouteTypes>()

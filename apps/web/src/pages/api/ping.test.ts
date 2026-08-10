@@ -3,14 +3,13 @@ import { describe, expect } from "vitest";
 import { test } from "~tests/backend/utils/test";
 import { getServerRouteMethod } from "~web/pages/api/test.utils";
 
-import { ServerRoute } from "./ping";
+import { Route } from "./ping";
 
-const GET = getServerRouteMethod(ServerRoute, "GET");
+const GET = getServerRouteMethod(Route, "GET");
 
 describe("ping", () => {
 	test("pong", async () => {
 		const response = await GET({
-			context: undefined,
 			pathname: "/api/ping",
 			request: new Request("http://localhost:3000/"),
 			params: {},

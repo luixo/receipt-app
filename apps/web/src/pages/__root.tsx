@@ -1,7 +1,6 @@
 import React from "react";
 import { AppRegistry } from "react-native";
 
-import { wrapCreateRootRouteWithSentry } from "@sentry/tanstackstart-react";
 import type { QueryClient } from "@tanstack/react-query";
 import {
 	HeadContent,
@@ -9,9 +8,9 @@ import {
 	Scripts,
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
-import { serverOnly } from "@tanstack/react-start";
-import { getHeaders } from "@tanstack/react-start/server";
-import { keys, omit } from "remeda";
+import { createIsomorphicFn } from "@tanstack/react-start";
+import { getRequestHeaders } from "@tanstack/react-start/server";
+import { fromEntries, keys, omit } from "remeda";
 
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
@@ -77,6 +76,12 @@ const RootDocument: React.FC<React.PropsWithChildren> = ({ children }) => {
 		<html lang="en" className={colorMode}>
 			<head>
 				{getNativeCss()}
+				<link rel="icon" href="/favicon.svg" />
+				<link rel="stylesheet" href={appCss} />
+				<link
+					rel="stylesheet"
+					href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+				/>
 				<HeadContent />
 			</head>
 			<body>
@@ -87,16 +92,18 @@ const RootDocument: React.FC<React.PropsWithChildren> = ({ children }) => {
 	);
 };
 
+// We want headers to only exist on server-side so we don't pass them in the context
+const getHeaders = createIsomorphicFn()
+	.server(() => fromEntries([...getRequestHeaders().entries()]))
+	.client(() => undefined);
+
 const RootComponent = () => {
 	const data = Route.useLoaderData();
 	const baseLinksContext = React.use(LinksContext);
 	const searchParams = Route.useSearch();
 
 	const linksContext = React.useMemo<LinksContextType>(() => {
-		// We want headers to only exist on server-side so we don't pass them in the context
-		const headers = (
-			typeof window === "undefined" ? serverOnly(getHeaders) : undefined
-		)?.();
+		const headers = getHeaders();
 		return {
 			debug: searchParams.debug,
 			url:
@@ -169,11 +176,7 @@ export type ExternalRouterContext = Pick<
 	"initialValues" | "isTest"
 >;
 
-const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
-	createRootRouteWithContext,
-);
-
-export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
+export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
 	staleTime: Infinity,
 	loader: async (ctx) => {
@@ -193,17 +196,6 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 				},
 				{ title },
 				{ name: "description", description: title },
-			],
-			links: [
-				{ rel: "icon", href: "/favicon.svg" },
-				{
-					rel: "stylesheet",
-					href: appCss,
-				},
-				{
-					rel: "stylesheet",
-					href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap",
-				},
 			],
 		};
 	},

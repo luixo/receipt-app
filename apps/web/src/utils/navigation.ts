@@ -1,5 +1,6 @@
 import React from "react";
 
+import type { SearchMiddleware } from "@tanstack/react-router";
 import {
 	stripSearchParams,
 	useParams,
@@ -8,8 +9,8 @@ import {
 	useRouterState,
 } from "@tanstack/react-router";
 import type { ValidateNavigateOptions } from "@tanstack/router-core";
-import { mapValues } from "remeda";
-import type { z } from "zod";
+import { mapValues, omitBy } from "remeda";
+import { z } from "zod";
 
 import type { NavigationContext } from "~app/contexts/navigation-context";
 import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
@@ -71,23 +72,28 @@ export const searchParamsWithDefaults = <
 >(
 	key: K,
 ) => {
-	const shape = searchParamsMapping[key];
-	type ResultSchema = z.ZodObject<
-		typeof shape extends z.ZodObject<
-			infer Shape extends Record<string, z.ZodCatch>
-		>
-			? { [S in keyof Shape]: z.ZodDefault<Shape[S]> }
-			: never
-	>;
-	const defaultValues = mapValues(shape.shape, (value) =>
-		// `catchValue` doesn't actually do anything with it's argument
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		value.def.catchValue({} as any),
-	) as z.input<ResultSchema>;
+	const schema = searchParamsMapping[key];
+	const defaultValues = mapValues(
+		omitBy(schema.shape, (value) => !(value instanceof z.ZodCatch)),
+		(value) =>
+			value instanceof z.ZodCatch
+				? value.def.catchValue({
+						error: { issues: [] },
+						input: undefined,
+						value: undefined,
+						issues: [],
+					})
+				: undefined,
+	);
 	return {
-		validateSearch: shape as unknown as ResultSchema,
+		validateSearch: schema,
 		search: {
-			middlewares: [stripSearchParams<z.input<ResultSchema>>(defaultValues)],
+			middlewares: [
+				// Apparently, the type inference is different in linter and typescript compiler
+				// Any is needed because we don't use search middleware functions
+				// oxlint-disable-next-line typescript/no-unnecessary-type-assertion typescript/no-explicit-any
+				stripSearchParams(defaultValues) as SearchMiddleware<any>,
+			],
 		},
 	};
 };

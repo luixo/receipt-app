@@ -10,14 +10,12 @@ test("On load without token", async ({
 	page,
 	api,
 	faker,
-	awaitCacheKey,
 	expectScreenshotWithSchemes,
 }) => {
 	api.mockFirst("resetPasswordIntentions.get", {
 		email: faker.internet.email(),
 	});
 	await page.goto("/reset-password");
-	await awaitCacheKey("resetPasswordIntentions.get");
 	await expectScreenshotWithSchemes("empty.png");
 });
 

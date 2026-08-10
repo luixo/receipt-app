@@ -1,4 +1,3 @@
-import { type H3Event, createEvent } from "@tanstack/react-start/server";
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import type { TRPCRequestInfo } from "@trpc/server/http";
 import type { IncomingMessage, ServerResponse } from "node:http";
@@ -22,9 +21,8 @@ type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
 };
 
 export type NetContext = {
-	event: H3Event;
-	req: H3Event["node"]["req"];
-	res: H3Event["node"]["res"];
+	req: IncomingMessage;
+	res: ServerResponse;
 	info: TRPCRequestInfo;
 };
 
@@ -41,13 +39,9 @@ export const createContext = (
 		info,
 	}: { req: IncomingMessage; res: ServerResponse; info: TRPCRequestInfo },
 	testContext: TestContextPicks,
-): UnauthorizedContext => {
-	const event = createEvent(req, res);
-	return {
-		info,
-		event,
-		req,
-		res,
-		...testContext,
-	};
-};
+): UnauthorizedContext => ({
+	info,
+	req,
+	res,
+	...testContext,
+});

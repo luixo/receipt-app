@@ -4,6 +4,7 @@ import { TRPCClientError } from "@trpc/client";
 import type { AnyTRPCProcedure, inferProcedureInput } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { serialize } from "cookie";
+import { HTTPResponse } from "nitro/h3";
 import { entries, fromEntries, pick } from "remeda";
 import { assert, beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod";
@@ -11,24 +12,26 @@ import { z } from "zod";
 import { test } from "~tests/backend/utils/test";
 import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
-import type { FlattenObject, Tail, UnionToIntersection } from "~utils/types";
+import type { FlattenObject, UnionToIntersection } from "~utils/types";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
 import { getServerRouteMethod } from "~web/pages/api/test.utils";
 import { baseLogger } from "~web/providers/logger";
 
-import { ServerRoute } from "./$";
+import { Route } from "./$";
 
-const proxySpy = vi.hoisted(() => vi.fn<() => Promise<void>>());
+const proxySpy = vi.hoisted(() =>
+	vi.fn<() => Promise<HTTPResponse>>(async () => new HTTPResponse("Spy body")),
+);
 vi.mock(import("@tanstack/react-start/server"), async (importOriginal) => ({
 	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 	...(await importOriginal<typeof import("@tanstack/react-start/server")>()),
 	proxyRequest: proxySpy,
 }));
 
-const POST = getServerRouteMethod(ServerRoute, "POST");
-const GET = getServerRouteMethod(ServerRoute, "GET");
+const POST = getServerRouteMethod(Route, "POST");
+const GET = getServerRouteMethod(Route, "GET");
 
 const handleWithError = (
 	ctx: UnauthorizedContext,
@@ -112,7 +115,6 @@ const runRoute = async <K extends keyof Procedures>({
 		);
 	}
 	const response = await (method === "GET" ? GET : POST)({
-		context: undefined,
 		pathname: "/api/trpc/$",
 		request: new Request(url, {
 			method,
@@ -238,7 +240,7 @@ describe("TRPC endpoint", () => {
 				expectedUrl.searchParams.set("input", serializeInput({ name }));
 				expect(proxySpy).toHaveBeenCalledTimes(1);
 				const firstCallArgs = proxySpy.mock.lastCall as
-					| Tail<Parameters<typeof proxyRequest>>
+					| Parameters<typeof proxyRequest>
 					| undefined;
 				assert(firstCallArgs);
 				expect(firstCallArgs[0]).toEqual(expectedUrl.toString());
