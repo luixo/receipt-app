@@ -76,10 +76,18 @@ const getSnapshotName = (
 	return [...path, name];
 };
 
+const addAttachment = (testInfo: TestInfo, name: string, data: object) =>
+	testInfo.attach(name, {
+		body: JSON.stringify(data, null, "\t"),
+		contentType: "application/json",
+	});
+
 export type KeysLists = {
 	whitelistKeys: TRPCKey[];
 	blacklistKeys: TRPCKey[];
 };
+
+const emptyKeysLists = { whitelistKeys: [], blacklistKeys: [] };
 
 const shouldIgnoreKey = (key: TRPCKey, keysLists: KeysLists) =>
 	keysLists.blacklistKeys.includes(key) &&
@@ -498,6 +506,7 @@ type QueriesFixtures = {
 		nextQueryCache: Awaited<ReturnType<typeof getDehydratedCache>>;
 		diff: object;
 	}>;
+	autoReportQueries: void;
 	awaitCacheKey: <K extends TRPCKey>(
 		key: K,
 		options?: AwaitOptionsObject,
@@ -818,4 +827,27 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 			},
 		);
 	},
+	autoReportQueries: [
+		async ({ page, api }, use, testInfo) => {
+			await use();
+			if (testInfo.status !== testInfo.expectedStatus) {
+				await addAttachment(
+					testInfo,
+					"dehydrated-cache",
+					await getDehydratedCache({
+						page,
+						timeout: 5000,
+						keysLists: emptyKeysLists,
+					}),
+				);
+				const actions = api.getActions();
+				await addAttachment(
+					testInfo,
+					"actions",
+					remapActions(actions, emptyKeysLists),
+				);
+			}
+		},
+		{ auto: true },
+	],
 });
