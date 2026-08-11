@@ -6984,13 +6984,13 @@ __metadata:
     "@ra/vitest": "workspace:*"
     "@sentry/tanstackstart-react": "npm:^10.62.0"
     "@tailwindcss/vite": "npm:^4.1.14"
-    "@tanstack/devtools-vite": "npm:^0.8.1"
-    "@tanstack/react-devtools": "npm:^0.10.8"
-    "@tanstack/react-form-devtools": "npm:^0.2.29"
+    "@tanstack/devtools-vite": "npm:^0.8.3"
+    "@tanstack/react-devtools": "npm:^0.10.9"
+    "@tanstack/react-form-devtools": "npm:^0.2.33"
     "@tanstack/react-query": "catalog:"
-    "@tanstack/react-query-devtools": "catalog:"
+    "@tanstack/react-query-devtools": "npm:^5.101.4"
     "@tanstack/react-router": "catalog:"
-    "@tanstack/react-router-devtools": "npm:^1.167.0"
+    "@tanstack/react-router-devtools": "npm:^1.167.1"
     "@tanstack/react-router-ssr-query": "npm:^1.167.1"
     "@tanstack/react-start": "npm:^1.168.26"
     "@trpc/client": "catalog:"
@@ -11577,6 +11577,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/devtools-bundler-core@npm:0.1.1":
+  version: 0.1.1
+  resolution: "@tanstack/devtools-bundler-core@npm:0.1.1"
+  dependencies:
+    "@tanstack/devtools-client": "npm:0.0.8"
+    "@tanstack/devtools-event-bus": "npm:0.4.2"
+    chalk: "npm:^5.6.2"
+    launch-editor: "npm:^2.11.1"
+    magic-string: "npm:^0.30.0"
+    oxc-parser: "npm:^0.120.0"
+    picomatch: "npm:^4.0.3"
+  checksum: 10/2a374b9a18126651a69c1ea081d0dd79a9ca30589082e0ba05a6934856c3783f20e31e1a599924ca47069de2be76ae0145048d35cfe93f71bded164d8a5aae0f
+  languageName: node
+  linkType: hard
+
 "@tanstack/devtools-client@npm:0.0.8":
   version: 0.0.8
   resolution: "@tanstack/devtools-client@npm:0.0.8"
@@ -11681,28 +11696,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/devtools-vite@npm:^0.8.1":
-  version: 0.8.1
-  resolution: "@tanstack/devtools-vite@npm:0.8.1"
+"@tanstack/devtools-vite@npm:^0.8.3":
+  version: 0.8.3
+  resolution: "@tanstack/devtools-vite@npm:0.8.3"
   dependencies:
+    "@tanstack/devtools-bundler-core": "npm:0.1.1"
     "@tanstack/devtools-client": "npm:0.0.8"
     "@tanstack/devtools-event-bus": "npm:0.4.2"
     chalk: "npm:^5.6.2"
-    launch-editor: "npm:^2.11.1"
-    magic-string: "npm:^0.30.0"
-    oxc-parser: "npm:^0.120.0"
-    picomatch: "npm:^4.0.3"
   peerDependencies:
     vite: ^6.0.0 || ^7.0.0 || ^8.0.0
   bin:
     intent: ./bin/intent.js
-  checksum: 10/bac5a98f1c545fdf707a489c7f6e55dc252becb6f2cb8672550296067794c30346d19c303c70a3ab6470c74c667fa71507021302daea01eb845cb4530232ff78
+  checksum: 10/34f92c316380bdc07e02ea518994552a8c73ba4191194e5205375ce95bb40d772e858ab5d839038de5dadb93610d130d5f643afcd3c2c61833e11df345f276cd
   languageName: node
   linkType: hard
 
-"@tanstack/devtools@npm:0.12.5":
-  version: 0.12.5
-  resolution: "@tanstack/devtools@npm:0.12.5"
+"@tanstack/devtools@npm:0.13.0":
+  version: 0.13.0
+  resolution: "@tanstack/devtools@npm:0.13.0"
   dependencies:
     "@solid-primitives/event-listener": "npm:^2.4.3"
     "@solid-primitives/keyboard": "npm:^1.3.3"
@@ -11717,7 +11729,7 @@ __metadata:
     solid-js: ">=1.9.7"
   bin:
     intent: ./bin/intent.js
-  checksum: 10/24853f6fe93211a5b9263002023dcf43c96792d5bbbb653fdc74832ccc6f21d37aacbe2842215d003febe0eec50716ee8391772b46ec80d1f42d563d21daa3b6
+  checksum: 10/f36ef54af2db877561c8643166c472f207d0a709c34e8827588569ff21098c77042ac3f139ca5edded1c7ae96070d09516f8c70f87a3c94519567de3a447b695
   languageName: node
   linkType: hard
 
@@ -11742,30 +11754,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/form-core@npm:1.33.0":
-  version: 1.33.0
-  resolution: "@tanstack/form-core@npm:1.33.0"
+"@tanstack/form-core@npm:1.33.4":
+  version: 1.33.4
+  resolution: "@tanstack/form-core@npm:1.33.4"
   dependencies:
     "@tanstack/devtools-event-client": "npm:^0.4.1"
     "@tanstack/pacer-lite": "npm:^0.1.1"
     "@tanstack/store": "npm:^0.11.0"
-  checksum: 10/9ad6a45cfda2c966cbebbdf25aed0e1ae9cfb8a294c9837128f5b9e1fb3af2940c81bfcac438529190bea9f0d7e3bb515296fb4d2066ee13c5beaf12299f8852
+  checksum: 10/308fb077d952aea3916aca00a5d53afd759eda970dfba3ea515cb121dabc4705fd6bcaeb319a959f34a5f1a7e41e03d95d40c860da92bcefd2f835c10caafc00
   languageName: node
   linkType: hard
 
-"@tanstack/form-devtools@npm:0.2.29":
-  version: 0.2.29
-  resolution: "@tanstack/form-devtools@npm:0.2.29"
+"@tanstack/form-devtools@npm:0.2.33":
+  version: 0.2.33
+  resolution: "@tanstack/form-devtools@npm:0.2.33"
   dependencies:
     "@tanstack/devtools-ui": "npm:^0.5.1"
     "@tanstack/devtools-utils": "npm:^0.4.0"
-    "@tanstack/form-core": "npm:1.33.0"
+    "@tanstack/form-core": "npm:1.33.4"
     clsx: "npm:^2.1.1"
     dayjs: "npm:^1.11.18"
     goober: "npm:^2.1.16"
   peerDependencies:
     solid-js: ">=1.9.9"
-  checksum: 10/3e1188b5fc18995a428a14027fc091e627ad74faeff324ffc3cf907073114476303ef3c841139602541c45dc1006621a8cedeb36280e442527dc5723d2560fc7
+  checksum: 10/0b0a4dcfe0853e500b73a8f2d8f590073c2d4a9a047d7d295532251c624332e6b881dcdf1c19a80b069b6fc794683fb91fd92bde123607e18fd6b3745734a3d4
   languageName: node
   linkType: hard
 
@@ -11816,10 +11828,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/query-devtools@npm:5.80.0":
-  version: 5.80.0
-  resolution: "@tanstack/query-devtools@npm:5.80.0"
-  checksum: 10/b698895cd2fd0a861ad7a6403e8f583cb77602fceeb100401f048f3d40679a9845a2e6b341fd71e93d34a32fcc6bc9cb9074a186ea5f559ce8ebfb48da2e5018
+"@tanstack/query-devtools@npm:5.101.4":
+  version: 5.101.4
+  resolution: "@tanstack/query-devtools@npm:5.101.4"
+  checksum: 10/f733d7382eb395cfed8135bddb4ee448a4c426967f2a66c83337f553a04636a2cf5e9fe79386f0aeabf78c5683beade4e4f45c56d9c26f884497106b905d8976
   languageName: node
   linkType: hard
 
@@ -11832,29 +11844,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-devtools@npm:^0.10.8":
-  version: 0.10.8
-  resolution: "@tanstack/react-devtools@npm:0.10.8"
+"@tanstack/react-devtools@npm:^0.10.9":
+  version: 0.10.9
+  resolution: "@tanstack/react-devtools@npm:0.10.9"
   dependencies:
-    "@tanstack/devtools": "npm:0.12.5"
+    "@tanstack/devtools": "npm:0.13.0"
   peerDependencies:
     "@types/react": ">=16.8"
     "@types/react-dom": ">=16.8"
     react: ">=16.8"
     react-dom: ">=16.8"
-  checksum: 10/d4f749637d06e7aa323cc27e8a26f43de0b330be85c432b09fe232b25df4ca5814480c78ba53748728edd6b7257bbaca75fb3eddf712882f3c923d324203b7ad
+  checksum: 10/b6064ecd7378129b3c02d46bb4784f660f638991bf1f51bbed7d42748aac462a0f9a4b18df457cdc003f385d588ea3c5220b4fea21828f998a6bfa4c4e649768
   languageName: node
   linkType: hard
 
-"@tanstack/react-form-devtools@npm:^0.2.29":
-  version: 0.2.29
-  resolution: "@tanstack/react-form-devtools@npm:0.2.29"
+"@tanstack/react-form-devtools@npm:^0.2.33":
+  version: 0.2.33
+  resolution: "@tanstack/react-form-devtools@npm:0.2.33"
   dependencies:
     "@tanstack/devtools-utils": "npm:^0.4.0"
-    "@tanstack/form-devtools": "npm:0.2.29"
+    "@tanstack/form-devtools": "npm:0.2.33"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/9322db4355c126a1f91ff39fb25d01d194090fee5810277af998b3907536725873afc59d56d97ddcc6a584dc547f5853a481839715f051f05ce1a0c0fdf4c73c
+  checksum: 10/690d45eff500a697a6e7ce250778757ec69805fc1e2828a1aa08216fec4c055e4a19b9b2edc54f75da505196a925cbbcc310233623aee53b9ac7ef8e28ddb210
   languageName: node
   linkType: hard
 
@@ -11889,15 +11901,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query-devtools@npm:5.80.6":
-  version: 5.80.6
-  resolution: "@tanstack/react-query-devtools@npm:5.80.6"
+"@tanstack/react-query-devtools@npm:^5.101.4":
+  version: 5.101.4
+  resolution: "@tanstack/react-query-devtools@npm:5.101.4"
   dependencies:
-    "@tanstack/query-devtools": "npm:5.80.0"
+    "@tanstack/query-devtools": "npm:5.101.4"
   peerDependencies:
-    "@tanstack/react-query": ^5.80.6
+    "@tanstack/react-query": ^5.101.4
     react: ^18 || ^19
-  checksum: 10/e8eb034dc650ef8ccd32c227435226352d0b1f215b1b97885450d597f18fcf17d8e72ca0688bec19384f4903d1386218119c0ce90dfc1f9cac6585559c5f0c45
+  checksum: 10/b9b3ff3ee5e7b0c98bb59a6f9ff2c50b285da52287a54f26403fdbf4090f35c7e39c4e75156a1dc8b7e9d77fbb67909dd97f8b27289bed255963720b4f3d7769
   languageName: node
   linkType: hard
 
@@ -11935,20 +11947,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-router-devtools@npm:^1.167.0":
-  version: 1.167.0
-  resolution: "@tanstack/react-router-devtools@npm:1.167.0"
+"@tanstack/react-router-devtools@npm:^1.167.1":
+  version: 1.167.1
+  resolution: "@tanstack/react-router-devtools@npm:1.167.1"
   dependencies:
-    "@tanstack/router-devtools-core": "npm:1.168.0"
+    "@tanstack/router-devtools-core": "npm:1.168.1"
   peerDependencies:
-    "@tanstack/react-router": ^1.170.0
-    "@tanstack/router-core": ^1.170.0
+    "@tanstack/react-router": ^1.170.19
+    "@tanstack/router-core": ^1.171.16
     react: ">=18.0.0 || >=19.0.0"
     react-dom: ">=18.0.0 || >=19.0.0"
   peerDependenciesMeta:
     "@tanstack/router-core":
       optional: true
-  checksum: 10/7df338cb5425fdf50203039170604f5599428ee898293b9ccccc7fbfd3a0d2c4ba78e7c5af9c78996c48208962ab0a749f8b4d313dc75c247c1f18804f7e6796
+  checksum: 10/ec4ee7f52a18695718886acd9c740862f31180b7dbb53b1af271287accbe0a2095b43a464ade9c669eae6b181bfa9ee343d1c00491c934224941bfa6600d57ab
   languageName: node
   linkType: hard
 
@@ -12119,19 +12131,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/router-devtools-core@npm:1.168.0":
-  version: 1.168.0
-  resolution: "@tanstack/router-devtools-core@npm:1.168.0"
+"@tanstack/router-devtools-core@npm:1.168.1":
+  version: 1.168.1
+  resolution: "@tanstack/router-devtools-core@npm:1.168.1"
   dependencies:
     clsx: "npm:^2.1.1"
     goober: "npm:^2.1.16"
   peerDependencies:
-    "@tanstack/router-core": ^1.170.0
+    "@tanstack/router-core": ^1.171.16
     csstype: ^3.0.10
   peerDependenciesMeta:
     csstype:
       optional: true
-  checksum: 10/63e808aeb8f22fc67c28bbfbe6921cc8004f8f533d924df881b4a82416ec9baf27472c34b751de75ea809a6e42405ecb76df1cbed904313af475379727ea4f87
+  checksum: 10/4b42655e652027b58e1bdcde4c2695bd5e6a9e74be736c3766389fbda0eec2246e50addec2c8a9f56ac57c89df17e4bc6cd419494f791fd9c2e2114a869bf7e8
   languageName: node
   linkType: hard
 
