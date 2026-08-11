@@ -1,5 +1,9 @@
-import { createServerFileRoute } from "@tanstack/react-start/server";
+import { createFileRoute } from "@tanstack/react-router";
 
-export const ServerRoute = createServerFileRoute("/api/ping").methods({
-	GET: async () => new Response("Pong"),
+export const Route = createFileRoute("/api/ping")({
+	server: {
+		handlers: {
+			GET: async () => new Response("Pong"),
+		},
+	},
 });

@@ -1,0 +1,83 @@
+diff --git a/dist/esm/index.js b/dist/esm/index.js
+index b235fa700e3c0d0ca5af2738e654e9065baf0402..647d72f99e0d74f3c1eccfeb604fa1d6dede1442 100644
+--- a/dist/esm/index.js
++++ b/dist/esm/index.js
+@@ -1,6 +1,6 @@
+-import { clearResponseHeaders, clearSession, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, unsealSession, updateSession, useSession } from "./request-response.js";
++import { clearResponseHeaders, clearSession, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, unsealSession, updateSession, useSession, proxyRequest } from "./request-response.js";
+ import { HEADERS } from "./constants.js";
+ import { createStartHandler } from "./createStartHandler.js";
+ import { VIRTUAL_MODULES } from "./virtual-modules.js";
+ import { attachRouterServerSsrUtils, createRequestHandler, defineHandlerCallback, transformPipeableStreamWithRouter, transformReadableStreamWithRouter } from "@tanstack/router-core/ssr/server";
+-export { HEADERS, VIRTUAL_MODULES, attachRouterServerSsrUtils, clearResponseHeaders, clearSession, createRequestHandler, createStartHandler, defineHandlerCallback, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, transformPipeableStreamWithRouter, transformReadableStreamWithRouter, unsealSession, updateSession, useSession };
++export { HEADERS, VIRTUAL_MODULES, attachRouterServerSsrUtils, clearResponseHeaders, clearSession, createRequestHandler, createStartHandler, defineHandlerCallback, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, transformPipeableStreamWithRouter, transformReadableStreamWithRouter, unsealSession, updateSession, useSession, proxyRequest };
+diff --git a/dist/esm/request-response.d.ts b/dist/esm/request-response.d.ts
+index f96569c16263a8138d4c99c3acc5df88a8f8e982..43127174e96914145397df4107383a198eb167a2 100644
+--- a/dist/esm/request-response.d.ts
++++ b/dist/esm/request-response.d.ts
+@@ -3,6 +3,7 @@ import { CookieSerializeOptions } from 'cookie-es';
+ import { Session, SessionConfig, SessionData, SessionManager, SessionUpdate } from './session.js';
+ import { StandardSchemaV1 } from '@standard-schema/spec';
+ import { RequestHandler } from './request-handler.js';
++import type { ProxyOptions } from 'h3-v2';
+ export type { ResponseHeaderName, RequestHeaderName };
+ export declare function requestHandler<TRegister = unknown>(handler: RequestHandler<TRegister>): (request: Request, requestOpts: any) => Promise<Response> | Response;
+ export declare function getRequest(): Request;
+@@ -82,6 +83,15 @@ export declare function getCookie(name: string): string | undefined;
+  * ```
+  */
+ export declare function setCookie(name: string, value: string, options?: CookieSerializeOptions): void;
++/**
++* Proxy the incoming request to a target URL.
++* @param target Url to proxy to
++* @param options {ProxyOptions} Options for proxy
++* ```ts
++* proxyRequest('http://localhost:3000/', { header: { 'x-for': "foo" } })
++* ```
++*/
++export declare function proxyRequest(target: string, opts?: ProxyOptions): Promise<HTTPResponse>;
+ /**
+  * Remove a cookie by name.
+  * @param name Name of the cookie to delete
+diff --git a/dist/esm/request-response.js b/dist/esm/request-response.js
+index 4ce23fae2de3772646a2380a9e64c3f468b051f6..242c1da7424120dc8c062ff2eb552a754745dfa0 100644
+--- a/dist/esm/request-response.js
++++ b/dist/esm/request-response.js
+@@ -1,5 +1,5 @@
+ import { AsyncLocalStorage } from "node:async_hooks";
+-import { H3Event, clearSession as clearSession$1, deleteCookie as deleteCookie$1, getRequestHost as getRequestHost$1, getRequestIP as getRequestIP$1, getRequestProtocol as getRequestProtocol$1, getRequestURL, getSession as getSession$1, getValidatedQuery as getValidatedQuery$1, parseCookies, sanitizeStatusCode, sanitizeStatusMessage, sealSession as sealSession$1, setCookie as setCookie$1, toResponse, unsealSession as unsealSession$1, updateSession as updateSession$1, useSession as useSession$1 } from "h3-v2";
++import { H3Event, clearSession as clearSession$1, deleteCookie as deleteCookie$1, getRequestHost as getRequestHost$1, getRequestIP as getRequestIP$1, getRequestProtocol as getRequestProtocol$1, getRequestURL, getSession as getSession$1, getValidatedQuery as getValidatedQuery$1, parseCookies, sanitizeStatusCode, sanitizeStatusMessage, sealSession as sealSession$1, setCookie as setCookie$1, toResponse, unsealSession as unsealSession$1, updateSession as updateSession$1, useSession as useSession$1, proxyRequest as proxyRequest$1 } from "h3-v2";
+ //#region src/request-response.ts
+ var GLOBAL_EVENT_STORAGE_KEY = Symbol.for("tanstack-start:event-storage");
+ var globalObj = globalThis;
+@@ -84,6 +84,21 @@ function getRequestUrl(opts) {
+ 	return getRequestURL(getH3Event(), opts);
+ }
+ /**
++* Proxy the incoming request to a target URL.
++*
++* If the `target` starts with `/`, the request is handled internally by the app router
++* via `event.app.fetch()` instead of making an external HTTP request.
++*
++* **Security:** Never pass unsanitized user input as the `target`. Callers are
++* responsible for validating and restricting the target URL (e.g. allowlisting
++* hosts, blocking internal paths, enforcing protocol). Consider using
++* `bodyLimit()` middleware to prevent large request bodies from consuming
++* excessive resources when proxying untrusted input.
++*/
++function proxyRequest(target, opts) {
++	return proxyRequest$1(getH3Event(), target, opts);
++}
++/**
+ * Get the request protocol.
+ *
+ * If `x-forwarded-proto` header is set to "https", it will return "https". You can disable this behavior by setting `xForwardedProto` to `false`.
+@@ -225,6 +240,6 @@ function getValidatedQuery(schema) {
+ 	return getValidatedQuery$1(getH3Event(), schema);
+ }
+ //#endregion
+-export { clearResponseHeaders, clearSession, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, unsealSession, updateSession, useSession };
++export { clearResponseHeaders, clearSession, deleteCookie, getCookie, getCookies, getRequest, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestProtocol, getRequestUrl, getResponse, getResponseHeader, getResponseHeaders, getResponseStatus, getSession, getValidatedQuery, removeResponseHeader, requestHandler, sealSession, setCookie, setResponseHeader, setResponseHeaders, setResponseStatus, unsealSession, updateSession, useSession, proxyRequest };
+ 
+ //# sourceMappingURL=request-response.js.map
+\ No newline at end of file

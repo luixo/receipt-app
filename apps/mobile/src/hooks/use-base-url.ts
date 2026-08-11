@@ -1,7 +1,8 @@
 import React from "react";
 
 const getBaseUrl = () => {
-	const envBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL;
+	// ExpoProcessEnv interface extends an object with any as value
+	const envBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL as string | undefined;
 	if (!envBaseUrl) {
 		/* eslint-disable no-console */
 		console.warn(

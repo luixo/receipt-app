@@ -4,8 +4,8 @@ import {
 	incomingMessageToRequest,
 } from "@trpc/server/adapters/node-http";
 import { getRequestInfo } from "@trpc/server/unstable-core-do-not-import";
-import type { MockRequestOptions, MockResponseOptions } from "mock-http";
-import { Request as MockRequest, Response as MockResponse } from "mock-http";
+import type { RequestOptions, ResponseOptions } from "node-mocks-http";
+import { createRequest, createResponse } from "node-mocks-http";
 import { assert } from "vitest";
 
 import type { SessionId } from "~db/ids";
@@ -15,8 +15,8 @@ import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";
 
 type ContextOptions = {
-	request?: MockRequestOptions;
-	response?: MockResponseOptions;
+	request?: RequestOptions;
+	response?: ResponseOptions;
 	router?: AnyTRPCRouter;
 };
 
@@ -24,8 +24,8 @@ export const createContext = async (
 	ctx: TestContext,
 	options?: ContextOptions,
 ): Promise<UnauthorizedContext> => {
-	const mockReq = new MockRequest(options?.request);
-	const mockRes = new MockResponse(options?.response);
+	const mockReq = createRequest(options?.request);
+	const mockRes = createResponse(options?.response);
 	const request = incomingMessageToRequest(mockReq, mockRes, {
 		maxBodySize: null,
 	});

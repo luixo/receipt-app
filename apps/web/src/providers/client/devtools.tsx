@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { FormDevtoolsPlugin } from "@tanstack/react-form-devtools";
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
@@ -29,7 +29,7 @@ export const DevToolsProvider: React.FC<React.PropsWithChildren<object>> = ({
 							name: "TanStack Router",
 							render: <TanStackRouterDevtoolsPanel />,
 						},
-						FormDevtoolsPlugin(),
+						formDevtoolsPlugin(),
 					]}
 				/>
 			) : null}

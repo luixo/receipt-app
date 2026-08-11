@@ -14,7 +14,7 @@
 		"deep-object-diff": "^1.1.9",
 		"h3": "^1.15.3",
 		"kysely": "^0.28.7",
-		"mock-http": "^1.1.1",
+		"node-mocks-http": "^1.18.1",
 		"testcontainers": "^10.11.0",
 		"timekeeper": "catalog:",
 		"zod": "catalog:"

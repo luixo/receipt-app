@@ -10,8 +10,9 @@ import {
 	createRouter as createTanStackRouter,
 	useRouter,
 } from "@tanstack/react-router";
+import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
-import { getWebRequest, parseCookies } from "@tanstack/react-start/server";
+import { getCookies, getRequest } from "@tanstack/react-start/server";
 import { fromEntries } from "remeda";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
@@ -73,12 +74,12 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 };
 
 const getUniversalRequest = createIsomorphicFn()
-	.server(() => getWebRequest())
+	.server(() => getRequest())
 	.client(() => null);
 
 const getExternalContext = createIsomorphicFn()
 	.server(() => {
-		const cookies = parseCookies();
+		const cookies = getCookies();
 		const initialValues = getStoreValuesFromInitialValues(cookies);
 		return {
 			initialValues,
@@ -103,7 +104,7 @@ const getExternalContext = createIsomorphicFn()
 		} satisfies ExternalRouterContext;
 	});
 
-export const createRouter = () => {
+export const getRouter = () => {
 	const externalContext = getExternalContext();
 	const request = getUniversalRequest();
 	const queryClient = getQueryClient();
@@ -114,7 +115,7 @@ export const createRouter = () => {
 		isInitializable: typeof window === "undefined",
 	});
 	void i18nContext.initialize({ language: initialLanguage });
-	return createTanStackRouter({
+	const router = createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
@@ -131,18 +132,10 @@ export const createRouter = () => {
 		defaultStaleTime: Infinity,
 		defaultPreloadStaleTime: 0,
 		dehydrate: () => ({
-			dehydratedState: dehydrate(queryClient, {
-				serializeData: transformer.serialize,
-			}),
 			i18n: i18nContext.serializeContext(),
 		}),
 		hydrate: async (dehydratedData) => {
 			await i18nContext.initialize(dehydratedData.i18n);
-			hydrate(queryClient, dehydratedData.dehydratedState, {
-				defaultOptions: {
-					deserializeData: transformer.deserialize,
-				},
-			});
 		},
 		Wrap: ({ children }) => {
 			const pretendEmail =
@@ -171,9 +164,23 @@ export const createRouter = () => {
 			<HydrationBoundary>{children}</HydrationBoundary>
 		),
 	});
+	setupRouterSsrQueryIntegration({
+		router,
+		queryClient,
+		dehydrateOptions: {
+			serializeData: transformer.serialize,
+		},
+		hydrateOptions: {
+			defaultOptions: {
+				deserializeData: transformer.deserialize,
+			},
+		},
+		wrapQueryClient: false,
+	});
+	return router;
 };
 
-export type TreeRouter = ReturnType<typeof createRouter>;
+export type TreeRouter = ReturnType<typeof getRouter>;
 
 declare module "@tanstack/react-router" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions

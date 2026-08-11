@@ -1,9 +1,9 @@
-import { wrapVinxiConfigWithSentry } from "@sentry/tanstackstart-react";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import initModuleAlias, { addAlias } from "module-alias";
+import { nitro } from "nitro/vite";
 import fsp from "node:fs/promises";
 import path from "node:path";
 import url from "node:url";
@@ -65,13 +65,17 @@ const config = defineConfig({
 			dtsFile: path.join(rootDir, "packages/app/uniwind-types.d.ts"),
 		}),
 		tanstackStart({
-			root: webDir,
-			tsr: {
-				srcDirectory: "./src/entry",
-				routesDirectory: "./src/pages",
+			srcDirectory: "./apps/web/src/",
+			router: {
+				entry: "./entry/router.tsx",
+				generatedRouteTree: "./entry/routeTree.gen.ts",
+				routesDirectory: "./pages/",
 				routeFileIgnorePattern: "test.",
 			},
-			customViteReactPlugin: true,
+		}),
+		nitro({
+			output: { dir: path.join(webDir, ".output") },
+			publicAssets: [{ dir: path.join(webDir, "public"), maxAge: 0 }],
 		}),
 		viteReact({
 			babel: {
@@ -83,6 +87,17 @@ const config = defineConfig({
 				optimizedDeps.some((dep) => id.includes(`node_modules/${dep}/`)),
 		}),
 		reactNativeWeb(),
+		// `vite-plugin-react-native-web` unconditionally does
+		// `define: { global: "self" }`, which is only correct in a browser.
+		// Since the server bundle now goes through the very same Vite
+		// pipeline, that rewrite also hits node-only dependencies (e.g.
+		// `thread-stream` doing `global.FinalizationRegistry`) and they blow
+		// up at runtime with `self is not defined`.
+		{
+			name: "server-global-define",
+			configEnvironment: (name) =>
+				name === "client" ? undefined : { define: { global: "globalThis" } },
+		},
 		cjsInterop({
 			dependencies: [
 				// This is needed on SSR when we import CJS modules from ESM `react-native-web`
@@ -100,6 +115,17 @@ const config = defineConfig({
 			],
 		}),
 		viteTsConfigPaths(),
+		// `pg` lazily requires `pg-cloudflare`, which imports a Cloudflare
+		// Workers-only builtin that has no counterpart on node
+		{
+			name: "stub-cloudflare-sockets",
+			resolveId: (id) =>
+				id === "cloudflare:sockets" ? "\0cloudflare:sockets" : undefined,
+			load: (id) =>
+				id === "\0cloudflare:sockets"
+					? `export const connect = () => { throw new Error("'cloudflare:sockets' is not available outside Cloudflare Workers"); };`
+					: undefined,
+		},
 		analyzer({
 			analyzerMode: "json",
 			enabled: Boolean(process.env.ANALYZE_BUNDLE),
@@ -129,9 +155,4 @@ await fsp.mkdir(path.resolve(rootDir, "dist")).catch((error) => {
 	throw error;
 });
 
-export default process.env.NODE_ENV !== "production"
-	? config
-	: wrapVinxiConfigWithSentry(config, {
-			authToken: process.env.SENTRY_AUTH_TOKEN,
-			silent: !process.env.CI,
-		});
+export default config;

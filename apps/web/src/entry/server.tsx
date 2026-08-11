@@ -5,20 +5,15 @@ import {
 	createStartHandler,
 	defaultStreamHandler,
 } from "@tanstack/react-start/server";
+import { createServerEntry } from "@tanstack/react-start/server-entry";
 
 import type { TreeRouter } from "./router";
-import { createRouter } from "./router";
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
 	Sentry.init({ dsn: sentryDsn, tracesSampleRate: 1 });
 }
 
-const wrappedStreamHandler =
-	Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler);
+const fetch = createStartHandler<TreeRouter>(defaultStreamHandler);
 
-const eventHandler = createStartHandler<TreeRouter>({
-	createRouter: () => createRouter(),
-})(wrappedStreamHandler);
-
-export default eventHandler;
+export default createServerEntry({ fetch });
