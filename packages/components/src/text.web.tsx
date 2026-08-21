@@ -26,7 +26,7 @@ export const Text: React.FC<Props> = ({
 	const Variant = variant;
 	return (
 		<Variant
-			className={cn(textVariants({ variant, className }))}
+			className={cn(textVariants().base({ variant, className }))}
 			data-testid={testID}
 			role={ROLE[variant]}
 			aria-level={ARIA_LEVEL[variant]}

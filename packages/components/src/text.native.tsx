@@ -16,8 +16,9 @@ export const Text = ({
 	testID,
 	children,
 }: Props) => {
-	const textClass = React.useContext(TextClassContext);
-	const finalClassName = textVariants({
+	const textClass = React.use(TextClassContext);
+	const base = textVariants().base;
+	const finalClassName = base({
 		variant,
 		className: cn(textClass, className),
 	});

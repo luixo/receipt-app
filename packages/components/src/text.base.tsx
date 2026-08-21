@@ -1,9 +1,13 @@
 import type React from "react";
 import type { Role } from "react-native";
 
-import { type VariantProps, cva } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { tv } from "tailwind-variants";
 
-export const textVariants = cva("m-0 font-sans", {
+export const textVariants = tv({
+	slots: {
+		base: "m-0 font-sans",
+	},
 	variants: {
 		variant: {
 			span: "text-base font-normal",
@@ -12,7 +16,7 @@ export const textVariants = cva("m-0 font-sans", {
 			h3: "text-2xl font-semibold tracking-tight",
 			h4: "text-xl font-semibold tracking-tight",
 			p: "text-base font-normal",
-			blockquote: "text-base font-normal border-l-2 pl-3 italic",
+			blockquote: "border-l-2 pl-3 text-base font-normal italic",
 			code: "relative rounded font-mono text-sm font-semibold",
 		},
 	},

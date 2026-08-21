@@ -156,7 +156,7 @@ const getComponent = (icon: IconName) => {
 const emptySize: undefined = null;
 
 export const Icon = ({ name, className, testID, onClick }: Props) => {
-	const textClass = React.useContext(TextClassContext);
+	const textClass = React.use(TextClassContext);
 	const Component = getComponent(name);
 	// These are actually created only once
 	const finalClassNames = cn(textClass, className).split(" ");
