@@ -1,0 +1,15 @@
+{
+	"mutations": {
+		"users.add": {
+			"1": {
+				"state": {
+					"data": {
+						"id": "55e5b568-27a4-4936-aca5-972120cbf26d",
+						"connection": "<undefined>"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

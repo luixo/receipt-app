@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"users.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"users.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"name": "Test user"
+					}
+				}
+			}
+		]
+	}
+}

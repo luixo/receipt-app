@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"users.add": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"name": "Test user"
+					}
+				}
+			}
+		}
+	}
+}
