@@ -205,7 +205,6 @@ const mapMutations = (mutations: DehydratedState["mutations"]) =>
 				...mutation.state,
 				variables: hydrateData(mutation.state.variables),
 				data: hydrateData(mutation.state.data),
-				context: undefined,
 				error: flattenError(mutation.state.error),
 				failureReason: undefined,
 				// Removing actual dates as they are not stable for snapshots

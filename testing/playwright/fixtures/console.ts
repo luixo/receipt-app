@@ -1,4 +1,4 @@
-import { type ConsoleMessage, expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import colors from "colors";
 
 type IgnoredPattern = string | RegExp;
@@ -38,32 +38,19 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/Refused to apply style from .* because its MIME type .* is not a supported stylesheet MIME type, and strict MIME checking is enabled./,
 ];
 
-type ConsoleManager = {
-	onMessage: (message: ConsoleMessage) => void;
-	getMessages: () => string[];
-	ignore: (pattern: IgnoredPattern) => void;
-};
-
 type ConsoleFixtures = {
-	consoleManager: ConsoleManager;
 	autoVerifyNoConsoleMessages: void;
+	consoleManager: {
+		ignore: (pattern: IgnoredPattern) => void;
+		getIgnored: () => IgnoredPattern[];
+	};
 };
 
 export const consoleFixtures = test.extend<ConsoleFixtures>({
 	consoleManager: async ({}, use) => {
-		const flatMessages: string[] = [];
-		const ignored = [...DEFAULT_CLIENT_IGNORED];
+		const ignored: IgnoredPattern[] = [];
 		await use({
-			onMessage: (message) => {
-				const text = message.text();
-				if (isIgnored(ignored, text)) {
-					return;
-				}
-				flatMessages.push(
-					`${colors.magenta(`[${message.type()}]`)} ${message.text()}`,
-				);
-			},
-			getMessages: () => flatMessages,
+			getIgnored: () => ignored,
 			ignore: (pattern) => {
 				ignored.push(pattern);
 			},
@@ -75,9 +62,24 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 				await use();
 				return;
 			}
-			page.on("console", consoleManager.onMessage);
 			await use();
-			expect.soft(consoleManager.getMessages()).toStrictEqual([]);
+			const messages = await page.consoleMessages();
+			const ignored = [
+				...DEFAULT_CLIENT_IGNORED,
+				...consoleManager.getIgnored(),
+			];
+			expect
+				.soft(
+					messages
+						.map(({ text, type }) => {
+							if (isIgnored(ignored, text())) {
+								return;
+							}
+							return `${colors.magenta(`[${type()}]`)} ${text()}`;
+						})
+						.filter(Boolean),
+				)
+				.toStrictEqual([]);
 		},
 		{ auto: true },
 	],
