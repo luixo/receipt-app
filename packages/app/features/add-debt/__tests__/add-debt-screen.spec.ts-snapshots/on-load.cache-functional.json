@@ -1,0 +1,145 @@
+{
+	"queries": {
+		"currency.top:[{\"options\":{\"type\":\"debts\"}}]": {
+			"state": {
+				"data": [
+					{
+						"currencyCode": "SZL",
+						"count": 92
+					},
+					{
+						"currencyCode": "VUV",
+						"count": 76
+					},
+					{
+						"currencyCode": "ARS",
+						"count": 54
+					},
+					{
+						"currencyCode": "SCR",
+						"count": 13
+					},
+					{
+						"currencyCode": "LRD",
+						"count": 4
+					}
+				],
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"0a9bfd50-b2e2-49d3-87ef-47cf8f897b07\"}]": {
+			"state": {
+				"data": {
+					"id": "0a9bfd50-b2e2-49d3-87ef-47cf8f897b07",
+					"name": "Paula Shields",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"19d84598-734a-486e-aeaf-94bc1c6ad62d\"}]": {
+			"state": {
+				"data": {
+					"id": "19d84598-734a-486e-aeaf-94bc1c6ad62d",
+					"name": "Eunice Wilkinson",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"4fc8574b-0e96-40b5-b433-ae901d506449\"}]": {
+			"state": {
+				"data": {
+					"id": "4fc8574b-0e96-40b5-b433-ae901d506449",
+					"name": "Don Jacobi",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"df7fffac-3426-4def-ad90-39bf52c78c28\"}]": {
+			"state": {
+				"data": {
+					"id": "df7fffac-3426-4def-ad90-39bf52c78c28",
+					"name": "Rodolfo Koepp",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"ff6341d9-3fda-40ca-bcb4-c8987bf94f2f\"}]": {
+			"state": {
+				"data": {
+					"id": "ff6341d9-3fda-40ca-bcb4-c8987bf94f2f",
+					"name": "Helen Kessler",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.suggest:[{\"filterIds\":[],\"input\":\"\",\"limit\":5}]": {
+			"state": {
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "pending",
+				"fetchStatus": "idle"
+			},
+			"promise": "<undefined>"
+		},
+		"users.suggestTop:[{\"filterIds\":[],\"limit\":5}]": {
+			"state": {
+				"data": {
+					"items": [
+						"19d84598-734a-486e-aeaf-94bc1c6ad62d",
+						"0a9bfd50-b2e2-49d3-87ef-47cf8f897b07",
+						"ff6341d9-3fda-40ca-bcb4-c8987bf94f2f",
+						"df7fffac-3426-4def-ad90-39bf52c78c28",
+						"4fc8574b-0e96-40b5-b433-ae901d506449"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

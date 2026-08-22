@@ -4,6 +4,7 @@ import { apiFixtures } from "./fixtures/api";
 import { browserFixtures } from "./fixtures/browser";
 import { consoleFixtures } from "./fixtures/console";
 import { currencyFixtures } from "./fixtures/currency";
+import { formFixtures } from "./fixtures/form";
 import { mockFixtures } from "./fixtures/mock";
 import { pageFixtures } from "./fixtures/page";
 import { queriesFixtures } from "./fixtures/queries";
@@ -27,6 +28,7 @@ export const test = mergeTests(
 	apiFixtures,
 	pageFixtures,
 	queriesFixtures,
+	formFixtures,
 );
 
 export { expect } from "@playwright/test";

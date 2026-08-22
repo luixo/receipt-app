@@ -1,0 +1,11 @@
+{
+	"currency.top": {
+		"clientCalls": 1
+	},
+	"users.get": {
+		"clientCalls": 5
+	},
+	"users.suggestTop": {
+		"clientCalls": 1
+	}
+}

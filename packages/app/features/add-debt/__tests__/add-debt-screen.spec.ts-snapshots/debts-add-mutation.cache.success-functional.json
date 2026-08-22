@@ -1,0 +1,39 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"68f71c29-5d58-458f-8e37-312e45ecd219\"}]": {
+			"state": {
+				"data": {
+					"id": "68f71c29-5d58-458f-8e37-312e45ecd219",
+					"amount": 10,
+					"currencyCode": "RON",
+					"userId": "4e3d5a9d-3afa-4823-934e-f9b584ae7448",
+					"timestamp": "2019-12-31",
+					"note": "Test debt note",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": {
+			"1": {
+				"state": {
+					"data": {
+						"id": "68f71c29-5d58-458f-8e37-312e45ecd219",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
