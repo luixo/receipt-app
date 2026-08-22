@@ -7,7 +7,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
-		"@playwright/test": "^1.53.0",
+		"@playwright/test": "catalog:",
 		"@ra/app": "workspace:*",
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
@@ -20,7 +20,7 @@
 		"colors": "^1.4.0",
 		"deep-object-diff": "^1.1.9",
 		"join-images": "^1.1.5",
-		"playwright": "^1.53.0",
+		"playwright": "catalog:",
 		"sharp": "catalog:",
 		"timekeeper": "catalog:",
 		"uuid": "catalog:",

@@ -117,7 +117,7 @@ jobs:
         shardIndex: [1, 2, 3, 4]
         shardTotal: [4]
     container:
-      image: mcr.microsoft.com/playwright:v1.53.0
+      image: mcr.microsoft.com/playwright:v1.62.1
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
