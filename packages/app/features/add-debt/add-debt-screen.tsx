@@ -2,7 +2,6 @@ import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
@@ -117,13 +116,8 @@ export const AddDebtScreen = () => {
 								minValue={0}
 								label={t("add.form.amount.label")}
 								isDisabled={addMutation.isPending}
-								errorMessage={
-									field.state.meta.isDirty
-										? field.state.meta.errors
-												.filter(isNonNullish)
-												.map((error) => error.message)
-												.join("\n")
-										: undefined
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								fractionDigits={debtAmountSchemaDecimal}
 							/>

@@ -1,0 +1,24 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Test debt note",
+						"currencyCode": "RON",
+						"userId": "4e3d5a9d-3afa-4823-934e-f9b584ae7448",
+						"amount": 10,
+						"timestamp": "2019-12-31"
+					}
+				}
+			}
+		]
+	}
+}
