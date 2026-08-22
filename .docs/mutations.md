@@ -52,7 +52,10 @@ When importing from a mutation file, rename `options` to `<router><Procedure>Opt
 
 ```ts
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
-import { update as updateReceipts, updateRevert as updateRevertReceipts } from "~mutations/cache/receipts";
+import {
+	update as updateReceipts,
+	updateRevert as updateRevertReceipts,
+} from "~mutations/cache/receipts";
 ```
 
 ## Usage in components
@@ -61,9 +64,9 @@ import { update as updateReceipts, updateRevert as updateRevertReceipts } from "
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 
 const mutation = useMutation(
-  trpc.receipts.add.mutationOptions(
-    useTrpcMutationOptions(receiptsAddOptions, { context: { selfAccountId } }),
-  ),
+	trpc.receipts.add.mutationOptions(
+		useTrpcMutationOptions(receiptsAddOptions, { context: { selfAccountId } }),
+	),
 );
 ```
 

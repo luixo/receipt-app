@@ -16,7 +16,7 @@ The fallback can be a static `ReactNode` or a `React.FC<Props>` if the skeleton 
 When a query input depends on optional data, pass `skipToken` as the input:
 
 ```ts
-trpc.receipts.get.useQuery(receiptId ? { id: receiptId } : skipToken)
+trpc.receipts.get.useQuery(receiptId ? { id: receiptId } : skipToken);
 ```
 
 Both `useQuery` and `useSuspenseQuery` accept `skipToken`. With `useSuspenseQuery`, the component suspends until the token becomes non-skip and data is available.
@@ -35,7 +35,7 @@ When nearby items will be needed but aren't cached yet, prefetch them:
 
 ```ts
 useEffect(() => {
-  queryClient.prefetchQuery(trpc.some.procedure.queryOptions(input));
+	queryClient.prefetchQuery(trpc.some.procedure.queryOptions(input));
 }, [ids]);
 ```
 
@@ -58,7 +58,7 @@ Use `trpc.some.procedure.infiniteQueryOptions({ …, cursor: 0, direction: "forw
 When rendering N items that each need their own query, use `useQueries` rather than mapping hook calls inside a render:
 
 ```ts
-useQueries({ queries: ids.map((id) => trpc.users.get.queryOptions({ id })) })
+useQueries({ queries: ids.map((id) => trpc.users.get.queryOptions({ id })) });
 ```
 
 ## Skeleton components
