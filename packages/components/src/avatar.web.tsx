@@ -31,6 +31,7 @@ export type Props = {
 	};
 	hashId?: string;
 	onPress?: () => void;
+	testID?: string;
 };
 
 export const useAvatarProps = ({
@@ -40,6 +41,7 @@ export const useAvatarProps = ({
 	image,
 	hashId,
 	onPress,
+	testID,
 	...props
 }: Props): React.ComponentProps<typeof AvatarRaw> => {
 	const ref = React.useRef<HTMLSpanElement>(null);
@@ -80,6 +82,7 @@ export const useAvatarProps = ({
 			),
 		},
 		onClick: onPress,
+		"data-testid": testID,
 	};
 };
 

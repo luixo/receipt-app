@@ -215,14 +215,15 @@ const handleRequest = async (
 	isBatch: boolean,
 	url: URL,
 	method: string,
-	getBody: () => Promise<string>,
+	getBody: () => Promise<string | undefined>,
 ): Promise<MaybeArray<JSONRPC2.ResultResponse | JSONRPC2.ErrorResponse>> => {
-	const source =
-		(method === "GET" ? url.searchParams.get("input") : await getBody()) ||
-		"{}";
+	const rawBody =
+		method === "GET"
+			? (url.searchParams.get("input") ?? undefined)
+			: await getBody();
 	const cleanPathname = url.pathname.replace(API_PREFIX, "");
 	if (isBatch) {
-		const inputs = JSON.parse(decodeURIComponent(source)) as Record<
+		const inputs = JSON.parse(decodeURIComponent(rawBody || "{}")) as Record<
 			number,
 			TransformerResult
 		>;
@@ -235,7 +236,10 @@ const handleRequest = async (
 				),
 		);
 	}
-	const input = JSON.parse(decodeURIComponent(source)) as TransformerResult;
+	const input =
+		rawBody !== undefined
+			? (JSON.parse(decodeURIComponent(rawBody)) as TransformerResult)
+			: undefined;
 	const name = cleanPathname as TRPCKey;
 	return handleCall(controller, headers, type, name, input);
 };
@@ -351,7 +355,15 @@ const createApiManager = async (
 				url.searchParams.has("batch"),
 				url,
 				request.method(),
-				async () => request.postData() || "{}",
+				async () => {
+					// multipart/form-data bodies can't be parsed as JSON; return
+					// undefined so handleRequest passes undefined input to the mock.
+					const contentType = request.headers()["content-type"] ?? "";
+					if (contentType.startsWith("multipart/form-data")) {
+						return undefined;
+					}
+					return request.postData() ?? undefined;
+				},
 			);
 			await route.fulfill({
 				json: response,
@@ -416,9 +428,15 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 				message: "No token provided - mocked",
 			});
 		});
+		const unmockReceipts = api.mockLast("receipts.getPaged", {
+			items: [],
+			cursor: 0,
+			count: 0,
+		});
 		return {
 			unmockCurrency,
 			unmockAccount,
+			unmockReceipts,
 		};
 	},
 	authPage: async ({ page }: { page: Page }) => {

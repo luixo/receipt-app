@@ -1,0 +1,17 @@
+{
+	"mutations": {
+		"account.changeAvatar": [
+			{
+				"state": {
+					"data": {
+						"url": "https://picsum.photos/seed/oNYy2b/640/480"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {}
+				}
+			}
+		]
+	}
+}

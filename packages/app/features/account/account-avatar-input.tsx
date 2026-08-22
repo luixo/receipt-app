@@ -56,6 +56,7 @@ const UserAvatar = suspendedFallback<{ onClick: () => void }>(
 				onPress={onClick}
 				size="lg"
 				className="cursor-pointer"
+				testID="avatar-button"
 			/>
 		);
 	},
@@ -153,7 +154,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 
 	return (
 		<form.AppForm>
-			<form.Form className="flex flex-row gap-4">
+			<form.Form className="flex flex-row gap-4" testID="avatar-form">
 				{isAvatarEditorOpen ? (
 					<View className="h-80 flex-1 flex-row justify-between gap-4">
 						<Slider
@@ -209,6 +210,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 								}
 								onPress={disableAvatarEdit}
 								isIconOnly
+								aria-label={t("avatar.closeEditor")}
 							>
 								<Icon name="close" className="size-6" />
 							</Button>
@@ -230,6 +232,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 										}
 										onPress={openModal}
 										isIconOnly
+										aria-label={t("avatar.remove.title")}
 									>
 										<Icon name="trash" className="size-6" />
 									</OnlyAvatarButton>
@@ -248,6 +251,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 											}
 											onPress={resetEditor}
 											isIconOnly
+											aria-label={t("avatar.resetAvatar")}
 										>
 											<Icon name="sync" className="size-6" />
 										</Button>
@@ -262,6 +266,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 											}
 											type="submit"
 											isIconOnly
+											aria-label={t("avatar.saveAvatar")}
 										>
 											<Icon name="check" className="size-6" />
 										</Button>

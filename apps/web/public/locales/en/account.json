@@ -10,7 +10,10 @@
 		},
 		"slider": {
 			"label": "Change scale"
-		}
+		},
+		"closeEditor": "Close avatar editor",
+		"saveAvatar": "Save avatar",
+		"resetAvatar": "Reset avatar selection"
 	},
 	"form": {
 		"name": {
