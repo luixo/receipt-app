@@ -30,7 +30,6 @@ export const Card: React.FC<
 	headerClassName,
 	footer,
 	footerClassName,
-	onPress,
 	children,
 	as,
 	...props
@@ -38,8 +37,8 @@ export const Card: React.FC<
 	<CardRaw
 		data-testid={testID}
 		className={className}
-		onPress={onPress}
 		as={as}
+		isPressable={Boolean(props.onPress)}
 		{...props}
 	>
 		{header ? (

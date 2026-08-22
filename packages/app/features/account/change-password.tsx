@@ -52,7 +52,7 @@ const ChangePasswordForm: React.FC = () => {
 
 	return (
 		<form.AppForm>
-			<form.Form className="flex flex-col gap-4">
+			<form.Form className="flex flex-col gap-4" testID="password-form">
 				<form.AppField name="prevPassword">
 					{(field) => (
 						<field.TextField

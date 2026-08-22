@@ -20,6 +20,7 @@ export type ButtonProps = Pick<
 	| "startContent"
 	| "endContent"
 	| "title"
+	| "aria-label"
 	| "as"
 	| "type"
 	| "form"

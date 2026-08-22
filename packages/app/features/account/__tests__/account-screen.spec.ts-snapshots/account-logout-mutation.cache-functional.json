@@ -1,0 +1,17 @@
+{
+	"mutations": {
+		"account.logout": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"account.logout\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error"
+				}
+			}
+		]
+	}
+}

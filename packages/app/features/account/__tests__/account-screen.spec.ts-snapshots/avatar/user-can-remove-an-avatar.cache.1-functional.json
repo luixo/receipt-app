@@ -1,0 +1,14 @@
+{
+	"mutations": {
+		"account.changeAvatar": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {}
+				}
+			}
+		]
+	}
+}

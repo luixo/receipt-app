@@ -56,3 +56,4 @@ All packages from `packages` are referred as `~package/*` (e.g. `packages/foo/ba
 - Edit manually generated `*.gen.ts`, regenerate instead.
 - Edit git-ignored files.
 - Edit manually snapshots (`__snapshots__/` or `*-snapshots/`), regenerate instead.
+- Add long comment sections with `// -------` lines
