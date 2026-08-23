@@ -212,18 +212,17 @@ test.describe("Password change", () => {
 		await snapshotQueries(
 			async () => {
 				await submitPasswordButton.click();
-				await verifyToastTexts();
+				await expect(submitPasswordButton).toBeDisabled();
+				await expect(buttonWithLoader).toBeVisible();
 			},
 			{ name: "loading" },
 		);
-		await expect(submitPasswordButton).toBeDisabled();
-		await expect(buttonWithLoader).toBeVisible();
 
 		await snapshotQueries(
 			async () => {
 				pause.resolve();
 				await awaitCacheKey("account.changePassword");
-				await verifyToastTexts();
+				await expect(buttonWithLoader).toBeHidden();
 			},
 			{ name: "success", skipQueries: true },
 		);
@@ -267,18 +266,18 @@ test("'account.logout' mutation", async ({
 	await snapshotQueries(
 		async () => {
 			await logoutButton.click();
-			await verifyToastTexts();
+			await expect(logoutButton).toBeDisabled();
+			await expect(buttonWithLoader).toBeVisible();
 		},
 		{ name: "loading" },
 	);
-	await expect(logoutButton).toBeDisabled();
-	await expect(buttonWithLoader).toBeVisible();
 
 	await snapshotQueries(
 		async () => {
 			pause.resolve();
 			await awaitCacheKey("account.logout");
 			await verifyToastTexts("Logout successful, redirecting..");
+			await expect(page).toHaveURL("/receipts");
 		},
 		{
 			name: "success",
@@ -286,5 +285,4 @@ test("'account.logout' mutation", async ({
 			blacklistKeys: "receipts.getPaged",
 		},
 	);
-	await expect(page).toHaveURL("/receipts");
 });

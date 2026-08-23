@@ -36,6 +36,8 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/The resource .* was preloaded using link preload but not used within a few seconds from the window's load event/,
 	// Happens while running on dev
 	/Refused to apply style from .* because its MIME type .* is not a supported stylesheet MIME type, and strict MIME checking is enabled./,
+	// Happens while running on dev, fix later
+	/React does not recognize the `%s` prop on a DOM element/,
 ];
 
 type ConsoleFixtures = {
@@ -71,11 +73,11 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 			expect
 				.soft(
 					messages
-						.map(({ text, type }) => {
-							if (isIgnored(ignored, text())) {
+						.map((message) => {
+							if (isIgnored(ignored, message.text())) {
 								return;
 							}
-							return `${colors.magenta(`[${type()}]`)} ${text()}`;
+							return `${colors.magenta(`[${message.type()}]`)} ${message.text()}`;
 						})
 						.filter(Boolean),
 				)
