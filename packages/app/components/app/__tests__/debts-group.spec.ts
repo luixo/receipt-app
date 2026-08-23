@@ -41,20 +41,20 @@ criticalPaths.forEach((path) => {
 					`Error in route match: /_protected/debts/user/${debtUser.id}/`,
 				),
 			);
+			const getAllUserErrorLocator = errorMessage(
+				`Mock "${path}" error`,
+			).first();
 			await snapshotQueries(
 				async () => {
 					await openUserDebtsScreen(debtUser.id, { awaitCache: false });
 					await awaitCacheKey(path, { errored: 1 });
+					await expect(getAllUserErrorLocator).toBeVisible();
 				},
 				{
 					name: `${path}-errors`,
 					blacklistKeys: otherPaths,
 				},
 			);
-			const getAllUserErrorLocator = errorMessage(
-				`Mock "${path}" error`,
-			).first();
-			await expect(getAllUserErrorLocator).toBeVisible();
 			unmockError();
 			await snapshotQueries(
 				async () => {
