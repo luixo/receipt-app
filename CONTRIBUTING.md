@@ -1,7 +1,7 @@
 # Prerequisites
 
 - Node.js (version pinned in `.nvmrc`)
-- Yarn (use `corpack enable` to activate automatically)
+- Bun (version pinned in `packageManager` field of `package.json`)
 
 ## Getting code
 
@@ -15,7 +15,7 @@ cd receipt-app
 Install dependencies
 
 ```sh
-yarn install
+bun install
 ```
 
 To run a development build, you need to copy `.env.example` file as `.env` and fill with proper values.
@@ -23,7 +23,7 @@ To run a development build, you need to copy `.env.example` file as `.env` and f
 Run development (web & mobile):
 
 ```sh
-yarn dev
+bun run dev
 ```
 
 # Testing
@@ -37,13 +37,13 @@ DB used in API is bootstrapped with empty (though migrated) database for each in
 To run backend tests:
 
 ```sh
-yarn backend:test
+bun run backend:test
 ```
 
 In case snapshots need to be updated, run:
 
 ```sh
-yarn backend:test --update
+bun run backend:test --update
 ```
 
 On completion tests provide coverage report in `testing/vitest/coverage` directory.
@@ -74,7 +74,7 @@ npx playwright install
 
 ```sh
 # Mode is needed to run test-specific code
-yarn web:build --mode test
+bun run web:build --mode test
 ```
 
 #### Testing in development with HMR
@@ -85,7 +85,7 @@ Visual regression tests will fail on screenshots (different platforms have signi
 
 ```sh
 # Mode is needed to run test-specific code
-yarn dev --mode test
+bun run dev --mode test
 ```
 
 ### Functional tests
@@ -93,7 +93,7 @@ yarn dev --mode test
 To run (functional) frontend tests:
 
 ```sh
-yarn frontend:test --project functional
+bun run frontend:test --project functional
 ```
 
 ### Visual regression tests
@@ -107,33 +107,27 @@ Visual regression tests are run in a docker image (to be consistent on CI enviro
 NB: To expose host network on MacOS and Windows you [need](https://docs.docker.com/engine/network/tutorials/host/#prerequisites) to enable it manually in Docker settings.
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '^  playwright:' .yarnrc.yml | awk '{print $2}' | tr -d '^')"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')"
 ```
 
-2. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
+2. (in Docker) Install runtime
 
 ```sh
-corepack yarn
+npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")"
 ```
 
-3. (in Docker) Enable corepack
+3a. (in Docker) Run tests
 
 ```sh
-corepack enable
-```
-
-4a. (in Docker) Run tests
-
-```sh
-PW_SERVER=true yarn frontend:test
+PW_SERVER=true bun run frontend:test
 ```
 
 `PW_SERVER` env variable indicates Playwright should run web server itself.
 
-4b. (in Docker) Run tests and update snapshots with current results
+3b. (in Docker) Run tests and update snapshots with current results
 
 ```sh
-PW_SERVER=true yarn frontend:test --update-snapshots
+PW_SERVER=true bun run frontend:test --update-snapshots
 ```
 
 #### One-liner with snapshot updating
@@ -141,7 +135,7 @@ PW_SERVER=true yarn frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '^  playwright:' .yarnrc.yml | awk '{print $2}' | tr -d '^')" -c "corepack yarn && corepack enable && PW_SERVER=true yarn frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
 ```
 
 ### Tests structure

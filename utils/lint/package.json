@@ -5,7 +5,7 @@
 	"type": "module",
 	"main": "config.ts",
 	"scripts": {
-		"lint": "yarn --cwd ../.. oxlint"
+		"lint": "bun --cwd ../.. oxlint"
 	},
 	"devDependencies": {
 		"@tanstack/eslint-plugin-router": "^1.162.0",

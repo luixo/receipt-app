@@ -753,7 +753,6 @@ export default defineConfig({
 	],
 	ignorePatterns: [
 		".history/",
-		".yarn/",
 		"**/.output/",
 		"**/.vercel/",
 		"**/.tanstack/",

@@ -8,7 +8,7 @@ const main = async () => {
 		[
 			{
 				name: "native",
-				command: "yarn native:dev",
+				command: "bun run native:dev",
 				env: {
 					EXPO_PUBLIC_API_BASE_URL: url,
 				},
@@ -16,7 +16,7 @@ const main = async () => {
 			},
 			{
 				name: "web",
-				command: "yarn web:dev",
+				command: "bun run web:dev",
 				env: {
 					PORT: port,
 				},

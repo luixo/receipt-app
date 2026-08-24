@@ -4,9 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite dev",
-		"start": "node .output/server/index.mjs"
+		"build": "bun --bun vite build",
+		"dev": "bun --bun vite dev",
+		"start": "bun run .output/server/index.mjs"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",
