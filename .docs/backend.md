@@ -46,4 +46,4 @@ Every sub-router with shared logic should have a `utils.ts` alongside the proced
 
 ## New table checklist
 
-Adding a table requires: (a) new migration file; (b) new consts block in `consts.ts` (index/trigger/constraint names); (c) `yarn db:generate-types` to regenerate `types.gen.ts`; (d) new flavored ID in `ids.ts` + zod schema in `validation.ts`; (e) `getAccessRole`-style helper in the router's `utils.ts` if access control is needed.
+Adding a table requires: (a) new migration file; (b) new consts block in `consts.ts` (index/trigger/constraint names); (c) `bun run db:generate-types` to regenerate `types.gen.ts`; (d) new flavored ID in `ids.ts` + zod schema in `validation.ts`; (e) `getAccessRole`-style helper in the router's `utils.ts` if access control is needed.

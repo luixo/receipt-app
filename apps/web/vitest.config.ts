@@ -9,6 +9,7 @@ export default defineProject({
 	test: {
 		name: "web",
 		setupFiles: path.resolve(vitestRoot, "./database.setup.ts"),
+		include: ["src/**/*.test.ts"],
 		exclude: ["**/utils.test.ts"],
 	},
 });

@@ -1,5 +1,5 @@
 const config = {
-	"*.{j,t}s{,x}": ["prettier --write", "yarn lint:fix"],
+	"*.{j,t}s{,x}": ["prettier --write", "bun run lint:fix"],
 };
 
 export default config;

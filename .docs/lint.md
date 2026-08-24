@@ -1,6 +1,6 @@
 # Linting (oxlint)
 
-Run `yarn lint` to check; `yarn lint:fix` to auto-fix.
+Run `bun run lint` to check; `bun run lint:fix` to auto-fix.
 
 ## Replacements for banned APIs
 

@@ -5,7 +5,7 @@
 	"type": "module",
 	"main": "./entry.ts",
 	"scripts": {
-		"css:prepare": "tsx generate-colors.ts"
+		"css:prepare": "bun generate-colors.ts"
 	},
 	"dependencies": {
 		"@expo-google-fonts/inter": "^0.4.2",
@@ -51,7 +51,6 @@
 		"@babel/core": "^7.29.0",
 		"babel-plugin-react-compiler": "catalog:",
 		"react-query-external-sync": "^2.2.3",
-		"socket.io-client": "^4.8.3",
-		"tsx": "catalog:"
+		"socket.io-client": "^4.8.3"
 	}
 }

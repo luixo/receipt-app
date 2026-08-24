@@ -108,7 +108,8 @@ export default defineConfig({
 		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
 	/* Run your local dev server before starting the tests */
 	webServer: {
-		command: "yarn web:start",
+		command: "bun run --silent web:start",
+		cwd: rootDir,
 		reuseExistingServer: !(process.env.CI || process.env.PW_SERVER),
 		url: `${urlSettings.baseUrl}api/ping`,
 		env: {

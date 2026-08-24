@@ -1,6 +1,6 @@
 # Backend tests (Vitest)
 
-Tests are co-located with source files: `foo.ts` → `foo.test.ts`. Run with `yarn backend:test`; run one file with `yarn backend:test <path>`; `--update` rewrites snapshots.
+Tests are co-located with source files: `foo.ts` → `foo.test.ts`. Run with `bun run backend:test`; run one file with `bun run backend:test <path>`; `--update` rewrites snapshots.
 
 ## Test fixture
 
