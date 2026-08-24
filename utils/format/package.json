@@ -4,9 +4,9 @@
 	"type": "module",
 	"main": "config.ts",
 	"scripts": {
-		"check": "yarn --cwd ../.. prettier --check .",
-		"collect-ignore-rules": "node ./collect-ignores.ts",
-		"write": "yarn --cwd ../.. prettier --write ."
+		"check": "bun --cwd ../.. prettier --check .",
+		"collect-ignore-rules": "bun ./collect-ignores.ts",
+		"write": "bun --cwd ../.. prettier --write ."
 	},
 	"devDependencies": {
 		"@types/ignore-walk": "^4.0.3",

@@ -3,54 +3,72 @@
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
-	"workspaces": [
-		"apps/*",
-		"packages/*",
-		"testing/*",
-		"utils/*"
-	],
+	"workspaces": {
+		"packages": [
+			"apps/*",
+			"packages/*",
+			"testing/*",
+			"utils/*"
+		],
+		"catalog": {
+			"@heroui/react": "2.8.4",
+			"@playwright/test": "1.62.1",
+			"@tanstack/react-query": "5.80.6",
+			"@tanstack/react-router": "1.170.16",
+			"@trpc/client": "11.9.0",
+			"@trpc/react-query": "11.9.0",
+			"@trpc/server": "11.9.0",
+			"@trpc/tanstack-react-query": "11.9.0",
+			"@types/uuid": "9.0.2",
+			"babel-plugin-react-compiler": "1.0.0",
+			"cookie": "1.0.2",
+			"dataloader": "2.2.2",
+			"expo-router": "55.0.0-preview.7",
+			"heroui-native": "1.0.0-beta.12",
+			"i18next": "25.8.0",
+			"playwright": "1.62.1",
+			"react": "19.2.0",
+			"react-dom": "19.2.0",
+			"react-i18next": "16.5.4",
+			"sharp": "0.32.6",
+			"tailwindcss": "4.1.14",
+			"timekeeper": "2.3.1",
+			"uniwind": "^1.2.2",
+			"uuid": "9.0.0",
+			"zod": "4.0.5"
+		}
+	},
 	"scripts": {
-		"backend:test": "NODE_OPTIONS='--import tsx' vitest",
+		"backend:test": "vitest",
 		"db:generate-types": "kysely-codegen",
-		"db:migrate": "yarn workspace @ra/db db:migrate",
-		"dev": "yarn workspace @ra/scripts dev",
-		"format": "yarn workspace @ra/format write",
-		"format:prepare": "yarn workspace @ra/format collect-ignore-rules",
-		"format:verify": "yarn workspace @ra/format check",
-		"frontend:test": "yarn workspace @ra/playwright test",
-		"install:immutable": "yarn --immutable",
-		"lint": "yarn workspace @ra/lint lint",
+		"db:migrate": "bun run --cwd packages/db db:migrate",
+		"dev": "bun run --cwd utils/scripts dev",
+		"format": "bun run --cwd utils/format write",
+		"format:prepare": "bun run --cwd utils/format collect-ignore-rules",
+		"format:verify": "bun run --cwd utils/format check",
+		"frontend:test": "bun run --cwd testing/playwright test",
+		"install:immutable": "bun install --frozen-lockfile",
+		"lint": "bun run --cwd utils/lint lint",
 		"lint-staged": "lint-staged",
-		"lint:fix": "yarn workspace @ra/lint lint --fix",
-		"native:dev": "yarn workspace @ra/mobile expo start",
-		"native:doctor": "yarn workspace @ra/mobile expo-doctor",
-		"native:prebuild": "yarn workspace @ra/mobile expo prebuild",
-		"native:run:android": "yarn workspace @ra/mobile css:prepare && yarn workspace @ra/mobile expo run:android",
-		"native:run:ios": "yarn workspace @ra/mobile css:prepare && yarn workspace @ra/mobile expo run:ios",
+		"lint:fix": "bun run --cwd utils/lint lint --fix",
+		"native:dev": "bun --cwd apps/mobile expo start",
+		"native:doctor": "bun --cwd apps/mobile expo-doctor",
+		"native:prebuild": "bun --cwd apps/mobile expo prebuild",
+		"native:run:android": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:android",
+		"native:run:ios": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:ios",
 		"typecheck": "tsgo --noEmit",
-		"verify-routers": "yarn workspace @ra/scripts verify-routers",
-		"web:build": "yarn workspace @ra/web build",
-		"web:dev": "yarn workspace @ra/web dev",
-		"web:start": "yarn workspace @ra/web start"
+		"verify-routers": "bun run --cwd utils/scripts verify-routers",
+		"web:build": "bun run --cwd apps/web build",
+		"web:dev": "bun run --cwd apps/web dev",
+		"web:start": "bun run --cwd apps/web start"
 	},
 	"pre-commit": [
 		"install:immutable",
 		"typecheck",
 		"lint-staged"
 	],
-	"resolutions": {
-		"@expo/cli@npm:55.0.7": "patch:@expo/cli@npm%3A55.0.7#~/patches/@expo-cli-npm-55.0.7.patch",
-		"@heroui/theme@npm:2.4.22": "patch:@heroui/theme@npm%3A2.4.22#~/patches/@heroui-theme-npm-2.4.22.patch",
-		"@heroui/toast@npm:2.0.16": "patch:@heroui/toast@npm%3A2.0.16#~/patches/@heroui-toast-npm-2.0.16.patch",
-		"@internationalized/date": "^3.10.0",
-		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
-		"@tanstack/react-query@catalog:": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
-		"@tanstack/start-server-core@npm:1.169.15": "patch:@tanstack/start-server-core@npm%3A1.169.15#~/patches/@tanstack-start-server-core-npm-1.169.15.patch",
-		"framer-motion@npm:^11.11.11": "patch:framer-motion@npm%3A11.11.11#~/patches/framer-motion-npm-11.11.11.patch",
-		"lucide-react@npm:^0.562.0": "patch:lucide-react@npm%3A0.562.0#~/patches/lucide-react-npm-0.562.0.patch",
-		"react-native-color-matrix-image-filters@npm:^8.0.2": "patch:react-native-color-matrix-image-filters@npm%3A8.0.2#~/patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
-		"react-native-web@npm:^0.21.2": "patch:react-native-web@npm%3A0.21.2#~/patches/react-native-web-npm-0.21.2.patch",
-		"uniwind@catalog:": "patch:uniwind@npm%3A1.2.2#~/patches/uniwind-npm-1.2.2.patch"
+	"overrides": {
+		"@internationalized/date": "^3.10.0"
 	},
 	"dependencies": {
 		"react": "catalog:",
@@ -59,6 +77,7 @@
 		"remeda": "^2.25.0"
 	},
 	"devDependencies": {
+		"@types/bun": "^1.4.0",
 		"@types/node": "^24.1.0",
 		"@types/react": "^19.2.11",
 		"@types/react-dom": "^19.2.3",
@@ -70,10 +89,27 @@
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.7.4",
 		"sharp": "catalog:",
-		"tsx": "^4.21.0",
 		"typescript": "6.0.0-dev.20260203",
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.2.4"
 	},
-	"packageManager": "yarn@4.12.0+sha512.f45ab632439a67f8bc759bf32ead036a1f413287b9042726b7cc4818b7b49e14e9423ba49b18f9e06ea4941c1ad062385b1d8760a8d5091a1a31e5f6219afca8"
+	"packageManager": "bun@1.4.0",
+	"patchedDependencies": {
+		"@expo/cli@55.0.7": "patches/@expo-cli-npm-55.0.7.patch",
+		"@heroui/theme@2.4.22": "patches/@heroui-theme-npm-2.4.22.patch",
+		"@heroui/toast@2.0.16": "patches/@heroui-toast-npm-2.0.16.patch",
+		"@tanstack/query-core@5.80.6": "patches/@tanstack-query-core-npm-5.80.6.patch",
+		"@tanstack/react-query@5.80.6": "patches/@tanstack-react-query-npm-5.80.6.patch",
+		"@tanstack/start-server-core@1.169.15": "patches/@tanstack-start-server-core-npm-1.169.15.patch",
+		"framer-motion@11.11.11": "patches/framer-motion-npm-11.11.11.patch",
+		"lucide-react@0.562.0": "patches/lucide-react-npm-0.562.0.patch",
+		"react-native-color-matrix-image-filters@8.0.2": "patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
+		"react-native-web@0.21.2": "patches/react-native-web-npm-0.21.2.patch",
+		"uniwind@1.2.2": "patches/uniwind-npm-1.2.2.patch"
+	},
+	"trustedDependencies": [
+		"esbuild",
+		"pre-commit",
+		"sharp"
+	]
 }

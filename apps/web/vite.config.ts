@@ -74,6 +74,7 @@ const config = defineConfig({
 			},
 		}),
 		nitro({
+			preset: "bun",
 			output: { dir: path.join(webDir, ".output") },
 			publicAssets: [{ dir: path.join(webDir, "public"), maxAge: 0 }],
 		}),

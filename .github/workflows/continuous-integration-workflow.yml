@@ -26,9 +26,9 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Prepare ignore file
-        run: yarn format:prepare
+        run: bun run format:prepare
       - name: Run code formatting verification
-        run: yarn format:verify
+        run: bun run format:verify
 
   typecheck:
     name: Typecheck
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run typecheck
-        run: yarn typecheck
+        run: bun run typecheck
 
   linter:
     name: Linter
@@ -46,7 +46,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run linter
-        run: yarn lint
+        run: bun run lint
 
   build:
     name: Build
@@ -57,7 +57,7 @@ jobs:
       - uses: ./.github/actions/setup-env
       - name: Build web app
         # Mode needed to inject .env.test file variables into the build
-        run: yarn web:build --mode test
+        run: bun run web:build --mode test
         env:
           ANALYZE_BUNDLE: true
       - name: Upload web build dir
@@ -87,7 +87,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run backend tests
-        run: yarn backend:test
+        run: bun run backend:test
       - name: Archive code coverage results
         uses: actions/upload-artifact@v7
         with:
@@ -103,7 +103,7 @@ jobs:
       - name: Pass coverage percent to output
         id: coverage-percent
         run: |
-          COVERAGE=$(node -e 'console.log(Object.entries(require("./testing/vitest/coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
+          COVERAGE=$(bun -e 'console.log(Object.entries(require("./testing/vitest/coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
           echo "Coverage is $COVERAGE"
           echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
 
@@ -122,6 +122,9 @@ jobs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
       - uses: actions/checkout@v6
+      - name: Ensure unzip is available
+        # Playwright image doesn't ship unzip, which bun setup needs
+        run: apt-get update && apt-get install -y unzip
       - uses: ./.github/actions/setup-env
       - name: Fetch web build
         uses: actions/download-artifact@v8
@@ -131,7 +134,7 @@ jobs:
       - name: Run frontend tests
         id: tests
         # see https://github.com/microsoft/playwright/issues/6500
-        run: HOME=/root yarn frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: HOME=/root bun run frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload Playwright report chunks
         uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
@@ -190,13 +193,13 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run types generation
-        run: yarn db:generate-types
+        run: bun run db:generate-types
         env:
           DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
       - name: Check for uncommitted changes
         run: |
           if [[ -n "$(git status --porcelain ./packages/db/src/models)" ]]; then
-            echo "Database types are out of sync. Run 'yarn db:generate-types' and commit the results."
+            echo "Database types are out of sync. Run 'bun run db:generate-types' and commit the results."
             git --no-pager diff ./packages/db/src/models
             exit 1
           else
@@ -211,7 +214,7 @@ jobs:
       - name: Check for uncommitted changes
         run: |
           if [[ -n "$(git status --porcelain ./apps/web/src/entry/routeTree.gen.ts)" ]]; then
-            echo "Route types are out of sync. Run 'yarn web:dev' or 'yarn web:build' and commit the results."
+            echo "Route types are out of sync. Run 'bun run web:dev' or 'bun run web:build' and commit the results."
             git --no-pager diff ./apps/web/src/entry/routeTree.gen.ts
             exit 1
           else
@@ -256,7 +259,7 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run Expo doctor
-        run: yarn native:doctor
+        run: bun run native:doctor
         env:
           EXPO_DOCTOR_SKIP_DEPENDENCY_VERSION_CHECK: true
 
@@ -267,4 +270,4 @@ jobs:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
       - name: Run routers verification
-        run: yarn verify-routers
+        run: bun run verify-routers

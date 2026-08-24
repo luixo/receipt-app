@@ -38,7 +38,7 @@ export const useQueryClientHelper = () => {
 							data: transformer.serialize(mutation.state.data),
 							// `context` carries the live `queryClient`/`trpc` client
 							// instances (see use-trpc-mutation-options.ts), which
-							// can't cross the page.evaluate() browser/Node boundary.
+							// can't cross the page.evaluate() browser/server boundary.
 							context: undefined,
 						},
 					})),

@@ -1,6 +1,6 @@
 # Mobile app (`apps/mobile`)
 
-Run `yarn native:doctor` to verify native health. Run `yarn verify-routers` to confirm web and native page sets match.
+Run `bun run native:doctor` to verify native health. Run `bun run verify-routers` to confirm web and native page sets match.
 
 ## Routing
 
@@ -22,7 +22,7 @@ Run `yarn native:doctor` to verify native health. Run `yarn verify-routers` to c
 
 ## Styling
 
-- CSS variables for colors are generated from `@heroui/theme` semantic colors via `generate-colors.ts`. Run `yarn workspace @ra/mobile css:prepare` after changing theme colors.
+- CSS variables for colors are generated from `@heroui/theme` semantic colors via `generate-colors.ts`. Run `bun run --cwd apps/mobile css:prepare` after changing theme colors.
 - Safe area insets are fed into Uniwind via `SafeAreaListener` + `Uniwind.updateInsets`.
 
 ## Splash screen

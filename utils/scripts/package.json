@@ -4,9 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "tsx dev.ts",
-		"expo:update-ios-version": "tsx update-version.ts",
-		"verify-routers": "node verify-routers.ts"
+		"dev": "bun dev.ts",
+		"expo:update-ios-version": "bun update-version.ts",
+		"verify-routers": "bun verify-routers.ts"
 	},
 	"devDependencies": {
 		"@ra/utils": "workspace:*",

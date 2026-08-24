@@ -1,6 +1,6 @@
 # Web app (`apps/web`)
 
-Run via `yarn web:dev`.
+Run via `bun run web:dev`.
 
 ## Routing
 

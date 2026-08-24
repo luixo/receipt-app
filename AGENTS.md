@@ -1,26 +1,26 @@
 # Receipt App
 
-Yarn 4 monorepo: a TanStack Start web app and an Expo mobile app sharing one tRPC backend and one platform-agnostic app layer. Run all scripts from the repo root.
+Bun monorepo: a TanStack Start web app and an Expo mobile app sharing one tRPC backend and one platform-agnostic app layer. Run all scripts from the repo root.
 
 ## Commands
 
 ### Verification
 
-- Verify typescript via `yarn typecheck`.
-- Apply formatting via `yarn format` (run `yarn format:prepare` on new installments). See `@.docs/format.md` for details.
-- Verify linting rule (oxlint) via `yarn lint` (use `yarn lint:fix` to fix rules). See `@.docs/lint.md` for details.
-- Only if working with mobile, verify native health `yarn native:doctor`.
-- Only if working with mobile, verify router pages match between web and native `yarn verify-routers`.
+- Verify typescript via `bun run typecheck`.
+- Apply formatting via `bun run format` (run `bun run format:prepare` on new workspaces). See `@.docs/format.md` for details.
+- Verify linting rule (oxlint) via `bun run lint` (use `bun run lint:fix` to fix rules). See `@.docs/lint.md` for details.
+- Only if working with mobile, verify native health `bun run native:doctor`.
+- Only if working with mobile, verify router pages match between web and native `bun run verify-routers`.
 
 ### Testing
 
-- Backend is tested via Vitest: `yarn backend:test`. Tests should emit 100% coverage. `yarn backend:test <path>` runs one file, `--update` rewrites snapshots. See `@.docs/be-test.md` for details.
+- Backend is tested via Vitest: `bun run backend:test`. Tests should emit 100% coverage. `bun run backend:test <path>` runs one file, `--update` rewrites snapshots. See `@.docs/be-test.md` for details.
 - Frontend is tested via Playwright. As this requires running a server, see details in `@.docs/fe-test.md` if you need to run FE tests.
 
 ### Development
 
-- Run web via `yarn web:dev`, don't run mobile for now.
-- When DB schema is changed, run `yarn db:generate-types` and commit the result.
+- Run web via `bun run web:dev`, don't run mobile for now.
+- When DB schema is changed, run `bun run db:generate-types` and commit the result.
 
 ## Files structure
 

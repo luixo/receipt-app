@@ -9,5 +9,6 @@ export default defineProject({
 	test: {
 		name: "db",
 		setupFiles: path.resolve(vitestRoot, "./database.setup.ts"),
+		include: ["src/**/*.test.ts"],
 	},
 });
