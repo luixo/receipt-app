@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import Sharp from "sharp";
+import { imageSize } from "image-size";
 
 import { avatarFormSchema } from "~app/utils/validation";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
@@ -8,32 +8,31 @@ import { getS3Client } from "~web/providers/s3";
 
 export const S3_AVATAR_PREFIX = "avatars";
 
-const ALLOWED_FORMATS = new Set<keyof Sharp.FormatEnum>(["png", "jpeg", "jpg"]);
+const ALLOWED_FORMATS = new Set(["png", "jpg"]);
 
-const validateImage = async (image: Buffer) => {
-	const parsedImage = Sharp(image);
-	const metadata = await parsedImage.metadata();
-	if (!metadata.size || metadata.size > MAX_AVATAR_BYTESIZE) {
+const validateImage = (image: Buffer) => {
+	if (image.byteLength > MAX_AVATAR_BYTESIZE) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Maximum bytesize allowed is ${MAX_AVATAR_BYTESIZE}.`,
 		});
 	}
-	if (!metadata.format || !ALLOWED_FORMATS.has(metadata.format)) {
+	const metadata = imageSize(image);
+	if (!metadata.type || !ALLOWED_FORMATS.has(metadata.type)) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			/* c8 ignore next */
-			message: `Format "${metadata.format || "unknown"}" is not allowed.`,
+			message: `Format "${metadata.type || "unknown"}" is not allowed.`,
 		});
 	}
 	const maxSizeAllowed = MAX_AVATAR_SIDE_SIZE;
-	if (!metadata.height || metadata.height > maxSizeAllowed) {
+	if (metadata.height > maxSizeAllowed) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Maximum height allowed is ${maxSizeAllowed}.`,
 		});
 	}
-	if (!metadata.width || metadata.width > maxSizeAllowed) {
+	if (metadata.width > maxSizeAllowed) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Maximum width allowed is ${maxSizeAllowed}.`,
@@ -45,7 +44,7 @@ const validateImage = async (image: Buffer) => {
 			message: `Expected to have equal height and width, got ${metadata.width}x${metadata.height}.`,
 		});
 	}
-	return parsedImage.toBuffer();
+	return image;
 };
 
 export const procedure = authProcedure
@@ -61,7 +60,7 @@ export const procedure = authProcedure
 			return;
 		}
 		const s3Client = getS3Client(ctx);
-		const validatedImage = await validateImage(
+		const validatedImage = validateImage(
 			Buffer.from(await input.avatar.arrayBuffer()),
 		);
 		const avatarKey = [S3_AVATAR_PREFIX, `${ctx.auth.accountId}.png`].join("/");

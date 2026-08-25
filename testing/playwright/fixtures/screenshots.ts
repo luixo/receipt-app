@@ -5,10 +5,9 @@ import type {
 	PageScreenshotOptions,
 } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { joinImages } from "join-images";
+import { Jimp, JimpMime } from "jimp";
 import assert from "node:assert";
 import { isNonNullish } from "remeda";
-import sharp from "sharp";
 
 import type { ColorMode } from "~app/utils/store/color-modes";
 
@@ -16,6 +15,8 @@ import { toastsFixtures as test } from "./toasts";
 
 const FRAME_LENGTH = 33;
 const DELAY_FRAME_COUNT = 5;
+
+type JimpImage = Awaited<ReturnType<typeof Jimp.fromBuffer>>;
 
 type BoundingBox = NonNullable<PageScreenshotOptions["clip"]>;
 
@@ -54,8 +55,8 @@ const mergeClip = async (
 	return mergeClip(rest, mergeBoundingBoxes(boundingBox, acc));
 };
 
-const getPixelColor = async (
-	image: sharp.Sharp,
+const getPixelColor = (
+	image: JimpImage,
 	boundingBox: BoundingBox,
 	[x, y]: [number, number],
 ) => {
@@ -63,34 +64,25 @@ const getPixelColor = async (
 	if (x > width || y > height) {
 		return;
 	}
-	const { data } = await image
-		.clone()
-		.extract({ left: Math.floor(x), top: Math.floor(y), width: 1, height: 1 })
-		.raw()
-		.toBuffer({ resolveWithObject: true });
-	return `#${Array.from(data)
-		.map((component) => component.toString(16).padStart(2, "0"))
-		// We currently ignore transparency component
-		.slice(0, 3)
-		.join("")}`;
+	const color = image.getPixelColor(Math.floor(x), Math.floor(y));
+	// We currently ignore transparency component
+	return `#${color.toString(16).padStart(8, "0").slice(0, 6)}` as const;
 };
 
 type RGBColor = `#${string}`;
 type ExpectedPixel = { rgb: RGBColor; location: [number, number] };
 
 const getPixelMatchErrors = async (
-	image: sharp.Sharp,
+	image: JimpImage,
 	boundingBox: BoundingBox,
 	getExpectedPixels: GetExpectedPixels,
 	colorMode: ColorMode,
 ) => {
-	const pixelMatches = await Promise.all(
-		getExpectedPixels({ boundingBox }).map(
-			async ({ rgb: expectedColor, location: [x, y] }) => {
-				const actualColor = await getPixelColor(image, boundingBox, [x, y]);
-				return { actualColor, expectedColor, location: [x, y] };
-			},
-		),
+	const pixelMatches = getExpectedPixels({ boundingBox }).map(
+		({ rgb: expectedColor, location: [x, y] }) => {
+			const actualColor = getPixelColor(image, boundingBox, [x, y]);
+			return { actualColor, expectedColor, location: [x, y] };
+		},
 	);
 	return pixelMatches
 		.map(({ actualColor, expectedColor, location: [x, y] }) => {
@@ -102,12 +94,25 @@ const getPixelMatchErrors = async (
 		.filter(isNonNullish);
 };
 
-const getImageBoundingBox = async (image: sharp.Sharp) => {
-	const metadata = await image.metadata();
-	if (!metadata.width || !metadata.height) {
-		throw new Error(`Expected to have measured screenshot bbox`);
-	}
-	return { width: metadata.width, height: metadata.height, x: 0, y: 0 };
+const getImageBoundingBox = (image: JimpImage) => ({
+	width: image.width,
+	height: image.height,
+	x: 0,
+	y: 0,
+});
+
+const joinImagesHorizontally = async (buffers: Buffer[], color: number) => {
+	const images = await Promise.all(
+		buffers.map((buffer) => Jimp.fromBuffer(buffer)),
+	);
+	const width = images.reduce((sum, image) => sum + image.width, 0);
+	const height = Math.max(...images.map((image) => image.height));
+	const canvas = new Jimp({ width, height, color });
+	images.reduce((offsetX, image) => {
+		canvas.composite(image, offsetX, 0);
+		return offsetX + image.width;
+	}, 0);
+	return canvas;
 };
 
 const stableScreenshot = async (
@@ -160,9 +165,8 @@ const stableScreenshot = async (
 		switch (firstCheck) {
 			case "pixels": {
 				prevScreenshot = await makeScreenshot(clipBoundingBox);
-				const image = sharp(prevScreenshot.buffer);
-				const boundingBox =
-					clipBoundingBox || (await getImageBoundingBox(image));
+				const image = await Jimp.fromBuffer(prevScreenshot.buffer);
+				const boundingBox = clipBoundingBox || getImageBoundingBox(image);
 				errors = await getPixelMatchErrors(
 					image,
 					boundingBox,
@@ -309,12 +313,12 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 				const lightImage = await getImage("light");
 				const darkImage = await getImage("dark");
 
-				const mergedImage = await joinImages([lightImage, darkImage], {
-					direction: "horizontal",
-					color: "#00ff00",
-				});
+				const mergedImage = await joinImagesHorizontally(
+					[lightImage, darkImage],
+					0x00ff00ff,
+				);
 				expect
-					.soft(await mergedImage.toFormat("png").toBuffer())
+					.soft(await mergedImage.getBuffer(JimpMime.png))
 					.toMatchSnapshot(name, {
 						maxDiffPixelRatio,
 						maxDiffPixels,
