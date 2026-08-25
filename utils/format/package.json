@@ -4,14 +4,10 @@
 	"type": "module",
 	"main": "config.ts",
 	"scripts": {
-		"check": "bun --cwd ../.. prettier --check .",
-		"collect-ignore-rules": "bun ./collect-ignores.ts",
-		"write": "bun --cwd ../.. prettier --write ."
+		"check": "bun --cwd ../.. oxfmt --check .",
+		"write": "bun --cwd ../.. oxfmt ."
 	},
 	"devDependencies": {
-		"@types/ignore-walk": "^4.0.3",
-		"ignore-walk": "^8.0.0",
-		"prettier-plugin-packagejson": "^2.5.20",
-		"prettier-plugin-tailwindcss": "^0.7.2"
+		"oxfmt": "^0.65.0"
 	}
 }

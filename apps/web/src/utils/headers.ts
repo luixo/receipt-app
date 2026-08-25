@@ -2,7 +2,9 @@ import { entries } from "remeda";
 
 import type { NetContext } from "~web/handlers/context";
 
-const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
+const getFirstValue = (
+	valueOrValues: string | number | string[] | undefined,
+) =>
 	/* c8 ignore start */
 	valueOrValues === undefined
 		? undefined

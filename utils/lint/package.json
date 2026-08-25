@@ -1,8 +1,8 @@
 {
 	"name": "@ra/lint",
 	"version": "0.0.0",
-	"sideEffects": false,
 	"type": "module",
+	"sideEffects": false,
 	"main": "config.ts",
 	"scripts": {
 		"lint": "bun --cwd ../.. oxlint"

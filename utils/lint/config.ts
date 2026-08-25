@@ -385,7 +385,7 @@ const disabledRules = {
 	"default-case": "off",
 	// We extensively spread props: `<Foo {...props} />`
 	"react/jsx-props-no-spreading": "off",
-	// Maintained by prettier plugin
+	// Maintained by oxfmt (sortTailwindcss)
 	"better-tailwindcss/enforce-consistent-class-order": "off",
 	// `(object | undefined) || number` is assumed incorrect by this rule
 	// it should be `(object | undefined) ?? number`
@@ -414,7 +414,7 @@ const disabledRules = {
 	"vitest/require-test-timeout": "off",
 	// We don't need to know amount of assertions in every test
 	"vitest/prefer-expect-assertions": "off",
-	// Prettier lowercases hex numbers
+	// Oxfmt lowercases hex numbers
 	"unicorn/number-literal-case": "off",
 } satisfies DummyRuleMap;
 
