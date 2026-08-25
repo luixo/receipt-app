@@ -8,6 +8,7 @@ import { Icon } from "~components/icons";
 import type { IconName } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
+import { cn } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
@@ -55,7 +56,7 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 			<AmountBadge useAmount={useBadgeAmount}>
 				<Icon name={iconName} className="size-6" />
 			</AmountBadge>
-			<Text className={`text-sm leading-8 ${selected ? "text-primary" : ""}`}>
+			<Text className={cn("text-sm/8", selected ? "text-primary" : undefined)}>
 				{text}
 			</Text>
 		</Link>

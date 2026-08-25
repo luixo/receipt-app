@@ -43,10 +43,10 @@ const UserDebtPreviewShape: React.FC<
 	>
 		<View className="flex-1 flex-row gap-2 p-3 sm:p-2">
 			{startContent}
-			<View className="flex-[2]">{amount}</View>
-			<View className="flex-[2]">{timestamp}</View>
+			<View className="flex-2">{amount}</View>
+			<View className="flex-2">{timestamp}</View>
 			<View className="flex-1 empty:hidden">{synced}</View>
-			<View className="hidden flex-[3] sm:flex">{note}</View>
+			<View className="hidden flex-3 sm:flex">{note}</View>
 		</View>
 		<View className="p-3 pb-5 sm:hidden">{note}</View>
 	</View>

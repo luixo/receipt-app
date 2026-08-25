@@ -55,9 +55,9 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 
 	return (
 		<View className="flex flex-row gap-2">
-			<Text className="text-2xl leading-9">{sum}</Text>
+			<Text className="text-2xl/9">{sum}</Text>
 			<View onPress={disabled ? undefined : openModal}>
-				<Text className="text-2xl leading-9">
+				<Text className="text-2xl/9">
 					{getCurrencySymbol(locale, receipt.currencyCode)}
 				</Text>
 			</View>

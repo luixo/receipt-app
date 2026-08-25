@@ -220,12 +220,12 @@ const mapReceipt = (
 			auth.accountId,
 			receipt.selfUserId,
 		),
+		// This can't happen as payers item always exists
 		payers:
+			/* c8 ignore next */
 			payersItem?.consumers.map((payer) => ({
 				...payer,
 				part: Number(payer.part),
-				// This can't happen as payers item always exists
-				/* c8 ignore next */
 			})) ?? [],
 	};
 };
