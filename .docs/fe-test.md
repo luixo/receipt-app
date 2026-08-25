@@ -9,6 +9,19 @@ Before working on tests, you need to pre-build the server (`bun run web:build --
 - Per-feature fixtures: `*.utils.ts` co-located in `__tests__/` alongside the spec file.
 - Always import `test` and `expect` from `~tests/frontend/fixtures`, not from `@playwright/test`. Per-feature fixture sets are composed with `mergeTests()`.
 
+## Visual tests routine
+
+- **Visual tests must ONLY be run and their snapshots updated via Docker, never directly on a local machine.** Local browser binaries (even ones `playwright install` fetches) render slightly differently per OS/arch than the pinned CI image, so running or `--update-snapshots`-ing outside Docker produces false diffs and can silently corrupt committed snapshots with host-specific pixels.
+- **The build itself stays on the host**, Docker is only used to run/update the tests against that build.
+
+Full command to run tests in Docker:
+
+```sh
+# Optionally add a single test file / grep for test case
+# Drop `--update-snapshots` to just verify snapshots match instead of regenerating them
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
+```
+
 ## API mocking
 
 Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepted — no real backend is called in functional tests.
@@ -54,12 +67,11 @@ Fixture-provided locators available in every spec:
 - `verifyToastTexts(text | texts[], timeout?)` — asserts exactly the given toasts are visible (sorted comparison), then programmatically dismisses them. Always call this to consume toasts; leftover toasts at screenshot time throw.
 - `clearToasts(n)` — dismiss N toasts without asserting text.
 
-## Visual tests
+## Visual test quirks
 
 - `expectScreenshotWithSchemes(name, opts)` — takes a screenshot in both light and dark mode, joins them side-by-side, and compares to a named snapshot. No visible toasts are allowed before calling. Masks the sticky menu by default. Pass `locator` to clip to a specific element.
 - When using a locator, always use a named locator fixture defined in `utils.ts` (e.g. `avatarForm`) rather than inline expressions like `page.locator("form").first()`. This keeps visual tests readable and lets fixture names serve as stable contracts.
 - Visual snapshots live in `*-snapshots/` directories next to the spec.
-- To have stable screenshots in visual tests locally you need to run a docker command `docker run --rm -v ${PWD}:/work/ -w /work/ --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "curl -fsSL https://bun.sh/install | bash && export PATH=\"\$HOME/.bun/bin:\$PATH\" && bun install && PW_SERVER=true bun run frontend:test --update-snapshots"` (optionally adding a single test file / grep for test case).
 
 ## Faker and time
 
