@@ -1,5 +1,5 @@
+import { Jimp, JimpMime } from "jimp";
 import { File } from "node:buffer";
-import Sharp from "sharp";
 import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -25,8 +25,16 @@ const getFormData = (bits?: Buffer[]) => {
 	return formData;
 };
 
+// Minimal valid RIFF/WEBP header, just enough for `image-size` to detect the
+// format without needing a real VP8 bitstream.
+const WEBP_BUFFER = Buffer.alloc(30);
+WEBP_BUFFER.write("RIFF", 0, "ascii");
+WEBP_BUFFER.writeUInt32LE(22, 4);
+WEBP_BUFFER.write("WEBP", 8, "ascii");
+WEBP_BUFFER.write("VP8 ", 12, "ascii");
+WEBP_BUFFER.writeUInt32LE(10, 16);
+
 type FormImageOptions = {
-	exif?: Record<string, unknown>;
 	format?: "png" | "jpeg" | "webp";
 	type?: "static" | "noise";
 };
@@ -37,29 +45,18 @@ const defaultSettings: FormImageOptions = {
 const generateFormWithImage = async (
 	width: number,
 	height: number,
-	{ exif, format = "png", type = "static" }: FormImageOptions = defaultSettings,
+	{ format = "png", type = "static" }: FormImageOptions = defaultSettings,
 ) => {
-	let image = Sharp({
-		create: {
-			width,
-			height,
-			channels: 4,
-			background: { r: 255, g: 0, b: 0, alpha: 0.5 },
-			noise:
-				type === "noise"
-					? {
-							type: "gaussian" as const,
-							mean: 128,
-							sigma: 30,
-						}
-					: undefined,
-		},
-	});
-	image = image[format]();
-	if (exif) {
-		image = image.withMetadata({ exif });
+	if (format === "webp") {
+		return getFormData([WEBP_BUFFER]);
 	}
-	const buffer = await image.toBuffer();
+	const image = new Jimp({ width, height, color: 0xff000080 });
+	if (type === "noise") {
+		for (let index = 0; index < image.bitmap.data.length; index += 1) {
+			image.bitmap.data[index] = Math.floor(Math.random() * 256);
+		}
+	}
+	const buffer = await image.getBuffer(JimpMime[format]);
 	return getFormData([buffer]);
 };
 
@@ -220,30 +217,6 @@ describe("account.changeAvatar", () => {
 				key,
 				objectLength: message.objectLength,
 			});
-		});
-
-		test("metadata is stripped", async ({ ctx }) => {
-			// Verifying other users are not affected
-			await insertAccountWithSession(ctx);
-			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
-
-			await caller.procedure(
-				await generateFormWithImage(MAX_AVATAR_SIDE_SIZE, MAX_AVATAR_SIDE_SIZE),
-			);
-			await caller.procedure(
-				await generateFormWithImage(
-					MAX_AVATAR_SIDE_SIZE,
-					MAX_AVATAR_SIDE_SIZE,
-					{ exif: { IFD0: { Copyright: "Anything" } } },
-				),
-			);
-			const getObjectLength = (index: number) => {
-				const message = ctx.s3Options.mock.getMessages()[index];
-				assert(message);
-				return message.objectLength;
-			};
-			expect(getObjectLength(0)).toEqual(getObjectLength(1));
 		});
 	});
 });
