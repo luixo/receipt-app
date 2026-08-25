@@ -414,6 +414,8 @@ const disabledRules = {
 	"vitest/require-test-timeout": "off",
 	// We don't need to know amount of assertions in every test
 	"vitest/prefer-expect-assertions": "off",
+	// Prettier lowercases hex numbers
+	"unicorn/number-literal-case": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {

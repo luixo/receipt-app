@@ -135,9 +135,6 @@ const config = defineConfig({
 	ssr: {
 		noExternal: optimizedDeps,
 	},
-	optimizeDeps: {
-		exclude: ["sharp"],
-	},
 	server: {
 		port: Number(process.env.PORT) || 3000,
 	},
