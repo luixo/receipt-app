@@ -1,4 +1,0 @@
-.history
-**/*-snapshots/**/*.json
-**/*.gen.ts
-**/uniwind-types.d.ts

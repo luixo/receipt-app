@@ -87,9 +87,11 @@ export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
 type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
 	{
-		[K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
-			? K
-			: never]: P[K];
+		[
+			K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
+				? K
+				: never
+		]: P[K];
 	};
 
 export type TRPCQueryKey = keyof TRPCQueryValues;

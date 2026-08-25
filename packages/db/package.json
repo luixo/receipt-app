@@ -1,8 +1,8 @@
 {
 	"name": "@ra/db",
 	"version": "0.0.0",
-	"sideEffects": false,
 	"type": "module",
+	"sideEffects": false,
 	"main": "src/index.ts",
 	"scripts": {
 		"db:migrate": "kysely migrate latest --cwd ../.. --experimental-resolve-tsconfig-paths"

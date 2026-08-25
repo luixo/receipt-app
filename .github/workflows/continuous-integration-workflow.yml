@@ -19,14 +19,12 @@ jobs:
           find: "{{PR_NUMBER}}"
           replace: ${{ github.event.pull_request.number }}
 
-  prettier:
-    name: Prettier
+  format:
+    name: Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
-      - name: Prepare ignore file
-        run: bun run format:prepare
       - name: Run code formatting verification
         run: bun run format:verify
 
