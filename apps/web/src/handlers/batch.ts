@@ -44,14 +44,14 @@ type ProcedureResolverShort<C, I, O> = ProcedureResolver<
 >;
 
 const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
+	// there are no batched requests with no auth yet
+	/* c8 ignore start */
 	if ("auth" in context) {
 		return (context as AuthorizedContext).auth.accountId;
-		/* c8 ignore start */
 	}
-	// There are no batched requests with no auth yet
 	return "anonymous";
+	/* c8 ignore stop */
 };
-/* c8 ignore stop */
 
 export type BatchLoadContextFn<
 	C extends UnauthorizedContext,

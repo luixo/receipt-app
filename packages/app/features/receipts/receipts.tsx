@@ -40,10 +40,10 @@ const ReceiptsWrapper: React.FC<{ children: ViewReactNode }> = ({
 	return (
 		<>
 			<View className="flex-row gap-2">
-				<View className="flex-[8] p-2">
+				<View className="flex-8 p-2">
 					<Text>{t("list.table.receipt")}</Text>
 				</View>
-				<View className="flex-[2] p-2">
+				<View className="flex-2 p-2">
 					<Text className="self-end">{t("list.table.sum")}</Text>
 				</View>
 				<View className="hidden flex-1 p-2 sm:flex" />

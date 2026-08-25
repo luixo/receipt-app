@@ -165,10 +165,11 @@ describe("TRPC endpoint", () => {
 				input: { name: "foo" },
 				headers: { "x-error": errorMessage, "user-agent": userAgent },
 			});
-			expect(spy).toBeCalledTimes(1);
+			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenLastCalledWith(
 				`[BAD_REQUEST] [${userAgent}] query "query": ${errorMessage}`,
 			);
+			spy.mockRestore();
 		});
 
 		// see https://github.com/trpc/trpc/issues/6157
@@ -185,7 +186,7 @@ describe("TRPC endpoint", () => {
 					"x-email": email,
 				},
 			});
-			expect(spy).toBeCalledTimes(1);
+			expect(spy).toHaveBeenCalledTimes(1);
 			expect(spy).toHaveBeenLastCalledWith(
 				`[BAD_REQUEST] [${userAgent}] query "authQuery" (by ${email}): ${errorMessage}`,
 			);
@@ -196,7 +197,7 @@ describe("TRPC endpoint", () => {
 			await runRoute({
 				procedure: "account.get",
 			});
-			expect(spy).toBeCalledTimes(0);
+			expect(spy).toHaveBeenCalledTimes(0);
 		});
 	});
 

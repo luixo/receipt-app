@@ -1,25 +1,24 @@
 import path from "node:path";
-import tsconfigPaths from "vite-tsconfig-paths";
-import { configDefaults, defineConfig } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
-const rootPath = __dirname;
+const rootPath = import.meta.dirname;
 const vitestRoot = path.resolve(rootPath, "testing/vitest");
 
 export default defineConfig({
-	plugins: [tsconfigPaths()],
+	resolve: {
+		tsconfigPaths: true,
+	},
 	test: {
 		globalSetup: path.resolve(vitestRoot, "./global.setup.ts"),
 		coverage: {
-			all: true,
 			enabled: true,
 			skipFull: true,
 			thresholds: {
 				"100": true,
 			},
 			reporter: ["text", "html", "lcov", "json-summary", "json"],
+			include: ["apps/web/src/**/*.{ts,tsx}", "packages/db/src/**/*.{ts,tsx}"],
 			exclude: [
-				...(configDefaults.coverage.exclude || []),
-				path.resolve(rootPath, "*.config.*"),
 				path.resolve(rootPath, "apps/web/src/providers/**/*"),
 				path.resolve(rootPath, "apps/web/src/hooks/**/*"),
 				path.resolve(rootPath, "apps/web/src/entry/**/*"),
@@ -32,21 +31,11 @@ export default defineConfig({
 				path.resolve(rootPath, "apps/web/src/utils/store.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/storage.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/i18n.ts"),
-				path.resolve(rootPath, "apps/web/*.config.*"),
-				path.resolve(rootPath, "apps/mobile/**/*"),
-				path.resolve(rootPath, "packages/app/**/*"),
-				path.resolve(rootPath, "packages/utils/**/*"),
-				path.resolve(rootPath, "packages/components/**/*"),
-				path.resolve(rootPath, "packages/mutations/**/*"),
-				path.resolve(rootPath, "packages/db/!(src)/**/*"),
-				path.resolve(rootPath, "utils/**/*"),
-				path.resolve(rootPath, "testing/playwright/**/*"),
-				path.resolve(vitestRoot, "**/*"),
 			],
 			allowExternal: true,
 			reportsDirectory: path.resolve(vitestRoot, "./coverage"),
 		},
-		workspace: ["apps/*/vitest.config.ts", "packages/*/vitest.config.ts"],
+		projects: ["apps/*/vitest.config.ts", "packages/*/vitest.config.ts"],
 		pool: "vmThreads",
 		env: {
 			// This regulates timezone with which expected dates are creates in tests

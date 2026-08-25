@@ -6,7 +6,6 @@ import initModuleAlias, { addAlias } from "module-alias";
 import { nitro } from "nitro/vite";
 import fsp from "node:fs/promises";
 import path from "node:path";
-import url from "node:url";
 import { uniwind } from "uniwind/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
@@ -14,7 +13,6 @@ import { cjsInterop } from "vite-plugin-cjs-interop";
 import commonjs from "vite-plugin-commonjs";
 import vitePluginInspect from "vite-plugin-inspect";
 import reactNativeWeb from "vite-plugin-react-native-web";
-import viteTsConfigPaths from "vite-tsconfig-paths";
 
 // This is the only way I found to make SSR render with `react-native-web` so far
 initModuleAlias();
@@ -32,7 +30,7 @@ const optimizedDeps = [
 	"tslib",
 ];
 
-const rootDir = path.resolve(url.fileURLToPath(import.meta.url), "../../..");
+const rootDir = path.resolve(import.meta.dirname, "../..");
 
 const webDir = path.join(rootDir, "apps/web");
 const config = defineConfig({
@@ -55,6 +53,7 @@ const config = defineConfig({
 			".js",
 			".json",
 		],
+		tsconfigPaths: true,
 	},
 	plugins: [
 		devtools(),
@@ -79,9 +78,7 @@ const config = defineConfig({
 			publicAssets: [{ dir: path.join(webDir, "public"), maxAge: 0 }],
 		}),
 		viteReact({
-			babel: {
-				plugins: ["babel-plugin-react-compiler"],
-			},
+			compiler: true,
 		}),
 		commonjs({
 			filter: (id) =>
@@ -115,7 +112,6 @@ const config = defineConfig({
 				"inline-style-prefixer/lib/createPrefixer",
 			],
 		}),
-		viteTsConfigPaths(),
 		// `pg` lazily requires `pg-cloudflare`, which imports a Cloudflare
 		// Workers-only builtin that has no counterpart on node
 		{

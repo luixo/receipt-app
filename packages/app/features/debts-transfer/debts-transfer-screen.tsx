@@ -237,7 +237,7 @@ const DebtsListForm = suspendedFallback<{
 												);
 												return (
 													<View className="flex items-center gap-2 sm:flex-row">
-														<Text className="flex-[2]">{currencySymbol}</Text>
+														<Text className="flex-2">{currencySymbol}</Text>
 														<field.NumberField
 															value={field.state.value}
 															fractionDigits={debtAmountSchemaDecimal}
@@ -250,7 +250,7 @@ const DebtsListForm = suspendedFallback<{
 																	? field.state.meta.errors
 																	: undefined
 															}
-															className="flex-[6]"
+															className="flex-6"
 															aria-label={currencySymbol}
 															color={
 																!field.state.value
@@ -351,9 +351,9 @@ const DebtsListForm = suspendedFallback<{
 					{Array.from({ length: 3 }).map((_, index) => (
 						// eslint-disable-next-line react/no-array-index-key
 						<View className="flex items-center gap-2 sm:flex-row" key={index}>
-							<Skeleton className="h-6 w-8 flex-[2] rounded-md" />
+							<Skeleton className="h-6 w-8 flex-2 rounded-md" />
 							<SkeletonNumberInput
-								className="flex-[6]"
+								className="flex-6"
 								startContent={<View className="bg-default size-4 rounded" />}
 								defaultValue={0}
 								endContent={
