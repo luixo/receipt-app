@@ -7,8 +7,7 @@ Bun monorepo: a TanStack Start web app and an Expo mobile app sharing one tRPC b
 ### Verification
 
 - Verify typescript via `bun run typecheck`.
-- Apply formatting via `bun run format` (run `bun run format:prepare` on new workspaces). See `@.docs/format.md` for details.
-- Verify linting rule (oxlint) via `bun run lint` (use `bun run lint:fix` to fix rules). See `@.docs/lint.md` for details.
+- Verify linting rule via `bun run lint` (use `bun run lint:fix` to fix rules), apply formatting via `bun run format`. See `@.docs/lint.md` for details.
 - Only if working with mobile, verify native health `bun run native:doctor`.
 - Only if working with mobile, verify router pages match between web and native `bun run verify-routers`.
 
@@ -32,8 +31,8 @@ All packages from `packages` are referred as `~package/*` (e.g. `packages/foo/ba
 - `packages/mutations/**` - mutation descriptors and cache controllers (see `@.docs/mutations.md` for details)
 - `packages/app/**` - the main portion of the app, containing shared layer between and mobile and all the features
 
-- `utils/format` - prettier & format utils
-- `utils/lint` - oxlint & lint utils
+- `utils/format` - format utils
+- `utils/lint` - lint utils
 - `utils/scripts` - misc utils
 
 - `testing/vitest` - backend testing infrastructure (tests are co-located with files)

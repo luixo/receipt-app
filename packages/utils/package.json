@@ -1,8 +1,8 @@
 {
 	"name": "@ra/utils",
 	"version": "0.0.0",
-	"sideEffects": false,
 	"type": "module",
+	"sideEffects": false,
 	"main": "src/index.ts",
 	"dependencies": {
 		"@internationalized/date": "3.10.0",

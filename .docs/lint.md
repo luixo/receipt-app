@@ -1,6 +1,7 @@
-# Linting (oxlint)
+# Linting & formatting
 
-Run `bun run lint` to check; `bun run lint:fix` to auto-fix.
+Run `bun run lint` to lint; `bun run lint:fix` to auto-fix.
+Run `bun run format` to format.
 
 ## Replacements for banned APIs
 

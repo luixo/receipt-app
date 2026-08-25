@@ -198,9 +198,15 @@ describe("currency.rates", () => {
 					]),
 					...currenciesTo
 						.filter((currencyTo) => currencyTo !== currencyInCache)
-						.map<
-							(typeof dbMessages)[number]
-						>((currencyTo) => ["setValue", [`${currencyFrom}->${currencyTo}`, result[currencyTo]?.toString(), { expiryInS: 1440000 }], { result: undefined }]),
+						.map<(typeof dbMessages)[number]>((currencyTo) => [
+							"setValue",
+							[
+								`${currencyFrom}->${currencyTo}`,
+								result[currencyTo]?.toString(),
+								{ expiryInS: 1440000 },
+							],
+							{ result: undefined },
+						]),
 				]);
 			});
 		});
