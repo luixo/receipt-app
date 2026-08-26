@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.remove": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"accountConnectionIntentions.remove\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"targetAccountId": "d9f78dd2-12e5-4c0a-ba14-29617830faf9"
+					}
+				}
+			}
+		]
+	}
+}

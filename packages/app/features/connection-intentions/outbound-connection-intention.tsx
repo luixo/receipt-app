@@ -10,6 +10,7 @@ import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
+import { View } from "~components/view";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {
@@ -50,22 +51,24 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	}, [removeConnectionMutation, intention.account.id]);
 
 	return (
-		<Input
-			value={intention.account.email}
-			label={intention.user.name}
-			isReadOnly
-			mutation={removeConnectionMutation}
-			endContent={
-				<Button
-					title={t("intentions.unlinkUserButton")}
-					variant="light"
-					isLoading={removeConnectionMutation.isPending}
-					isIconOnly
-					onPress={removeConnection}
-				>
-					<Icon name="unlink" className="size-6" />
-				</Button>
-			}
-		/>
+		<View testID="outbound-connection-intention">
+			<Input
+				value={intention.account.email}
+				label={intention.user.name}
+				isReadOnly
+				mutation={removeConnectionMutation}
+				endContent={
+					<Button
+						title={t("intentions.unlinkUserButton")}
+						variant="light"
+						isLoading={removeConnectionMutation.isPending}
+						isIconOnly
+						onPress={removeConnection}
+					>
+						<Icon name="unlink" className="size-6" />
+					</Button>
+				}
+			/>
+		</View>
 	);
 };
