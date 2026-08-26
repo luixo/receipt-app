@@ -18,8 +18,9 @@ export const PartButtons: React.FC<Props> = ({
 	upDisabled,
 	children,
 }) => (
-	<View className="flex-row items-center gap-2">
+	<View className="flex-row items-center gap-2" testID="part-buttons">
 		<Button
+			testID="part-buttons-down"
 			variant="ghost"
 			color="primary"
 			onPress={() => updatePart((prev) => prev - 1)}
@@ -30,6 +31,7 @@ export const PartButtons: React.FC<Props> = ({
 		</Button>
 		{children}
 		<Button
+			testID="part-buttons-up"
 			variant="ghost"
 			color="primary"
 			onPress={() => updatePart((prev) => prev + 1)}

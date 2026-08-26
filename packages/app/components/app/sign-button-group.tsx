@@ -11,7 +11,7 @@ export type Direction = "+" | "-";
 export const SkeletonSignButtonGroup = () => {
 	const { t } = useTranslation("default");
 	return (
-		<View className="flex-row">
+		<View className="flex-row" testID="sign-button-group">
 			<Button
 				className="flex-1 flex-row rounded-r-none"
 				color="success"
@@ -48,8 +48,9 @@ export const SignButtonGroup: React.FC<Props> = ({
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
-		<View className="flex-row">
+		<View className="flex-row" testID="sign-button-group">
 			<Button
+				testID="sign-button-positive"
 				onPress={setPositive}
 				variant={direction === "-" ? "bordered" : undefined}
 				className="flex-1 flex-row rounded-r-none"
@@ -63,6 +64,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				)}
 			</Button>
 			<Button
+				testID="sign-button-negative"
 				onPress={setNegative}
 				variant={direction === "+" ? "bordered" : undefined}
 				className="flex-1 flex-row rounded-l-none"

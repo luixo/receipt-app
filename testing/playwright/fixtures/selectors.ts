@@ -7,7 +7,6 @@ type SelectorsFixtures = {
 	withLoader: (locator: Locator) => Locator;
 	modal: (title?: string) => Locator;
 	modalCross: Locator;
-	user: Locator;
 	errorMessage: (message?: string | RegExp) => Locator;
 	emptyCard: (message?: string | RegExp) => Locator;
 	backLink: Locator;
@@ -47,7 +46,6 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 				String.raw`.data-\[loaded\=true\]\:before\:opacity-0.data-\[loaded\=true\]\:before\:-z-10.data-\[loaded\=true\]\:before\:animate-none`,
 			),
 		),
-	user: ({ page }, use) => use(page.getByTestId("user")),
 	emptyCard: async ({ page }, use) => {
 		await use((message) => {
 			const emptyCard = page.getByTestId("empty-card");

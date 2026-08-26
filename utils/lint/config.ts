@@ -634,7 +634,12 @@ export default defineConfig({
 				...playwrightPlugin.configs["flat/recommended"].rules,
 				"playwright/expect-expect": [
 					"error",
-					{ assertFunctionNames: ["expectScreenshotWithSchemes"] },
+					{
+						assertFunctionNames: [
+							"expectScreenshotWithSchemes",
+							"snapshotQueries",
+						],
+					},
 				],
 			},
 		},
