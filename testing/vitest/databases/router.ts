@@ -95,7 +95,6 @@ export const appRouter = router({
 				async () => {
 					const resultSet = await migrate(database, "latest", {
 						migrationFolder: "packages/db/migration/migrations",
-						experimentalResolveTSConfigPaths: true,
 					});
 					if ("error" in resultSet) {
 						throw resultSet.error;

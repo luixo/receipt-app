@@ -39,18 +39,19 @@ type BuiltinType = Exclude<
 >;
 type TypeParser = (input: string) => unknown;
 type TemporalBuiltinType =
-	| typeof types.builtins.DATE
-	| typeof types.builtins.TIMESTAMP
-	| typeof types.builtins.TIMESTAMPTZ
-	| typeof types.builtins.TIME
-	| typeof types.builtins.TIMETZ;
+	| typeof types.TypeId.DATE
+	| typeof types.TypeId.TIMESTAMP
+	| typeof types.TypeId.TIMESTAMPTZ
+	| typeof types.TypeId.TIME
+	| typeof types.TypeId.TIMETZ;
 const temporalMapping = {
-	[types.builtins.DATE]: "plainDate",
-	[types.builtins.TIMESTAMP]: "plainDateTime",
-	[types.builtins.TIMESTAMPTZ]: "zonedDateTime",
-	[types.builtins.TIME]: "plainDate",
+	[types.builtins.DATE as typeof types.TypeId.DATE]: "plainDate",
+	[types.builtins.TIMESTAMP as typeof types.TypeId.TIMESTAMP]: "plainDateTime",
+	[types.builtins.TIMESTAMPTZ as typeof types.TypeId.TIMESTAMPTZ]:
+		"zonedDateTime",
+	[types.builtins.TIME as typeof types.TypeId.TIME]: "plainDate",
 	// This is incorrect, but we don't use timetz type
-	[types.builtins.TIMETZ]: "plainTime",
+	[types.builtins.TIMETZ as typeof types.TypeId.TIMETZ]: "plainTime",
 } satisfies Record<TemporalBuiltinType, TemporalType>;
 export const temporalParsers = mapValues(
 	temporalMapping,
@@ -58,7 +59,8 @@ export const temporalParsers = mapValues(
 );
 const dbParsers: Partial<Record<BuiltinType, TypeParser>> = {
 	...temporalParsers,
-	[types.builtins.BOOL]: (value) => (value === "t" ? "true" : "false"),
+	[types.builtins.BOOL as typeof types.TypeId.BOOL]: (value) =>
+		value === "t" ? "true" : "false",
 	/* c8 ignore stop */
 };
 const calendarISOToDatabaseISO = (input: string) =>
@@ -128,10 +130,11 @@ type DatabaseOptions = {
 	} | null;
 } & Omit<PoolConfig, "connectionString">;
 type GetTypeParser = (oid: BuiltinType) => undefined | TypeParser;
+// @ts-expect-error Complicated function override types
 const getCustomTypes = (getTypeParser: GetTypeParser): typeof types => ({
-	// @ts-expect-error Complicated function override types
 	getTypeParser: (oid, format) => {
 		const parser = getTypeParser(oid);
+		// eslint-disable-next-line typescript/no-unsafe-return
 		return parser || types.getTypeParser(oid, format as "text");
 	},
 });

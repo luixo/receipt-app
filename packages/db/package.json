@@ -5,14 +5,15 @@
 	"sideEffects": false,
 	"main": "src/index.ts",
 	"scripts": {
-		"db:migrate": "kysely migrate latest --cwd ../.. --experimental-resolve-tsconfig-paths"
+		"db:migrate": "kysely migrate latest --cwd ../..",
+		"db:generate-types": "bun --cwd ../.. kysely-codegen"
 	},
 	"dependencies": {
 		"@ra/utils": "workspace:*",
-		"kysely": "^0.28.7",
-		"kysely-ctl": "^0.19.0",
+		"kysely": "catalog:",
+		"kysely-ctl": "^0.21.0",
 		"kysely-plugin-serialize": "^0.8.2",
-		"pg": "^8.16.0"
+		"pg": "^8.23.0"
 	},
 	"devDependencies": {
 		"@ra/vitest": "workspace:*"
