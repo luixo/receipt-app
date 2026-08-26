@@ -1,0 +1,39 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"6f59e38a-851c-45ac-aad9-63590659e167\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"consumers": {
+								"0": {
+									"part": 3
+								}
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"itemId": "53bf6583-b16b-4b6f-906c-0a89ec33d41e",
+						"userId": "341b114c-1939-4ec9-b00e-fdb393172285",
+						"update": {
+							"type": "part",
+							"part": 3
+						}
+					}
+				}
+			}
+		]
+	}
+}

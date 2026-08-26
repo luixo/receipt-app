@@ -35,6 +35,7 @@ export const Avatar: React.FC<Props> = ({
 	image,
 	hashId,
 	onPress,
+	testID = "user-avatar",
 }) => {
 	const avatarGroupContext = React.use(AvatarGroupProvider);
 	const contextSize = avatarGroupContext?.size ?? size;
@@ -65,6 +66,7 @@ export const Avatar: React.FC<Props> = ({
 					),
 				);
 			}}
+			testID={testID}
 		>
 			<Pressable
 				onPress={onPress}

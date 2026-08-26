@@ -259,21 +259,6 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 				}
 				const stickyMenu = page.getByTestId("sticky-menu");
 				const stickyMenuBoundingBox = await stickyMenu.boundingBox();
-				const masks = mask.map((maskElement) => {
-					const locatorElements = Array.isArray(restScreenshotOptions.locator)
-						? restScreenshotOptions.locator
-						: [restScreenshotOptions.locator || page];
-					// We mask only those that are included in our locator
-					return locatorElements.reduce<Locator>(
-						(acc, locatorElement) =>
-							acc.or(
-								"request" in locatorElement
-									? maskElement
-									: locatorElement.locator(maskElement),
-							),
-						page.locator("never"),
-					);
-				});
 				const getImage = async (colorMode: ColorMode) => {
 					await page.emulateMedia({ colorScheme: colorMode });
 					const rawExpectedPixels = [
@@ -294,7 +279,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 						{
 							page,
 							fullPage,
-							mask: noStickyMenuMask ? masks : [...masks, stickyMenu],
+							mask: noStickyMenuMask ? mask : [...mask, stickyMenu],
 							animations,
 							timeout,
 							...restScreenshotOptions,

@@ -6,5 +6,9 @@ import { Skeleton } from "~components/skeleton";
 export const SkeletonAvatar: React.FC<
 	Omit<React.ComponentProps<typeof Avatar>, "fallback">
 > = (props) => (
-	<Avatar {...props} fallback={<Skeleton className="size-full" />} />
+	<Avatar
+		{...props}
+		testID="user-avatar-skeleton"
+		fallback={<Skeleton className="size-full" />}
+	/>
 );
