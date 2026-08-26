@@ -41,7 +41,7 @@ export const useAvatarProps = ({
 	image,
 	hashId,
 	onPress,
-	testID,
+	testID = "user-avatar",
 	...props
 }: Props): React.ComponentProps<typeof AvatarRaw> => {
 	const ref = React.useRef<HTMLSpanElement>(null);
