@@ -1,4 +1,4 @@
-import type { Config } from "kysely-codegen";
+import { defineConfig } from "kysely-codegen";
 import { entries, fromEntries, values } from "remeda";
 
 import type { DB } from "~db/types.gen";
@@ -102,7 +102,7 @@ const TYPES: Record<
 	},
 };
 
-const config: Config = {
+export default defineConfig({
 	outFile: "packages/db/src/types.gen.ts",
 	singularize: true,
 	customImports: {
@@ -125,6 +125,4 @@ const config: Config = {
 		),
 	},
 	typeMapping,
-};
-
-export default config;
+});
