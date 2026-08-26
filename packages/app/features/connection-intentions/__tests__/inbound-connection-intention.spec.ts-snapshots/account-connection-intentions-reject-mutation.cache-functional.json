@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.reject": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"accountConnectionIntentions.reject\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"sourceAccountId": "bf4b273a-d398-4c4f-aae8-228f364da0c4"
+					}
+				}
+			}
+		]
+	}
+}
