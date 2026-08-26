@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.accept": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"accountConnectionIntentions.accept\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"accountId": "b5966c3b-6e81-4076-b4be-af2056d50ea3",
+						"userId": "0ac17d2f-6e48-4349-97ad-2c73b7596927"
+					}
+				}
+			}
+		]
+	}
+}

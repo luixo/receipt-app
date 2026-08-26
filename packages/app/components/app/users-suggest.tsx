@@ -282,7 +282,11 @@ export const UsersSuggest: React.FC<Props> = ({
 	].filter(isNonNull);
 
 	return (
-		<View className="items-start gap-4" {...wrapperProps}>
+		<View
+			testID="users-suggest"
+			className="items-start gap-4"
+			{...wrapperProps}
+		>
 			{selectedUserIds.length === 0 || multiselect ? (
 				<Autocomplete
 					// This is needed to reset the Autocomplete state on selected user change

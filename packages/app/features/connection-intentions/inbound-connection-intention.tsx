@@ -1,17 +1,15 @@
 import React from "react";
 
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import { doNothing } from "remeda";
 
 import {
 	SkeletonUsersSuggest,
 	UsersSuggest,
 } from "~app/components/app/users-suggest";
 import { ConfirmModal } from "~app/components/confirm-modal";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCMutationResult, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
@@ -41,46 +39,6 @@ export const SkeletonInboundConnectionIntention = () => {
 	);
 };
 
-const ConfirmModalWrapper = suspendedFallback<
-	Props & {
-		children: (
-			opts?: Parameters<
-				React.ComponentProps<typeof ConfirmModal>["children"]
-			>[0],
-		) => React.ReactNode;
-		acceptMutation: TRPCMutationResult<"accountConnectionIntentions.accept">;
-		userId: UserId;
-		resetUserId: () => void;
-	}
->(
-	({ children, intention, acceptMutation, userId, resetUserId }) => {
-		const trpc = useTRPC();
-		const { t } = useTranslation("users");
-		const acceptConnection = React.useCallback(() => {
-			acceptMutation.mutate({ accountId: intention.account.id, userId });
-		}, [acceptMutation, intention.account.id, userId]);
-		const { data: user } = useSuspenseQuery(
-			trpc.users.get.queryOptions({ id: userId }),
-		);
-		return (
-			<ConfirmModal
-				onConfirm={acceptConnection}
-				onCancel={resetUserId}
-				isLoading={acceptMutation.isPending}
-				title={t("intentions.modal.title")}
-				subtitle={t("intentions.modal.description", {
-					email: intention.account.email,
-					userName: user.name,
-				})}
-				confirmText={t("intentions.modal.confirmText")}
-			>
-				{(props) => <>{children(props)}</>}
-			</ConfirmModal>
-		);
-	},
-	({ children }) => <>{children()}</>,
-);
-
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];
 };
@@ -95,6 +53,15 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			useTrpcMutationOptions(accountConnectionsAcceptOptions),
 		),
 	);
+	const acceptConnection = React.useCallback(() => {
+		if (!userId) {
+			return;
+		}
+		acceptConnectionMutation.mutate({
+			accountId: intention.account.id,
+			userId,
+		});
+	}, [acceptConnectionMutation, intention.account.id, userId]);
 
 	const rejectConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.reject.mutationOptions(
@@ -112,12 +79,9 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		[],
 	);
 	const onUserClick = React.useCallback(
-		(openModal?: () => void) => (nextUserId: UserId) => {
+		(openModal: () => void) => (nextUserId: UserId) => {
 			if (nextUserId === userId) {
 				setUserId(undefined);
-				return;
-			}
-			if (!openModal) {
 				return;
 			}
 			setUserId(nextUserId);
@@ -125,11 +89,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		},
 		[userId],
 	);
+	const userQuery = useQuery(
+		trpc.users.get.queryOptions(userId ? { id: userId } : skipToken),
+	);
 
 	const isLoading =
 		acceptConnectionMutation.isPending || rejectConnectionMutation.isPending;
 	return (
-		<View className="gap-2">
+		<View testID="inbound-connection-intention" className="gap-2">
 			<View className="flex flex-row justify-between">
 				<Input
 					isReadOnly
@@ -148,29 +115,30 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					{t("intentions.form.rejectButton")}
 				</Button>
 			</View>
-			{userId ? (
-				<ConfirmModalWrapper
-					acceptMutation={acceptConnectionMutation}
-					intention={intention}
-					userId={userId}
-					resetUserId={() => setUserId(undefined)}
-				>
-					{(params) => (
-						<UsersSuggest
-							label={t("intentions.userSuggestLabel")}
-							onUserClick={onUserClick(params?.openModal)}
-							options={usersSuggestOptions}
-							closeOnSelect
-						/>
-					)}
-				</ConfirmModalWrapper>
-			) : (
-				<UsersSuggest
-					label={t("intentions.userSuggestLabel")}
-					onUserClick={doNothing()}
-					isDisabled
-				/>
-			)}
+			<ConfirmModal
+				onConfirm={acceptConnection}
+				onCancel={() => setUserId(undefined)}
+				isLoading={acceptConnectionMutation.isPending}
+				title={t("intentions.modal.title")}
+				subtitle={
+					userQuery.data
+						? t("intentions.modal.description", {
+								email: intention.account.email,
+								userName: userQuery.data.name,
+							})
+						: undefined
+				}
+				confirmText={t("intentions.modal.confirmText")}
+			>
+				{({ openModal }) => (
+					<UsersSuggest
+						label={t("intentions.userSuggestLabel")}
+						onUserClick={onUserClick(openModal)}
+						options={usersSuggestOptions}
+						closeOnSelect
+					/>
+				)}
+			</ConfirmModal>
 		</View>
 	);
 };
