@@ -218,9 +218,9 @@ const DebtsListForm = suspendedFallback<{
 							) : (
 								<>
 									<View className="flex-row gap-4 self-end">
-										{fromUserData.length !== nonResolvedDebts.length ? (
+										{fromUserData.length === nonResolvedDebts.length ? null : (
 											<ShowResolvedDebtsOption />
-										) : null}
+										)}
 										<Button color="secondary" onPress={setAllMax}>
 											{t("transfer.form.allMax")}
 										</Button>
@@ -253,11 +253,11 @@ const DebtsListForm = suspendedFallback<{
 															className="flex-6"
 															aria-label={currencySymbol}
 															color={
-																!field.state.value
-																	? "default"
-																	: field.state.value > 0
+																field.state.value
+																	? field.state.value > 0
 																		? "success"
 																		: "danger"
+																	: "default"
 															}
 															startContent={
 																<View
@@ -271,11 +271,11 @@ const DebtsListForm = suspendedFallback<{
 																	}
 																	className={cn(
 																		"size-4 rounded-sm",
-																		!field.state.value
-																			? "bg-default"
-																			: field.state.value > 0
+																		field.state.value
+																			? field.state.value > 0
 																				? "bg-success"
-																				: "bg-danger",
+																				: "bg-danger"
+																			: "bg-default",
 																	)}
 																/>
 															}

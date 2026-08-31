@@ -61,7 +61,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 					}}
 				/>
 			</View>
-			{debtParticipants.length !== 0 ? (
+			{debtParticipants.length === 0 ? null : (
 				<View className="flex flex-row gap-2">
 					<Trans
 						t={t}
@@ -82,7 +82,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						}}
 					/>
 				</View>
-			) : null}
+			)}
 			<Button
 				variant="bordered"
 				color="primary"

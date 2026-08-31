@@ -52,7 +52,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 					item={item}
 					isDisabled={isDisabled}
 				/>
-				{!canEdit ? null : (
+				{canEdit ? (
 					<RemoveButton
 						className="self-end"
 						onRemove={removeConsumer}
@@ -60,7 +60,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 						noConfirm
 						isIconOnly
 					/>
-				)}
+				) : null}
 			</View>
 		</View>
 	);

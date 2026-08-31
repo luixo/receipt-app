@@ -182,7 +182,7 @@ export const ReceiptPreview = suspendedFallback<{
 					/>
 				}
 				infoTooltip={
-					matchedItems.length !== 0 ? (
+					matchedItems.length === 0 ? null : (
 						<View>
 							{matchedItems.map(
 								({ id: itemId, highlights: itemHighlights }) => {
@@ -220,7 +220,7 @@ export const ReceiptPreview = suspendedFallback<{
 								},
 							)}
 						</View>
-					) : null
+					)
 				}
 				sum={
 					<Text className="font-medium">

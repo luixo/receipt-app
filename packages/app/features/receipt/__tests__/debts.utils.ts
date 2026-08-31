@@ -82,9 +82,9 @@ export const test = originalTest.extend<Fixtures>({
 			const debtsAmount =
 				receipt.debts.direction === "outcoming"
 					? receipt.debts.debts.length
-					: !receipt.debts.id
-						? undefined
-						: 1;
+					: receipt.debts.id
+						? 1
+						: undefined;
 			await awaitCacheKey("debts.get", debtsAmount || undefined);
 		}),
 

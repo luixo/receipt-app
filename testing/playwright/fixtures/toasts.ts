@@ -44,9 +44,9 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 						message: `Expected to have length of ${
 							expectedTexts.length
 						} for toast messages.${
-							sortedActualTexts.length !== 0
-								? `\nGot actually:\n${sortedActualTexts.join("\n")}`
-								: ""
+							sortedActualTexts.length === 0
+								? ""
+								: `\nGot actually:\n${sortedActualTexts.join("\n")}`
 						}`,
 					}).toHaveLength(expectedTexts.length);
 					expectedTexts.forEach((expectedText, index) => {

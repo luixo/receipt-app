@@ -46,6 +46,6 @@ export const getErrorState = ({
 		isWarning: fieldErrorMessages.length !== 0,
 		isError: mutationMessages.length !== 0,
 		errors:
-			fieldErrorMessages.length !== 0 ? fieldErrorMessages : mutationMessages,
+			fieldErrorMessages.length === 0 ? mutationMessages : fieldErrorMessages,
 	};
 };
