@@ -59,10 +59,10 @@ export const UserDebtPreviewSkeleton = () => (
 				<Checkbox isDisabled color="secondary" />
 			</View>
 		}
-		amount={<Skeleton className="h-6 w-16 rounded" />}
-		timestamp={<Skeleton className="h-6 w-24 rounded" />}
-		synced={<Skeleton className="size-6 rounded" />}
-		note={<Skeleton className="h-6 w-32 rounded" />}
+		amount={<Skeleton className="h-6 w-16 rounded-sm" />}
+		timestamp={<Skeleton className="h-6 w-24 rounded-sm" />}
+		synced={<Skeleton className="size-6 rounded-sm" />}
+		note={<Skeleton className="h-6 w-32 rounded-sm" />}
 	/>
 );
 

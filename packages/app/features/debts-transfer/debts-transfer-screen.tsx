@@ -270,7 +270,7 @@ const DebtsListForm = suspendedFallback<{
 																			: undefined
 																	}
 																	className={cn(
-																		"size-4 rounded",
+																		"size-4 rounded-sm",
 																		!field.state.value
 																			? "bg-default"
 																			: field.state.value > 0
@@ -354,7 +354,7 @@ const DebtsListForm = suspendedFallback<{
 							<Skeleton className="h-6 w-8 flex-2 rounded-md" />
 							<SkeletonNumberInput
 								className="flex-6"
-								startContent={<View className="bg-default size-4 rounded" />}
+								startContent={<View className="bg-default size-4 rounded-sm" />}
 								defaultValue={0}
 								endContent={
 									<View className="cursor-pointer">
