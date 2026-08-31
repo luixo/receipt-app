@@ -7,7 +7,7 @@ import { transformer } from "~utils/transformer";
 
 declare global {
 	// external interface extension
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface Window {
 		getDehydratedCache?: (timeout: number) => Promise<DehydratedState>;
 		queryClient?: QueryClient;

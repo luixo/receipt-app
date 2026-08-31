@@ -26,7 +26,7 @@ import type {
 } from "~web/entry/routeTree.gen";
 
 declare module "@react-types/shared" {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface RouterConfig {
 		routerOptions: ValidateNavigateOptions;
 	}

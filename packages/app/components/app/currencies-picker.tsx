@@ -102,12 +102,12 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 	() => (
 		<View className="flex-row flex-wrap gap-2">
 			{Array.from({ length: 3 }).map((_, index) => (
-				// eslint-disable-next-line react/no-array-index-key
+				// oxlint-disable-next-line react/no-array-index-key
 				<SkeletonCurrencyButton key={index} />
 			))}
 			<Divider className="my-2" />
 			{Array.from({ length: 10 }).map((_, index) => (
-				// eslint-disable-next-line react/no-array-index-key
+				// oxlint-disable-next-line react/no-array-index-key
 				<SkeletonCurrencyButton key={index} />
 			))}
 		</View>

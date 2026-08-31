@@ -61,7 +61,7 @@ export const temporalSchemas = mapValues(temporalClasses, (value, key) =>
 	>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-namespace
+// oxlint-disable-next-line typescript/no-namespace
 export namespace Temporal {
 	export type PlainTime = InstanceType<(typeof temporalClasses)["plainTime"]>;
 	export type PlainDate = InstanceType<(typeof temporalClasses)["plainDate"]>;
@@ -104,7 +104,7 @@ export const fromDate = {
 	plainDateTime: (date) => toCalendarDateTime(fromDateRaw(date, localTimeZone)),
 	zonedDateTime: (date) => fromDateRaw(date, localTimeZone),
 } satisfies {
-	// eslint-disable-next-line eslint-js/no-restricted-syntax
+	// oxlint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: Date) => TemporalMapping[K];
 };
 export const toDate = {
@@ -114,7 +114,7 @@ export const toDate = {
 	plainDateTime: (input) => input.toDate(localTimeZone),
 	zonedDateTime: (input) => input.toDate(),
 } satisfies {
-	// eslint-disable-next-line eslint-js/no-restricted-syntax
+	// oxlint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: TemporalMapping[K]) => Date;
 };
 type ZonedProperties = "timeZone" | "timeZoneName";
@@ -188,7 +188,7 @@ export const deserialize = <K extends TemporalType>(
 				// @ts-expect-error Union type is too cumbersome to fix
 				return parser(converter(input));
 			} catch {
-				// eslint-disable-next-line no-useless-return
+				// oxlint-disable-next-line no-useless-return
 				return;
 			}
 		})

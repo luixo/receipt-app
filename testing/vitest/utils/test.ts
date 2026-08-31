@@ -29,7 +29,7 @@ type FileContext = {
 
 declare module "vitest" {
 	// external interface extension
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface RunnerTestSuite {
 		fileContext: FileContext;
 	}

@@ -200,7 +200,7 @@ const queueSession = queueCallFactory<
 		getKey: (ctx) =>
 			[
 				// If we've got here, auth token surely exists
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				getAuthToken(ctx)!,
 				getReqHeader(ctx, "x-keep-real-auth") ?? "",
 			]

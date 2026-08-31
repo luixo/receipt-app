@@ -52,7 +52,7 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 		router,
 		createContext: (opts) =>
 			// This context should not use database generally, so let's hope for the best
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			createContext(opts, { ...ctx, database: database!.instance }),
 	});
 	const port = await getFreePort();

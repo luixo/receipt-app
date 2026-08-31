@@ -19,7 +19,7 @@ export const OuterProvider: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
 	// We're doing useState instead of useMemo
 	// Because we don't want to rerender Wrap on every queryClient change
-	// eslint-disable-next-line react/hook-use-state
+	// oxlint-disable-next-line react/hook-use-state
 	const queryClientsState = React.useState<QueryClientsRecord>(
 		getQueryClientsRecord,
 	);

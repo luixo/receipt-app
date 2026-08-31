@@ -8,7 +8,7 @@ const addNonNullConstraint = async (db: Database) => {
 		// @ts-expect-error Error is expected as column does not exist anymore
 		.where("lockedTimestamp", "is", null)
 		// @ts-expect-error Error is expected as column does not exist anymore
-		// eslint-disable-next-line
+		// oxlint-disable-next-line
 		.set({ lockedTimestamp: (eb) => eb.ref("debts.updatedAt") })
 		.execute();
 	await db.schema

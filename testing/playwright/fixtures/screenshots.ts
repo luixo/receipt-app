@@ -148,14 +148,14 @@ const stableScreenshot = async (
 		}),
 		timestamp: performance.now(),
 	});
-	/* eslint-disable no-await-in-loop */
+	/* oxlint-disable no-await-in-loop */
 	while (checks.length !== 0) {
 		const clipBoundingBox = locator
 			? await mergeClip(Array.isArray(locator) ? locator : [locator])
 			: undefined;
 		// see https://github.com/microsoft/TypeScript/issues/9998
 		// "bad behavior on locals" section
-		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+		// oxlint-disable-next-line typescript/no-unnecessary-condition
 		if (isTimedOut) {
 			throw new Error(
 				["Timeout while waiting for a screenshot", ...errors].join("\n"),
@@ -200,13 +200,13 @@ const stableScreenshot = async (
 				break;
 		}
 		// This is experimental value to get color mode properly changed
-		// eslint-disable-next-line playwright/no-wait-for-timeout
+		// oxlint-disable-next-line playwright/no-wait-for-timeout
 		await page.waitForTimeout(delayBetweenShots);
 	}
 	// We definitely went through screenshotting this time
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	// oxlint-disable-next-line typescript/no-non-null-assertion
 	return (screenshot || prevScreenshot)!.buffer;
-	/* eslint-enable no-await-in-loop */
+	/* oxlint-enable no-await-in-loop */
 };
 
 type MapExpectedPixels = (options: {

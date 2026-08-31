@@ -61,7 +61,7 @@ export const getBackendModule = (): BackendModule => ({
 	type: "backend",
 	init: () => {},
 	// Improper types in i18next
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
+	// oxlint-disable-next-line typescript/no-misused-promises
 	read: async (language, namespace) => {
 		try {
 			if (import.meta.env.SSR) {
@@ -83,7 +83,7 @@ export const getBackendModule = (): BackendModule => ({
 			const response = await fetch(`/locales/${language}/${namespace}.json`);
 			return await (response.json() as Promise<ResourceKey>);
 		} catch (e) {
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.error(`Failed to load ${language}/${namespace} i18n translation`);
 			throw e;
 		}

@@ -23,11 +23,11 @@ const hashCode = (name: string) =>
 	Math.abs(
 		name.split("").reduce((hash, char) => {
 			// Bitwise calculations
-			/* eslint-disable no-bitwise */
+			/* oxlint-disable no-bitwise */
 			const codePoint = char.codePointAt(0) ?? 0;
 			const tempHash = (hash << 5) - hash + codePoint;
 			return tempHash & tempHash;
-			/* eslint-enable no-bitwise */
+			/* oxlint-enable no-bitwise */
 		}, 0),
 	);
 
@@ -123,7 +123,7 @@ export const BeamAvatar = ({
 			? wrapperTranslateY / 2
 			: getUnit(nameHash, 7, 2);
 	const wrapperRotate = getUnit(nameHash, 360);
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	// oxlint-disable-next-line typescript/no-non-null-assertion
 	const wrapperColor = COLORS[nameHash % COLORS.length]!;
 	const backgroundColor = COLORS[(nameHash + 13) % COLORS.length];
 	const wrapperScale = 1 + getUnit(nameHash, BASE_SIZE / 12) / 10;
@@ -138,7 +138,7 @@ export const BeamAvatar = ({
 		<components.Svg
 			viewBox={`0 0 ${BASE_SIZE} ${BASE_SIZE}`}
 			fill="none"
-			// eslint-disable-next-line jsx-a11y/prefer-tag-over-role
+			// oxlint-disable-next-line jsx-a11y/prefer-tag-over-role
 			role="img"
 			width={size}
 			height={size}

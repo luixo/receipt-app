@@ -50,7 +50,7 @@ const fetchCDNRate =
 		return toCodesLower.map((toCodeLower) =>
 			Number(
 				// We just verified it exists
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				parsedJson.data[fromCodeLower]![toCodeLower]!.toFixed(6),
 			),
 		);

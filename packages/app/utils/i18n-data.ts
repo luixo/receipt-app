@@ -102,7 +102,7 @@ type ValidatedResources = AssertAllEqual<
 type StrictTranslations = true;
 
 declare module "i18next" {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface CustomTypeOptions {
 		defaultNS: "default";
 		resources: StrictTranslations extends true

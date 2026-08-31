@@ -18,7 +18,7 @@ export const iconFamily = createIconSet(
 	lucideGlyphMap,
 	"lucide",
 	// This seems to be the expected way to import a font
-	// eslint-disable-next-line node/global-require, typescript/no-require-imports, typescript/no-var-requires, import/no-commonjs
+	// oxlint-disable-next-line node/global-require, typescript/no-require-imports, typescript/no-var-requires, import/no-commonjs
 	require("@react-native-vector-icons/lucide/fonts/Lucide.ttf"),
 );
 
@@ -174,7 +174,7 @@ export const Icon = ({ name, className, testID, onClick }: Props) => {
 			size={emptySize}
 			pointerEvents="none"
 			// Lucide specifically supports `data-testid` in native package
-			// eslint-disable-next-line eslint-js/no-restricted-syntax
+			// oxlint-disable-next-line eslint-js/no-restricted-syntax
 			data-testid={testID}
 		/>
 	);

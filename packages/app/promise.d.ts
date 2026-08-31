@@ -1,12 +1,12 @@
 // One can't extend interface with a type
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions, no-redeclare
+// oxlint-disable-next-line typescript/consistent-type-definitions, no-redeclare
 interface Promise<T> {
 	/**
 	 * Attaches a callback for only the rejection of the Promise.
 	 * @param onrejected The callback to execute when the Promise is rejected.
 	 * @returns A Promise for the completion of the callback.
 	 */
-	// eslint-disable-next-line @typescript-eslint/method-signature-style
+	// oxlint-disable-next-line typescript/method-signature-style
 	catch<TResult = never>(
 		onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
 	): Promise<T | TResult>;

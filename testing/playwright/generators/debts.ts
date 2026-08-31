@@ -109,7 +109,7 @@ export const remapDebts =
 			if (Array.isArray(mapperSet)) {
 				return (
 					acc
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						// oxlint-disable-next-line typescript/no-non-null-assertion
 						.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
 						.filter(isNonNullish)
 				);

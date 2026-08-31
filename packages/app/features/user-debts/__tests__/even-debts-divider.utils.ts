@@ -25,10 +25,10 @@ export const test = originalTest.extend<Fixtures>({
 				defaultGenerateDebts({ ...opts, amount: debts.length }).map(
 					(debt, index) => ({
 						...debt,
-						/* eslint-disable @typescript-eslint/no-non-null-assertion */
+						/* oxlint-disable typescript/no-non-null-assertion */
 						currencyCode: debts[debts.length - index - 1]!.currencyCode,
 						amount: debts[debts.length - index - 1]!.amount,
-						/* eslint-enable @typescript-eslint/no-non-null-assertion */
+						/* oxlint-enable typescript/no-non-null-assertion */
 					}),
 				),
 		),

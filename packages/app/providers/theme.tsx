@@ -16,7 +16,7 @@ export const ThemeProvider: React.FC<
 	} = useColorModes();
 	const colorMode = selectedColorMode || lastColorMode;
 	// Should be `useEffectEvent` in next React
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// oxlint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => applyColorMode(colorMode), [colorMode]);
 	React.useEffect(() => {
 		if (colorScheme === "unspecified") {

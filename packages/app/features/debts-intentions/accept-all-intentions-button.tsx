@@ -25,10 +25,10 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 
 	const acceptMutations = intentions.map((intention) =>
 		// Intentions are stable due to `key` based on intention id in the upper component
-		// eslint-disable-next-line react-hooks/rules-of-hooks
+		// oxlint-disable-next-line react-hooks/rules-of-hooks
 		useMutation(
 			trpc.debtIntentions.accept.mutationOptions(
-				// eslint-disable-next-line react-hooks/rules-of-hooks
+				// oxlint-disable-next-line react-hooks/rules-of-hooks
 				useTrpcMutationOptions(acceptDebtIntentionOptions, {
 					context: { intention },
 				}),
@@ -39,7 +39,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 		try {
 			await Promise.all(
 				acceptMutations.map((mutation, index) =>
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// oxlint-disable-next-line typescript/no-non-null-assertion
 					mutation.mutateAsync({ id: intentions[index]!.id }),
 				),
 			);

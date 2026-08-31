@@ -1,7 +1,7 @@
 import React from "react";
 
 // We currently reuse the styles from button / buttonGroup of the web components
-// eslint-disable-next-line eslint-js/no-restricted-syntax
+// oxlint-disable-next-line eslint-js/no-restricted-syntax
 import { button, buttonGroup } from "@heroui/react";
 import { Button as ButtonRaw } from "heroui-native";
 
@@ -28,7 +28,7 @@ const baseButtonClasses = button.base;
 
 // This is needed for tailwind to find `rounded-s-medimm` -> `rounded-l-medium` change
 // rounded-s and rounded-e are not supported on native yet
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// oxlint-disable-next-line typescript/no-unused-vars
 const classesNeeded = [
 	"rounded-l-none",
 	"rounded-r-none",

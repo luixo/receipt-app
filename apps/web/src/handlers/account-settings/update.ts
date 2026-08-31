@@ -22,7 +22,7 @@ export const procedure = authProcedure
 		const updateObject: SettingsUpdateObject = {};
 		switch (input.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "manualAcceptDebts":
 				updateObject.manualAcceptDebts = input.value;
 		}
@@ -32,7 +32,7 @@ export const procedure = authProcedure
 			.limit(1)
 			.executeTakeFirst();
 		// This reads better without ternary
-		// eslint-disable-next-line unicorn/prefer-ternary
+		// oxlint-disable-next-line unicorn/prefer-ternary
 		if (!existingSettings) {
 			await database
 				.insertInto("accountSettings")

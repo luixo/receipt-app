@@ -1,5 +1,5 @@
 import React from "react";
-// eslint-disable-next-line eslint-js/no-restricted-syntax
+// oxlint-disable-next-line eslint-js/no-restricted-syntax
 import type { View } from "react-native";
 
 import { ScrollContext } from "~components/scroll-view";

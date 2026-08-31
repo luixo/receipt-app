@@ -19,7 +19,7 @@ const applyUpdate =
 	(consumer) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...consumer, part: update.part };
 		}
@@ -33,7 +33,7 @@ const getRevert =
 	(item) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...item, part: snapshot.part };
 		}
@@ -46,7 +46,7 @@ const applyUpdatePayer =
 	(part) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...part, part: update.part };
 		}
@@ -60,7 +60,7 @@ const getRevertPayer =
 	(item) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...item, part: snapshot.part };
 		}

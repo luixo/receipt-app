@@ -79,7 +79,7 @@ export const CurrenciesGroup = suspendedFallback<Props>(
 	},
 	<ButtonGroup color="primary" className="flex-wrap">
 		{Array.from({ length: 3 }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
+			// oxlint-disable-next-line react/no-array-index-key
 			<Button key={index} variant="ghost">
 				<Skeleton className="h-6 w-12 rounded-md" />
 			</Button>

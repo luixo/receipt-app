@@ -299,7 +299,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 		return (
 			<View className="flex flex-col gap-4">
 				{Array.from({ length: 3 }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
+					// oxlint-disable-next-line react/no-array-index-key
 					<View className="gap-1" key={index}>
 						<View className="flex-row gap-4">
 							<View className="flex-1 self-center">

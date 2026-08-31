@@ -100,7 +100,7 @@ export const useTrpcMutationOptions = <
 				> = {
 					controllerContext: { queryClient, trpc },
 					// We're sure outerContext exists here (if needed)
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// oxlint-disable-next-line typescript/no-non-null-assertion
 					outerContext: pinnedOuterContext!,
 				};
 				const toastObject = await mutationToaster.mutateToast({
@@ -119,7 +119,7 @@ export const useTrpcMutationOptions = <
 			},
 			onError: (error, vars, internalContext) => {
 				// We're sure `internalContext` exists here
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const sureInternalContext = internalContext!;
 				const {
 					toastObject,
@@ -146,7 +146,7 @@ export const useTrpcMutationOptions = <
 					finalizeFn,
 				} = internalContext;
 				// We're sure `lifecycleContext` exists here
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const sureLifecycleContext = lifecycleContext!;
 				void mutationToaster.successToast({
 					toastArgs: getToastArgs(internalContext),
@@ -163,7 +163,7 @@ export const useTrpcMutationOptions = <
 			},
 			onSettled: (result, error, vars, internalContext) => {
 				// We're sure `internalContext` exists here
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const sureInternalContext = internalContext!;
 				const { context: lifecycleContext } = sureInternalContext;
 				onSettled?.(result, error, vars, lifecycleContext);

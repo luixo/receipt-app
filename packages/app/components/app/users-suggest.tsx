@@ -63,7 +63,7 @@ type Props = {
 >;
 
 // It's hard to dismantle this components and keep it sane
-// eslint-disable-next-line complexity
+// oxlint-disable-next-line complexity
 export const UsersSuggest: React.FC<Props> = ({
 	selected,
 	multiselect,

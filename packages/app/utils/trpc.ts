@@ -27,7 +27,7 @@ const mapError =
 	({ next, op }) =>
 		observable((observer) =>
 			// This is a false positive
-			// eslint-disable-next-line node/callback-return
+			// oxlint-disable-next-line node/callback-return
 			next(op).subscribe({
 				next: (value) => observer.next(value),
 				error: (error) => observer.error(mapper(error)),
@@ -36,7 +36,7 @@ const mapError =
 		);
 
 declare module "@trpc/client" {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface OperationContext {
 		batch: symbol;
 	}

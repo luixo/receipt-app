@@ -108,7 +108,7 @@ const deserializer: Deserializer = (input) => {
 		if (regexTypeMatch) {
 			const type = regexTypeMatch[0];
 			return parsers[type](
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				// oxlint-disable-next-line typescript/no-explicit-any
 				databaseISOToCalendarISO(input, type.startsWith("zoned")) as any,
 			);
 		}
@@ -134,7 +134,7 @@ type GetTypeParser = (oid: BuiltinType) => undefined | TypeParser;
 const getCustomTypes = (getTypeParser: GetTypeParser): typeof types => ({
 	getTypeParser: (oid, format) => {
 		const parser = getTypeParser(oid);
-		// eslint-disable-next-line typescript/no-unsafe-return
+		// oxlint-disable-next-line typescript/no-unsafe-return
 		return parser || types.getTypeParser(oid, format);
 	},
 });

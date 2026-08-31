@@ -204,7 +204,7 @@ test("'debts.add' mutation", async ({
 	await expect(addButton).toBeDisabled();
 	await expect(buttonWithLoader).toBeVisible();
 	for (const input of [amountInput, currencyInput, dateInput, noteInput]) {
-		// eslint-disable-next-line no-await-in-loop
+		// oxlint-disable-next-line no-await-in-loop
 		await expect(input).toBeDisabled();
 	}
 

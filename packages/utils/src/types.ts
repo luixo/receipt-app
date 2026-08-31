@@ -10,7 +10,7 @@ export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
 	| boolean
 	| null
 	| undefined
-	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+	// oxlint-disable-next-line typescript/no-unsafe-function-type
 	| Function
 	| TerminalVaue
 	? T
@@ -106,7 +106,7 @@ export type KeysMatching<T extends object, V> = {
 }[keyof T];
 
 export type AddParameters<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	Fn extends (...args: any) => unknown,
 	AddedParameters extends [...args: unknown[]],
 > = (...args: [...Parameters<Fn>, ...AddedParameters]) => ReturnType<Fn>;
@@ -174,7 +174,7 @@ export type AssertAllEqual<T extends unknown[]> = AssertTrue<
 	T extends (infer U)[] ? U : never
 >;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export type Constructor<T> = new (...args: any[]) => T;
 
 export type ArrayOf<T extends unknown[]> = {

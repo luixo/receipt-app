@@ -24,7 +24,7 @@ test("On load without token", async ({ page, api, faker, snapshotQueries }) => {
 
 test.describe("'resetPasswordIntentions.get' query", () => {
 	test("loading", async ({ page, api, snapshotQueries, faker, skeleton }) => {
-		// eslint-disable-next-line playwright/no-skipped-test
+		// oxlint-disable-next-line playwright/no-skipped-test
 		test.skip(
 			true,
 			"We prefetch this query completely so loading state will hang it forever",

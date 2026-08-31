@@ -76,7 +76,7 @@ test("'auth.register' mutation", async ({
 	await expect(buttonWithLoader).toBeVisible();
 	const inputs = await page.locator("input").all();
 	for (const input of inputs) {
-		// eslint-disable-next-line no-await-in-loop
+		// oxlint-disable-next-line no-await-in-loop
 		await expect(input).toBeDisabled();
 	}
 

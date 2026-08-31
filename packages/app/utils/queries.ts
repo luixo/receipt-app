@@ -14,7 +14,7 @@ export type EmptyMutateOptions = {
 };
 
 // This is needed for generic infer
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// oxlint-disable-next-line typescript/no-unused-vars
 export const typeQuery = <K extends TRPCQueryKey>(query: Query, _key: K) =>
 	query as unknown as Query<
 		TRPCQueryOutput<K>,

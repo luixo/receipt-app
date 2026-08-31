@@ -63,10 +63,10 @@ const RemoveReceiptsButton: React.FC<{
 	const removeMutations = receiptIds.map((receiptId) => ({
 		receiptId,
 		// Mutations are stable due to `key` based on limit in the parent component
-		// eslint-disable-next-line react-hooks/rules-of-hooks
+		// oxlint-disable-next-line react-hooks/rules-of-hooks
 		mutation: useMutation(
 			trpc.receipts.remove.mutationOptions(
-				// eslint-disable-next-line react-hooks/rules-of-hooks
+				// oxlint-disable-next-line react-hooks/rules-of-hooks
 				useTrpcMutationOptions(receiptsRemoveOptions),
 			),
 		),
@@ -225,7 +225,7 @@ export const Receipts = suspendedFallback<Props>(
 			<SuspendedOverlay isPending>
 				<ReceiptsWrapper>
 					{Array.from({ length: limitState[0] }).map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
+						// oxlint-disable-next-line react/no-array-index-key
 						<ReceiptPreviewSkeleton key={index} />
 					))}
 				</ReceiptsWrapper>

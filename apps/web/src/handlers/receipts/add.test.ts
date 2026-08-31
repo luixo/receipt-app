@@ -210,7 +210,7 @@ describe("receipts.add", () => {
 					{
 						...getValidReceiptItemNoReceiptId(),
 						consumers: participants.map((_participant, index) => ({
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							// oxlint-disable-next-line typescript/no-non-null-assertion
 							userId: fakeUserIds[index]!,
 							part: index + 1,
 						})),
@@ -321,7 +321,7 @@ describe("receipts.add", () => {
 				createdAt: getNow.zonedDateTime(),
 				participants: [],
 				items: receiptItems.map((_item, index) => ({
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// oxlint-disable-next-line typescript/no-non-null-assertion
 					id: result.items[index]!.id,
 					createdAt: getNow.zonedDateTime(),
 					consumers: undefined,
@@ -384,7 +384,7 @@ describe("receipts.add", () => {
 					createdAt: getNow.zonedDateTime(),
 				})),
 				items: receiptItems.map((item, index) => ({
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// oxlint-disable-next-line typescript/no-non-null-assertion
 					id: result.items[index]!.id,
 					createdAt: getNow.zonedDateTime(),
 					consumers: item.consumers?.map((consumer) => ({

@@ -201,7 +201,7 @@ const addDebts = async (
 	return debts.map(({ generatedId, ...debt }) => {
 		const id = reverseIdMap[getDebtUserReceiptTupleId(debt)] || generatedId;
 		// We just added these value, should be returned in `values` variable
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// oxlint-disable-next-line typescript/no-non-null-assertion
 		const { updatedAt } = values.find(({ id: lookupId }) => lookupId === id)!;
 		return { id, updatedAt };
 	});

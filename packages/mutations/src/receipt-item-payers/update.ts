@@ -18,7 +18,7 @@ const applyUpdate =
 	(payer) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...payer, part: update.part };
 		}
@@ -32,7 +32,7 @@ const getRevert =
 	(item) => {
 		switch (update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				return { ...item, part: snapshot.part };
 		}

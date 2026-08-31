@@ -25,7 +25,7 @@ const proxySpy = vi.hoisted(() =>
 	vi.fn<() => Promise<HTTPResponse>>(async () => new HTTPResponse("Spy body")),
 );
 vi.mock(import("@tanstack/react-start/server"), async (importOriginal) => ({
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+	// oxlint-disable-next-line typescript/consistent-type-imports
 	...(await importOriginal<typeof import("@tanstack/react-start/server")>()),
 	proxyRequest: proxySpy,
 }));

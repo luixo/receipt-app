@@ -205,7 +205,7 @@ describe("account.changeAvatar", () => {
 				key,
 			].join(
 				"/",
-				// eslint-disable-next-line eslint-js/no-restricted-syntax
+				// oxlint-disable-next-line eslint-js/no-restricted-syntax
 			)}?lastModified=${Date.now()}`;
 			expect(result).toEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);

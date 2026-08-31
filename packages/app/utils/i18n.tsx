@@ -47,7 +47,7 @@ const addFormatters = (instance: I18n) => {
 			return value;
 		},
 	} satisfies PostProcessorModule);
-	/* eslint-disable @typescript-eslint/no-non-null-assertion */
+	/* oxlint-disable typescript/no-non-null-assertion */
 	instance.services.formatter!.add("and", (messages: string[]) => {
 		if (messages.length === 1) {
 			return messages.join("");
@@ -78,7 +78,7 @@ const addFormatters = (instance: I18n) => {
 			);
 		},
 	);
-	/* eslint-enable @typescript-eslint/no-non-null-assertion */
+	/* oxlint-enable typescript/no-non-null-assertion */
 };
 
 const id = <T,>(a: T): T => a;
@@ -126,7 +126,7 @@ export const createI18nContext = ({
 			);
 		}
 		// This is a log we should see on client in case instance was not initialized
-		// eslint-disable-next-line no-console
+		// oxlint-disable-next-line no-console
 		console.error(
 			`Expected to be in either pending or resolved initialized state`,
 		);

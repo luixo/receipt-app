@@ -147,7 +147,7 @@ const insertConsumers = async (
 	const consumers = [
 		...(input.items?.flatMap((item, index) =>
 			(item.consumers ?? []).map((consumer) => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const itemId = insertedItems[index]!.id;
 				/* c8 ignore start */
 				if (!itemId) {
@@ -171,7 +171,7 @@ const insertConsumers = async (
 	const insertedConsumers = await addConsumers(ctx)(consumers);
 	return insertedConsumers.reduce<InsertedConsumers>(
 		(acc, insertedConsumer, index) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			const { itemId, userId } = consumers[index]!;
 			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
 			if (insertedConsumer instanceof TRPCError) {
@@ -206,7 +206,7 @@ const insertPayers = async (
 	const payers =
 		input.items?.flatMap((item, index) =>
 			(item.payers ?? []).map((payer) => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const itemId = insertedItems[index]!.id;
 				/* c8 ignore start */
 				if (!itemId) {
@@ -224,7 +224,7 @@ const insertPayers = async (
 	}
 	const insertedPayers = await addPayers(ctx)(payers);
 	return insertedPayers.reduce<InsertedPayers>((acc, insertedPayer, index) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// oxlint-disable-next-line typescript/no-non-null-assertion
 		const { itemId, userId } = payers[index]!;
 		const itemAcc = acc[itemId] || { errors: [], payers: [] };
 		/* c8 ignore next 2 */

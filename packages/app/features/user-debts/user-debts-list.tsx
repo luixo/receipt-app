@@ -271,10 +271,10 @@ const RemoveDebtsButton: React.FC<{
 		return {
 			debtId,
 			// Mutations are stable due to `key` based on limit in the parent component
-			// eslint-disable-next-line react-hooks/rules-of-hooks
+			// oxlint-disable-next-line react-hooks/rules-of-hooks
 			mutation: useMutation(
 				trpc.debts.remove.mutationOptions(
-					// eslint-disable-next-line react-hooks/rules-of-hooks
+					// oxlint-disable-next-line react-hooks/rules-of-hooks
 					useTrpcMutationOptions(debtsRemoveOptions, {
 						context: cachedDebt ? { debt: cachedDebt } : skipToken,
 					}),
@@ -397,7 +397,7 @@ export const UserDebtsList = suspendedFallback<{
 			<SuspendedOverlay isPending>
 				<UserDebtsListWrapper>
 					{Array.from({ length: limitState[0] }).map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
+						// oxlint-disable-next-line react/no-array-index-key
 						<React.Fragment key={index}>
 							<Divider />
 							<UserDebtPreviewSkeleton />

@@ -1,4 +1,4 @@
-/* eslint-disable class-methods-use-this */
+/* oxlint-disable class-methods-use-this */
 import type { Reporter, TestCase } from "@playwright/test/reporter";
 import colors from "colors";
 

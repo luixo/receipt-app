@@ -54,11 +54,11 @@ const formSchema = z
 	);
 type Form = z.infer<typeof formSchema>;
 
-/* eslint-disable @typescript-eslint/no-unnecessary-template-expression */
+/* oxlint-disable typescript/no-unnecessary-template-expression */
 // Typescript is not as good with flavored types inside template literals
 const transformCurrencyCode = (currencyCode: CurrencyCode): `${CurrencyCode}` =>
 	currencyCode as `${CurrencyCode}`;
-/* eslint-enable @typescript-eslint/no-unnecessary-template-expression */
+/* oxlint-enable typescript/no-unnecessary-template-expression */
 
 const DebtsListForm = suspendedFallback<{
 	fromUserId: UserId;
@@ -349,7 +349,7 @@ const DebtsListForm = suspendedFallback<{
 						{t("transfer.form.allMax")}
 					</Button>
 					{Array.from({ length: 3 }).map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
+						// oxlint-disable-next-line react/no-array-index-key
 						<View className="flex items-center gap-2 sm:flex-row" key={index}>
 							<Skeleton className="h-6 w-8 flex-2 rounded-md" />
 							<SkeletonNumberInput

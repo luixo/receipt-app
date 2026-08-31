@@ -42,7 +42,7 @@ export const Footer: React.FC<Props> = ({ children }) => {
 				<Table>
 					{children?.map((child, index) => (
 						// That's one-time render, we don't care about rerenders
-						// eslint-disable-next-line react/no-array-index-key
+						// oxlint-disable-next-line react/no-array-index-key
 						<Table.Row key={index}>
 							<td className="footer-block">
 								<Child {...child} />
