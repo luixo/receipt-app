@@ -116,11 +116,9 @@ export const createI18nContext = ({
 			return;
 		}
 		if (instance.isInitializing) {
-			return promisifyEvent({
-				subscribe: (listener) => {
-					instance.on("initialized", listener);
-					return () => instance.off("initialized", listener);
-				},
+			return promisifyEvent((listener) => {
+				instance.on("initialized", listener);
+				return () => instance.off("initialized", listener);
 			});
 		}
 		if (isInitializable) {
