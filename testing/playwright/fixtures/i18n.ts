@@ -35,11 +35,12 @@ export const i18nFixtures = test.extend<Fixtures>({
 	getLanguages: async ({ page }, use) => {
 		await use(async () => {
 			const languages = await page.evaluate(() => {
-				if (!window.i18n) {
+				const i18n = window.i18n;
+				if (!i18n) {
 					throw new Error("Expected to have i18n in window");
 				}
 				// oxlint-disable-next-line no-restricted-properties
-				return Object.keys(window.i18n.store.data) as Language[];
+				return Object.keys(i18n.store.data) as Language[];
 			}, []);
 			return languages;
 		});
@@ -49,12 +50,13 @@ export const i18nFixtures = test.extend<Fixtures>({
 			const language = overrideLanguage || baseLanguage;
 			const namespaces = await page.evaluate(
 				([languageInner]) => {
-					if (!window.i18n) {
+					const i18n = window.i18n;
+					if (!i18n) {
 						throw new Error("Expected to have i18n in window");
 					}
 					// oxlint-disable-next-line no-restricted-properties
 					return Object.keys(
-						window.i18n.store.data[languageInner] ?? {},
+						i18n.store.data[languageInner] ?? {},
 					) as Namespace[];
 				},
 				[language] as const,

@@ -33,10 +33,7 @@ export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 		? /* c8 ignore start */
 			getLinksParamsFromRequest(context.request, "ssr-loader")
 		: {
-				debug:
-					typeof window === "undefined"
-						? false
-						: Boolean(new URL(window.location.href).searchParams.get("debug")),
+				debug: false,
 				headers: {},
 				source: "csr-loader" as GetLinksOptions["source"],
 				url: DEFAULT_TRPC_ENDPOINT,
