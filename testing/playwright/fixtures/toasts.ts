@@ -71,10 +71,11 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 				const toastCount = await toast.count();
 				if (toastCount !== 0) {
 					const removeToastsAmount = await page.evaluate(() => {
-						if (!window.removeToasts) {
+						const { removeToasts } = window;
+						if (!removeToasts) {
 							throw new Error("Expected to have window.remoteToasts");
 						}
-						return window.removeToasts();
+						return removeToasts();
 					});
 					toastsLeft -= removeToastsAmount;
 					if (toastsLeft === 0) {

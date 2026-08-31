@@ -116,10 +116,11 @@ type QueryCacheOptions = {
 const getDehydratedCacheFromPage = (page: Page, timeout: number) =>
 	page.evaluate(
 		([timeoutInner]) => {
-			if (!window.getDehydratedCache) {
+			const { getDehydratedCache: getCache } = window;
+			if (!getCache) {
 				return { mutations: [], queries: [] };
 			}
-			return window.getDehydratedCache(timeoutInner);
+			return getCache(timeoutInner);
 		},
 		[timeout] as const,
 	);

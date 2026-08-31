@@ -1,7 +1,7 @@
 import React from "react";
 import { AppRegistry } from "react-native";
 
-import type { QueryClient } from "@tanstack/react-query";
+import { type QueryClient, isServer } from "@tanstack/react-query";
 import {
 	HeadContent,
 	Outlet,
@@ -107,12 +107,12 @@ const RootComponent = () => {
 		return {
 			debug: searchParams.debug,
 			url:
-				data.baseUrl && typeof window === "undefined"
+				data.baseUrl && isServer
 					? new URL(baseLinksContext.url, data.baseUrl).toString()
 					: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
 			useBatch: !data.isTest,
-			source: typeof window === "undefined" ? "ssr" : "csr",
+			source: isServer ? "ssr" : "csr",
 			captureError: captureSentryError,
 			headers,
 		};

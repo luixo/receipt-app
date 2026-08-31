@@ -401,6 +401,8 @@ const disabledRules = {
 	"unicorn/no-useless-undefined": "off",
 	// There are false positives on `z.foo().catch()`
 	"unicorn/prefer-top-level-await": "off",
+	// There's no particular reason not to use `window`
+	"unicorn/prefer-global-this": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -430,7 +432,6 @@ const temporaryDisabledRules = {
 	"unicorn/catch-error-name": "off", // 41 cases
 	"unicorn/explicit-length-check": "off", // 34 cases
 	"unicorn/no-nested-ternary": "off", // 30 cases
-	"unicorn/prefer-global-this": "off", // 24 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

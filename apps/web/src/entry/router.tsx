@@ -1,7 +1,7 @@
 import React from "react";
 
 import type { QueryClient } from "@tanstack/react-query";
-import { dehydrate, hydrate } from "@tanstack/react-query";
+import { dehydrate, hydrate, isServer } from "@tanstack/react-query";
 import type {
 	ErrorRouteComponent,
 	NotFoundRouteComponent,
@@ -58,7 +58,7 @@ const RootErrorComponent: ErrorRouteComponent = ({ error, reset }) => {
 };
 
 const getLocalQueryClient = (queryClient: QueryClient) => {
-	if (typeof window === "undefined") {
+	if (isServer) {
 		return queryClient;
 	}
 	const dehydratedState = dehydrate(queryClient, {
@@ -112,7 +112,7 @@ export const getRouter = () => {
 	const i18nContext = createI18nContext({
 		getLanguage: () => initialLanguage,
 		beforeInit: (instance) => instance.use(getBackendModule()),
-		isInitializable: typeof window === "undefined",
+		isInitializable: isServer,
 	});
 	void i18nContext.initialize({ language: initialLanguage });
 	const router = createTanStackRouter({

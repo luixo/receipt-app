@@ -45,15 +45,9 @@ export const useQueryClientHelper = () => {
 				};
 			};
 			return new Promise((resolve, reject) => {
-				if (!window.queryClient) {
-					return;
-				}
 				if (queryClient.isFetching()) {
-					const unsub = window.queryClient.getQueryCache().subscribe(() => {
-						if (!window.queryClient) {
-							return;
-						}
-						if (!window.queryClient.isFetching()) {
+					const unsub = queryClient.getQueryCache().subscribe(() => {
+						if (!queryClient.isFetching()) {
 							resolve(getData());
 							unsub();
 						}
