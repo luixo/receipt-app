@@ -177,8 +177,8 @@ const insertConsumers = async (
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Expected to have a consumer for inserted consumer at position "${index}".`,
 				});
-				/* c8 ignore stop */
 			}
+			/* c8 ignore stop */
 			const { itemId, userId } = consumer;
 			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
 			if (insertedConsumer instanceof TRPCError) {
@@ -237,8 +237,8 @@ const insertPayers = async (
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Expected to have a payer at index "${index}".`,
 			});
-			/* c8 ignore stop */
 		}
+		/* c8 ignore stop */
 		const { itemId, userId } = payer;
 		const itemAcc = acc[itemId] || { errors: [], payers: [] };
 		/* c8 ignore next 2 */
@@ -328,10 +328,10 @@ const verifyPayers = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message.replace(receiptId, "new receipt")}${
+				/* c8 ignore start */
 				payers.errors.length === 1
 					? ""
-					: /* c8 ignore start */
-						` (+${payers.errors.length - 1} errors)`
+					: ` (+${payers.errors.length - 1} errors)`
 				/* c8 ignore stop */
 			}`,
 		});
