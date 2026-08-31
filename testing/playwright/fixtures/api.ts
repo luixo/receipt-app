@@ -327,9 +327,9 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			return {
 				controller,
 				cleanup: async () => {
-					controller.paused.forEach((controllerPromise) => {
+					for (const controllerPromise of controller.paused) {
 						controllerPromise.reject(CLEANUP_MARK);
-					});
+					}
 					delete controllers[id];
 				},
 			};

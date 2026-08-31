@@ -424,7 +424,6 @@ const temporaryDisabledRules = {
 	"unicorn/no-array-reduce": "off", // 48 cases
 	"unicorn/no-array-callback-reference": "off", // 46 cases
 	"unicorn/catch-error-name": "off", // 41 cases
-	"unicorn/no-array-for-each": "off", // 40 cases
 	"unicorn/explicit-length-check": "off", // 34 cases
 	"unicorn/no-nested-ternary": "off", // 30 cases
 	"unicorn/no-negated-condition": "off", // 25 cases

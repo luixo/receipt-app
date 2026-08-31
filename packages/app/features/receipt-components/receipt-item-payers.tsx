@@ -69,12 +69,16 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 					: undefined
 			}
 			onSelectionChange={(nextSelected) => {
-				addedParticipantsIds
-					.filter((id) => !nextSelected.includes(id))
-					.forEach((id) => removeItemPayer(item.id, id));
-				nextSelected
-					.filter((id) => notAddedParticipantsIds.has(id))
-					.forEach((id) => addItemPayer(item.id, id, 1));
+				for (const id of addedParticipantsIds.filter(
+					(candidateId) => !nextSelected.includes(candidateId),
+				)) {
+					removeItemPayer(item.id, id);
+				}
+				for (const id of nextSelected.filter((candidateId) =>
+					notAddedParticipantsIds.has(candidateId),
+				)) {
+					addItemPayer(item.id, id, 1);
+				}
 			}}
 			renderValue={(selectedParticipants) => {
 				if (selectedParticipants.length === 1) {

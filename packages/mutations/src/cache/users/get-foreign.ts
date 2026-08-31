@@ -67,13 +67,12 @@ const invalidateForeign = ({ queryClient, procedure }: Controller) => {
 		queryClient,
 		procedure.queryKey(),
 	);
-	inputs.forEach((input) => {
+	for (const input of inputs) {
 		const currentUser = queryClient.getQueryData(procedure.queryKey(input));
-		if (currentUser && "publicName" in currentUser) {
-			return;
+		if (!currentUser || !("publicName" in currentUser)) {
+			void queryClient.invalidateQueries(procedure.queryFilter(input));
 		}
-		return queryClient.invalidateQueries(procedure.queryFilter(input));
-	});
+	}
 };
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {

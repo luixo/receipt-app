@@ -152,15 +152,14 @@ export const getUpdaters = <
 			[K in keyof T]: UpdateOption<T[K]> | undefined;
 		},
 	) => {
-		entries(input).forEach(([key, { getController }]) => {
+		for (const [key, { getController }] of entries(input)) {
 			const updater = options[key];
-			if (!updater) {
-				return;
+			if (updater) {
+				updater(
+					getController(controllerContext) as Parameters<typeof updater>[0],
+				);
 			}
-			return updater(
-				getController(controllerContext) as Parameters<typeof updater>[0],
-			);
-		});
+		}
 	};
 
 	return { updateRevert, update };

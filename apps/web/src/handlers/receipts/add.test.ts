@@ -313,9 +313,9 @@ describe("receipts.add", () => {
 				caller.procedure({ ...getValidReceipt(), items: receiptItems }),
 			);
 			expect(result.id).toMatch(UUID_REGEX);
-			result.items.forEach((item) => {
+			for (const item of result.items) {
 				expect(item.id).toMatch(UUID_REGEX);
-			});
+			}
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
 				createdAt: getNow.zonedDateTime(),
@@ -374,9 +374,9 @@ describe("receipts.add", () => {
 				}),
 			);
 			expect(result.id).toMatch(UUID_REGEX);
-			result.items.forEach((item) => {
+			for (const item of result.items) {
 				expect(item.id).toMatch(UUID_REGEX);
-			});
+			}
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
 				createdAt: getNow.zonedDateTime(),

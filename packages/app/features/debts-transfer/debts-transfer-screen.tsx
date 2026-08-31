@@ -165,11 +165,11 @@ const DebtsListForm = suspendedFallback<{
 			(vars) => lastMutationTimestamps.includes(hashKey([vars])),
 		);
 		const setAllMax = React.useCallback(() => {
-			allCurrenciesWithSums.forEach(({ currencyCode, sum }) => {
+			for (const { currencyCode, sum } of allCurrenciesWithSums) {
 				if (sum !== null) {
 					form.setFieldValue(transformCurrencyCode(currencyCode), sum);
 				}
-			});
+			}
 		}, [allCurrenciesWithSums, form]);
 		const [
 			currencyModalOpen,

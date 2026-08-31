@@ -10,7 +10,7 @@ import {
 } from "~utils/date";
 
 const superJSONInstance = new SuperJSON({ dedupe: true });
-keys(temporalSchemas).forEach((key) => {
+for (const key of keys(temporalSchemas)) {
 	superJSONInstance.registerCustom<
 		TemporalMapping[keyof TemporalMapping],
 		string
@@ -29,7 +29,7 @@ keys(temporalSchemas).forEach((key) => {
 		},
 		key,
 	);
-});
+}
 export const transformer = {
 	serialize: superJSONInstance.serialize.bind(superJSONInstance),
 	deserialize: superJSONInstance.deserialize.bind(superJSONInstance),

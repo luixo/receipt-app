@@ -110,9 +110,9 @@ const runRoute = async <K extends keyof Procedures>({
 		url.searchParams.set("input", serializeInput(input));
 	}
 	if (searchParams) {
-		entries(searchParams).forEach(([key, value]) =>
-			url.searchParams.set(key, value),
-		);
+		for (const [key, value] of entries(searchParams)) {
+			url.searchParams.set(key, value);
+		}
 	}
 	const response = await (method === "GET" ? GET : POST)({
 		pathname: "/api/trpc/$",
