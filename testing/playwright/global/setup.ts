@@ -5,6 +5,7 @@ import { capitalize } from "remeda";
 
 import { serverMessages } from "~tests/frontend/server-reporter";
 import { getFreePort } from "~utils/port";
+import { promisifyServer } from "~utils/promise";
 
 import { appRouter } from "./router";
 
@@ -12,12 +13,10 @@ const globalSetup = async (config: FullConfig) => {
 	const portManagerPort = await getFreePort();
 	process.env.MANAGER_PORT = portManagerPort.toString();
 	process.env.PLAYWRIGHT = "true";
-	const httpServer = createHTTPServer({ router: appRouter });
-	await new Promise<void>((resolve) => {
-		httpServer.listen(portManagerPort, resolve);
-	});
+	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
+	await httpServer.listen(portManagerPort);
 	config.metadata.portManagerServer = httpServer;
-	return () => {
+	return async () => {
 		if (serverMessages.length !== 0) {
 			const message = [
 				colors.red("Server errors occurred"),
@@ -37,6 +36,7 @@ const globalSetup = async (config: FullConfig) => {
 			// TODO: Throw instead of warn
 			// throw new Error(message);
 		}
+		await httpServer.close();
 	};
 };
 

@@ -414,6 +414,10 @@ const disabledRules = {
 	"unicorn/no-array-reduce": "off",
 	// We're going to be using null literals
 	"unicorn/no-null": "off",
+	// There are false positives on `z.foo().catch()`
+	"promise/prefer-await-to-then": "off",
+	// There are no good usecases for that, all callbacks are valid
+	"promise/prefer-await-to-callbacks": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -466,11 +470,6 @@ const temporaryDisabledRules = {
 	"oxc/no-optional-chaining": "off", // 196 cases
 	"oxc/no-accumulating-spread": "off", // 23 cases
 	"oxc/no-map-spread": "off", // 14 cases
-	// promise
-	"promise/prefer-await-to-callbacks": "off", // 98 cases
-	"promise/prefer-await-to-then": "off", // 25 cases
-	"promise/avoid-new": "off", // 20 cases
-	"promise/no-multiple-resolved": "off", // 3 cases
 	// import
 	"import/no-named-export": "off", // 1292 cases
 	"import/group-exports": "off", // 731 cases

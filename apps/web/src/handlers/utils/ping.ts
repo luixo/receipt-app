@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { wait } from "~utils/promise";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
@@ -11,9 +12,7 @@ export const procedure = unauthProcedure
 		}),
 	)
 	.query(async ({ input: { timeout, error } }) => {
-		await new Promise((resolve) => {
-			setTimeout(resolve, timeout);
-		});
+		await wait(timeout);
 		if (error) {
 			throw new TRPCError({
 				code: "BAD_REQUEST",

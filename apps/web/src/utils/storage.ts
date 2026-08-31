@@ -7,7 +7,9 @@ export const storage: Props["storage"] = isServer
 	? undefined
 	: {
 			setItem: set,
-			getItem: (key) =>
-				get<string>(key).then((value) => (value === undefined ? null : value)),
+			getItem: async (key) => {
+				const value = await get<string>(key);
+				return value === undefined ? null : value;
+			},
 			removeItem: del,
 		};

@@ -9,7 +9,7 @@ import { getLinks } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { getFreePort } from "~utils/port";
-import { wait } from "~utils/promise";
+import { promisifyServer, wait } from "~utils/promise";
 import { createContext } from "~web/handlers/context";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>
@@ -48,23 +48,21 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 	router: R,
 	fn: (opts: { url: string }) => Promise<void>,
 ) => {
-	const httpServer = createHTTPServer({
-		router,
-		createContext: (opts) =>
-			// This context should not use database generally, so let's hope for the best
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			createContext(opts, { ...ctx, database: database!.instance }),
-	});
+	const httpServer = promisifyServer(
+		createHTTPServer({
+			router,
+			createContext: (opts) =>
+				// This context should not use database generally, so let's hope for the best
+				// oxlint-disable-next-line typescript/no-non-null-assertion
+				createContext(opts, { ...ctx, database: database!.instance }),
+		}),
+	);
 	const port = await getFreePort();
-	await new Promise<void>((resolve) => {
-		httpServer.listen(port, resolve);
-	});
+	await httpServer.listen(port);
 	try {
 		await fn({ url: `http://localhost:${port}` });
 	} finally {
-		await new Promise<void>((resolve, reject) => {
-			httpServer.close((err) => (err ? reject(err) : resolve()));
-		});
+		await httpServer.close();
 	}
 };
 

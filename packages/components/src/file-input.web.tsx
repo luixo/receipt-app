@@ -1,20 +1,27 @@
 import React from "react";
 
+import { promisifyEvent } from "~utils/promise";
+
 export type Props = {
 	onClickRef?: React.RefObject<() => void>;
 	onFileUpdate?: (dataBlob: string) => void;
 };
 
-const convertFileToDataUrl = (file: File) =>
-	new Promise<string>((resolve) => {
-		const reader = new FileReader();
-		reader.addEventListener(
-			"load",
-			() => resolve(reader.result as string),
-			false,
-		);
+const convertFileToDataUrl = (file: File) => {
+	const reader = new FileReader();
+	return promisifyEvent<string>((listener, errorListener) => {
+		const localListener = () => listener(reader.result as string);
+		const localErrorListener = () =>
+			errorListener(new Error("Problem converting file to data url"));
+		reader.addEventListener("load", localListener, false);
+		reader.addEventListener("error", localErrorListener);
 		reader.readAsDataURL(file);
+		return () => {
+			reader.removeEventListener("load", localListener);
+			reader.removeEventListener("error", localErrorListener);
+		};
 	});
+};
 
 export const FileInput: React.FC<Props> = ({ onClickRef, onFileUpdate }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);

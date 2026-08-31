@@ -3,6 +3,7 @@ import { mergeTests } from "@playwright/test";
 import { test as debtTest } from "~app/features/debt/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { wait } from "~utils/promise";
 
 import { test as signButtonGroupFixture } from "./sign-button-group.utils";
 
@@ -30,9 +31,7 @@ test("Clicking the button", async ({
 	await snapshotQueries(async () => {
 		await signButtonPositive.click();
 		// Debt is already positive - clicking the same direction should be a no-op
-		await new Promise((resolve) => {
-			setTimeout(resolve, 300);
-		});
+		await wait(300);
 	});
 	await snapshotQueries(async () => {
 		await signButtonNegative.click();

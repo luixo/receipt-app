@@ -697,6 +697,8 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 							) {
 								return immediateActual;
 							}
+							// We're inside the browser evaluation context
+							// oxlint-disable-next-line promise/avoid-new
 							return new Promise<ActualAwaitAmounts>((resolve, reject) => {
 								const unsubscribe = subscribeCache(() => {
 									const actual = getActual();

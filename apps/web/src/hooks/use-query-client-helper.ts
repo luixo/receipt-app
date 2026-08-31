@@ -3,6 +3,7 @@ import React from "react";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
+import { promisifyEvent } from "~utils/promise";
 import { transformer } from "~utils/transformer";
 
 declare global {
@@ -44,18 +45,20 @@ export const useQueryClientHelper = () => {
 					})),
 				};
 			};
-			return new Promise((resolve, reject) => {
-				if (queryClient.isFetching()) {
-					const unsub = queryClient.getQueryCache().subscribe(() => {
-						if (!queryClient.isFetching()) {
-							resolve(getData());
-							unsub();
-						}
-					});
-					setTimeout(reject, timeout);
-					return;
-				}
-				resolve(getData());
+			if (!queryClient.isFetching()) {
+				return getData();
+			}
+			return promisifyEvent((listener, errorListener) => {
+				const unsub = queryClient.getQueryCache().subscribe(() => {
+					if (!queryClient.isFetching()) {
+						listener(getData());
+					}
+				});
+				const timeoutId = setTimeout(errorListener, timeout);
+				return () => {
+					unsub();
+					clearTimeout(timeoutId);
+				};
 			});
 		};
 	}, [queryClient]);
