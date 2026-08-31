@@ -3,7 +3,7 @@ import { Queue } from "async-await-queue";
 import { v4 } from "uuid";
 import { z } from "zod";
 
-import { getFreePort } from "~utils/port";
+import { getFreePort } from "~utils/server/port";
 import { transformer } from "~utils/transformer";
 
 const { router, procedure } = initTRPC.create({ transformer });

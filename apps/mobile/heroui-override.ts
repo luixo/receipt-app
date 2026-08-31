@@ -1,11 +1,8 @@
 /* oxlint-disable import-js/no-extraneous-dependencies */
 // We intentionally copy semantic colors from the theme
 // oxlint-disable-next-line eslint-js/no-restricted-syntax
-import {
-	type ColorScale,
-	type ThemeColors,
-	semanticColors,
-} from "@heroui/theme";
+import { semanticColors } from "@heroui/theme";
+import type { ColorScale, ThemeColors } from "@heroui/theme";
 import { entries, fromEntries, mapKeys, mapValues, omitBy } from "remeda";
 import createPlugin from "tailwindcss/plugin";
 /* oxlint-enable import-js/no-extraneous-dependencies */

@@ -8,8 +8,8 @@ import type { GetLinksOptions, Headers } from "~app/utils/trpc";
 import { getLinks } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
-import { getFreePort } from "~utils/port";
 import { promisifyServer, wait } from "~utils/promise";
+import { getFreePort } from "~utils/server/port";
 import { createContext } from "~web/handlers/context";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>

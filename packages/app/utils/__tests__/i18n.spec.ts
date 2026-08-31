@@ -28,6 +28,7 @@ const test = mergeTests(originalTest, i18nFixtures).extend<Fixtures>({
 });
 
 test.use({ locale: "en-GB" });
+
 test.describe("Language strategies", () => {
 	test("Cookie", async ({
 		openSettings,
@@ -43,6 +44,7 @@ test.describe("Language strategies", () => {
 
 	test.describe("Preferred language header", () => {
 		test.use({ locale: "ru-RU" });
+
 		test("Full tag", async ({ openSettings, page, getI18nResource }) => {
 			await openSettings();
 			const ru = await getI18nResource("ru", "settings");
@@ -52,6 +54,7 @@ test.describe("Language strategies", () => {
 		});
 
 		test.use({ locale: "ru" });
+
 		test("Short tag", async ({ openSettings, page, getI18nResource }) => {
 			await openSettings();
 			const ru = await getI18nResource("ru", "settings");

@@ -14,7 +14,8 @@ import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
-import { type MutationsProp, getMutationLoading } from "~components/utils";
+import { getMutationLoading } from "~components/utils";
+import type { MutationsProp } from "~components/utils";
 
 export const SkeletonCurrencyInput = () => {
 	const { t } = useTranslation("default");

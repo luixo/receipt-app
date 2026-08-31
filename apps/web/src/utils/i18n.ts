@@ -1,9 +1,11 @@
 /// <reference types="vite/client" />
 
+import { createIsomorphicFn } from "@tanstack/react-start";
 import { parse } from "cookie";
 import type { BackendModule, ParseKeys, ResourceKey } from "i18next";
 
 import type { I18nContext } from "~app/utils/i18n";
+import type { Language, Namespace } from "~app/utils/i18n-data";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
 import { env } from "~utils/env";
 
@@ -56,6 +58,30 @@ export const getLanguageFromRequest = (request: Request | null) => {
 	return baseLanguage;
 };
 
+const readBackend = createIsomorphicFn()
+	.server(async (language: Language, namespace: Namespace) => {
+		/* oxlint-disable import/no-nodejs-modules */
+		const fs = await import("node:fs/promises");
+		const url = await import("node:url");
+		/* oxlint-enable import/no-nodejs-modules */
+		const publicPath = import.meta.env.DEV
+			? `../../public`
+			: env.VERCEL
+				? "./static"
+				: "../../public";
+		const jsonUrl = new url.URL(
+			`${publicPath}/locales/${language}/${namespace}.json`,
+			import.meta.url,
+		);
+		const fileContent = await fs.readFile(url.fileURLToPath(jsonUrl));
+		const resource = JSON.parse(fileContent.toString("utf8"));
+		return resource as ResourceKey;
+	})
+	.client(async (language, namespace) => {
+		const response = await fetch(`/locales/${language}/${namespace}.json`);
+		return response.json() as Promise<ResourceKey>;
+	});
+
 export const getBackendModule = (): BackendModule => ({
 	type: "backend",
 	init: () => {},
@@ -63,24 +89,7 @@ export const getBackendModule = (): BackendModule => ({
 	// oxlint-disable-next-line typescript/no-misused-promises
 	read: async (language, namespace) => {
 		try {
-			if (import.meta.env.SSR) {
-				const fs = await import("node:fs/promises");
-				const url = await import("node:url");
-				const publicPath = import.meta.env.DEV
-					? `../../public`
-					: env.VERCEL
-						? "./static"
-						: "../../public";
-				const jsonUrl = new url.URL(
-					`${publicPath}/locales/${language}/${namespace}.json`,
-					import.meta.url,
-				);
-				const fileContent = await fs.readFile(url.fileURLToPath(jsonUrl));
-				const resource = JSON.parse(fileContent.toString("utf8"));
-				return resource as ResourceKey;
-			}
-			const response = await fetch(`/locales/${language}/${namespace}.json`);
-			return await (response.json() as Promise<ResourceKey>);
+			return await readBackend(language as Language, namespace as Namespace);
 		} catch (error) {
 			// oxlint-disable-next-line no-console
 			console.error(`Failed to load ${language}/${namespace} i18n translation`);

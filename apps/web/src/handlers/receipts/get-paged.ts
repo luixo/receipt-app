@@ -18,7 +18,7 @@ import {
 	SIMILARTY_THRESHOLD,
 	trigramSimilarity,
 	trigramsForString,
-} from "~utils/trigram";
+} from "~utils/server/trigram";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import {

@@ -9,7 +9,8 @@ import { useFormat } from "~app/hooks/use-format";
 import { Input } from "~components/input";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
-import { type Temporal, parsers } from "~utils/date";
+import { parsers } from "~utils/date";
+import type { Temporal } from "~utils/date";
 
 export type Props = {
 	value: Temporal.PlainDate | undefined;

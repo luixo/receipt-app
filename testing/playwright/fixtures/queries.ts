@@ -1,11 +1,7 @@
 import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import {
-	type DehydratedState,
-	type Mutation,
-	type Query,
-	hashKey,
-} from "@tanstack/react-query";
+import { hashKey } from "@tanstack/react-query";
+import type { DehydratedState, Mutation, Query } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
 import type { RouterRecord } from "@trpc/server/unstable-core-do-not-import";
@@ -37,7 +33,8 @@ import { transformer } from "~utils/transformer";
 import type { DeepPartial } from "~utils/types";
 import { router } from "~web/handlers";
 
-import { type ApiManager, type TRPCKey, apiFixtures as test } from "./api";
+import { apiFixtures as test } from "./api";
+import type { ApiManager, TRPCKey } from "./api";
 
 const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 

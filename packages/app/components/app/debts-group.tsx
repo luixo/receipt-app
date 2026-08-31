@@ -3,7 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { useLocale } from "~app/hooks/use-locale";
-import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
+import { formatCurrency } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";

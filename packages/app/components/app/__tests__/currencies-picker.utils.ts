@@ -1,4 +1,5 @@
-import { type Locator, expect, test as originalTest } from "@playwright/test";
+import { expect, test as originalTest } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 
 import { getCurrencyDescription } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";

@@ -7,7 +7,8 @@ import {
 } from "heroui-native";
 import { tv } from "tailwind-variants";
 
-import { Icon, type IconName } from "~components/icons";
+import { Icon } from "~components/icons";
+import type { IconName } from "~components/icons";
 import type { AddProps, ToastProviderProps } from "~components/toast";
 import { View } from "~components/view";
 import { MAX_VISIBLE_TOASTS, TOAST_TIMEOUT } from "~utils/toast";

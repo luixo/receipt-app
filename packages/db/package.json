@@ -5,12 +5,13 @@
 	"sideEffects": false,
 	"main": "src/index.ts",
 	"scripts": {
-		"db:migrate": "kysely migrate latest --cwd ../..",
-		"db:generate-types": "bun --cwd ../.. kysely-codegen"
+		"db:migrate": "bun --bun --env-file=../../.env,../../.env.local kysely migrate latest",
+		"db:generate-types": "bun --bun --env-file=../../.env,../../.env.local kysely-codegen"
 	},
 	"dependencies": {
 		"@ra/utils": "workspace:*",
 		"kysely": "catalog:",
+		"kysely-codegen": "^0.20.0",
 		"kysely-ctl": "^0.21.0",
 		"kysely-plugin-serialize": "^0.8.2",
 		"pg": "^8.23.0"

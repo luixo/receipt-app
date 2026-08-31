@@ -5,6 +5,7 @@ import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
 import type { AccountId, UserId } from "~db/ids";
 import { getNow } from "~utils/date";
+import { generatePasswordData } from "~utils/server/crypto";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,
@@ -12,7 +13,6 @@ import {
 import { unauthProcedure } from "~web/handlers/trpc";
 import { emailSchema } from "~web/handlers/validation";
 import { setCookie } from "~web/utils/cookies";
-import { generatePasswordData } from "~web/utils/crypto";
 
 export const procedure = unauthProcedure
 	.input(

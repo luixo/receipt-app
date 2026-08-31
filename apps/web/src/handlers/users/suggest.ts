@@ -9,7 +9,7 @@ import {
 	queryNoMinSchema,
 } from "~app/utils/validation";
 import type { UserId } from "~db/ids";
-import { SIMILARTY_THRESHOLD } from "~utils/trigram";
+import { SIMILARTY_THRESHOLD } from "~utils/server/trigram";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { getAccessRole } from "~web/handlers/receipts/utils";

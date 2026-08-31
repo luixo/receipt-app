@@ -4,7 +4,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useLocale } from "~app/hooks/use-locale";
-import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
+import { getCurrencySymbol } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { Skeleton } from "~components/skeleton";

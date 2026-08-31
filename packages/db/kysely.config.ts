@@ -4,17 +4,18 @@ import { Kysely, PostgresDialect } from "kysely";
 import { defineConfig } from "kysely-ctl";
 import { Pool } from "pg";
 
-if (!process.env.DATABASE_URL) {
-	throw new Error("Expected to have process.env.DATABASE_URL variable!");
+const databaseUrl = import.meta.env.DATABASE_URL;
+if (!databaseUrl) {
+	throw new Error("Expected to have import.meta.env.DATABASE_URL variable!");
 }
 
 export default defineConfig({
 	kysely: new Kysely({
 		dialect: new PostgresDialect({
-			pool: new Pool({ connectionString: process.env.DATABASE_URL }),
+			pool: new Pool({ connectionString: databaseUrl }),
 		}),
 	}),
 	migrations: {
-		migrationFolder: "packages/db/migration/migrations",
+		migrationFolder: "migration/migrations",
 	},
 });

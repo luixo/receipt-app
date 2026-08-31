@@ -17,7 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { wordSimilarity } from "~utils/trigram";
+import { wordSimilarity } from "~utils/server/trigram";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 

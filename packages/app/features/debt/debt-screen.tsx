@@ -23,11 +23,8 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import {
-	type CurrencyCode,
-	formatCurrency,
-	getCurrencySymbol,
-} from "~app/utils/currency";
+import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";

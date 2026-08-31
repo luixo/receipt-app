@@ -39,7 +39,8 @@ import { Tooltip } from "~components/tooltip";
 import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
-import { type Temporal, getNow } from "~utils/date";
+import { getNow } from "~utils/date";
+import type { Temporal } from "~utils/date";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 

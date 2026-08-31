@@ -1,6 +1,7 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
-import { type Temporal, getNow } from "~utils/date";
+import { getNow } from "~utils/date";
+import type { Temporal } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";

@@ -11,11 +11,8 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import {
-	type CurrencyCode,
-	formatCurrency,
-	getCurrencySymbol,
-} from "~app/utils/currency";
+import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import type { Locale } from "~app/utils/locale";
 import { useTRPC } from "~app/utils/trpc";
