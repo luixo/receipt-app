@@ -49,12 +49,12 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 								: ""
 						}`,
 					}).toHaveLength(expectedTexts.length);
-					expectedTexts.forEach((expectedText, index) => {
+					for (const [index, expectedText] of expectedTexts.entries()) {
 						const actualText = sortedActualTexts[index];
 						expect(actualText, {
 							message: `Expected to have "${expectedText.toString()}" at index ${index}, got "${actualText}"`,
 						}).toMatch(expectedText);
-					});
+					}
 				}).toPass({ timeout, intervals: [100] });
 				await clearToasts(textsArray.length);
 			},

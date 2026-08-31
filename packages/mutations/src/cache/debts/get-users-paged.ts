@@ -30,7 +30,7 @@ const updatePages =
 			controller.queryClient,
 			controller.procedure.queryKey(),
 		);
-		inputs.forEach((input) => {
+		for (const input of inputs) {
 			updatePage(
 				controller,
 				input,
@@ -41,7 +41,7 @@ const updatePages =
 				}
 				return { ...page, items: nextItems };
 			});
-		});
+		}
 	};
 
 const updateUser = (

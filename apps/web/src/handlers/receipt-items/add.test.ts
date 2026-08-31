@@ -173,9 +173,9 @@ describe("receiptItems.add", () => {
 					() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				]),
 			);
-			results.forEach((result) => {
+			for (const result of results) {
 				expect(result.id).toMatch(UUID_REGEX);
-			});
+			}
 			expect(results).toStrictEqual<typeof results>([
 				{
 					id: results[0].id,

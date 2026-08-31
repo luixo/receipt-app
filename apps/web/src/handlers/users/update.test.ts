@@ -48,55 +48,53 @@ describe("users.update", () => {
 			});
 		});
 
-		(["name", "publicName"] as const).forEach((field) => {
-			describe(field, () => {
-				test("minimal length", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: userId } = await insertUser(ctx, accountId);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								id: userId,
-								update:
-									field === "name"
-										? {
-												type: field,
-												[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
-											}
-										: {
-												type: field,
-												[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
-											},
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "update.${field}": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
-					);
-				});
+		describe.each(["name", "publicName"] as const)("%s", (field) => {
+			test("minimal length", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: userId } = await insertUser(ctx, accountId);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							id: userId,
+							update:
+								field === "name"
+									? {
+											type: field,
+											[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
+										}
+									: {
+											type: field,
+											[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
+										},
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "update.${field}": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
+				);
+			});
 
-				test("maximum length", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: userId } = await insertUser(ctx, accountId);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								id: userId,
-								update:
-									field === "name"
-										? {
-												type: field,
-												[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
-											}
-										: {
-												type: field,
-												[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
-											},
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "update.${field}": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,
-					);
-				});
+			test("maximum length", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: userId } = await insertUser(ctx, accountId);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							id: userId,
+							update:
+								field === "name"
+									? {
+											type: field,
+											[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
+										}
+									: {
+											type: field,
+											[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
+										},
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "update.${field}": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,
+				);
 			});
 		});
 

@@ -63,13 +63,13 @@ const generateEmail = (
 			if (styles) {
 				acc[selector] = convertStylesToString(styles);
 			}
-			entries(mediaObject).forEach(([mediaKey, mediaStyles]) => {
+			for (const [mediaKey, mediaStyles] of entries(mediaObject)) {
 				if (!acc[mediaKey]) {
 					acc[mediaKey] = {};
 				}
 				(acc[mediaKey] as NestedStyles)[selector] =
 					convertStylesToString(mediaStyles);
-			});
+			}
 			return acc;
 		},
 		{},

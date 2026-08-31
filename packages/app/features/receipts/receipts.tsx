@@ -72,20 +72,19 @@ const RemoveReceiptsButton: React.FC<{
 		),
 	}));
 	const onRemoveSelected = React.useCallback(() => {
-		removeMutations.forEach(({ receiptId, mutation }) => {
-			if (!selectedReceiptIds.includes(receiptId)) {
-				return;
+		for (const { receiptId, mutation } of removeMutations) {
+			if (selectedReceiptIds.includes(receiptId)) {
+				mutation.mutate(
+					{ id: receiptId },
+					{
+						onSuccess: () =>
+							setSelectedReceiptIds((prevReceiptIds) =>
+								prevReceiptIds.filter((lookupId) => lookupId !== receiptId),
+							),
+					},
+				);
 			}
-			mutation.mutate(
-				{ id: receiptId },
-				{
-					onSuccess: () =>
-						setSelectedReceiptIds((prevReceiptIds) =>
-							prevReceiptIds.filter((lookupId) => lookupId !== receiptId),
-						),
-				},
-			);
-		});
+		}
 	}, [removeMutations, selectedReceiptIds, setSelectedReceiptIds]);
 	return (
 		<RemoveButton

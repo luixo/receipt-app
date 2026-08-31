@@ -78,12 +78,12 @@ const useDebtsByIds = (debtIds: DebtId[]) => {
 	);
 	// Fetching all the missing debts to show even debts markers
 	React.useEffect(() => {
-		missingIds.forEach((missingId) => {
+		for (const missingId of missingIds) {
 			// Debts are batched server-side so we can fetch all of them at once
 			void queryClient.prefetchQuery(
 				trpc.debts.get.queryOptions({ id: missingId }),
 			);
-		});
+		}
 	}, [missingIds, queryClient, trpc]);
 	return debts;
 };
@@ -191,7 +191,7 @@ const useConsecutiveDebtIds = ({
 	);
 	// Fetching all the missing lists to show even debts markers
 	React.useEffect(() => {
-		missingCursors.forEach((missingCursor) => {
+		for (const missingCursor of missingCursors) {
 			// Lists are batched server-side so we can fetch all of them at once
 			void queryClient.prefetchQuery(
 				trpc.debts.getByUserPaged.queryOptions({
@@ -199,7 +199,7 @@ const useConsecutiveDebtIds = ({
 					cursor: missingCursor,
 				}),
 			);
-		});
+		}
 	}, [input, missingCursors, queryClient, trpc]);
 	return debtIds;
 };
@@ -283,20 +283,19 @@ const RemoveDebtsButton: React.FC<{
 		};
 	});
 	const onRemoveSelected = React.useCallback(() => {
-		removeMutations.forEach(({ debtId, mutation }) => {
-			if (!selectedDebtIds.includes(debtId)) {
-				return;
+		for (const { debtId, mutation } of removeMutations) {
+			if (selectedDebtIds.includes(debtId)) {
+				mutation.mutate(
+					{ id: debtId },
+					{
+						onSuccess: () =>
+							setSelectedDebtIds((prevDebtIds) =>
+								prevDebtIds.filter((lookupId) => lookupId !== debtId),
+							),
+					},
+				);
 			}
-			mutation.mutate(
-				{ id: debtId },
-				{
-					onSuccess: () =>
-						setSelectedDebtIds((prevDebtIds) =>
-							prevDebtIds.filter((lookupId) => lookupId !== debtId),
-						),
-				},
-			);
-		});
+		}
 	}, [removeMutations, selectedDebtIds, setSelectedDebtIds]);
 	return (
 		<RemoveButton

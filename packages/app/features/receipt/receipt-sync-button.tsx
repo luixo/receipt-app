@@ -97,41 +97,39 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 		});
 
 		const propagateDebts = React.useCallback(() => {
-			nonCreatedParticipants.forEach((participant) => {
+			for (const participant of nonCreatedParticipants) {
 				const participantIndex = participantsWithDebts.findIndex(
 					({ userId }) => userId === participant.userId,
 				);
 				const matchedMutation = addMutations[participantIndex];
-				if (!matchedMutation) {
-					return;
+				if (matchedMutation) {
+					matchedMutation.mutate({
+						note: getReceiptDebtName(receipt.name),
+						currencyCode: receipt.currencyCode,
+						userId: participant.userId,
+						amount: participant.sum,
+						timestamp: receipt.issued,
+						receiptId: receipt.id,
+					});
 				}
-				matchedMutation.mutate({
-					note: getReceiptDebtName(receipt.name),
-					currencyCode: receipt.currencyCode,
-					userId: participant.userId,
-					amount: participant.sum,
-					timestamp: receipt.issued,
-					receiptId: receipt.id,
-				});
-			});
-			desyncedParticipants.forEach((participant) => {
+			}
+			for (const participant of desyncedParticipants) {
 				const participantIndex = participantsWithDebts.findIndex(
 					({ userId }) => userId === participant.userId,
 				);
 				const matchedMutation = updateMutations[participantIndex];
-				if (!matchedMutation) {
-					return;
+				if (matchedMutation) {
+					matchedMutation.mutate({
+						id: participant.debt.id,
+						update: {
+							amount: participant.sum,
+							currencyCode: receipt.currencyCode,
+							timestamp: receipt.issued,
+							receiptId: receipt.id,
+						},
+					});
 				}
-				matchedMutation.mutate({
-					id: participant.debt.id,
-					update: {
-						amount: participant.sum,
-						currencyCode: receipt.currencyCode,
-						timestamp: receipt.issued,
-						receiptId: receipt.id,
-					},
-				});
-			});
+			}
 		}, [
 			nonCreatedParticipants,
 			desyncedParticipants,

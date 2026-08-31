@@ -115,12 +115,16 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 				);
 			}}
 			onSelectionChange={(nextSelected) => {
-				addedParticipantsIds
-					.filter((id) => !nextSelected.includes(id))
-					.forEach((id) => removeItemConsumer(item.id, id));
-				nextSelected
-					.filter((id) => notAddedParticipantsIds.has(id))
-					.forEach((id) => addItemConsumer(item.id, id, 1));
+				for (const id of addedParticipantsIds.filter(
+					(candidateId) => !nextSelected.includes(candidateId),
+				)) {
+					removeItemConsumer(item.id, id);
+				}
+				for (const id of nextSelected.filter((candidateId) =>
+					notAddedParticipantsIds.has(candidateId),
+				)) {
+					addItemConsumer(item.id, id, 1);
+				}
 			}}
 			items={participants.toSorted(SORT_USERS)}
 			getKey={({ userId }) => userId}

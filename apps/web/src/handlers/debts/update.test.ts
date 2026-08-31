@@ -154,7 +154,7 @@ const updateDescribes = (getData: GetData) => {
 			.selectAll()
 			.execute();
 
-		debtIds.forEach((debtId) => {
+		for (const debtId of debtIds) {
 			const selfDebt = debts.find(
 				(debt) => debt.id === debtId && debt.ownerAccountId === selfAccountId,
 			);
@@ -172,7 +172,7 @@ const updateDescribes = (getData: GetData) => {
 				...pickedForeignDebt,
 				amount: (-Number(pickedForeignDebt.amount)).toFixed(4),
 			});
-		});
+		}
 	});
 };
 

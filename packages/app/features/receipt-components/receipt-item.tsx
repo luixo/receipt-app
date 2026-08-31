@@ -67,9 +67,9 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 		[addedParticipantsIds, participantsIds],
 	);
 	const onAddEveryItemParticipant = React.useCallback(() => {
-		notAddedParticipantsIds.forEach((participantId) => {
+		for (const participantId of notAddedParticipantsIds) {
 			addItemConsumer(item.id, participantId, 1);
-		});
+		}
 	}, [addItemConsumer, item.id, notAddedParticipantsIds]);
 	const sortedConsumers = item.consumers.toSorted(SORT_USERS);
 
