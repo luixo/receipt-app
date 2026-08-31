@@ -2,9 +2,9 @@ import React from "react";
 
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
+import type { StoreValues } from "~app/utils/store-data";
 import { LOCALE_STORE_NAME, getLocale } from "~app/utils/store/locale";
 import { TIMEZONE_STORE_NAME, getTimezone } from "~app/utils/store/timezone";
-import type { StoreValues } from "~app/utils/store-data";
 
 const useSetLocalSetting = <T extends keyof StoreValues>(
 	key: T,
