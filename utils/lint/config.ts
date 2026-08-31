@@ -131,6 +131,10 @@ type NoRestrictedSyntaxElement = {
 	message: string;
 	omitTags?: RestrictedTag[];
 };
+const getSelector = (input: string | RegExp) =>
+	input instanceof RegExp
+		? `/${input.source.replaceAll("/", String.raw`u002F`)}/`
+		: `'${input}'`;
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
 		selector: "JSXAttribute[name.name='data-testid']",
@@ -138,10 +142,6 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		omitTags: ["web-only"],
 	},
 	...restrictedImports.flatMap(({ from, omitTags, ...rest }) => {
-		const getSelector = (input: string | RegExp) =>
-			input instanceof RegExp
-				? `/${input.source.replaceAll("/", String.raw`u002F`)}/`
-				: `'${input}'`;
 		const valueSelector = getSelector(from);
 		if ("message" in rest) {
 			return [
@@ -398,7 +398,7 @@ const disabledRules = {
 	// This creates more problem that solves
 	"unicorn/prefer-spread": "off",
 	// There are too many false positives
-	"unicorn/no-useless-undefined": "off"
+	"unicorn/no-useless-undefined": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -430,7 +430,6 @@ const temporaryDisabledRules = {
 	"unicorn/no-nested-ternary": "off", // 30 cases
 	"unicorn/prefer-global-this": "off", // 24 cases
 	"unicorn/prefer-top-level-await": "off", // 19 cases
-	"unicorn/consistent-function-scoping": "off", // 18 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

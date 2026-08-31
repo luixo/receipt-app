@@ -12,6 +12,29 @@ import { test as localTest } from "./utils";
 
 const test = mergeTests(localTest, debtsGroupFixture);
 
+const generateDebtsWithEmpty: GenerateDebts = (opts) => {
+	const [firstDebt, secondDebt, thirdDebt] = defaultGenerateDebts({
+		...opts,
+		amount: 3,
+	});
+	assert.ok(firstDebt);
+	assert.ok(secondDebt);
+	assert.ok(thirdDebt);
+	return [
+		{ ...firstDebt, amount: 10 },
+		{
+			...secondDebt,
+			currencyCode: firstDebt.currencyCode,
+			amount: -10,
+		},
+		{
+			...thirdDebt,
+			currencyCode: firstDebt.currencyCode === "USD" ? "EUR" : "USD",
+			amount: 10,
+		},
+	];
+};
+
 test.describe("Wrapper component", () => {
 	test("'debts.getByUserPaged' error", async ({
 		api,
@@ -59,29 +82,6 @@ test.describe("Header", () => {
 });
 
 test.describe("Showed debts depending on 'show resolved debts' option", () => {
-	const generateDebtsWithEmpty: GenerateDebts = (opts) => {
-		const [firstDebt, secondDebt, thirdDebt] = defaultGenerateDebts({
-			...opts,
-			amount: 3,
-		});
-		assert.ok(firstDebt);
-		assert.ok(secondDebt);
-		assert.ok(thirdDebt);
-		return [
-			{ ...firstDebt, amount: 10 },
-			{
-				...secondDebt,
-				currencyCode: firstDebt.currencyCode,
-				amount: -10,
-			},
-			{
-				...thirdDebt,
-				currencyCode: firstDebt.currencyCode === "USD" ? "EUR" : "USD",
-				amount: 10,
-			},
-		];
-	};
-
 	test("Option is true", async ({
 		mockDebts,
 		openDebtsExchangeScreen,
