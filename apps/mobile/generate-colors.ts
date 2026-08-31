@@ -19,26 +19,22 @@ const generateTree = (input: CSSTree, indent = ""): string => {
 	].join("\n");
 };
 
-const generateVariablesFile = async () => {
-	const lines: CSSTree = {
-		name: "@layer theme",
-		content: [
-			{
-				name: ":root",
-				content: [
-					{
-						name: "@variant light",
-						content: mapTheme(light),
-					},
-					{
-						name: "@variant dark",
-						content: mapTheme(dark),
-					},
-				],
-			},
-		],
-	};
-	await fs.writeFile("./variables.css", `${generateTree(lines)}\n`, "utf8");
+const lines: CSSTree = {
+	name: "@layer theme",
+	content: [
+		{
+			name: ":root",
+			content: [
+				{
+					name: "@variant light",
+					content: mapTheme(light),
+				},
+				{
+					name: "@variant dark",
+					content: mapTheme(dark),
+				},
+			],
+		},
+	],
 };
-
-void generateVariablesFile();
+await fs.writeFile("./variables.css", `${generateTree(lines)}\n`, "utf8");

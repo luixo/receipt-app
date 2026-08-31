@@ -399,6 +399,8 @@ const disabledRules = {
 	"unicorn/prefer-spread": "off",
 	// There are too many false positives
 	"unicorn/no-useless-undefined": "off",
+	// There are false positives on `z.foo().catch()`
+	"unicorn/prefer-top-level-await": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -429,7 +431,6 @@ const temporaryDisabledRules = {
 	"unicorn/explicit-length-check": "off", // 34 cases
 	"unicorn/no-nested-ternary": "off", // 30 cases
 	"unicorn/prefer-global-this": "off", // 24 cases
-	"unicorn/prefer-top-level-await": "off", // 19 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases
