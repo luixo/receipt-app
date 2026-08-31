@@ -2,6 +2,8 @@
 
 Before working on tests, you need to pre-build the server (`bun run web:build --mode test`). If you're only editing test files, the existing build stays valid — re-run tests directly.
 
+No `.env` or `DATABASE_URL` is needed to build or run these tests. `PLAYWRIGHT=true` (set by `webServer.env` in `playwright.config.ts`) makes env validation a no-op (`packages/utils/src/env.ts:26`) and the tRPC handler short-circuits before touching the real DB (`apps/web/src/pages/api/trpc/$.ts:124`).
+
 ## File conventions
 
 - Functional tests: `*.spec.ts` (all files except `*.visual.spec.ts`).
