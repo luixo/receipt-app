@@ -13,7 +13,7 @@ test("Form", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	const { users } = await mockBase();
-	assert(users[0]);
+	assert.ok(users[0]);
 	const user = users[0];
 
 	await page.goto("/debts/add");
@@ -67,7 +67,7 @@ test.describe("'debts.add' mutation", () => {
 		expectScreenshotWithSchemes,
 	}) => {
 		const { users } = await mockBase();
-		assert(users[0]);
+		assert.ok(users[0]);
 		const user = users[0];
 
 		const createPause = api.createPause();

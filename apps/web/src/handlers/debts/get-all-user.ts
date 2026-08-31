@@ -62,7 +62,7 @@ const queueGetAllUser = queueCallFactory<
 		);
 		return filteredDebts.map(({ currencyCode, sum }) => ({
 			currencyCode,
-			sum: parseFloat(sum),
+			sum: Number(sum),
 		}));
 	});
 });

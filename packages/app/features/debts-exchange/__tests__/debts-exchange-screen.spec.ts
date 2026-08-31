@@ -64,9 +64,9 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 			...opts,
 			amount: 3,
 		});
-		assert(firstDebt);
-		assert(secondDebt);
-		assert(thirdDebt);
+		assert.ok(firstDebt);
+		assert.ok(secondDebt);
+		assert.ok(thirdDebt);
 		return [
 			{ ...firstDebt, amount: 10 },
 			{

@@ -92,7 +92,7 @@ export const procedure = authProcedure
 						.distinctOn(["users.id"])
 						.select([
 							"users.id",
-							database.fn.count<string>("receipts.id").as("latestCount"),
+							database.fn.count<number>("receipts.id").as("latestCount"),
 						])
 						.groupBy("users.id")
 						.orderBy("users.id"),
@@ -126,7 +126,7 @@ export const procedure = authProcedure
 				)
 				.select([
 					"users.id",
-					database.fn.count<string>("debts.id").as("latestCount"),
+					database.fn.count<number>("debts.id").as("latestCount"),
 				])
 				.groupBy(["users.id"])
 				.orderBy("latestCount", "desc")
@@ -154,7 +154,7 @@ export const procedure = authProcedure
 			)
 			.select([
 				"users.id",
-				database.fn.count<string>("debts.id").as("latestCount"),
+				database.fn.count<number>("debts.id").as("latestCount"),
 			])
 			.groupBy("users.id")
 			.orderBy("latestCount", "desc")

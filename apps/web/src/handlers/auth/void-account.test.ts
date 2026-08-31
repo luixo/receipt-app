@@ -58,7 +58,7 @@ describe("auth.voidAccount", () => {
 			});
 			const context = await createContext(ctx);
 			const caller = createCaller(context);
-			assert(
+			assert.ok(
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",
 			);

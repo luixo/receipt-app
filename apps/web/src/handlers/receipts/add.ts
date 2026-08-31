@@ -147,17 +147,16 @@ const insertConsumers = async (
 	const consumers = [
 		...(input.items?.flatMap((item, index) =>
 			(item.consumers ?? []).map((consumer) => {
-				// oxlint-disable-next-line typescript/no-non-null-assertion
-				const itemId = insertedItems[index]!.id;
+				const insertedItem = insertedItems[index];
 				/* c8 ignore start */
-				if (!itemId) {
+				if (!insertedItem) {
 					throw new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
 						message: `Expected to have an inserted item for user "${consumer.userId}" with part ${consumer.part}.`,
 					});
 				}
 				/* c8 ignore stop */
-				return { itemId, ...consumer };
+				return { itemId: insertedItem.id, ...consumer };
 			}),
 		) ?? []),
 		...(input.payers?.map((payer) => ({
@@ -171,8 +170,14 @@ const insertConsumers = async (
 	const insertedConsumers = await addConsumers(ctx)(consumers);
 	return insertedConsumers.reduce<InsertedConsumers>(
 		(acc, insertedConsumer, index) => {
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			const { itemId, userId } = consumers[index]!;
+			const consumer = consumers[index];
+			if (!consumer) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Expected to have a consumer for inserted consumer at position "${index}".`,
+				});
+			}
+			const { itemId, userId } = consumer;
 			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
 			if (insertedConsumer instanceof TRPCError) {
 				itemAcc.errors.push(insertedConsumer);
@@ -206,17 +211,16 @@ const insertPayers = async (
 	const payers =
 		input.items?.flatMap((item, index) =>
 			(item.payers ?? []).map((payer) => {
-				// oxlint-disable-next-line typescript/no-non-null-assertion
-				const itemId = insertedItems[index]!.id;
+				const insertedItem = insertedItems[index];
 				/* c8 ignore start */
-				if (!itemId) {
+				if (!insertedItem) {
 					throw new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
 						message: `Expected to have an inserted item for user "${payer.userId}" with part ${payer.part}.`,
 					});
 				}
 				/* c8 ignore stop */
-				return { itemId, ...payer };
+				return { itemId: insertedItem.id, ...payer };
 			}),
 		) ?? [];
 	if (payers.length === 0) {
@@ -224,8 +228,14 @@ const insertPayers = async (
 	}
 	const insertedPayers = await addPayers(ctx)(payers);
 	return insertedPayers.reduce<InsertedPayers>((acc, insertedPayer, index) => {
-		// oxlint-disable-next-line typescript/no-non-null-assertion
-		const { itemId, userId } = payers[index]!;
+		const payer = payers[index];
+		if (!payer) {
+			throw new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: `Expected to have a payer at index "${index}".`,
+			});
+		}
+		const { itemId, userId } = payer;
 		const itemAcc = acc[itemId] || { errors: [], payers: [] };
 		/* c8 ignore next 2 */
 		if (insertedPayer instanceof TRPCError) {

@@ -25,7 +25,7 @@ test("No connected account - no description", async ({
 			},
 		],
 	});
-	assert(firstUser);
+	assert.ok(firstUser);
 	await openUsersScreen();
 	const userLocator = user.filter({ hasText: firstUser.name });
 	await expect(userLocator).toBeVisible();
@@ -54,8 +54,8 @@ test("Connected account - description", async ({
 			},
 		],
 	});
-	assert(firstUser);
-	assert(firstUser.connectedAccount);
+	assert.ok(firstUser);
+	assert.ok(firstUser.connectedAccount);
 	await openUsersScreen();
 	const userLocator = user.filter({ hasText: firstUser.name });
 	await expect(userLocator).toBeVisible();

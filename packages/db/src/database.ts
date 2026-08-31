@@ -61,6 +61,7 @@ const dbParsers: Partial<Record<BuiltinType, TypeParser>> = {
 	...temporalParsers,
 	[types.builtins.BOOL as typeof types.TypeId.BOOL]: (value) =>
 		value === "t" ? "true" : "false",
+	[types.builtins.INT8 as typeof types.TypeId.INT8]: Number,
 	/* c8 ignore stop */
 };
 const calendarISOToDatabaseISO = (input: string) =>

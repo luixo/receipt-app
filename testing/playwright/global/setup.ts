@@ -24,8 +24,7 @@ const globalSetup = async (config: FullConfig) => {
 				...serverMessages.map((element) =>
 					[
 						element.suspectTests.length === 1
-							? // oxlint-disable-next-line typescript/no-non-null-assertion
-								element.suspectTests[0]!
+							? element.suspectTests[0]
 							: [colors.dim("Suspect tests:"), ...element.suspectTests].join(
 									"\n",
 								),

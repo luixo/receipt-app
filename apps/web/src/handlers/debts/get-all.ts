@@ -16,6 +16,6 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 
 	return debts.map(({ currencyCode, sum }) => ({
 		currencyCode,
-		sum: parseFloat(sum),
+		sum: Number(sum),
 	}));
 });

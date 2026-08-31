@@ -389,7 +389,7 @@ const getProcedure = (
 	path: string,
 ): AnyTRPCProcedure => {
 	const [first, ...rest] = path.split(".");
-	assert(first);
+	assert.ok(first);
 	if (rest.length === 0) {
 		return currentRouter[first] as AnyTRPCProcedure;
 	}

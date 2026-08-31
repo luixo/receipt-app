@@ -47,7 +47,7 @@ const mergeClip = async (
 		return acc || { x: 0, y: 0, width: 0, height: 0 };
 	}
 	const [first, ...rest] = locators;
-	assert(first);
+	assert.ok(first);
 	const boundingBox = await first.boundingBox();
 	if (!boundingBox) {
 		throw new Error(`Expected to have boundingBox for the first locator`);
@@ -300,7 +300,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 
 				const mergedImage = await joinImagesHorizontally(
 					[lightImage, darkImage],
-					0x00ff00ff,
+					0x00_ff_00_ff,
 				);
 				expect
 					.soft(await mergedImage.getBuffer(JimpMime.png))

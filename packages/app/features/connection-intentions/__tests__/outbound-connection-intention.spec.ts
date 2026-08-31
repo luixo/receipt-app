@@ -17,7 +17,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 }) => {
 	const { outbound } = await mockConnectionIntentions({ outboundAmount: 1 });
 	const intention = outbound[0];
-	assert(intention);
+	assert.ok(intention);
 	await openConnectionIntentions();
 
 	api.mockFirst("accountConnectionIntentions.remove", () => {

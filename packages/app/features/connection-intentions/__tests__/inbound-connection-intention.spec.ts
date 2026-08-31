@@ -21,7 +21,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 }) => {
 	const { inbound } = await mockConnectionIntentions({ inboundAmount: 1 });
 	const intention = inbound[0];
-	assert(intention);
+	assert.ok(intention);
 	await openConnectionIntentions();
 
 	api.mockFirst("accountConnectionIntentions.reject", () => {
@@ -71,15 +71,15 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 }) => {
 	const { inbound } = await mockConnectionIntentions({ inboundAmount: 1 });
 	const intention = inbound[0];
-	assert(intention);
+	assert.ok(intention);
 	// Two users: the first is used for the cancel + error rounds, the
 	// second for the final retry, since `users.suggestTop` is only fetched
 	// once and re-mocking it mid-test wouldn't be picked up by the cache.
 	const suggestedUsers = mockSuggestedUsers(2);
 	const firstUser = suggestedUsers[0];
-	assert(firstUser);
+	assert.ok(firstUser);
 	const secondUser = suggestedUsers[1];
-	assert(secondUser);
+	assert.ok(secondUser);
 	await openConnectionIntentions();
 
 	const input = suggestInput("Please choose a user below to accept intention");

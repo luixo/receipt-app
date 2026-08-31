@@ -1,5 +1,6 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
@@ -28,8 +29,8 @@ test("On load", async ({
 	expectCurrency,
 }) => {
 	const { topCurrencies } = await mockBase();
-	// oxlint-disable-next-line typescript/no-non-null-assertion
-	const topCurrency = topCurrencies.toSorted((a, b) => a.count - b.count)[0]!;
+	const topCurrency = topCurrencies.toSorted((a, b) => a.count - b.count)[0];
+	assert.ok(topCurrency);
 
 	await snapshotQueries(async () => {
 		await page.goto("/receipts/add");

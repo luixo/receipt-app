@@ -90,12 +90,12 @@ const fetchPage = async (
 			.limit(input.limit)
 			.execute(),
 		debts
-			.select((eb) => eb.fn.count<string>("debts.id").as("count"))
+			.select((eb) => eb.fn.count<number>("debts.id").as("count"))
 			.executeTakeFirstOrThrow(),
 	]);
 
 	return {
-		count: parseInt(totalCount.count, 10),
+		count: totalCount.count,
 		cursor: input.cursor,
 		items: paginatedDebts.map((debt) => debt.id),
 	};

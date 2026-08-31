@@ -1,7 +1,6 @@
 import type { Project, ReporterDescription } from "@playwright/test";
 import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
-import url from "node:url";
 
 import {
 	localSettings,
@@ -66,7 +65,7 @@ const functionalProject: Project = {
 	testMatch: /.*(?<!visual|utils)\.spec\.ts/,
 };
 
-const localDir = path.dirname(url.fileURLToPath(import.meta.url));
+const localDir = import.meta.dirname;
 const rootDir = path.join(localDir, "../..");
 
 export default defineConfig({

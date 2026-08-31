@@ -1,5 +1,6 @@
 import type { Locator } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 import { entries } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -33,9 +34,8 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ page, api, faker }, use) =>
 		use(async () => {
 			await api.mockUtils.authPage({ page });
-			const [user] = defaultGenerateUsers({ faker, amount: 1 });
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			const debtUser = user!;
+			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
+			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
 			return { debtUser };
 		}),

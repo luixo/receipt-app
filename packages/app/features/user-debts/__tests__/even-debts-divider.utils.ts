@@ -1,4 +1,5 @@
 import type { Locator } from "@playwright/test";
+import assert from "node:assert";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
@@ -23,13 +24,15 @@ export const test = originalTest.extend<Fixtures>({
 		use(
 			(debts) => (opts) =>
 				defaultGenerateDebts({ ...opts, amount: debts.length }).map(
-					(debt, index) => ({
-						...debt,
-						/* oxlint-disable typescript/no-non-null-assertion */
-						currencyCode: debts[debts.length - index - 1]!.currencyCode,
-						amount: debts[debts.length - index - 1]!.amount,
-						/* oxlint-enable typescript/no-non-null-assertion */
-					}),
+					(debt, index) => {
+						const previousDebt = debts[debts.length - index - 1];
+						assert.ok(previousDebt);
+						return {
+							...debt,
+							currencyCode: previousDebt.currencyCode,
+							amount: previousDebt.amount,
+						};
+					},
 				),
 		),
 });

@@ -48,7 +48,7 @@ export const NumberInput: React.FC<Props> = ({
 			if (commitedInput === "") {
 				return Number.NaN;
 			}
-			const parsedNumber = Number.parseFloat(commitedInput);
+			const parsedNumber = Number(commitedInput);
 			if (Number.isNaN(parsedNumber)) {
 				// Bail out if not a number
 				return Number.NaN;

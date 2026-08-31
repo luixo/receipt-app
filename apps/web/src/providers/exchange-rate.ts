@@ -226,7 +226,7 @@ export const getExchangeRates = async (
 				? await cacheInstance.getValue(cacheKey)
 				: null;
 			if (cachedRate) {
-				return { toCode, rate: parseFloat(cachedRate) };
+				return { toCode, rate: Number(cachedRate) };
 			}
 			const fetchedRate = await (ctx.exchangeRateOptions.mock
 				? ctx.exchangeRateOptions.mock.fn(fromCode, toCode)

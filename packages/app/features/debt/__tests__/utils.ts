@@ -27,7 +27,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(async () => {
 			const auth = await api.mockUtils.authPage({ page });
 			const [user] = defaultGenerateUsers({ faker, amount: 1 });
-			assert(user);
+			assert.ok(user);
 			api.mockUtils.mockUsers(user);
 			return { ...auth, debtUser: user };
 		}),
@@ -40,7 +40,7 @@ export const test = originalTest.extend<Fixtures>({
 				amount: 1,
 				userId: baseMock.debtUser.id,
 			});
-			assert(debt);
+			assert.ok(debt);
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				if (lookupId !== debt.id) {
 					throw new Error(`Unexpected debt id in "debts.get": ${lookupId}`);

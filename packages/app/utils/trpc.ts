@@ -103,7 +103,7 @@ export const getLinks = ({
 				headers,
 				transformer,
 				// Experimentally: 15k is ok
-				maxURLLength: 14000,
+				maxURLLength: 14_000,
 			}),
 			false: httpLink({ url, fetch, headers, transformer }),
 		}),

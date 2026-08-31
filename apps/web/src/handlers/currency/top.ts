@@ -35,11 +35,11 @@ export const procedure = authProcedure
 		});
 		switch (input.options.type) {
 			case "debts": {
-				const topCurrenciesResult = await ctx.database
+				return ctx.database
 					.selectFrom("debts")
 					.select([
 						"currencyCode",
-						ctx.database.fn.count<string>("id").as("count"),
+						ctx.database.fn.count<number>("id").as("count"),
 					])
 					.where((eb) =>
 						eb("timestamp", ">", minimalTimestamp).and(
@@ -51,10 +51,6 @@ export const procedure = authProcedure
 					.groupBy("currencyCode")
 					.orderBy("count", "desc")
 					.execute();
-				return topCurrenciesResult.map(({ currencyCode, count }) => ({
-					currencyCode,
-					count: Number(count),
-				}));
 			}
 			case "receipts": {
 				const topCurrenciesResult = await ctx.database
@@ -65,7 +61,7 @@ export const procedure = authProcedure
 						)
 							.select([
 								"receipts.currencyCode",
-								ctx.database.fn.count<string>("receipts.id").as("count"),
+								ctx.database.fn.count<number>("receipts.id").as("count"),
 							])
 							.where("issued", ">", minimalTimestamp)
 							.groupBy("receipts.currencyCode");
@@ -75,7 +71,7 @@ export const procedure = authProcedure
 						)
 							.select([
 								"receipts.currencyCode",
-								ctx.database.fn.count<string>("receipts.id").as("count"),
+								ctx.database.fn.count<number>("receipts.id").as("count"),
 							])
 							.where("issued", ">", minimalTimestamp)
 							.groupBy("receipts.currencyCode");

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 import { entries } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -28,8 +29,8 @@ export const test = originalTest.extend<Fixtures>({
 		use(async ({ generateUsers = defaultGenerateUsers } = {}) => {
 			await api.mockUtils.authPage({ page });
 			const users = generateUsers({ faker, amount: 1 });
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			const debtUser = users[0]!;
+			const debtUser = users[0];
+			assert.ok(debtUser);
 			api.mockFirst(
 				"users.get",
 				({ input, next }) =>

@@ -265,11 +265,11 @@ describe("debts.getUsersPaged", () => {
 							}),
 						];
 						if (index <= 1) {
+							assert(debts[0]);
 							debts.push(
 								await insertDebt(ctx, accountId, user.id, {
 									currencyCode: "USD",
-									// oxlint-disable-next-line typescript/no-non-null-assertion
-									amount: -debts[0]!.amount,
+									amount: -debts[0].amount,
 								}),
 							);
 						}

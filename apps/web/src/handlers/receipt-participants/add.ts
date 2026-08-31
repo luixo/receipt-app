@@ -78,10 +78,10 @@ const getParticipants = (
 			});
 		}
 		const matchedUsers = users.filter((user) => user.id === input.userId);
+		const firstMatchedUser = matchedUsers[0];
 		if (
-			matchedUsers.length === 0 ||
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			matchedUsers[0]!.ownerAccountId !== ctx.auth.accountId
+			!firstMatchedUser ||
+			firstMatchedUser.ownerAccountId !== ctx.auth.accountId
 		) {
 			return new TRPCError({
 				code: "NOT_FOUND",

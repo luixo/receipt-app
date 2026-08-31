@@ -55,7 +55,7 @@ describe("auth.confirmEmail", () => {
 			});
 			const context = await createContext(ctx);
 			const caller = createCaller(context);
-			assert(
+			assert.ok(
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",
 			);
@@ -67,12 +67,12 @@ describe("auth.confirmEmail", () => {
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);
-			assert(
+			assert.ok(
 				setCookieTuple,
 				"Header 'set-cookie' has to be set in the response",
 			);
 			const tokenMatch = /authToken=([^;]+)/.exec(setCookieTuple[1].toString());
-			assert(tokenMatch, "Cookie 'authToken' should be present");
+			assert.ok(tokenMatch, "Cookie 'authToken' should be present");
 			const token = tokenMatch[1];
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
