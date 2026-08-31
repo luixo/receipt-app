@@ -15,15 +15,14 @@ const getFirstValue = (
 
 export const getResHeaders = ({ res }: NetContext) => {
 	const headersEntries: [string, string][] = [];
-	entries(res.getHeaders()).forEach(([key, valueOrValues]) => {
+	for (const [key, valueOrValues] of entries(res.getHeaders())) {
 		const value = getFirstValue(valueOrValues);
 		/* c8 ignore start */
-		if (!value) {
-			return;
+		if (value) {
+			/* c8 ignore stop */
+			headersEntries.push([key, value]);
 		}
-		/* c8 ignore stop */
-		headersEntries.push([key, value]);
-	});
+	}
 	return headersEntries;
 };
 

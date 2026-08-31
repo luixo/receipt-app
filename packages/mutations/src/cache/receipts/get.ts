@@ -70,11 +70,11 @@ const updateAll =
 			queryClient,
 			procedure.queryKey(),
 		);
-		inputs.forEach((input) => {
+		for (const input of inputs) {
 			queryClient.setQueryData(procedure.queryKey(input), (receipt) =>
 				getUpdatedData(receipt, updater),
 			);
-		});
+		}
 	};
 
 const updateItems =

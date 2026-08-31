@@ -50,35 +50,33 @@ describe("users.add", () => {
 			});
 		});
 
-		(["name", "publicName"] as const).forEach((field) => {
-			describe(field, () => {
-				test("minimal length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								name: faker.person.fullName(),
-								[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "${field}": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
-					);
-				});
+		describe.each(["name", "publicName"] as const)("%s", (field) => {
+			test("minimal length", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							name: faker.person.fullName(),
+							[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "${field}": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
+				);
+			});
 
-				test("maximum length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								name: faker.person.fullName(),
-								[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "${field}": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,
-					);
-				});
+			test("maximum length", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							name: faker.person.fullName(),
+							[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "${field}": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,
+				);
 			});
 		});
 
@@ -322,9 +320,9 @@ describe("users.add", () => {
 				() => caller.procedure({ name: asName, email: otherEmail }),
 				() => caller.procedure({ name: anotherAsName, email: anotherEmail }),
 			]);
-			results.forEach((result) => {
+			for (const result of results) {
 				expect(userIdSchema.safeParse(result.id).success).toBe(true);
-			});
+			}
 			expect(results).toStrictEqual<typeof results>([
 				{ id: results[0].id, connection: undefined },
 				{

@@ -8,16 +8,18 @@ export const mergeUpdaterResults = (
 	const filteredResults = results.filter(isNonNullish);
 	return {
 		revertFn: () => {
-			filteredResults
+			for (const fn of filteredResults
 				.map(({ revertFn }) => revertFn)
-				.filter(isNonNullish)
-				.forEach((fn) => fn());
+				.filter(isNonNullish)) {
+				fn();
+			}
 		},
 		finalizeFn: () => {
-			filteredResults
+			for (const fn of filteredResults
 				.map(({ finalizeFn }) => finalizeFn)
-				.filter(isNonNullish)
-				.forEach((fn) => fn());
+				.filter(isNonNullish)) {
+				fn();
+			}
 		},
 	};
 };

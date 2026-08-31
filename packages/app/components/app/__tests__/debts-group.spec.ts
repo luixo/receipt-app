@@ -13,7 +13,7 @@ import { test as debtsGroupFixture } from "./debts-group.utils";
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
 const criticalPaths = ["debts.getByUserPaged", "debts.getAllUser"] as const;
-criticalPaths.forEach((path) => {
+for (const path of criticalPaths) {
 	const otherPaths = criticalPaths.filter((lookupPath) => lookupPath !== path);
 
 	test.describe(`'${path}' query`, () => {
@@ -75,7 +75,7 @@ criticalPaths.forEach((path) => {
 			);
 		});
 	});
-});
+}
 
 test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
 	const { debtUser } = await mockDebts({

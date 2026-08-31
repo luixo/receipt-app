@@ -83,7 +83,7 @@ export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 	const [isMounted, { setTrue: setMounted }] = useBooleanState();
 	useMountEffect(setMounted);
 	if (!isMounted) {
-		prefetchedQueries.forEach((query) => {
+		for (const query of prefetchedQueries) {
 			void localQueryClient.prefetchQuery({
 				queryKey: query.queryKey,
 				queryFn: () =>
@@ -102,23 +102,22 @@ export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 							return result;
 						}),
 			});
-		});
-		matchErrors.forEach((error) => {
-			if (!("errorObject" in error)) {
-				return;
+		}
+		for (const error of matchErrors) {
+			if ("errorObject" in error) {
+				const castedError = error as SerializedTRPCError;
+				const serializedError = new SerializedTRPCError(
+					castedError.queryKey,
+					castedError.errorObject,
+				);
+				void localQueryClient.prefetchQuery({
+					queryKey: serializedError.queryKey,
+					queryFn: () => {
+						throw serializedError.errorObject;
+					},
+				});
 			}
-			const castedError = error as SerializedTRPCError;
-			const serializedError = new SerializedTRPCError(
-				castedError.queryKey,
-				castedError.errorObject,
-			);
-			void localQueryClient.prefetchQuery({
-				queryKey: serializedError.queryKey,
-				queryFn: () => {
-					throw serializedError.errorObject;
-				},
-			});
-		});
+		}
 	}
 	return <>{children}</>;
 };

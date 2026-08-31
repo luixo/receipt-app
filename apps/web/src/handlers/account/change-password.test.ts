@@ -26,36 +26,34 @@ describe("account.changePassword", () => {
 		);
 
 		const types = ["password", "prevPassword"] as const;
-		types.forEach((type) => {
+		describe.each(types)("%s", (type) => {
 			const otherType = types.find((lookupType) => lookupType !== type);
-			describe(type, () => {
-				test("minimal length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								[type as "password"]: "a".repeat(MIN_PASSWORD_LENGTH - 1),
-								[otherType as "prevPassword"]: "a".repeat(MIN_PASSWORD_LENGTH),
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "${type}": Minimal length for password is ${MIN_PASSWORD_LENGTH}`,
-					);
-				});
+			test("minimal length", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							[type as "password"]: "a".repeat(MIN_PASSWORD_LENGTH - 1),
+							[otherType as "prevPassword"]: "a".repeat(MIN_PASSWORD_LENGTH),
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "${type}": Minimal length for password is ${MIN_PASSWORD_LENGTH}`,
+				);
+			});
 
-				test("maximum length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					await expectTRPCError(
-						() =>
-							caller.procedure({
-								[type as "password"]: "a".repeat(MAX_PASSWORD_LENGTH + 1),
-								[otherType as "prevPassword"]: "a".repeat(MAX_PASSWORD_LENGTH),
-							}),
-						"BAD_REQUEST",
-						`Zod error\n\nAt "${type}": Maximum length for password is ${MAX_PASSWORD_LENGTH}`,
-					);
-				});
+			test("maximum length", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							[type as "password"]: "a".repeat(MAX_PASSWORD_LENGTH + 1),
+							[otherType as "prevPassword"]: "a".repeat(MAX_PASSWORD_LENGTH),
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "${type}": Maximum length for password is ${MAX_PASSWORD_LENGTH}`,
+				);
 			});
 		});
 
