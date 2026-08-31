@@ -1,0 +1,47 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"3f1fa7f5-f254-46cf-bf56-e0686d932360\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"88355624-b0e0-4f72-b097-a2149284549e\"}]": {
+			"state": {
+				"data": [],
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"88355624-b0e0-4f72-b097-a2149284549e\"}]": {
+			"state": {
+				"data": {
+					"items": [],
+					"count": 0,
+					"cursor": 0
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debts.remove": {
+			"1": {
+				"state": {
+					"data": {
+						"reverseRemoved": false
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
