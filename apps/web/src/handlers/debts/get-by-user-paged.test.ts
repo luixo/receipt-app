@@ -38,6 +38,36 @@ const mapDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 		})
 		.map((debt) => debt.id);
 
+const insertDebts = async (
+	ctx: TestContext,
+	accountId: AccountId,
+	userId: UserId,
+) => {
+	// Create debts with non-zero sum currencies
+	const nonResolvedDebts = await Promise.all([
+		insertDebt(ctx, accountId, userId, {
+			currencyCode: "USD",
+			amount: 100,
+		}),
+		insertDebt(ctx, accountId, userId, { currencyCode: "USD", amount: 50 }),
+		insertDebt(ctx, accountId, userId, { currencyCode: "EUR", amount: 25 }),
+	]);
+
+	// Create debts that resolve to zero (should be excluded by default)
+	const resolvedAmount = getRandomAmount();
+	const resolvedDebts = await Promise.all([
+		insertDebt(ctx, accountId, userId, {
+			currencyCode: "GEL",
+			amount: resolvedAmount,
+		}),
+		insertDebt(ctx, accountId, userId, {
+			currencyCode: "GEL",
+			amount: -resolvedAmount,
+		}),
+	]);
+	return [nonResolvedDebts, resolvedDebts] as const;
+};
+
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.getByUserPaged", () => {
@@ -266,36 +296,6 @@ describe("debts.getByUserPaged", () => {
 				cursor: 0,
 			});
 		});
-
-		const insertDebts = async (
-			ctx: TestContext,
-			accountId: AccountId,
-			userId: UserId,
-		) => {
-			// Create debts with non-zero sum currencies
-			const nonResolvedDebts = await Promise.all([
-				insertDebt(ctx, accountId, userId, {
-					currencyCode: "USD",
-					amount: 100,
-				}),
-				insertDebt(ctx, accountId, userId, { currencyCode: "USD", amount: 50 }),
-				insertDebt(ctx, accountId, userId, { currencyCode: "EUR", amount: 25 }),
-			]);
-
-			// Create debts that resolve to zero (should be excluded by default)
-			const resolvedAmount = getRandomAmount();
-			const resolvedDebts = await Promise.all([
-				insertDebt(ctx, accountId, userId, {
-					currencyCode: "GEL",
-					amount: resolvedAmount,
-				}),
-				insertDebt(ctx, accountId, userId, {
-					currencyCode: "GEL",
-					amount: -resolvedAmount,
-				}),
-			]);
-			return [nonResolvedDebts, resolvedDebts] as const;
-		};
 
 		test("without resolved currencies", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);

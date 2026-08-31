@@ -29,6 +29,15 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept";
 
+type AccountWithUser = { id: AccountId; foreignUserId: UserId };
+
+const revertDebt = (debt: InsertedDebt, otherAccount: AccountWithUser) => ({
+	...debt,
+	ownerAccountId: otherAccount.id,
+	userId: otherAccount.foreignUserId,
+	amount: (-debt.amount).toFixed(4),
+});
+
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("accountConnectionIntentions.accept", () => {
@@ -320,18 +329,6 @@ describe("accountConnectionIntentions.accept", () => {
 		});
 
 		describe("auto-accepted debts", () => {
-			type AccountWithUser = { id: AccountId; foreignUserId: UserId };
-
-			const revertDebt = (
-				debt: InsertedDebt,
-				otherAccount: AccountWithUser,
-			) => ({
-				...debt,
-				ownerAccountId: otherAccount.id,
-				userId: otherAccount.foreignUserId,
-				amount: (-debt.amount).toFixed(4),
-			});
-
 			const runAcceptDebtsTest = async (
 				ctx: TestContext,
 				settings: {

@@ -14,6 +14,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./rates";
 
+const respondAsEmptyCache = (dbMock: CacheDbOptionsMock["mock"]) => {
+	dbMock.setResponder("getValue", async () => null);
+	dbMock.setResponder("setValue", async () => {});
+};
+
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const getFakeRate = () => Number(faker.finance.amount({ min: 0.01, max: 100 }));
@@ -95,11 +100,6 @@ describe("currency.rates", () => {
 		});
 
 		describe("cache is empty", () => {
-			const respondAsEmptyCache = (dbMock: CacheDbOptionsMock["mock"]) => {
-				dbMock.setResponder("getValue", async () => null);
-				dbMock.setResponder("setValue", async () => {});
-			};
-
 			test("exchange rate provider throws", async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
 				respondAsEmptyCache(dbMock);

@@ -612,6 +612,8 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 						typeInner,
 						timeoutInner,
 					]) => {
+						// We're inside evaluate, we can't unscope from here
+						/* oxlint-disable unicorn/consistent-function-scoping */
 						const { queryClient } = window;
 						if (!queryClient) {
 							throw new Error("window.queryClient is not defined yet");
@@ -805,6 +807,7 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 									optionsInner,
 								);
 						}
+						/* oxlint-enable unicorn/consistent-function-scoping */
 					},
 					[
 						path,

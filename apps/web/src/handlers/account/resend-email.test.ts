@@ -15,6 +15,25 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./resend-email";
 
+const insertReadyForEmailAccount = async (ctx: TestContext) => {
+	const {
+		sessionId,
+		account: { email },
+	} = await insertAccountWithSession(ctx, {
+		account: {
+			email: faker.internet.email(),
+			confirmation: {
+				// Simulating an email sent 65 minutes ago
+				timestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					minutes: 5,
+					hours: 1,
+				}),
+			},
+		},
+	});
+	return { sessionId, email };
+};
+
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.resendEmail", () => {
@@ -60,25 +79,6 @@ describe("account.resendEmail", () => {
 	});
 
 	describe("functionality", () => {
-		const insertReadyForEmailAccount = async (ctx: TestContext) => {
-			const {
-				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx, {
-				account: {
-					email: faker.internet.email(),
-					confirmation: {
-						// Simulating an email sent 65 minutes ago
-						timestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
-							minutes: 5,
-							hours: 1,
-						}),
-					},
-				},
-			});
-			return { sessionId, email };
-		};
-
 		test("email is not resent - service is disabled", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
