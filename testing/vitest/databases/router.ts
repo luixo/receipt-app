@@ -1,6 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { sql } from "kysely";
-import { keys } from "remeda";
+import { fromEntries, keys } from "remeda";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 import { z } from "zod";
@@ -174,23 +174,19 @@ export const appRouter = router({
 						.execute();
 					return {
 						tableName,
-						data: data.reduce(
-							(dataAcc, element) => ({
-								...dataAcc,
-								[orders
+						data: fromEntries(
+							data.map((element) => [
+								orders
 									.map((column) => `${column}:${String(element[column])}`)
-									.join("|")]: element,
-							}),
-							{},
+									.join("|"),
+								element,
+							]),
 						),
 					};
 				}),
 			);
 			await database.destroy();
-			return dump.reduce(
-				(acc, { tableName, data }) => ({ ...acc, [tableName]: data }),
-				{},
-			);
+			return fromEntries(dump.map(({ tableName, data }) => [tableName, data]));
 		}),
 	truncateDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))

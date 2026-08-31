@@ -225,14 +225,11 @@ const getDehydratedCache = async ({
 		(mutation) => !shouldIgnoreKey(mutation.mutationKey.handler, keysLists),
 	);
 	return {
-		queries: redactedQueries.reduce<
-			Record<string, Omit<(typeof redactedQueries)[number], "queryKey">>
-		>(
-			(acc, { queryKey, ...query }) => ({
-				...acc,
-				[getQueryPath(queryKey)]: query,
-			}),
-			{},
+		queries: fromEntries(
+			redactedQueries.map(({ queryKey, ...query }) => [
+				getQueryPath(queryKey),
+				query,
+			]),
 		),
 		mutations: redactedMutations.reduce<
 			Record<string, Omit<(typeof redactedMutations)[number], "mutationKey">[]>

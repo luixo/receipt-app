@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { keys } from "remeda";
+import { fromEntries, keys } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -135,9 +135,8 @@ describe("currency.rates", () => {
 					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
-					currenciesTo.reduce(
-						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
-						{},
+					fromEntries(
+						currenciesTo.map((currency) => [currency, result[currency] ?? -1]),
 					),
 				);
 				const dbMessages = dbMock.getMessages();
@@ -181,9 +180,8 @@ describe("currency.rates", () => {
 					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
-					currenciesTo.reduce(
-						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
-						{},
+					fromEntries(
+						currenciesTo.map((currency) => [currency, result[currency] ?? -1]),
 					),
 				);
 				const dbMessages = dbMock.getMessages();
@@ -216,12 +214,8 @@ describe("currency.rates", () => {
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
 				const dbMock = ctx.cacheDbOptions.mock;
-				const fakeRates = currenciesTo.reduce<Record<string, number>>(
-					(acc, currencyTo) => ({
-						...acc,
-						[currencyTo]: getFakeRate(),
-					}),
-					{},
+				const fakeRates = fromEntries(
+					currenciesTo.map((currencyTo) => [currencyTo, getFakeRate()]),
 				);
 				dbMock.setResponder("getValue", async (key) => {
 					const currencyTo = key.split("->")[1];
@@ -238,9 +232,8 @@ describe("currency.rates", () => {
 					[...currenciesTo].toSorted(),
 				);
 				expect(result).toStrictEqual<typeof result>(
-					currenciesTo.reduce(
-						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
-						{},
+					fromEntries(
+						currenciesTo.map((currency) => [currency, result[currency] ?? -1]),
 					),
 				);
 				const dbMessages = dbMock.getMessages();

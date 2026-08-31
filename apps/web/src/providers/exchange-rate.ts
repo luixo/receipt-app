@@ -1,5 +1,5 @@
 import Dataloader from "dataloader";
-import { entries, keys } from "remeda";
+import { entries, fromEntries, keys } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -243,8 +243,5 @@ export const getExchangeRates = async (
 			return { toCode, rate: fetchedRate };
 		}),
 	);
-	return rates.reduce<Record<CurrencyCode, number>>(
-		(acc, { toCode, rate }) => ({ ...acc, [toCode]: rate }),
-		{},
-	);
+	return fromEntries(rates.map(({ toCode, rate }) => [toCode, rate]));
 };
