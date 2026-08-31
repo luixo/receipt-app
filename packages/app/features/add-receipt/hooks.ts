@@ -69,7 +69,7 @@ const useUpdateItem = (setItems: SetItems) =>
 				if (index === -1) {
 					return prevItems;
 				}
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const prevItem = prevItems[index]!;
 				const nextItemPartial =
 					typeof setStateAction === "function"
@@ -164,7 +164,7 @@ const useUpdateItemConsumerPart = (setItems: SetItems) => {
 					return {
 						consumers: [
 							...prevConsumers.slice(0, matchedPartIndex),
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							// oxlint-disable-next-line typescript/no-non-null-assertion
 							{ ...prevConsumers[matchedPartIndex]!, part },
 							...prevConsumers.slice(matchedPartIndex + 1),
 						],
@@ -231,7 +231,7 @@ const useUpdateItemPayerPart = (setItems: SetItems) => {
 					return {
 						payers: [
 							...prevPayers.slice(0, matchedPartIndex),
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							// oxlint-disable-next-line typescript/no-non-null-assertion
 							{ ...prevPayers[matchedPartIndex]!, part },
 							...prevPayers.slice(matchedPartIndex + 1),
 						],
@@ -279,7 +279,7 @@ const useUpdatePayers = (setPayers: SetPayers) =>
 				if (index === -1) {
 					return prevPayers;
 				}
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const prevPayer = prevPayers[index]!;
 				const nextPayerPartial =
 					typeof setStateAction === "function"
@@ -346,7 +346,7 @@ const useUpdateParticipant = (setParticipants: SetParticipants) =>
 				if (index === -1) {
 					return prevParticipants;
 				}
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const prevParticipant = prevParticipants[index]!;
 				const nextParticipantPartial =
 					typeof setStateAction === "function"

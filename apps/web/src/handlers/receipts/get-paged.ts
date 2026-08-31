@@ -89,7 +89,7 @@ const getTrigramHighlight = ({
 			return matches.map<Interval>((match) => [
 				startIndex + match.index,
 				// This is non-consuming RegExp hence 2nd argument
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				startIndex + match.index + match[1]!.length,
 			]);
 		}),

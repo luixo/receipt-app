@@ -96,7 +96,7 @@ test("'users.add' mutation", async ({
 	await expect(addButton).toBeDisabled();
 	await expect(buttonWithLoader).toBeVisible();
 	for (const input of [nameInput, emailInput]) {
-		// eslint-disable-next-line no-await-in-loop
+		// oxlint-disable-next-line no-await-in-loop
 		await expect(input).toBeDisabled();
 	}
 

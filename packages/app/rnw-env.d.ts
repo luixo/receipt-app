@@ -2,7 +2,7 @@
 import "react-native";
 
 // external interface extension
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
+/* oxlint-disable typescript/consistent-type-definitions */
 declare module "react-native" {
 	interface PressableStateCallbackType {
 		hovered?: boolean;
@@ -31,4 +31,4 @@ declare module "react-native" {
 		onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 	}
 }
-/* eslint-enable @typescript-eslint/consistent-type-definitions */
+/* oxlint-enable typescript/consistent-type-definitions */

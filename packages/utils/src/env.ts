@@ -21,8 +21,8 @@ export const env = createEnv({
 	clientPrefix: "VITE_",
 	client: {},
 	// This is the only place it can be used
-	/* eslint-disable node/no-process-env */
+	/* oxlint-disable node/no-process-env */
 	runtimeEnv: process.env,
 	skipValidation: Boolean(process.env.PLAYWRIGHT || process.env.TEST),
-	/* eslint-enable node/no-process-env */
+	/* oxlint-enable node/no-process-env */
 });

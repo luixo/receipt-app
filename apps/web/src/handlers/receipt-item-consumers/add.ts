@@ -119,7 +119,7 @@ const getConsumersOrErrors = (
 			});
 		}
 		// We just checked for non-empty array
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// oxlint-disable-next-line typescript/no-non-null-assertion
 		const { receiptId, ownerAccountId } = matchedReceiptItems[0]!;
 		if (ownerAccountId !== ctx.auth.accountId) {
 			const selfReceiptItemRole = matchedReceiptItems.find(

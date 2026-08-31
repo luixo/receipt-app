@@ -139,7 +139,7 @@ export const Email: React.FC<Props> = ({ title, children, footerChildren }) => (
 						<Body>
 							{children.map((child, index) => (
 								// That's one-time render, we don't care about rerenders
-								// eslint-disable-next-line react/no-array-index-key
+								// oxlint-disable-next-line react/no-array-index-key
 								<Child key={index} {...child} />
 							))}
 						</Body>

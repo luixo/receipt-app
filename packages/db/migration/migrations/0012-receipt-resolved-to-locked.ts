@@ -22,7 +22,7 @@ const addLockedTimestampColumn = async (db: Database) => {
 				.then(CURRENT_TIMESTAMP)
 				.else(null)
 				.end()
-				// eslint-disable-next-line eslint-js/no-restricted-syntax
+				// oxlint-disable-next-line eslint-js/no-restricted-syntax
 				.$castTo<Date>(),
 		})
 		.execute();
@@ -48,7 +48,7 @@ const addResolvedColumn = async (db: Database) => {
 		.updateTable("receipts")
 		.set({
 			// Error is expected as column does not exist anymore
-			/* eslint-disable @typescript-eslint/ban-ts-comment */
+			/* oxlint-disable typescript/ban-ts-comment */
 			// @ts-expect-error
 			resolved: db
 				.case()
@@ -57,7 +57,7 @@ const addResolvedColumn = async (db: Database) => {
 				.then(true)
 				.else(false)
 				.end(),
-			/* eslint-enable @typescript-eslint/ban-ts-comment */
+			/* oxlint-enable typescript/ban-ts-comment */
 		} satisfies ReceiptsUpdateObject)
 		.execute();
 };

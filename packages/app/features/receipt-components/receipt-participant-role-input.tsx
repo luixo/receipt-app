@@ -35,7 +35,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			(vars) =>
 				vars.receiptId === receiptId &&
 				vars.userId === participant.userId &&
-				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+				// oxlint-disable-next-line typescript/no-unnecessary-condition
 				vars.update.type === "role",
 		);
 	const changeRole = React.useCallback(

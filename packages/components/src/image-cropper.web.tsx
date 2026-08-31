@@ -68,7 +68,7 @@ export const getFormData = async (imageSrc: string, pixelCrop: Area) => {
 		const type = "image/png";
 		croppedCanvas.toBlob(
 			// It is not clear in which case `file` in `null`
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			(file) => resolve(new File([file!], "avatar.png", { type })),
 			type,
 		);

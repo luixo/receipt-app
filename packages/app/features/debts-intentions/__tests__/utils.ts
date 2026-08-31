@@ -16,7 +16,7 @@ export const test = originalTest.extend<Fixtures>({
 	mockDebts: ({ api, faker }, use) =>
 		use(({ generateDebts = defaultGenerateDebts }) => {
 			const [other] = defaultGenerateUsers({ faker, amount: 1 });
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			const debtUser = other!;
 			api.mockUtils.mockUsers(debtUser);
 			const debts = generateDebts({

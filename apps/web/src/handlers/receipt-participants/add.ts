@@ -80,7 +80,7 @@ const getParticipants = (
 		const matchedUsers = users.filter((user) => user.id === input.userId);
 		if (
 			matchedUsers.length === 0 ||
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			matchedUsers[0]!.ownerAccountId !== ctx.auth.accountId
 		) {
 			return new TRPCError({

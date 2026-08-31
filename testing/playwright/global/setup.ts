@@ -24,7 +24,7 @@ const globalSetup = async (config: FullConfig) => {
 				...serverMessages.map((element) =>
 					[
 						element.suspectTests.length === 1
-							? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							? // oxlint-disable-next-line typescript/no-non-null-assertion
 								element.suspectTests[0]!
 							: [colors.dim("Suspect tests:"), ...element.suspectTests].join(
 									"\n",
@@ -33,7 +33,7 @@ const globalSetup = async (config: FullConfig) => {
 					].join("\n\n"),
 				),
 			].join("\n\n");
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.warn(message);
 			// TODO: Throw instead of warn
 			// throw new Error(message);

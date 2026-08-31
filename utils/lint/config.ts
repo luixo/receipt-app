@@ -438,7 +438,7 @@ const temporaryDisabledRules = {
 	"unicorn/prefer-number-properties": "off", // 8 cases
 	"unicorn/prefer-spread": "off", // 8 cases
 	"unicorn/prefer-module": "off", // 4 cases
-	"unicorn/no-abusive-eslint-disable": "off", // 2 cases
+	"unicorn/no-abusive-oxlint-disable": "off", // 2 cases
 	"unicorn/prefer-import-meta-properties": "off", // 2 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases

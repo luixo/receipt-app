@@ -484,7 +484,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 							return mutations.filter(isNonNullish).map(mapMutation);
 						}
 						// Case of diff for a single mutation - array is convert to an object with partial keys
-						// eslint-disable-next-line prefer-object-spread
+						// oxlint-disable-next-line prefer-object-spread
 						return mapValues(Object.assign({}, mutations), mapMutation);
 					})
 				: undefined,
@@ -604,7 +604,7 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 					path,
 				);
 				const procedureType =
-					// eslint-disable-next-line no-underscore-dangle
+					// oxlint-disable-next-line no-underscore-dangle
 					procedure._def.type === "query" ? "query" : "mutation";
 				const nextAmounts = await page.evaluate(
 					async ([

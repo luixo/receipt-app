@@ -27,7 +27,7 @@ const AggregatedIntentionGroup: React.FC<{ amount: number }> = ({ amount }) => (
 	<View className="gap-4">
 		<SkeletonUser className="self-start" />
 		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
+			// oxlint-disable-next-line react/no-array-index-key
 			<SkeletonInboundDebtIntention key={index} />
 		))}
 	</View>
@@ -100,7 +100,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			<View className="flex gap-8">
 				<Button color="primary">{t("intentions.acceptAllButton")}</Button>
 				{Array.from({ length: 2 }).map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
+					// oxlint-disable-next-line react/no-array-index-key
 					<AggregatedIntentionGroup key={index} amount={index + 2} />
 				))}
 			</View>

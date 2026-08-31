@@ -65,7 +65,7 @@ export const PlaygroundScreen = () => {
 	} = useColorModes();
 	const [modalOpen, setModalOpen] = React.useState(false);
 	// This is false positive
-	// eslint-disable-next-line react/hook-use-state
+	// oxlint-disable-next-line react/hook-use-state
 	const [date, changeDate] = React.useState<Temporal.PlainDate | undefined>(
 		undefined,
 	);
@@ -95,7 +95,7 @@ export const PlaygroundScreen = () => {
 		if (toastIds.length === 0) {
 			return;
 		}
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// oxlint-disable-next-line typescript/no-non-null-assertion
 		const lastId = toastIds.at(-1)!;
 		closeToastById(lastId);
 		setToastIds((prevIds) => prevIds.filter((id) => id !== lastId));
@@ -303,7 +303,7 @@ export const PlaygroundScreen = () => {
 			</Overlay>
 			<View className="flex rounded-md bg-blue-500 p-2">
 				{elements.map(({ data, status }, index) => (
-					// eslint-disable-next-line react/no-array-index-key
+					// oxlint-disable-next-line react/no-array-index-key
 					<Text key={index} className="whitespace-pre text-red-500">
 						{status}: {data}
 					</Text>

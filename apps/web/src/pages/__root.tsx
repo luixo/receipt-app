@@ -188,7 +188,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		const title = getTitle(match.context.i18nContext, "index");
 		return {
 			meta: [
-				// eslint-disable-next-line unicorn/text-encoding-identifier-case
+				// oxlint-disable-next-line unicorn/text-encoding-identifier-case
 				{ charSet: "utf-8" },
 				{
 					name: "viewport",

@@ -34,7 +34,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(async () => {
 			await api.mockUtils.authPage({ page });
 			const [user] = defaultGenerateUsers({ faker, amount: 1 });
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			const debtUser = user!;
 			api.mockUtils.mockUsers(debtUser);
 			return { debtUser };

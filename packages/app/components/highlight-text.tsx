@@ -44,12 +44,12 @@ export const HighlightText: React.FC<
 	return (
 		<View {...props}>
 			{interlacedResult.map((element, index) => {
-				/* eslint-disable react/no-array-index-key */
+				/* oxlint-disable react/no-array-index-key */
 				if (index % 2 === 0) {
 					return <Text key={index}>{element}</Text>;
 				}
 				return <HighlightedText key={index}>{element}</HighlightedText>;
-				/* eslint-enable react/no-array-index-key */
+				/* oxlint-enable react/no-array-index-key */
 			})}
 		</View>
 	);

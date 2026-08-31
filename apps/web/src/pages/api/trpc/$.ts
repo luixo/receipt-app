@@ -84,7 +84,7 @@ const redirectTestHandler = async (
 	proxyPort: string,
 ) => {
 	if (import.meta.env.MODE !== "test") {
-		// eslint-disable-next-line no-console
+		// oxlint-disable-next-line no-console
 		console.warn(
 			"You are trying to use proxying without activating --mode=test",
 		);

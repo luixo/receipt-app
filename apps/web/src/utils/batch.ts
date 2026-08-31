@@ -77,7 +77,7 @@ export const queueList = async <
 		values(mappedInputs).flatMap((mappedInput = []) => {
 			const compactInput = mergeInputs(mappedInput);
 			return mappedInput.map(
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				// oxlint-disable-next-line typescript/no-non-null-assertion
 				(input) => [input, compactInput.get(input)!],
 			);
 		}),
@@ -100,7 +100,7 @@ export const queueList = async <
 		),
 	);
 	const mappedList = new Map<I, O | TRPCError>(
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		// oxlint-disable-next-line typescript/no-non-null-assertion
 		compactInputs.map((input, index) => [input, list[index]!]),
 	);
 	return inputs.map((input) => {

@@ -70,7 +70,7 @@ export const procedure = authProcedure
 		let setObject: Updateable<DB["receiptItemPayers"]> = {};
 		switch (input.update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "part":
 				setObject = { part: input.update.part.toString() };
 				break;

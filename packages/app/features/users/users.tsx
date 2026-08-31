@@ -109,7 +109,7 @@ export const Users: React.FC<Props> = suspendedFallback(
 			<SuspendedOverlay isPending>
 				<>
 					{Array.from({ length: limitState[0] }).map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
+						// oxlint-disable-next-line react/no-array-index-key
 						<SkeletonUser key={index} className="self-start" />
 					))}
 				</>

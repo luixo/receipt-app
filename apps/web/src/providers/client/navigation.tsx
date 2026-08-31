@@ -9,7 +9,7 @@ export const NavigationProvider: React.FC<React.PropsWithChildren> = ({
 	const router = useRouter();
 	return (
 		<HeroUIProvider
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			navigate={(_href, options) => router.navigate(options!)}
 			useHref={(href) => router.buildLocation({ to: href }).href}
 			validationBehavior="native"

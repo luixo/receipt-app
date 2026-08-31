@@ -183,7 +183,7 @@ export const getRouter = () => {
 export type TreeRouter = ReturnType<typeof getRouter>;
 
 declare module "@tanstack/react-router" {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	// oxlint-disable-next-line typescript/consistent-type-definitions
 	interface Register {
 		router: TreeRouter;
 	}

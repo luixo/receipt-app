@@ -11,7 +11,7 @@ export type FieldError =
 	| (StandardSchemaV1Issue | undefined)
 	| (StandardSchemaV1Issue | undefined)[];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 type MutationOrState = TRPCMutationResult<any> | TRPCMutationState<any>;
 type ValueOrArray<T> = T | T[];
 export type MutationsProp = ValueOrArray<MutationOrState | undefined>;

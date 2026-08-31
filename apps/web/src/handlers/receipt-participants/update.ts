@@ -52,7 +52,7 @@ export const procedure = authProcedure
 		}
 		switch (input.update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "role":
 				if (receipt.ownerAccountId !== ctx.auth.accountId) {
 					throw new TRPCError({
@@ -83,7 +83,7 @@ export const procedure = authProcedure
 		let setObject: Updateable<DB["receiptParticipants"]> = {};
 		switch (input.update.type) {
 			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "role":
 				setObject = { role: input.update.role };
 				break;

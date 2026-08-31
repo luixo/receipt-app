@@ -176,7 +176,7 @@ export const getMutationToaster = <
 						timeout: Infinity,
 					});
 					// We always have a toast queue
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					// oxlint-disable-next-line typescript/no-non-null-assertion
 					return { id: toastId!, count: inputs.length };
 				},
 			),

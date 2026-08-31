@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_protected/admin")({
 			trpc.account.get.queryOptions(),
 		);
 		if (account.account.role !== "admin") {
-			// eslint-disable-next-line typescript/only-throw-error
+			// oxlint-disable-next-line typescript/only-throw-error
 			throw redirect({ to: "/" });
 		}
 	},

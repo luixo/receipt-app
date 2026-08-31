@@ -63,7 +63,7 @@ export const DebtsGroupSkeleton: React.FC<{
 		>
 			<SeparatedDebts>
 				{elements.map((_, index) => (
-					// eslint-disable-next-line react/no-array-index-key
+					// oxlint-disable-next-line react/no-array-index-key
 					<DebtGroupElementSkeleton key={index} />
 				))}
 			</SeparatedDebts>

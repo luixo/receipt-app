@@ -4,7 +4,7 @@ import path from "node:path";
 
 const require = createRequire(import.meta.url);
 const { withUniwindConfig } =
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+	// oxlint-disable-next-line typescript/consistent-type-imports
 	require("uniwind/metro") as typeof import("uniwind/metro");
 
 const projectRoot = import.meta.dirname;

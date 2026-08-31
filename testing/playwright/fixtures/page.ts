@@ -28,16 +28,16 @@ const setProxyHeaders = async (
 };
 
 const fakeBrowserDate = async (page: OriginalPage) => {
-	// eslint-disable-next-line eslint-js/no-restricted-syntax
+	// oxlint-disable-next-line eslint-js/no-restricted-syntax
 	const localMockedTimestamp = Date.now();
 	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {
 			Date.now = () => mockedTimestamp;
-			// eslint-disable-next-line no-global-assign, no-implicit-globals
+			// oxlint-disable-next-line no-global-assign, no-implicit-globals
 			Date = class extends Date {
 				constructor(...args: Parameters<DateConstructor>) {
 					// see https://github.com/microsoft/TypeScript/issues/32164
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					// oxlint-disable-next-line typescript/no-unnecessary-condition
 					if (args.length === 0) {
 						super(mockedTimestamp);
 					} else {

@@ -1,7 +1,7 @@
 import type { KeysMatching } from "~utils/types";
 import type { CacheDbOptions, CacheInstance } from "~web/providers/cache-db";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 type CacheFunctionKey = KeysMatching<CacheInstance, (...args: any) => any>;
 
 type Message = [string, unknown[], object];

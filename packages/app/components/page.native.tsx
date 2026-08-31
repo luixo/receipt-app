@@ -29,14 +29,14 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ elements }) => {
-	/* eslint-disable react-hooks/rules-of-hooks */
+	/* oxlint-disable react-hooks/rules-of-hooks */
 	// We're pretty sure amount of these elements is stable, but running hooks inside a callback is not an option
 	// And we can't move tabs outside because NativeTabs don't digest wrapped Triggers
 	const shows = elements.map(({ useShow = useTrue }) => useShow());
 	const badgeAmounts = elements.map(({ useBadgeAmount = useZero }) =>
 		useBadgeAmount(),
 	);
-	/* eslint-enable react-hooks/rules-of-hooks */
+	/* oxlint-enable react-hooks/rules-of-hooks */
 	const foregroundColor = useCSSVariable(`--heroui-foreground`) as string;
 	const backgroundColor = useCSSVariable(`--heroui-background`) as string;
 	const primaryColor = useCSSVariable(`--heroui-primary`) as string;

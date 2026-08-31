@@ -18,7 +18,7 @@ const isKeyEqual = <
 	keyB: Readonly<K2>,
 ) =>
 	// Let's keep it in case deeper routing ever happens
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	// oxlint-disable-next-line typescript/no-unnecessary-condition
 	keyA.length === keyB.length &&
 	keyA.every((element, index) => element === keyB[index]);
 

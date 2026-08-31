@@ -183,7 +183,7 @@ const handleCall = async <K extends TRPCKey>(
 					});
 		if (!(e instanceof TRPCError) && e !== CLEANUP_MARK) {
 			// Unexpected error logging in Playwright helps debugging
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.error("Internal server error", e);
 		}
 		return {
@@ -393,7 +393,7 @@ const createApiManager = async (
 		}
 		controller.handlers[key] = handlers;
 		return () => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			controller.handlers[key] = controller.handlers[key]!.filter(
 				(lookupHandler) => lookupHandler !== handler,
 			) as (typeof controller)["handlers"][typeof key];

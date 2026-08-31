@@ -32,11 +32,11 @@ export const getExchangeRateOptions = (): ExchangeRateOptionsMock => {
 				};
 				let lastResult: ExchangeRateResult = -1;
 				for (const interceptor of interceptors) {
-					// eslint-disable-next-line no-await-in-loop
+					// oxlint-disable-next-line no-await-in-loop
 					lastResult = await interceptor(from, to, next);
 					// see https://github.com/microsoft/TypeScript/issues/9998
 					// "bad behavior on locals" section
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					// oxlint-disable-next-line typescript/no-unnecessary-condition
 					if (!shouldContinue) {
 						return lastResult;
 					}

@@ -142,11 +142,11 @@ export const AddReceipt = () => {
 		),
 	);
 
-	/* eslint-disable react/hook-use-state */
+	/* oxlint-disable react/hook-use-state */
 	const itemsState = React.useState<Item[]>([]);
 	const participantsState = React.useState<Participant[]>([]);
 	const payersState = React.useState<Payer[]>([]);
-	/* eslint-enable react/hook-use-state */
+	/* oxlint-enable react/hook-use-state */
 
 	// If we preloaded top currency codes for receipts - we can initialize our form with it
 	const optimisticCurrencyCode = queryClient.getQueryData(

@@ -268,7 +268,7 @@ describe("debts.getUsersPaged", () => {
 							debts.push(
 								await insertDebt(ctx, accountId, user.id, {
 									currencyCode: "USD",
-									// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+									// oxlint-disable-next-line typescript/no-non-null-assertion
 									amount: -debts[0]!.amount,
 								}),
 							);

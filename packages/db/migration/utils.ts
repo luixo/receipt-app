@@ -2,5 +2,5 @@
 // Used in Vitest tests
 export const isTestEnv = () =>
 	// Migration doesn't have import.meta
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	// oxlint-disable-next-line typescript/no-unnecessary-condition
 	import.meta.env ? import.meta.env.MODE === "test" : false;

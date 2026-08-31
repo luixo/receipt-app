@@ -50,7 +50,7 @@ export const SuspenseWrapper: React.FC<
 					getResetKey={() => "static"}
 					onCatch={(error) => {
 						captureError(error);
-						// eslint-disable-next-line no-console
+						// oxlint-disable-next-line no-console
 						console.error(error);
 					}}
 					errorComponent={errorComponent || ErrorComponent}
@@ -64,7 +64,7 @@ export const SuspenseWrapper: React.FC<
 
 type ErrorComponent = (props: ErrorComponentProps) => React.ReactNode;
 
-// eslint-disable-next-line react/display-name
+// oxlint-disable-next-line react/display-name
 export const suspendedFallback =
 	<P extends object = Record<string, never>>(
 		Component: React.ComponentType<P>,

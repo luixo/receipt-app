@@ -39,7 +39,7 @@ export const replaceInArray = <T>(
 	if (matchedIndex === -1) {
 		return array;
 	}
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	// oxlint-disable-next-line typescript/no-non-null-assertion
 	return replace(array, updater(array[matchedIndex]!), matchedIndex, ref);
 };
 
@@ -71,7 +71,7 @@ export const removeFromArray = <T>(
 	if (ref) {
 		ref.current = {
 			index: matchedIndex,
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			// oxlint-disable-next-line typescript/no-non-null-assertion
 			item: array[matchedIndex]!,
 		};
 	}

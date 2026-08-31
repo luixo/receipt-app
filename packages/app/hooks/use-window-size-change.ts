@@ -7,6 +7,6 @@ export const useWindowSizeChange = (
 	deps: React.DependencyList = [],
 ) => {
 	const { width, height } = useWindowSize();
-	// eslint-disable-next-line react-hooks/exhaustive-deps
+	// oxlint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(effect, [width, height, ...deps]);
 };
