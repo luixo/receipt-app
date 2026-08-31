@@ -433,7 +433,6 @@ const temporaryDisabledRules = {
 	"unicorn/consistent-function-scoping": "off", // 18 cases
 	"unicorn/no-useless-undefined": "off", // 16 cases
 	"unicorn/no-new-array": "off", // 15 cases
-	"unicorn/prefer-object-from-entries": "off", // 13 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases
