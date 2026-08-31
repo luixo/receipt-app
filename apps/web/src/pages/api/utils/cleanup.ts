@@ -17,8 +17,8 @@ export const Route = createFileRoute("/api/utils/cleanup")({
 					return new Response(
 						`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
 					);
-				} catch (e) {
-					return new Response(`Error on cleanup: ${String(e)}`, {
+				} catch (error) {
+					return new Response(`Error on cleanup: ${String(error)}`, {
 						status: 500,
 					});
 				}

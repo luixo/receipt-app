@@ -86,14 +86,14 @@ export const queueList = async <
 	const list = await Promise.all(
 		compactInputs.map(async (input) =>
 			fetchPage(input).catch(
-				(e) =>
+				(error) =>
 					/* c8 ignore start */
-					e instanceof TRPCError
-						? e
+					error instanceof TRPCError
+						? error
 						: new TRPCError({
 								code: "INTERNAL_SERVER_ERROR",
-								message: `Unknown internal error: ${String(e)}`,
-								cause: e,
+								message: `Unknown internal error: ${String(error)}`,
+								cause: error,
 							}),
 				/* c8 ignore stop */
 			),

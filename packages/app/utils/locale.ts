@@ -15,8 +15,8 @@ export const getValidLocale = (input: string): Locale | undefined => {
 			// oxlint-disable-next-line typescript/no-non-null-assertion
 			return locales[0]!;
 		}
-	} catch (e) {
-		if (e instanceof TypeError) {
+	} catch (error) {
+		if (error instanceof TypeError) {
 			return input;
 		}
 	}

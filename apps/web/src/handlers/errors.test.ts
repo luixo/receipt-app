@@ -22,9 +22,11 @@ describe("errors formatting", () => {
 			const client = getTestClient<typeof router>(ctx, url, {
 				headers: { cookie: `${AUTH_COOKIE}=fake` },
 			});
-			const error = await client.account.get.query().catch((e) => e);
-			expect(error).toBeInstanceOf(TRPCClientError);
-			const typedError = error as TRPCClientError<typeof router>;
+			const queryError = await client.account.get
+				.query()
+				.catch((error) => error);
+			expect(queryError).toBeInstanceOf(TRPCClientError);
+			const typedError = queryError as TRPCClientError<typeof router>;
 			expect(typedError.shape?.data.stack).toMatch(
 				/^TRPCError: Session id mismatch\n/,
 			);

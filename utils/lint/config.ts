@@ -431,7 +431,6 @@ const temporaryDisabledRules = {
 	"unicorn/switch-case-braces": "off", // 58 cases
 	"unicorn/no-array-reduce": "off", // 48 cases
 	"unicorn/no-array-callback-reference": "off", // 46 cases
-	"unicorn/catch-error-name": "off", // 41 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

@@ -331,7 +331,7 @@ describe("debts.getUsersPaged", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ cursor: 0, limit: 2 }),
-					() => caller.procedure({ cursor: 0, limit: -1 }).catch((e) => e),
+					() => caller.procedure({ cursor: 0, limit: -1 }).catch((error) => error),
 				]);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: userDebts.length,

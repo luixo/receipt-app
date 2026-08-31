@@ -242,7 +242,7 @@ describe("receiptParticipants.add", () => {
 									userId: fakeUserId,
 									role: "editor",
 								})
-								.catch((e) => e),
+								.catch((error) => error),
 					]),
 				);
 

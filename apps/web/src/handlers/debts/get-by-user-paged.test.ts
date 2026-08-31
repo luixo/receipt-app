@@ -475,7 +475,7 @@ describe("debts.getByUserPaged", () => {
 					() =>
 						caller
 							.procedure({ userId: faker.string.uuid(), cursor: 2, limit: 2 })
-							.catch((e) => e),
+							.catch((error) => error),
 				]);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: debts.length,

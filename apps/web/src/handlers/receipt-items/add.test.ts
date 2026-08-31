@@ -128,7 +128,7 @@ describe("receiptItems.add", () => {
 					() =>
 						caller
 							.procedure(getValidReceiptItem(fakeReceiptId))
-							.catch((e) => e),
+							.catch((error) => error),
 				]),
 			);
 

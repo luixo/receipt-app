@@ -269,8 +269,8 @@ const queueReceipt = queueCallFactory<
 			);
 			return mapped;
 			/* c8 ignore start */
-		} catch (e) {
-			return e as Error;
+		} catch (error) {
+			return error as Error;
 		}
 		/* c8 ignore stop */
 	});

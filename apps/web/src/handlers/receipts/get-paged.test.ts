@@ -548,7 +548,7 @@ describe("receipts.getPaged", () => {
 					() =>
 						caller
 							.procedure({ limit: -1, cursor: 0, orderBy: "date-desc" })
-							.catch((e) => e),
+							.catch((error) => error),
 				]);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: receipts.length,

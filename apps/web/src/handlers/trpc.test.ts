@@ -54,7 +54,7 @@ describe("procedures", () => {
 			ctx.logger.level = "trace";
 
 			const caller = createCaller(await createContext(ctx));
-			await caller.account.get().catch((e) => e);
+			await caller.account.get().catch((error) => error);
 			const loggedMessages = ctx.logger.getMessages();
 			expect(Array.isArray(loggedMessages)).toBe(true);
 			const loggedProcedureMessage = loggedMessages.at(-1) as [
