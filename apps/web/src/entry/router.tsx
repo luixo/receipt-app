@@ -23,8 +23,8 @@ import {
 } from "~app/contexts/query-clients-context";
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { View } from "~components/view";

@@ -1,7 +1,7 @@
-import type { NoMigrations } from "kysely/migration";
-import { Migrator } from "kysely/migration";
 import type { TSFileMigrationProviderProps } from "kysely-ctl";
 import { TSFileMigrationProvider } from "kysely-ctl";
+import type { NoMigrations } from "kysely/migration";
+import { Migrator } from "kysely/migration";
 import path from "node:path";
 import * as url from "node:url";
 

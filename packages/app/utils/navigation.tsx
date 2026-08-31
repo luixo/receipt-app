@@ -19,11 +19,11 @@ import {
 	userIdSchema,
 	voidAccountTokenSchema,
 } from "~app/utils/validation";
+import type { TreeRouter } from "~web/entry/router";
 import type {
 	FileRoutesByFullPath,
 	FileRoutesById,
 } from "~web/entry/routeTree.gen";
-import type { TreeRouter } from "~web/entry/router";
 
 declare module "@react-types/shared" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions

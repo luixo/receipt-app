@@ -10,9 +10,8 @@ import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 
-import { getTestClient, withTestServer } from "./utils.test";
-
 import { router } from "./index";
+import { getTestClient, withTestServer } from "./utils.test";
 
 const createCaller = t.createCallerFactory(router);
 

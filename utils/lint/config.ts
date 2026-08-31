@@ -292,31 +292,6 @@ const overriddenRules = {
 		"error",
 		getExtraneousDependenciesConfig("", ["*.config.ts"]),
 	],
-	// Custom order
-	"import-js/order": [
-		"error",
-		{
-			groups: [["builtin", "external"], "internal", "parent", "sibling"],
-			warnOnUnassignedImports: false,
-			"newlines-between": "always",
-			alphabetize: {
-				order: "asc",
-			},
-			pathGroups: [
-				{
-					pattern: "{react,react-native}",
-					group: "builtin",
-					position: "before",
-				},
-				{
-					pattern: "{~*/**,~*}",
-					group: "internal",
-					position: "before",
-				},
-			],
-			pathGroupsExcludedImportTypes: ["react", "react-native", "{~*/**,~*}"],
-		},
-	],
 	"import-js/no-useless-path-segments": ["error", { noUselessIndex: false }],
 
 	// Allow expressions for stuff like `<>{children}</>`
