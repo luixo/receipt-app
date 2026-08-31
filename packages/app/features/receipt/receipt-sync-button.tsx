@@ -176,13 +176,13 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 					variant="flat"
 					title={t("receipt.syncButton.synced")}
 					isDisabled
-					color={emptyItemsAmount !== 0 ? "warning" : "success"}
+					color={emptyItemsAmount === 0 ? "success" : "warning"}
 					isIconOnly
 				>
-					{emptyItemsAmount !== 0 ? (
-						<Icon name="unsync" className="size-6" />
-					) : (
+					{emptyItemsAmount === 0 ? (
 						<Icon name="sync" className="size-6" />
+					) : (
+						<Icon name="unsync" className="size-6" />
 					)}
 				</Button>
 			);

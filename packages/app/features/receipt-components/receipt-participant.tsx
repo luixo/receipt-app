@@ -304,7 +304,16 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						<View className="flex flex-row items-center gap-2">
 							<form.Subscribe selector={(state) => state.values.value}>
 								{(currentValue) =>
-									currentValue !== 0 ? (
+									currentValue === 0 ? (
+										<>
+											<Button onPress={onAddPayer}>
+												{t("participant.form.addPayerButton")}
+											</Button>
+											<View className="absolute -top-0.5 -right-0.5">
+												{updateElement}
+											</View>
+										</>
+									) : (
 										<>
 											<Text>{t("participant.payedInfix")}</Text>
 											<PartButtons
@@ -354,15 +363,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 												</form.AppField>
 											</PartButtons>
 										</>
-									) : (
-										<>
-											<Button onPress={onAddPayer}>
-												{t("participant.form.addPayerButton")}
-											</Button>
-											<View className="absolute -top-0.5 -right-0.5">
-												{updateElement}
-											</View>
-										</>
 									)
 								}
 							</form.Subscribe>
@@ -411,7 +411,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 												currencyCode,
 												round(item.sum),
 											),
-											extraSymbol: item.shortage !== 0 ? "+" : "",
+											extraSymbol: item.shortage === 0 ? "" : "+",
 										})}
 									</Text>
 								);

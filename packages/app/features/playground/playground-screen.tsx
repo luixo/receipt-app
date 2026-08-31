@@ -311,9 +311,9 @@ export const PlaygroundScreen = () => {
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
 				<Button onPress={runToast}>Run toast</Button>
-				{toastIds.length !== 0 ? (
+				{toastIds.length === 0 ? null : (
 					<Button onPress={closeLast}>Close last</Button>
-				) : null}
+				)}
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
 				<DateInput value={date} onValueChange={changeDate} />
