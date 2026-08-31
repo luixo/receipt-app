@@ -170,12 +170,11 @@ const useConsecutiveDebtIds = ({
 			if (!matchedElement?.data) {
 				return {
 					debtIds: consecutivePages.flatMap((page) => page.items),
-					missingCursors: new Array(Math.floor(currentCursor / limit))
-						.fill(null)
-						.map((_, page) =>
+					missingCursors: Array.from(
+						{ length: Math.floor(currentCursor / limit) },
+						(_, page) =>
 							getMatchedElement(page * limit) ? null : page * limit,
-						)
-						.filter(isNonNullish),
+					).filter(isNonNullish),
 				};
 			}
 			consecutivePages.push(matchedElement.data);

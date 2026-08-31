@@ -228,15 +228,13 @@ describe("debts.getUsersPaged", () => {
 
 		test("paged result", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const users = await Promise.all(
-				new Array(5).fill(null).map(async () => {
-					const user = await insertUser(ctx, accountId);
-					const debt = await insertDebt(ctx, accountId, user.id, {
-						currencyCode: "USD",
-					});
-					return { user, debts: [debt] };
-				}),
-			);
+			const users = await Array.fromAsync({ length: 5 }, async () => {
+				const user = await insertUser(ctx, accountId);
+				const debt = await insertDebt(ctx, accountId, user.id, {
+					currencyCode: "USD",
+				});
+				return { user, debts: [debt] };
+			});
 
 			const limit = 3;
 			const cursor = 1;
@@ -256,8 +254,9 @@ describe("debts.getUsersPaged", () => {
 		describe("multiple intentions", () => {
 			test("success", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const usersDebts = await Promise.all(
-					new Array(12).fill(null).map(async (_, index) => {
+				const usersDebts = await Array.fromAsync(
+					{ length: 12 },
+					async (_, index) => {
 						const user = await insertUser(ctx, accountId);
 						const debts = [
 							await insertDebt(ctx, accountId, user.id, {
@@ -274,7 +273,7 @@ describe("debts.getUsersPaged", () => {
 							);
 						}
 						return { user, debts };
-					}),
+					},
 				);
 				const nonResolvedUsers = mapUsers(usersDebts);
 				const resolvedUsers = mapUsers(

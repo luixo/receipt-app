@@ -66,9 +66,7 @@ export const PlaygroundScreen = () => {
 	const [modalOpen, setModalOpen] = React.useState(false);
 	// This is false positive
 	// oxlint-disable-next-line react/hook-use-state
-	const [date, changeDate] = React.useState<Temporal.PlainDate | undefined>(
-		undefined,
-	);
+	const [date, changeDate] = React.useState<Temporal.PlainDate | undefined>();
 	const [numberValue, setNumberValue] = React.useState(0);
 	const [currentPage, setCurrentPage] = React.useState(1);
 	const [sliderValue, setSliderValue] = React.useState(1);

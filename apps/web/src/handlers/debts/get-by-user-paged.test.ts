@@ -345,20 +345,18 @@ describe("debts.getByUserPaged", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: userId } = await insertUser(ctx, accountId);
 
-			await Promise.all(
-				new Array(5).fill(null).map(async (_, index) => {
-					const currencyCode = CURRENCY_CODES[index];
-					const amount = getRandomAmount();
-					await insertDebt(ctx, accountId, userId, {
-						currencyCode,
-						amount,
-					});
-					await insertDebt(ctx, accountId, userId, {
-						currencyCode,
-						amount: -amount,
-					});
-				}),
-			);
+			await Array.fromAsync({ length: 5 }, async (_, index) => {
+				const currencyCode = CURRENCY_CODES[index];
+				const amount = getRandomAmount();
+				await insertDebt(ctx, accountId, userId, {
+					currencyCode,
+					amount,
+				});
+				await insertDebt(ctx, accountId, userId, {
+					currencyCode,
+					amount: -amount,
+				});
+			});
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 100 });
@@ -372,12 +370,8 @@ describe("debts.getByUserPaged", () => {
 		test("paged result", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: userId } = await insertUser(ctx, accountId);
-			const userDebts = await Promise.all(
-				new Array(5)
-					.fill(null)
-					.map(() =>
-						insertDebt(ctx, accountId, userId, { currencyCode: "USD" }),
-					),
+			const userDebts = await Array.fromAsync({ length: 5 }, () =>
+				insertDebt(ctx, accountId, userId, { currencyCode: "USD" }),
 			);
 
 			const limit = 3;
@@ -400,25 +394,21 @@ describe("debts.getByUserPaged", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: userId } = await insertUser(ctx, accountId);
 				const { id: anotherUserId } = await insertUser(ctx, accountId);
-				const userDebts = await Promise.all(
-					new Array(12).fill(null).map((_, index) =>
-						insertDebt(ctx, accountId, userId, {
-							currencyCode: index <= 1 ? "EUR" : "USD",
-							amount: index === 0 ? 100 : index === 1 ? -100 : undefined,
-						}),
-					),
+				const userDebts = await Array.fromAsync({ length: 12 }, (_, index) =>
+					insertDebt(ctx, accountId, userId, {
+						currencyCode: index <= 1 ? "EUR" : "USD",
+						amount: index === 0 ? 100 : index === 1 ? -100 : undefined,
+					}),
 				);
 				const nonResolvedUserDebts = mapDebts(userDebts);
 				const resolvedUserDebts = mapDebts(
 					userDebts.filter((debt) => debt.currencyCode !== "EUR"),
 				);
 				const anotherUserDebts = mapDebts(
-					await Promise.all(
-						new Array(4).fill(null).map(() =>
-							insertDebt(ctx, accountId, anotherUserId, {
-								currencyCode: "EUR",
-							}),
-						),
+					await Array.fromAsync({ length: 4 }, () =>
+						insertDebt(ctx, accountId, anotherUserId, {
+							currencyCode: "EUR",
+						}),
 					),
 				);
 				assert(
@@ -474,12 +464,8 @@ describe("debts.getByUserPaged", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: userId } = await insertUser(ctx, accountId);
 				const debts = mapDebts(
-					await Promise.all(
-						new Array(4)
-							.fill(null)
-							.map(() =>
-								insertDebt(ctx, accountId, userId, { currencyCode: "USD" }),
-							),
+					await Array.fromAsync({ length: 4 }, () =>
+						insertDebt(ctx, accountId, userId, { currencyCode: "USD" }),
 					),
 				);
 

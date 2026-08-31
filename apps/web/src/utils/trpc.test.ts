@@ -29,12 +29,11 @@ describe("API calls", () => {
 
 	test("headers are passed through", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
-			const adHocHeaders = new Array(5)
-				.fill(null)
-				.map(
-					() =>
-						[faker.internet.domainWord(), faker.internet.domainWord()] as const,
-				);
+			const adHocHeaders = Array.from(
+				{ length: 5 },
+				() =>
+					[faker.internet.domainWord(), faker.internet.domainWord()] as const,
+			);
 			const client = getApiTrpcClient<typeof router>(
 				new Request(url, {
 					headers: fromEntries(adHocHeaders),

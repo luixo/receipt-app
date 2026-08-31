@@ -397,6 +397,8 @@ const disabledRules = {
 	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
 	// This creates more problem that solves
 	"unicorn/prefer-spread": "off",
+	// There are too many false positives
+	"unicorn/no-useless-undefined": "off"
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -429,8 +431,6 @@ const temporaryDisabledRules = {
 	"unicorn/prefer-global-this": "off", // 24 cases
 	"unicorn/prefer-top-level-await": "off", // 19 cases
 	"unicorn/consistent-function-scoping": "off", // 18 cases
-	"unicorn/no-useless-undefined": "off", // 16 cases
-	"unicorn/no-new-array": "off", // 15 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

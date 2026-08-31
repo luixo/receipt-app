@@ -171,8 +171,8 @@ const insertConsumers = async (
 	return insertedConsumers.reduce<InsertedConsumers>(
 		(acc, insertedConsumer, index) => {
 			const consumer = consumers[index];
+			/* c8 ignore start */
 			if (!consumer) {
-				/* c8 ignore start */
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Expected to have a consumer for inserted consumer at position "${index}".`,
@@ -231,8 +231,8 @@ const insertPayers = async (
 	const insertedPayers = await addPayers(ctx)(payers);
 	return insertedPayers.reduce<InsertedPayers>((acc, insertedPayer, index) => {
 		const payer = payers[index];
+		/* c8 ignore start */
 		if (!payer) {
-			/* c8 ignore start */
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Expected to have a payer at index "${index}".`,

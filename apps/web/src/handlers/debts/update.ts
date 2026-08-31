@@ -194,7 +194,6 @@ const updateAutoAcceptingDebts = async (
 			if (keys(debtToUpdate.reverseSetObject).length !== 0 || newDebtAdded) {
 				return debtToUpdate.debt.id;
 			}
-			return undefined;
 		})
 		.filter(isNonNullish);
 };

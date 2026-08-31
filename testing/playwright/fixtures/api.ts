@@ -360,7 +360,7 @@ const createApiManager = async (
 					// undefined so handleRequest passes undefined input to the mock.
 					const contentType = request.headers()["content-type"] ?? "";
 					if (contentType.startsWith("multipart/form-data")) {
-						return undefined;
+						return;
 					}
 					return request.postData() ?? undefined;
 				},

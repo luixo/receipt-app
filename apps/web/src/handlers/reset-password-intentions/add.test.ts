@@ -47,10 +47,8 @@ describe("resetPasswordIntentions.add", () => {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			await Promise.all(
-				new Array(MAX_INTENTIONS_AMOUNT)
-					.fill(null)
-					.map(() => insertResetPasswordIntention(ctx, accountId)),
+			await Array.fromAsync({ length: MAX_INTENTIONS_AMOUNT }, () =>
+				insertResetPasswordIntention(ctx, accountId),
 			);
 			await expectTRPCError(
 				() => caller.procedure({ email }),
