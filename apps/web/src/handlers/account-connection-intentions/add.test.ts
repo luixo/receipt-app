@@ -289,7 +289,7 @@ describe("accountConnectionIntentions.add", () => {
 									userId: "not a valid uuid",
 									email: faker.internet.email(),
 								})
-								.catch((e) => e),
+								.catch((error) => error),
 					]),
 				);
 

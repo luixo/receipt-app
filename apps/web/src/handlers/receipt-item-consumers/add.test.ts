@@ -321,7 +321,7 @@ describe("receiptItemConsumers.add", () => {
 									userId: "not a valid uuid",
 									part: 1,
 								})
-								.catch((e) => e),
+								.catch((error) => error),
 					]),
 				);
 

@@ -54,12 +54,12 @@ export const sendVerificationEmail = async (
 			subject: "Confirm email in Receipt App",
 			body: generateConfirmEmailEmail(ctx, token),
 		});
-	} catch (e) {
+	} catch (error) {
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
 			message: `Something went wrong: ${
 				/* c8 ignore next */
-				e instanceof Error ? e.message : String(e)
+				error instanceof Error ? error.message : String(error)
 			}`,
 		});
 	}

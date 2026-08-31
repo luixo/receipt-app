@@ -236,9 +236,9 @@ export const getExchangeRates = async (
 					}));
 			cacheInstance
 				?.setValue(cacheKey, fetchedRate.toString(), { expiryInS: CACHE_TTL })
-				.catch((e) => {
+				.catch((error) => {
 					// Failing on this action doesn't matter much
-					ctx.logger.warn("Cache DB setex action failed", e);
+					ctx.logger.warn("Cache DB setex action failed", error);
 				});
 			return { toCode, rate: fetchedRate };
 		}),

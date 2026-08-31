@@ -172,19 +172,19 @@ const handleCall = async <K extends TRPCKey>(
 				data: transformer.serialize(response),
 			},
 		};
-	} catch (e) {
+	} catch (error) {
 		const trpcError =
-			e instanceof TRPCError
-				? e
+			error instanceof TRPCError
+				? error
 				: new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
-						message: `Internal server error: ${String(e)}`,
-						cause: e,
+						message: `Internal server error: ${String(error)}`,
+						cause: error,
 					});
-		if (!(e instanceof TRPCError) && e !== CLEANUP_MARK) {
+		if (!(error instanceof TRPCError) && error !== CLEANUP_MARK) {
 			// Unexpected error logging in Playwright helps debugging
 			// oxlint-disable-next-line no-console
-			console.error("Internal server error", e);
+			console.error("Internal server error", error);
 		}
 		return {
 			error: transformer.serialize({
@@ -194,8 +194,8 @@ const handleCall = async <K extends TRPCKey>(
 					httpStatus: getHTTPStatusCodeFromError(trpcError),
 					path: name,
 					stack:
-						e instanceof TRPCError || e instanceof Error
-							? e.stack
+						error instanceof TRPCError || error instanceof Error
+							? error.stack
 							: trpcError.stack,
 				},
 				message: trpcError.message,
@@ -288,13 +288,13 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 				res.setHeaders(headers);
 			}
 			res.end(JSON.stringify(response));
-		} catch (e) {
-			if (e === CLEANUP_MARK) {
+		} catch (error) {
+			if (error === CLEANUP_MARK) {
 				res.statusCode = 500;
 				res.end("Cleanup finished");
 				return;
 			}
-			throw e;
+			throw error;
 		}
 	});
 
@@ -369,12 +369,12 @@ const createApiManager = async (
 				json: response,
 				headers: fromEntries([...headers.entries()]),
 			});
-		} catch (e) {
-			if (e === CLEANUP_MARK) {
+		} catch (error) {
+			if (error === CLEANUP_MARK) {
 				await route.abort();
 				return;
 			}
-			throw e;
+			throw error;
 		}
 	});
 	const mock = <K extends TRPCKey>(

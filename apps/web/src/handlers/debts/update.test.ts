@@ -338,7 +338,7 @@ describe("debts.update", () => {
 								id: "not-a-valid-uuid",
 								update: { amount: getRandomAmount() },
 							})
-							.catch((e) => e),
+							.catch((error) => error),
 				]),
 			);
 
@@ -608,7 +608,7 @@ describe("debts.update", () => {
 								id: fakeDebtId,
 								update: { amount: getRandomAmount() },
 							})
-							.catch((e) => e),
+							.catch((error) => error),
 				]);
 				expect(results).toHaveLength(2);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>(

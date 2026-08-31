@@ -31,14 +31,14 @@ export const expectTRPCError = async (
 	expectedCode: TRPC_ERROR_CODE_KEY,
 	expectedMessage: string | RegExp,
 ) => {
-	let error;
+	let localError;
 	try {
 		await fn();
-	} catch (e) {
-		error = e;
+	} catch (error) {
+		localError = error;
 	}
-	expect(error).toBeInstanceOf(TRPCError);
-	const trpcError = error as TRPCError;
+	expect(localError).toBeInstanceOf(TRPCError);
+	const trpcError = localError as TRPCError;
 	const formattedMessage = formatErrorMessage(trpcError, trpcError.message);
 	expect
 		.soft(trpcError.code)

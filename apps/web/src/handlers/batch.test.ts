@@ -65,8 +65,8 @@ const queueElement = queueCallFactory<
 			try {
 				const result = mapElement(element);
 				return result;
-			} catch (e) {
-				return e as Error;
+			} catch (error) {
+				return error as Error;
 			}
 		});
 	},
@@ -144,8 +144,8 @@ describe("batching", () => {
 					useBatch: true,
 				});
 				const elements = await Promise.all([
-					client.batch.query({ id: "1" }).catch((e) => e),
-					client.batch.query({ id: "fail-single" }).catch((e) => e),
+					client.batch.query({ id: "1" }).catch((error) => error),
+					client.batch.query({ id: "fail-single" }).catch((error) => error),
 				]);
 				expect(elements[0]).toEqual<(typeof elements)[number]>({
 					id: "1",
@@ -164,8 +164,8 @@ describe("batching", () => {
 					useBatch: true,
 				});
 				const errors = await Promise.all([
-					client.batch.query({ id: "1" }).catch((e) => e),
-					client.batch.query({ id: "fail-all" }).catch((e) => e),
+					client.batch.query({ id: "1" }).catch((error) => error),
+					client.batch.query({ id: "fail-all" }).catch((error) => error),
 				]);
 				expect(errors[0]).toBeInstanceOf(TRPCClientError);
 				expect(errors[1]).toBeInstanceOf(TRPCClientError);
@@ -189,8 +189,8 @@ describe("batching", () => {
 					useBatch: true,
 				});
 				const elements = await Promise.all([
-					client.batch.query({ id: "1" }).catch((e) => e),
-					client.batch.query({ id: "miss-element" }).catch((e) => e),
+					client.batch.query({ id: "1" }).catch((error) => error),
+					client.batch.query({ id: "miss-element" }).catch((error) => error),
 				]);
 				expect(elements[0]).toEqual<(typeof elements)[number]>({
 					id: "1",

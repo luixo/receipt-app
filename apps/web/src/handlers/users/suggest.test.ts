@@ -618,7 +618,7 @@ describe("users.suggest", () => {
 				const results = await runInBand([
 					() => caller.procedure({ ...commonOptions, limit: 2 }),
 					() =>
-						caller.procedure({ ...commonOptions, limit: -1 }).catch((e) => e),
+						caller.procedure({ ...commonOptions, limit: -1 }).catch((error) => error),
 				]);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: 1,

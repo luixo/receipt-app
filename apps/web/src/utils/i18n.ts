@@ -82,10 +82,10 @@ export const getBackendModule = (): BackendModule => ({
 			}
 			const response = await fetch(`/locales/${language}/${namespace}.json`);
 			return await (response.json() as Promise<ResourceKey>);
-		} catch (e) {
+		} catch (error) {
 			// oxlint-disable-next-line no-console
 			console.error(`Failed to load ${language}/${namespace} i18n translation`);
-			throw e;
+			throw error;
 		}
 	},
 });

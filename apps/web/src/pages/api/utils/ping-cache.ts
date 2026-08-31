@@ -10,8 +10,8 @@ export const Route = createFileRoute("/api/utils/ping-cache")({
 				try {
 					await client.utils.pingCache.mutate();
 					return new Response(`Cache ping successful`);
-				} catch (e) {
-					return new Response(`Error on cache ping: ${String(e)}`, {
+				} catch (error) {
+					return new Response(`Error on cache ping: ${String(error)}`, {
 						status: 500,
 					});
 				}

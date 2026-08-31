@@ -161,7 +161,7 @@ describe("users.add", () => {
 								name: faker.person.fullName(),
 								email: "invalid@@mail.org",
 							})
-							.catch((e) => e),
+							.catch((error) => error),
 				]),
 			);
 

@@ -88,7 +88,7 @@ describe("debtIntentions.accept", () => {
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runInBand([
 					() => caller.procedure({ id: foreignDebtId }),
-					() => caller.procedure({ id: fakeDebtId }).catch((e) => e),
+					() => caller.procedure({ id: fakeDebtId }).catch((error) => error),
 				]),
 			);
 
