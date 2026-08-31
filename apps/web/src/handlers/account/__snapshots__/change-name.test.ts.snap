@@ -5,7 +5,7 @@ exports[`account.changeName > functionality > name changes 1`] = `
   "updated": {
     "users": {
       "id:c15396d3-fa8e-40bc-8746-091d7721edd6": {
-        "name": "Sedrick",
+        "name": "Verda",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

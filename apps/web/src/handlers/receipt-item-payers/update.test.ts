@@ -245,7 +245,10 @@ describe("receiptItemPayers.update", () => {
 				caller.procedure({
 					itemId: receiptItemId,
 					userId: foreignUserId,
-					update: { type: "part", part: faker.number.int({ max: 100 }) },
+					update: {
+						type: "part",
+						part: faker.number.int({ min: 1, max: 100 }),
+					},
 				}),
 			);
 		});

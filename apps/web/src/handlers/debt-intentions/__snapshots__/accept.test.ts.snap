@@ -26,8 +26,8 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
   "updated": {
     "debts": {
       "id:8809ceb6-73e4-4ee0-9dc8-3fcc4e64865a|ownerAccountId:4bba98a1-6f92-48a9-a3c2-3bfdc9d8ed1b": {
-        "amount": "43.8500",
-        "currencyCode": "DZD",
+        "amount": "315.7100",
+        "currencyCode": "HUF",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
@@ -42,7 +42,7 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
     "debts": {
       "id:bad54f6a-aca7-4dbf-bee5-68efd4e4fdd8|ownerAccountId:7b1ff11a-6b5d-4bae-a328-2631994177cd": {
         "amount": "-623.4000",
-        "currencyCode": "LYD",
+        "currencyCode": "SSP",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -72,14 +72,14 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
   "updated": {
     "debts": {
       "id:5ff7439e-ad55-4ed3-ac55-adef2787c71b|ownerAccountId:051a3473-2ea1-4abf-87fe-dbaced6071a5": {
-        "amount": "558.5300",
-        "currencyCode": "CUP",
+        "amount": "936.8100",
+        "currencyCode": "GYD",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
       "id:935382db-3c53-4128-afcb-f49283b2ba20|ownerAccountId:051a3473-2ea1-4abf-87fe-dbaced6071a5": {
-        "amount": "-17.7800",
-        "currencyCode": "PGK",
+        "amount": "243.6500",
+        "currencyCode": "AED",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
