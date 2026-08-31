@@ -39,7 +39,7 @@ const ResetPasswordHeader = suspendedFallback<{ token: string }>(
 		);
 		return <Text variant="h3">{intention.email}</Text>;
 	},
-	<Skeleton className="h-8 w-60 rounded" />,
+	<Skeleton className="h-8 w-60 rounded-sm" />,
 );
 
 type Props = {

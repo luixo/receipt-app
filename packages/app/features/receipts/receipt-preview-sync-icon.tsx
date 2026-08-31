@@ -9,7 +9,7 @@ import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 
 export const skeletonReceiptPreviewSyncIcon = (
-	<Skeleton className="size-6 rounded" />
+	<Skeleton className="size-6 rounded-sm" />
 );
 
 const StatusButton: React.FC<{ type: "synced" | "desynced" | "unsynced" }> = ({

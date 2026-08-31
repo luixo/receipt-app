@@ -90,12 +90,12 @@ export const ReceiptPreviewSkeleton = () => (
 	<ReceiptPreviewShape
 		title={
 			<View className="flex flex-col items-start gap-1">
-				<Skeleton className="h-5 w-48 rounded" />
-				<Skeleton className="h-4 w-14 rounded" />
+				<Skeleton className="h-5 w-48 rounded-sm" />
+				<Skeleton className="h-4 w-14 rounded-sm" />
 			</View>
 		}
 		checkbox={<Checkbox isDisabled color="secondary" />}
-		sum={<Skeleton className="h-5 w-16 rounded" />}
+		sum={<Skeleton className="h-5 w-16 rounded-sm" />}
 		icon={skeletonReceiptPreviewSyncIcon}
 	/>
 );

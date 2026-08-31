@@ -14,8 +14,8 @@ export const SkeletonUser: React.FC<
 		{...props}
 		testID="user-skeleton"
 		className={cn("text-foreground", className)}
-		name={<Skeleton className="h-4 w-20 rounded" />}
-		description={<Skeleton className="mt-1 h-3 w-10 rounded" />}
+		name={<Skeleton className="h-4 w-20 rounded-sm" />}
+		description={<Skeleton className="mt-1 h-3 w-10 rounded-sm" />}
 		avatarProps={{
 			fallback: <Skeleton className="size-full" />,
 		}}

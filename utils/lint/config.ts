@@ -391,13 +391,13 @@ const disabledRules = {
 	"vitest/prefer-expect-assertions": "off",
 	// Oxfmt lowercases hex numbers
 	"unicorn/number-literal-case": "off",
+	// Turn back on in case we introduce LTR layout
+	"better-tailwindcss/enforce-logical-properties": "off",
+	// This doesn't work out good with formatter
+	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
-	// tailwindcss
-	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
-	"better-tailwindcss/no-deprecated-classes": "off",
-	"better-tailwindcss/enforce-logical-properties": "off",
 	// typescript
 	"typescript/prefer-readonly-parameter-types": "off", // 4266 cases
 	"typescript/explicit-function-return-type": "off", // 1205 cases

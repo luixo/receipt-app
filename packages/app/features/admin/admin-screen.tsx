@@ -90,7 +90,7 @@ const AdminCard = suspendedFallback(
 			/>
 		);
 	},
-	<Skeleton className="h-8 w-60 rounded" />,
+	<Skeleton className="h-8 w-60 rounded-sm" />,
 );
 
 const AdminScreenInner = suspendedFallback(
