@@ -1,8 +1,8 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import type { TestProject } from "vitest/node";
 
-import { getFreePort } from "~utils/port";
 import { promisifyServer } from "~utils/promise";
+import { getFreePort } from "~utils/server/port";
 
 import { appRouter, createCaller } from "./databases/router";
 

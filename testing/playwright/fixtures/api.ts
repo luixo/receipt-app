@@ -2,11 +2,8 @@ import type { BrowserContext, Page } from "@playwright/test";
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
-import {
-	type JSONRPC2,
-	type TRPCErrorShape,
-	TRPC_ERROR_CODES_BY_KEY,
-} from "@trpc/server/rpc";
+import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
+import type { JSONRPC2, TRPCErrorShape } from "@trpc/server/rpc";
 import http from "node:http";
 import { fromEntries } from "remeda";
 import { v4 } from "uuid";

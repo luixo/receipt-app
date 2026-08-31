@@ -1,7 +1,9 @@
-import { type Locator, expect, test as originalTest } from "@playwright/test";
+import { expect, test as originalTest } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 
 import { localSettings } from "~tests/frontend/consts";
-import { type Temporal, formatters, serialize } from "~utils/date";
+import { formatters, serialize } from "~utils/date";
+import type { Temporal } from "~utils/date";
 
 type Fixtures = {
 	expectDate: (locator: Locator, date: Temporal.PlainDate) => Promise<void>;

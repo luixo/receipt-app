@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from "react";
 
-import i18n from "i18next";
+import { createInstance } from "i18next";
 import type {
 	i18n as I18n,
 	InitOptions,
@@ -107,10 +107,9 @@ export const createI18nContext = ({
 }) => {
 	const initialLanguage = getLanguage();
 	const instance = beforeInit(
-		i18n
-			// Options are cloned because i18next mutates properties inline
-			// causing different request to get same e.g. namespaces
-			.createInstance(clone(i18nInitOptions)),
+		// Options are cloned because i18next mutates properties inline
+		// causing different request to get same e.g. namespaces
+		createInstance(clone(i18nInitOptions)),
 	);
 	const ensureInitialized = () => {
 		if (instance.isInitialized) {

@@ -3,7 +3,8 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 
 import { useLocale } from "~app/hooks/use-locale";
-import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
+import { getCurrencySymbol } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";

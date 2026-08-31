@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema } from "~app/utils/validation";
+import { generatePasswordData, getHash } from "~utils/server/crypto";
 import { authProcedure } from "~web/handlers/trpc";
-import { generatePasswordData, getHash } from "~web/utils/crypto";
 
 export const procedure = authProcedure
 	.input(

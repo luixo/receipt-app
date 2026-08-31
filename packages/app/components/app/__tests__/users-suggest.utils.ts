@@ -1,4 +1,5 @@
-import { type Locator, test as originalTest } from "@playwright/test";
+import { test as originalTest } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 
 export type Fixtures = {
 	usersSuggest: Locator;

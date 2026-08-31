@@ -11,6 +11,7 @@
 		"@ra/web": "workspace:*",
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
+		"@vitest/coverage-v8": "^4.1.11",
 		"deep-object-diff": "catalog:",
 		"kysely": "catalog:",
 		"node-mocks-http": "^1.18.1",

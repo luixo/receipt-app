@@ -1,7 +1,8 @@
 import React from "react";
 import { AppRegistry } from "react-native";
 
-import { type QueryClient, isServer } from "@tanstack/react-query";
+import { isServer } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import {
 	HeadContent,
 	Outlet,

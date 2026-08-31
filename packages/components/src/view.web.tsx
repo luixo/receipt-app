@@ -1,9 +1,6 @@
 import type React from "react";
-import {
-	type LayoutRectangle,
-	View as RawView,
-	type ViewStyle,
-} from "react-native";
+import { View as RawView } from "react-native";
+import type { LayoutRectangle, ViewStyle } from "react-native";
 
 import { cn } from "~components/utils";
 

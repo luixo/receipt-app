@@ -1,6 +1,6 @@
 import tanstackRouterPlugin from "@tanstack/eslint-plugin-router";
 import tailwindPlugin from "eslint-plugin-better-tailwindcss";
-import packageJson from "eslint-plugin-package-json";
+import { configs as packageJsonConfigs } from "eslint-plugin-package-json";
 import playwrightPlugin from "eslint-plugin-playwright";
 import htmlTags from "html-tags";
 import path from "node:path";
@@ -115,6 +115,11 @@ const restrictedImports: ((
 		omitTags: ["client-only"],
 	},
 	{
+		from: /~utils\/server.*/,
+		message: "Do not import server-side utils from the client",
+		omitTags: ["client-only"],
+	},
+	{
 		from: /\.web/,
 		message: "Don't import from `./foo.web`, import from `./foo`",
 		omitTags: ["strict-web-only"],
@@ -217,18 +222,21 @@ const getNoRestrictedSyntax = (...omittedTags: RestrictedTag[]): DummyRule => [
 		.map(omit(["omitTags"])),
 ];
 
-const restrictedSyntaxRules: [string, RestrictedTag[]][] = [
-	["**/*", []],
+const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
+	[["**/*"], []],
 	// Web-only imports can be used in web app..
-	["apps/web/**/*", ["web-only"]],
+	[["apps/web/**/*"], ["web-only"]],
 	// ..and in .web files (that also can import other .web files)
-	["**/*.web.ts{,x}", ["web-only", "strict-web-only"]],
+	[["**/*.web.ts{,x}"], ["web-only", "strict-web-only"]],
 	// Native-only imports can be used in native app..
-	["apps/mobile/**/*", ["native-only"]],
+	[["apps/mobile/**/*"], ["native-only"]],
 	// ..and in .web files (that also can import other .web files)
-	["**/*.native.ts{,x}", ["native-only", "strict-native-only"]],
-	// Handlers is the only place where handlers validation is allowed to be imported from
-	["apps/web/src/handlers/**/*", ["client-only"]],
+	[["**/*.native.ts{,x}"], ["native-only", "strict-native-only"]],
+	// Server code is allowed in these locations
+	[
+		["apps/web/src/handlers/**/*", "apps/web/src/pages/api/**/*", "testing/**"],
+		["client-only"],
+	],
 ];
 
 const overriddenRules = {
@@ -418,6 +426,21 @@ const disabledRules = {
 	"promise/prefer-await-to-then": "off",
 	// There are no good usecases for that, all callbacks are valid
 	"promise/prefer-await-to-callbacks": "off",
+	// No idea why do we need that
+	"import/unambiguous": "off",
+	// When we don't assign import module a variable, we mean that
+	"import/no-unassigned-import": "off",
+	// There are a lot of proper usecases of namespace imports
+	"import/no-namespace": "off",
+	// We'll care about that ourselves
+	"import/max-dependencies": "off",
+	"import/no-relative-parent-imports": "off",
+	// We prefer named exports
+	"import/prefer-default-export": "off",
+	"import/no-named-export": "off",
+	// We export inline
+	"import/exports-last": "off",
+	"import/group-exports": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -470,21 +493,6 @@ const temporaryDisabledRules = {
 	"oxc/no-optional-chaining": "off", // 196 cases
 	"oxc/no-accumulating-spread": "off", // 23 cases
 	"oxc/no-map-spread": "off", // 14 cases
-	// import
-	"import/no-named-export": "off", // 1292 cases
-	"import/group-exports": "off", // 731 cases
-	"import/prefer-default-export": "off", // 369 cases
-	"import/exports-last": "off", // 229 cases
-	"import/no-relative-parent-imports": "off", // 129 cases
-	"import/max-dependencies": "off", // 113 cases
-	"import/no-default-export": "off", // 59 cases
-	"import/consistent-type-specifier-style": "off", // 48 cases
-	"import/no-namespace": "off", // 42 cases
-	"import/no-nodejs-modules": "off", // 41 cases
-	"import-js/no-extraneous-dependencies": "off", // 34 cases
-	"import/no-unassigned-import": "off", // 18 cases
-	"import/no-named-as-default-member": "off", // 7 cases
-	"import/unambiguous": "off", // 2 cases
 	// react
 	"react/forbid-component-props": "off", // 595 cases
 	"react/jsx-max-depth": "off", // 329 cases
@@ -522,6 +530,9 @@ const temporaryDisabledRules = {
 	"vitest/prefer-lowercase-title": "off", // 2 cases
 	"vitest/prefer-called-once": "off", // 2 cases
 	"vitest/prefer-snapshot-hint": "off", // 2 cases
+	// heavy rules
+	"import/no-cycle": "off",
+	"vitest/valid-expect": "off",
 } satisfies DummyRuleMap;
 
 export default defineConfig({
@@ -590,7 +601,7 @@ export default defineConfig({
 			]),
 		),
 		...tanstackRouterPlugin.configs["flat/recommended"][0]?.rules,
-		...packageJson.configs.recommended.rules,
+		...packageJsonConfigs.recommended.rules,
 		...overriddenRules,
 		...disabledRules,
 		...temporaryDisabledRules,
@@ -617,7 +628,6 @@ export default defineConfig({
 					"apps/web",
 					[
 						"vite.config.ts",
-						"src/entry/ssr.tsx",
 						"vitest.config.ts",
 						"**/test.*.ts",
 						"**/*.test.ts",
@@ -634,6 +644,7 @@ export default defineConfig({
 				["utils/scripts", true],
 				["utils/lint", true],
 				["utils/format", true],
+				["testing/utils", true],
 				["testing/vitest", true],
 				["testing/playwright", true],
 			] satisfies Parameters<typeof getExtraneousDependenciesConfig>[]
@@ -694,16 +705,32 @@ export default defineConfig({
 			},
 		},
 		{
-			files: [
-				"**/__tests__/**",
-				"testing/playwright/**",
-				"testing/vitest/**",
-				"**/*.spec.ts",
-				"**/*.spec.tsx",
-			],
+			files: ["**/__tests__/**", "testing/playwright/**", "testing/vitest/**"],
 			rules: {
 				// We use `use` function in Playwright tests which clashes with this rule
 				"react/rules-of-hooks": "off",
+			},
+		},
+		{
+			files: [
+				"**/__tests__/**",
+				"testing/utils/**",
+				"testing/playwright/**",
+				"testing/vitest/**",
+				"**/*.test.ts",
+				"**/config.ts",
+				"**/*.config.ts",
+				"utils/scripts/**",
+				"apps/web/src/handlers/**",
+				"apps/web/src/pages/api/**",
+				"apps/mobile/update-version.ts",
+				"apps/mobile/generate-colors.ts",
+				"packages/db/migration/**",
+				"packages/utils/src/server/**",
+			],
+			rules: {
+				// These are packages that allow server-side code
+				"import/no-nodejs-modules": "off",
 			},
 		},
 		{
@@ -714,13 +741,33 @@ export default defineConfig({
 			},
 		},
 		{
+			files: [
+				"apps/web/src/pages/**",
+				"apps/mobile/app/**",
+				"**/config.ts",
+				"**/*.config.ts",
+				"**/*.config.js",
+				"**/*.setup.ts",
+				"apps/web/src/entry/server.tsx",
+				"apps/mobile/heroui-override.ts",
+				"apps/mobile/heroui.ts",
+				"packages/app/heroui.ts",
+				"testing/playwright/server-reporter.ts",
+				"testing/playwright/global/**",
+			],
+			rules: {
+				// We have to export default exports in pages
+				"import/no-default-export": "off",
+			},
+		},
+		{
 			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*"],
 			rules: {
 				"node/no-process-env": "off",
 			},
 		},
-		...restrictedSyntaxRules.map(([file, tags]) => ({
-			files: [file],
+		...restrictedSyntaxRules.map(([files, tags]) => ({
+			files,
 			rules: {
 				"eslint-js/no-restricted-syntax": getNoRestrictedSyntax(...tags),
 			},

@@ -5,10 +5,8 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
-import {
-	type Direction,
-	SignButtonGroup,
-} from "~app/components/app/sign-button-group";
+import { SignButtonGroup } from "~app/components/app/sign-button-group";
+import type { Direction } from "~app/components/app/sign-button-group";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { PageHeader } from "~app/components/page-header";
 import { NavigationContext } from "~app/contexts/navigation-context";

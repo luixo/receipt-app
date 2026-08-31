@@ -3,11 +3,10 @@ import * as React from "react";
 import { doNothing } from "remeda";
 
 import {
-	type StoreStates,
-	type StoreValues,
 	getStoreStatesFromValues,
 	getStoreValuesFromInitialValues,
 } from "~app/utils/store-data";
+import type { StoreStates, StoreValues } from "~app/utils/store-data";
 import type { Temporal } from "~utils/date";
 import { getNow } from "~utils/date";
 

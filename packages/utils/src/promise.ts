@@ -1,3 +1,5 @@
+// It's just types
+// oxlint-disable-next-line import/no-nodejs-modules
 import type { IncomingMessage, Server, ServerResponse } from "node:http";
 
 export const wait = (ms: number) =>

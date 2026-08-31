@@ -1,17 +1,13 @@
 import type React from "react";
 
-import {
-	LinksContext,
-	type LinksContextType,
-} from "~app/contexts/links-context";
+import { LinksContext } from "~app/contexts/links-context";
+import type { LinksContextType } from "~app/contexts/links-context";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { StoreContext } from "~app/contexts/store-context";
 import type { StoreContextType } from "~app/contexts/store-context";
 
-import {
-	type Props as PersisterProps,
-	PersisterProvider,
-} from "./persist-client";
+import { PersisterProvider } from "./persist-client";
+import type { Props as PersisterProps } from "./persist-client";
 import { QueryProviderWithPretend } from "./query-with-pretend";
 import { ShimsProvider } from "./shims";
 import { StoredDataProvider } from "./stored-data";

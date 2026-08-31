@@ -14,8 +14,8 @@ import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import type { Temporal } from "~utils/date";
 import { add, getNow } from "~utils/date";
+import { generatePasswordData } from "~utils/server/crypto";
 import type { Role } from "~web/handlers/receipts/utils";
-import { generatePasswordData } from "~web/utils/crypto";
 
 export const assertDatabase = (ctx: TestContext) => {
 	assert(ctx.database, "This test required DB to exist");

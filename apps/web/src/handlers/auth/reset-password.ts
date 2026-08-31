@@ -6,8 +6,8 @@ import {
 	resetPasswordTokenSchema,
 } from "~app/utils/validation";
 import { getNow } from "~utils/date";
+import { generatePasswordData } from "~utils/server/crypto";
 import { unauthProcedure } from "~web/handlers/trpc";
-import { generatePasswordData } from "~web/utils/crypto";
 
 export const procedure = unauthProcedure
 	.input(

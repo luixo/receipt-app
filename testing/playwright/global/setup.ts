@@ -4,8 +4,8 @@ import colors from "colors";
 import { capitalize } from "remeda";
 
 import { serverMessages } from "~tests/frontend/server-reporter";
-import { getFreePort } from "~utils/port";
 import { promisifyServer } from "~utils/promise";
+import { getFreePort } from "~utils/server/port";
 
 import { appRouter } from "./router";
 

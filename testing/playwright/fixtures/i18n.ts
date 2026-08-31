@@ -2,12 +2,8 @@ import { test } from "@playwright/test";
 import fs from "node:fs/promises";
 import url from "node:url";
 
-import {
-	type Language,
-	type Namespace,
-	type Resources,
-	baseLanguage,
-} from "~app/utils/i18n-data";
+import { baseLanguage } from "~app/utils/i18n-data";
+import type { Language, Namespace, Resources } from "~app/utils/i18n-data";
 import { COOKIE_LANGUAGE_NAME } from "~web/utils/i18n";
 
 type Fixtures = {

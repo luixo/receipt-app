@@ -6,14 +6,10 @@ import { entries } from "remeda";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import {
-	type GenerateDebts,
-	defaultGenerateDebts,
-} from "~tests/frontend/generators/debts";
-import {
-	type GenerateUsers,
-	defaultGenerateUsers,
-} from "~tests/frontend/generators/users";
+import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import type { GenerateDebts } from "~tests/frontend/generators/debts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { GenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: () => Promise<{

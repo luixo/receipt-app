@@ -17,8 +17,8 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { getNow, subtract } from "~utils/date";
+import { getHash } from "~utils/server/crypto";
 import { t } from "~web/handlers/trpc";
-import { getHash } from "~web/utils/crypto";
 import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./reset-password";
