@@ -1,46 +1,20 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"2229afe2-d79b-402a-949b-6f6be31e8205\"}]": {
+		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
 			"state": {
 				"data": {
-					"id": "2229afe2-d79b-402a-949b-6f6be31e8205",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "BSD",
-					"amount": -3591.26,
-					"timestamp": "2019-12-09",
-					"note": "modi quae blanditiis repellendus",
-					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-09",
-						"amount": -3591.26,
-						"currencyCode": "BSD"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 2,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"2bebdb40-84ee-4955-a735-7c4476ea90d3\"}]": {
-			"state": {
-				"data": {
-					"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "BDT",
-					"amount": -8515.4,
-					"timestamp": "2019-12-08",
-					"note": "debitis nobis sed labore",
+					"id": "229936ae-1f75-422a-bed9-0a966e1804c1",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "NGN",
+					"amount": 2179.11,
+					"timestamp": "2019-12-07",
+					"note": "via summopere sodalitas hic",
 					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-08",
-						"amount": -8515.4,
-						"currencyCode": "BDT"
+						"timestamp": "2019-12-07",
+						"amount": 2179.11,
+						"currencyCode": "NGN"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -52,21 +26,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"4a275509-29dc-4fb3-a562-426bcf06bf5b\"}]": {
+		"debts.get:[{\"id\":\"2724773d-3062-49b9-8cca-9a36a0b32d1c\"}]": {
 			"state": {
 				"data": {
-					"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "PYG",
-					"amount": 4806.72,
-					"timestamp": "2019-12-18",
-					"note": "alias vitae sit magnam",
+					"id": "2724773d-3062-49b9-8cca-9a36a0b32d1c",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "KZT",
+					"amount": 9772.07,
+					"timestamp": "2019-12-05",
+					"note": "colligo iusto chirographum cresco",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-18",
-						"amount": 4806.72,
-						"currencyCode": "PYG"
+						"timestamp": "2019-12-05",
+						"amount": 9772.07,
+						"currencyCode": "KZT"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -78,47 +52,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"952beab0-ac8a-4943-823f-8d3ecc424905\"}]": {
+		"debts.get:[{\"id\":\"3383c440-1915-4425-902d-f3646c0b5a71\"}]": {
 			"state": {
 				"data": {
-					"id": "952beab0-ac8a-4943-823f-8d3ecc424905",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "MVR",
-					"amount": -837.35,
+					"id": "3383c440-1915-4425-902d-f3646c0b5a71",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "SHP",
+					"amount": -4551.98,
 					"timestamp": "2019-12-13",
-					"note": "qui architecto facilis ad",
-					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"note": "antiquus suspendo virgo defero",
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"timestamp": "2019-12-13",
-						"amount": -837.35,
-						"currencyCode": "MVR"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 2,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
-			"state": {
-				"data": {
-					"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "TND",
-					"amount": -3979.7,
-					"timestamp": "2019-12-06",
-					"note": "dicta laboriosam repellat nihil",
-					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-06",
-						"amount": -3979.7,
-						"currencyCode": "TND"
+						"amount": -4551.98,
+						"currencyCode": "SHP"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -130,21 +78,73 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5\"}]": {
+		"debts.get:[{\"id\":\"40c81ffd-5b8b-4263-9cd7-1533848360f2\"}]": {
 			"state": {
 				"data": {
-					"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5",
-					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "DOP",
-					"amount": 248.23,
-					"timestamp": "2019-12-02",
-					"note": "fugiat esse deleniti ipsam",
+					"id": "40c81ffd-5b8b-4263-9cd7-1533848360f2",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "CNY",
+					"amount": -8075.21,
+					"timestamp": "2019-12-10",
+					"note": "tego vulgo ventosus antepono",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-02",
-						"amount": 248.23,
-						"currencyCode": "DOP"
+						"timestamp": "2019-12-10",
+						"amount": -8075.21,
+						"currencyCode": "CNY"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"50210be2-3813-4fb7-8978-a4592ef5ea0d\"}]": {
+			"state": {
+				"data": {
+					"id": "50210be2-3813-4fb7-8978-a4592ef5ea0d",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "ARS",
+					"amount": 4481.43,
+					"timestamp": "2019-12-07",
+					"note": "attollo pectus approbo ultra",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-07",
+						"amount": 4481.43,
+						"currencyCode": "ARS"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"d7daed78-2ad5-4e24-bae1-6947aa738ff8\"}]": {
+			"state": {
+				"data": {
+					"id": "d7daed78-2ad5-4e24-bae1-6947aa738ff8",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "KGS",
+					"amount": -5770.29,
+					"timestamp": "2019-12-05",
+					"note": "verto tamisium animus mollitia",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-05",
+						"amount": -5770.29,
+						"currencyCode": "KGS"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -165,7 +165,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3"
+						"id": "229936ae-1f75-422a-bed9-0a966e1804c1"
 					}
 				}
 			},
@@ -175,7 +175,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75"
+						"id": "3383c440-1915-4425-902d-f3646c0b5a71"
 					}
 				}
 			},
@@ -188,7 +188,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5"
+						"id": "50210be2-3813-4fb7-8978-a4592ef5ea0d"
 					}
 				}
 			},
@@ -201,7 +201,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "2229afe2-d79b-402a-949b-6f6be31e8205"
+						"id": "d7daed78-2ad5-4e24-bae1-6947aa738ff8"
 					}
 				}
 			},
@@ -214,7 +214,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "952beab0-ac8a-4943-823f-8d3ecc424905"
+						"id": "2724773d-3062-49b9-8cca-9a36a0b32d1c"
 					}
 				}
 			},
@@ -227,7 +227,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b"
+						"id": "40c81ffd-5b8b-4263-9cd7-1533848360f2"
 					}
 				}
 			}

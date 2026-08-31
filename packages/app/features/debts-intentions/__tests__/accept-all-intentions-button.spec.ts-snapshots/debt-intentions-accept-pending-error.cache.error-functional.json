@@ -1,11 +1,11 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"2bebdb40-84ee-4955-a735-7c4476ea90d3\"}]": {
+		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
 			"state": {
 				"isInvalidated": true
 			}
 		},
-		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
+		"debts.get:[{\"id\":\"3383c440-1915-4425-902d-f3646c0b5a71\"}]": {
 			"state": {
 				"isInvalidated": true
 			}

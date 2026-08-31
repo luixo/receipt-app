@@ -4,36 +4,36 @@ exports[`auth.register > functionality > email sent if active 1`] = `
 {
   "added": {
     "accounts": {
-      "id:d3e851e7-a827-44d1-9a44-49c2ad7fe2fa": {
+      "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
         "avatarUrl": null,
-        "confirmationToken": "53660a25-ca9c-4880-b244-d5390017793a",
+        "confirmationToken": "f0bc24b0-e797-4768-a3e0-1abbfff5172c",
         "confirmationTokenTimestamp": "2020-01-01 00:00:00+00",
         "createdAt": "2020-01-01 00:00:00+00",
-        "email": "roberto9@yahoo.com",
-        "id": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
-        "passwordHash": "7baffdb38bd56961dc1bd70850ba85386c302d550d58ce364000b900db5a38ff10ee1daf3bcf14dbd8597bd75a4805eb1006ad2d0a3f0394832a6487fe1b13d7",
-        "passwordSalt": "fd10f3b23268f81eed9bcda7ae9db45bec0f20eff5feedfae37220a13cbef781e4bd997abceab99906d9605f3e532f7e4c33ab8c4f74a0fca1e024d04e52cdec",
+        "email": "briana_friesen48@yahoo.com",
+        "id": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "passwordHash": "2e37e7646b419850921596a78d9e13bfc311b71e2bc72b93247e00b3876b4f6c6f6d65d815e19345be09ee386a3fa8ad37cd75877a59c482cb45a63d54230855",
+        "passwordSalt": "8eb97beb90d65352743a847afae2d45cebfce8224eb1de716ce0615720fe986ef36ebefaf3fcbccdb1c00a1d6fcabd5eacfb9e2c3fdcdb393da494b1e9df4f61",
         "role": null,
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "sessions": {
-      "sessionId:80f0d5a0-5d1c-41e3-9fad-8f0793a7530a": {
-        "accountId": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
+      "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
+        "accountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "80f0d5a0-5d1c-41e3-9fad-8f0793a7530a",
+        "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
       },
     },
     "users": {
-      "id:d3e851e7-a827-44d1-9a44-49c2ad7fe2fa": {
+      "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
         "acceptReceipts": true,
-        "connectedAccountId": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
+        "connectedAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
         "createdAt": "2020-01-01 00:00:00+00",
         "exposeReceipts": true,
-        "id": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
-        "name": "Hillary",
-        "ownerAccountId": "d3e851e7-a827-44d1-9a44-49c2ad7fe2fa",
+        "id": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "name": "Raven",
+        "ownerAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
         "publicName": null,
         "updatedAt": "2020-01-01 00:00:00+00",
       },
@@ -52,7 +52,7 @@ exports[`auth.register > functionality > email sent if active 2`] = `
 			<title>Receipt App</title>
 			<style> body {background-color:#eaebed;font-family:sans-serif;font-size:14px;line-height:1.4;margin:0;padding:0;-webkit-font-smoothing:antialiased;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;} h1,h2,h3,h4 {color:#06090f;font-family:sans-serif;font-weight:400;line-height:1.4;margin:0;} p {font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;margin-bottom:15px;} @media only screen and (max-width: 620px) { p {font-size:16px !important;} a {font-size:16px !important;} td {font-size:16px !important;} span {font-size:16px !important;} .container {padding:0 !important;width:100% !important;} .content {padding:0 !important;} .main {border-left-width:0 !important;border-radius:0 !important;border-right-width:0 !important;} .wrapper {padding:10px !important;} table[class=body] h3 {font-size:22px !important;margin-bottom:10px !important;} .btn table {width:100% !important;} .btn a {width:100% !important;}} a {color:#ec0867;text-decoration:underline;} .container {display:block;margin:0 auto !important;max-width:580px;padding:10px;width:580px;} .content {box-sizing:border-box;display:block;margin:0 auto;max-width:580px;padding:10px;} .preheader {color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;visibility:hidden;width:0;} table {border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;min-width:100%;width:100%;} table td {font-family:sans-serif;font-size:14px;vertical-align:top;} .header {padding:20px 0;} h1 {font-size:35px;font-weight:300;text-align:center;text-transform:capitalize;} .align-center {text-align:center;} .main {background:#ffffff;border-radius:3px;width:100%;} .wrapper {box-sizing:border-box;padding:20px;} .btn {box-sizing:border-box;width:100%;} .btn > tbody > tr > td  {padding-bottom:15px;} .btn table {min-width:auto;width:auto;} .btn table td {background-color:#ffffff;border-radius:5px;text-align:center;} .btn a {background-color:#ffffff;border:solid 1px #ec0867;border-radius:5px;box-sizing:border-box;color:#ec0867;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;text-transform:capitalize;} .btn-primary table td {background-color:#ec0867;} .btn-primary a {background-color:#ec0867;border-color:#ec0867;color:#ffffff;} .btn-primary table td:hover {background-color:#d5075d !important;} .btn-primary a:hover {background-color:#d5075d !important;border-color:#d5075d !important;} .footer {clear:both;margin-top:10px;text-align:center;width:100%;} .footer td,.footer p,.footer span,.footer a {color:#9a9ea6;font-size:12px;text-align:center;} .footer-block {padding-bottom:10px;padding-top:10px;}</style>
 		</head>
-		<body><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="body"><tr><td> </td><td class="container"><div class="header"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" width="100%"><tr><td class="align-center" width="100%"><h1>Receipt App</h1></td></tr></table></div><div class="content"><span class="preheader">Receipt App confirm email</span><table role="presentation" class="main"><tr><td class="wrapper"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tr><td><h3>✨Welcome to Receipt App✨</h3><p>Happy counting!</p><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="btn btn-primary"><tbody><tr><td align="left"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tbody><tr><td> <a href="http://receipt-app.test/confirm-email?token=53660a25-ca9c-4880-b244-d5390017793a" rel="noreferrer" target="_blank">Confirm email</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t register in Receipt App? Click below to void your account.</p><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="btn btn-primary"><tbody><tr><td align="left"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tbody><tr><td> <a href="http://receipt-app.test/void-account?token=53660a25-ca9c-4880-b244-d5390017793a" rel="noreferrer" target="_blank">Void account</a> </td></tr></tbody></table></td></tr></tbody></table></td></tr></table></td></tr></table><div class="footer"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tr><td class="footer-block"><span class="apple-link">Contact us on receipt@luixo.ru</span><br/>You can click <a href="http://receipt-app.test/unsubscribe">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class="footer-block powered-by">Inspired by <a href="https://postdrop.io">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
+		<body><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="body"><tr><td> </td><td class="container"><div class="header"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" width="100%"><tr><td class="align-center" width="100%"><h1>Receipt App</h1></td></tr></table></div><div class="content"><span class="preheader">Receipt App confirm email</span><table role="presentation" class="main"><tr><td class="wrapper"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tr><td><h3>✨Welcome to Receipt App✨</h3><p>Happy counting!</p><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="btn btn-primary"><tbody><tr><td align="left"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tbody><tr><td> <a href="http://receipt-app.test/confirm-email?token=f0bc24b0-e797-4768-a3e0-1abbfff5172c" rel="noreferrer" target="_blank">Confirm email</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t register in Receipt App? Click below to void your account.</p><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0" class="btn btn-primary"><tbody><tr><td align="left"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tbody><tr><td> <a href="http://receipt-app.test/void-account?token=f0bc24b0-e797-4768-a3e0-1abbfff5172c" rel="noreferrer" target="_blank">Void account</a> </td></tr></tbody></table></td></tr></tbody></table></td></tr></table></td></tr></table><div class="footer"><table role="presentation" style="border:0" cellPadding="0" cellSpacing="0"><tr><td class="footer-block"><span class="apple-link">Contact us on receipt@luixo.ru</span><br/>You can click <a href="http://receipt-app.test/unsubscribe">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class="footer-block powered-by">Inspired by <a href="https://postdrop.io">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
 		</body>
 	</html>"
 `;
@@ -61,36 +61,36 @@ exports[`auth.register > functionality > register successful 1`] = `
 {
   "added": {
     "accounts": {
-      "id:cede701c-1498-4975-903f-c38d3105a43d": {
+      "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
         "avatarUrl": null,
         "confirmationToken": null,
         "confirmationTokenTimestamp": null,
         "createdAt": "2020-01-01 00:00:00+00",
-        "email": "octavia.schuster@hotmail.com",
-        "id": "cede701c-1498-4975-903f-c38d3105a43d",
-        "passwordHash": "ca0872f9992e78745d58e43fc2eb363105ac45b7213c96e3b9364eaabe7d7bcd65014314dbe4af7d8f52b4c8cdcdd723814271666c455ca347a56704a4faccfc",
-        "passwordSalt": "fe311e7d721cacccf0cf6fca77b4be0aaaa4ea46f6402c227e9adfa25c1ecb2d2e77c761d0bc6ce04a37ebdebdddb69cb4372dbb2da8b32e7b251dbb86c9afbd",
+        "email": "lauretta89@hotmail.com",
+        "id": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "passwordHash": "9d28eb57391a09ba75c9024913ea15bd6cc60470033212247bfe286f66db827a6b0f8dbfc9af4c61d164283b4db7558b12665bcd3842256a2b4c66ab0d774ed4",
+        "passwordSalt": "227c6db6e43edbdb9b32b2ab2721b8cab31fc50a8d4f7a580f42cc18de41dbb966a3c08efbedf7ad8e7f6c6febbcdb3bebaeae63cae3ed09fa52c403a24ef0c1",
         "role": null,
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "sessions": {
-      "sessionId:2e19f1de-3001-47e6-81ea-2af159783866": {
-        "accountId": "cede701c-1498-4975-903f-c38d3105a43d",
+      "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
+        "accountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "2e19f1de-3001-47e6-81ea-2af159783866",
+        "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",
       },
     },
     "users": {
-      "id:cede701c-1498-4975-903f-c38d3105a43d": {
+      "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
         "acceptReceipts": true,
-        "connectedAccountId": "cede701c-1498-4975-903f-c38d3105a43d",
+        "connectedAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
         "createdAt": "2020-01-01 00:00:00+00",
         "exposeReceipts": true,
-        "id": "cede701c-1498-4975-903f-c38d3105a43d",
-        "name": "Destinee",
-        "ownerAccountId": "cede701c-1498-4975-903f-c38d3105a43d",
+        "id": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "name": "Matteo",
+        "ownerAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
         "publicName": null,
         "updatedAt": "2020-01-01 00:00:00+00",
       },

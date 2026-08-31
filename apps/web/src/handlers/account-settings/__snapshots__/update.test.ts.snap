@@ -4,7 +4,7 @@ exports[`accountSettings.update > functionality > manualAcceptDebts > settings f
 {
   "updated": {
     "accountSettings": {
-      "accountId:535c16d9-e7f8-46b9-8ec1-7249f8db6e66": {
+      "accountId:dbc40e6d-039d-49da-8ba0-3614ddcd4b12": {
         "manualAcceptDebts": false,
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -17,8 +17,8 @@ exports[`accountSettings.update > functionality > manualAcceptDebts > settings n
 {
   "added": {
     "accountSettings": {
-      "accountId:cd58f9d1-e657-491e-b40b-d55c1cdcd984": {
-        "accountId": "cd58f9d1-e657-491e-b40b-d55c1cdcd984",
+      "accountId:e4860ce7-fc45-482f-ba14-ee2e375b4ae5": {
+        "accountId": "e4860ce7-fc45-482f-ba14-ee2e375b4ae5",
         "manualAcceptDebts": false,
         "updatedAt": "2020-01-01 00:00:00+00",
       },
@@ -31,8 +31,8 @@ exports[`accountSettings.update > functionality > manualAcceptDebts > settings n
 {
   "added": {
     "accountSettings": {
-      "accountId:47376ecf-e921-41c2-8dfd-f733c8d46ed4": {
-        "accountId": "47376ecf-e921-41c2-8dfd-f733c8d46ed4",
+      "accountId:d4b1be34-e269-4c5f-937a-eb17ac6e0ff3": {
+        "accountId": "d4b1be34-e269-4c5f-937a-eb17ac6e0ff3",
         "manualAcceptDebts": true,
         "updatedAt": "2020-01-01 00:00:00+00",
       },

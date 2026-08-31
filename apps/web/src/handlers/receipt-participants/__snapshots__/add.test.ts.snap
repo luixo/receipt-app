@@ -4,40 +4,40 @@ exports[`receiptParticipants.add > functionality > participants are added 1`] = 
 {
   "added": {
     "receiptParticipants": {
-      "receiptId:aa05f9ce-d200-45cb-8e12-3a0e8bc25881|userId:449dd9d3-c24b-4215-9b19-5610eadb2213": {
+      "receiptId:49ddc425-151e-4d21-a718-14b3ffe274ea|userId:3987c9f1-74ed-4473-8597-de02eb443894": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "aa05f9ce-d200-45cb-8e12-3a0e8bc25881",
-        "role": "editor",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "449dd9d3-c24b-4215-9b19-5610eadb2213",
-      },
-      "receiptId:aa05f9ce-d200-45cb-8e12-3a0e8bc25881|userId:5a87319e-8371-4c29-9bf4-17754ceddd45": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "aa05f9ce-d200-45cb-8e12-3a0e8bc25881",
-        "role": "editor",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "5a87319e-8371-4c29-9bf4-17754ceddd45",
-      },
-      "receiptId:aa05f9ce-d200-45cb-8e12-3a0e8bc25881|userId:fd5de2a0-fa28-4cde-a57a-de95fdc45b1f": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "aa05f9ce-d200-45cb-8e12-3a0e8bc25881",
+        "receiptId": "49ddc425-151e-4d21-a718-14b3ffe274ea",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "fd5de2a0-fa28-4cde-a57a-de95fdc45b1f",
+        "userId": "3987c9f1-74ed-4473-8597-de02eb443894",
       },
-      "receiptId:cb17aaa4-3a3e-4f9b-9af8-e10833ff3cd8|userId:5a87319e-8371-4c29-9bf4-17754ceddd45": {
+      "receiptId:49ddc425-151e-4d21-a718-14b3ffe274ea|userId:a21238f3-4666-44ee-a5bb-094040442b42": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "cb17aaa4-3a3e-4f9b-9af8-e10833ff3cd8",
+        "receiptId": "49ddc425-151e-4d21-a718-14b3ffe274ea",
         "role": "viewer",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "5a87319e-8371-4c29-9bf4-17754ceddd45",
+        "userId": "a21238f3-4666-44ee-a5bb-094040442b42",
       },
-      "receiptId:cb17aaa4-3a3e-4f9b-9af8-e10833ff3cd8|userId:fd5de2a0-fa28-4cde-a57a-de95fdc45b1f": {
+      "receiptId:9051b0f7-ba6f-4a83-8a82-5677d113b154|userId:3987c9f1-74ed-4473-8597-de02eb443894": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "cb17aaa4-3a3e-4f9b-9af8-e10833ff3cd8",
+        "receiptId": "9051b0f7-ba6f-4a83-8a82-5677d113b154",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "fd5de2a0-fa28-4cde-a57a-de95fdc45b1f",
+        "userId": "3987c9f1-74ed-4473-8597-de02eb443894",
+      },
+      "receiptId:9051b0f7-ba6f-4a83-8a82-5677d113b154|userId:4ea2aefc-ee52-4978-9a38-07c7316042df": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "receiptId": "9051b0f7-ba6f-4a83-8a82-5677d113b154",
+        "role": "editor",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "4ea2aefc-ee52-4978-9a38-07c7316042df",
+      },
+      "receiptId:9051b0f7-ba6f-4a83-8a82-5677d113b154|userId:a21238f3-4666-44ee-a5bb-094040442b42": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "receiptId": "9051b0f7-ba6f-4a83-8a82-5677d113b154",
+        "role": "editor",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "a21238f3-4666-44ee-a5bb-094040442b42",
       },
     },
   },
@@ -48,12 +48,12 @@ exports[`receiptParticipants.add > input verification > multiple participants > 
 {
   "added": {
     "receiptParticipants": {
-      "receiptId:16421b02-e743-45f4-a7d0-353038e5c1a4|userId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c": {
+      "receiptId:8de070d3-b416-4c09-9fa4-81f293c86ae0|userId:1d263b1a-801e-44e4-a018-32c2cbc9f60e": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "16421b02-e743-45f4-a7d0-353038e5c1a4",
+        "receiptId": "8de070d3-b416-4c09-9fa4-81f293c86ae0",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
+        "userId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
       },
     },
   },

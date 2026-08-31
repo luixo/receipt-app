@@ -1,4 +1,4 @@
-import type { ExtendedFaker } from "~tests/frontend/fixtures/mock";
+import type { ExtendedFaker } from "~tests/utils/faker";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
 export type GeneratedAmount = number | { min: number; max: number };

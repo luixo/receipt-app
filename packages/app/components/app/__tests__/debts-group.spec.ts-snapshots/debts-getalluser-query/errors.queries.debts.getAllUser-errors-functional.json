@@ -4,7 +4,7 @@
 	},
 	"debts.getAllUser": {
 		"serverCalls": 1,
-		"clientCalls": 1
+		"clientCalls": 2
 	},
 	"users.get": {
 		"serverCalls": 1

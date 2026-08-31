@@ -1,18 +1,18 @@
 {
 	"queries": {
-		"receipts.get:[{\"id\":\"a7b78913-cc20-41ca-8212-fa827c195a0e\"}]": {
+		"receipts.get:[{\"id\":\"bd0d48e0-70f7-4448-a351-30c2044c3814\"}]": {
 			"state": {
 				"data": {
-					"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
+					"id": "bd0d48e0-70f7-4448-a351-30c2044c3814",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "tempora reprehenderit quam",
+					"name": "surculus appono itaque",
 					"issued": "2020-02-01",
 					"currencyCode": "USD",
 					"participants": [],
 					"items": [],
 					"payers": [],
-					"ownerUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
-					"selfUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
+					"ownerUserId": "8afe767f-5e74-41b7-bfa4-22872f477793",
+					"selfUserId": "8afe767f-5e74-41b7-bfa4-22872f477793",
 					"debts": {
 						"direction": "outcoming",
 						"debts": []
@@ -32,7 +32,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
+						"id": "bd0d48e0-70f7-4448-a351-30c2044c3814",
 						"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"participants": [],
 						"items": [],

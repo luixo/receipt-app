@@ -4,7 +4,7 @@ exports[`accountConnectionIntentions.remove > functionality > account connection
 {
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:48c2e24a-608c-4813-923d-c1f7122d3538|targetAccountId:5cd9c297-1547-4806-8da8-4b83d6ab4ecc": undefined,
+      "accountId:bb1fc619-2cf1-4501-afee-242ac49a0db8|targetAccountId:73bd681b-844d-4c94-ac9c-40ddb798633d": undefined,
     },
   },
 }

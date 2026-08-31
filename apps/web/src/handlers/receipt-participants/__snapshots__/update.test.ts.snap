@@ -4,7 +4,7 @@ exports[`receiptParticipants.update > functionality > update role > for another 
 {
   "updated": {
     "receiptParticipants": {
-      "receiptId:c27ebd16-5e6c-40e0-a5da-5729efd65c20|userId:fbabce36-a6a3-4822-9d09-82380d3ca64f": {
+      "receiptId:e612691a-267e-4426-8aba-fa578d947c4d|userId:9a0f03b6-1495-4e4a-a66e-4bf7193a5a15": {
         "role": "viewer",
         "updatedAt": "2020-01-01 00:01:00+00",
       },

@@ -1,18 +1,18 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"56074242-0dc3-439a-963d-d1cd677e603d\"}]": {
+		"debts.get:[{\"id\":\"0cc4e459-3f41-4e53-8d2b-34fe107ce4dc\"}]": {
 			"state": {
 				"data": {
-					"id": "56074242-0dc3-439a-963d-d1cd677e603d",
-					"currencyCode": "XPF",
+					"id": "0cc4e459-3f41-4e53-8d2b-34fe107ce4dc",
+					"currencyCode": "AED",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"timestamp": "2019-12-16",
-					"note": "architecto ex consequuntur aut",
+					"timestamp": "2019-12-25",
+					"note": "adipiscor caveo iusto ascisco",
 					"receiptId": "<undefined>",
-					"amount": 7387.08,
+					"amount": 6784.13,
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": "<undefined>",
-					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+					"userId": "96d1d7e0-df12-4dae-a932-d54170d80a2f"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -22,19 +22,19 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"ca3e89b3-523d-4e5b-94a1-c750dd68f06a\"}]": {
+		"debts.get:[{\"id\":\"101a95f0-555e-4f90-98dd-6700ca684428\"}]": {
 			"state": {
 				"data": {
-					"id": "ca3e89b3-523d-4e5b-94a1-c750dd68f06a",
-					"currencyCode": "CLP",
+					"id": "101a95f0-555e-4f90-98dd-6700ca684428",
+					"currencyCode": "MYR",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"timestamp": "2019-12-16",
-					"note": "a possimus blanditiis consequatur",
+					"timestamp": "2019-12-11",
+					"note": "paulatim abscido patrocinor dignissimos",
 					"receiptId": "<undefined>",
-					"amount": 6606.15,
+					"amount": 9574.07,
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": "<undefined>",
-					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+					"userId": "96d1d7e0-df12-4dae-a932-d54170d80a2f"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -44,19 +44,19 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"ec7042fc-4520-46ce-acb4-0ef485e983ef\"}]": {
+		"debts.get:[{\"id\":\"20053a52-7e58-464f-acd7-9ce9b3756a78\"}]": {
 			"state": {
 				"data": {
-					"id": "ec7042fc-4520-46ce-acb4-0ef485e983ef",
-					"currencyCode": "GIP",
+					"id": "20053a52-7e58-464f-acd7-9ce9b3756a78",
+					"currencyCode": "JPY",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"timestamp": "2019-12-10",
-					"note": "sunt est debitis aliquam",
+					"timestamp": "2019-12-09",
+					"note": "aedificium carus audeo quod",
 					"receiptId": "<undefined>",
-					"amount": -3537.36,
+					"amount": -9699.4,
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": "<undefined>",
-					"userId": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9"
+					"userId": "96d1d7e0-df12-4dae-a932-d54170d80a2f"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -66,13 +66,13 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
+		"debts.getAllUser:[{\"userId\":\"96d1d7e0-df12-4dae-a932-d54170d80a2f\"}]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",
 					"message": "Mock \"debts.getAllUser\" error"
 				},
-				"errorUpdateCount": 1,
+				"errorUpdateCount": 2,
 				"fetchFailureCount": 1,
 				"fetchMeta": null,
 				"isInvalidated": false,
@@ -80,11 +80,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
+		"users.get:[{\"id\":\"96d1d7e0-df12-4dae-a932-d54170d80a2f\"}]": {
 			"state": {
 				"data": {
-					"id": "0c2d8dc5-d52e-4271-b757-434eb2a5aca9",
-					"name": "Dr. Essie Stiedemann",
+					"id": "96d1d7e0-df12-4dae-a932-d54170d80a2f",
+					"name": "Al Russel",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},

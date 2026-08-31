@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"9d54d814-c899-429d-af7f-e16a9893ffe0\"}]": {
+		"debts.get:[{\"id\":\"55c72a1c-8e62-4478-b465-3f79a43cfe53\"}]": {
 			"state": {
 				"data": {
-					"amount": -5275.12
+					"amount": -4889.2
 				},
 				"dataUpdateCount": 2
 			}
@@ -21,9 +21,9 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "9d54d814-c899-429d-af7f-e16a9893ffe0",
+						"id": "55c72a1c-8e62-4478-b465-3f79a43cfe53",
 						"update": {
-							"amount": -5275.12
+							"amount": -4889.2
 						}
 					}
 				}

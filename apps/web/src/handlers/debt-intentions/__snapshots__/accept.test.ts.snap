@@ -4,17 +4,17 @@ exports[`debtIntentions.accept > functionality > debt did not exist on our accou
 {
   "added": {
     "debts": {
-      "id:a960195d-11ac-43b2-a920-8102435cdb2a|ownerAccountId:3f15eacc-f005-4bf0-b89b-358bb3828e10": {
-        "amount": "565.6400",
+      "id:96bf9c27-198e-418f-be49-8ef9c6946592|ownerAccountId:ac99ee4b-9080-4ced-a8a0-444f173ef623": {
+        "amount": "470.9100",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "TRY",
-        "id": "a960195d-11ac-43b2-a920-8102435cdb2a",
-        "note": "Ab dignissimos officia officia necessitatibus possimus.",
-        "ownerAccountId": "3f15eacc-f005-4bf0-b89b-358bb3828e10",
-        "receiptId": "ac86f88f-66a0-4e9a-8d77-7839add6d227",
+        "currencyCode": "GMD",
+        "id": "96bf9c27-198e-418f-be49-8ef9c6946592",
+        "note": "Carpo earum xiphias vitium.",
+        "ownerAccountId": "ac99ee4b-9080-4ced-a8a0-444f173ef623",
+        "receiptId": "288a1bc7-c6ef-4d35-81f4-55bc8c93e0aa",
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "6d1a0999-ecd2-4c13-a06a-e18d2e71aca9",
+        "userId": "24b84697-f90f-4add-9643-086c1aec6193",
       },
     },
   },
@@ -25,9 +25,9 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
 {
   "updated": {
     "debts": {
-      "id:d71020d8-553b-45ce-8cd2-4df1d0057053|ownerAccountId:19787db4-b092-4be9-8721-93f366e58985": {
-        "amount": "741.2200",
-        "currencyCode": "BRL",
+      "id:8809ceb6-73e4-4ee0-9dc8-3fcc4e64865a|ownerAccountId:4bba98a1-6f92-48a9-a3c2-3bfdc9d8ed1b": {
+        "amount": "43.8500",
+        "currencyCode": "DZD",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
@@ -40,9 +40,9 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
 {
   "updated": {
     "debts": {
-      "id:c0dfa818-bdd7-49f1-90ae-638adbe4238b|ownerAccountId:d3eb30cd-68d2-40cf-8e44-17cce47ac32c": {
-        "amount": "644.7300",
-        "currencyCode": "CNY",
+      "id:bad54f6a-aca7-4dbf-bee5-68efd4e4fdd8|ownerAccountId:7b1ff11a-6b5d-4bae-a328-2631994177cd": {
+        "amount": "-623.4000",
+        "currencyCode": "LYD",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -55,33 +55,33 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
 {
   "added": {
     "debts": {
-      "id:43bf5ea5-77b1-409d-a63b-ed62c3c8fcc5|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
-        "amount": "-818.6200",
+      "id:2e73f758-214e-48d0-b60a-f9de62904fc9|ownerAccountId:051a3473-2ea1-4abf-87fe-dbaced6071a5": {
+        "amount": "-148.2500",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "PLN",
-        "id": "43bf5ea5-77b1-409d-a63b-ed62c3c8fcc5",
-        "note": "Sit explicabo repellat pariatur.",
-        "ownerAccountId": "fafeb023-e645-46f7-9047-36240d7da0f9",
+        "currencyCode": "LAK",
+        "id": "2e73f758-214e-48d0-b60a-f9de62904fc9",
+        "note": "Solitudo aegrus quos tabula vomer deprimo vilitas vespillo tubineus studio.",
+        "ownerAccountId": "051a3473-2ea1-4abf-87fe-dbaced6071a5",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "02f30387-7df1-4ac5-8f74-8591c280e791",
+        "userId": "be9cea7b-2700-412e-a183-01ad9211a074",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:7e41d833-50a1-4aa3-9d39-9241a1eaa097|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
-        "amount": "544.1900",
-        "currencyCode": "LSL",
-        "timestamp": "2020-04-01",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
-      "id:e5a6b3ec-9ac4-4eba-8379-bf22740f0a1d|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
-        "amount": "733.4100",
-        "currencyCode": "BZD",
+      "id:5ff7439e-ad55-4ed3-ac55-adef2787c71b|ownerAccountId:051a3473-2ea1-4abf-87fe-dbaced6071a5": {
+        "amount": "558.5300",
+        "currencyCode": "CUP",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
+      },
+      "id:935382db-3c53-4128-afcb-f49283b2ba20|ownerAccountId:051a3473-2ea1-4abf-87fe-dbaced6071a5": {
+        "amount": "-17.7800",
+        "currencyCode": "PGK",
+        "timestamp": "2020-04-01",
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -92,17 +92,17 @@ exports[`debtIntentions.accept > input verification > mixed success and fail 1`]
 {
   "added": {
     "debts": {
-      "id:8d376f0c-f7f3-4f5d-99d6-f7663448f6c8|ownerAccountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c": {
-        "amount": "157.9200",
+      "id:62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb|ownerAccountId:1d263b1a-801e-44e4-a018-32c2cbc9f60e": {
+        "amount": "-981.5400",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "XCD",
-        "id": "8d376f0c-f7f3-4f5d-99d6-f7663448f6c8",
-        "note": "A quos quod amet id quos architecto accusantium minima.",
-        "ownerAccountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
-        "receiptId": "fa44b851-0f92-4c9f-839c-c8d68a0e90b7",
+        "currencyCode": "BAM",
+        "id": "62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb",
+        "note": "Cresco temperantia asporto.",
+        "ownerAccountId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
+        "receiptId": "e6ada951-0179-4108-b2be-222cbc95533e",
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "20566048-adf0-457d-936e-ecfb1d719980",
+        "userId": "c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3",
       },
     },
   },

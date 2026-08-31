@@ -1,8 +1,8 @@
 {
 	"debts.add": {
-		"clientCalls": 1
+		"clientCalls": 2
 	},
 	"debts.update": {
-		"clientCalls": 1
+		"clientCalls": 2
 	}
 }

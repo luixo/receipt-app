@@ -4,24 +4,24 @@
 			"state": {
 				"data": [
 					{
-						"currencyCode": "LRD",
-						"count": 4
+						"currencyCode": "WST",
+						"count": 58
 					},
 					{
-						"currencyCode": "SCR",
-						"count": 13
+						"currencyCode": "GYD",
+						"count": 73
 					},
 					{
-						"currencyCode": "ARS",
-						"count": 54
-					},
-					{
-						"currencyCode": "VUV",
+						"currencyCode": "FJD",
 						"count": 76
 					},
 					{
-						"currencyCode": "SZL",
-						"count": 92
+						"currencyCode": "CVE",
+						"count": 94
+					},
+					{
+						"currencyCode": "MXN",
+						"count": 100
 					}
 				],
 				"dataUpdateCount": 1,

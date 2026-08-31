@@ -4,8 +4,8 @@ exports[`resetPasswordIntentions.cleanup > functionality > reset password intent
 {
   "deleted": {
     "resetPasswordIntentions": {
-      "accountId:8bb70d3a-398a-4d0b-aa4d-60000fc80e14|token:455bb7b9-8232-4b30-a851-acdd2817454f": undefined,
-      "accountId:8bb70d3a-398a-4d0b-aa4d-60000fc80e14|token:799671c8-2985-4f99-82d8-df44da695511": undefined,
+      "accountId:3698afb6-7404-4907-95e8-cdd43925dec1|token:153839c8-3f02-44b3-8e90-e90ac4b18d93": undefined,
+      "accountId:3698afb6-7404-4907-95e8-cdd43925dec1|token:bc48c163-c0ad-4f51-8b39-df9d93d70a8b": undefined,
     },
   },
 }

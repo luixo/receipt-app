@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"resetPasswordIntentions.get:[{\"token\":\"be1c51e1-aeb6-410c-94fa-6c53ad4cac58\"}]": {
+		"resetPasswordIntentions.get:[{\"token\":\"b15eab1c-f65a-44a5-b665-9d66e7daf871\"}]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",

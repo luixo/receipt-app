@@ -4,17 +4,17 @@ exports[`receipts.remove > functionality > receipt is removed 1`] = `
 {
   "deleted": {
     "receiptItems": {
-      "id:1657e0b1-af47-4802-b508-9c3cfbc6e0ef": undefined,
-      "id:a02ef01f-3420-4178-8637-729274749591": undefined,
-      "id:a7d27271-ee65-4644-88cb-c1860422e5db": undefined,
-      "id:ff403c95-9784-4de0-8a0e-66e9dc76fe5e": undefined,
+      "id:46205292-5141-4639-9b3b-8417dced9e92": undefined,
+      "id:c660a112-3e21-439a-a063-edfd7277665c": undefined,
+      "id:cf5f8f81-13af-4628-b6c7-46464c9ea3ef": undefined,
+      "id:e34c6fe4-298c-4c79-b6b3-db6957894c45": undefined,
     },
     "receiptParticipants": {
-      "receiptId:1657e0b1-af47-4802-b508-9c3cfbc6e0ef|userId:08bd06fb-ddb6-4835-af60-caa6a243a5f5": undefined,
-      "receiptId:1657e0b1-af47-4802-b508-9c3cfbc6e0ef|userId:e578d406-9700-4e7f-88cb-70e0e5548a42": undefined,
+      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|userId:3998d006-ed7f-4530-be0f-40767224451a": undefined,
+      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|userId:8f1fd9aa-e20d-442b-a00f-691852274028": undefined,
     },
     "receipts": {
-      "id:1657e0b1-af47-4802-b508-9c3cfbc6e0ef": undefined,
+      "id:46205292-5141-4639-9b3b-8417dced9e92": undefined,
     },
   },
 }

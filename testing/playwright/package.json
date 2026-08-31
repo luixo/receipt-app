@@ -6,7 +6,7 @@
 		"test": "TZ=UTC playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
-		"@faker-js/faker": "^8.0.2",
+		"@faker-js/faker": "catalog:",
 		"@playwright/test": "catalog:",
 		"@ra/app": "workspace:*",
 		"@ra/test-utils": "workspace:*",
@@ -18,7 +18,7 @@
 		"@types/uuid": "catalog:",
 		"async-await-queue": "^2.1.4",
 		"colors": "^1.4.0",
-		"deep-object-diff": "^1.1.9",
+		"deep-object-diff": "catalog:",
 		"jimp": "catalog:",
 		"playwright": "catalog:",
 		"timekeeper": "catalog:",

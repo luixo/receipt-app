@@ -4,11 +4,11 @@ exports[`auth.login > functionality > login successful 1`] = `
 {
   "added": {
     "sessions": {
-      "sessionId:3a5a4d2e-cde5-4132-9be0-c13d55fb2b6c": {
-        "accountId": "5acba26a-7c4b-4340-9aa6-0a1942365f2e",
+      "sessionId:3542ce12-ec35-4f26-b536-1a9adfed13bc": {
+        "accountId": "a6ffa077-eaca-4387-be3d-f7689434be4f",
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "3a5a4d2e-cde5-4132-9be0-c13d55fb2b6c",
+        "sessionId": "3542ce12-ec35-4f26-b536-1a9adfed13bc",
       },
     },
   },

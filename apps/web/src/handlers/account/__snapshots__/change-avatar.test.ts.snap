@@ -4,8 +4,8 @@ exports[`account.changeAvatar > functionality > avatar changes to a given image 
 {
   "updated": {
     "accounts": {
-      "id:6fbc201e-126e-4834-8710-3c2910e12e39": {
-        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/6fbc201e-126e-4834-8710-3c2910e12e39.png?lastModified=1577836800000",
+      "id:09ca8fd7-b571-45a3-9a2f-0aec2f32c47a": {
+        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/09ca8fd7-b571-45a3-9a2f-0aec2f32c47a.png?lastModified=1577836800000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -17,7 +17,7 @@ exports[`account.changeAvatar > functionality > avatar changes to null 1`] = `
 {
   "updated": {
     "accounts": {
-      "id:fd2e5e36-7dd4-49d4-a77f-058e4840222b": {
+      "id:111fae5d-5adc-4a50-a691-b9235e73cda8": {
         "avatarUrl": null,
         "updatedAt": "2020-01-01 00:01:00+00",
       },

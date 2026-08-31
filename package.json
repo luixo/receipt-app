@@ -73,7 +73,7 @@
 		"@trpc/react-query": "11.9.0",
 		"@trpc/server": "11.9.0",
 		"@trpc/tanstack-react-query": "11.9.0",
-		"@types/uuid": "9.0.2",
+		"@types/uuid": "11.0.0",
 		"babel-plugin-react-compiler": "1.0.0",
 		"cookie": "1.0.2",
 		"dataloader": "2.2.2",
@@ -88,9 +88,11 @@
 		"react-dom": "19.2.0",
 		"react-i18next": "16.5.4",
 		"tailwindcss": "4.3.3",
-		"timekeeper": "2.3.1",
+		"@faker-js/faker": "^10.6.0",
+		"timekeeper": "^2.3.1",
+		"deep-object-diff": "^1.1.9",
 		"uniwind": "^1.2.2",
-		"uuid": "9.0.0",
+		"uuid": "14.0.2",
 		"zod": "4.0.5"
 	},
 	"patchedDependencies": {

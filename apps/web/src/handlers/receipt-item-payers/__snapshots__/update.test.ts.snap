@@ -4,8 +4,8 @@ exports[`receiptItemPayers.update > functionality > updates item participant pay
 {
   "updated": {
     "receiptItemPayers": {
-      "itemId:88d0ae01-90e5-4052-a942-3569c1416382|userId:a01488f5-7317-4b96-85df-aa832bc9c7b7": {
-        "part": "75.00",
+      "itemId:14db991f-4500-4bfe-9604-79d122e47a8e|userId:e4e050cb-5a61-421e-a9ae-d46716e9f8b0": {
+        "part": "27.00",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
