@@ -11,6 +11,7 @@ import { I18nextProvider } from "react-i18next";
 import { capitalize, clone, keys, unique } from "remeda";
 
 import type { TRPCError } from "~app/trpc";
+import { promisifyEvent } from "~utils/promise";
 
 import type { Language, Namespace } from "./i18n-data";
 import { baseLanguage, defaultNamespace, languages } from "./i18n-data";
@@ -116,8 +117,11 @@ export const createI18nContext = ({
 			return;
 		}
 		if (instance.isInitializing) {
-			return new Promise<void>((resolve) => {
-				instance.on("initialized", () => resolve());
+			return promisifyEvent({
+				subscribe: (listener) => {
+					instance.on("initialized", listener);
+					return () => instance.off("initialized", listener);
+				},
 			});
 		}
 		if (isInitializable) {

@@ -25,6 +25,7 @@ import { urlSettings } from "~tests/frontend/consts";
 import type { ExtendedFaker } from "~tests/utils/faker";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
+import { promisifyEvent, promisifyServer } from "~utils/promise";
 import { transformer } from "~utils/transformer";
 import type { TransformerResult } from "~utils/transformer";
 import type { MaybePromise } from "~utils/types";
@@ -246,75 +247,71 @@ const handleRequest = async (
 
 const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 	const controllers: Record<string, Controller> = {};
-	const server = http.createServer(async (req, res) => {
-		let body = "";
-		const jsonPromise = new Promise<string>((resolve) => {
-			req.on("data", (chunk: string) => {
-				body += chunk;
+	const server = promisifyServer(
+		http.createServer(async (req, res) => {
+			const jsonPromise = promisifyEvent<string>((listener, errorListener) => {
+				let body = "";
+				const dataListener = (chunk: string) => {
+					body += chunk;
+				};
+				const doneListener = () => listener(body);
+				req.on("data", dataListener);
+				req.on("error", errorListener);
+				req.on("end", doneListener);
+				return () => {
+					req.off("data", dataListener);
+					req.off("error", errorListener);
+					req.off("end", doneListener);
+				};
 			});
-			res.on("end", () => {
-				resolve(body);
+			res.writeHead(200, {
+				"Content-Type": "application/json",
 			});
-		});
-		res.writeHead(200, {
-			"Content-Type": "application/json",
-		});
-		const url = new URL(req.url || "/", "http://localhost");
-		const controllerId = getCookie(
-			req.headers.cookie || "",
-			apiCookieNames.controllerId,
-		);
-		if (!controllerId || Array.isArray(controllerId)) {
-			throw new Error(
-				`Expected to have controller id for url "${url.toString()}"`,
+			const url = new URL(req.url || "/", "http://localhost");
+			const controllerId = getCookie(
+				req.headers.cookie || "",
+				apiCookieNames.controllerId,
 			);
-		}
-		const controller = controllers[controllerId];
-		if (!controller) {
-			throw new Error(`Expected to have controller for id "${controllerId}"`);
-		}
-		const headers = new Headers();
-		try {
-			const response = await handleRequest(
-				controller,
-				headers,
-				"server",
-				url.searchParams.has("batch"),
-				url,
-				req.method || "GET",
-				() => jsonPromise,
-			);
-			if (!res.headersSent) {
-				res.setHeaders(headers);
+			if (!controllerId || Array.isArray(controllerId)) {
+				throw new Error(
+					`Expected to have controller id for url "${url.toString()}"`,
+				);
 			}
-			res.end(JSON.stringify(response));
-		} catch (error) {
-			if (error === CLEANUP_MARK) {
-				res.statusCode = 500;
-				res.end("Cleanup finished");
-				return;
+			const controller = controllers[controllerId];
+			if (!controller) {
+				throw new Error(`Expected to have controller for id "${controllerId}"`);
 			}
-			throw error;
-		}
-	});
+			const headers = new Headers();
+			try {
+				const response = await handleRequest(
+					controller,
+					headers,
+					"server",
+					url.searchParams.has("batch"),
+					url,
+					req.method || "GET",
+					() => jsonPromise,
+				);
+				if (!res.headersSent) {
+					res.setHeaders(headers);
+				}
+				res.end(JSON.stringify(response));
+			} catch (error) {
+				if (error === CLEANUP_MARK) {
+					res.statusCode = 500;
+					res.end("Cleanup finished");
+					return;
+				}
+				throw error;
+			}
+		}),
+	);
 
 	return {
 		getPort: () => port,
 		start: async () => {
-			await new Promise<void>((resolve) => {
-				server.listen(port, resolve);
-			});
-			return async () => {
-				await new Promise<void>((resolve, reject) => {
-					server.close((err) => {
-						if (err) {
-							reject(err);
-						} else {
-							resolve();
-						}
-					});
-				});
-			};
+			await server.listen(port);
+			return () => server.close();
 		},
 		createController: (id: string) => {
 			const controller: Controller = {

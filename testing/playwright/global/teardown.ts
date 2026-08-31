@@ -1,12 +1,11 @@
 import type { FullConfig } from "@playwright/test";
-import type * as http from "node:http";
+
+import type { promisifyServer } from "~utils/promise";
 
 const globalTeardown = async (config: FullConfig) => {
-	await new Promise<void>((resolve, reject) => {
-		(config.metadata.portManagerServer as http.Server).close((err) =>
-			err ? reject(err) : resolve(),
-		);
-	});
+	await (
+		config.metadata.portManagerServer as ReturnType<typeof promisifyServer>
+	).close();
 };
 
 export default globalTeardown;

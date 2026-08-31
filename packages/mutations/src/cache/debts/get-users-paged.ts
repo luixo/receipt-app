@@ -1,12 +1,7 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { UserId } from "~db/ids";
 
-import type {
-	ControllerContext,
-	ControllerWith,
-	UpdateFn,
-	UpdaterRevertResult,
-} from "../../types";
+import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
 import { applyWithRevert, getAllInputs, getUpdatedData } from "../utils";
 
 type Controller = ControllerWith<{
@@ -95,16 +90,13 @@ export const getRevertController = ({
 }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getUsersPaged };
 	return {
-		update: async (userId: UserId) =>
-			new Promise<UpdaterRevertResult | undefined>((resolve) => {
-				setTimeout(() => {
-					const allDebts = queryClient.getQueryData(
-						trpc.debts.getAllUser.queryKey({ userId }),
-					);
-					const updateUserBinded = () =>
-						updateUser(controller, allDebts, userId);
-					resolve(applyWithRevert(updateUserBinded, updateUserBinded));
-				});
-			}),
+		update: async (userId: UserId) => {
+			await Promise.resolve();
+			const allDebts = queryClient.getQueryData(
+				trpc.debts.getAllUser.queryKey({ userId }),
+			);
+			const updateUserBinded = () => updateUser(controller, allDebts, userId);
+			return applyWithRevert(updateUserBinded, updateUserBinded);
+		},
 	};
 };

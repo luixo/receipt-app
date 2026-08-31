@@ -2,6 +2,7 @@ import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 
 import { MAX_AVATAR_SIDE_SIZE } from "~utils/images";
+import { promisifyEvent } from "~utils/promise";
 
 export type Props = {
 	image: string;
@@ -13,14 +14,19 @@ export type Props = {
 	onZoomChange: (zoom: number) => void;
 };
 
-const convertDataUrlToImageElement = (url: string) =>
-	new Promise<HTMLImageElement>((resolve, reject) => {
+const convertDataUrlToImageElement = async (url: string) =>
+	promisifyEvent<HTMLImageElement>((listener, errorListener) => {
 		const image = new Image();
-		image.addEventListener("load", () => resolve(image));
-		image.addEventListener("error", (error) =>
-			reject(new Error(error.message)),
-		);
+		const localListener = () => listener(image);
+		const localErrorListener = (error: ErrorEvent) =>
+			errorListener(new Error(error.message));
+		image.addEventListener("load", localListener);
+		image.addEventListener("error", localErrorListener);
 		image.src = url;
+		return () => {
+			image.removeEventListener("load", localListener);
+			image.removeEventListener("error", localErrorListener);
+		};
 	});
 
 const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
@@ -64,12 +70,12 @@ const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
 export const getFormData = async (imageSrc: string, pixelCrop: Area) => {
 	const formData = new FormData();
 	const croppedCanvas = await getCroppedCanvas(imageSrc, pixelCrop);
-	const croppedBlob = await new Promise<File>((resolve) => {
-		const type = "image/png";
+	const type = "image/png";
+	const croppedBlob = await promisifyEvent<File>((listener) => {
 		croppedCanvas.toBlob(
 			// It is not clear in which case `file` in `null`
 			// oxlint-disable-next-line typescript/no-non-null-assertion
-			(file) => resolve(new File([file!], "avatar.png", { type })),
+			(file) => listener(new File([file!], "avatar.png", { type })),
 			type,
 		);
 	});

@@ -15,16 +15,25 @@ import type { RouterContext } from "~web/pages/__root";
 // see https://github.com/TanStack/router/issues/4084
 const ERROR_TAG = "__error__";
 
+const getPrefetchPromise = async (
+	ctx: PrefetchContext,
+	options: ReturnType<TRPCQueryOptions<ResolverDef>>,
+) => {
+	try {
+		const x = await ctx.context.queryClient.fetchQuery(options);
+		return transformer.serialize(x);
+	} catch (error) {
+		return { [ERROR_TAG]: true, message: String(error) };
+	}
+};
+
 type PrefetchContext = { context: RouterContext };
 const prefetchQuery = (
 	ctx: PrefetchContext,
 	options: ReturnType<TRPCQueryOptions<ResolverDef>>,
 ) => ({
 	queryKey: options.queryKey,
-	promise: ctx.context.queryClient
-		.fetchQuery(options)
-		.catch((error) => ({ [ERROR_TAG]: true, message: String(error) }))
-		.then(transformer.serialize),
+	promise: getPrefetchPromise(ctx, options),
 });
 
 export const prefetchQueries = (
@@ -86,21 +95,13 @@ export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 		for (const query of prefetchedQueries) {
 			void localQueryClient.prefetchQuery({
 				queryKey: query.queryKey,
-				queryFn: () =>
-					query.promise
-						.then(transformer.deserialize)
-						.then((result: unknown) => {
-							if (
-								typeof result === "object" &&
-								result &&
-								ERROR_TAG in result &&
-								"message" in result &&
-								typeof result.message === "string"
-							) {
-								throw new TRPCClientError(result.message);
-							}
-							return result;
-						}),
+				queryFn: async () => {
+					const result = await query.promise;
+					if (ERROR_TAG in result) {
+						throw new TRPCClientError(result.message);
+					}
+					return transformer.deserialize(result);
+				},
 			});
 		}
 		for (const error of matchErrors) {
