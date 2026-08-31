@@ -349,11 +349,13 @@ const overriddenRules = {
 	"typescript/no-floating-promises": "error",
 	// We use autoFocus on custom components hence we should ignore them (or better list every component it might be passed to)
 	"jsx-a11y/no-autofocus": ["error", { ignoreNonDOM: true }],
+	"unicorn/explicit-length-check": ["error", { "non-zero": "not-equal" }],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
 	// We see no evil in nested ternaries
 	"no-nested-ternary": "off",
+	"unicorn/no-nested-ternary": "off",
 	// This is guarded by typescript
 	"consistent-return": "off",
 	// Typescript version is typescript/switch-exhaustiveness-check
@@ -430,8 +432,6 @@ const temporaryDisabledRules = {
 	"unicorn/no-array-reduce": "off", // 48 cases
 	"unicorn/no-array-callback-reference": "off", // 46 cases
 	"unicorn/catch-error-name": "off", // 41 cases
-	"unicorn/explicit-length-check": "off", // 34 cases
-	"unicorn/no-nested-ternary": "off", // 30 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

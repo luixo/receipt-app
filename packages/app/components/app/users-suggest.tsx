@@ -84,7 +84,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	const trpc = useTRPC();
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
-	const queryEnabled = debouncedValue.length >= 1;
+	const queryEnabled = debouncedValue.length !== 0;
 	const selectedUserIds = Array.isArray(selected)
 		? selected
 		: selected
