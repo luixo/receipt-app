@@ -288,7 +288,10 @@ describe("debts.getAllUser", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ userId: firstUserId }),
-					() => caller.procedure({ userId: nonExistingUserId }).catch((error) => error),
+					() =>
+						caller
+							.procedure({ userId: nonExistingUserId })
+							.catch((error) => error),
 				]);
 				const successfulEntries = fromEntries(
 					results[0].map(({ currencyCode, sum }) => [currencyCode, sum]),

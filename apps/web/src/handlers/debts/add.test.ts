@@ -146,7 +146,8 @@ describe("debts.add", () => {
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runInBand([
 					() => caller.procedure(getValidDebt(userId)),
-					() => caller.procedure(getValidDebt(fakeUserId)).catch((error) => error),
+					() =>
+						caller.procedure(getValidDebt(fakeUserId)).catch((error) => error),
 				]),
 			);
 
@@ -364,7 +365,8 @@ describe("debts.add", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure(getValidDebt(foreignUserId)),
-					() => caller.procedure(getValidDebt(fakeUserId)).catch((error) => error),
+					() =>
+						caller.procedure(getValidDebt(fakeUserId)).catch((error) => error),
 				]);
 				expect(results).toHaveLength(2);
 				expect(results[0].id).toMatch(UUID_REGEX);
