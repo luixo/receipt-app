@@ -34,7 +34,7 @@ export const procedure = authProcedure
 			months: 1,
 		});
 		switch (input.options.type) {
-			case "debts": {
+			case "debts":
 				return ctx.database
 					.selectFrom("debts")
 					.select([
@@ -51,7 +51,6 @@ export const procedure = authProcedure
 					.groupBy("currencyCode")
 					.orderBy("count", "desc")
 					.execute();
-			}
 			case "receipts": {
 				const topCurrenciesResult = await ctx.database
 					.with("mergedReceipts", () => {

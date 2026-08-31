@@ -49,9 +49,8 @@ export const getLanguageFromRequest = (request: Request | null) => {
 				}
 				break;
 			}
-			case "baseLocale": {
+			case "baseLocale":
 				return baseLanguage;
-			}
 		}
 	}
 	return baseLanguage;

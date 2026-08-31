@@ -19,7 +19,7 @@ export type Props = TextChild | ActionChild;
 
 export const Child: React.FC<Props> = (props) => {
 	switch (props.type) {
-		case "text": {
+		case "text":
 			switch (props.size) {
 				case "h3":
 					return (
@@ -39,7 +39,7 @@ export const Child: React.FC<Props> = (props) => {
 				default:
 					return <p>{props.text}</p>;
 			}
-		}
+
 		case "action":
 			return <Button href={props.href} text={props.text} />;
 	}

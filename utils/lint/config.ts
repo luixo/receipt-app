@@ -350,6 +350,9 @@ const overriddenRules = {
 	// We use autoFocus on custom components hence we should ignore them (or better list every component it might be passed to)
 	"jsx-a11y/no-autofocus": ["error", { ignoreNonDOM: true }],
 	"unicorn/explicit-length-check": ["error", { "non-zero": "not-equal" }],
+	"unicorn/switch-case-braces": ["error", "avoid"],
+	// This number was figured out experimentally
+	"unicorn/max-nested-calls": ["error", { max: 5 }],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
@@ -405,6 +408,12 @@ const disabledRules = {
 	"unicorn/prefer-top-level-await": "off",
 	// There's no particular reason not to use `window`
 	"unicorn/prefer-global-this": "off",
+	// We've got typescript for that
+	"unicorn/no-array-callback-reference": "off",
+	// No way we're not using reduce
+	"unicorn/no-array-reduce": "off",
+	// We're going to be using null literals
+	"unicorn/no-null": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -425,12 +434,6 @@ const temporaryDisabledRules = {
 	"typescript/unbound-method": "off", // 3 cases
 	"typescript/ban-types": "off", // 2 cases
 	"typescript/no-useless-default-assignment": "off", // 2 cases
-	// unicorn
-	"unicorn/no-null": "off", // 168 cases
-	"unicorn/max-nested-calls": "off", // 83 cases
-	"unicorn/switch-case-braces": "off", // 58 cases
-	"unicorn/no-array-reduce": "off", // 48 cases
-	"unicorn/no-array-callback-reference": "off", // 46 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases
