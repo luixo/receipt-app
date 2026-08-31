@@ -17,7 +17,7 @@ test("Renders a generated avatar for a user without a connected account", async 
 	userAvatar,
 }) => {
 	const [user] = defaultGenerateUsers({ faker, amount: 1 });
-	assert(user);
+	assert.ok(user);
 	const { receipt } = await mockReceipt({
 		generateUsers: () => [user],
 		generateReceiptItems: () => [],

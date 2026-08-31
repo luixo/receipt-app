@@ -30,7 +30,7 @@ test("userId query param pre-selects user", async ({
 	awaitCacheKey,
 }) => {
 	const { users } = await mockBase();
-	assert(users[0]);
+	assert.ok(users[0]);
 	const user = users[0];
 
 	await page.goto(`/debts/add?userId=${user.id}`);
@@ -51,7 +51,7 @@ test.describe("Invalid form disables submit button", () => {
 		fillValidForm,
 	}) => {
 		const { users } = await mockBase();
-		assert(users[0]);
+		assert.ok(users[0]);
 		const user = users[0];
 
 		await page.goto("/debts/add");
@@ -73,7 +73,7 @@ test.describe("Invalid form disables submit button", () => {
 		fillValidForm,
 	}) => {
 		const { users } = await mockBase();
-		assert(users[0]);
+		assert.ok(users[0]);
 		const user = users[0];
 
 		await page.goto("/debts/add");
@@ -115,7 +115,7 @@ test.describe("Invalid form disables submit button", () => {
 		fillValidForm,
 	}) => {
 		const { users, topCurrencies } = await mockBase();
-		assert(users[0]);
+		assert.ok(users[0]);
 		const user = users[0];
 
 		const createPause = api.createPause();
@@ -153,10 +153,10 @@ test("'debts.add' mutation", async ({
 	faker,
 }) => {
 	const { users, topCurrencies } = await mockBase();
-	assert(users[0]);
+	assert.ok(users[0]);
 	const user = users[0];
 	const sortedCurrencies = topCurrencies.toSorted((a, b) => b.count - a.count);
-	assert(sortedCurrencies[0]);
+	assert.ok(sortedCurrencies[0]);
 	const topCurrency = sortedCurrencies[0];
 	const debtId = faker.string.uuid();
 
@@ -209,7 +209,7 @@ test("'debts.add' mutation", async ({
 	}
 
 	const [debt] = defaultGenerateDebts({ faker, userId: user.id, amount: 1 });
-	assert(debt);
+	assert.ok(debt);
 	api.mockFirst("debts.get", ({ input: { id } }) => {
 		if (id === debtId) {
 			return { ...debt, id: debtId, currencyCode: topCurrency.currencyCode };

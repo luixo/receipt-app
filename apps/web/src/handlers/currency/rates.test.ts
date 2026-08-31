@@ -152,7 +152,7 @@ describe("currency.rates", () => {
 						[
 							`${currencyFrom}->${currencyTo}`,
 							result[currencyTo]?.toString(),
-							{ expiryInS: 1440000 },
+							{ expiryInS: 1_440_000 },
 						],
 						{ result: undefined },
 					]),
@@ -203,7 +203,7 @@ describe("currency.rates", () => {
 							[
 								`${currencyFrom}->${currencyTo}`,
 								result[currencyTo]?.toString(),
-								{ expiryInS: 1440000 },
+								{ expiryInS: 1_440_000 },
 							],
 							{ result: undefined },
 						]),

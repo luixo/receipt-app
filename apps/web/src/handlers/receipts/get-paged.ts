@@ -194,7 +194,7 @@ const fetchPage = async (
 			.limit(input.limit)
 			.execute(),
 		mergedReceipts
-			.select((eb) => eb.fn.count<string>("mergedReceipts.id").as("amount"))
+			.select((eb) => eb.fn.count<number>("mergedReceipts.id").as("amount"))
 			.executeTakeFirstOrThrow(
 				/* c8 ignore start */
 				() =>
@@ -207,7 +207,7 @@ const fetchPage = async (
 	]);
 
 	return {
-		count: parseInt(receiptsCount.amount, 10),
+		count: receiptsCount.amount,
 		cursor: input.cursor,
 		items: receipts.map(({ id, name, matchedItems }) => ({
 			id,

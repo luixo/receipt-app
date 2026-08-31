@@ -114,11 +114,11 @@ const fetchPage = async (
 			.limit(input.limit)
 			.execute(),
 		fuzzyMatchedUsersExpression
-			.select([(eb) => eb.fn.count<string>("users.id").as("count")])
+			.select([(eb) => eb.fn.count<number>("users.id").as("count")])
 			.executeTakeFirstOrThrow(),
 	]);
 	return {
-		count: parseInt(totalCountUsers.count, 10),
+		count: totalCountUsers.count,
 		cursor,
 		items: fuzzyMatchedUsers.map(({ id }) => id),
 	};

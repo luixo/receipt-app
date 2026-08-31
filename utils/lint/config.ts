@@ -395,6 +395,8 @@ const disabledRules = {
 	"better-tailwindcss/enforce-logical-properties": "off",
 	// This doesn't work out good with formatter
 	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
+	// This creates more problem that solves
+	"unicorn/prefer-spread": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -432,14 +434,6 @@ const temporaryDisabledRules = {
 	"unicorn/no-useless-undefined": "off", // 16 cases
 	"unicorn/no-new-array": "off", // 15 cases
 	"unicorn/prefer-object-from-entries": "off", // 13 cases
-	"unicorn/consistent-assert": "off", // 11 cases
-	"unicorn/numeric-separators-style": "off", // 9 cases
-	"unicorn/prefer-number-coercion": "off", // 9 cases
-	"unicorn/prefer-number-properties": "off", // 8 cases
-	"unicorn/prefer-spread": "off", // 8 cases
-	"unicorn/prefer-module": "off", // 4 cases
-	"unicorn/no-abusive-eslint-disable": "off", // 2 cases
-	"unicorn/prefer-import-meta-properties": "off", // 2 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases

@@ -93,7 +93,7 @@ test("Rounding", async ({
 	const { debtUser } = await mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
-			assert(debt);
+			assert.ok(debt);
 			return [
 				{
 					...debt,

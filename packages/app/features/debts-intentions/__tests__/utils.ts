@@ -1,3 +1,5 @@
+import assert from "node:assert";
+
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
@@ -15,9 +17,8 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	mockDebts: ({ api, faker }, use) =>
 		use(({ generateDebts = defaultGenerateDebts }) => {
-			const [other] = defaultGenerateUsers({ faker, amount: 1 });
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			const debtUser = other!;
+			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
+			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
 			const debts = generateDebts({
 				faker,

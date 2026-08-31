@@ -37,12 +37,12 @@ const fetchPage = async (
 			.limit(input.limit)
 			.execute(),
 		accountUsers
-			.select(database.fn.count<string>("id").as("amount"))
+			.select(database.fn.count<number>("id").as("amount"))
 			.executeTakeFirstOrThrow(),
 	]);
 
 	return {
-		count: parseInt(usersCount.amount, 10),
+		count: usersCount.amount,
 		cursor: input.cursor,
 		items: users.map(({ id }) => id),
 	};

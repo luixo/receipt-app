@@ -110,7 +110,7 @@ export const procedure = authProcedure
 		const selfAccount = accounts.find(
 			(account) => account.id === ctx.auth.accountId,
 		);
-		assert(selfAccount, "Expected to have self account in account list");
+		assert.ok(selfAccount, "Expected to have self account in account list");
 		const [outboundDebts, inboundDebts] = await Promise.all([
 			!targetAccount.manualAcceptDebts
 				? database

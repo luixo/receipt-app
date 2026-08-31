@@ -50,7 +50,7 @@ const generateFormWithImage = async (
 	if (format === "webp") {
 		return getFormData([WEBP_BUFFER]);
 	}
-	const image = new Jimp({ width, height, color: 0xff000080 });
+	const image = new Jimp({ width, height, color: 0xff_00_00_80 });
 	if (type === "noise") {
 		for (let index = 0; index < image.bitmap.data.length; index += 1) {
 			image.bitmap.data[index] = Math.floor(Math.random() * 256);

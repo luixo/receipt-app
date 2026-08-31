@@ -112,15 +112,14 @@ const getPayersOrErrors = (
 		const matchedReceiptItems = receiptItems.filter(
 			(receiptItem) => receiptItem.itemId === input.itemId,
 		);
-		if (matchedReceiptItems.length === 0) {
+		const firstReceiptItem = matchedReceiptItems[0];
+		if (!firstReceiptItem) {
 			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt item "${input.itemId}" does not exist.`,
 			});
 		}
-		// We just checked for non-empty array
-		// oxlint-disable-next-line typescript/no-non-null-assertion
-		const { receiptId, ownerAccountId } = matchedReceiptItems[0]!;
+		const { receiptId, ownerAccountId } = firstReceiptItem;
 		if (ownerAccountId !== ctx.auth.accountId) {
 			const selfReceiptItemRole = matchedReceiptItems.find(
 				(receiptItem) => receiptItem.selfAccountId === ctx.auth.accountId,

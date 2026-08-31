@@ -66,12 +66,12 @@ const fetchPage = async (
 			.execute(),
 		database
 			.selectFrom(users.select("userId").groupBy("userId").as("groupedUsers"))
-			.select((eb) => eb.fn.count<string>("userId").as("count"))
+			.select((eb) => eb.fn.count<number>("userId").as("count"))
 			.executeTakeFirstOrThrow(),
 	]);
 
 	return {
-		count: parseInt(totalCount.count, 10),
+		count: totalCount.count,
 		cursor: input.cursor,
 		items: paginatedUsers.map(({ userId }) => userId),
 	};

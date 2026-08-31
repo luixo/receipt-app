@@ -556,7 +556,7 @@ export const insertReceiptItem = async (
 				`${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
 			price: (
 				data.price ??
-				faker.number.float({ min: 1, max: 10000, multipleOf: 0.01 })
+				faker.number.float({ min: 1, max: 10_000, multipleOf: 0.01 })
 			).toString(),
 			quantity: (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })

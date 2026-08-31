@@ -116,7 +116,7 @@ export const appRouter = router({
 			};
 		}),
 	teardown: runningProcedure.mutation(async ({ ctx: { instance } }) =>
-		instance.container.stop({ timeout: 10000 }),
+		instance.container.stop({ timeout: 10_000 }),
 	),
 	lockDatabase: runningProcedure
 		.output(

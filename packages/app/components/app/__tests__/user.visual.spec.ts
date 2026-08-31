@@ -29,7 +29,7 @@ test("No connected account", async ({
 			},
 		],
 	});
-	assert(firstUser);
+	assert.ok(firstUser);
 	await openUsersScreen();
 	await expectScreenshotWithSchemes("no-account.png", {
 		locator: user.filter({ hasText: firstUser.name }),
@@ -67,7 +67,7 @@ test("Connected account", async ({
 			},
 		],
 	});
-	assert(firstUser);
+	assert.ok(firstUser);
 	await openUsersScreen();
 	await expectScreenshotWithSchemes("connected-account.png", {
 		locator: user.filter({ hasText: firstUser.name }),
@@ -101,7 +101,7 @@ test("Loading skeleton", async ({
 			},
 		],
 	});
-	assert(firstUser);
+	assert.ok(firstUser);
 	const usersGetPause = api.createPause();
 	api.mockFirst("users.get", async ({ next }) => {
 		await usersGetPause.promise;

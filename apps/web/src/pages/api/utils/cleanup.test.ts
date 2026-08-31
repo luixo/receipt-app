@@ -11,10 +11,10 @@ import { Route } from "./cleanup";
 
 const POST = getServerRouteMethod(Route, "POST");
 
-const removedSessions = faker.number.int({ min: 3000, max: 10000 });
+const removedSessions = faker.number.int({ min: 3000, max: 10_000 });
 const removedResetPasswordIntentions = faker.number.int({
 	min: 3000,
-	max: 10000,
+	max: 10_000,
 });
 const router = t.router({
 	sessions: t.router({
