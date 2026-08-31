@@ -1,4 +1,8 @@
 import type { AppJSONConfig } from "expo/config";
+import fs from "node:fs";
+
+// oxlint-disable-next-line node/no-sync
+const version = fs.readFileSync(".version", "utf8");
 
 const fonts = [
 	"100Thin",
@@ -16,7 +20,7 @@ const config: AppJSONConfig = {
 	expo: {
 		name: "Checkalka",
 		slug: "checkalka-app",
-		version: "1.0.0",
+		version: version.trim(),
 		scheme: "me.luixo.receipt",
 		platforms: ["ios", "android"],
 		icon: "assets/app-icon.png",

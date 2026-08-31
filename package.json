@@ -13,7 +13,7 @@
 		"backend:test": "vitest --configLoader native",
 		"db:generate-types": "bun run --cwd packages/db db:generate-types",
 		"db:migrate": "bun run --cwd packages/db db:migrate",
-		"dev": "bun run --cwd utils/scripts dev",
+		"dev": "EXPO_PUBLIC_API_BASE_URL=http://localhost:3000 bun run --parallel native:dev web:dev",
 		"format": "bun run --cwd utils/format write",
 		"format:verify": "bun run --cwd utils/format check",
 		"frontend:test": "bun run --cwd testing/playwright test",
@@ -26,6 +26,7 @@
 		"native:prebuild": "bun --cwd apps/mobile expo prebuild",
 		"native:run:android": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:android",
 		"native:run:ios": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:ios",
+		"native:update-ios-version": "bun run --cwd apps/mobile update-ios-version",
 		"typecheck": "tsgo --noEmit",
 		"verify-routers": "bun run --cwd utils/scripts verify-routers",
 		"web:build": "bun run --cwd apps/web build",
@@ -50,11 +51,12 @@
 		"oxfmt": "^0.65.0",
 		"oxlint": "^1.71.0",
 		"pre-commit": "^1.2.2",
-		"typescript": "6.0.0-dev.20260203",
+		"typescript": "^7.0.2",
 		"vitest": "^4.1.11"
 	},
 	"overrides": {
-		"@internationalized/date": "^3.10.0"
+		"@internationalized/date": "^3.10.0",
+		"cosmiconfig": "^10"
 	},
 	"pre-commit": [
 		"install:immutable",
