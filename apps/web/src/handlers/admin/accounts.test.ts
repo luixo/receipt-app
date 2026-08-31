@@ -1,6 +1,7 @@
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
+import type { insertUser } from "~tests/backend/utils/data";
 import {
 	insertAccount,
 	insertAccountWithSession,
@@ -14,6 +15,18 @@ import { procedure } from "./accounts";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
+const getAccountShape = (
+	account: Awaited<ReturnType<typeof insertAccount>>,
+	user?: Awaited<ReturnType<typeof insertUser>>,
+) => ({
+	account: {
+		id: account.id,
+		email: account.email,
+		avatarUrl: account.avatarUrl,
+	},
+	user: user ? { id: user.id, name: user.name } : undefined,
+});
+
 describe("admin.accounts", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) => createCaller(context).procedure());
@@ -25,10 +38,18 @@ describe("admin.accounts", () => {
 				account: { role: "admin" },
 			});
 			const foreignAccount = await insertAccount(ctx, { avatarUrl: null });
+			const anotherForeignAccount = await insertAccount(ctx, {
+				avatarUrl: null,
+			});
 			const connectedAccount = await insertAccount(ctx);
 			const [foreignUser] = await insertConnectedUsers(ctx, [
 				accountId,
 				connectedAccount.id,
+			]);
+			const anotherConnectedAccount = await insertAccount(ctx);
+			const [anotherForeignUser] = await insertConnectedUsers(ctx, [
+				accountId,
+				anotherConnectedAccount.id,
 			]);
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -36,23 +57,26 @@ describe("admin.accounts", () => {
 
 			expect(accounts).toStrictEqual<typeof accounts>(
 				[
-					{
-						account: {
-							id: foreignAccount.id,
-							email: foreignAccount.email,
-							avatarUrl: foreignAccount.avatarUrl,
-						},
-						user: undefined,
-					},
-					{
-						account: {
-							id: connectedAccount.id,
-							email: connectedAccount.email,
-							avatarUrl: connectedAccount.avatarUrl,
-						},
-						user: { id: foreignUser.id, name: foreignUser.name },
-					},
-				].toSorted((a, b) => b.account.email.localeCompare(a.account.email)),
+					getAccountShape(foreignAccount),
+					getAccountShape(anotherForeignAccount),
+					getAccountShape(connectedAccount, foreignUser),
+					getAccountShape(anotherConnectedAccount, anotherForeignUser),
+				].toSorted((a, b) => {
+					const emailComparison = a.account.email.localeCompare(
+						b.account.email,
+					);
+					if (a.user && b.user) {
+						const nameComparison = a.user.name.localeCompare(b.user.name);
+						return nameComparison === 0 ? emailComparison : nameComparison;
+					}
+					if (a.user) {
+						return -1;
+					}
+					if (b.user) {
+						return 1;
+					}
+					return emailComparison;
+				}),
 			);
 		});
 	});

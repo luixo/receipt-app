@@ -4,7 +4,7 @@ exports[`account.logout > functionality > session is removed 1`] = `
 {
   "deleted": {
     "sessions": {
-      "sessionId:e82f6e4a-1695-4750-8156-13d11de6a040": undefined,
+      "sessionId:faf6a39d-8f06-48ce-9415-2e5bfadf2c81": undefined,
     },
   },
 }

@@ -4,7 +4,7 @@ exports[`receiptItemConsumers.remove > functionality > user does not consume ite
 {
   "deleted": {
     "receiptItemConsumers": {
-      "itemId:19e76f6f-11a0-44a2-857f-d476738064d3|userId:da58386c-f0f5-4e4b-b208-27c1b8316076": undefined,
+      "itemId:70fdd3c3-d115-44f8-a137-2d36203ae6ba|userId:9c75af77-802a-4fc6-becf-f9a347d963d9": undefined,
     },
   },
 }

@@ -28,7 +28,7 @@ test.describe("States", () => {
 			});
 		});
 		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
-		await clearToasts(2);
+		await clearToasts(1);
 		await expectScreenshotWithSchemes("error.png");
 	});
 

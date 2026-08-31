@@ -1,19 +1,19 @@
 {
 	"queries": {
-		"debts.getAllUser:[{\"userId\":\"0c2d8dc5-d52e-4271-b757-434eb2a5aca9\"}]": {
+		"debts.getAllUser:[{\"userId\":\"96d1d7e0-df12-4dae-a932-d54170d80a2f\"}]": {
 			"state": {
 				"data": [
 					{
-						"currencyCode": "XPF",
-						"sum": 7387.08
+						"currencyCode": "AED",
+						"sum": 6784.13
 					},
 					{
-						"currencyCode": "CLP",
-						"sum": 6606.15
+						"currencyCode": "JPY",
+						"sum": -9699.4
 					},
 					{
-						"currencyCode": "GIP",
-						"sum": -3537.36
+						"currencyCode": "MYR",
+						"sum": 9574.07
 					}
 				],
 				"dataUpdateCount": 1,

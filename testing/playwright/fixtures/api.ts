@@ -22,6 +22,7 @@ import type {
 import { AUTH_COOKIE } from "~app/utils/auth";
 import type { AccountId, UserId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
+import type { ExtendedFaker } from "~tests/utils/faker";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
@@ -31,7 +32,6 @@ import { getCookie } from "~web/utils/cookies";
 
 import type { appRouter } from "../global/router";
 
-import type { ExtendedFaker } from "./mock";
 import { mockFixtures as test } from "./mock";
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";

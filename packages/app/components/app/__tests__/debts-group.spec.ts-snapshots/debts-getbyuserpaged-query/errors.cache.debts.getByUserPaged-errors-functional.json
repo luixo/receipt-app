@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"7a512c27-8c73-4184-9394-401a98ee65c4\"}]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",
@@ -14,11 +14,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
+		"users.get:[{\"id\":\"7a512c27-8c73-4184-9394-401a98ee65c4\"}]": {
 			"state": {
 				"data": {
-					"id": "2226aee6-53a5-4bf5-b7bd-8596a3355d7e",
-					"name": "Luz Trantow Jr.",
+					"id": "7a512c27-8c73-4184-9394-401a98ee65c4",
+					"name": "Micah Gislason",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},

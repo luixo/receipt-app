@@ -1,25 +1,22 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"0e187343-6cd5-466c-befe-358d1b9bc088\"}]": {
+		"debts.get:[{\"id\":\"55e5402a-ebb2-4075-a65a-4695e297ea50\"}]": {
 			"state": {
 				"data": {
-					"amount": 105852.47
-				},
-				"dataUpdateCount": 2
-			}
-		},
-		"debts.get:[{\"id\":\"b80f9427-ac79-412e-9682-6f56ce3b6a7b\"}]": {
-			"state": {
-				"data": {
-					"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
-					"amount": 82628.38,
-					"currencyCode": "NOK",
-					"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d",
+					"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
+					"amount": 26839.85,
+					"currencyCode": "THB",
+					"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
 					"timestamp": "2020-01-01",
-					"note": "Receipt \"exercitationem alias porro\"",
+					"note": "Receipt \"alienus vesica aqua\"",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"their": "<undefined>",
-					"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"
+					"their": {
+						"timestamp": "2020-01-01",
+						"amount": 26839.85,
+						"currencyCode": "THB",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -29,19 +26,65 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"72cc16e7-64ae-4b7a-b6f8-66948bf9d5df\"}]": {
+		"debts.get:[{\"id\":\"a9fda622-3ef3-4157-b9d9-044754e6505c\"}]": {
+			"state": {
+				"data": {
+					"amount": 16414.7
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.get:[{\"id\":\"aff29a3a-f5d2-477b-9c28-914ea466b32f\"}]": {
+			"state": {
+				"data": {
+					"amount": 15848.77
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.get:[{\"id\":\"f1bc38ce-0937-4118-9ef5-21fabbd44c55\"}]": {
+			"state": {
+				"data": {
+					"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
+					"amount": 21938.87,
+					"currencyCode": "THB",
+					"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
+					"timestamp": "2020-01-01",
+					"note": "Receipt \"alienus vesica aqua\"",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"timestamp": "2020-01-01",
+						"amount": 21938.87,
+						"currencyCode": "THB",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"68daea53-ad02-49da-9d2e-d19cc48bdc8b\"}]": {
 			"state": {
 				"data": {
 					"debts": {
 						"debts": {
-							"1": {
-								"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
-								"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d"
+							"2": {
+								"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
+								"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5"
+							},
+							"3": {
+								"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
+								"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe"
 							}
 						}
 					}
 				},
-				"dataUpdateCount": 1
+				"dataUpdateCount": 2
 			}
 		}
 	},
@@ -50,20 +93,40 @@
 			{
 				"state": {
 					"data": {
-						"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
+						"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"reverseAccepted": false
+						"reverseAccepted": true
 					},
 					"error": null,
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"note": "Receipt \"exercitationem alias porro\"",
-						"currencyCode": "NOK",
-						"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d",
-						"amount": 82628.38,
+						"note": "Receipt \"alienus vesica aqua\"",
+						"currencyCode": "THB",
+						"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
+						"amount": 26839.85,
 						"timestamp": "2020-01-01",
-						"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"
+						"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": true
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Receipt \"alienus vesica aqua\"",
+						"currencyCode": "THB",
+						"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
+						"amount": 21938.87,
+						"timestamp": "2020-01-01",
+						"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
 					}
 				}
 			}
@@ -79,12 +142,32 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "0e187343-6cd5-466c-befe-358d1b9bc088",
+						"id": "a9fda622-3ef3-4157-b9d9-044754e6505c",
 						"update": {
-							"amount": 105852.47,
-							"currencyCode": "NOK",
+							"amount": 16414.7,
+							"currencyCode": "THB",
 							"timestamp": "2020-01-01",
-							"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"
+							"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
+						}
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseUpdated": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "aff29a3a-f5d2-477b-9c28-914ea466b32f",
+						"update": {
+							"amount": 15848.77,
+							"currencyCode": "THB",
+							"timestamp": "2020-01-01",
+							"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
 						}
 					}
 				}

@@ -4,13 +4,13 @@ exports[`auth.voidAccount > functionality > account voided 1`] = `
 {
   "deleted": {
     "accounts": {
-      "id:22e89cb5-1cc7-442c-946a-c3bd980ae298": undefined,
+      "id:0c3f8a23-230e-419f-8cbc-37d2812eaa3f": undefined,
     },
     "sessions": {
-      "sessionId:b037d56f-5112-45a9-933d-366dbd0d0165": undefined,
+      "sessionId:fecc131b-0d90-48ec-88a0-47bfccd0a97f": undefined,
     },
     "users": {
-      "id:22e89cb5-1cc7-442c-946a-c3bd980ae298": undefined,
+      "id:0c3f8a23-230e-419f-8cbc-37d2812eaa3f": undefined,
     },
   },
 }

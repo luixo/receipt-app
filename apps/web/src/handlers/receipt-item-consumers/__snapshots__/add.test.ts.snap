@@ -4,47 +4,47 @@ exports[`receiptItemConsumers.add > functionality > multiple participants are ad
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:10cd7f43-0849-427f-ab30-5b69fa29e124": {
+      "itemId:241a931a-cfbd-4ab1-9743-75cd366df793|userId:31c93f2f-b1ce-46e8-a927-aea767bfaa57": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
-        "part": "3.00",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "10cd7f43-0849-427f-ab30-5b69fa29e124",
-      },
-      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:a8fc2847-c92a-488d-847e-13f4c265a44a": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
-        "part": "0.10",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "a8fc2847-c92a-488d-847e-13f4c265a44a",
-      },
-      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:b4055fe5-a860-45e2-9850-e42f5d3bc3b3": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
+        "itemId": "241a931a-cfbd-4ab1-9743-75cd366df793",
         "part": "1.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "b4055fe5-a860-45e2-9850-e42f5d3bc3b3",
+        "userId": "31c93f2f-b1ce-46e8-a927-aea767bfaa57",
       },
-      "itemId:c8d1bc94-199a-485e-af79-1266d2b14240|userId:3330c54e-15ff-48fd-96d9-13432509c131": {
+      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|userId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "c8d1bc94-199a-485e-af79-1266d2b14240",
+        "itemId": "33c41f8d-d142-40c3-96ed-f7cecfed3673",
         "part": "1.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "3330c54e-15ff-48fd-96d9-13432509c131",
+        "userId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
       },
-      "itemId:dc4d9a9c-b750-4337-ac16-8fca58af8093|userId:10cd7f43-0849-427f-ab30-5b69fa29e124": {
+      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|userId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "dc4d9a9c-b750-4337-ac16-8fca58af8093",
+        "itemId": "33c41f8d-d142-40c3-96ed-f7cecfed3673",
         "part": "2.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "10cd7f43-0849-427f-ab30-5b69fa29e124",
+        "userId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
       },
-      "itemId:dc4d9a9c-b750-4337-ac16-8fca58af8093|userId:b4055fe5-a860-45e2-9850-e42f5d3bc3b3": {
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "dc4d9a9c-b750-4337-ac16-8fca58af8093",
+        "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
         "part": "1.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "b4055fe5-a860-45e2-9850-e42f5d3bc3b3",
+        "userId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
+      },
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:cdb9198e-716d-4b44-b988-5f3bcb7d3c61": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
+        "part": "0.10",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "cdb9198e-716d-4b44-b988-5f3bcb7d3c61",
+      },
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
+        "part": "3.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
       },
     },
   },
@@ -55,12 +55,12 @@ exports[`receiptItemConsumers.add > input verification > multiple participants >
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:597a7157-9b1d-4f32-b9ae-e2e76cd97b3b|userId:12801bd6-206a-430b-b010-ab8d0919eb48": {
+      "itemId:8360fffd-df63-44fc-843f-a9c4554dcee6|userId:e3f4144e-ec74-4433-9296-e0f0407e39ad": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "597a7157-9b1d-4f32-b9ae-e2e76cd97b3b",
+        "itemId": "8360fffd-df63-44fc-843f-a9c4554dcee6",
         "part": "1.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "12801bd6-206a-430b-b010-ab8d0919eb48",
+        "userId": "e3f4144e-ec74-4433-9296-e0f0407e39ad",
       },
     },
   },

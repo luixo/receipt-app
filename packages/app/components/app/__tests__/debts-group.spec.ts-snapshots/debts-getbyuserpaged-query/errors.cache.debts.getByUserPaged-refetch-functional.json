@@ -1,14 +1,14 @@
 {
 	"queries": {
-		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"2226aee6-53a5-4bf5-b7bd-8596a3355d7e\"}]": {
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"7a512c27-8c73-4184-9394-401a98ee65c4\"}]": {
 			"state": {
 				"data": {
 					"cursor": 0,
 					"count": 3,
 					"items": [
-						"070fb9b0-b5aa-47da-b25b-1b29c22b7e80",
-						"8744309a-4545-40d1-b6aa-988cefe46459",
-						"5dbbcb41-71f1-4369-8ae4-d94a19ecb1e0"
+						"f39ed41e-be08-464b-a095-23209b3f2044",
+						"1447bb22-8d8f-4c19-a19f-9d2c1dea4888",
+						"4dbfc1a4-8edf-4fba-82e8-24b596a7cb1d"
 					]
 				},
 				"dataUpdateCount": 1,

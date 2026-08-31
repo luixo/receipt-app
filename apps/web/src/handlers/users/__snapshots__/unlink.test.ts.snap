@@ -4,11 +4,11 @@ exports[`users.unlink > functionality > account is unlinked from a user 1`] = `
 {
   "updated": {
     "users": {
-      "id:448026ba-5f53-43cc-86e4-74f0ce5b41dc": {
+      "id:2c3bc2c4-5684-4f5f-a3c4-987eba945aee": {
         "connectedAccountId": null,
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:7600d780-8a44-48e5-a365-6f3beb058c1e": {
+      "id:cc11f089-b1bd-49ee-a8f5-2eb9547041bc": {
         "connectedAccountId": null,
         "updatedAt": "2020-01-01 00:01:00+00",
       },

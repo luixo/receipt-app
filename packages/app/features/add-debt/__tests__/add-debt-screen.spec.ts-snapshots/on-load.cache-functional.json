@@ -4,24 +4,24 @@
 			"state": {
 				"data": [
 					{
-						"currencyCode": "SZL",
-						"count": 92
+						"currencyCode": "MXN",
+						"count": 100
 					},
 					{
-						"currencyCode": "VUV",
+						"currencyCode": "CVE",
+						"count": 94
+					},
+					{
+						"currencyCode": "FJD",
 						"count": 76
 					},
 					{
-						"currencyCode": "ARS",
-						"count": 54
+						"currencyCode": "GYD",
+						"count": 73
 					},
 					{
-						"currencyCode": "SCR",
-						"count": 13
-					},
-					{
-						"currencyCode": "LRD",
-						"count": 4
+						"currencyCode": "WST",
+						"count": 58
 					}
 				],
 				"dataUpdateCount": 1,
@@ -32,11 +32,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"0a9bfd50-b2e2-49d3-87ef-47cf8f897b07\"}]": {
+		"users.get:[{\"id\":\"29c74c54-0905-43a9-b156-4f467228ef2c\"}]": {
 			"state": {
 				"data": {
-					"id": "0a9bfd50-b2e2-49d3-87ef-47cf8f897b07",
-					"name": "Paula Shields",
+					"id": "29c74c54-0905-43a9-b156-4f467228ef2c",
+					"name": "Nolan Renner",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},
@@ -48,11 +48,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"19d84598-734a-486e-aeaf-94bc1c6ad62d\"}]": {
+		"users.get:[{\"id\":\"5c0dccea-bbda-4f42-9828-7d4ba7d3247d\"}]": {
 			"state": {
 				"data": {
-					"id": "19d84598-734a-486e-aeaf-94bc1c6ad62d",
-					"name": "Eunice Wilkinson",
+					"id": "5c0dccea-bbda-4f42-9828-7d4ba7d3247d",
+					"name": "Jovanny Weber",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},
@@ -64,11 +64,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"4fc8574b-0e96-40b5-b433-ae901d506449\"}]": {
+		"users.get:[{\"id\":\"87013df6-4d3d-40ab-bc97-f42c07d7fa32\"}]": {
 			"state": {
 				"data": {
-					"id": "4fc8574b-0e96-40b5-b433-ae901d506449",
-					"name": "Don Jacobi",
+					"id": "87013df6-4d3d-40ab-bc97-f42c07d7fa32",
+					"name": "Mr. Dandre Heathcote",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},
@@ -80,11 +80,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"df7fffac-3426-4def-ad90-39bf52c78c28\"}]": {
+		"users.get:[{\"id\":\"b55fc4cb-c67d-4485-b29e-b465d9fbff94\"}]": {
 			"state": {
 				"data": {
-					"id": "df7fffac-3426-4def-ad90-39bf52c78c28",
-					"name": "Rodolfo Koepp",
+					"id": "b55fc4cb-c67d-4485-b29e-b465d9fbff94",
+					"name": "Donny Torp",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},
@@ -96,11 +96,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"ff6341d9-3fda-40ca-bcb4-c8987bf94f2f\"}]": {
+		"users.get:[{\"id\":\"d040861d-5e22-48db-8020-b2001ba7e01d\"}]": {
 			"state": {
 				"data": {
-					"id": "ff6341d9-3fda-40ca-bcb4-c8987bf94f2f",
-					"name": "Helen Kessler",
+					"id": "d040861d-5e22-48db-8020-b2001ba7e01d",
+					"name": "Cara Block",
 					"publicName": "<undefined>",
 					"connectedAccount": "<undefined>"
 				},
@@ -126,11 +126,11 @@
 			"state": {
 				"data": {
 					"items": [
-						"19d84598-734a-486e-aeaf-94bc1c6ad62d",
-						"0a9bfd50-b2e2-49d3-87ef-47cf8f897b07",
-						"ff6341d9-3fda-40ca-bcb4-c8987bf94f2f",
-						"df7fffac-3426-4def-ad90-39bf52c78c28",
-						"4fc8574b-0e96-40b5-b433-ae901d506449"
+						"87013df6-4d3d-40ab-bc97-f42c07d7fa32",
+						"29c74c54-0905-43a9-b156-4f467228ef2c",
+						"b55fc4cb-c67d-4485-b29e-b465d9fbff94",
+						"d040861d-5e22-48db-8020-b2001ba7e01d",
+						"5c0dccea-bbda-4f42-9828-7d4ba7d3247d"
 					]
 				},
 				"dataUpdateCount": 1,

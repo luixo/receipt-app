@@ -4,31 +4,31 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:4102c91a-5ade-406a-a666-6975ce16df9b": {
+      "id:40c15d0a-667c-41d9-9a40-ca0dccd1be52": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "4102c91a-5ade-406a-a666-6975ce16df9b",
-        "name": "omnis tempore harum",
-        "price": "757.9600",
-        "quantity": "27.0000",
-        "receiptId": "34ae2501-14ba-48b0-b8ef-721155128b46",
+        "id": "40c15d0a-667c-41d9-9a40-ca0dccd1be52",
+        "name": "dolor necessitatibus sunt",
+        "price": "137.9600",
+        "quantity": "59.0000",
+        "receiptId": "a84cc0f4-0768-4f2a-9e62-e3f3035b557c",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:88b75de4-6c94-424f-a3a2-ffd391a4b202": {
+      "id:93586693-ad80-4272-a54b-45c49d31aece": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "88b75de4-6c94-424f-a3a2-ffd391a4b202",
-        "name": "accusamus inventore ex",
-        "price": "842.1300",
-        "quantity": "100.0000",
-        "receiptId": "67d43cef-d57a-478e-92f6-e6f76e3f9213",
+        "id": "93586693-ad80-4272-a54b-45c49d31aece",
+        "name": "praesentium dignissimos qui",
+        "price": "476.2200",
+        "quantity": "4.0000",
+        "receiptId": "5183f7b7-880a-4d64-af40-4fc8b8f41427",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:aa83c9ed-21bd-4f79-9896-1ba0fd941192": {
+      "id:a8ce2bf9-91af-4919-8687-d4c4432f3142": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "aa83c9ed-21bd-4f79-9896-1ba0fd941192",
-        "name": "autem molestias molestiae",
-        "price": "357.0600",
-        "quantity": "77.0000",
-        "receiptId": "67d43cef-d57a-478e-92f6-e6f76e3f9213",
+        "id": "a8ce2bf9-91af-4919-8687-d4c4432f3142",
+        "name": "libero fugit consequuntur",
+        "price": "852.6300",
+        "quantity": "42.0000",
+        "receiptId": "a84cc0f4-0768-4f2a-9e62-e3f3035b557c",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -40,13 +40,13 @@ exports[`receiptItems.add > input verification > mixed success and fail 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:beb192ca-6815-4215-ac1f-ca9aa502c53b": {
+      "id:bb9c6125-1c9a-40c3-bb1f-7e6c4e870372": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "beb192ca-6815-4215-ac1f-ca9aa502c53b",
-        "name": "quia assumenda a",
-        "price": "549.9200",
-        "quantity": "80.0000",
-        "receiptId": "16421b02-e743-45f4-a7d0-353038e5c1a4",
+        "id": "bb9c6125-1c9a-40c3-bb1f-7e6c4e870372",
+        "name": "delectus eveniet sed",
+        "price": "566.6300",
+        "quantity": "30.0000",
+        "receiptId": "8de070d3-b416-4c09-9fa4-81f293c86ae0",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },

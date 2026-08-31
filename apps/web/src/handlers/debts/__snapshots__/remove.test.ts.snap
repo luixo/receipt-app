@@ -4,7 +4,7 @@ exports[`debts.remove > functionality > auto-accepted by counterparty > debt doe
 {
   "deleted": {
     "debts": {
-      "id:9ac5225a-77fd-4a24-aab8-47297743468e|ownerAccountId:56bae36c-0cfa-4100-b1d6-5efe427b3048": undefined,
+      "id:d3af4cb4-ace1-44e3-a2d2-2698f7188e11|ownerAccountId:ba3fd356-765a-44cd-a500-6f9844a84908": undefined,
     },
   },
 }
@@ -14,8 +14,8 @@ exports[`debts.remove > functionality > auto-accepted by counterparty > debt exi
 {
   "deleted": {
     "debts": {
-      "id:a6b4315f-09a6-42eb-8af7-02fd9117f580|ownerAccountId:3e46b9c3-3d53-441d-b4f2-8cfa063914d5": undefined,
-      "id:a6b4315f-09a6-42eb-8af7-02fd9117f580|ownerAccountId:9d9adde3-1a01-4d09-bc04-92447f0ccc48": undefined,
+      "id:2e34b38e-b509-4be5-bd8f-b75ca2fc9eb2|ownerAccountId:458fcda8-4d28-40bb-b948-5fb013fa1bba": undefined,
+      "id:2e34b38e-b509-4be5-bd8f-b75ca2fc9eb2|ownerAccountId:f4841511-75cd-4c9c-8a58-a18c9d026f47": undefined,
     },
   },
 }
@@ -25,7 +25,7 @@ exports[`debts.remove > functionality > not auto-accepted by counterparty 1`] = 
 {
   "deleted": {
     "debts": {
-      "id:ecdfb1f0-7c98-461b-a826-1dd52f144ec0|ownerAccountId:f04752bd-4d20-4189-9652-34eabba08a46": undefined,
+      "id:249bca7b-8f63-42fb-8fcc-1842b08fdf04|ownerAccountId:688c76d7-c4f7-4a72-8bb0-3141f90cf2e3": undefined,
     },
   },
 }

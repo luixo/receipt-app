@@ -3,7 +3,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"devDependencies": {
-		"@faker-js/faker": "^8.0.2",
+		"@faker-js/faker": "catalog:",
 		"@ra/db": "workspace:*",
 		"@ra/playwright": "workspace:*",
 		"@ra/test-utils": "workspace:*",
@@ -11,10 +11,10 @@
 		"@ra/web": "workspace:*",
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
-		"deep-object-diff": "^1.1.9",
+		"deep-object-diff": "catalog:",
 		"kysely": "catalog:",
 		"node-mocks-http": "^1.18.1",
-		"testcontainers": "^10.11.0",
+		"testcontainers": "^12.1.0",
 		"timekeeper": "catalog:",
 		"zod": "catalog:"
 	}

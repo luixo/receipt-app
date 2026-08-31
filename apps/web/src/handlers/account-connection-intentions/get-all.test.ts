@@ -118,7 +118,7 @@ describe("accountConnectionIntentions.getAll", () => {
 							email: secondInboundEmail,
 						},
 					},
-				].toSorted((a, b) => b.account.id.localeCompare(a.account.id)),
+				].toSorted((a, b) => a.account.id.localeCompare(b.account.id)),
 				outbound: [
 					{
 						account: { id: outboundAccountId, email: outboundEmail },
@@ -131,7 +131,7 @@ describe("accountConnectionIntentions.getAll", () => {
 						},
 						user: { id: secondOutboundUserId, name: secondOutboundUserName },
 					},
-				].toSorted((a, b) => b.account.id.localeCompare(a.account.id)),
+				].toSorted((a, b) => a.account.id.localeCompare(b.account.id)),
 			});
 		});
 	});

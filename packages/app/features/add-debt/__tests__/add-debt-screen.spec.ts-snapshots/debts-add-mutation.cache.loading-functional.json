@@ -8,8 +8,8 @@
 					"status": "pending",
 					"variables": {
 						"note": "Test debt note",
-						"currencyCode": "RON",
-						"userId": "4e3d5a9d-3afa-4823-934e-f9b584ae7448",
+						"currencyCode": "ARS",
+						"userId": "d6ca5433-3c49-49cf-9fa2-1fceffedfbd2",
 						"amount": 10,
 						"timestamp": "2019-12-31"
 					}

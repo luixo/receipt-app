@@ -4,8 +4,8 @@ exports[`receiptItems.update > functionality > update name > foreign 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
-        "name": "adipisci dolores assumenda",
+      "id:92190998-0b5f-4424-99ed-35892271544c": {
+        "name": "illum debitis atque",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -17,8 +17,8 @@ exports[`receiptItems.update > functionality > update name > own 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
-        "name": "cum accusamus dolores",
+      "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
+        "name": "nostrum voluptates incidunt",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -30,8 +30,8 @@ exports[`receiptItems.update > functionality > update price > foreign 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
-        "price": "241.1700",
+      "id:92190998-0b5f-4424-99ed-35892271544c": {
+        "price": "582.6600",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -43,8 +43,8 @@ exports[`receiptItems.update > functionality > update price > own 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
-        "price": "740.9500",
+      "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
+        "price": "647.3500",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -56,8 +56,8 @@ exports[`receiptItems.update > functionality > update quantity > foreign 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
-        "quantity": "24.0000",
+      "id:92190998-0b5f-4424-99ed-35892271544c": {
+        "quantity": "100.0000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -69,8 +69,8 @@ exports[`receiptItems.update > functionality > update quantity > own 1`] = `
 {
   "updated": {
     "receiptItems": {
-      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
-        "quantity": "74.0000",
+      "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
+        "quantity": "82.0000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

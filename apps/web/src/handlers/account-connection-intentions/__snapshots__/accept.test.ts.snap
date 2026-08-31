@@ -4,17 +4,17 @@ exports[`accountConnectionIntentions.accept > functionality > account connection
 {
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:16ea7bee-2f60-42e6-b8ab-36b34b457f3a|targetAccountId:aedbd8b6-7b96-4ad6-9114-e893be9f3067": undefined,
+      "accountId:7a988727-0208-4ed9-b46c-ae2d6734c1eb|targetAccountId:ee616fa5-9be1-457b-8946-614a6c8088b3": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:bc38347a-c16d-407f-8d09-cf52738c37e1": {
-        "connectedAccountId": "16ea7bee-2f60-42e6-b8ab-36b34b457f3a",
+      "id:1e7e2626-a3b4-4473-acdf-7ae563571faa": {
+        "connectedAccountId": "7a988727-0208-4ed9-b46c-ae2d6734c1eb",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:bd1f875a-de35-4367-93f5-f7915ffa7ac8": {
-        "connectedAccountId": "aedbd8b6-7b96-4ad6-9114-e893be9f3067",
+      "id:bb23b271-5cfb-42a1-ac77-a14f2b2ddb50": {
+        "connectedAccountId": "ee616fa5-9be1-457b-8946-614a6c8088b3",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -26,45 +26,45 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 {
   "added": {
     "debts": {
-      "id:25413069-7c27-493e-b1cf-beff93af39e5|ownerAccountId:50bcfda0-a837-4279-8515-3c43b64212e8": {
-        "amount": "-19.2700",
+      "id:7d12f3b3-df37-437f-b3c7-ea2b605dc97f|ownerAccountId:abe3f702-b036-4293-972b-f7c1a164d9cd": {
+        "amount": "-572.3600",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "CLP",
-        "id": "25413069-7c27-493e-b1cf-beff93af39e5",
-        "note": "Aperiam voluptatum soluta officiis architecto.",
-        "ownerAccountId": "50bcfda0-a837-4279-8515-3c43b64212e8",
+        "currencyCode": "BDT",
+        "id": "7d12f3b3-df37-437f-b3c7-ea2b605dc97f",
+        "note": "Capillus voluptate caelum adamo vorax cibus callide amplexus celer conventus.",
+        "ownerAccountId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "e555ddd9-1921-4188-accb-f816a6001f3a",
+        "userId": "9de5bd27-b8d8-46a6-a55c-a05f98926c07",
       },
-      "id:2848224b-529a-4060-91c4-f4991ff407c3|ownerAccountId:b672045b-2d98-4d4d-bb1a-b845bea60278": {
-        "amount": "797.8700",
+      "id:ff41c2ae-f6cd-42ef-a4b6-84eb43292461|ownerAccountId:6cd26971-98bb-4120-808c-36555ab43ede": {
+        "amount": "-334.6900",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "HTG",
-        "id": "2848224b-529a-4060-91c4-f4991ff407c3",
-        "note": "Id consequuntur illum.",
-        "ownerAccountId": "b672045b-2d98-4d4d-bb1a-b845bea60278",
+        "currencyCode": "BOB",
+        "id": "ff41c2ae-f6cd-42ef-a4b6-84eb43292461",
+        "note": "Sint speculum tepesco vomica soleo adflicto colligo.",
+        "ownerAccountId": "6cd26971-98bb-4120-808c-36555ab43ede",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "4c35184e-511c-4595-9798-a8a0ccffaa0e",
+        "userId": "5bfaa329-134b-441e-a055-d9918cb8660f",
       },
     },
   },
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:50bcfda0-a837-4279-8515-3c43b64212e8|targetAccountId:b672045b-2d98-4d4d-bb1a-b845bea60278": undefined,
+      "accountId:abe3f702-b036-4293-972b-f7c1a164d9cd|targetAccountId:6cd26971-98bb-4120-808c-36555ab43ede": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:4c35184e-511c-4595-9798-a8a0ccffaa0e": {
-        "connectedAccountId": "50bcfda0-a837-4279-8515-3c43b64212e8",
+      "id:5bfaa329-134b-441e-a055-d9918cb8660f": {
+        "connectedAccountId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:e555ddd9-1921-4188-accb-f816a6001f3a": {
-        "connectedAccountId": "b672045b-2d98-4d4d-bb1a-b845bea60278",
+      "id:9de5bd27-b8d8-46a6-a55c-a05f98926c07": {
+        "connectedAccountId": "6cd26971-98bb-4120-808c-36555ab43ede",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -76,33 +76,33 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 {
   "added": {
     "debts": {
-      "id:c69987d7-083e-4285-8ae0-1c52cf3f5abb|ownerAccountId:e664b8b4-4078-41cf-b254-165f465cc47d": {
-        "amount": "734.9100",
+      "id:4484ba58-db99-4527-92ef-bedee4d832a0|ownerAccountId:0de22606-b399-45ec-bd99-c0c252ecee5e": {
+        "amount": "676.6200",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "AMD",
-        "id": "c69987d7-083e-4285-8ae0-1c52cf3f5abb",
-        "note": "Animi cupiditate repudiandae.",
-        "ownerAccountId": "e664b8b4-4078-41cf-b254-165f465cc47d",
+        "currencyCode": "BRL",
+        "id": "4484ba58-db99-4527-92ef-bedee4d832a0",
+        "note": "Tres cohors calcar vapulus tero vado.",
+        "ownerAccountId": "0de22606-b399-45ec-bd99-c0c252ecee5e",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "6ac04b20-42bd-473d-bfad-31e45f80624c",
+        "userId": "909c1133-7d2e-4492-820b-a496bf97c1eb",
       },
     },
   },
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:e664b8b4-4078-41cf-b254-165f465cc47d|targetAccountId:38cd34c1-ac84-4fe5-9998-01b2aae24465": undefined,
+      "accountId:0de22606-b399-45ec-bd99-c0c252ecee5e|targetAccountId:3b7312c0-43dd-41fe-8957-c853908b97d1": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:6ac04b20-42bd-473d-bfad-31e45f80624c": {
-        "connectedAccountId": "38cd34c1-ac84-4fe5-9998-01b2aae24465",
+      "id:909c1133-7d2e-4492-820b-a496bf97c1eb": {
+        "connectedAccountId": "3b7312c0-43dd-41fe-8957-c853908b97d1",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:c5e1a332-a2b8-4dcb-8668-86409996e941": {
-        "connectedAccountId": "e664b8b4-4078-41cf-b254-165f465cc47d",
+      "id:e6bb471f-5154-45c7-bca0-b02d3fd14f02": {
+        "connectedAccountId": "0de22606-b399-45ec-bd99-c0c252ecee5e",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -114,17 +114,17 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 {
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:270e5d47-6b41-40b4-8aab-13a542df9879|targetAccountId:1b831b81-969f-436e-9683-6c3cb9142b30": undefined,
+      "accountId:11294055-863e-4d7b-93b0-42aabfa4d3d5|targetAccountId:f52d884a-1a45-4e7f-a4f6-940e9f38f143": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:287217dd-8e68-4c07-9b13-ddf9ed4170ee": {
-        "connectedAccountId": "1b831b81-969f-436e-9683-6c3cb9142b30",
+      "id:20546404-a1a4-4d97-b382-7de80b3d9d10": {
+        "connectedAccountId": "11294055-863e-4d7b-93b0-42aabfa4d3d5",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:a36231b5-434a-4233-a4e4-f8961162b3cb": {
-        "connectedAccountId": "270e5d47-6b41-40b4-8aab-13a542df9879",
+      "id:a86393bb-e3ba-4064-a9a3-b2b2c1fea1e9": {
+        "connectedAccountId": "f52d884a-1a45-4e7f-a4f6-940e9f38f143",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -136,33 +136,33 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 {
   "added": {
     "debts": {
-      "id:064bafc0-b776-4d6b-931e-b6249562c673|ownerAccountId:583a3733-45e4-4419-af7a-3c9bba380caa": {
-        "amount": "961.0100",
+      "id:0648e870-ee31-4fca-a11a-d532de55326b|ownerAccountId:965c9aa3-5fc1-489f-b80d-e64d92dc5e0b": {
+        "amount": "-445.0300",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "MYR",
-        "id": "064bafc0-b776-4d6b-931e-b6249562c673",
-        "note": "Omnis debitis quaerat ducimus cum asperiores aperiam magni porro necessitatibus.",
-        "ownerAccountId": "583a3733-45e4-4419-af7a-3c9bba380caa",
+        "currencyCode": "ERN",
+        "id": "0648e870-ee31-4fca-a11a-d532de55326b",
+        "note": "Absque est ciminatio textus.",
+        "ownerAccountId": "965c9aa3-5fc1-489f-b80d-e64d92dc5e0b",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "7f370288-4ec9-48a2-a476-19cc374f8f6e",
+        "userId": "bf380b97-a198-4307-9d88-639db6c2c666",
       },
     },
   },
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:befc348e-08b9-49b7-b9aa-159a8b310d7d|targetAccountId:583a3733-45e4-4419-af7a-3c9bba380caa": undefined,
+      "accountId:351a0390-a676-4b8c-a007-7baf42b48921|targetAccountId:965c9aa3-5fc1-489f-b80d-e64d92dc5e0b": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:08287623-e95d-4dbc-96ac-028cc6463627": {
-        "connectedAccountId": "583a3733-45e4-4419-af7a-3c9bba380caa",
+      "id:bf380b97-a198-4307-9d88-639db6c2c666": {
+        "connectedAccountId": "351a0390-a676-4b8c-a007-7baf42b48921",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:7f370288-4ec9-48a2-a476-19cc374f8f6e": {
-        "connectedAccountId": "befc348e-08b9-49b7-b9aa-159a8b310d7d",
+      "id:d49f8cad-e715-4743-b6a6-fa5a356b69d0": {
+        "connectedAccountId": "965c9aa3-5fc1-489f-b80d-e64d92dc5e0b",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

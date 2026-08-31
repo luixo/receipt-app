@@ -1,12 +1,12 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"68f71c29-5d58-458f-8e37-312e45ecd219\"}]": {
+		"debts.get:[{\"id\":\"05c05ebd-87c1-485a-8da6-6aff4d701e00\"}]": {
 			"state": {
 				"data": {
-					"id": "68f71c29-5d58-458f-8e37-312e45ecd219",
+					"id": "05c05ebd-87c1-485a-8da6-6aff4d701e00",
 					"amount": 10,
-					"currencyCode": "RON",
-					"userId": "4e3d5a9d-3afa-4823-934e-f9b584ae7448",
+					"currencyCode": "ARS",
+					"userId": "d6ca5433-3c49-49cf-9fa2-1fceffedfbd2",
 					"timestamp": "2019-12-31",
 					"note": "Test debt note",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
@@ -27,7 +27,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "68f71c29-5d58-458f-8e37-312e45ecd219",
+						"id": "05c05ebd-87c1-485a-8da6-6aff4d701e00",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": false
 					},

@@ -4,12 +4,12 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 {
   "added": {
     "accountConnectionsIntentions": {
-      "accountId:e20766cf-a87a-422e-8f74-6693283d8aee|targetAccountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc": {
-        "accountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
+      "accountId:5f7c257e-533e-4e6e-892a-7ac9a11f082d|targetAccountId:4b9cc8ce-fd83-458e-aab0-380ad161a965": {
+        "accountId": "5f7c257e-533e-4e6e-892a-7ac9a11f082d",
         "createdAt": "2020-01-01 00:00:00+00",
-        "targetAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
+        "targetAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "9a11d224-0baf-49c1-89f7-73673387cb63",
+        "userId": "1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3",
       },
     },
   },
@@ -20,17 +20,17 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 {
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc|targetAccountId:e20766cf-a87a-422e-8f74-6693283d8aee": undefined,
+      "accountId:4b9cc8ce-fd83-458e-aab0-380ad161a965|targetAccountId:5f7c257e-533e-4e6e-892a-7ac9a11f082d": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:05723e6e-e916-46aa-886e-b744bb05d6ce": {
-        "connectedAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
+      "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
+        "connectedAccountId": "5f7c257e-533e-4e6e-892a-7ac9a11f082d",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:9a11d224-0baf-49c1-89f7-73673387cb63": {
-        "connectedAccountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
+      "id:b9fc248f-10cc-42f1-98b2-6d4a62666168": {
+        "connectedAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -42,12 +42,12 @@ exports[`accountConnectionIntentions.add > input verification > multiple intenti
 {
   "added": {
     "accountConnectionsIntentions": {
-      "accountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c|targetAccountId:25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9": {
-        "accountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
+      "accountId:1d263b1a-801e-44e4-a018-32c2cbc9f60e|targetAccountId:fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc": {
+        "accountId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
         "createdAt": "2020-01-01 00:00:00+00",
-        "targetAccountId": "25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9",
+        "targetAccountId": "fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "20566048-adf0-457d-936e-ecfb1d719980",
+        "userId": "c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3",
       },
     },
   },

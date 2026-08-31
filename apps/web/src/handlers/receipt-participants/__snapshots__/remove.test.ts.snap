@@ -4,10 +4,10 @@ exports[`receiptParticipants.remove > functionality > user is removed 1`] = `
 {
   "deleted": {
     "receiptItemConsumers": {
-      "itemId:47c3aa72-d37e-4039-91bb-78a75ea71923|userId:4a950a61-6655-4a98-8554-dc797c4131a2": undefined,
+      "itemId:8e1c4a3c-aad4-49a8-b1c5-8db2c0baf5d7|userId:1fbeb525-646d-40b0-8d75-1b0c06b406b6": undefined,
     },
     "receiptParticipants": {
-      "receiptId:ba0db3c1-5954-4d81-923a-e5ab58e56bfc|userId:4a950a61-6655-4a98-8554-dc797c4131a2": undefined,
+      "receiptId:f45f1a12-c893-4f77-be13-bedb806088ae|userId:1fbeb525-646d-40b0-8d75-1b0c06b406b6": undefined,
     },
   },
 }

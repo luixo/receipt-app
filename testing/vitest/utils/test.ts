@@ -14,8 +14,7 @@ import { getExchangeRateOptions } from "~tests/backend/utils/mocks/exchange-rate
 import type { LoggerMock } from "~tests/backend/utils/mocks/logger";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
-import { ExtendedFaker } from "~tests/frontend/fixtures/mock";
-import { setSeed } from "~tests/utils/faker";
+import { ExtendedFaker, setSeed } from "~tests/utils/faker";
 
 type FileContext = {
 	logger: LoggerMock;

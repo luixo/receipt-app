@@ -4,24 +4,24 @@ exports[`receipts.add > functionality > empty receipt 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7": {
+      "id:77ce22c5-ef8a-48af-b7dc-70443373f2e6": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
+        "id": "77ce22c5-ef8a-48af-b7dc-70443373f2e6",
         "name": "",
         "price": "0.0000",
         "quantity": "0.0000",
-        "receiptId": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
+        "receiptId": "77ce22c5-ef8a-48af-b7dc-70443373f2e6",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "receipts": {
-      "id:7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7": {
+      "id:77ce22c5-ef8a-48af-b7dc-70443373f2e6": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "ALL",
-        "id": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
+        "currencyCode": "CNY",
+        "id": "77ce22c5-ef8a-48af-b7dc-70443373f2e6",
         "issued": "2020-01-01",
-        "name": "aliquid aperiam repellat",
-        "ownerAccountId": "6b205b96-3e1f-4d5e-af8d-63a5fe2f9fca",
+        "name": "tempora quam placeat",
+        "ownerAccountId": "765cb46c-a8f5-4cea-ad28-51a2d6531b82",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -33,90 +33,90 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
-        "part": "1.00",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
-      },
-      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:63519bcb-aae8-491a-be96-1416818752ac": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "2.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
+      },
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
+        "part": "1.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receiptItemPayers": {
-      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
-        "part": "2.00",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
-      },
-      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:63519bcb-aae8-491a-be96-1416818752ac": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "3.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
+      },
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
+        "part": "2.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receiptItems": {
-      "id:8669afe9-1540-42e5-a723-2f5667b522b9": {
+      "id:2d659cae-9a91-4188-b5ac-4de41909364a": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "8669afe9-1540-42e5-a723-2f5667b522b9",
-        "name": "pariatur quo iusto",
-        "price": "897.6500",
-        "quantity": "40.0000",
-        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "id": "2d659cae-9a91-4188-b5ac-4de41909364a",
+        "name": "sint placeat maxime",
+        "price": "377.4500",
+        "quantity": "3.0000",
+        "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:8900c422-074a-4ca8-81f9-118dadfcee64": {
+      "id:80c204c8-f18a-4fe6-a069-f950e73f6752": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "id": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "name": "",
         "price": "0.0000",
         "quantity": "0.0000",
-        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:8cc65c49-c8b6-4297-a935-a9772f5d68b4": {
+      "id:8c54cb27-3a72-456b-89bc-4c3a6a2cea59": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
-        "name": "non et voluptas",
-        "price": "554.4800",
-        "quantity": "11.0000",
-        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "id": "8c54cb27-3a72-456b-89bc-4c3a6a2cea59",
+        "name": "sequi ut in",
+        "price": "202.1100",
+        "quantity": "28.0000",
+        "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "receiptParticipants": {
-      "receiptId:8900c422-074a-4ca8-81f9-118dadfcee64|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
-        "role": "editor",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
-      },
-      "receiptId:8900c422-074a-4ca8-81f9-118dadfcee64|userId:63519bcb-aae8-491a-be96-1416818752ac": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
+      },
+      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
+        "role": "editor",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receipts": {
-      "id:8900c422-074a-4ca8-81f9-118dadfcee64": {
+      "id:80c204c8-f18a-4fe6-a069-f950e73f6752": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "CNY",
-        "id": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "currencyCode": "AFN",
+        "id": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "issued": "2020-01-01",
-        "name": "atque iure exercitationem",
-        "ownerAccountId": "63519bcb-aae8-491a-be96-1416818752ac",
+        "name": "impedit cupiditate ut",
+        "ownerAccountId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -128,42 +128,42 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:2e0d96cf-3d4a-411e-973c-0c702045027f": {
+      "id:8d1da110-db7e-4565-b1ed-6fda17cc0052": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "2e0d96cf-3d4a-411e-973c-0c702045027f",
-        "name": "quia sed a",
-        "price": "751.0900",
-        "quantity": "67.0000",
-        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
-        "updatedAt": "2020-01-01 00:00:00+00",
-      },
-      "id:8ad217d2-aa1a-4140-83d3-b377ed516d54": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "id": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "id": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
         "name": "",
         "price": "0.0000",
         "quantity": "0.0000",
-        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "receiptId": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:915c4d1c-d97c-4299-aa11-0ec105bd3ba6": {
+      "id:9541d729-10c0-4b3a-8a74-3c4fa2c125d9": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "915c4d1c-d97c-4299-aa11-0ec105bd3ba6",
-        "name": "fugit at distinctio",
-        "price": "904.6000",
-        "quantity": "77.0000",
-        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "id": "9541d729-10c0-4b3a-8a74-3c4fa2c125d9",
+        "name": "exercitationem aspernatur nemo",
+        "price": "31.7100",
+        "quantity": "60.0000",
+        "receiptId": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+      "id:ea036ecc-abde-441a-8059-8830b10dd5b7": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "id": "ea036ecc-abde-441a-8059-8830b10dd5b7",
+        "name": "adipisci tenetur nobis",
+        "price": "43.8800",
+        "quantity": "25.0000",
+        "receiptId": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "receipts": {
-      "id:8ad217d2-aa1a-4140-83d3-b377ed516d54": {
+      "id:8d1da110-db7e-4565-b1ed-6fda17cc0052": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "SAR",
-        "id": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "currencyCode": "KYD",
+        "id": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
         "issued": "2020-01-01",
-        "name": "incidunt ab inventore",
-        "ownerAccountId": "073a60e9-c5c0-4a5b-a2db-ec411ba2025e",
+        "name": "dolores odio numquam",
+        "ownerAccountId": "2818c424-c82b-400b-b550-d25614946d49",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -175,40 +175,40 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1": {
+      "id:8dd65dc8-e9fe-400a-8f49-d80a41448177": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "id": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "name": "",
         "price": "0.0000",
         "quantity": "0.0000",
-        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "receiptId": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "receiptParticipants": {
-      "receiptId:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1|userId:ee0798e0-559e-4bf0-8d89-a07af856aa2f": {
+      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|userId:380d581a-3a71-432d-96ed-290d284bbffa": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
-        "role": "editor",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "ee0798e0-559e-4bf0-8d89-a07af856aa2f",
-      },
-      "receiptId:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1|userId:f2fab689-ac19-474e-b15b-c90bb158b1a3": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "receiptId": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "f2fab689-ac19-474e-b15b-c90bb158b1a3",
+        "userId": "380d581a-3a71-432d-96ed-290d284bbffa",
+      },
+      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|userId:93b6e565-0c29-47c3-aa85-6b7836da664e": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "receiptId": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
+        "role": "editor",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "93b6e565-0c29-47c3-aa85-6b7836da664e",
       },
     },
     "receipts": {
-      "id:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1": {
+      "id:8dd65dc8-e9fe-400a-8f49-d80a41448177": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "UGX",
-        "id": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "currencyCode": "SVC",
+        "id": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "issued": "2020-01-01",
-        "name": "atque assumenda delectus",
-        "ownerAccountId": "f2fab689-ac19-474e-b15b-c90bb158b1a3",
+        "name": "explicabo tenetur iure",
+        "ownerAccountId": "380d581a-3a71-432d-96ed-290d284bbffa",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -220,56 +220,56 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:60b2fa20-4a9e-4c16-9da2-1ed76299dd7d": {
+      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "272764d2-5de2-4742-a111-7e66ffb995f2",
-        "part": "22.00",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
-      },
-      "itemId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:91085ca0-17c5-4268-9da7-bb75dd229df3": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "itemId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "itemId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "part": "1.00",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "91085ca0-17c5-4268-9da7-bb75dd229df3",
+        "userId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
+      },
+      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:dbad4f55-f087-4591-9264-fbc355413624": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "itemId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
+        "part": "22.00",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "dbad4f55-f087-4591-9264-fbc355413624",
       },
     },
     "receiptItems": {
-      "id:272764d2-5de2-4742-a111-7e66ffb995f2": {
+      "id:226d5e72-176f-4b9f-b93f-282e7bb931e2": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "id": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "name": "",
         "price": "0.0000",
         "quantity": "0.0000",
-        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "receiptId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
     "receiptParticipants": {
-      "receiptId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:60b2fa20-4a9e-4c16-9da2-1ed76299dd7d": {
+      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
-        "role": "owner",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
-      },
-      "receiptId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:91085ca0-17c5-4268-9da7-bb75dd229df3": {
-        "createdAt": "2020-01-01 00:00:00+00",
-        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "receiptId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "role": "editor",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "91085ca0-17c5-4268-9da7-bb75dd229df3",
+        "userId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
+      },
+      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:dbad4f55-f087-4591-9264-fbc355413624": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "receiptId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
+        "role": "owner",
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "dbad4f55-f087-4591-9264-fbc355413624",
       },
     },
     "receipts": {
-      "id:272764d2-5de2-4742-a111-7e66ffb995f2": {
+      "id:226d5e72-176f-4b9f-b93f-282e7bb931e2": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "ISK",
-        "id": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "currencyCode": "VUV",
+        "id": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "issued": "2020-01-01",
-        "name": "vitae ea porro",
-        "ownerAccountId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
+        "name": "quasi voluptatum culpa",
+        "ownerAccountId": "dbad4f55-f087-4591-9264-fbc355413624",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
