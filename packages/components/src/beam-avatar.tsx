@@ -8,9 +8,10 @@ const DEGREES = 360;
 // We use a color from a color circle divided in given sectors
 // effectively having a spread variety of colors around the circle
 const SECTORS = 36;
-const COLORS = new Array(SECTORS)
-	.fill(null)
-	.map((_, index) => `#${hslToRgb(index * (DEGREES / SECTORS), 0.7, 0.5)}`);
+const COLORS = Array.from(
+	{ length: SECTORS },
+	(_, index) => `#${hslToRgb(index * (DEGREES / SECTORS), 0.7, 0.5)}`,
+);
 
 /*
 	This is a universal more-or-less copy from

@@ -51,7 +51,7 @@ export const DebtsGroupSkeleton: React.FC<{
 	className?: string;
 }> = ({ amount, className }) => {
 	const elements = React.useMemo(
-		() => new Array<null>(amount).fill(null),
+		() => Array.from({ length: amount }, (_, index) => index),
 		[amount],
 	);
 	return (
@@ -62,8 +62,7 @@ export const DebtsGroupSkeleton: React.FC<{
 			)}
 		>
 			<SeparatedDebts>
-				{elements.map((_, index) => (
-					// oxlint-disable-next-line react/no-array-index-key
+				{elements.map((index) => (
 					<DebtGroupElementSkeleton key={index} />
 				))}
 			</SeparatedDebts>

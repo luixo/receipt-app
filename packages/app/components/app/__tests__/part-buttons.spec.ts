@@ -53,7 +53,7 @@ test("Clicking up increases the consumer's part", async ({
 	awaitCacheKey,
 	snapshotQueries,
 }) => {
-	api.mockFirst("receiptItemConsumers.update", () => undefined);
+	api.mockFirst("receiptItemConsumers.update", undefined);
 	const { receipt } = await mockReceipt({
 		generateUsers,
 		generateReceiptItems,

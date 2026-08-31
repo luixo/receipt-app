@@ -173,7 +173,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	);
 };
 
-const consumersSkeletonItems = new Array(2).fill(null).map((_, index) => index);
+const consumersSkeletonItems = Array.from({ length: 2 }, (_, index) => index);
 
 export const ReceiptItemSkeleton: React.FC = () => (
 	<Card

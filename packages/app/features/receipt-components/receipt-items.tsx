@@ -96,7 +96,7 @@ export const ReceiptItemsSkeleton: React.FC<{ amount: number }> = ({
 	amount,
 }) => {
 	const items = React.useMemo(
-		() => new Array(amount).fill(null).map((_, index) => index),
+		() => Array.from({ length: amount }, (_, index) => index),
 		[amount],
 	);
 	return (

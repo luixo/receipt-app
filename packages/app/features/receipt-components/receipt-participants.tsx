@@ -95,7 +95,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	);
 };
 
-const skeletonParticipants = new Array(3).fill(null).map((_, index) => index);
+const skeletonParticipants = Array.from({ length: 3 }, (_, index) => index);
 
 export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 	const { t } = useTranslation("receipts");
