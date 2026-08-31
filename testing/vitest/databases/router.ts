@@ -16,7 +16,6 @@ import { cleanupManagerFactory, databaseManagerFactory } from "./managers";
 
 const POSTGRES_USER = "test-user";
 const POSTGRES_PASSWORD = "test-password";
-const POSTGRES_HOST = "localhost";
 const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
 const POSTGRES_TEMP_DIR = "/temp_pgdata";
@@ -77,7 +76,7 @@ export const appRouter = router({
 				});
 			const runningContainer = await container.start();
 			const connectionData = {
-				host: POSTGRES_HOST,
+				host: runningContainer.getHost(),
 				username: POSTGRES_USER,
 				password: POSTGRES_PASSWORD,
 				port: runningContainer.getMappedPort(POSTGRES_PORT),
