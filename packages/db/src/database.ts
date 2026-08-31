@@ -135,7 +135,7 @@ const getCustomTypes = (getTypeParser: GetTypeParser): typeof types => ({
 	getTypeParser: (oid, format) => {
 		const parser = getTypeParser(oid);
 		// eslint-disable-next-line typescript/no-unsafe-return
-		return parser || types.getTypeParser(oid, format as "text");
+		return parser || types.getTypeParser(oid, format);
 	},
 });
 const customizedTypes: typeof types = getCustomTypes((oid) => dbParsers[oid]);

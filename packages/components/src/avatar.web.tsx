@@ -101,10 +101,4 @@ export type GroupProps = GroupContext &
 		className?: string;
 	}>;
 
-export const AvatarGroup: React.FC<GroupProps> = ({ size, ...props }) => (
-	<AvatarGroupRaw
-		{...props}
-		// It's just being passed through as a context
-		size={size as "sm"}
-	/>
-);
+export const AvatarGroup: React.FC<GroupProps> = AvatarGroupRaw;

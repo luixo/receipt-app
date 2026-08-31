@@ -52,7 +52,7 @@ const temporalClassNames = {
 } satisfies Record<TemporalType, string>;
 export const temporalSchemas = mapValues(temporalClasses, (value, key) =>
 	z.instanceof(value, {
-		message: `Input not instance of ${temporalClassNames[key]}`,
+		error: `Input not instance of ${temporalClassNames[key]}`,
 	}),
 ) as {
 	[K in TemporalType]: z.ZodCustom<
@@ -97,15 +97,13 @@ export const getNow = {
 	plainDate: () => today(localTimeZone),
 	plainDateTime: () => toCalendarDateTime(now(localTimeZone)),
 	zonedDateTime: () => now(localTimeZone),
-} as {
-	[K in TemporalType]: () => TemporalMapping[K];
 };
 export const fromDate = {
 	plainTime: (date) => toTime(fromDateRaw(date, localTimeZone)),
 	plainDate: (date) => toCalendarDate(fromDateRaw(date, localTimeZone)),
 	plainDateTime: (date) => toCalendarDateTime(fromDateRaw(date, localTimeZone)),
 	zonedDateTime: (date) => fromDateRaw(date, localTimeZone),
-} as {
+} satisfies {
 	// eslint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: Date) => TemporalMapping[K];
 };
@@ -115,7 +113,7 @@ export const toDate = {
 	plainDate: (input) => input.toDate(localTimeZone),
 	plainDateTime: (input) => input.toDate(localTimeZone),
 	zonedDateTime: (input) => input.toDate(),
-} as {
+} satisfies {
 	// eslint-disable-next-line eslint-js/no-restricted-syntax
 	[K in TemporalType]: (input: TemporalMapping[K]) => Date;
 };
@@ -177,7 +175,7 @@ export const parsers = {
 	plainDate: (input) => parseDate(input),
 	plainDateTime: (input) => parseDateTime(input),
 	zonedDateTime: (input) => parseZonedDateTime(input),
-} as {
+} satisfies {
 	[K in TemporalType]: (input: TemporalInputMapping[K]) => TemporalMapping[K];
 };
 export const deserialize = <K extends TemporalType>(

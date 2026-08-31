@@ -248,7 +248,7 @@ const queueAddDebt = queueCallFactory<
 				message: `There is already a debt for user "${matchedDebtReceipt.userId}" in receipt "${matchedDebtReceipt.receiptId}".`,
 			});
 		}
-		return { ...debt, generatedId: ctx.getUuid() as DebtId };
+		return { ...debt, generatedId: ctx.getUuid() };
 	});
 	const debts = debtsOrErrors.filter(
 		(debtOrError): debtOrError is Exclude<typeof debtOrError, TRPCError> =>

@@ -13,11 +13,11 @@ export const getValidLocale = (input: string): Locale | undefined => {
 		const locales = Intl.getCanonicalLocales([input]);
 		if (locales.length === 1) {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			return locales[0]! as Locale;
+			return locales[0]!;
 		}
 	} catch (e) {
 		if (e instanceof TypeError) {
-			return input as Locale;
+			return input;
 		}
 	}
 };
