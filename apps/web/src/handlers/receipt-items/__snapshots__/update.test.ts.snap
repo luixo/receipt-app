@@ -5,7 +5,7 @@ exports[`receiptItems.update > functionality > update name > foreign 1`] = `
   "updated": {
     "receiptItems": {
       "id:92190998-0b5f-4424-99ed-35892271544c": {
-        "name": "illum debitis atque",
+        "name": "attonbitus ascisco aro",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -18,7 +18,7 @@ exports[`receiptItems.update > functionality > update name > own 1`] = `
   "updated": {
     "receiptItems": {
       "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
-        "name": "nostrum voluptates incidunt",
+        "name": "aveho acervus eius",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -31,7 +31,7 @@ exports[`receiptItems.update > functionality > update price > foreign 1`] = `
   "updated": {
     "receiptItems": {
       "id:92190998-0b5f-4424-99ed-35892271544c": {
-        "price": "582.6600",
+        "price": "181.6000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -44,7 +44,7 @@ exports[`receiptItems.update > functionality > update price > own 1`] = `
   "updated": {
     "receiptItems": {
       "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
-        "price": "647.3500",
+        "price": "199.5400",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -57,7 +57,7 @@ exports[`receiptItems.update > functionality > update quantity > foreign 1`] = `
   "updated": {
     "receiptItems": {
       "id:92190998-0b5f-4424-99ed-35892271544c": {
-        "quantity": "100.0000",
+        "quantity": "18.0000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -70,7 +70,7 @@ exports[`receiptItems.update > functionality > update quantity > own 1`] = `
   "updated": {
     "receiptItems": {
       "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
-        "quantity": "82.0000",
+        "quantity": "20.0000",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

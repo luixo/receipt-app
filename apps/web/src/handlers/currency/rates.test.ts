@@ -16,7 +16,7 @@ import { procedure } from "./rates";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-const getFakeRate = () => Number(faker.finance.amount(0.01, 100));
+const getFakeRate = () => Number(faker.finance.amount({ min: 0.01, max: 100 }));
 
 describe("currency.rates", () => {
 	describe("input verification", () => {

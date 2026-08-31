@@ -5,7 +5,7 @@ exports[`receipts.update > functionality > update currency code 1`] = `
   "updated": {
     "receipts": {
       "id:7d9b1e24-9ce5-43c6-a4fc-9e11f08dc0d6": {
-        "currencyCode": "NZD",
+        "currencyCode": "FKP",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -31,7 +31,7 @@ exports[`receipts.update > functionality > update name 1`] = `
   "updated": {
     "receipts": {
       "id:1f13ba3f-43a6-45b5-8300-0477beaa45b9": {
-        "name": "blanditiis iste dolorem",
+        "name": "repellendus vinculum ipsa",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
