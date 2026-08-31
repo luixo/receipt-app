@@ -1,0 +1,29 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"1ce9a308-dd7a-42c5-9ad6-616f818a20d8\"}]": {
+			"state": {
+				"data": {
+					"amount": -8829.72
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": {
+			"1": {
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "1ce9a308-dd7a-42c5-9ad6-616f818a20d8"
+					}
+				}
+			}
+		}
+	}
+}

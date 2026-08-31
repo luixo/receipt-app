@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"51e7eca0-f79d-4e80-adad-d561c7aa77c1\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.update\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "51e7eca0-f79d-4e80-adad-d561c7aa77c1",
+						"update": {
+							"timestamp": "2019-12-23"
+						}
+					}
+				}
+			}
+		]
+	}
+}

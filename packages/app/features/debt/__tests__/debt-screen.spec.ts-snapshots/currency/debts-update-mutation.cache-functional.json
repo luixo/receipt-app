@@ -1,0 +1,33 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"aac6c6cc-9df3-4427-9f0c-a4c1e3ac53a8\"}]": {
+			"state": {
+				"data": {
+					"currencyCode": "EUR"
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseUpdated": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "aac6c6cc-9df3-4427-9f0c-a4c1e3ac53a8",
+						"update": {
+							"currencyCode": "EUR"
+						}
+					}
+				}
+			}
+		]
+	}
+}

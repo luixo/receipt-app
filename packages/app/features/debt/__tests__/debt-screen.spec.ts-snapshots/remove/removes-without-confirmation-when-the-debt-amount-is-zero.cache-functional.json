@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"53fa027f-d801-417a-9f4e-739cd20b0ae5\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.remove": [
+			{
+				"state": {
+					"data": {
+						"reverseRemoved": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "53fa027f-d801-417a-9f4e-739cd20b0ae5"
+					}
+				}
+			}
+		]
+	}
+}

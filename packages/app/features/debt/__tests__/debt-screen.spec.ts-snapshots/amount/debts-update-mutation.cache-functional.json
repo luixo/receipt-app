@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"93a1ee80-e395-437c-afb7-c651ed43dc8e\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.update\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "93a1ee80-e395-437c-afb7-c651ed43dc8e",
+						"update": {
+							"amount": 25
+						}
+					}
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"93a1ee80-e395-437c-afb7-c651ed43dc8e\"}]": {
+			"state": {
+				"data": {
+					"amount": 25,
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "93a1ee80-e395-437c-afb7-c651ed43dc8e",
+						"update": {
+							"amount": 25
+						}
+					}
+				}
+			}
+		}
+	}
+}
