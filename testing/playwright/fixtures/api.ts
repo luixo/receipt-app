@@ -237,9 +237,9 @@ const handleRequest = async (
 		);
 	}
 	const input =
-		rawBody !== undefined
-			? (JSON.parse(decodeURIComponent(rawBody)) as TransformerResult)
-			: undefined;
+		rawBody === undefined
+			? undefined
+			: (JSON.parse(decodeURIComponent(rawBody)) as TransformerResult);
 	const name = cleanPathname as TRPCKey;
 	return handleCall(controller, headers, type, name, input);
 };

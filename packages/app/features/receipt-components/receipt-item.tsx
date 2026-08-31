@@ -95,7 +95,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									</Chip>
 								) : null}
 							</View>
-							{!canEdit ? null : (
+							{canEdit ? (
 								<RemoveButton
 									onRemove={() => removeItem(item.id)}
 									mutation={{ isPending: isRemovalPending }}
@@ -103,7 +103,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									noConfirm={item.consumers.length === 0}
 									isIconOnly
 								/>
-							)}
+							) : null}
 						</View>
 						{canEdit ? (
 							<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">

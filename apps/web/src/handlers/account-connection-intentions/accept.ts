@@ -112,8 +112,9 @@ export const procedure = authProcedure
 		);
 		assert.ok(selfAccount, "Expected to have self account in account list");
 		const [outboundDebts, inboundDebts] = await Promise.all([
-			!targetAccount.manualAcceptDebts
-				? database
+			targetAccount.manualAcceptDebts
+				? []
+				: database
 						.selectFrom("debts")
 						.where("debts.ownerAccountId", "=", ctx.auth.accountId)
 						.where("debts.userId", "=", input.userId)
@@ -125,10 +126,10 @@ export const procedure = authProcedure
 							"debts.receiptId",
 							"debts.timestamp",
 						])
-						.execute()
-				: [],
-			!selfAccount.manualAcceptDebts
-				? database
+						.execute(),
+			selfAccount.manualAcceptDebts
+				? []
+				: database
 						.selectFrom("debts")
 						.where("debts.ownerAccountId", "=", targetAccount.id)
 						.where("debts.userId", "=", intention.userId)
@@ -140,8 +141,7 @@ export const procedure = authProcedure
 							"debts.receiptId",
 							"debts.timestamp",
 						])
-						.execute()
-				: [],
+						.execute(),
 		]);
 		await Promise.all([
 			acceptNewIntentions(

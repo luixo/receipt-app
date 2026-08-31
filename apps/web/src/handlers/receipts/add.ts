@@ -266,9 +266,9 @@ const verifyParticipants = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message}${
-				participants.errors.length !== 1
-					? ` (+${participants.errors.length - 1} errors)`
-					: ""
+				participants.errors.length === 1
+					? ""
+					: ` (+${participants.errors.length - 1} errors)`
 			}`,
 		});
 	}
@@ -295,7 +295,7 @@ const verifyItems = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message}${
-				items.errors.length !== 1 ? ` (+${items.errors.length - 1} errors)` : ""
+				items.errors.length === 1 ? "" : ` (+${items.errors.length - 1} errors)`
 			}`,
 		});
 	}
@@ -328,10 +328,10 @@ const verifyPayers = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message.replace(receiptId, "new receipt")}${
-				payers.errors.length !== 1
-					? /* c8 ignore start */
+				payers.errors.length === 1
+					? ""
+					: /* c8 ignore start */
 						` (+${payers.errors.length - 1} errors)`
-					: ""
 				/* c8 ignore stop */
 			}`,
 		});
@@ -362,9 +362,9 @@ const verifyItemConsumers = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message}${
-				addedConsumersErrors.length !== 1
-					? ` (+${addedConsumersErrors.length - 1} errors)`
-					: ""
+				addedConsumersErrors.length === 1
+					? ""
+					: ` (+${addedConsumersErrors.length - 1} errors)`
 			}`,
 		});
 	}
@@ -402,9 +402,9 @@ const verifyItemPayers = (
 		throw new TRPCError({
 			code: firstError.code,
 			message: `${firstError.message}${
-				addedPayersErrors.length !== 1
-					? ` (+${addedPayersErrors.length - 1} errors)`
-					: ""
+				addedPayersErrors.length === 1
+					? ""
+					: ` (+${addedPayersErrors.length - 1} errors)`
 			}`,
 		});
 	}

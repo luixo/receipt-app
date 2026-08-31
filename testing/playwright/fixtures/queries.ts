@@ -717,11 +717,11 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 												`Succeed entries: expected ${formatExpectedRange(
 													expectedAmounts.succeed,
 												)}, got ${accountedAmounts.succeed}`,
-												expectedAmounts.errored.min !== 0
-													? `Errored entries: expected ${formatExpectedRange(
+												expectedAmounts.errored.min === 0
+													? undefined
+													: `Errored entries: expected ${formatExpectedRange(
 															expectedAmounts.errored,
-														)}, got ${accountedAmounts.errored}`
-													: undefined,
+														)}, got ${accountedAmounts.errored}`,
 												options.awaitLoading && actual.unresolved !== 0
 													? `${actual.unresolved} unresolved entries`
 													: undefined,

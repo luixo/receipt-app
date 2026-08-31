@@ -33,7 +33,13 @@ export const procedure = authProcedure
 			.executeTakeFirst();
 		// This reads better without ternary
 		// oxlint-disable-next-line unicorn/prefer-ternary
-		if (!existingSettings) {
+		if (existingSettings) {
+			await database
+				.updateTable("accountSettings")
+				.set(updateObject)
+				.where("accountSettings.accountId", "=", ctx.auth.accountId)
+				.executeTakeFirst();
+		} else {
 			await database
 				.insertInto("accountSettings")
 				.values({
@@ -41,12 +47,6 @@ export const procedure = authProcedure
 					...DEFAULT_ACCOUNT_SETTINGS,
 					...updateObject,
 				})
-				.executeTakeFirst();
-		} else {
-			await database
-				.updateTable("accountSettings")
-				.set(updateObject)
-				.where("accountSettings.accountId", "=", ctx.auth.accountId)
 				.executeTakeFirst();
 		}
 	});

@@ -426,7 +426,6 @@ const temporaryDisabledRules = {
 	"unicorn/catch-error-name": "off", // 41 cases
 	"unicorn/explicit-length-check": "off", // 34 cases
 	"unicorn/no-nested-ternary": "off", // 30 cases
-	"unicorn/no-negated-condition": "off", // 25 cases
 	"unicorn/prefer-global-this": "off", // 24 cases
 	"unicorn/prefer-top-level-await": "off", // 19 cases
 	"unicorn/consistent-function-scoping": "off", // 18 cases

@@ -117,9 +117,9 @@ const UserDebtsGroup = suspendedFallback<{
 						<Icon name="exchange" />
 					</ButtonLink>
 				) : null}
-				{debts.length !== nonResolvedDebts.length ? (
+				{debts.length === nonResolvedDebts.length ? null : (
 					<ShowResolvedDebtsOption className="absolute right-0" />
-				) : null}
+				)}
 			</View>
 		);
 	},

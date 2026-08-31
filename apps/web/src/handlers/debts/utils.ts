@@ -20,18 +20,18 @@ export const upsertAutoAcceptedDebts = async (
 		.where((eb) =>
 			eb.or(
 				debts.map((debt) =>
-					!debt.isNew
-						? eb.and({
-								id: debt.id,
-								ownerAccountId: debt.ownerAccountId,
-							})
-						: debt.receiptId
+					debt.isNew
+						? debt.receiptId
 							? eb.and({
 									ownerAccountId: debt.ownerAccountId,
 									userId: debt.userId,
 									receiptId: debt.receiptId,
 								})
-							: eb("debts.ownerAccountId", "is", null),
+							: eb("debts.ownerAccountId", "is", null)
+						: eb.and({
+								id: debt.id,
+								ownerAccountId: debt.ownerAccountId,
+							}),
 				),
 			),
 		)
