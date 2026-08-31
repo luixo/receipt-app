@@ -253,7 +253,8 @@ describe("users.getPaged", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ limit: 2, cursor: 0 }),
-					() => caller.procedure({ limit: -1, cursor: 0 }).catch((error) => error),
+					() =>
+						caller.procedure({ limit: -1, cursor: 0 }).catch((error) => error),
 				]);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					count: 1,
