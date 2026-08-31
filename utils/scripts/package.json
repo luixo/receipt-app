@@ -4,14 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun dev.ts",
-		"expo:update-ios-version": "bun update-version.ts",
 		"verify-routers": "bun verify-routers.ts"
 	},
 	"devDependencies": {
-		"@ra/utils": "workspace:*",
-		"concurrently": "^9.2.1",
-		"diff": "^8.0.2",
-		"ts-morph": "^27.0.2"
+		"diff": "^9.0.0"
 	}
 }
