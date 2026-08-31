@@ -1,7 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
 import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
-import type { UserId } from "~db/ids";
 import { expect } from "~tests/frontend/fixtures";
 import type {
 	GenerateReceiptItems,
@@ -19,7 +18,7 @@ const test = mergeTests(receiptTest, partButtonsFixture);
 // PartButtons row is rendered first, above the self consumer row.
 const generateUsers: GenerateUsers = ({ faker }) => [
 	{
-		id: faker.string.uuid() as UserId,
+		id: faker.string.uuid(),
 		name: "Other user",
 		publicName: undefined,
 		connectedAccount: undefined,

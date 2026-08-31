@@ -47,8 +47,7 @@ type ExtendedTestInfo = TestInfo & {
 		Record<TRPCQueryKey | TRPCMutationKey, ActualAwaitAmounts>
 	>;
 };
-const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo =>
-	testInfo as ExtendedTestInfo;
+const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo => testInfo;
 
 const getSnapshotName = (
 	testInfo: ExtendedTestInfo,

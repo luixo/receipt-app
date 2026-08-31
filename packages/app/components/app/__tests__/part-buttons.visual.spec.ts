@@ -1,7 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
 import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
-import type { UserId } from "~db/ids";
 import type {
 	GenerateReceiptItems,
 	GenerateReceiptItemsWithConsumers,
@@ -16,7 +15,7 @@ const test = mergeTests(receiptTest, partButtonsFixture);
 
 const generateUsers: GenerateUsers = ({ faker }) => [
 	{
-		id: faker.string.uuid() as UserId,
+		id: faker.string.uuid(),
 		name: "Other user",
 		publicName: undefined,
 		connectedAccount: undefined,

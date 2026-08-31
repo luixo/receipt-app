@@ -143,7 +143,7 @@ const queueSession = queueCallFactory<
 						accountId: pretendAccount.id,
 						email: pretendAccount.email,
 					},
-					role: matchedSession.role as "admin",
+					role: matchedSession.role,
 				};
 			}
 			return {

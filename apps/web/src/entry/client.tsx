@@ -10,9 +10,7 @@ if (sentryDsn) {
 	Sentry.init({
 		dsn: sentryDsn,
 		tracesSampleRate: 1,
-		// Adds request headers and IP for users, for more info visit:
-		// https://docs.sentry.io/platforms/javascript/guides/tanstackstart-react/configuration/options/#sendDefaultPii
-		sendDefaultPii: true,
+		dataCollection: {},
 	});
 }
 

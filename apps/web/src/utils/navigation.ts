@@ -78,8 +78,10 @@ export const searchParamsWithDefaults = <
 		(value) =>
 			value instanceof z.ZodCatch
 				? value.def.catchValue({
+						/* eslint-disable typescript/no-deprecated */
 						error: { issues: [] },
 						input: undefined,
+						/* eslint-enable typescript/no-deprecated */
 						value: undefined,
 						issues: [],
 					})
