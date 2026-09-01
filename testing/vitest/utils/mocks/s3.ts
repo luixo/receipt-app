@@ -3,7 +3,7 @@ import type { S3Options } from "~web/providers/s3";
 type InterceptedMessage = { key: string; objectLength: number };
 
 export type S3OptionsMock = S3Options & {
-	broken: boolean;
+	setBroken: (next: boolean) => void;
 	mock: S3Options["mock"] & {
 		getMessages: () => InterceptedMessage[];
 	};
@@ -12,11 +12,8 @@ export const getS3Options = (): S3OptionsMock => {
 	let innerBroken = false;
 	const messages: InterceptedMessage[] = [];
 	return {
-		get broken() {
-			return innerBroken;
-		},
-		set broken(value) {
-			innerBroken = value;
+		setBroken: (next: boolean) => {
+			innerBroken = next
 		},
 		mock: {
 			putObject: (key, object) => {

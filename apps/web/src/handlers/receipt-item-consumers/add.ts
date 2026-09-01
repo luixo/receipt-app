@@ -112,7 +112,7 @@ const getConsumersOrErrors = (
 		const matchedReceiptItems = receiptItems.filter(
 			(receiptItem) => receiptItem.itemId === input.itemId,
 		);
-		const firstReceiptItem = matchedReceiptItems[0];
+		const [firstReceiptItem] = matchedReceiptItems;
 		if (!firstReceiptItem) {
 			return new TRPCError({
 				code: "NOT_FOUND",

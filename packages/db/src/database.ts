@@ -83,7 +83,7 @@ const deserializeRegexes = {
 const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	const separatedInput = input.replace(" ", "T");
 	if (addTimezone) {
-		const match = /[-+]\d\d(:\d\d)?$/.exec(input);
+		const match = /[-+]\d\d(?<shift>:\d\d)?$/.exec(input);
 		/* c8 ignore start */
 		if (match) {
 			const isUTC = match[0] === "+00" || match[0] === "+00:00";
@@ -107,7 +107,7 @@ const deserializer: Deserializer = (input) => {
 			regex.test(input),
 		);
 		if (regexTypeMatch) {
-			const type = regexTypeMatch[0];
+			const [type] = regexTypeMatch;
 			return parsers[type](
 				// oxlint-disable-next-line typescript/no-explicit-any typescript/no-unsafe-argument
 				databaseISOToCalendarISO(input, type.startsWith("zoned")) as any,

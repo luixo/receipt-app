@@ -9,7 +9,7 @@ import { getServerRouteMethod } from "~web/pages/api/test.utils";
 
 import { Route } from "./ping-cache";
 
-const POST = getServerRouteMethod(Route, "POST");
+const postMethod = getServerRouteMethod(Route, "POST");
 
 const router = t.router({
 	utils: t.router({
@@ -30,7 +30,7 @@ describe("ping-cache", () => {
 		test("procedure failed", async ({ ctx }) => {
 			await withTestServer(ctx, router, async ({ url }) => {
 				const errorMessage = faker.lorem.sentence();
-				const response = await POST({
+				const response = await postMethod({
 					pathname: "/api/utils/ping-cache",
 					request: new Request(url, { headers: { "x-error": errorMessage } }),
 					params: {},
@@ -49,7 +49,7 @@ describe("ping-cache", () => {
 
 	test("success", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
-			const response = await POST({
+			const response = await postMethod({
 				pathname: "/api/utils/ping-cache",
 				request: new Request(url),
 				params: {},

@@ -78,7 +78,7 @@ const getParticipants = (
 			});
 		}
 		const matchedUsers = users.filter((user) => user.id === input.userId);
-		const firstMatchedUser = matchedUsers[0];
+		const [firstMatchedUser] = matchedUsers;
 		if (
 			!firstMatchedUser ||
 			firstMatchedUser.ownerAccountId !== ctx.auth.accountId

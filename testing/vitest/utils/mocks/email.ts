@@ -1,7 +1,7 @@
 import type { Email, EmailOptions } from "~web/providers/email";
 
 export type EmailOptionsMock = EmailOptions & {
-	broken: boolean;
+	setBroken: (next: boolean) => void;
 	mock: NonNullable<EmailOptions["mock"]> & {
 		getMessages: () => Email[];
 	};
@@ -12,18 +12,13 @@ export const getEmailOptions = (): EmailOptionsMock => {
 	let innerBaseUrl = "http://receipt-app.test/";
 	const messages: Email[] = [];
 	return {
-		get broken() {
-			return innerBroken;
+		setBroken: (next) => {
+			innerBroken = next;
 		},
-		set broken(value) {
-			innerBroken = value;
+		setActive: (next) => {
+			innerActive = next;
 		},
-		get active() {
-			return innerActive;
-		},
-		set active(value) {
-			innerActive = value;
-		},
+		getActive: () => innerActive,
 		get baseUrl() {
 			return innerBaseUrl;
 		},

@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
-import { fromEntries } from "remeda";
+import { doNothing, fromEntries } from "remeda";
 import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
@@ -38,7 +38,8 @@ const defaultGetEmailOptions = () => {
 		);
 	}
 	return {
-		active,
+		getActive: () => active,
+		setActive: doNothing,
 		baseUrl: env.BASE_URL || "http://example.com/",
 	};
 };

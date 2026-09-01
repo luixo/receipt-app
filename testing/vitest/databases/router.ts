@@ -48,7 +48,7 @@ let runningInstance:
 			cleanupManager: ReturnType<typeof cleanupManagerFactory>;
 			databaseManager: ReturnType<typeof databaseManagerFactory>;
 	  }
-	| undefined;
+	| undefined = undefined;
 
 const runningProcedure = procedure.use(
 	middleware(async ({ ctx, path, next }) => {

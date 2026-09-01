@@ -51,8 +51,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			>((acc, intention) => {
 				const userIntentions = acc[intention.userId] || [];
 				userIntentions.push(intention);
-				acc[intention.userId] = userIntentions;
-				return acc;
+				return { ...acc, [intention.userId]: userIntentions };
 			}, {});
 			return entries(
 				mapValues(intentionsByUser, (userIntentions) =>

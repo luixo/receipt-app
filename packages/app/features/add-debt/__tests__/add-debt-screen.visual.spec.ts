@@ -13,8 +13,8 @@ test("Form", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	const { users } = await mockBase();
-	assert.ok(users[0]);
-	const user = users[0];
+	const [user] = users;
+	assert.ok(user);
 
 	await page.goto("/debts/add");
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Add debt");
@@ -67,8 +67,8 @@ test.describe("'debts.add' mutation", () => {
 		expectScreenshotWithSchemes,
 	}) => {
 		const { users } = await mockBase();
-		assert.ok(users[0]);
-		const user = users[0];
+		const [user] = users;
+		assert.ok(user);
 
 		const createPause = api.createPause();
 		api.mockFirst("debts.add", async () => {

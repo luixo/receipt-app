@@ -15,6 +15,7 @@ const globalSetup = async (config: FullConfig) => {
 	process.env.PLAYWRIGHT = "true";
 	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
 	await httpServer.listen(portManagerPort);
+	// oxlint-disable-next-line no-param-reassign
 	config.metadata.portManagerServer = httpServer;
 	return async () => {
 		if (serverMessages.length !== 0) {

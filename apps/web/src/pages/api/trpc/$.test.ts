@@ -249,7 +249,7 @@ describe("TRPC endpoint", () => {
 					| undefined;
 				assert(firstCallArgs);
 				expect(firstCallArgs[0]).toEqual(expectedUrl.toString());
-				const options = firstCallArgs[1];
+				const [, options] = firstCallArgs;
 				assert(options);
 				expect({
 					...options,

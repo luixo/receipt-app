@@ -29,7 +29,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(async ({ generateUsers = defaultGenerateUsers } = {}) => {
 			await api.mockUtils.authPage({ page });
 			const users = generateUsers({ faker, amount: 1 });
-			const debtUser = users[0];
+			const [debtUser] = users;
 			assert.ok(debtUser);
 			api.mockFirst(
 				"users.get",

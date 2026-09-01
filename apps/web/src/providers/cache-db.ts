@@ -39,7 +39,7 @@ const getRedisInstance = async (): Promise<CacheInstance> => {
 	}
 };
 
-let cacheInstance: CacheInstance | undefined;
+let cacheInstance: CacheInstance | undefined = undefined;
 
 export const getCacheInstance = async (
 	ctx: UnauthorizedContext,

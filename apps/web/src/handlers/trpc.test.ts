@@ -24,6 +24,7 @@ const createCaller = t.createCallerFactory(router);
 describe("procedures", () => {
 	describe("unauth procedure", () => {
 		test("success logged data", async ({ ctx }) => {
+			// oxlint-disable-next-line no-param-reassign
 			ctx.logger.level = "trace";
 
 			const caller = createCaller(await createContext(ctx));
@@ -51,6 +52,7 @@ describe("procedures", () => {
 			]);
 		});
 		test("failed logged data", async ({ ctx }) => {
+			// oxlint-disable-next-line no-param-reassign
 			ctx.logger.level = "trace";
 
 			const caller = createCaller(await createContext(ctx));

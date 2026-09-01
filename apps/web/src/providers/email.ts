@@ -10,7 +10,8 @@ export type Email = {
 };
 
 export type EmailOptions = {
-	active: boolean;
+	getActive: () => boolean;
+	setActive: (next: boolean) => void;
 	baseUrl: string;
 	mock?: EmailClient;
 };
@@ -19,7 +20,7 @@ type EmailClient = {
 	send: (email: Email) => Promise<void>;
 };
 
-let emailClient: EmailClient | undefined;
+let emailClient: EmailClient | undefined = undefined;
 
 export const getEmailClient = (ctx: UnauthorizedContext): EmailClient => {
 	if (ctx.emailOptions.mock) {

@@ -9,7 +9,7 @@ import { getServerRouteMethod } from "~web/pages/api/test.utils";
 
 import { Route } from "./cleanup";
 
-const POST = getServerRouteMethod(Route, "POST");
+const postMethod = getServerRouteMethod(Route, "POST");
 
 const removedSessions = faker.number.int({ min: 3000, max: 10_000 });
 const removedResetPasswordIntentions = faker.number.int({
@@ -39,7 +39,7 @@ describe("cleanup", () => {
 		test("one of the procedures failed", async ({ ctx }) => {
 			await withTestServer(ctx, router, async ({ url }) => {
 				const errorMessage = faker.lorem.sentence();
-				const response = await POST({
+				const response = await postMethod({
 					pathname: "/api/utils/cleanup",
 					request: new Request(url, {
 						headers: { "x-error": errorMessage },
@@ -60,7 +60,7 @@ describe("cleanup", () => {
 
 	test("success", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
-			const response = await POST({
+			const response = await postMethod({
 				pathname: "/api/utils/cleanup",
 				request: new Request(url),
 				params: {},

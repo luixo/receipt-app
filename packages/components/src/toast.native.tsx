@@ -13,7 +13,7 @@ import type { AddProps, ToastProviderProps } from "~components/toast";
 import { View } from "~components/view";
 import { MAX_VISIBLE_TOASTS, TOAST_TIMEOUT } from "~utils/toast";
 
-let toastManager: ReturnType<typeof useToast> | undefined;
+let toastManager: ReturnType<typeof useToast> | undefined = undefined;
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {
 	const localToastManager = useToast();
 	React.useEffect(() => {

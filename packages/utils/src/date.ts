@@ -188,8 +188,7 @@ export const deserialize = <K extends TemporalType>(
 				// @ts-expect-error Union type is too cumbersome to fix
 				return parser(converter(input));
 			} catch {
-				// oxlint-disable-next-line no-useless-return
-				return;
+				return undefined;
 			}
 		})
 		.find(Boolean) as TemporalMapping[K] | undefined;

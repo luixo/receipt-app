@@ -57,6 +57,7 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 		await page.emulateMedia({ colorScheme: "light" });
 
 		const originalGoto = page.goto.bind(page);
+		// oxlint-disable-next-line no-param-reassign
 		page.goto = async (url, options) => {
 			await fakeBrowserDate(page);
 			await setProxyHeaders(page, api, baseURL);

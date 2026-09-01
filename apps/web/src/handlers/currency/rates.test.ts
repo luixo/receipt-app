@@ -171,7 +171,9 @@ describe("currency.rates", () => {
 						key.includes(currencyInCache) ? fakeRate.toString() : null,
 					),
 				);
-				dbMock.setResponder("setValue", async () => {});
+				dbMock.setResponder("setValue", async () => {
+					/* empty */
+				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
@@ -222,7 +224,7 @@ describe("currency.rates", () => {
 					currenciesTo.map((currencyTo) => [currencyTo, getFakeRate()]),
 				);
 				dbMock.setResponder("getValue", (key) => {
-					const currencyTo = key.split("->")[1];
+					const [, currencyTo] = key.split("->");
 					assert(currencyTo, "Expected to have format 'USD->EUR' in key");
 					return Promise.resolve(fakeRates[currencyTo]?.toString() ?? null);
 				});

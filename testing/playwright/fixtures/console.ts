@@ -75,7 +75,7 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 					messages
 						.map((message) => {
 							if (isIgnored(ignored, message.text())) {
-								return;
+								return undefined;
 							}
 							return `${colors.magenta(`[${message.type()}]`)} ${message.text()}`;
 						})

@@ -57,7 +57,7 @@ const insertConnections = async (
 	);
 	return connections.map((connection) => {
 		if (!connection) {
-			return;
+			return undefined;
 		}
 		const matchedNonEmptyConnectionIndex =
 			nonEmptyConnections.indexOf(connection);

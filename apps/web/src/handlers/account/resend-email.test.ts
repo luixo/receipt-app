@@ -80,7 +80,7 @@ describe("account.resendEmail", () => {
 
 	describe("functionality", () => {
 		test("email is not resent - service is disabled", async ({ ctx }) => {
-			ctx.emailOptions.active = false;
+			ctx.emailOptions.setActive(false);
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -93,7 +93,7 @@ describe("account.resendEmail", () => {
 		test("email is not resent - something failed in an email provider", async ({
 			ctx,
 		}) => {
-			ctx.emailOptions.broken = true;
+			ctx.emailOptions.setBroken(true);
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -115,7 +115,7 @@ describe("account.resendEmail", () => {
 			);
 			expect(returnEmail).toBe(email);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0];
+			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),

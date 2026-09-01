@@ -60,7 +60,7 @@ describe("resetPasswordIntentions.add", () => {
 
 	describe("functionality", () => {
 		test("email service is disabled", async ({ ctx }) => {
-			ctx.emailOptions.active = false;
+			ctx.emailOptions.setActive(false);
 			const {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
@@ -74,7 +74,7 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("email service is broken", async ({ ctx }) => {
-			ctx.emailOptions.broken = true;
+			ctx.emailOptions.setBroken(true);
 			const {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
@@ -98,7 +98,7 @@ describe("resetPasswordIntentions.add", () => {
 			await insertResetPasswordIntention(ctx, accountId);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure({ email }));
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0];
+			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),

@@ -17,7 +17,7 @@ export const Text = ({
 	children,
 }: Props) => {
 	const textClass = React.use(TextClassContext);
-	const base = textVariants().base;
+	const { base } = textVariants();
 	const finalClassName = base({
 		variant,
 		className: cn(textClass, className),
@@ -85,7 +85,7 @@ export const TextWrapper: React.FC<
 			// Pass only text-related non-inheritable props to the context
 			const reason = classNameElement.trim().split(":").at(-1)?.trim();
 			if (!reason) {
-				return;
+				return undefined;
 			}
 			return (
 				matches.has(reason) || prefixes.some((prefix) => prefix.exec(reason))

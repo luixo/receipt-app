@@ -153,7 +153,7 @@ describe("batching", () => {
 					id: "1",
 					modifiedValue: "m-1",
 				});
-				const error = elements[1];
+				const [, error] = elements;
 				expect(error).toBeInstanceOf(TRPCClientError);
 				const typedError = error as TRPCClientError<typeof router>;
 				expect(typedError.shape?.message).toMatch("Failed mapElement call");
@@ -198,7 +198,7 @@ describe("batching", () => {
 					id: "1",
 					modifiedValue: "m-1",
 				});
-				const error = elements[1];
+				const [, error] = elements;
 				expect(error).toBeInstanceOf(TRPCClientError);
 				const typedError = error as TRPCClientError<typeof router>;
 				expect(typedError.shape?.message).toMatch("Missing element error");
