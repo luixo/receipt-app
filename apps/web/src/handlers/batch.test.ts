@@ -98,7 +98,7 @@ describe("batching", () => {
 					client.batch.query({ id: "2" }),
 					client.ping.query("hello world"),
 				]);
-				expect(elements).toEqual<typeof elements>([
+				expect(elements).toStrictEqual<typeof elements>([
 					{ id: "1", modifiedValue: "m-1" },
 					{ id: "2", modifiedValue: "m-2" },
 					{ pong: "hello world" },
@@ -115,7 +115,7 @@ describe("batching", () => {
 					client.batch.query({ id: "1" }),
 					client.ping.query("hello world"),
 				]);
-				expect(elements).toEqual<typeof elements>([
+				expect(elements).toStrictEqual<typeof elements>([
 					{ id: "1", modifiedValue: "m-1" },
 					{ pong: "hello world" },
 				]);
@@ -131,7 +131,7 @@ describe("batching", () => {
 					client.batch.query({ id: "1" }),
 					client.batch.query({ id: "2" }),
 				]);
-				expect(elements).toEqual<typeof elements>([
+				expect(elements).toStrictEqual<typeof elements>([
 					{ id: "1", modifiedValue: "m-1" },
 					{ id: "2", modifiedValue: "m-2" },
 				]);
@@ -149,7 +149,7 @@ describe("batching", () => {
 					client.batch.query({ id: "1" }).catch((error) => error),
 					client.batch.query({ id: "fail-single" }).catch((error) => error),
 				]);
-				expect(elements[0]).toEqual<(typeof elements)[number]>({
+				expect(elements[0]).toStrictEqual<(typeof elements)[number]>({
 					id: "1",
 					modifiedValue: "m-1",
 				});
@@ -194,7 +194,7 @@ describe("batching", () => {
 					client.batch.query({ id: "1" }).catch((error) => error),
 					client.batch.query({ id: "miss-element" }).catch((error) => error),
 				]);
-				expect(elements[0]).toEqual<(typeof elements)[number]>({
+				expect(elements[0]).toStrictEqual<(typeof elements)[number]>({
 					id: "1",
 					modifiedValue: "m-1",
 				});

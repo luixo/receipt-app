@@ -39,7 +39,7 @@ describe("ping-cache", () => {
 					status: response.status,
 					data: await response.text(),
 				};
-				expect(result).toEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					status: 500,
 					data: `Error on cache ping: TRPCClientError: ${errorMessage}`,
 				});
@@ -58,7 +58,7 @@ describe("ping-cache", () => {
 				status: response.status,
 				data: await response.text(),
 			};
-			expect(result).toEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				status: 200,
 				data: `Cache ping successful`,
 			});

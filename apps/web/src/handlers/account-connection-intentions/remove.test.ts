@@ -165,7 +165,7 @@ describe("accountConnectionIntentions.remove", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ targetAccountId: foreignAccountId }),
 			);
-			expect(result).toBeUndefined();
+			expect(result).toStrictEqual<typeof result>(undefined);
 		});
 	});
 });

@@ -180,7 +180,7 @@ describe("account.changeAvatar", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getFormData()),
 			);
-			expect(result).toBeUndefined();
+			expect(result).toStrictEqual<typeof result>(undefined);
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(0);
 		});
 
@@ -207,7 +207,7 @@ describe("account.changeAvatar", () => {
 				"/",
 				// oxlint-disable-next-line eslint-js/no-restricted-syntax
 			)}?lastModified=${Date.now()}`;
-			expect(result).toEqual({ url });
+			expect(result).toStrictEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.s3Options.mock.getMessages();
 			assert(message);

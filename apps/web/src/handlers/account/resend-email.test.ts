@@ -113,7 +113,7 @@ describe("account.resendEmail", () => {
 			const { email: returnEmail } = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);
-			expect(returnEmail).toBe(email);
+			expect(returnEmail).toStrictEqual<typeof returnEmail>(email);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);

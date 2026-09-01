@@ -10,7 +10,9 @@ type FormContextType = {
 	submitHandler: () => void;
 };
 export const FormContext = React.createContext<FormContextType>({
-	submitHandler: () => { /* empty */ },
+	submitHandler: () => {
+		/* empty */
+	},
 });
 
 export const Form: React.FC<Props> = ({

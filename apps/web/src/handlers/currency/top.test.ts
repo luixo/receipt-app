@@ -43,11 +43,11 @@ describe("currency.top", () => {
 			const debtsResult = await caller.procedure({
 				options: { type: "debts" },
 			});
-			expect(debtsResult).toEqual<typeof debtsResult>([]);
+			expect(debtsResult).toStrictEqual<typeof debtsResult>([]);
 			const receiptsResult = await caller.procedure({
 				options: { type: "receipts" },
 			});
-			expect(receiptsResult).toEqual<typeof receiptsResult>([]);
+			expect(receiptsResult).toStrictEqual<typeof receiptsResult>([]);
 		});
 
 		test("top debts currencies returned", async ({ ctx }) => {

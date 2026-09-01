@@ -19,7 +19,7 @@ describe("database", () => {
 		type MessageType = { duration: number; sql: string; error: Error };
 		const typedMessage = loggedMessages[0][0] as MessageType;
 		expect(typedMessage.duration).toBeTypeOf("number");
-		expect(typedMessage.error.toString()).toBe(
+		expect(typedMessage.error.toString()).toStrictEqual(
 			'error: column "foo" does not exist',
 		);
 		expect(typedMessage).toStrictEqual<typeof typedMessage>({

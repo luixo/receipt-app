@@ -1,3 +1,4 @@
+// oxlint-disable vitest/require-top-level-describe
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";

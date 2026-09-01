@@ -30,7 +30,7 @@ describe("errors formatting", () => {
 			expect(typedError.shape?.data.stack).toMatch(
 				/^TRPCError: Session id mismatch\n/,
 			);
-			expect(typedError.shape).toEqual<(typeof typedError)["shape"]>({
+			expect(typedError.shape).toStrictEqual<(typeof typedError)["shape"]>({
 				code: TRPC_ERROR_CODES_BY_KEY.UNAUTHORIZED,
 				message: "Session id mismatch",
 				data: {
@@ -75,23 +75,21 @@ test("error is captured", async ({ ctx }) => {
 			},
 			headers: { cookie: `${AUTH_COOKIE}=fake` },
 		});
-		try {
-			await client.account.get.query();
-			throw new Error("Expected not to get here");
-		} catch (error) {
-			expect(error).toBeInstanceOf(TRPCClientError);
-			const errorComponents = (
-				error as TRPCClientError<AppRouter>
-			).message.split("\n");
-			expect(errorComponents).toStrictEqual([
-				"Internal server error",
-				'Error fingerprint "transaction-id"',
-				"Session id mismatch",
-				...errorComponents.slice(3),
-			]);
-			expect(ctx.logger.getMessages()).toEqual([
-				['Captured error: "Session id mismatch"'],
-			]);
-		}
+		const caughtError = await client.account.get
+			.query()
+			.catch((error) => error);
+		expect(caughtError).toBeInstanceOf(TRPCClientError);
+		const errorComponents = (
+			caughtError as TRPCClientError<AppRouter>
+		).message.split("\n");
+		expect(errorComponents).toStrictEqual([
+			"Internal server error",
+			'Error fingerprint "transaction-id"',
+			"Session id mismatch",
+			...errorComponents.slice(3),
+		]);
+		expect(ctx.logger.getMessages()).toStrictEqual([
+			['Captured error: "Session id mismatch"'],
+		]);
 	});
 });

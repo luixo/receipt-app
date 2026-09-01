@@ -489,9 +489,9 @@ describe("users.suggest", () => {
 				direction: "forward",
 				cursor: 0,
 			});
-			expect(firstPage.items.length).toBe(limit);
-			expect(firstPage.cursor).toBe(0);
-			expect(firstPage.count).toBe(limit + 1);
+			expect(firstPage.items).toHaveLength(limit);
+			expect(firstPage.cursor).toStrictEqual(0);
+			expect(firstPage.count).toStrictEqual(limit + 1);
 			const secondPage = await caller.procedure({
 				input: "Alice",
 				cursor: firstPage.cursor + limit,
@@ -499,8 +499,8 @@ describe("users.suggest", () => {
 				direction: "forward",
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
-			expect(secondPage.cursor).toBe(limit);
-			expect(secondPage.count).toBe(limit + 1);
+			expect(secondPage.cursor).toStrictEqual(limit);
+			expect(secondPage.count).toStrictEqual(limit + 1);
 		});
 
 		test("returns users with given filtered users", async ({ ctx }) => {

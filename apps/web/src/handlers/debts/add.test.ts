@@ -349,7 +349,7 @@ describe("debts.add", () => {
 						reverseAccepted: true,
 					})) as typeof results,
 				);
-				expect(results[0].id).toEqual(counterpartyId);
+				expect(results[0].id).toStrictEqual(counterpartyId);
 			});
 
 			test("partially with errors", async ({ ctx }) => {
@@ -447,7 +447,7 @@ describe("debts.add", () => {
 					updatedAt: getNow.zonedDateTime(),
 					reverseAccepted: true,
 				});
-				expect(result.id).toEqual(counterpartyId);
+				expect(result.id).toStrictEqual(counterpartyId);
 			});
 		});
 	});

@@ -153,12 +153,12 @@ const runRoute = async <K extends keyof Procedures>({
 	};
 };
 
-beforeEach(() => {
-	vi.stubEnv("DATABASE_URL", "DATABASE_URL");
-	return () => vi.unstubAllEnvs();
-});
+describe("tRPC endpoint", () => {
+	beforeEach(() => {
+		vi.stubEnv("DATABASE_URL", "DATABASE_URL");
+		return () => vi.unstubAllEnvs();
+	});
 
-describe("TRPC endpoint", () => {
 	describe("error handling", () => {
 		test("errors are logged", async () => {
 			const errorMessage = faker.lorem.words();
@@ -213,7 +213,7 @@ describe("TRPC endpoint", () => {
 				input: { name },
 				headers: { "x-error": "Any error" },
 			});
-			expect(response.status).toEqual(200);
+			expect(response.status).toStrictEqual(200);
 		});
 
 		test("response does pass headers through", async () => {
@@ -222,8 +222,8 @@ describe("TRPC endpoint", () => {
 				procedure: "setHeader",
 				input: { name },
 			});
-			expect(response.headers.get("x-name")).toEqual(name);
-			expect(response.headers.get("x-amount")).toEqual("1");
+			expect(response.headers.get("x-name")).toStrictEqual(name);
+			expect(response.headers.get("x-amount")).toStrictEqual("1");
 		});
 	});
 
@@ -248,7 +248,7 @@ describe("TRPC endpoint", () => {
 					| Parameters<typeof proxyRequest>
 					| undefined;
 				assert(firstCallArgs);
-				expect(firstCallArgs[0]).toEqual(expectedUrl.toString());
+				expect(firstCallArgs[0]).toStrictEqual(expectedUrl.toString());
 				const [, options] = firstCallArgs;
 				assert(options);
 				expect({
@@ -256,7 +256,7 @@ describe("TRPC endpoint", () => {
 					headers: options.headers
 						? fromEntries([...(options.headers as Headers).entries()])
 						: undefined,
-				}).toEqual({
+				}).toStrictEqual({
 					headers: {
 						...BASE_HEADERS,
 						cookie: serialize(apiCookieNames.controllerId, controllerId),
@@ -275,8 +275,10 @@ describe("TRPC endpoint", () => {
 					[apiCookieNames.proxyPort]: "1000",
 				},
 			});
-			expect(response.status).toBe(403);
-			expect(response.text).toBe("Proxying is only allowed in test mode");
+			expect(response.status).toStrictEqual(403);
+			expect(response.text).toStrictEqual(
+				"Proxying is only allowed in test mode",
+			);
 			vi.unstubAllEnvs();
 		});
 	});
@@ -288,7 +290,7 @@ describe("TRPC endpoint", () => {
 				procedure: "query",
 				input: { name },
 			});
-			expect(pick(response, ["status", "json"])).toEqual<
+			expect(pick(response, ["status", "json"])).toStrictEqual<
 				Partial<typeof response>
 			>({
 				status: 200,
@@ -304,7 +306,7 @@ describe("TRPC endpoint", () => {
 				procedure: "mutation",
 				input: { name },
 			});
-			expect(pick(response, ["status", "json"])).toEqual<
+			expect(pick(response, ["status", "json"])).toStrictEqual<
 				Partial<typeof response>
 			>({
 				status: 200,

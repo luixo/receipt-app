@@ -65,7 +65,7 @@ describe("auth.voidAccount", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ token: confirmationToken }),
 			);
-			expect(result).toEqual<typeof result>({ email });
+			expect(result).toStrictEqual<typeof result>({ email });
 		});
 
 		test.todo("verify account users are removed");

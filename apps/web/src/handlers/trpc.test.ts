@@ -166,7 +166,7 @@ describe("procedures", () => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const caller = createCaller(await createAuthContext(ctx, sessionId));
 					const { account } = await caller.account.get();
-					expect(account.id).toEqual(accountId);
+					expect(account.id).toStrictEqual(accountId);
 				});
 
 				test("with email not found", async ({ ctx }) => {
@@ -185,7 +185,7 @@ describe("procedures", () => {
 						}),
 					);
 					const { account } = await caller.account.get();
-					expect(account.id).toEqual(accountId);
+					expect(account.id).toStrictEqual(accountId);
 				});
 
 				test("with magic header", async ({ ctx }) => {
@@ -206,7 +206,7 @@ describe("procedures", () => {
 						}),
 					);
 					const { account } = await caller.account.get();
-					expect(account.id).toEqual(accountId);
+					expect(account.id).toStrictEqual(accountId);
 				});
 
 				test("with malformed cookie", async ({ ctx }) => {
@@ -226,7 +226,7 @@ describe("procedures", () => {
 						}),
 					);
 					const { account } = await caller.account.get();
-					expect(account.id).toEqual(accountId);
+					expect(account.id).toStrictEqual(accountId);
 				});
 			});
 
@@ -247,7 +247,7 @@ describe("procedures", () => {
 					}),
 				);
 				const { account } = await caller.account.get();
-				expect(account.id).toEqual(foreignAccount.id);
+				expect(account.id).toStrictEqual(foreignAccount.id);
 			});
 		});
 	});
@@ -271,7 +271,7 @@ describe("procedures", () => {
 			});
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const accounts = await caller.admin.accounts();
-			expect(accounts.length).toBe(0);
+			expect(accounts).toHaveLength(0);
 		});
 	});
 });

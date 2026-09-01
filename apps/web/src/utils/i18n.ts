@@ -84,7 +84,9 @@ const readBackend = createIsomorphicFn()
 
 export const getBackendModule = (): BackendModule => ({
 	type: "backend",
-	init: () => { /* empty */ },
+	init: () => {
+		/* empty */
+	},
 	// Improper types in i18next
 	// oxlint-disable-next-line typescript/no-misused-promises typescript/strict-void-return
 	read: async (language, namespace) => {

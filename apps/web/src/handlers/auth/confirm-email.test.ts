@@ -62,7 +62,7 @@ describe("auth.confirmEmail", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ token: confirmationToken }),
 			);
-			expect(result).toEqual<typeof result>({ email });
+			expect(result).toStrictEqual<typeof result>({ email });
 			const responseHeaders = getResHeaders(context);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",

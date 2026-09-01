@@ -64,7 +64,7 @@ describe("resetPasswordIntentions.get", () => {
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const caller = createCaller(await createContext(ctx));
 			const result = await caller.procedure({ token });
-			expect(result).toEqual<typeof result>({ email });
+			expect(result).toStrictEqual<typeof result>({ email });
 		});
 	});
 });

@@ -50,7 +50,7 @@ describe("cleanup", () => {
 					status: response.status,
 					data: await response.text(),
 				};
-				expect(result).toEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					status: 500,
 					data: `Error on cleanup: TRPCClientError: ${errorMessage}`,
 				});
@@ -69,7 +69,7 @@ describe("cleanup", () => {
 				status: response.status,
 				data: await response.text(),
 			};
-			expect(result).toEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				status: 200,
 				data: `Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
 			});

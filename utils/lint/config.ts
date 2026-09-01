@@ -367,6 +367,7 @@ const overriddenRules = {
 			allowedStrings: ["&nbsp;"],
 		},
 	],
+	"vitest/consistent-test-it": ["error", { fn: "test" }],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
@@ -410,12 +411,34 @@ const disabledRules = {
 	"typescript/no-unsafe-type-assertion": "off",
 	// This doesn't fit with us spreading options to the routes
 	"@tanstack/router/create-route-property-order": "off",
-	// It conflicts with vitest/prefer-strict-boolean-matchers
+	// These conflict with vitest/prefer-strict-boolean-matchers
 	"vitest/prefer-to-be-falsy": "off",
+	"vitest/prefer-to-be-truthy": "off",
+	// This conflict with vitest/prefer-called-times
+	"vitest/prefer-called-once": "off",
 	// We don't need timeouts for every test
 	"vitest/require-test-timeout": "off",
 	// We don't need to know amount of assertions in every test
 	"vitest/prefer-expect-assertions": "off",
+	// No idea why it triggers on every expect
+	"vitest/no-standalone-expect": "off",
+	// This one is not ready for fixtures
+	"vitest/prefer-importing-vitest-globals": "off",
+	"vitest/no-importing-vitest-globals": "off",
+	// This one does a bad job calculating what a hook is
+	"vitest/require-hook": "off",
+	// There are so many valid cases for conditionals in tests
+	"vitest/no-conditional-in-test": "off",
+	// This one conflicts with other similar rules
+	"vitest/prefer-to-be": "off",
+	// We want to run as many expects as needed
+	"vitest/max-expects": "off",
+	// We need before/after hooks
+	"vitest/no-hooks": "off",
+	// It's used only once and it false positives
+	"vitest/prefer-snapshot-hint": "off",
+	// We'll do titles ourselves
+	"vitest/prefer-lowercase-title": "off",
 	// Oxfmt lowercases hex numbers
 	"unicorn/number-literal-case": "off",
 	// Turn back on in case we introduce LTR layout
@@ -512,31 +535,6 @@ const disabledRules = {
 	"eslint/no-warning-comments": "off",
 } satisfies DummyRuleMap;
 
-const temporaryDisabledRules = {
-	// vitest
-	"vitest/no-standalone-expect": "off", // 324 cases
-	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
-	"vitest/require-hook": "off", // 101 cases
-	"vitest/no-conditional-in-test": "off", // 93 cases
-	"vitest/no-importing-vitest-globals": "off", // 83 cases
-	"vitest/prefer-strict-equal": "off", // 40 cases
-	"vitest/consistent-test-filename": "off", // 23 cases
-	"vitest/prefer-to-have-length": "off", // 12 cases
-	"vitest/prefer-to-be-truthy": "off", // 8 cases
-	"vitest/prefer-to-be": "off", // 5 cases
-	"vitest/max-expects": "off", // 5 cases
-	"vitest/require-top-level-describe": "off", // 4 cases
-	"vitest/no-hooks": "off", // 3 cases
-	"vitest/no-alias-methods": "off", // 3 cases
-	"vitest/no-conditional-expect": "off", // 3 cases
-	"vitest/prefer-lowercase-title": "off", // 2 cases
-	"vitest/prefer-called-once": "off", // 2 cases
-	"vitest/prefer-snapshot-hint": "off", // 2 cases
-	// heavy rules
-	"import/no-cycle": "off",
-	"vitest/valid-expect": "off",
-} satisfies DummyRuleMap;
-
 export default defineConfig({
 	options: {
 		typeAware: true,
@@ -606,7 +604,6 @@ export default defineConfig({
 		...packageJsonConfigs.recommended.rules,
 		...overriddenRules,
 		...disabledRules,
-		...temporaryDisabledRules,
 	},
 	overrides: [
 		{
@@ -704,6 +701,13 @@ export default defineConfig({
 			files: ["testing/vitest/**", "*.test.ts"],
 			rules: {
 				"vitest/valid-title": ["error", { allowArguments: true }],
+			},
+		},
+		{
+			files: ["**/*.spec.ts"],
+			rules: {
+				// Playwright tests don't need vitest rules
+				"vitest/consistent-test-filename": "off",
 			},
 		},
 		{

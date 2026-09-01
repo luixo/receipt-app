@@ -47,7 +47,7 @@ describe("API calls", () => {
 				await client.getHeaders.query(),
 				[...adHocHeaders, ...defaultHeaders].map(([key]) => key),
 			);
-			expect(resultHeaders).toEqual<typeof resultHeaders>(
+			expect(resultHeaders).toStrictEqual<typeof resultHeaders>(
 				fromEntries([...adHocHeaders, ...defaultHeaders]),
 			);
 		});
@@ -78,7 +78,7 @@ describe("loader call", () => {
 					resultHeaders,
 					expectedHeaders.map(([key]) => key),
 				),
-			).toEqual<typeof resultHeaders>(fromEntries(expectedHeaders));
+			).toStrictEqual<typeof resultHeaders>(fromEntries(expectedHeaders));
 			vi.unstubAllEnvs();
 		});
 	});
