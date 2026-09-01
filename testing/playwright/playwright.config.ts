@@ -123,5 +123,4 @@ export default defineConfig({
 		name: serverName,
 	},
 	globalSetup: path.resolve(localDir, "./global/setup.ts"),
-	globalTeardown: path.resolve(localDir, "./global/teardown.ts"),
 });
