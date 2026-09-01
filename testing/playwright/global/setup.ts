@@ -1,4 +1,3 @@
-import type { FullConfig } from "@playwright/test";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
 import { capitalize } from "remeda";
@@ -9,14 +8,12 @@ import { getFreePort } from "~utils/server/port";
 
 import { appRouter } from "./router";
 
-const globalSetup = async (config: FullConfig) => {
+const globalSetup = async () => {
 	const portManagerPort = await getFreePort();
 	process.env.MANAGER_PORT = portManagerPort.toString();
 	process.env.PLAYWRIGHT = "true";
 	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
 	await httpServer.listen(portManagerPort);
-	// oxlint-disable-next-line no-param-reassign
-	config.metadata.portManagerServer = httpServer;
 	return async () => {
 		if (serverMessages.length !== 0) {
 			const message = [
