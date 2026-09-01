@@ -5,8 +5,8 @@ import * as ReactDOMServer from "react-dom/server";
 import { entries } from "remeda";
 
 import { createI18nContext } from "~app/utils/i18n";
-import type { Language } from "~app/utils/i18n-data";
 import type { UnauthorizedContext } from "~web/handlers/context";
+import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
 
 import { BaseUrlContext } from "./base-url-context";
 import { ConfirmEmailEmail } from "./confirm-email-email";
@@ -15,7 +15,6 @@ import type { AugmentedProperies } from "./styling-context";
 import { StylingContext } from "./styling-context";
 
 const STYLE_REPLACER = "__style_replacer__";
-const EMAIL_LANGUAGE: Language = "ru";
 
 type NestedStyles = { [key: string]: NestedStylesOrString };
 type NestedStylesOrString = string | NestedStyles;
@@ -44,8 +43,18 @@ const generateEmail = async (
 	element: React.ReactElement,
 	titlePath: ParseKeys<"email">,
 ) => {
-	const i18nContext = createI18nContext({ getLanguage: () => EMAIL_LANGUAGE });
-	await i18nContext.initialize({ language: EMAIL_LANGUAGE });
+	const language = getLanguageFromRequest(
+		new Headers(
+			entries(ctx.req.headers).filter(
+				(entry): entry is [string, string] => typeof entry[1] === "string",
+			),
+		),
+	);
+	const i18nContext = createI18nContext({
+		getLanguage: () => language,
+		beforeInit: (instance) => instance.use(getBackendModule()),
+	});
+	await i18nContext.initialize({ language });
 	await i18nContext.loadNamespaces("email");
 	const t = i18nContext.getNamespacedTranslation("email");
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
