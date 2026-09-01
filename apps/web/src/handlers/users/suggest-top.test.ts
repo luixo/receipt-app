@@ -236,7 +236,7 @@ describe("users.suggestTop", () => {
 				const result = await caller.procedure({
 					limit: 10,
 				});
-				expect(result.items.length).toBe(1);
+				expect(result.items).toHaveLength(1);
 			});
 
 			test("limit is applied", async ({ ctx }) => {
@@ -249,7 +249,7 @@ describe("users.suggestTop", () => {
 				const result = await caller.procedure({
 					limit,
 				});
-				expect(result.items.length).toBe(limit);
+				expect(result.items).toHaveLength(limit);
 			});
 
 			test("ignores users from filterIds", async ({ ctx }) => {
@@ -261,7 +261,7 @@ describe("users.suggestTop", () => {
 					limit: 10,
 					filterIds: [ignoredUserId],
 				});
-				expect(result.items.length).toBe(1);
+				expect(result.items).toHaveLength(1);
 			});
 
 			test("returns users based by debts created date", async ({ ctx }) => {
@@ -364,7 +364,7 @@ describe("users.suggestTop", () => {
 					limit,
 					options: { type: "not-connected" },
 				});
-				expect(result.items.length).toBe(limit);
+				expect(result.items).toHaveLength(limit);
 			});
 
 			test("returns users with no debts", async ({ ctx }) => {
@@ -375,7 +375,7 @@ describe("users.suggestTop", () => {
 					limit: 10,
 					options: { type: "not-connected" },
 				});
-				expect(result.items.length).toBe(1);
+				expect(result.items).toHaveLength(1);
 			});
 
 			test("ignores users from filterIds", async ({ ctx }) => {
@@ -388,7 +388,7 @@ describe("users.suggestTop", () => {
 					filterIds: [ignoredUserId],
 					options: { type: "not-connected" },
 				});
-				expect(result.items.length).toBe(1);
+				expect(result.items).toHaveLength(1);
 			});
 
 			test("returns users based by debts created date", async ({ ctx }) => {
@@ -537,7 +537,7 @@ describe("users.suggestTop", () => {
 						receiptId,
 					},
 				});
-				expect(result.items.length).toBe(limit);
+				expect(result.items).toHaveLength(limit);
 			});
 
 			test("returns users that didn't participate in receipts", async ({
@@ -559,7 +559,7 @@ describe("users.suggestTop", () => {
 						receiptId: otherReceiptId,
 					},
 				});
-				expect(result.items.length).toBe(1);
+				expect(result.items).toHaveLength(1);
 			});
 
 			test("returns users based by receipts created date", async ({ ctx }) => {

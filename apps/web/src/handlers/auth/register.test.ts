@@ -131,7 +131,7 @@ describe("auth.register", () => {
 				}),
 			);
 			expect(result.account.id).toMatch(UUID_REGEX);
-			expect(result).toEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				account: { id: result.account.id, verified: true },
 			});
 			const responseHeaders = getResHeaders(context);
@@ -163,7 +163,7 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(result.account.verified).toBe(false);
+			expect(result.account.verified).toStrictEqual(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);

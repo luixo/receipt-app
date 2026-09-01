@@ -13,7 +13,7 @@ export const getS3Options = (): S3OptionsMock => {
 	const messages: InterceptedMessage[] = [];
 	return {
 		setBroken: (next: boolean) => {
-			innerBroken = next
+			innerBroken = next;
 		},
 		mock: {
 			putObject: (key, object) => {

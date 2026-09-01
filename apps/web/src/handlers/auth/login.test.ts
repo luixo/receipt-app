@@ -107,7 +107,7 @@ describe("auth.login", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ email, password }),
 			);
-			expect(result).toEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				account: { id: accountId, verified: true, avatarUrl, role: undefined },
 				user: { name },
 			});
@@ -141,7 +141,7 @@ describe("auth.login", () => {
 			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			const result = await caller.procedure({ email, password });
-			expect(result).toEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				account: {
 					id: accountId,
 					verified: false,

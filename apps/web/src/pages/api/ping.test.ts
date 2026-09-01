@@ -18,7 +18,7 @@ describe("ping", () => {
 			status: response.status,
 			data: await response.text(),
 		};
-		expect(result).toEqual<typeof result>({
+		expect(result).toStrictEqual<typeof result>({
 			status: 200,
 			data: "Pong",
 		});
