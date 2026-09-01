@@ -4,8 +4,8 @@ import { TRPCClientError } from "@trpc/client";
 import type { AnyTRPCProcedure, inferProcedureInput } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { serialize } from "cookie";
-import { HTTPResponse } from "nitro/h3";
 import { entries, fromEntries, pick } from "remeda";
+import type { SuperJSONResult } from "superjson";
 import { assert, beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod";
 
@@ -22,7 +22,9 @@ import { baseLogger } from "~web/providers/logger";
 import { Route } from "./$";
 
 const proxySpy = vi.hoisted(() =>
-	vi.fn<() => Promise<HTTPResponse>>(async () => new HTTPResponse("Spy body")),
+	vi.fn<() => Promise<Response>>(() =>
+		Promise.resolve(new Response("Spy body")),
+	),
 );
 vi.mock(import("@tanstack/react-start/server"), async (importOriginal) => ({
 	// oxlint-disable-next-line typescript/consistent-type-imports
@@ -132,7 +134,9 @@ const runRoute = async <K extends keyof Procedures>({
 	});
 	const base = { status: response.status, headers: response.headers };
 	if (response.headers.get("content-type")?.includes("application/json")) {
-		const json = await response.json();
+		const json = (await response.json()) as
+			| { error: { message: string } }
+			| { result: { data: SuperJSONResult } };
 		return {
 			...base,
 			json:

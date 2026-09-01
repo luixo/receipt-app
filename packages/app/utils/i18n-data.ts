@@ -3,6 +3,7 @@ import type accountEn from "@ra/web/public/locales/en/account.json";
 import type adminEn from "@ra/web/public/locales/en/admin.json";
 import type debtsEn from "@ra/web/public/locales/en/debts.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
+import type emailEn from "@ra/web/public/locales/en/email.json";
 import type loginEn from "@ra/web/public/locales/en/login.json";
 import type receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import type registerEn from "@ra/web/public/locales/en/register.json";
@@ -14,6 +15,7 @@ import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
 import type debtsRu from "@ra/web/public/locales/ru/debts.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
+import type emailRu from "@ra/web/public/locales/ru/email.json";
 import type loginRu from "@ra/web/public/locales/ru/login.json";
 import type receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import type registerRu from "@ra/web/public/locales/ru/register.json";
@@ -25,7 +27,7 @@ import { keys } from "remeda";
 
 import type { AssertAllEqual } from "~utils/types";
 
-// To add a language add code in the list, namespace jsons, import at (*) and verification at (**)
+// To add a language add amespace jsons, import at (*) and verification at (**)
 export type Language = "en" | "ru";
 export const baseLanguage = "en";
 export const languages: Record<Language, true> = {
@@ -37,18 +39,7 @@ export const isLanguage = (input: string): input is Language =>
 	keys(languages).includes(input as Language);
 
 // To add a namespace add name in the list, namespace json, import at (*) and verification at (**)
-export type Namespace =
-	| "default"
-	| "settings"
-	| "account"
-	| "admin"
-	| "login"
-	| "receipts"
-	| "register"
-	| "reset-password"
-	| "void-account"
-	| "users"
-	| "debts";
+export type Namespace = keyof Resources;
 export const defaultNamespace: Namespace = "default";
 export const namespaces: Record<Namespace, true> = {
 	default: true,
@@ -62,6 +53,7 @@ export const namespaces: Record<Namespace, true> = {
 	"void-account": true,
 	users: true,
 	debts: true,
+	email: true,
 };
 
 export type Resources = {
@@ -76,6 +68,7 @@ export type Resources = {
 	"void-account": typeof voidAccountEn;
 	users: typeof usersEn;
 	debts: typeof debtsEn;
+	email: typeof emailEn;
 };
 
 type ValidatedResources = AssertAllEqual<
@@ -94,6 +87,7 @@ type ValidatedResources = AssertAllEqual<
 			"void-account": typeof voidAccountRu;
 			users: typeof usersRu;
 			debts: typeof debtsRu;
+			email: typeof emailRu;
 		},
 	]
 >;

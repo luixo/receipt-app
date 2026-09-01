@@ -42,13 +42,13 @@ export const FilterButton: React.FC<Props> = ({
 		(filterKey: keyof typeof filters, key: keyof typeof filterOwnerOptions) => {
 			switch (key) {
 				case "true":
-					void setFilters((prev) => ({ ...prev, [filterKey]: true }));
+					setFilters((prev) => ({ ...prev, [filterKey]: true }));
 					break;
 				case "false":
-					void setFilters((prev) => ({ ...prev, [filterKey]: false }));
+					setFilters((prev) => ({ ...prev, [filterKey]: false }));
 					break;
 				default:
-					void setFilters((prev) => ({ ...prev, [filterKey]: undefined }));
+					setFilters((prev) => ({ ...prev, [filterKey]: undefined }));
 			}
 		},
 		[setFilters],

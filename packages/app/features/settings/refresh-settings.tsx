@@ -11,7 +11,7 @@ export const RefreshSettings: React.FC = () => {
 	const { t } = useTranslation("settings");
 	const queryClient = useQueryClient();
 	const refetch = React.useCallback(
-		() => queryClient.invalidateQueries({ refetchType: "all" }),
+		() => void queryClient.invalidateQueries({ refetchType: "all" }),
 		[queryClient],
 	);
 	return (

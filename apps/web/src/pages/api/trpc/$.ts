@@ -31,14 +31,14 @@ const defaultGetDatabase = (req: Request) =>
 		sharedKey: "tRPC",
 	});
 const defaultGetEmailOptions = () => {
-	const active = Boolean(env.EMAIL_SERVICE_ACTIVE);
+	const active = env.EMAIL_SERVICE_ACTIVE;
 	if (active && !env.BASE_URL) {
 		throw new Error(
 			`Expected to have env variable BASE_URL while creating context with active email`,
 		);
 	}
 	return {
-		active: Boolean(env.EMAIL_SERVICE_ACTIVE),
+		active,
 		baseUrl: env.BASE_URL || "http://example.com/",
 	};
 };
@@ -75,7 +75,7 @@ const getTestRequestHandlerProps = ({
 		return {};
 	}
 	/* c8 ignore stop */
-	return { endpoint: "", router: overrideRouter };
+	return { endpoint: "", router: overrideRouter as unknown };
 };
 
 const redirectTestHandler = async (
@@ -121,7 +121,7 @@ const callback = async (
 	if (proxyPort) {
 		return redirectTestHandler(request, cookieHeader, proxyPort);
 	}
-	if (import.meta.env.MODE === "test" && Boolean(env.PLAYWRIGHT)) {
+	if (import.meta.env.MODE === "test" && env.PLAYWRIGHT) {
 		return Response.json({
 			error: transformer.serialize({
 				code: 400,
@@ -153,7 +153,14 @@ const callback = async (
 				const errors =
 					error.cause instanceof AggregateError ? error.cause.errors : [error];
 				const internalConnectionError = errors.find(
-					(subError) =>
+					(
+						subError: Record<string, unknown>,
+					): subError is {
+						syscall: "connect";
+						code: "ECONNREFUSED";
+						address: string;
+						port: number;
+					} =>
 						subError.syscall === "connect" && subError.code === "ECONNREFUSED",
 				);
 				if (internalConnectionError) {

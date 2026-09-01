@@ -61,7 +61,7 @@ export const getServerRouteMethod = <
 		params: Expand<ResolveAllParamsFromParent<TParentRoute, TParams>>;
 	}) => {
 		const response = await method({
-			// oxlint-disable-next-line typescript/no-explicit-any
+			// oxlint-disable-next-line typescript/no-explicit-any typescript/no-unsafe-assignment
 			context: undefined as any,
 			next: () => {
 				throw new Error("Next function should not be run in tests!");

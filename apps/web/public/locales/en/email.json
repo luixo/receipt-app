@@ -1,0 +1,12 @@
+{
+	"subjects": {
+		"resetPassword": "Reset password intention in Receipt App",
+		"confirmEmail": "Confirm email in Receipt App"
+	},
+	"header": "Receipt App",
+	"footer": {
+		"link": "Contact us on receipt@luixo.me",
+		"unsubscribe": "You can click <a>unsubscribe</a>, but there is nothing to unsubscribe from.",
+		"inspiredBy": "Inspired by <a>Postdrop</a>."
+	}
+}

@@ -196,7 +196,9 @@ const exchangeRateDataloader = new Dataloader<
 		);
 	},
 	{
-		batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
+		batchScheduleFn: (callback) => {
+			setTimeout(callback, SCHEDULE_DELAY);
+		},
 		cacheKeyFn: JSON.stringify,
 		name: "exchange-rate",
 	},

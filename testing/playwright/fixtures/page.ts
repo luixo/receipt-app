@@ -35,6 +35,8 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 			Date.now = () => mockedTimestamp;
 			// oxlint-disable-next-line no-global-assign, no-implicit-globals
 			Date = class extends Date {
+				// Browser may crumble with an extra member accessibility parameter
+				// oxlint-disable-next-line typescript/explicit-member-accessibility
 				constructor(...args: Parameters<DateConstructor>) {
 					// see https://github.com/microsoft/TypeScript/issues/32164
 					// oxlint-disable-next-line typescript/no-unnecessary-condition

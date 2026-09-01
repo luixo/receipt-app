@@ -361,6 +361,15 @@ const overriddenRules = {
 	"unicorn/switch-case-braces": ["error", "avoid"],
 	// This number was figured out experimentally
 	"unicorn/max-nested-calls": ["error", { max: 5 }],
+	"react/jsx-no-literals": [
+		"error",
+		{
+			noAttributeStrings: true,
+			noStrings: true,
+			ignoreProps: true,
+			allowedStrings: ["&nbsp;"],
+		},
+	],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
@@ -394,6 +403,14 @@ const disabledRules = {
 	"typescript/explicit-module-boundary-types": "off",
 	// This is replaced by typescript/no-floating-promises
 	"typescript/promise-function-async": "off",
+	// We don't need readonly parameter types
+	"typescript/prefer-readonly-parameter-types": "off",
+	// Typescript guards us good enough
+	"typescript/explicit-function-return-type": "off",
+	// I'll spend half my life changing those
+	"typescript/strict-boolean-expressions": "off",
+	// We use type assertions heavily (but with caution)
+	"typescript/no-unsafe-type-assertion": "off",
 	// This doesn't fit with us spreading options to the routes
 	"@tanstack/router/create-route-property-order": "off",
 	// It conflicts with vitest/prefer-strict-boolean-matchers
@@ -441,26 +458,31 @@ const disabledRules = {
 	// We export inline
 	"import/exports-last": "off",
 	"import/group-exports": "off",
+	// These all should be addressed by React Compiler
+	"react-perf/jsx-no-new-function-as-prop": "off",
+	"react-perf/jsx-no-new-object-as-prop": "off",
+	"react-perf/jsx-no-jsx-as-prop": "off",
+	"react-perf/jsx-no-new-array-as-prop": "off",
+	"react/no-object-type-as-default-prop": "off",
+	// We'll manage these
+	"react/jsx-handler-names": "off",
+	// There's a forbid syntax rule for that
+	"react/forbid-component-props": "off",
+	// They say fast refresh won't work with these errors. Ok.
+	"react/only-export-components": "off",
+	// No need for that
+	"react/jsx-filename-extension": "off",
+	// I guess we're going to decide how many components file can hold
+	"react/no-multi-comp": "off",
+	// Compilers know how to manage this
+	"react/react-in-jsx-scope": "off",
+	// No problem with that
+	"react/jsx-max-depth": "off",
+	// This will probably be split amongst many rules later, for now it's a mess
+	"react/react-compiler": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
-	// typescript
-	"typescript/prefer-readonly-parameter-types": "off", // 4266 cases
-	"typescript/explicit-function-return-type": "off", // 1205 cases
-	"typescript/strict-boolean-expressions": "off", // 289 cases
-	"typescript/no-unsafe-type-assertion": "off", // 206 cases
-	"typescript/strict-void-return": "off", // 77 cases
-	"typescript/require-await": "off", // 32 cases
-	"typescript/no-unsafe-assignment": "off", // 29 cases
-	"typescript/no-unsafe-member-access": "off", // 26 cases
-	"typescript/no-unnecessary-type-conversion": "off", // 20 cases
-	"typescript/explicit-member-accessibility": "off", // 14 cases
-	"typescript/no-unsafe-call": "off", // 11 cases
-	"typescript/no-meaningless-void-operator": "off", // 7 cases
-	"typescript/no-unsafe-argument": "off", // 6 cases
-	"typescript/unbound-method": "off", // 3 cases
-	"typescript/ban-types": "off", // 2 cases
-	"typescript/no-useless-default-assignment": "off", // 2 cases
 	// eslint
 	"eslint/sort-keys": "off", // 1693 cases
 	"eslint/no-magic-numbers": "off", // 1240 cases
@@ -493,24 +515,6 @@ const temporaryDisabledRules = {
 	"oxc/no-optional-chaining": "off", // 196 cases
 	"oxc/no-accumulating-spread": "off", // 23 cases
 	"oxc/no-map-spread": "off", // 14 cases
-	// react
-	"react/forbid-component-props": "off", // 595 cases
-	"react/jsx-max-depth": "off", // 329 cases
-	"react/jsx-filename-extension": "off", // 247 cases
-	"react/react-in-jsx-scope": "off", // 89 cases
-	"react/react-compiler": "off", // 64 cases
-	"react/no-multi-comp": "off", // 61 cases
-	"react/only-export-components": "off", // 47 cases
-	"react/jsx-no-literals": "off", // 46 cases
-	"react/jsx-handler-names": "off", // 39 cases
-	"react/no-react-children": "off", // 5 cases
-	"react/jsx-no-constructed-context-values": "off", // 3 cases
-	"react/no-object-type-as-default-prop": "off", // 2 cases
-	// react-perf
-	"react-perf/jsx-no-new-function-as-prop": "off", // 135 cases
-	"react-perf/jsx-no-new-object-as-prop": "off", // 133 cases
-	"react-perf/jsx-no-jsx-as-prop": "off", // 105 cases
-	"react-perf/jsx-no-new-array-as-prop": "off", // 23 cases
 	// vitest
 	"vitest/no-standalone-expect": "off", // 324 cases
 	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
@@ -764,6 +768,13 @@ export default defineConfig({
 			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*"],
 			rules: {
 				"node/no-process-env": "off",
+			},
+		},
+		{
+			files: ["packages/app/features/playground/playground-screen.tsx"],
+			rules: {
+				// Maybe remove these later
+				"react/jsx-no-literals": "off",
 			},
 		},
 		...restrictedSyntaxRules.map(([files, tags]) => ({

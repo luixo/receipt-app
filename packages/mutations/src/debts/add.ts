@@ -82,7 +82,9 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			},
 			getByUserPaged: (controller) =>
 				controller.invalidate(updateObject.userId),
-			get: (controller) => controller.add(createDebt(result, updateObject)),
+			get: (controller) => {
+				controller.add(createDebt(result, updateObject));
+			},
 			getIntentions: undefined,
 		});
 	},

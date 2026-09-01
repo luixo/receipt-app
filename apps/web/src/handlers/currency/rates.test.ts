@@ -15,8 +15,8 @@ import { t } from "~web/handlers/trpc";
 import { procedure } from "./rates";
 
 const respondAsEmptyCache = (dbMock: CacheDbOptionsMock["mock"]) => {
-	dbMock.setResponder("getValue", async () => null);
-	dbMock.setResponder("setValue", async () => {});
+	dbMock.setResponder("getValue", () => Promise.resolve(null));
+	dbMock.setResponder("setValue", () => Promise.resolve(undefined));
 };
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
@@ -74,7 +74,7 @@ describe("currency.rates", () => {
 		describe("cache db throws", () => {
 			test(`on getValue request`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
-				dbMock.setResponder("getValue", async () => {
+				dbMock.setResponder("getValue", () => {
 					throw new Error('Throw on "getValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
@@ -88,8 +88,8 @@ describe("currency.rates", () => {
 
 			test(`on setValue request`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
-				dbMock.setResponder("getValue", async () => null);
-				dbMock.setResponder("setValue", async () => {
+				dbMock.setResponder("getValue", () => Promise.resolve(null));
+				dbMock.setResponder("setValue", () => {
 					throw new Error('Throw on "setValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
@@ -122,7 +122,9 @@ describe("currency.rates", () => {
 			test("exchange rate returned", async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock;
 				respondAsEmptyCache(dbMock);
-				ctx.exchangeRateOptions.mock.addInterceptor(async () => getFakeRate());
+				ctx.exchangeRateOptions.mock.addInterceptor(() =>
+					Promise.resolve(getFakeRate()),
+				);
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
@@ -164,8 +166,10 @@ describe("currency.rates", () => {
 				const dbMock = ctx.cacheDbOptions.mock;
 				const currencyInCache = "EUR";
 				const fakeRate = getFakeRate();
-				dbMock.setResponder("getValue", async (key) =>
-					key.includes(currencyInCache) ? fakeRate.toString() : null,
+				dbMock.setResponder("getValue", (key) =>
+					Promise.resolve(
+						key.includes(currencyInCache) ? fakeRate.toString() : null,
+					),
 				);
 				dbMock.setResponder("setValue", async () => {});
 				const { sessionId } = await insertAccountWithSession(ctx);
@@ -217,10 +221,10 @@ describe("currency.rates", () => {
 				const fakeRates = fromEntries(
 					currenciesTo.map((currencyTo) => [currencyTo, getFakeRate()]),
 				);
-				dbMock.setResponder("getValue", async (key) => {
+				dbMock.setResponder("getValue", (key) => {
 					const currencyTo = key.split("->")[1];
 					assert(currencyTo, "Expected to have format 'USD->EUR' in key");
-					return fakeRates[currencyTo]?.toString() ?? null;
+					return Promise.resolve(fakeRates[currencyTo]?.toString() ?? null);
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -249,7 +253,9 @@ describe("currency.rates", () => {
 
 		test(`currencyCode casing is ignored`, async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock;
-			dbMock.setResponder("getValue", async () => getFakeRate().toString());
+			dbMock.setResponder("getValue", () =>
+				Promise.resolve(getFakeRate().toString()),
+			);
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const currencyFrom = "uSd";

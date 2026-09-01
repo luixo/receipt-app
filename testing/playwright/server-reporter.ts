@@ -19,16 +19,16 @@ const getTestName = (test: TestCase) =>
 const runningTests: string[] = [];
 
 class ServerMessagesReporter implements Reporter {
-	onTestBegin(test: TestCase): void {
+	public onTestBegin(test: TestCase): void {
 		runningTests.push(getTestName(test));
 	}
 
-	onTestEnd(test: TestCase): void {
+	public onTestEnd(test: TestCase): void {
 		const testIndex = runningTests.indexOf(getTestName(test));
 		runningTests.splice(testIndex, 1);
 	}
 
-	onStd(
+	public onStd(
 		chunk: string | Buffer,
 		test: TestCase | undefined,
 		type: "error" | "info",
@@ -49,11 +49,11 @@ class ServerMessagesReporter implements Reporter {
 		});
 	}
 
-	onStdOut(chunk: string | Buffer, test: TestCase | undefined) {
+	public onStdOut(chunk: string | Buffer, test: TestCase | undefined) {
 		this.onStd(chunk, test, "info");
 	}
 
-	onStdErr(chunk: string | Buffer, test: TestCase | undefined) {
+	public onStdErr(chunk: string | Buffer, test: TestCase | undefined) {
 		this.onStd(chunk, test, "error");
 	}
 }

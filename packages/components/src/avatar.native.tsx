@@ -97,10 +97,14 @@ export const AvatarGroup: React.FC<GroupProps> = ({
 	max = 5,
 	size,
 }) => {
+	// There are no other options to figure that out
+	// oxlint-disable-next-line react/no-react-children
 	const childrenCount = React.Children.count(children);
+	const sizeMemo = React.useMemo(() => ({ size }), [size]);
 	return (
 		<View className="ml-2 flex flex-row">
-			<AvatarGroupProvider value={React.useMemo(() => ({ size }), [size])}>
+			<AvatarGroupProvider value={sizeMemo}>
+				{/* oxlint-disable-next-line react/no-react-children */}
 				{React.Children.map(children, (child, index) =>
 					index >= max ? null : child,
 				)}

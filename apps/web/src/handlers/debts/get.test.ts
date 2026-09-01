@@ -100,7 +100,7 @@ describe("debts.get", () => {
 				timestamp: debt.timestamp,
 				note: debt.note,
 				receiptId: debt.receiptId || undefined,
-				amount: Number(debt.amount),
+				amount: debt.amount,
 				updatedAt: debt.updatedAt,
 				their: undefined,
 			});
@@ -138,13 +138,13 @@ describe("debts.get", () => {
 					timestamp: debt.timestamp,
 					note: debt.note,
 					receiptId: debt.receiptId || undefined,
-					amount: Number(debt.amount),
+					amount: debt.amount,
 					updatedAt: debt.updatedAt,
 					their: {
 						updatedAt: foreignDebt.updatedAt,
 						currencyCode: foreignDebt.currencyCode,
 						timestamp: foreignDebt.timestamp,
-						amount: -Number(foreignDebt.amount),
+						amount: -foreignDebt.amount,
 					},
 				});
 			});

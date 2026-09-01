@@ -93,7 +93,7 @@ const createDataloader = <
 	runPre?: (inputs: readonly Input[]) => void,
 ) =>
 	new Dataloader<Input, Output | undefined, string>(
-		async (inputs) => {
+		(inputs) => {
 			runPre?.(inputs);
 			const outerContext = createArrayOf(inputs, getOuterContext);
 			const actionArgs = createArrayOf(inputs, getActionArgs);
@@ -102,13 +102,15 @@ const createDataloader = <
 					? getOptions(...outerContext)(...actionArgs)
 					: getOptions;
 			if (!toastOptions) {
-				return inputs.map(() => undefined);
+				return Promise.resolve(inputs.map(() => undefined));
 			}
 			const result = runResult(toastOptions, inputs);
-			return inputs.map(() => result);
+			return Promise.resolve(inputs.map(() => result));
 		},
 		{
-			batchScheduleFn: (callback) => setTimeout(callback, delay),
+			batchScheduleFn: (callback) => {
+				setTimeout(callback, delay);
+			},
 			cacheKeyFn: JSON.stringify,
 			name: key,
 			// We don't want to memoize the response of dataloader as dataloader is just a batcher here

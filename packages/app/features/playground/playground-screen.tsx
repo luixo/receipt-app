@@ -119,7 +119,7 @@ export const PlaygroundScreen = () => {
 				placeholder={t("components.usersSuggest.placeholder")}
 				selectedKey={selectedKeys[0] ?? null}
 				onSelectionChange={(nextValue) =>
-					setSelectedKeys(nextValue ? [String(nextValue)] : [])
+					setSelectedKeys(nextValue ? [nextValue] : [])
 				}
 				onClear={() => setValue("")}
 				endContent={

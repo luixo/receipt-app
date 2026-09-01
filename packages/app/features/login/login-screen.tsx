@@ -22,7 +22,7 @@ type Form = z.infer<typeof formSchema>;
 
 export const LoginScreen = () => {
 	const { usePush, useSearchParams } = React.use(NavigationContext);
-	const { redirect: redirectUrl = "/" } = useSearchParams("__root__");
+	const { redirect: redirectUrl } = useSearchParams("__root__");
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
 	const push = usePush();

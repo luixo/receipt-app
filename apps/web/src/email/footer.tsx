@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Trans, useTranslation } from "react-i18next";
+
 import { BaseUrlContext } from "./base-url-context";
 import type { Props as ChildProps } from "./child";
 import { Child } from "./child";
@@ -12,6 +14,7 @@ type Props = {
 
 export const Footer: React.FC<Props> = ({ children }) => {
 	const baseUrl = React.use(BaseUrlContext);
+	const { t } = useTranslation("email");
 	return (
 		<>
 			<Style
@@ -51,16 +54,28 @@ export const Footer: React.FC<Props> = ({ children }) => {
 					))}
 					<Table.Row>
 						<td className="footer-block">
-							<span className="apple-link">Contact us on receipt@luixo.ru</span>
+							<span className="apple-link">{t("footer.link")}</span>
 							<br />
-							You can click&nbsp;
-							<a href={`${baseUrl}unsubscribe`}>unsubscribe</a>, but there is
-							nothing to unsubscribe from.
+							<Trans
+								t={t}
+								i18nKey="footer.unsubscribe"
+								components={{
+									// oxlint-disable-next-line jsx-a11y/anchor-has-content jsx-a11y/control-has-associated-label
+									a: <a href={`${baseUrl}unsubscribe`} />,
+								}}
+							/>
 						</td>
 					</Table.Row>
 					<Table.Row>
 						<td className="footer-block powered-by">
-							Inspired by <a href="https://postdrop.io">Postdrop</a>.
+							<Trans
+								t={t}
+								i18nKey="footer.inspiredBy"
+								components={{
+									// oxlint-disable-next-line jsx-a11y/anchor-has-content jsx-a11y/control-has-associated-label
+									a: <a href="https://postdrop.io" />,
+								}}
+							/>
 						</td>
 					</Table.Row>
 				</Table>

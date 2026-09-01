@@ -391,7 +391,7 @@ export const insertSyncedDebts = async (
 		{
 			id: reverseDebtObject.id,
 			currencyCode: reverseDebtObject.currencyCode,
-			amount: -Number(reverseDebtObject.amount),
+			amount: -reverseDebtObject.amount,
 			timestamp: reverseDebtObject.timestamp,
 			createdAt: reverseDebtObject.createdAt,
 			note: reverseDebtObject.note,

@@ -157,7 +157,7 @@ export const appRouter = router({
 				serialization: null,
 				getTypeParser: (oid) => {
 					if (oid in temporalParsers) {
-						return (localInput) => localInput.toString();
+						return (localInput) => localInput;
 					}
 				},
 			});
@@ -208,7 +208,7 @@ export const appRouter = router({
 		}),
 	releaseDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
-		.mutation(async ({ input, ctx: { instance } }) => {
+		.mutation(({ input, ctx: { instance } }) => {
 			instance.databaseManager.release(input.databaseName);
 		}),
 });

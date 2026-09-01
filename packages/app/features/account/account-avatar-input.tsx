@@ -130,6 +130,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 	const [crop, setCrop] = React.useState<
 		React.ComponentProps<typeof ImageCropper>["crop"]
 	>({ x: 0, y: 0 });
+	// oxlint-disable-next-line typescript/strict-void-return
 	const inputClickRef = React.useRef<() => void>(doNothing);
 	const onInputButtonClick = React.useCallback(() => {
 		inputClickRef.current();

@@ -9,7 +9,7 @@ export const getDuplicates = <T, K extends string | string[]>(
 	const items = array.map(getKey);
 	const map = new Map<string, { count: number; value: K }>();
 	for (const item of items) {
-		const key = Array.isArray(item) ? item.join("|") : String(item);
+		const key = Array.isArray(item) ? item.join("|") : (item satisfies string);
 		const prevMapElement = map.get(key) || {
 			count: 0,
 			value: item,

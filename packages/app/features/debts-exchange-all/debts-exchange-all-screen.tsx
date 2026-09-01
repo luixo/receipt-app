@@ -89,6 +89,7 @@ export const DebtsExchangeAllScreen = () => {
 				onChange={onSelectModalCurrencyCode}
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}
+				// oxlint-disable-next-line typescript/strict-void-return
 				onLoad={doNothing}
 				topQueryOptions={{ type: "debts" }}
 			/>

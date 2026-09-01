@@ -1,0 +1,12 @@
+{
+	"subjects": {
+		"resetPassword": "Сброс пароля в Чекалке",
+		"confirmEmail": "Подтверждение почты в Чекалке"
+	},
+	"header": "Чекалка",
+	"footer": {
+		"link": "Почта для связи: receipt@luixo.me",
+		"unsubscribe": "Вы можете кликнуть <a>отписаться</a>, но пока тут не от чего отписываться.",
+		"inspiredBy": "Вдохновлено <a>Postdrop</a>."
+	}
+}

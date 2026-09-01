@@ -14,7 +14,9 @@ export const options: UseContextedMutationOptions<"receipts.remove"> = {
 	onSuccess: (controllerContext) => () => {
 		updateReceipts(controllerContext, {
 			get: undefined,
-			getPaged: (controller) => controller.invalidate(),
+			getPaged: (controller) => {
+				void controller.invalidate();
+			},
 		});
 	},
 	mutateToastOptions:

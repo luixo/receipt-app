@@ -70,7 +70,7 @@ export const navigationContext: NavigationContext = {
 				? { "#": options.hash as string }
 				: undefined;
 			const method = options.replace ? router.replace : router.push;
-			void method({
+			method({
 				pathname: webToNative(options.to || "/"),
 				params: { ...searchParams, ...pathParams, ...hashParams },
 			});

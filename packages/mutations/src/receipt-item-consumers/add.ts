@@ -45,22 +45,24 @@ export const options: UseContextedMutationOptions<
 		(result, variables) => {
 			if (variables.itemId === receiptId) {
 				return updateReceipts(controllerContext, {
-					get: (controller) =>
+					get: (controller) => {
 						controller.updatePayer(receiptId, variables.userId, (payer) => ({
 							...payer,
 							createdAt: result.createdAt,
-						})),
+						}));
+					},
 					getPaged: undefined,
 				});
 			}
 			updateReceipts(controllerContext, {
-				get: (controller) =>
+				get: (controller) => {
 					controller.updateItemConsumer(
 						receiptId,
 						variables.itemId,
 						variables.userId,
 						(consumer) => ({ ...consumer, createdAt: result.createdAt }),
-					),
+					);
+				},
 				getPaged: undefined,
 			});
 		},

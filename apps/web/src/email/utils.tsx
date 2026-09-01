@@ -1,8 +1,11 @@
 import React from "react";
 
+import type { ParseKeys } from "i18next";
 import * as ReactDOMServer from "react-dom/server";
 import { entries } from "remeda";
 
+import { createI18nContext } from "~app/utils/i18n";
+import type { Language } from "~app/utils/i18n-data";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 import { BaseUrlContext } from "./base-url-context";
@@ -12,6 +15,7 @@ import type { AugmentedProperies } from "./styling-context";
 import { StylingContext } from "./styling-context";
 
 const STYLE_REPLACER = "__style_replacer__";
+const EMAIL_LANGUAGE: Language = "ru";
 
 type NestedStyles = { [key: string]: NestedStylesOrString };
 type NestedStylesOrString = string | NestedStyles;
@@ -35,10 +39,15 @@ const reduceStyles = (styles: NestedStyles): string =>
 		return `${acc} ${selector} {${reduceStyles(style)}}`;
 	}, "");
 
-const generateEmail = (
+const generateEmail = async (
 	ctx: UnauthorizedContext,
 	element: React.ReactElement,
+	titlePath: ParseKeys<"email">,
 ) => {
+	const i18nContext = createI18nContext({ getLanguage: () => EMAIL_LANGUAGE });
+	await i18nContext.initialize({ language: EMAIL_LANGUAGE });
+	await i18nContext.loadNamespaces("email");
+	const t = i18nContext.getNamespacedTranslation("email");
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
 	const markup = `
 	<!doctype html lang="en">
@@ -52,7 +61,7 @@ const generateEmail = (
 		<body>${ReactDOMServer.renderToStaticMarkup(
 			<StylingContext value={stylesMapping}>
 				<BaseUrlContext value={ctx.emailOptions.baseUrl}>
-					{element}
+					<i18nContext.Provider>{element}</i18nContext.Provider>
 				</BaseUrlContext>
 			</StylingContext>,
 		)}
@@ -74,18 +83,31 @@ const generateEmail = (
 		},
 		{},
 	);
-	return markup.replace(
-		STYLE_REPLACER,
-		`<style>${reduceStyles(nestedStyles)}</style>`,
-	);
+	return {
+		subject: t(titlePath),
+		body: markup.replace(
+			STYLE_REPLACER,
+			`<style>${reduceStyles(nestedStyles)}</style>`,
+		),
+	};
 };
 
-export const generateResetPasswordEmail = (
+export const generateResetPasswordEmail = async (
 	ctx: UnauthorizedContext,
 	token: string,
-) => generateEmail(ctx, <ResetPasswordEmail token={token} />);
+) =>
+	generateEmail(
+		ctx,
+		<ResetPasswordEmail token={token} />,
+		"subjects.resetPassword",
+	);
 
-export const generateConfirmEmailEmail = (
+export const generateConfirmEmailEmail = async (
 	ctx: UnauthorizedContext,
 	token: string,
-) => generateEmail(ctx, <ConfirmEmailEmail token={token} />);
+) =>
+	generateEmail(
+		ctx,
+		<ConfirmEmailEmail token={token} />,
+		"subjects.confirmEmail",
+	);

@@ -74,8 +74,8 @@ const readBackend = createIsomorphicFn()
 			import.meta.url,
 		);
 		const fileContent = await fs.readFile(url.fileURLToPath(jsonUrl));
-		const resource = JSON.parse(fileContent.toString("utf8"));
-		return resource as ResourceKey;
+		const resource = JSON.parse(fileContent.toString("utf8")) as ResourceKey;
+		return resource;
 	})
 	.client(async (language, namespace) => {
 		const response = await fetch(`/locales/${language}/${namespace}.json`);
@@ -86,7 +86,7 @@ export const getBackendModule = (): BackendModule => ({
 	type: "backend",
 	init: () => {},
 	// Improper types in i18next
-	// oxlint-disable-next-line typescript/no-misused-promises
+	// oxlint-disable-next-line typescript/no-misused-promises typescript/strict-void-return
 	read: async (language, namespace) => {
 		try {
 			return await readBackend(language as Language, namespace as Namespace);

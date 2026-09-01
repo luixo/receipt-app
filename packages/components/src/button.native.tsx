@@ -136,6 +136,8 @@ export const Button: React.FC<ButtonProps> = (props) => {
 				{isLoading ? spinner : null}
 				{isIconOnly && (isLoading || !children) ? null : typeof children ===
 						"string" ||
+				  // The only way to find that out
+				  // oxlint-disable-next-line react/no-react-children
 				  React.Children.toArray(children).every(
 						(child) => typeof child === "string",
 				  ) ? (
@@ -162,7 +164,20 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 	className,
 	children,
 }) => {
+	// oxlint-disable-next-line react/no-react-children
 	const totalChildren = React.Children.count(children);
+	const buttonGroupContext = React.useMemo(
+		() => ({
+			size,
+			color,
+			variant,
+			radius,
+			isDisabled,
+			isIconOnly,
+			fullWidth,
+		}),
+		[size, color, variant, radius, isDisabled, isIconOnly, fullWidth],
+	);
 	return (
 		<View
 			className={buttonGroup({
@@ -170,21 +185,10 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 				className: cn("flex-row", className),
 			})}
 		>
-			<ButtonGroupProvider
-				value={React.useMemo(
-					() => ({
-						size,
-						color,
-						variant,
-						radius,
-						isDisabled,
-						isIconOnly,
-						fullWidth,
-					}),
-					[size, color, variant, radius, isDisabled, isIconOnly, fullWidth],
-				)}
-			>
+			<ButtonGroupProvider value={buttonGroupContext}>
+				{/* oxlint-disable-next-line react/no-react-children */}
 				{React.Children.map(children, (child, index) => (
+					// oxlint-disable-next-line react/jsx-no-constructed-context-values
 					<ButtonGroupIndexContent value={{ index, total: totalChildren }}>
 						{child}
 					</ButtonGroupIndexContent>

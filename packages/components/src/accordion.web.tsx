@@ -23,4 +23,5 @@ export const AccordionItem = (props: ItemProps) => (
 );
 
 // @ts-expect-error see https://github.com/heroui-inc/heroui/issues/729
+// oxlint-disable-next-line typescript/no-unsafe-assignment
 AccordionItem.getCollectionNode = AccordionItemRaw.getCollectionNode;

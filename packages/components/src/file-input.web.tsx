@@ -34,12 +34,13 @@ export const FileInput: React.FC<Props> = ({ onClickRef, onFileUpdate }) => {
 	const onChange = React.useCallback<
 		React.ChangeEventHandler<HTMLInputElement>
 	>(
-		async (event) => {
+		(event) => {
 			if (event.target.files && event.target.files.length !== 0) {
 				// oxlint-disable-next-line typescript/no-non-null-assertion
 				const file = event.target.files[0]!;
-				const dataUrl = await convertFileToDataUrl(file);
-				onFileUpdate?.(dataUrl);
+				void convertFileToDataUrl(file).then((dataUrl) =>
+					onFileUpdate?.(dataUrl),
+				);
 			}
 		},
 		[onFileUpdate],

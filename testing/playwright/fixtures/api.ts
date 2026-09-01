@@ -242,9 +242,10 @@ const handleRequest = async (
 	return handleCall(controller, headers, type, name, input);
 };
 
-const createWorkerManager = async (port: number): Promise<WorkerManager> => {
+const createWorkerManager = (port: number): WorkerManager => {
 	const controllers: Record<string, Controller> = {};
 	const server = promisifyServer(
+		// oxlint-disable-next-line typescript/strict-void-return
 		http.createServer(async (req, res) => {
 			const jsonPromise = promisifyEvent<string>((listener, errorListener) => {
 				let body = "";
@@ -320,11 +321,12 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			controllers[id] = controller;
 			return {
 				controller,
-				cleanup: async () => {
+				cleanup: () => {
 					for (const controllerPromise of controller.paused) {
 						controllerPromise.reject(CLEANUP_MARK);
 					}
 					delete controllers[id];
+					return Promise.resolve();
 				},
 			};
 		},
@@ -349,14 +351,14 @@ const createApiManager = async (
 				url.searchParams.has("batch"),
 				url,
 				request.method(),
-				async () => {
+				() => {
 					// multipart/form-data bodies can't be parsed as JSON; return
 					// undefined so handleRequest passes undefined input to the mock.
 					const contentType = request.headers()["content-type"] ?? "";
 					if (contentType.startsWith("multipart/form-data")) {
-						return;
+						return Promise.resolve(undefined);
 					}
-					return request.postData() ?? undefined;
+					return Promise.resolve(request.postData() ?? undefined);
 				},
 			);
 			await route.fulfill({
@@ -520,7 +522,7 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 				],
 			});
 			const { port, hash } = await client.lockPort.mutate();
-			const workerManager = await createWorkerManager(port);
+			const workerManager = createWorkerManager(port);
 			const cleanup = await workerManager.start();
 			await client.release.mutate({ hash });
 			await use(workerManager);

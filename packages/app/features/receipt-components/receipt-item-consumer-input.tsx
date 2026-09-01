@@ -52,7 +52,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		updateElement,
 		eagerToSubmitState,
 	} = useAutosave({
-		isUpdatePending: Boolean(updateMutationState?.status === "pending"),
+		isUpdatePending: updateMutationState?.status === "pending",
 	});
 	const form = useAppForm({
 		defaultValues: { value: consumer.part },

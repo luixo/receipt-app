@@ -380,15 +380,11 @@ export const DebtsTransferScreen = () => {
 	const [toId, setToId] = useQueryState("to");
 	const { t } = useTranslation("debts");
 	const onFromClick = React.useCallback(
-		(userId: UserId) => {
-			void setFromId(fromId === userId ? undefined : userId);
-		},
+		(userId: UserId) => setFromId(fromId === userId ? undefined : userId),
 		[fromId, setFromId],
 	);
 	const onToClick = React.useCallback(
-		(userId: UserId) => {
-			void setToId(toId === userId ? undefined : userId);
-		},
+		(userId: UserId) => setToId(toId === userId ? undefined : userId),
 		[setToId, toId],
 	);
 

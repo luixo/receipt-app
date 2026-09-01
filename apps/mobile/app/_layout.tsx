@@ -63,7 +63,7 @@ const WrappedToastProvider: React.FC<React.PropsWithChildren> = ({
 	</HeroUINativeProvider>
 );
 
-const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN;
+const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN as string | undefined;
 if (sentryDsn) {
 	Sentry.init({
 		dsn: sentryDsn,

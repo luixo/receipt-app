@@ -11,7 +11,7 @@ const useSetLocalSetting = <T extends keyof StoreValues>(
 	getValue: () => StoreValues[T],
 ) => {
 	const [, setValue] = React.use(StoreDataContext)[key];
-	// oxlint-disable-next-line typescript/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any typescript/no-unsafe-argument
 	useMountEffect(() => setValue(getValue() as any));
 };
 

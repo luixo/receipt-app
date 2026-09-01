@@ -113,14 +113,14 @@ describe("debt-intenions.getAll", () => {
 					{
 						id: debtToUpdate.id,
 						userId,
-						amount: -Number(foreignDebtToUpdate.amount),
+						amount: -foreignDebtToUpdate.amount,
 						currencyCode: foreignDebtToUpdate.currencyCode,
 						updatedAt: foreignDebtToUpdate.updatedAt,
 						timestamp: foreignDebtToUpdate.timestamp,
 						note: debtToUpdate.note,
 						receiptId: foreignDebtToUpdate.receiptId || undefined,
 						current: {
-							amount: Number(debtToUpdate.amount),
+							amount: debtToUpdate.amount,
 							timestamp: debtToUpdate.timestamp,
 							currencyCode: debtToUpdate.currencyCode,
 						},
@@ -128,7 +128,7 @@ describe("debt-intenions.getAll", () => {
 					{
 						id: debtToCreate.id,
 						userId,
-						amount: -Number(debtToCreate.amount),
+						amount: -debtToCreate.amount,
 						currencyCode: debtToCreate.currencyCode,
 						updatedAt: debtToCreate.updatedAt,
 						timestamp: debtToCreate.timestamp,

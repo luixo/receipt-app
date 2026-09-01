@@ -114,6 +114,8 @@
 			"itemLabel": "{{name}} — {{amount}}"
 		},
 		"quantityPostfix": "x {{quantity}} unit",
+		"amount": "= {{amount}}",
+		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
 			"consumer": {
 				"label": "Item consumer part",
@@ -145,6 +147,7 @@
 			"label": "Choose a payer"
 		},
 		"consumer": {
+			"skeletonAmount": "<skeleton />/<skeleton />",
 			"placeholder": "Consumers",
 			"label": "Choose consumers",
 			"group": "{{consumers, and}}"

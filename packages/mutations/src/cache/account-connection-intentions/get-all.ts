@@ -43,7 +43,7 @@ const updateDirectionIntentions = <D extends Direction>(
 	direction: Direction,
 	updater: UpdateFn<IntentionMapping[D][]>,
 ) =>
-	withRef<IntentionMapping[D][] | undefined>((ref) =>
+	withRef<IntentionMapping[D][] | undefined>((ref) => {
 		updateIntentions(controller, (intentions) => {
 			const prevIntentions = intentions[direction] as IntentionMapping[D][];
 			ref.current = prevIntentions;
@@ -52,8 +52,8 @@ const updateDirectionIntentions = <D extends Direction>(
 				return intentions;
 			}
 			return { ...intentions, [direction]: nextIntentions };
-		}),
-	).current;
+		});
+	}).current;
 
 const updateIntention =
 	<D extends Direction>(
@@ -62,7 +62,7 @@ const updateIntention =
 		accountId: AccountId,
 	) =>
 	(updater: UpdateFn<IntentionMapping[D]>) =>
-		withRef<IntentionMapping[D] | undefined>((ref) =>
+		withRef<IntentionMapping[D] | undefined>((ref) => {
 			updateDirectionIntentions<D>(controller, direction, (intentions) =>
 				replaceInArray(
 					intentions,
@@ -70,23 +70,23 @@ const updateIntention =
 					updater,
 					ref,
 				),
-			),
-		).current;
+			);
+		}).current;
 
 const removeIntention = <D extends Direction>(
 	controller: Controller,
 	direction: Direction,
 	accountId: AccountId,
 ) =>
-	withRef<ItemWithIndex<IntentionMapping[D]> | undefined>((ref) =>
+	withRef<ItemWithIndex<IntentionMapping[D]> | undefined>((ref) => {
 		updateDirectionIntentions<D>(controller, direction, (intentions) =>
 			removeFromArray(
 				intentions,
 				(intention) => intention.account.id === accountId,
 				ref,
 			),
-		),
-	).current;
+		);
+	}).current;
 
 const addIntention = <D extends Direction>(
 	controller: Controller,
@@ -136,7 +136,9 @@ const addRevert =
 	(intention: IntentionMapping[D], index?: number) =>
 		applyWithRevert(
 			() => addIntention(controller, direction, intention, index),
-			() => removeIntention(controller, direction, intention.account.id),
+			() => {
+				removeIntention(controller, direction, intention.account.id);
+			},
 		);
 
 const add =

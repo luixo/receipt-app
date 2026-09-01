@@ -12,7 +12,7 @@ type ExchangeRateFn = NonNullable<ExchangeRateOptions["mock"]>["fn"];
 type ExchangeRateResult = Awaited<ReturnType<ExchangeRateFn>>;
 type Interceptor = AddParameters<ExchangeRateFn, [next: () => void]>;
 export const getExchangeRateOptions = (): ExchangeRateOptionsMock => {
-	let interceptors: Interceptor[] = [async () => 1];
+	let interceptors: Interceptor[] = [() => Promise.resolve(1)];
 	let innerBroken = false;
 	return {
 		get broken() {

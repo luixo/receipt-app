@@ -59,7 +59,7 @@ beforeAll(
 	serializeDuration({ seconds: 10 }),
 );
 
-beforeEach(async ({ task }) => {
+beforeEach(({ task }) => {
 	// oxlint-disable-next-line eslint-js/no-restricted-syntax
 	timekeeper.freeze(new Date("2020-01-01"));
 	return async () => {

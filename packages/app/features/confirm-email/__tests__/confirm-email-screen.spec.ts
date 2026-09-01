@@ -62,7 +62,7 @@ test.describe("'auth.confirmEmail' mutation", () => {
 		api.mockUtils.noAuthPage();
 		const token = faker.string.uuid();
 		const rawErrorMessage = "Mock 'auth.confirmEmail' error";
-		api.mockFirst("auth.confirmEmail", async () => {
+		api.mockFirst("auth.confirmEmail", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: rawErrorMessage,

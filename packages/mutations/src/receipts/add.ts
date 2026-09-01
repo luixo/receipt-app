@@ -12,7 +12,9 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { selfAccountId }) =>
 		(result, variables) => {
 			updateReceipts(controllerContext, {
-				getPaged: (controller) => controller.invalidate(),
+				getPaged: (controller) => {
+					void controller.invalidate();
+				},
 				get: (controller) => {
 					const selfUserId = selfAccountId as UserId;
 					controller.add({

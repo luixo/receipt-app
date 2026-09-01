@@ -11,11 +11,9 @@ type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
 const isUpdateSyncable = (update: DebtUpdateObject) =>
-	Boolean(
-		update.amount !== undefined ||
-		update.timestamp !== undefined ||
-		update.currencyCode !== undefined,
-	);
+	update.amount !== undefined ||
+	update.timestamp !== undefined ||
+	update.currencyCode !== undefined;
 
 export const applySumUpdate =
 	(prevAmount: number, update: DebtUpdateObject): UpdateFn<number> =>

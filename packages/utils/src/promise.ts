@@ -43,7 +43,9 @@ export const promisifyServer = <
 		promisifyEvent((listener, errorListener) => {
 			server.listen(port, listener);
 			server.on("error", errorListener);
-			return () => server.off("error", errorListener);
+			return () => {
+				server.off("error", errorListener);
+			};
 		}),
 	close: () =>
 		promisifyEvent((listener, errorListener) => {

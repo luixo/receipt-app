@@ -3,6 +3,7 @@ import accountEn from "@ra/web/public/locales/en/account.json";
 import adminEn from "@ra/web/public/locales/en/admin.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
+import emailEn from "@ra/web/public/locales/en/email.json";
 import loginEn from "@ra/web/public/locales/en/login.json";
 import receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import registerEn from "@ra/web/public/locales/en/register.json";
@@ -14,6 +15,7 @@ import accountRu from "@ra/web/public/locales/ru/account.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
 import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
+import emailRu from "@ra/web/public/locales/ru/email.json";
 import loginRu from "@ra/web/public/locales/ru/login.json";
 import receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import registerRu from "@ra/web/public/locales/ru/register.json";
@@ -38,6 +40,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		"void-account": voidAccountEn,
 		users: usersEn,
 		debts: debtsEn,
+		email: emailEn,
 	},
 	ru: {
 		default: defaultRu,
@@ -51,5 +54,6 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		"void-account": voidAccountRu,
 		users: usersRu,
 		debts: debtsRu,
+		email: emailRu,
 	},
 };

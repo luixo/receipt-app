@@ -56,7 +56,7 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		const token = faker.string.uuid();
 		const rawErrorMessage = "Mock 'resetPasswordIntentions.get' error";
 		consoleManager.ignore(new RegExp(`TRPCClientError: ${rawErrorMessage}`));
-		api.mockFirst("resetPasswordIntentions.get", async () => {
+		api.mockFirst("resetPasswordIntentions.get", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: rawErrorMessage,
@@ -133,7 +133,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		});
 		const token = faker.string.uuid();
 		const rawErrorMessage = "Mock 'auth.resetPassword' error";
-		api.mockFirst("auth.resetPassword", async () => {
+		api.mockFirst("auth.resetPassword", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: rawErrorMessage,

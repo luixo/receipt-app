@@ -109,7 +109,7 @@ const deserializer: Deserializer = (input) => {
 		if (regexTypeMatch) {
 			const type = regexTypeMatch[0];
 			return parsers[type](
-				// oxlint-disable-next-line typescript/no-explicit-any
+				// oxlint-disable-next-line typescript/no-explicit-any typescript/no-unsafe-argument
 				databaseISOToCalendarISO(input, type.startsWith("zoned")) as any,
 			);
 		}
