@@ -22,7 +22,8 @@ const client = createTRPCClient<typeof appRouter>({
 const databaseIgnoredFiles = [/api\/trpc/];
 
 beforeAll(
-	async (_, fileOrSuite) => {
+	// oxlint-disable-next-line no-empty-pattern
+	async ({}, fileOrSuite) => {
 		const logger = getLogger();
 		const filepath =
 			"filepath" in fileOrSuite ? fileOrSuite.filepath : undefined;
