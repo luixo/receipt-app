@@ -112,7 +112,7 @@ export const getRouter = () => {
 	const externalContext = getExternalContext();
 	const request = getUniversalRequest();
 	const queryClient = getQueryClient();
-	const initialLanguage = getLanguageFromRequest(request);
+	const initialLanguage = getLanguageFromRequest(request?.headers);
 	const i18nContext = createI18nContext({
 		getLanguage: () => initialLanguage,
 		beforeInit: (instance) => instance.use(getBackendModule()),

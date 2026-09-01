@@ -9,12 +9,12 @@ import type { Language, Namespace } from "~app/utils/i18n-data";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
 import { env } from "~utils/env";
 
-const getCookie = (request: Request | null) =>
-	request ? (request.headers.get("cookie") ?? "") : document.cookie;
+const getCookie = (headers: Headers | undefined) =>
+	headers ? (headers.get("cookie") ?? "") : document.cookie;
 
-const getHeaderLanguages = (request: Request | null) =>
-	request
-		? (request.headers.get("accept-language") ?? "")
+const getHeaderLanguages = (headers: Headers | undefined) =>
+	headers
+		? (headers.get("accept-language") ?? "")
 				.split(",")
 				.map((lang) => {
 					const [tag = "", q = "1"] = lang.trim().split(";q=");
@@ -31,11 +31,11 @@ const getHeaderLanguages = (request: Request | null) =>
 type Strategy = "cookie" | "header" | "baseLocale";
 const strategies: Strategy[] = ["cookie", "header", "baseLocale"];
 export const COOKIE_LANGUAGE_NAME = "receipt_language";
-export const getLanguageFromRequest = (request: Request | null) => {
+export const getLanguageFromRequest = (headers: Headers | undefined) => {
 	for (const strategy of strategies) {
 		switch (strategy) {
 			case "cookie": {
-				const cookies = parse(getCookie(request));
+				const cookies = parse(getCookie(headers));
 				const cookieLanguage = cookies[COOKIE_LANGUAGE_NAME] ?? "";
 				if (isLanguage(cookieLanguage)) {
 					return cookieLanguage;
@@ -43,7 +43,7 @@ export const getLanguageFromRequest = (request: Request | null) => {
 				break;
 			}
 			case "header": {
-				const headerLanguages = getHeaderLanguages(request);
+				const headerLanguages = getHeaderLanguages(headers);
 				for (const headerLanguage of headerLanguages) {
 					if (isLanguage(headerLanguage)) {
 						return headerLanguage;

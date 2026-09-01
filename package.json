@@ -27,7 +27,7 @@
 		"native:run:android": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:android",
 		"native:run:ios": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:ios",
 		"native:update-ios-version": "bun run --cwd apps/mobile update-ios-version",
-		"typecheck": "tsgo --noEmit",
+		"typecheck": "tsc --noEmit",
 		"verify-routers": "bun run --cwd utils/scripts verify-routers",
 		"web:build": "bun run --cwd apps/web build",
 		"web:dev": "bun run --cwd apps/web dev",
