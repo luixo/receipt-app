@@ -121,7 +121,7 @@ describe("auth.login", () => {
 			);
 			const tokenMatch = /authToken=(?<token>[^;]+)/.exec(setCookieTuple[1]);
 			assert(tokenMatch, "Cookie 'authToken' should be present");
-			const [token] = tokenMatch;
+			const [, token] = tokenMatch;
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",

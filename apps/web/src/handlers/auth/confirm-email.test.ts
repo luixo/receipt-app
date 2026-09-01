@@ -73,7 +73,7 @@ describe("auth.confirmEmail", () => {
 			);
 			const tokenMatch = /authToken=(?<token>[^;]+)/.exec(setCookieTuple[1]);
 			assert.ok(tokenMatch, "Cookie 'authToken' should be present");
-			const [token] = tokenMatch;
+			const [, token] = tokenMatch;
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
