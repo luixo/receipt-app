@@ -480,6 +480,13 @@ const disabledRules = {
 	"react/jsx-max-depth": "off",
 	// This will probably be split amongst many rules later, for now it's a mess
 	"react/react-compiler": "off",
+	// We definitely want to use these features
+	"oxc/no-async-await": "off",
+	"oxc/no-rest-spread-properties": "off",
+	"oxc/no-optional-chaining": "off",
+	// This is not particulary good, but on out scale it doesn't matter
+	"oxc/no-accumulating-spread": "off",
+	"oxc/no-map-spread": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
@@ -509,12 +516,6 @@ const temporaryDisabledRules = {
 	"eslint/no-warning-comments": "off", // 6 cases
 	"eslint/array-callback-return": "off", // 5 cases
 	"eslint/func-style": "off", // 4 cases
-	// oxc
-	"oxc/no-async-await": "off", // 1324 cases
-	"oxc/no-rest-spread-properties": "off", // 440 cases
-	"oxc/no-optional-chaining": "off", // 196 cases
-	"oxc/no-accumulating-spread": "off", // 23 cases
-	"oxc/no-map-spread": "off", // 14 cases
 	// vitest
 	"vitest/no-standalone-expect": "off", // 324 cases
 	"vitest/prefer-importing-vitest-globals": "off", // 102 cases
