@@ -72,7 +72,7 @@ const getPixelColor = (
 type RGBColor = `#${string}`;
 type ExpectedPixel = { rgb: RGBColor; location: [number, number] };
 
-const getPixelMatchErrors = async (
+const getPixelMatchErrors = (
 	image: JimpImage,
 	boundingBox: BoundingBox,
 	getExpectedPixels: GetExpectedPixels,
@@ -167,7 +167,7 @@ const stableScreenshot = async (
 				prevScreenshot = await makeScreenshot(clipBoundingBox);
 				const image = await Jimp.fromBuffer(prevScreenshot.buffer);
 				const boundingBox = clipBoundingBox || getImageBoundingBox(image);
-				errors = await getPixelMatchErrors(
+				errors = getPixelMatchErrors(
 					image,
 					boundingBox,
 					getExpectedPixels,

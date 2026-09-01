@@ -36,7 +36,7 @@ const upsert = ({ queryClient, procedure }: Controller, user: User) =>
 const remove = ({ queryClient, procedure }: Controller, userId: UserId) =>
 	withRef<User | undefined>((ref) => {
 		ref.current = queryClient.getQueryData(procedure.queryKey({ id: userId }));
-		return queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
+		void queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
 	}).current;
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
@@ -68,12 +68,16 @@ export const getRevertController = ({
 		add: (user: User) =>
 			applyWithRevert(
 				() => upsert(controller, user),
-				() => remove(controller, user.id),
+				() => {
+					remove(controller, user.id);
+				},
 			),
 		remove: (userId: UserId) =>
 			applyWithRevert(
 				() => remove(controller, userId),
-				(snapshot) => upsert(controller, snapshot),
+				(snapshot) => {
+					upsert(controller, snapshot);
+				},
 			),
 	};
 };

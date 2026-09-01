@@ -13,6 +13,7 @@ import {
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getCookies, getRequest } from "@tanstack/react-start/server";
+import { useTranslation } from "react-i18next";
 import { fromEntries } from "remeda";
 
 import { ErrorComponent } from "~app/components/suspense-wrapper";
@@ -38,11 +39,14 @@ import { getHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
 
-const NotFoundComponent: NotFoundRouteComponent = () => (
-	<View>
-		<Text>Not found!</Text>
-	</View>
-);
+const NotFoundComponent: NotFoundRouteComponent = () => {
+	const { t } = useTranslation("default");
+	return (
+		<View>
+			<Text>{t("misc.notFound")}</Text>
+		</View>
+	);
+};
 
 const RootErrorComponent: ErrorRouteComponent = ({ error, reset }) => {
 	const router = useRouter();

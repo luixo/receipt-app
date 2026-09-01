@@ -11,15 +11,18 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 		(controllerContext) =>
 		({ id, connection }, variables) => {
 			updateUsers(controllerContext, {
-				get: (controller) =>
+				get: (controller) => {
 					controller.add({
 						id,
 						name: variables.name,
 						publicName: undefined,
 						connectedAccount: undefined,
-					}),
+					});
+				},
 				getForeign: undefined,
-				getPaged: (controller) => controller.invalidate(),
+				getPaged: (controller) => {
+					void controller.invalidate();
+				},
 			});
 			if (connection && !connection.connected) {
 				updateAccountConnections(controllerContext, {

@@ -30,7 +30,7 @@ export const test = originalTest.extend<Fixtures>({
 			const auth = await api.mockUtils.authPage({ page });
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
-				count: Number(faker.number.int(100)),
+				count: faker.number.int(100),
 			}));
 			api.mockFirst(
 				"currency.top",

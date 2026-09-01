@@ -85,7 +85,7 @@ const fetchPage = async (
 			qb.where("users.id", "not in", filterIds),
 		)
 		.where("users.ownerAccountId", "=", auth.accountId)
-		.$if(Boolean(options.type === "not-connected"), (qb) =>
+		.$if(options.type === "not-connected", (qb) =>
 			qb.where("users.connectedAccountId", "is", null),
 		)
 		.$if(input.input.length < 3, (qb) =>

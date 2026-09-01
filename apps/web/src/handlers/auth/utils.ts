@@ -49,11 +49,8 @@ export const sendVerificationEmail = async (
 		});
 	}
 	try {
-		await getEmailClient(ctx).send({
-			address: email,
-			subject: "Confirm email in Receipt App",
-			body: generateConfirmEmailEmail(ctx, token),
-		});
+		const data = await generateConfirmEmailEmail(ctx, token);
+		await getEmailClient(ctx).send({ address: email, ...data });
 	} catch (error) {
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",

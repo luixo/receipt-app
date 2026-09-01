@@ -10,11 +10,12 @@ export const options: UseContextedMutationOptions<"auth.login"> = {
 			updateAccount(
 				{ queryClient, trpc },
 				{
-					get: (controller) =>
+					get: (controller) => {
 						controller.upsert({
 							account: { ...account, email: variables.email },
 							user,
-						}),
+						});
+					},
 				},
 			);
 		},

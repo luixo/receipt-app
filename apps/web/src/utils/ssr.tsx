@@ -20,8 +20,10 @@ const getPrefetchPromise = async (
 	options: ReturnType<TRPCQueryOptions<ResolverDef>>,
 ) => {
 	try {
-		const x = await ctx.context.queryClient.fetchQuery(options);
-		return transformer.serialize(x);
+		const query = (await ctx.context.queryClient.fetchQuery(
+			options,
+		)) as unknown;
+		return transformer.serialize(query);
 	} catch (error) {
 		return { [ERROR_TAG]: true, message: String(error) };
 	}
@@ -47,9 +49,9 @@ export const prefetchQueries = (
 };
 
 class SerializedTRPCError extends Error {
-	queryKey: QueryKey;
-	errorObject: Error;
-	constructor(queryKey: QueryKey, errorObject: Error) {
+	public queryKey: QueryKey;
+	public errorObject: Error;
+	public constructor(queryKey: QueryKey, errorObject: Error) {
 		super(errorObject.message);
 		this.name = "SerializedTRPCError";
 		this.queryKey = queryKey;

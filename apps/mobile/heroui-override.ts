@@ -29,7 +29,9 @@ const flattenColors = (themeColors: ThemeColors) =>
 export const { light, dark } = mapValues(semanticColors, flattenColors);
 
 export default createPlugin(
-	async ({ addBase, addUtilities, config }) => {
+	// oxlint-disable-next-line typescript/unbound-method
+	({ addBase, addUtilities, config }) => {
+		// oxlint-disable-next-line typescript/no-unsafe-member-access
 		const colors = config().theme.colors as Record<keyof ThemeColors, string>;
 		const themedColors = omitBy(
 			colors,

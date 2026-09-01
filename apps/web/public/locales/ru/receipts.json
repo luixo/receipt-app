@@ -114,6 +114,8 @@
 			"itemLabel": "{{name}} — {{amount}}"
 		},
 		"quantityPostfix": "x {{quantity}} штук/кг",
+		"amount": "= {{amount}}",
+		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
 			"consumer": {
 				"label": "Доля потребителя позиции",
@@ -145,6 +147,7 @@
 			"label": "Выбери плательщика"
 		},
 		"consumer": {
+			"skeletonAmount": "<skeleton />/<skeleton />",
 			"placeholder": "Потребители",
 			"label": "Выберите потребителей",
 			"group": "{{consumers, and}}"

@@ -93,14 +93,15 @@ export const Button: React.FC<Props> = ({ href, text }) => {
 								<tbody>
 									<Table.Row>
 										<td>
-											{" "}
+											{/* oxlint-disable-next-line react/jsx-no-literals */}{" "}
 											<a
 												href={`${baseUrl}${href}`}
 												rel="noreferrer"
 												target="_blank"
 											>
 												{text}
-											</a>{" "}
+											</a>
+											{/* oxlint-disable-next-line react/jsx-no-literals */}{" "}
 										</td>
 									</Table.Row>
 								</tbody>

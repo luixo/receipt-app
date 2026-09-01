@@ -30,7 +30,7 @@ const updateAllSums =
 const update =
 	(controller: Controller, currencyCode: CurrencyCode) =>
 	(updater: UpdateFn<number>) =>
-		withRef<Debt | undefined>((ref) =>
+		withRef<Debt | undefined>((ref) => {
 			updateAllSums(controller)((prevData) =>
 				replaceInArray<(typeof prevData)[number]>(
 					prevData,
@@ -38,8 +38,8 @@ const update =
 					(entry) => ({ ...entry, sum: updater(entry.sum) }),
 					ref,
 				),
-			),
-		).current?.sum;
+			);
+		}).current?.sum;
 
 const invalidate =
 	({ queryClient, procedure }: Controller) =>

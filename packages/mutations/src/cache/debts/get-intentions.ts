@@ -34,7 +34,7 @@ const updateIntentions = (
 const updateIntention =
 	(controller: Controller, debtId: DebtId) =>
 	(updater: (intention: Intention) => Intention) =>
-		withRef<Intention | undefined>((ref) =>
+		withRef<Intention | undefined>((ref) => {
 			updateIntentions(controller, (intentions) =>
 				replaceInArray(
 					intentions,
@@ -42,15 +42,15 @@ const updateIntention =
 					updater,
 					ref,
 				),
-			),
-		).current;
+			);
+		}).current;
 
 const removeIntention = (controller: Controller, debtId: DebtId) =>
-	withRef<ItemWithIndex<Intention> | undefined>((ref) =>
+	withRef<ItemWithIndex<Intention> | undefined>((ref) => {
 		updateIntentions(controller, (intentions) =>
 			removeFromArray(intentions, (intention) => intention.id === debtId, ref),
-		),
-	).current;
+		);
+	}).current;
 
 const addIntention = (
 	controller: Controller,
@@ -92,7 +92,9 @@ const addRevert =
 	(controller: Controller) => (intention: Intention, index?: number) =>
 		applyWithRevert(
 			() => addIntention(controller, intention, index),
-			() => removeIntention(controller, intention.id),
+			() => {
+				removeIntention(controller, intention.id);
+			},
 		);
 
 const add =
@@ -104,7 +106,7 @@ const invalidate =
 	() =>
 		withRef<Intention[] | undefined>((ref) => {
 			ref.current = queryClient.getQueryData(procedure.queryKey());
-			return queryClient.invalidateQueries(procedure.queryFilter());
+			void queryClient.invalidateQueries(procedure.queryFilter());
 		}).current;
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {

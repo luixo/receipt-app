@@ -27,8 +27,8 @@ export type StoreDataContextType = Omit<StoreData, keyof StoreValues> & {
 export const StoreDataContext = React.createContext<StoreDataContextType>({
 	...getStoreStatesFromValues(
 		getStoreValuesFromInitialValues(),
-		() => doNothing,
-		() => doNothing,
+		doNothing,
+		doNothing,
 	),
 	nowTimestamp: getNow.zonedDateTime(),
 	isFirstRender: true,

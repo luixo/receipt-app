@@ -19,11 +19,12 @@ export const getS3Options = (): S3OptionsMock => {
 			innerBroken = value;
 		},
 		mock: {
-			putObject: async (key, object) => {
+			putObject: (key, object) => {
 				if (innerBroken) {
 					throw new Error("Test context broke s3 service error");
 				}
 				messages.push({ key, objectLength: object.length });
+				return Promise.resolve();
 			},
 			bucket: "test-bucket",
 			endpoint: "https://fake-endpoint.org",

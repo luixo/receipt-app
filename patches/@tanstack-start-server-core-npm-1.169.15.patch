@@ -35,7 +35,7 @@ index f96569c16263a8138d4c99c3acc5df88a8f8e982..43127174e96914145397df4107383a19
 +* proxyRequest('http://localhost:3000/', { header: { 'x-for': "foo" } })
 +* ```
 +*/
-+export declare function proxyRequest(target: string, opts?: ProxyOptions): Promise<HTTPResponse>;
++export declare function proxyRequest(target: string, opts?: ProxyOptions): Promise<Response>;
  /**
   * Remove a cookie by name.
   * @param name Name of the cookie to delete

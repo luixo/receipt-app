@@ -31,11 +31,12 @@ export const getEmailOptions = (): EmailOptionsMock => {
 			innerBaseUrl = value;
 		},
 		mock: {
-			send: async (email) => {
+			send: (email) => {
 				if (innerBroken) {
 					throw new Error("Test context broke email service error");
 				}
 				messages.push(email);
+				return Promise.resolve();
 			},
 			getMessages: () => messages,
 		},

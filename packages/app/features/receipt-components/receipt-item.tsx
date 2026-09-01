@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
@@ -131,12 +131,13 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						className="w-full shrink-0 sm:w-36"
 					/>
 					<Text>
-						={" "}
-						{formatCurrency(
-							locale,
-							currencyCode,
-							round(item.quantity * item.price),
-						)}
+						{t("item.amount", {
+							amount: formatCurrency(
+								locale,
+								currencyCode,
+								round(item.quantity * item.price),
+							),
+						})}
 					</Text>
 				</View>
 				{sortedConsumers.length === 0 ? null : (
@@ -175,22 +176,27 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 
 const consumersSkeletonItems = Array.from({ length: 2 }, (_, index) => index);
 
-export const ReceiptItemSkeleton: React.FC = () => (
-	<Card
-		header={<Skeleton className="h-7 w-24 rounded-md" />}
-		headerClassName="justify-between gap-4"
-		bodyClassName="gap-2"
-	>
-		<View className="flex-row items-center gap-2">
-			<Skeleton className="h-7 w-12 rounded-md" />
-			<Text>x</Text>
-			<Skeleton className="h-7 w-12 rounded-md" />
-			<Text>=</Text>
-			<Skeleton className="h-7 w-12 rounded-md" />
-		</View>
-		<Divider />
-		{consumersSkeletonItems.map((index) => (
-			<ReceiptItemConsumerSkeleton key={index} />
-		))}
-	</Card>
-);
+export const ReceiptItemSkeleton: React.FC = () => {
+	const { t } = useTranslation("receipts");
+	return (
+		<Card
+			header={<Skeleton className="h-7 w-24 rounded-md" />}
+			headerClassName="justify-between gap-4"
+			bodyClassName="gap-2"
+		>
+			<View className="flex-row items-center gap-2">
+				<Trans
+					t={t}
+					i18nKey="item.skeletonAmount"
+					components={{
+						skeleton: <Skeleton className="h-7 w-12 rounded-md" />,
+					}}
+				/>
+			</View>
+			<Divider />
+			{consumersSkeletonItems.map((index) => (
+				<ReceiptItemConsumerSkeleton key={index} />
+			))}
+		</Card>
+	);
+};

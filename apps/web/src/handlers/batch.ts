@@ -88,7 +88,9 @@ export const queueCallFactory = <
 			dataloader: new Dataloader<I, O, string>(
 				(inputs) => batchLoadFn(context)(inputs),
 				{
-					batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
+					batchScheduleFn: (callback) => {
+						setTimeout(callback, SCHEDULE_DELAY);
+					},
 					cacheKeyFn: JSON.stringify,
 					// Disable cache on test runs - subsequent calls with different data are happening in tests
 					cache: !getReqHeader(context, "x-test-id"),

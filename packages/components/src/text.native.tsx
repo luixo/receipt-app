@@ -95,9 +95,6 @@ export const TextWrapper: React.FC<
 		return children;
 	}
 	const previousContext = React.use(TextClassContext);
-	return (
-		<TextClassContext value={cn(previousContext, styles.join(" "))}>
-			{children}
-		</TextClassContext>
-	);
+	const nextContext = cn(previousContext, styles.join(" "));
+	return <TextClassContext value={nextContext}>{children}</TextClassContext>;
 };

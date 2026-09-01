@@ -25,19 +25,21 @@ type Element = {
 	modifiedValue: string;
 };
 
-const getElements = async (ids: string[]): Promise<RawElement[]> => {
+const getElements = (ids: string[]) => {
 	if (ids.includes("fail-all")) {
 		throw new Error("Failed getElements call");
 	}
-	return ids
-		.map((id) => {
-			if (id === "miss-element") {
-				return null;
-			}
-			return { id, value: id };
-		})
-		.filter(isNonNullish)
-		.toReversed();
+	return Promise.resolve(
+		ids
+			.map<RawElement | null>((id) => {
+				if (id === "miss-element") {
+					return null;
+				}
+				return { id, value: id };
+			})
+			.filter(isNonNullish)
+			.toReversed(),
+	);
 };
 
 const mapElement = (rawElement: RawElement): Element => {

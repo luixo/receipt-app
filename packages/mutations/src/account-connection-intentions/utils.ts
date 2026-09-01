@@ -14,11 +14,12 @@ export const updateUserConnected = (
 	account: TRPCMutationOutput<"accountConnectionIntentions.add">["account"],
 ) => {
 	updateUsers(controllerContext, {
-		get: (controller) =>
+		get: (controller) => {
 			controller.update(userId, (user) => ({
 				...user,
 				connectedAccount: account,
-			})),
+			}));
+		},
 		getForeign: (controller) => {
 			controller.updateOwn(userId, (user) => ({
 				...user,
@@ -38,10 +39,12 @@ export const updateUserConnected = (
 		getByUserPaged: undefined,
 		// A newly connected account may have new debts for us
 		getUsersPaged: (controller) => {
-			void controller.invalidate();
+			controller.invalidate();
 		},
 		get: undefined,
 		// A newly connected account may have new intentions for us
-		getIntentions: (controller) => controller.invalidate(),
+		getIntentions: (controller) => {
+			void controller.invalidate();
+		},
 	});
 };

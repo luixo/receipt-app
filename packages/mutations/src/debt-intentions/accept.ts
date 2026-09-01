@@ -81,13 +81,15 @@ export const options: UseContextedMutationOptions<
 				getAllUser: undefined,
 				getUsersPaged: undefined,
 				getByUserPaged: (controller) => controller.invalidate(intention.userId),
-				get: (controller) =>
+				get: (controller) => {
 					controller.update(intention.id, (debt) => ({
 						...debt,
 						updatedAt: data.updatedAt,
-					})),
-
-				getIntentions: (controller) => controller.remove(intention.id),
+					}));
+				},
+				getIntentions: (controller) => {
+					controller.remove(intention.id);
+				},
 			}),
 	mutateToastOptions:
 		({ t }) =>

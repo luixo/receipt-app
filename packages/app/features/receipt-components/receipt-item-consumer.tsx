@@ -1,12 +1,13 @@
 import React from "react";
 
+import { Trans, useTranslation } from "react-i18next";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
 import { View } from "~components/view";
 
 import { useActionsHooksContext } from "./context";
@@ -66,13 +67,20 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	);
 };
 
-export const ReceiptItemConsumerSkeleton: React.FC = () => (
-	<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
-		<SkeletonUser />
-		<View className="flex-row gap-2 self-end">
-			<Skeleton className="h-7 w-10 rounded-md" />
-			<Text>/</Text>
-			<Skeleton className="h-7 w-10 rounded-md" />
+export const ReceiptItemConsumerSkeleton: React.FC = () => {
+	const { t } = useTranslation("receipts");
+	return (
+		<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
+			<SkeletonUser />
+			<View className="flex-row gap-2 self-end">
+				<Trans
+					t={t}
+					i18nKey="item.consumer.skeletonAmount"
+					components={{
+						skeleton: <Skeleton className="h-7 w-10 rounded-md" />,
+					}}
+				/>
+			</View>
 		</View>
-	</View>
-);
+	);
+};

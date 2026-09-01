@@ -46,7 +46,7 @@ test.describe("Wrapper component", () => {
 		consoleManager,
 	}) => {
 		const { debtUser } = await mockBase();
-		api.mockFirst("debts.getAllUser", async () => {
+		api.mockFirst("debts.getAllUser", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "debts.getAllUser" error`,

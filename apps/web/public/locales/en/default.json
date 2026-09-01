@@ -121,5 +121,9 @@
 	},
 	"searchBar": {
 		"placeholder": "Type to search"
+	},
+	"misc": {
+		"redirect": "Redirecting to receipt tab..",
+		"notFound": "Not found!"
 	}
 }

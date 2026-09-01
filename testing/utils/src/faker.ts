@@ -6,11 +6,11 @@ import type { TemporalMapping, TemporalType } from "~utils/date";
 import { fromDate, temporalSchemas, toDate } from "~utils/date";
 
 class TemporalModule {
-	constructor(faker: Faker) {
+	public constructor(faker: Faker) {
 		this.faker = faker;
 	}
-	faker;
-	between = mapValues(
+	private readonly faker;
+	public between = mapValues(
 		temporalSchemas,
 		(_value, key) =>
 			<K extends TemporalType>({
@@ -33,7 +33,7 @@ class TemporalModule {
 		}) => TemporalMapping[K];
 	};
 
-	recent = mapValues(
+	public recent = mapValues(
 		temporalSchemas,
 		(_value, key) =>
 			<K extends TemporalType>({
@@ -59,7 +59,7 @@ class TemporalModule {
 
 // oxlint-disable-next-line max-classes-per-file
 export class ExtendedFaker extends Faker {
-	readonly temporal = new TemporalModule(this);
+	public readonly temporal = new TemporalModule(this);
 }
 
 const HASH_MAGNITUDE = 10 ** 30;

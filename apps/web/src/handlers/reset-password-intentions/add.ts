@@ -62,9 +62,6 @@ export const procedure = unauthProcedure
 				token: uuid,
 			})
 			.executeTakeFirst();
-		await getEmailClient(ctx).send({
-			address: input.email.lowercase,
-			subject: "Reset password intention in Receipt App",
-			body: generateResetPasswordEmail(ctx, uuid),
-		});
+		const data = await generateResetPasswordEmail(ctx, uuid);
+		await getEmailClient(ctx).send({ address: input.email.lowercase, ...data });
 	});

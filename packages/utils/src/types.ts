@@ -10,7 +10,7 @@ export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
 	| boolean
 	| null
 	| undefined
-	// oxlint-disable-next-line typescript/no-unsafe-function-type
+	// oxlint-disable-next-line typescript/no-unsafe-function-type typescript/ban-types
 	| Function
 	| TerminalVaue
 	? T

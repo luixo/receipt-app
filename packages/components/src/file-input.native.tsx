@@ -4,6 +4,7 @@ import { View } from "~components/view";
 
 export const FileInput: React.FC<Props> = () => (
 	<View className="border-warning rounded-md border p-2">
+		{/* oxlint-disable-next-line react/jsx-no-literals */}
 		<Text>FileInput TBD</Text>
 	</View>
 );

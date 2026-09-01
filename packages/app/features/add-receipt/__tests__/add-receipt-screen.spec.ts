@@ -136,7 +136,7 @@ test("'receipts.add' mutation", async ({
 		await expect(input).toBeDisabled();
 	}
 
-	api.mockFirst("receipts.get", async () => ({
+	api.mockFirst("receipts.get", () => ({
 		id: receiptId,
 		debts: { direction: "outcoming", debts: [] },
 		name: receiptName,

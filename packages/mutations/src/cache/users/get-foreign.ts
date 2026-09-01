@@ -56,7 +56,7 @@ const removeOwn = ({ queryClient, procedure }: Controller, userId: UserId) =>
 			return;
 		}
 		ref.current = currentUser;
-		return queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
+		void queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
 	}).current;
 
 const addOwn = ({ queryClient, procedure }: Controller, user: OwnUser) =>
@@ -103,7 +103,9 @@ export const getRevertController = ({
 		removeOwn: (userId: UserId) =>
 			applyWithRevert(
 				() => removeOwn(controller, userId),
-				(snapshot) => addOwn(controller, snapshot),
+				(snapshot) => {
+					addOwn(controller, snapshot);
+				},
 			),
 	};
 };

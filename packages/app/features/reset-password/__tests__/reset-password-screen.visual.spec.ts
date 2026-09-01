@@ -91,7 +91,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		api.mockFirst("resetPasswordIntentions.get", {
 			email: faker.internet.email(),
 		});
-		api.mockFirst("auth.resetPassword", async () => {
+		api.mockFirst("auth.resetPassword", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: "Mock 'auth.resetPassword' error",

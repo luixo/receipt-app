@@ -21,7 +21,7 @@ test.describe("States", () => {
 		clearToasts,
 	}) => {
 		api.mockUtils.noAuthPage();
-		api.mockFirst("auth.confirmEmail", async () => {
+		api.mockFirst("auth.confirmEmail", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: "Mock 'auth.confirmEmail' error",

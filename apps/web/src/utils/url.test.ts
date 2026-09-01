@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 
 import { getHostUrl } from "./url";
 
-test("url is filtered out", async () => {
+test("url is filtered out", () => {
 	const originalUrl = "http://localhost:3000/";
 	const urlObject = new URL(originalUrl);
 	urlObject.hash = "hash";

@@ -10,7 +10,7 @@ export const options: UseContextedMutationOptions<"auth.register"> = {
 			updateAccount(
 				{ queryClient, trpc },
 				{
-					get: (controller) =>
+					get: (controller) => {
 						controller.upsert({
 							user: { name: variables.name },
 							account: {
@@ -20,7 +20,8 @@ export const options: UseContextedMutationOptions<"auth.register"> = {
 								avatarUrl: undefined,
 								role: undefined,
 							},
-						}),
+						});
+					},
 				},
 			);
 		},

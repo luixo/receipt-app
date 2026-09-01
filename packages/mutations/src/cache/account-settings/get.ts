@@ -60,7 +60,9 @@ export const getRevertController = ({
 		upsert: (accountSettings: AccountSettings) =>
 			applyWithRevert(
 				() => upsert(controller, accountSettings),
-				() => invalidateAccountSettings(controller),
+				() => {
+					invalidateAccountSettings(controller);
+				},
 			),
 	};
 };

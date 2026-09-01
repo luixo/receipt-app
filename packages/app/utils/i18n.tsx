@@ -156,6 +156,8 @@ export const createI18nContext = ({
 			return instance.loadNamespaces(["default", ...namespaces]);
 		},
 		getTranslation: () => instance.getFixedT(initialLanguage),
+		getNamespacedTranslation: <N extends Namespace>(namespace: N) =>
+			instance.getFixedT(initialLanguage, namespace),
 	};
 };
 
