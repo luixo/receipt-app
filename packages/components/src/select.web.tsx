@@ -23,6 +23,8 @@ export type Props<T extends object, K extends string> = {
 	disallowEmptySelection?: boolean;
 };
 
+// Generic component has to be a function
+// oxlint-disable-next-line func-style
 export function Select<T extends object, K extends string>({
 	children,
 	getKey,

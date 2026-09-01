@@ -296,6 +296,7 @@ const createWorkerManager = (port: number): WorkerManager => {
 				res.end(JSON.stringify(response));
 			} catch (error) {
 				if (error === CLEANUP_MARK) {
+					// oxlint-disable-next-line no-param-reassign
 					res.statusCode = 500;
 					res.end("Cleanup finished");
 					return;

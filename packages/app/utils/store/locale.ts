@@ -7,6 +7,6 @@ import {
 export const LOCALE_STORE_NAME = "ssrContext:locale";
 
 export const getLocale = (): Locale =>
-	Intl.DateTimeFormat().resolvedOptions().locale;
+	new Intl.DateTimeFormat().resolvedOptions().locale;
 
 export const localeSchema = rawLocaleSchema.or(fallback(getLocale));

@@ -87,7 +87,7 @@ const getPixelMatchErrors = (
 	return pixelMatches
 		.map(({ actualColor, expectedColor, location: [x, y] }) => {
 			if (!actualColor || actualColor === expectedColor) {
-				return;
+				return undefined;
 			}
 			return `Expected to have "${expectedColor}", got "${actualColor}" at (${x}, ${y}) in ${colorMode} mode.`;
 		})
@@ -136,8 +136,9 @@ const stableScreenshot = async (
 			isTimedOut = true;
 		}, options.timeout);
 	}
-	let prevScreenshot: { buffer: Buffer; timestamp: number } | undefined;
-	let screenshot: { buffer: Buffer; timestamp: number } | undefined;
+	let prevScreenshot: { buffer: Buffer; timestamp: number } | undefined =
+		undefined;
+	let screenshot: { buffer: Buffer; timestamp: number } | undefined = undefined;
 	let errors: string[] = [];
 	const checks = ["pixels", "stable"] satisfies ("pixels" | "stable")[];
 	const makeScreenshot = async (bbox: BoundingBox | undefined) => ({
@@ -161,7 +162,7 @@ const stableScreenshot = async (
 				["Timeout while waiting for a screenshot", ...errors].join("\n"),
 			);
 		}
-		const firstCheck = checks[0];
+		const [firstCheck] = checks;
 		switch (firstCheck) {
 			case "pixels": {
 				prevScreenshot = await makeScreenshot(clipBoundingBox);

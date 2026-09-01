@@ -55,7 +55,7 @@ const getSnapshotName = (
 		element
 			.replaceAll(/[^a-zA-Z0-9]/g, "-")
 			// Trim dashes
-			.replaceAll(/(^-*|-*$)/g, "")
+			.replaceAll(/(?<dashes>^-*|-*$)/g, "")
 			// Replace multiple dashes with one
 			.replaceAll(/-{2,}/g, "-")
 			.toLowerCase(),
@@ -261,8 +261,7 @@ const remapActions = (
 					const callType: keyof KeyCalls =
 						type === "client" ? "clientCalls" : "serverCalls";
 					keyCalls[callType] = (keyCalls[callType] || 0) + 1;
-					acc[name] = keyCalls;
-					return acc;
+					return { ...acc, [name]: keyCalls };
 				},
 				{},
 			),

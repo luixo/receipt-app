@@ -84,6 +84,7 @@ export const getStoreValuesFromInitialValues = (
 ): StoreValues =>
 	fromEntries(
 		entries(schemas).map(([key, schema]) => {
+			// oxlint-disable-next-line init-declarations
 			let parsedValue: unknown;
 			try {
 				parsedValue = JSON.parse(initialValues[key] || "");

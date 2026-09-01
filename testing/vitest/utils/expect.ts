@@ -31,7 +31,7 @@ export const expectTRPCError = async (
 	expectedCode: TRPC_ERROR_CODE_KEY,
 	expectedMessage: string | RegExp,
 ) => {
-	let localError;
+	let localError = undefined;
 	try {
 		await fn();
 	} catch (error) {

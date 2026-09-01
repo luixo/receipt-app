@@ -25,13 +25,10 @@ import { procedure } from "./get-all-user";
 const getSums = (debts: { currencyCode: CurrencyCode; amount: number }[]) =>
 	mapValues(
 		debts.reduce<Record<CurrencyCode, number>>(
-			(acc, { currencyCode, amount }) => {
-				if (!acc[currencyCode]) {
-					acc[currencyCode] = 0;
-				}
-				acc[currencyCode] += amount;
-				return acc;
-			},
+			(acc, { currencyCode, amount }) => ({
+				...acc,
+				[currencyCode]: (acc[currencyCode] ?? 0) + amount,
+			}),
 			{},
 		),
 		(sum) => round(sum),

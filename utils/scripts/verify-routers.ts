@@ -4,6 +4,8 @@ import path from "node:path";
 
 const rootDir = path.join(import.meta.dirname, "../..");
 
+// This is a generator, how the heck should I write it with an anonymous function?
+// oxlint-disable-next-line func-style
 async function* walk(
 	dir: string,
 	filter: (fileName: string, dirName: string) => boolean,

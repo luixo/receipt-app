@@ -158,7 +158,7 @@ const queueSession = queueCallFactory<
 					(session) => session.sessionId === authToken,
 				);
 				if (!matchedSession) {
-					return;
+					return undefined;
 				}
 				const refreshSessionTimestamp = subtract.zonedDateTime(
 					matchedSession.expirationTimestamp,
@@ -170,7 +170,7 @@ const queueSession = queueCallFactory<
 						refreshSessionTimestamp,
 					)
 				) {
-					return;
+					return undefined;
 				}
 				return {
 					authToken,

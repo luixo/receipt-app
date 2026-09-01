@@ -67,9 +67,7 @@ export const queueList = async <
 	const mappedInputs = inputs.reduce<Partial<Record<string, I[]>>>(
 		(acc, input) => {
 			const key = hashKey([omit(input, ["cursor", "limit"])]);
-			acc[key] ||= [];
-			acc[key].push(input);
-			return acc;
+			return { ...acc, [key]: [...(acc[key] ?? []), input] };
 		},
 		{},
 	);

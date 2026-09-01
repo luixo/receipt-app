@@ -15,4 +15,9 @@ export const SELF_QUERY_CLIENT_KEY = Symbol("self-client-id");
 
 export const QueryClientsContext = React.createContext<
 	[QueryClientsRecord, React.Dispatch<React.SetStateAction<QueryClientsRecord>>]
->([{ [SELF_QUERY_CLIENT_KEY]: getQueryClient() }, () => {}]);
+>([
+	{ [SELF_QUERY_CLIENT_KEY]: getQueryClient() },
+	() => {
+		/* empty */
+	},
+]);

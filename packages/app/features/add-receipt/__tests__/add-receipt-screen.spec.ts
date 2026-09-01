@@ -29,7 +29,7 @@ test("On load", async ({
 	expectCurrency,
 }) => {
 	const { topCurrencies } = await mockBase();
-	const topCurrency = topCurrencies.toSorted((a, b) => a.count - b.count)[0];
+	const [topCurrency] = topCurrencies.toSorted((a, b) => a.count - b.count);
 	assert.ok(topCurrency);
 
 	await snapshotQueries(async () => {

@@ -153,7 +153,7 @@ describe("account.changeAvatar", () => {
 		});
 
 		test("provider broken", async ({ ctx }) => {
-			ctx.s3Options.broken = true;
+			ctx.s3Options.setBroken(true);
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -209,7 +209,7 @@ describe("account.changeAvatar", () => {
 			)}?lastModified=${Date.now()}`;
 			expect(result).toEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
-			const message = ctx.s3Options.mock.getMessages()[0];
+			const [message] = ctx.s3Options.mock.getMessages();
 			assert(message);
 			expect(message.objectLength).toBeGreaterThan(1000);
 			expect(message.objectLength).toBeLessThan(5000);

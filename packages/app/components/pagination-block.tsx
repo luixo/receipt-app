@@ -25,6 +25,8 @@ type ShapeProps<T> = {
 	endContent?: ViewReactNode;
 };
 
+// Generic component has to be a function
+// oxlint-disable-next-line func-style
 export function PaginationBlockShape<T>({
 	limit,
 	totalCount,
@@ -131,6 +133,8 @@ type Props<T> = Omit<ShapeProps<T>, "onLimitChange" | "onPageChange"> & {
 	onPageChange: (page: number) => void;
 };
 
+// Generic component has to be a function
+// oxlint-disable-next-line func-style
 export function PaginationBlock<T>({
 	totalCount,
 	setLimit,

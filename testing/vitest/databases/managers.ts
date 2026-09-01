@@ -10,7 +10,7 @@ type TemplateDatabaseListener<T> = () => Promise<T>;
 export const templateDatabaseManagerFactory = () => {
 	const listeners: TemplateDatabaseListener<unknown>[] = [];
 	const release = async () => {
-		const topListener = listeners[0];
+		const [topListener] = listeners;
 		if (topListener) {
 			await topListener();
 			listeners.shift();

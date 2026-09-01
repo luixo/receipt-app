@@ -60,6 +60,10 @@ export const useMutationErrors = ({
 };
 
 export const emptyInputHandler: InputHandler = {
-	focus: () => {},
-	blur: () => {},
+	focus: () => {
+		/* empty */
+	},
+	blur: () => {
+		/* empty */
+	},
 };

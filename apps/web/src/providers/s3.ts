@@ -13,7 +13,7 @@ type S3Client = {
 	endpoint: string;
 };
 
-let s3Client: S3Client | undefined;
+let s3Client: S3Client | undefined = undefined;
 
 export const getS3Client = (ctx: UnauthorizedContext): S3Client => {
 	if (ctx.s3Options.mock) {

@@ -31,7 +31,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 	getLanguages: async ({ page }, use) => {
 		await use(async () => {
 			const languages = await page.evaluate(() => {
-				const i18n = window.i18n;
+				const { i18n } = window;
 				if (!i18n) {
 					throw new Error("Expected to have i18n in window");
 				}
@@ -46,7 +46,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 			const language = overrideLanguage || baseLanguage;
 			const namespaces = await page.evaluate(
 				([languageInner]) => {
-					const i18n = window.i18n;
+					const { i18n } = window;
 					if (!i18n) {
 						throw new Error("Expected to have i18n in window");
 					}

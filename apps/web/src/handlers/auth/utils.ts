@@ -42,7 +42,7 @@ export const sendVerificationEmail = async (
 	email: string,
 	token: string,
 ) => {
-	if (!ctx.emailOptions.active) {
+	if (!ctx.emailOptions.getActive()) {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: "Currently email resend is not supported",

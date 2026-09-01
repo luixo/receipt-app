@@ -88,13 +88,13 @@ describe("debts.getAll", () => {
 			const expectedDebts = mapValues(
 				[...firstUserDebts, ...secondUserDebts].reduce<
 					Record<CurrencyCode, number>
-				>((acc, { currencyCode, amount }) => {
-					if (!acc[currencyCode]) {
-						acc[currencyCode] = 0;
-					}
-					acc[currencyCode] += amount;
-					return acc;
-				}, {}),
+				>(
+					(acc, { currencyCode, amount }) => ({
+						...acc,
+						[currencyCode]: (acc[currencyCode] ?? 0) + amount,
+					}),
+					{},
+				),
 				(sum) => round(sum),
 			);
 

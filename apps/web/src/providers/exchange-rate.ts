@@ -119,8 +119,7 @@ const fetchWithBatches = async (
 			if (!batch.includes(input.toCode)) {
 				batch.push(input.toCode);
 			}
-			acc[input.fromCode] = batch;
-			return acc;
+			return { ...acc, [input.fromCode]: batch };
 		},
 		{},
 	);

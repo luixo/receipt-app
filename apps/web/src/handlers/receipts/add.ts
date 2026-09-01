@@ -189,10 +189,7 @@ const insertConsumers = async (
 					createdAt: insertedConsumer.createdAt,
 				});
 			}
-			if (!acc[itemId]) {
-				acc[itemId] = itemAcc;
-			}
-			return acc;
+			return { ...acc, [itemId]: itemAcc };
 		},
 		{},
 	);
@@ -250,10 +247,7 @@ const insertPayers = async (
 				createdAt: insertedPayer.createdAt,
 			});
 		}
-		if (!acc[itemId]) {
-			acc[itemId] = itemAcc;
-		}
-		return acc;
+		return { ...acc, [itemId]: itemAcc };
 	}, {});
 };
 
@@ -261,7 +255,7 @@ const verifyParticipants = (
 	input: z.infer<typeof addReceiptSchema>,
 	participants: Awaited<ReturnType<typeof insertParticipants>>,
 ) => {
-	const firstError = participants.errors[0];
+	const [firstError] = participants.errors;
 	if (firstError) {
 		throw new TRPCError({
 			code: firstError.code,
@@ -290,7 +284,7 @@ const verifyItems = (
 ) => {
 	// There is no way for this to happen at the moment
 	/* c8 ignore start */
-	const firstError = items.errors[0];
+	const [firstError] = items.errors;
 	if (firstError) {
 		throw new TRPCError({
 			code: firstError.code,
@@ -323,7 +317,7 @@ const verifyPayers = (
 	receiptId: ReceiptId,
 	payers: Awaited<ReturnType<typeof insertConsumers>>[string] = defaultPayers,
 ) => {
-	const firstError = payers.errors[0];
+	const [firstError] = payers.errors;
 	if (firstError) {
 		throw new TRPCError({
 			code: firstError.code,
@@ -357,7 +351,7 @@ const verifyItemConsumers = (
 		[],
 	);
 	/* c8 ignore start */
-	const firstError = addedConsumersErrors[0];
+	const [firstError] = addedConsumersErrors;
 	if (firstError) {
 		throw new TRPCError({
 			code: firstError.code,
@@ -397,7 +391,7 @@ const verifyItemPayers = (
 		[],
 	);
 	/* c8 ignore start */
-	const firstError = addedPayersErrors[0];
+	const [firstError] = addedPayersErrors;
 	if (firstError) {
 		throw new TRPCError({
 			code: firstError.code,

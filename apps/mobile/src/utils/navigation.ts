@@ -21,9 +21,9 @@ import { updateSetStateAction } from "~utils/react";
 type SearchParams = Record<string, string | string[]>;
 
 const nativeToWeb = (pathname: string) =>
-	pathname.replaceAll(/\[([^\]/]+)\]/g, "$$$1");
+	pathname.replaceAll(/\[(?<part>[^\]/]+)\]/g, "$$$1");
 const webToNative = (pathname: string) =>
-	pathname.replaceAll(/\$([A-Za-z_$][\w$]*)/g, "[$1]");
+	pathname.replaceAll(/\$(?<part>[A-Za-z_$][\w$]*)/g, "[$1]");
 
 const deserializeSearchParams = (
 	key: RouteId,

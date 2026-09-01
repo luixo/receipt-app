@@ -120,7 +120,7 @@ describe("auth.register", () => {
 
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
-			ctx.emailOptions.active = false;
+			ctx.emailOptions.setActive(false);
 			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -142,9 +142,9 @@ describe("auth.register", () => {
 				setCookieTuple,
 				"Header 'set-cookie' has to be set in the response",
 			);
-			const tokenMatch = /authToken=([^;]+)/.exec(setCookieTuple[1]);
+			const tokenMatch = /authToken=(?<token>[^;]+)/.exec(setCookieTuple[1]);
 			assert(tokenMatch, "Cookie 'authToken' should be present");
-			const token = tokenMatch[1];
+			const [, token] = tokenMatch;
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
@@ -165,7 +165,7 @@ describe("auth.register", () => {
 			);
 			expect(result.account.verified).toBe(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0];
+			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),
@@ -176,7 +176,7 @@ describe("auth.register", () => {
 		});
 
 		test("email reports error if broken", async ({ ctx }) => {
-			ctx.emailOptions.broken = true;
+			ctx.emailOptions.setBroken(true);
 			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			await expectTRPCError(

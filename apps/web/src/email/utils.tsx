@@ -78,6 +78,7 @@ const generateEmail = async (
 	</html>`;
 	const nestedStyles = entries(stylesMapping).reduce<NestedStyles>(
 		(acc: NestedStyles, [selector, { default: styles, ...mediaObject }]) => {
+			/* oxlint-disable no-param-reassign */
 			if (styles) {
 				acc[selector] = convertStylesToString(styles);
 			}
@@ -89,6 +90,7 @@ const generateEmail = async (
 					convertStylesToString(mediaStyles);
 			}
 			return acc;
+			/* oxlint-enable no-param-reassign */
 		},
 		{},
 	);

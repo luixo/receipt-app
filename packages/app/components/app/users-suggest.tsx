@@ -174,7 +174,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		[queryClient, trpc.users.get],
 	);
 	React.useEffect(() => {
-		const firstUser = initialUserIds.current[0];
+		const [firstUser] = initialUserIds.current;
 		if (firstUser) {
 			setUserNameById(firstUser);
 		}

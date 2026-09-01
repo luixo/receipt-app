@@ -8,9 +8,6 @@ import type { DummyRule, DummyRuleMap, OxlintOverride } from "oxlint";
 import { defineConfig } from "oxlint";
 import { fromEntries, keys, omit } from "remeda";
 
-// Currently doesn't work properly
-// see https://github.com/oxc-project/oxc/issues/22364
-// TODO: re-enable when oxc solved package.json problem
 const getExtraneousDependenciesConfig = (
 	packageJsonDir: string,
 	devDependencies: string[] | boolean = false,
@@ -243,7 +240,7 @@ const overriddenRules = {
 	// We assign `ref.current` a lot
 	"no-param-reassign": [
 		"error",
-		{ props: true, ignorePropertyModificationsForRegex: ["ref$"] },
+		{ props: true, ignorePropertyModificationsForRegex: ["ref$", "Ref$"] },
 	],
 	// We enjoy sorting imports
 	"sort-imports": ["error", { ignoreDeclarationSort: true }],
@@ -487,35 +484,35 @@ const disabledRules = {
 	// This is not particulary good, but on out scale it doesn't matter
 	"oxc/no-accumulating-spread": "off",
 	"oxc/no-map-spread": "off",
+	// This is too much at the moment
+	"eslint/sort-keys": "off",
+	// We use a lot of sensible magic numbers
+	"eslint/no-magic-numbers": "off",
+	// It took more time to fight it than to turn it off
+	"eslint/id-length": "off",
+	// We love ternaries
+	"eslint/no-ternary": "off",
+	// No need to control that
+	"eslint/max-lines-per-function": "off",
+	"eslint/max-lines": "off",
+	"eslint/max-statements": "off",
+	"eslint/max-params": "off",
+	// ...
+	"eslint/no-undefined": "off",
+	// We don't care that much
+	"eslint/capitalized-comments": "off",
+	"eslint/no-inline-comments": "off",
+	// False positives for type imports
+	"eslint/no-duplicate-imports": "off",
+	// Controlled by `typescript/require-await`
+	"eslint/require-await": "off",
+	// We don't do much regexping
+	"eslint/require-unicode-regexp": "off",
+	// TODO: fix this one
+	"eslint/no-warning-comments": "off",
 } satisfies DummyRuleMap;
 
 const temporaryDisabledRules = {
-	// eslint
-	"eslint/sort-keys": "off", // 1693 cases
-	"eslint/no-magic-numbers": "off", // 1240 cases
-	"eslint/id-length": "off", // 672 cases
-	"eslint/no-ternary": "off", // 653 cases
-	"eslint/max-lines-per-function": "off", // 413 cases
-	"eslint/no-undefined": "off", // 385 cases
-	"eslint/capitalized-comments": "off", // 182 cases
-	"eslint/max-statements": "off", // 181 cases
-	"eslint/no-duplicate-imports": "off", // 151 cases
-	"eslint/require-await": "off", // 73 cases
-	"eslint/require-unicode-regexp": "off", // 64 cases
-	"eslint/max-params": "off", // 62 cases
-	"eslint/no-inline-comments": "off", // 42 cases
-	"eslint/max-lines": "off", // 40 cases
-	"eslint/no-negated-condition": "off", // 28 cases
-	"eslint/no-param-reassign": "off", // 26 cases
-	"eslint/prefer-destructuring": "off", // 23 cases
-	"eslint/no-empty-pattern": "off", // 11 cases
-	"eslint/new-cap": "off", // 10 cases
-	"eslint/no-empty-function": "off", // 9 cases
-	"eslint/init-declarations": "off", // 8 cases
-	"eslint/prefer-named-capture-group": "off", // 7 cases
-	"eslint/no-warning-comments": "off", // 6 cases
-	"eslint/array-callback-return": "off", // 5 cases
-	"eslint/func-style": "off", // 4 cases
 	// vitest
 	"vitest/no-standalone-expect": "off", // 324 cases
 	"vitest/prefer-importing-vitest-globals": "off", // 102 cases

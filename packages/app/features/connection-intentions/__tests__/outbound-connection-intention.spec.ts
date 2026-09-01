@@ -16,7 +16,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	snapshotQueries,
 }) => {
 	const { outbound } = await mockConnectionIntentions({ outboundAmount: 1 });
-	const intention = outbound[0];
+	const [intention] = outbound;
 	assert.ok(intention);
 	await openConnectionIntentions();
 

@@ -31,7 +31,7 @@ export const procedure = unauthProcedure
 		const expirationDate = add.zonedDateTime(getNow.zonedDateTime(), {
 			days: 1,
 		});
-		if (!ctx.emailOptions.active) {
+		if (!ctx.emailOptions.getActive()) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Currently password reset is not supported.`,

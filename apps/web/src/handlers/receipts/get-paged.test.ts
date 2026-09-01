@@ -442,7 +442,7 @@ describe("receipts.getPaged", () => {
 							}),
 							modifyOutput: (receipts) =>
 								receipts.slice(0, 1).map((receipt) => {
-									const firstItem = receipt.items[0];
+									const [firstItem] = receipt.items;
 									if (!firstItem) {
 										throw new Error("Expected to have at least 1 item");
 									}
@@ -473,7 +473,7 @@ describe("receipts.getPaged", () => {
 							}),
 							modifyOutput: (receipts) =>
 								receipts.slice(0, 1).map((receipt) => {
-									const firstItem = receipt.items[0];
+									const [firstItem] = receipt.items;
 									if (!firstItem) {
 										throw new Error("Expected to have at least 1 item");
 									}
