@@ -96,6 +96,7 @@ type Options<P extends keyof Procedures> = {
 	headers?: Record<string, string>;
 	cookies?: Record<string, string>;
 	searchParams?: Record<string, string>;
+	signal?: AbortSignal;
 } & (undefined extends inferProcedureInput<Procedures[P]>
 	? { input?: undefined }
 	: { input: inferProcedureInput<Procedures[P]> });
@@ -106,6 +107,7 @@ const runRoute = async <K extends keyof Procedures>({
 	headers,
 	cookies = {},
 	searchParams,
+	signal,
 }: Options<K>) => {
 	const url = new URL(`http://localhost:3000/${procedure}`);
 	if (input && method === "GET") {
@@ -128,6 +130,7 @@ const runRoute = async <K extends keyof Procedures>({
 				...headers,
 			},
 			body: method === "POST" && input ? serializeInput(input) : undefined,
+			signal,
 		}),
 		// @ts-expect-error This is a hack for tests
 		router,
@@ -232,6 +235,7 @@ describe("tRPC endpoint", () => {
 			await withTestServer(ctx, router, async ({ url }) => {
 				const name = faker.person.firstName();
 				const controllerId = "random-controller-id";
+				const abortController = new AbortController();
 				await runRoute({
 					procedure: "query",
 					input: { name },
@@ -239,6 +243,7 @@ describe("tRPC endpoint", () => {
 						[apiCookieNames.proxyPort]: new URL(url).port,
 						[apiCookieNames.controllerId]: controllerId,
 					},
+					signal: abortController.signal,
 				});
 				const expectedUrl = new URL(url);
 				expectedUrl.pathname = "query";
@@ -249,8 +254,14 @@ describe("tRPC endpoint", () => {
 					| undefined;
 				assert(firstCallArgs);
 				expect(firstCallArgs[0]).toStrictEqual(expectedUrl.toString());
-				const [, options] = firstCallArgs;
-				assert(options);
+				const [, rawOptions] = firstCallArgs;
+				assert(rawOptions);
+				const { fetchOptions, ...options } = rawOptions;
+				const signal = fetchOptions?.signal;
+				assert(signal instanceof AbortSignal);
+				expect(signal.aborted).toBe(false);
+				abortController.abort();
+				expect(signal.aborted).toBe(true);
 				expect({
 					...options,
 					headers: options.headers
