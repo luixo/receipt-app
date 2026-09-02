@@ -105,6 +105,7 @@ type Controller = {
 	paused: PromiseWithResolvers<void>[];
 	calls: Map<TRPCKey, number>;
 	actions: Action[];
+	signal: AbortSignal;
 };
 
 type CallType = "server" | "client";
@@ -266,21 +267,27 @@ const createWorkerManager = (port: number): WorkerManager => {
 				"Content-Type": "application/json",
 			});
 			const url = new URL(req.url || "/", "http://localhost");
-			const controllerId = getCookie(
-				req.headers.cookie || "",
-				apiCookieNames.controllerId,
-			);
-			if (!controllerId || Array.isArray(controllerId)) {
-				throw new Error(
-					`Expected to have controller id for url "${url.toString()}"`,
-				);
-			}
-			const controller = controllers[controllerId];
-			if (!controller) {
-				throw new Error(`Expected to have controller for id "${controllerId}"`);
-			}
 			const headers = new Headers();
 			try {
+				const controllerId = getCookie(
+					req.headers.cookie || "",
+					apiCookieNames.controllerId,
+				);
+				if (!controllerId || Array.isArray(controllerId)) {
+					throw new Error(
+						`Expected to have controller id for url "${url.toString()}"`,
+					);
+				}
+				const controller = controllers[controllerId];
+				if (!controller) {
+					throw new Error(
+						`Expected to have controller for id "${controllerId}"`,
+					);
+				}
+				if (controller.signal.aborted) {
+					// oxlint-disable-next-line eslint-js/no-throw-literal, typescript/only-throw-error
+					throw CLEANUP_MARK;
+				}
 				const response = await handleRequest(
 					controller,
 					headers,
@@ -313,20 +320,22 @@ const createWorkerManager = (port: number): WorkerManager => {
 			return () => server.close();
 		},
 		createController: (id: string) => {
+			const abortController = new AbortController();
 			const controller: Controller = {
 				actions: [],
 				handlers: {},
 				paused: [],
 				calls: new Map(),
+				signal: abortController.signal,
 			};
 			controllers[id] = controller;
 			return {
 				controller,
 				cleanup: () => {
+					abortController.abort();
 					for (const controllerPromise of controller.paused) {
 						controllerPromise.reject(CLEANUP_MARK);
 					}
-					delete controllers[id];
 					return Promise.resolve();
 				},
 			};
@@ -507,6 +516,7 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 				context,
 			);
 			await use({ ...api, mockUtils: getMockUtils(api, faker) });
+			await context.close();
 			await cleanup();
 		},
 		{ auto: true },
