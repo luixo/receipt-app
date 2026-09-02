@@ -49,6 +49,7 @@ export const promisifyServer = <
 		}),
 	close: () =>
 		promisifyEvent((listener, errorListener) => {
+			server.closeAllConnections();
 			server.close((error) => {
 				if (error) {
 					errorListener(error);
