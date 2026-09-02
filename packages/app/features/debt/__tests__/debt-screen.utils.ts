@@ -44,12 +44,7 @@ export const test = originalTest.extend<Fixtures>({
 	receiptLinkButton: ({ page }, use) =>
 		use((receiptId) => page.locator(`a[href="/receipts/${receiptId}"]`)),
 
-	removeDebtDialog: ({ page }, use) =>
-		use(
-			page
-				.getByRole("dialog")
-				.and(page.locator("", { hasText: "This will remove debt forever" })),
-		),
+	removeDebtDialog: ({ modal }, use) => use(modal("Remove modal")),
 
 	// The trigger button only shows the currency symbol as its content
 	// (e.g. "$"), unlike the picker's own currency buttons which carry a

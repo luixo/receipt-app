@@ -1,25 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import { expect } from "~tests/frontend/fixtures";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { Temporal } from "~utils/date";
 import { add, getNow, subtract } from "~utils/date";
 
-import { test } from "./debt-control-buttons.utils";
-
-const generateDebtWithUpdated =
-	(update: (updatedAt: Temporal.ZonedDateTime) => Temporal.ZonedDateTime) =>
-	(opts: Parameters<GenerateDebts>[0]) =>
-		defaultGenerateDebts(opts).map((generatedDebt) => ({
-			...generatedDebt,
-			their: {
-				updatedAt: update(generatedDebt.updatedAt),
-				currencyCode: generatedDebt.currencyCode,
-				timestamp: generatedDebt.timestamp,
-				amount: generatedDebt.amount + 100,
-			},
-		}));
+import { generateDebtWithUpdated, test } from "./debt-control-buttons.utils";
 
 test("Hidden when there is no counterparty debt", async ({
 	mockDebt,
