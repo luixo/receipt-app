@@ -34,9 +34,12 @@ test("Dialog", async ({
 	});
 	await openDebtScreen(debt.id);
 	await acceptIntentionButton.click();
-	// The dialog's own background isn't the page background, so it can't be
-	// screenshotted as a cropped locator (the corner-color stability check
-	// assumes page background) - shoot the full page with the dialog open.
+	// Can't crop to the dialog locator: in dark mode the modal has a 1px
+	// inset box-shadow (a subtle border glow) that blends into its very
+	// edge pixels, and each browser rasterizes that 1px blur slightly
+	// differently, so the corner-color stability check never agrees on one
+	// value across projects. Shoot the full page with the dialog open
+	// instead - its corner is flat backdrop-dimmed page background.
 	// The modal backdrop dims the page to ~50% black, which in light mode
 	// turns the white corner gray; in dark mode it stays indistinguishable
 	// from black, so only the light-mode expectation needs overriding.
