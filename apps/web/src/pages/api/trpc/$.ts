@@ -108,7 +108,7 @@ const redirectTestHandler = async (
 	);
 	const { body, status, statusText, headers } = await proxyRequest(
 		proxyUrl.toString(),
-		{ headers: request.headers },
+		{ headers: request.headers, fetchOptions: { signal: request.signal } },
 	);
 	return new Response(body, { status, statusText, headers });
 };
