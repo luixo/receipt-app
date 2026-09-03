@@ -88,7 +88,7 @@
 		"deep-object-diff": "^1.1.9",
 		"uniwind": "^1.2.2",
 		"uuid": "14.0.2",
-		"zod": "4.0.5"
+		"zod": "4.5.4"
 	},
 	"patchedDependencies": {
 		"@expo/cli@55.0.7": "patches/@expo-cli-npm-55.0.7.patch",
