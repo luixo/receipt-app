@@ -74,8 +74,6 @@ export const test = originalTest.extend<Fixtures>({
 	syncedDebtsButton: ({ page }, use) =>
 		use(page.locator("button[title='Synced']")),
 
-	debtSyncStatus: ({ page }, use) => use(page.getByTestId("debt-sync-status")),
-
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
 		use(async (receipt) => {
 			await openReceipt(receipt.id);

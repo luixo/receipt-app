@@ -1,0 +1,25 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"1ff6f6c6-66ba-4532-984b-330efb5ccea5\"}]": {
+			"state": {
+				"data": {
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": {
+			"1": {
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseUpdated": false
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
