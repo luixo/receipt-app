@@ -4,7 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as debtSyncStatusTest } from "~app/components/app/__tests__/debt-sync-status.utils";
-import { formatCurrency } from "~app/utils/currency";
+import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
@@ -301,7 +301,7 @@ test.describe("Currency", () => {
 		api.mockFirst("currency.top", []);
 		await openDebtScreen(debt.id);
 
-		await currencyTriggerButton("USD").click();
+		await currencyTriggerButton.click();
 		await expect(currenciesPicker).toBeVisible();
 
 		await snapshotQueries(async () => {
@@ -310,7 +310,9 @@ test.describe("Currency", () => {
 			await verifyToastTexts("Debt updated successfully");
 		});
 		await expect(currenciesPicker).toBeHidden();
-		await expect(currencyTriggerButton("EUR")).toBeVisible();
+		await expect(currencyTriggerButton).toHaveText(
+			getCurrencySymbol(localSettings.locale, "EUR"),
+		);
 	});
 });
 

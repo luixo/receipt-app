@@ -1,9 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { getCurrencySymbol } from "~app/utils/currency";
 import type { ReceiptId } from "~db/ids";
-import { localSettings } from "~tests/frontend/consts";
 
 import { test as originalTest } from "./utils";
 
@@ -17,7 +14,7 @@ type Fixtures = {
 	userPreview: Locator;
 	receiptLinkButton: (receiptId: ReceiptId) => Locator;
 	removeDebtDialog: Locator;
-	currencyTriggerButton: (currencyCode: CurrencyCode) => Locator;
+	currencyTriggerButton: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -46,14 +43,6 @@ export const test = originalTest.extend<Fixtures>({
 
 	removeDebtDialog: ({ modal }, use) => use(modal("Remove modal")),
 
-	// The trigger button only shows the currency symbol as its content
-	// (e.g. "$"), unlike the picker's own currency buttons which carry a
-	// `data-testid` and `title` attribute.
 	currencyTriggerButton: ({ page }, use) =>
-		use((currencyCode) =>
-			page.getByRole("button", {
-				name: getCurrencySymbol(localSettings.locale, currencyCode),
-				exact: true,
-			}),
-		),
+		use(page.getByTestId("currency-trigger-button")),
 });

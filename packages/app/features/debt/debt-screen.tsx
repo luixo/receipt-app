@@ -114,6 +114,7 @@ const DebtCurrencyInput = suspendedFallback<{
 					isDisabled={isLoading}
 					isLoading={updateReceiptMutation.isPending}
 					isIconOnly
+					testID="currency-trigger-button"
 				>
 					{getCurrencySymbol(locale, debt.currencyCode)}
 				</Button>
