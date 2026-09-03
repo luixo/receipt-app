@@ -416,7 +416,11 @@ test.describe("Remove", () => {
 				await awaitCacheKey("debts.remove");
 				await verifyToastTexts("Debt removed");
 			},
-			{ name: "success", skipQueries: true },
+			{
+				name: "success",
+				skipQueries: true,
+				blacklistKeys: ["debts.getAllUser", "debts.getByUserPaged"],
+			},
 		);
 		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
 	});

@@ -37,10 +37,6 @@ test("Dialog", async ({
 	await acceptIntentionButton.click();
 	await expectScreenshotWithSchemes("dialog.png", {
 		locator: acceptIntentionDialog,
-		// In dark mode the dialog has a 1px inset box-shadow (a subtle
-		// border glow) that each browser rasterizes slightly differently
-		// right at pixel (0, 0). One pixel in, past the blur, the flat
-		// content background is consistent across browsers.
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
