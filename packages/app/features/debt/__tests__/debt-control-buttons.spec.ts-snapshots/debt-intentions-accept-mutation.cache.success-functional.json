@@ -1,0 +1,29 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"f6896003-0691-471e-b2c8-a2e6a034134b\"}]": {
+			"state": {
+				"data": {
+					"amount": -1870.62
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": {
+			"1": {
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "f6896003-0691-471e-b2c8-a2e6a034134b"
+					}
+				}
+			}
+		}
+	}
+}

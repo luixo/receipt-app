@@ -82,6 +82,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 							variant="ghost"
 							color="warning"
 							isIconOnly
+							testID="sync-button"
 						>
 							<Icon name="sync" className="size-6" />
 						</Button>

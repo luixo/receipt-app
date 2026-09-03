@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"debts.remove": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.remove\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "3f1fa7f5-f254-46cf-bf56-e0686d932360"
+					}
+				}
+			}
+		]
+	}
+}

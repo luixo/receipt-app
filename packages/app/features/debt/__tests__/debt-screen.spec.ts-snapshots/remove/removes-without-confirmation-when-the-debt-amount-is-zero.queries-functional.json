@@ -1,0 +1,8 @@
+{
+	"debts.get": {
+		"clientCalls": 1
+	},
+	"debts.remove": {
+		"clientCalls": 1
+	}
+}
