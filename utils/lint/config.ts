@@ -767,7 +767,12 @@ export default defineConfig({
 			},
 		},
 		{
-			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*"],
+			files: [
+				"**/*.config.ts",
+				"testing/**/*",
+				"apps/mobile/**/*",
+				"utils/scripts/**",
+			],
 			rules: {
 				"node/no-process-env": "off",
 			},

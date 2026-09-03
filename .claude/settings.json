@@ -11,6 +11,17 @@
 					}
 				]
 			}
+		],
+		"CwdChanged": [
+			{
+				"hooks": [
+					{
+						"type": "command",
+						"command": "node --env-file-if-exists=.env.local \"$CLAUDE_PROJECT_DIR/utils/scripts/worktree-port.ts\" 2>/dev/null || true",
+						"timeout": 5
+					}
+				]
+			}
 		]
 	}
 }
