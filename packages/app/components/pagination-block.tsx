@@ -2,6 +2,7 @@ import React from "react";
 
 import { SearchBar } from "~app/components/search-bar";
 import { LimitOption } from "~app/features/settings/limit-options";
+import type { SearchParamStateDefaulted } from "~app/utils/navigation";
 import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { Checkbox } from "~components/checkbox";
 import { Pagination } from "~components/pagination";
@@ -129,7 +130,7 @@ export const PaginationBlockSkeleton: React.FC<{ limit: number }> = ({
 );
 
 type Props<T> = Omit<ShapeProps<T>, "onLimitChange" | "onPageChange"> & {
-	setLimit: React.Dispatch<React.SetStateAction<number>>;
+	setLimit: SearchParamStateDefaulted<"/_protected/debts/", "limit">[1];
 	onPageChange: (page: number) => void;
 };
 
