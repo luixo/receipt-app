@@ -176,7 +176,7 @@ export const getDatabase = ({
 				: [
 						new SerializePlugin({
 							serializer: serialization?.serialize || serializer,
-							deserializer: serialization?.serialize || deserializer,
+							deserializer: serialization?.deserialize || deserializer,
 						}),
 					],
 		/* c8 ignore stop */
