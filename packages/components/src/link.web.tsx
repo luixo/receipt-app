@@ -27,10 +27,10 @@ export const Link: React.FC<Props> = RawLink;
 export const ButtonLink = createLink(
 	(
 		props: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof Button>>,
-	) => <Button as={Link} {...props} />,
+	) => <Button as={LinkRaw} {...props} />,
 );
 export const CardLink = createLink(
 	(
 		props: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof Card>>,
-	) => <Card as={Link} {...props} />,
+	) => <Card as={LinkRaw} {...props} />,
 );
