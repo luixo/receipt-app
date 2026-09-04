@@ -1,6 +1,7 @@
 import type React from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { eq, useLiveSuspenseQuery } from "@tanstack/react-db";
+import { useQueryClient } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 
 import { HighlightText } from "~app/components/highlight-text";
@@ -22,6 +23,7 @@ import { cn } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
 import type { ReceiptId } from "~db/ids";
+import { getReceiptDetailCollection } from "~mutations/cache/receipts/collections";
 import type { Interval } from "~utils/array";
 import { round } from "~utils/math";
 
@@ -118,9 +120,18 @@ export const ReceiptPreview = suspendedFallback<{
 	}) => {
 		const { t } = useTranslation("receipts");
 		const trpc = useTRPC();
-		const { data: receipt } = useSuspenseQuery(
-			trpc.receipts.get.queryOptions({ id }),
-		);
+		const queryClient = useQueryClient();
+		const detailCollection = getReceiptDetailCollection(queryClient, trpc);
+		const { data: receipt } = useLiveSuspenseQuery({
+			query: (q) =>
+				q
+					.from({ r: detailCollection })
+					.where(({ r }) => eq(r.id, id))
+					.findOne(),
+		});
+		if (!receipt) {
+			throw new Error(`Receipt "${id}" not found`);
+		}
 		const { formatPlainDate } = useFormat();
 		const lastMutationState = useTrpcMutationState<"receipts.remove">(
 			trpc.receipts.remove.mutationKey(),

@@ -6,6 +6,10 @@
 	"scripts": {
 		"verify-routers": "bun verify-routers.ts"
 	},
+	"dependencies": {
+		"@internationalized/date": "^3.10.0",
+		"@trpc/client": "catalog:"
+	},
 	"devDependencies": {
 		"diff": "^9.0.0"
 	}

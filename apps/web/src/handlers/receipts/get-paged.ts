@@ -29,9 +29,15 @@ import { authProcedure } from "~web/handlers/trpc";
 import type { GeneralOutput } from "~web/utils/batch";
 import { queueList } from "~web/utils/batch";
 
+// Sentinel used internally (batching math, kysely query building) when the
+// caller omits `limit` -- comfortably above any real receipts count while
+// staying far from float precision limits (unlike e.g. Number.MAX_SAFE_INTEGER,
+// which combined with a cursor could exceed it).
+export const UNLIMITED_LIMIT = 1_000_000_000;
+
 const inputSchema = z.strictObject({
 	cursor: offsetSchema,
-	limit: limitSchema,
+	limit: limitSchema.optional().transform((limit) => limit ?? UNLIMITED_LIMIT),
 	orderBy: receiptsOrderBySchema,
 	filters: receiptsFiltersSchema.optional(),
 });
@@ -89,7 +95,7 @@ const getTrigramHighlight = ({
 			return matches.map<Interval>((match) => [
 				startIndex + match.index,
 				// This is non-consuming RegExp hence 2nd argument
-				// oxlint-disable-next-line typescript/no-non-null-assertion
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				startIndex + match.index + match[1]!.length,
 			]);
 		}),
@@ -191,10 +197,10 @@ const fetchPage = async (
 			)
 			.orderBy("mergedReceipts.id")
 			.offset(input.cursor)
-			.limit(input.limit)
+			.$if(input.limit !== UNLIMITED_LIMIT, (qb) => qb.limit(input.limit))
 			.execute(),
 		mergedReceipts
-			.select((eb) => eb.fn.count<number>("mergedReceipts.id").as("amount"))
+			.select((eb) => eb.fn.count<string>("mergedReceipts.id").as("amount"))
 			.executeTakeFirstOrThrow(
 				/* c8 ignore start */
 				() =>
@@ -207,7 +213,7 @@ const fetchPage = async (
 	]);
 
 	return {
-		count: receiptsCount.amount,
+		count: Math.trunc(Number(receiptsCount.amount)),
 		cursor: input.cursor,
 		items: receipts.map(({ id, name, matchedItems }) => ({
 			id,

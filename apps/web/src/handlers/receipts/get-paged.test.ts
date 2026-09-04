@@ -323,6 +323,21 @@ describe("receipts.getPaged", () => {
 			await runFunctionalTest(ctx);
 		});
 
+		test("returns all results when limit is omitted", async ({ ctx }) => {
+			const { sessionId, receipts } = await mockData(ctx);
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				cursor: 0,
+				orderBy: "date-desc",
+			});
+			const output = sortReceipts(receipts).map(mapReceipt);
+			expect(result).toStrictEqual<typeof result>({
+				count: output.length,
+				cursor: 0,
+				items: output,
+			});
+		});
+
 		test("returns paged results", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
@@ -346,18 +361,16 @@ describe("receipts.getPaged", () => {
 				orderBy: "date-desc",
 			});
 			expect(firstPage.items).toHaveLength(limit);
-			expect(firstPage.count).toStrictEqual<(typeof firstPage)["count"]>(count);
-			expect(firstPage.cursor).toStrictEqual<(typeof firstPage)["cursor"]>(0);
+			expect(firstPage.count).toBe(count);
+			expect(firstPage.cursor).toBe(0);
 			const secondPage = await caller.procedure({
 				cursor: firstPage.cursor + limit,
 				limit,
 				orderBy: "date-desc",
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
-			expect(secondPage.count).toStrictEqual<(typeof secondPage)["count"]>(
-				count,
-			);
-			expect(secondPage.cursor).toStrictEqual(firstPage.cursor + limit);
+			expect(secondPage.count).toBe(count);
+			expect(secondPage.cursor).toBe(firstPage.cursor + limit);
 		});
 
 		test("orderBy - asc", async ({ ctx }) => {

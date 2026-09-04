@@ -13,7 +13,6 @@ import {
 import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type {
 	SearchParamState,
@@ -30,6 +29,7 @@ import type { ReceiptId } from "~db/ids";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
+import { useReceiptsListPage } from "./use-receipts-list-page";
 
 const SEARCH_UPDATE_DEBOUNCE = 1000;
 
@@ -63,10 +63,10 @@ const RemoveReceiptsButton: React.FC<{
 	const removeMutations = receiptIds.map((receiptId) => ({
 		receiptId,
 		// Mutations are stable due to `key` based on limit in the parent component
-		// oxlint-disable-next-line react-hooks/rules-of-hooks
+		// eslint-disable-next-line react-hooks/rules-of-hooks
 		mutation: useMutation(
 			trpc.receipts.remove.mutationOptions(
-				// oxlint-disable-next-line react-hooks/rules-of-hooks
+				// eslint-disable-next-line react-hooks/rules-of-hooks
 				useTrpcMutationOptions(receiptsRemoveOptions),
 			),
 		),
@@ -120,8 +120,8 @@ export const Receipts = suspendedFallback<Props>(
 			updateFiltersQuery,
 			{ wait: SEARCH_UPDATE_DEBOUNCE },
 		);
-		const { data, onPageChange, isPending } = useCursorPaging(
-			trpc.receipts.getPaged,
+		const { data, onPageChange, isPending } = useReceiptsListPage(
+			trpc,
 			{ limit, orderBy: sort, filters },
 			offsetState,
 		);
@@ -224,7 +224,7 @@ export const Receipts = suspendedFallback<Props>(
 			<SuspendedOverlay isPending>
 				<ReceiptsWrapper>
 					{Array.from({ length: limitState[0] }).map((_, index) => (
-						// oxlint-disable-next-line react/no-array-index-key
+						// eslint-disable-next-line react/no-array-index-key
 						<ReceiptPreviewSkeleton key={index} />
 					))}
 				</ReceiptsWrapper>

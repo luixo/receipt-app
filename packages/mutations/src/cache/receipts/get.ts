@@ -1,28 +1,24 @@
-import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 import type { Temporal } from "~utils/date";
 
-import type {
-	ControllerContext,
-	ControllerWith,
-	SnapshotFn,
-	UpdateFn,
-} from "../../types";
+import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import {
 	applyUpdateFnWithRevert,
 	applyWithRevert,
-	getAllInputs,
 	getUpdatedData,
 	withRef,
 } from "../utils";
 
-type Controller = ControllerWith<{
-	procedure: ControllerContext["trpc"]["receipts"]["get"];
-}>;
+import type { ReceiptDetail } from "./collections";
+import { getReceiptDetailCollection } from "./collections";
 
-type Receipt = TRPCQueryOutput<"receipts.get">;
+type Controller = {
+	collection: ReturnType<typeof getReceiptDetailCollection>;
+};
+
+type Receipt = ReceiptDetail;
 
 type ReceiptItems = Receipt["items"];
 type ReceiptItem = ReceiptItems[number];
@@ -37,44 +33,40 @@ type ReceiptParticipant = ReceiptParticipants[number];
 type ReceiptPayers = Receipt["payers"];
 type ReceiptPayer = ReceiptPayers[number];
 
-const upsert = ({ queryClient, procedure }: Controller, receipt: Receipt) =>
-	queryClient.setQueryData(procedure.queryKey({ id: receipt.id }), receipt);
+const upsert = ({ collection }: Controller, receipt: Receipt) =>
+	collection.utils.writeUpsert(receipt);
 
-const remove = ({ queryClient, procedure }: Controller, receiptId: ReceiptId) =>
+const remove = ({ collection }: Controller, receiptId: ReceiptId) =>
 	withRef<Receipt | undefined>((ref) => {
-		ref.current = queryClient.getQueryData(
-			procedure.queryKey({ id: receiptId }),
-		);
-		void queryClient.invalidateQueries(
-			procedure.queryFilter({ id: receiptId }),
-		);
+		ref.current = collection.get(receiptId);
+		if (ref.current) {
+			collection.utils.writeDelete(receiptId);
+		}
 	}).current;
 
 const update =
-	({ queryClient, procedure }: Controller, receiptId: ReceiptId) =>
+	({ collection }: Controller, receiptId: ReceiptId) =>
 	(updater: UpdateFn<Receipt>) =>
 		withRef<Receipt | undefined>((ref) => {
-			queryClient.setQueryData(
-				procedure.queryKey({ id: receiptId }),
-				(receipt) => {
-					ref.current = receipt;
-					return getUpdatedData(receipt, updater);
-				},
-			);
+			const receipt = collection.get(receiptId);
+			ref.current = receipt;
+			const updatedData = getUpdatedData(receipt, updater);
+			if (updatedData !== undefined) {
+				collection.utils.writeUpdate(updatedData);
+			}
 		}).current;
 
 const updateAll =
-	({ queryClient, procedure }: Controller) =>
+	({ collection }: Controller) =>
 	(updater: UpdateFn<Receipt>) => {
-		const inputs = getAllInputs<"receipts.get">(
-			queryClient,
-			procedure.queryKey(),
-		);
-		for (const input of inputs) {
-			queryClient.setQueryData(procedure.queryKey(input), (receipt) =>
-				getUpdatedData(receipt, updater),
-			);
-		}
+		collection.utils.writeBatch(() => {
+			for (const receipt of collection.state.values()) {
+				const updatedData = getUpdatedData(receipt, updater);
+				if (updatedData !== undefined) {
+					collection.utils.writeUpdate(updatedData);
+				}
+			}
+		});
 	};
 
 const updateItems =
@@ -395,10 +387,11 @@ const removePayer = (
 	}).current;
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
-	const controller = { queryClient, procedure: trpc.receipts.get };
+	const controller = {
+		collection: getReceiptDetailCollection(queryClient, trpc),
+	};
 	return {
-		getData: (receiptId: ReceiptId) =>
-			queryClient.getQueryData(trpc.receipts.get.queryKey({ id: receiptId })),
+		getData: (receiptId: ReceiptId) => controller.collection.get(receiptId),
 		update: (receiptId: ReceiptId, updater: UpdateFn<Receipt>) =>
 			update(controller, receiptId)(updater),
 		updateAll: (updater: UpdateFn<Receipt>) => updateAll(controller)(updater),
@@ -438,7 +431,9 @@ export const getRevertController = ({
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = { queryClient, procedure: trpc.receipts.get };
+	const controller = {
+		collection: getReceiptDetailCollection(queryClient, trpc),
+	};
 	return {
 		add: (receipt: Receipt) =>
 			applyWithRevert(
@@ -450,9 +445,7 @@ export const getRevertController = ({
 		remove: (receiptId: ReceiptId) =>
 			applyWithRevert(
 				() => remove(controller, receiptId),
-				(snapshot) => {
-					upsert(controller, snapshot);
-				},
+				(snapshot) => upsert(controller, snapshot),
 			),
 		update: (
 			receiptId: ReceiptId,

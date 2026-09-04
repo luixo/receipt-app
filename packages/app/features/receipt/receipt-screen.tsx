@@ -1,6 +1,7 @@
 import React from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { eq, useLiveSuspenseQuery } from "@tanstack/react-db";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
@@ -27,6 +28,7 @@ import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { View } from "~components/view";
+import { getReceiptDetailCollection } from "~mutations/cache/receipts/collections";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";
@@ -57,9 +59,18 @@ export const ReceiptScreen = suspendedFallback(
 		const { useParams } = getPathHooks("/_protected/receipts/$id");
 		const { id } = useParams();
 		const trpc = useTRPC();
-		const { data: receipt } = useSuspenseQuery(
-			trpc.receipts.get.queryOptions({ id }),
-		);
+		const queryClient = useQueryClient();
+		const detailCollection = getReceiptDetailCollection(queryClient, trpc);
+		const { data: receipt } = useLiveSuspenseQuery({
+			query: (q) =>
+				q
+					.from({ r: detailCollection })
+					.where(({ r }) => eq(r.id, id))
+					.findOne(),
+		});
+		if (!receipt) {
+			throw new Error(`Receipt "${id}" not found`);
+		}
 
 		const [deleteLoading, setDeleteLoading] = React.useState(false);
 		const [isEditing, { setFalse: unsetEditing, setTrue: setEditing }] =

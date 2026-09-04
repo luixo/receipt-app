@@ -39,7 +39,12 @@ export const useCursorPaging = <
 	>,
 >(
 	procedure: P,
-	input: Omit<I, "cursor">,
+	// `limit` is forced required here regardless of what a given procedure's
+	// schema structurally allows (e.g. `receipts.getPaged` now accepts an
+	// omitted limit meaning "unlimited") -- this hook's cursor-window math
+	// always needs a concrete page size, and nothing calls it with
+	// `receipts.getPaged` anymore anyway.
+	input: Omit<I, "cursor" | "limit"> & { limit: number },
 	offsetState: SearchParamState<"/_protected/receipts/", "offset">,
 ) => {
 	const { limit } = input;

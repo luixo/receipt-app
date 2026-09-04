@@ -1,82 +1,39 @@
-import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptId } from "~db/ids";
 
-import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
-import {
-	applyUpdateFnWithRevert,
-	getAllInputs,
-	getUpdatedData,
-} from "../utils";
+import type { ControllerContext } from "../../types";
+import { applyWithRevert } from "../utils";
 
-type Controller = ControllerWith<{
-	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
-}>;
-type Input = TRPCQueryInput<"receipts.getPaged">;
-type Output = TRPCQueryOutput<"receipts.getPaged">;
-type OutputItem = Output["items"][number];
+import { getAllReceiptsListCollections } from "./collections";
 
-const invalidate = ({ queryClient, procedure }: Controller) => {
-	const inputs = getAllInputs<"receipts.getPaged">(
-		queryClient,
-		procedure.queryKey(),
+const refetchAll = (
+	collections: ReturnType<typeof getAllReceiptsListCollections>,
+) => collections.map((collection) => collection.utils.refetch());
+
+const removeFromAllLists = (
+	collections: ReturnType<typeof getAllReceiptsListCollections>,
+	receiptId: ReceiptId,
+) => {
+	const affected = collections.filter((collection) =>
+		collection.has(receiptId),
 	);
-	return inputs.map((input) =>
-		queryClient.invalidateQueries(procedure.queryFilter(input)),
-	);
+	for (const collection of affected) {
+		collection.utils.writeDelete(receiptId);
+	}
+	return affected.length === 0 ? undefined : affected;
 };
 
-const updatePage =
-	({ queryClient, procedure }: Controller, input: Input) =>
-	(updater: UpdateFn<Output>) =>
-		queryClient.setQueryData(procedure.queryKey(input), (result) =>
-			getUpdatedData(result, updater),
+export const getController = ({ queryClient }: ControllerContext) => ({
+	invalidate: () => refetchAll(getAllReceiptsListCollections(queryClient)),
+});
+
+export const getRevertController = ({ queryClient }: ControllerContext) => ({
+	remove: (receiptId: ReceiptId) => {
+		const collections = getAllReceiptsListCollections(queryClient);
+		return applyWithRevert(
+			() => removeFromAllLists(collections, receiptId),
+			() => {
+				void refetchAll(collections);
+			},
 		);
-
-const updatePages =
-	(controller: Controller) =>
-	(updater: UpdateFn<OutputItem[], OutputItem[], Input>) => {
-		const inputs = getAllInputs<"receipts.getPaged">(
-			controller.queryClient,
-			controller.procedure.queryKey(),
-		);
-		for (const input of inputs) {
-			updatePage(
-				controller,
-				input,
-			)((page) => {
-				const nextItems = updater(page.items, input);
-				if (nextItems === page.items) {
-					return page;
-				}
-				return { ...page, items: nextItems };
-			});
-		}
-	};
-
-export const getController = ({ queryClient, trpc }: ControllerContext) => {
-	const controller = { queryClient, procedure: trpc.receipts.getPaged };
-	return {
-		invalidate: () => invalidate(controller),
-	};
-};
-
-export const getRevertController = ({
-	queryClient,
-	trpc,
-}: ControllerContext) => {
-	const controller = { queryClient, procedure: trpc.receipts.getPaged };
-	return {
-		remove: (receiptId: ReceiptId) =>
-			applyUpdateFnWithRevert(
-				updatePages(controller),
-				(items) =>
-					items.some((item) => item.id === receiptId)
-						? items.filter((item) => item.id !== receiptId)
-						: items,
-				() => (items) => {
-					void invalidate(controller);
-					return items;
-				},
-			),
-	};
-};
+	},
+});

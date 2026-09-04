@@ -5,6 +5,8 @@
 	"sideEffects": false,
 	"main": "src/index.ts",
 	"dependencies": {
-		"@ra/utils": "workspace:*"
+		"@ra/utils": "workspace:*",
+		"@tanstack/db": "0.8.7",
+		"@tanstack/query-db-collection": "1.2.12"
 	}
 }
