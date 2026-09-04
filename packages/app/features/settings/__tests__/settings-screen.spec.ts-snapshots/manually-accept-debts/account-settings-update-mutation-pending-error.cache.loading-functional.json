@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"accountSettings.get:[[]]": {
+			"state": {
+				"data": {
+					"manualAcceptDebts": true
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"accountSettings.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"type": "manualAcceptDebts",
+						"value": true
+					}
+				}
+			}
+		]
+	}
+}

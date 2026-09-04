@@ -48,6 +48,7 @@ export const ColorModeSettings: React.FC = () => {
 				{t("colorMode.autoCheckbox")}
 			</Checkbox>
 			<Switch
+				testID="color-mode-switch"
 				isSelected={isSelected}
 				onValueChange={setColorMode}
 				thumbIcon={

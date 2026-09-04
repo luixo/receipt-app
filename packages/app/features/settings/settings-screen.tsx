@@ -30,7 +30,7 @@ export const SettingsScreen = () => {
 			<Divider />
 			<View className="flex-row gap-2">
 				<Text>{t("showResolvedDebts.header")}</Text>
-				<ShowResolvedDebtsOption />
+				<ShowResolvedDebtsOption testID="show-resolved-debts-switch" />
 			</View>
 			<View className="flex-row gap-2">
 				<Text>{t("manuallyAcceptDebts.header")}</Text>
