@@ -65,6 +65,7 @@ const config = defineConfig({
 		}),
 		tanstackStart({
 			srcDirectory: "./apps/web/src/",
+			server: { entry: "./entry/server.tsx" },
 			router: {
 				entry: "./entry/router.tsx",
 				generatedRouteTree: "./entry/routeTree.gen.ts",
