@@ -125,9 +125,7 @@ export const getLinks = ({
 							[
 								"Internal server error",
 								`Error fingerprint "${transactionId}"`,
-								...(import.meta.env.MODE === "test"
-									? [error.message, error.stack]
-									: []),
+								...(import.meta.env.MODE === "test" ? [error.message] : []),
 							].join("\n"),
 						),
 						{ meta: error.meta },

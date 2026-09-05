@@ -729,6 +729,7 @@ export default defineConfig({
 				"utils/scripts/**",
 				"apps/web/src/handlers/**",
 				"apps/web/src/pages/api/**",
+				"apps/web/src/entry/server.tsx",
 				"apps/mobile/update-version.ts",
 				"apps/mobile/generate-colors.ts",
 				"packages/db/migration/**",
