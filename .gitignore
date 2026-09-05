@@ -8,6 +8,3 @@
 
 # Node.js
 **/node_modules/
-
-# Claude Code worktrees
-.claude/worktrees/
