@@ -733,6 +733,7 @@ export default defineConfig({
 				"apps/mobile/generate-colors.ts",
 				"packages/db/migration/**",
 				"packages/utils/src/server/**",
+				".opencode/**",
 			],
 			rules: {
 				// These are packages that allow server-side code
