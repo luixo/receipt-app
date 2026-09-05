@@ -9,6 +9,7 @@ import { fromEntries } from "remeda";
 import { v4 } from "uuid";
 
 import type {
+	TRPCKey,
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
@@ -33,8 +34,6 @@ import type { appRouter } from "../global/router";
 import { mockFixtures as test } from "./mock";
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";
-
-export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
 
 type CleanupFn = () => Promise<void>;
 

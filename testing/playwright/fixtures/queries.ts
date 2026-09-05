@@ -20,6 +20,7 @@ import {
 
 import type {
 	AppRouter,
+	TRPCKey,
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
@@ -34,7 +35,7 @@ import type { DeepPartial } from "~utils/types";
 import { router } from "~web/handlers";
 
 import { apiFixtures as test } from "./api";
-import type { ApiManager, TRPCKey } from "./api";
+import type { ApiManager } from "./api";
 
 const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
