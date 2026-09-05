@@ -1,0 +1,28 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.add": {
+			"1": {
+				"state": {
+					"data": {
+						"connected": false,
+						"account": {
+							"id": "25592731-fe6a-44ea-a44f-6e22337155b2",
+							"email": "Rusty90@gmail.com",
+							"avatarUrl": "<undefined>"
+						},
+						"user": {
+							"name": "Lillian Kemmer"
+						}
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"userId": "93e6e25a-44de-4b4a-a7fe-56b3f743c2ad",
+						"email": "Rusty90@gmail.com"
+					}
+				}
+			}
+		}
+	}
+}
