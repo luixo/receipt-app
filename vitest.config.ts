@@ -24,6 +24,8 @@ export default defineConfig({
 				path.resolve(rootPath, "apps/web/src/entry/**/*"),
 				path.resolve(rootPath, "apps/web/src/pages/*"),
 				path.resolve(rootPath, "apps/web/src/pages/!(api)**/*"),
+				// TODO: untested — see /api/mcp follow-up
+				path.resolve(rootPath, "apps/web/src/pages/api/mcp/**/*"),
 				path.resolve(rootPath, "apps/web/src/utils/navigation.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/request.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/sentry.ts"),

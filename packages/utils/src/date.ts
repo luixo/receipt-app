@@ -61,6 +61,16 @@ export const temporalSchemas = mapValues(temporalClasses, (value, key) =>
 	>;
 };
 
+export const temporalSchemaReplacements = {
+	plainDate: z.iso.date(),
+	plainTime: z.iso.time({ precision: 3 }),
+	plainDateTime: z.iso.datetime({ local: true, precision: 3 }),
+	zonedDateTime: z.string().meta({
+		description: "ISO 8601 date-time including an IANA time-zone annotation",
+		examples: ["2026-09-05T12:30:00.000+00:00[UTC]"],
+	}),
+} satisfies Record<TemporalType, z.ZodType>;
+
 // oxlint-disable-next-line typescript/no-namespace
 export namespace Temporal {
 	export type PlainTime = InstanceType<(typeof temporalClasses)["plainTime"]>;

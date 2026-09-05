@@ -31,7 +31,9 @@
 		"verify-routers": "bun run --cwd utils/scripts verify-routers",
 		"web:build": "bun run --cwd apps/web build",
 		"web:dev": "bun run --cwd apps/web dev",
-		"web:start": "bun run --cwd apps/web start"
+		"web:start": "bun run --cwd apps/web start",
+		"bot:dev": "bun run --cwd apps/bot dev",
+		"bot:start": "bun run --cwd apps/bot start"
 	},
 	"dependencies": {
 		"react": "catalog:",
@@ -62,6 +64,7 @@
 	"catalog": {
 		"@heroui/react": "2.8.4",
 		"@playwright/test": "1.62.1",
+		"@t3-oss/env-core": "^0.13.11",
 		"@tanstack/react-query": "5.80.6",
 		"@tanstack/react-router": "1.170.16",
 		"@trpc/client": "11.9.0",
@@ -101,7 +104,8 @@
 		"lucide-react@0.562.0": "patches/lucide-react-npm-0.562.0.patch",
 		"react-native-color-matrix-image-filters@8.0.2": "patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
 		"react-native-web@0.21.2": "patches/react-native-web-npm-0.21.2.patch",
-		"uniwind@1.2.2": "patches/uniwind-npm-1.2.2.patch"
+		"uniwind@1.2.2": "patches/uniwind-npm-1.2.2.patch",
+		"@modelcontextprotocol/sdk@1.30.0": "patches/@modelcontextprotocol%2Fsdk@1.30.0.patch"
 	},
 	"trustedDependencies": [
 		"esbuild",

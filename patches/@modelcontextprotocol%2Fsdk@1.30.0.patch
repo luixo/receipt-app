@@ -1,0 +1,109 @@
+diff --git a/dist/esm/server/mcp.d.ts b/dist/esm/server/mcp.d.ts
+index 1bc0c68298e388a0ec505fa2bfa84dbe44820b35..1938e8dc6cd8f62e3f878cd250587b33db1a0e48 100644
+--- a/dist/esm/server/mcp.d.ts
++++ b/dist/esm/server/mcp.d.ts
+@@ -6,6 +6,7 @@ import { RequestHandlerExtra } from '../shared/protocol.js';
+ import { Transport } from '../shared/transport.js';
+ import { ExperimentalMcpServerTasks } from '../experimental/tasks/mcp-server.js';
+ import type { ToolTaskHandler } from '../experimental/tasks/interfaces.js';
++import { toJSONSchema } from 'zod';
+ /**
+  * High-level MCP server that provides a simpler API for working with resources, tools, and prompts.
+  * For advanced usage (like sending notifications or setting custom request handlers), use the underlying
+@@ -151,6 +152,7 @@ export declare class McpServer {
+         title?: string;
+         description?: string;
+         inputSchema?: InputArgs;
++        inputSchemaOptions?: Parameters<typeof toJSONSchema>[1];
+         outputSchema?: OutputArgs;
+         annotations?: ToolAnnotations;
+         _meta?: Record<string, unknown>;
+diff --git a/dist/esm/server/mcp.js b/dist/esm/server/mcp.js
+index 2314d881d39d3cf26d17d1fb585f53a737c9d145..2ab6c6e2fe402636331485af5e66bd7cb7a972b5 100644
+--- a/dist/esm/server/mcp.js
++++ b/dist/esm/server/mcp.js
+@@ -77,7 +77,8 @@ export class McpServer {
+                         return obj
+                             ? toJsonSchemaCompat(obj, {
+                                 strictUnions: true,
+-                                pipeStrategy: 'input'
++                                pipeStrategy: 'input',
++                                ...tool.inputSchemaOptions
+                             })
+                             : EMPTY_OBJECT_JSON_SCHEMA;
+                     })(),
+@@ -602,13 +603,14 @@ export class McpServer {
+         }
+         return registeredPrompt;
+     }
+-    _createRegisteredTool(name, title, description, inputSchema, outputSchema, annotations, execution, _meta, handler) {
++    _createRegisteredTool(name, title, description, inputSchema, inputSchemaOptions, outputSchema, annotations, execution, _meta, handler) {
+         // Validate tool name according to SEP specification
+         validateAndWarnToolName(name);
+         const registeredTool = {
+             title,
+             description,
+             inputSchema: getZodSchemaObject(inputSchema),
++            inputSchemaOptions,
+             outputSchema: getZodSchemaObject(outputSchema),
+             annotations,
+             execution,
+@@ -660,6 +662,7 @@ export class McpServer {
+         }
+         let description;
+         let inputSchema;
++        let inputSchemaOptions;
+         let outputSchema;
+         let annotations;
+         // Tool properties are passed as separate arguments, with omissions allowed.
+@@ -691,7 +694,7 @@ export class McpServer {
+             }
+         }
+         const callback = rest[0];
+-        return this._createRegisteredTool(name, undefined, description, inputSchema, outputSchema, annotations, { taskSupport: 'forbidden' }, undefined, callback);
++        return this._createRegisteredTool(name, undefined, description, inputSchema, inputSchemaOptions, outputSchema, annotations, { taskSupport: 'forbidden' }, undefined, callback);
+     }
+     /**
+      * Registers a tool with a config object and callback.
+@@ -700,8 +703,8 @@ export class McpServer {
+         if (this._registeredTools[name]) {
+             throw new Error(`Tool ${name} is already registered`);
+         }
+-        const { title, description, inputSchema, outputSchema, annotations, _meta } = config;
+-        return this._createRegisteredTool(name, title, description, inputSchema, outputSchema, annotations, { taskSupport: 'forbidden' }, _meta, cb);
++        const { title, description, inputSchema, inputSchemaOptions, outputSchema, annotations, _meta } = config;
++        return this._createRegisteredTool(name, title, description, inputSchema, inputSchemaOptions, outputSchema, annotations, { taskSupport: 'forbidden' }, _meta, cb);
+     }
+     prompt(name, ...rest) {
+         if (this._registeredPrompts[name]) {
+diff --git a/dist/esm/server/zod-json-schema-compat.js b/dist/esm/server/zod-json-schema-compat.js
+index 62f7fd0ef1a323d674f003a305bfa359e6e744e5..542ae4875d03a06c0811ab2f8c6dabc9a3686914 100644
+--- a/dist/esm/server/zod-json-schema-compat.js
++++ b/dist/esm/server/zod-json-schema-compat.js
+@@ -15,18 +15,21 @@ function mapMiniTarget(t) {
+         return 'draft-2020-12';
+     return 'draft-7'; // fallback
+ }
+-export function toJsonSchemaCompat(schema, opts) {
++export function toJsonSchemaCompat(schema, optsRaw) {
++    const { pipeStrategy = 'input', strictUnions = true, target, ...opts } = optsRaw ?? {};
+     if (isZ4Schema(schema)) {
+         // v4 branch — use Mini's built-in toJSONSchema
+         return z4mini.toJSONSchema(schema, {
+-            target: mapMiniTarget(opts?.target),
+-            io: opts?.pipeStrategy ?? 'input'
++            target: mapMiniTarget(target),
++            io: pipeStrategy,
++            ...opts
+         });
+     }
+     // v3 branch — use vendored converter
+     return zodToJsonSchema(schema, {
+-        strictUnions: opts?.strictUnions ?? true,
+-        pipeStrategy: opts?.pipeStrategy ?? 'input'
++        strictUnions,
++        pipeStrategy,
++        ...opts
+     });
+ }
+ export function getMethodLiteral(schema) {

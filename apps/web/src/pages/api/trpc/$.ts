@@ -43,7 +43,7 @@ const defaultGetEmailOptions = () => {
 		baseUrl: env.BASE_URL || "http://example.com/",
 	};
 };
-const createContextRest = (
+export const createContextRest = (
 	req: Request,
 ): Omit<UnauthorizedContext, keyof NetContext> => ({
 	logger: baseLogger,

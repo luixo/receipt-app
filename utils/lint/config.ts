@@ -231,7 +231,12 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 	[["**/*.native.ts{,x}"], ["native-only", "strict-native-only"]],
 	// Server code is allowed in these locations
 	[
-		["apps/web/src/handlers/**/*", "apps/web/src/pages/api/**/*", "testing/**"],
+		[
+			"apps/web/src/handlers/**/*",
+			"apps/web/src/pages/api/**/*",
+			"testing/**",
+			"apps/bot/src/**/*",
+		],
 		["client-only"],
 	],
 ];
@@ -533,6 +538,8 @@ const disabledRules = {
 	"eslint/require-unicode-regexp": "off",
 	// TODO: fix this one
 	"eslint/no-warning-comments": "off",
+	// Why even?
+	"eslint/no-continue": "off",
 } satisfies DummyRuleMap;
 
 export default defineConfig({
@@ -633,6 +640,7 @@ export default defineConfig({
 						"**/*.spec.ts",
 					],
 				],
+				["apps/bot"],
 				["apps/mobile", ["babel.config.js", "metro.config.ts"]],
 				["packages/components"],
 				["packages/mutations"],
@@ -727,6 +735,7 @@ export default defineConfig({
 				"**/config.ts",
 				"**/*.config.ts",
 				"utils/scripts/**",
+				"apps/bot/src/**",
 				"apps/web/src/handlers/**",
 				"apps/web/src/pages/api/**",
 				"apps/mobile/update-version.ts",
