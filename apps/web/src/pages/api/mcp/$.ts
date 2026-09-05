@@ -7,7 +7,7 @@ import type {
 	ProcedureType,
 } from "@trpc/server/unstable-core-do-not-import";
 import { toReqRes } from "fetch-to-node";
-import { entries } from "remeda";
+import { entries, mapValues } from "remeda";
 import z from "zod";
 
 import type { TRPCKey, TRPCMutationKey, TRPCQueryKey } from "~app/trpc";
@@ -67,6 +67,70 @@ const forbiddenHandlers = new Set<TRPCKey>([
 
 const STATIC_SESSION_ID = "a69b47fc-6401-4137-978d-f361d3f79f00";
 
+// zod v4 exposes each schema's internal definition via `_zod.def`; walking it
+// here is deliberately loose-typed since we're reaching into zod's own
+// internals rather than the repo's public schema API.
+type ZodInternal = { _zod: { def: Record<string, unknown> } };
+
+// tRPC procedure inputs reuse `temporalSchemas` directly (see e.g.
+// `receipts.add`'s `issued` field), which validates that the value is
+// already a real Temporal instance — correct for normal clients, since the
+// app's shared tRPC transformer (~utils/transformer) deserializes wire
+// strings into instances before validation runs. MCP calls bypass that
+// transformer and send a plain ISO string instead, so every occurrence of a
+// `temporalSchemas[key]` node — however deeply nested — is swapped for the
+// matching `temporalSchemaReplacements[key]` codec (accepts the ISO string
+// and decodes it into a real instance, see ~utils/date). The SDK validates
+// incoming tool-call arguments against this same schema before our callback
+// ever sees them, so the swap fixes the actual call, not just the schema
+// advertised by tools/list.
+const TEMPORAL_REPLACEMENTS = new Map<z.ZodType, z.ZodType>(
+	entries(temporalSchemas).map(([key, schema]) => [
+		schema,
+		temporalSchemaReplacements[key],
+	]),
+);
+
+const replaceSchema = (
+	schema: z.ZodType,
+	replacements: Map<z.ZodType, z.ZodType>,
+): z.ZodType => {
+	// Procedures with no `.input(...)` call have no schema to walk — the type
+	// says this can't happen, but `procedure._def.inputs[0]` really can be
+	// undefined at runtime (see the `as unknown as z.ZodType` cast below).
+	// oxlint-disable-next-line typescript/no-unnecessary-condition
+	if (!schema) {
+		return schema;
+	}
+	const replacement = replacements.get(schema);
+	if (replacement) {
+		return replacement;
+	}
+	const { def } = (schema as unknown as ZodInternal)._zod;
+	switch (def.type) {
+		case "optional":
+			return replaceSchema(def.innerType as z.ZodType, replacements).optional();
+		case "nullable":
+			return replaceSchema(def.innerType as z.ZodType, replacements).nullable();
+		case "array":
+			return z.array(replaceSchema(def.element as z.ZodType, replacements));
+		case "object":
+			return z.strictObject(
+				mapValues(def.shape as Record<string, z.ZodType>, (fieldSchema) =>
+					replaceSchema(fieldSchema, replacements),
+				),
+			);
+		case "union":
+			return z.union(
+				(def.options as z.ZodType[]).map((option) =>
+					replaceSchema(option, replacements),
+				),
+			);
+		default:
+			return schema;
+	}
+};
+
 const mapProcedures = (router: typeof appRouter): ProcedureInfo[] =>
 	entries(router._def.procedures).map((entry) => {
 		const [path, procedure] = entry as unknown as [
@@ -81,7 +145,10 @@ const mapProcedures = (router: typeof appRouter): ProcedureInfo[] =>
 			description: procedure.meta.description,
 			input: forbiddenHandlers.has(path)
 				? undefined
-				: (procedure._def.inputs[0] as unknown as z.ZodType),
+				: replaceSchema(
+						procedure._def.inputs[0] as unknown as z.ZodType,
+						TEMPORAL_REPLACEMENTS,
+					),
 			forbidden: forbiddenHandlers.has(path),
 			call: async (request: Request, input: unknown) => {
 				const url = new URL("/api/trpc", "http://localhost");
@@ -120,10 +187,6 @@ const mapProcedures = (router: typeof appRouter): ProcedureInfo[] =>
 			},
 		};
 	});
-
-const invertedTemporalSchema = new Map(
-	entries(temporalSchemas).map(([key, value]) => [value, key]),
-);
 
 // oxlint-enable no-underscore-dangle
 const registerTools = (
@@ -179,19 +242,6 @@ const registerTools = (
 				title: procedure.title,
 				description: procedure.description,
 				inputSchema: procedure.input,
-				inputSchemaOptions: {
-					unrepresentable: (ctx) => {
-						const mappedType = invertedTemporalSchema.get(
-							ctx.zodSchema as Parameters<
-								(typeof invertedTemporalSchema)["get"]
-							>[0],
-						);
-						if (mappedType) {
-							return temporalSchemaReplacements[mappedType].toJSONSchema();
-						}
-						return "throw";
-					},
-				},
 			},
 			async (input) => {
 				try {
@@ -203,7 +253,12 @@ const registerTools = (
 								text: JSON.stringify(result, null, 2),
 							},
 						],
-						structuredContent: result as Record<string, unknown>,
+						// Void-returning mutations (e.g. `receipts.update`) serialize to
+						// `null`, not an object — the protocol requires
+						// `structuredContent`, when present at all, to be a record.
+						...(result && typeof result === "object"
+							? { structuredContent: result as Record<string, unknown> }
+							: {}),
 					};
 				} catch (error) {
 					return {

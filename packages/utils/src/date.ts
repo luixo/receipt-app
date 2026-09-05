@@ -61,16 +61,6 @@ export const temporalSchemas = mapValues(temporalClasses, (value, key) =>
 	>;
 };
 
-export const temporalSchemaReplacements = {
-	plainDate: z.iso.date(),
-	plainTime: z.iso.time({ precision: 3 }),
-	plainDateTime: z.iso.datetime({ local: true, precision: 3 }),
-	zonedDateTime: z.string().meta({
-		description: "ISO 8601 date-time including an IANA time-zone annotation",
-		examples: ["2026-09-05T12:30:00.000+00:00[UTC]"],
-	}),
-} satisfies Record<TemporalType, z.ZodType>;
-
 // oxlint-disable-next-line typescript/no-namespace
 export namespace Temporal {
 	export type PlainTime = InstanceType<(typeof temporalClasses)["plainTime"]>;
@@ -188,6 +178,48 @@ export const parsers = {
 } satisfies {
 	[K in TemporalType]: (input: TemporalInputMapping[K]) => TemporalMapping[K];
 };
+
+const isoInputSchemas = {
+	plainDate: z.iso.date(),
+	plainTime: z.iso.time({ precision: 3 }),
+	plainDateTime: z.iso.datetime({ local: true, precision: 3 }),
+	zonedDateTime: z.string().meta({
+		description: "ISO 8601 date-time including an IANA time-zone annotation",
+		examples: ["2026-09-05T12:30:00.000+00:00[UTC]"],
+	}),
+} satisfies Record<TemporalType, z.ZodType>;
+// MCP calls bypass the app's shared tRPC transformer (~utils/transformer),
+// which normally deserializes wire strings into real Temporal instances
+// before `temporalSchemas` ever sees them — MCP sends plain ISO strings
+// instead. Each codec accepts that same ISO shape as input (representable in
+// JSON Schema, unlike `temporalSchemas` itself) and decodes it via `parsers`
+// into the real instance `temporalSchemas`-typed procedure code expects.
+export const temporalSchemaReplacements = mapValues(
+	isoInputSchemas,
+	(inputSchema, key) =>
+		z.codec(inputSchema, temporalSchemas[key], {
+			decode: (input, payload) => {
+				try {
+					// @ts-expect-error Union of parser input types is too cumbersome to fix
+					return parsers[key](input);
+				} catch {
+					payload.issues.push({
+						code: "custom",
+						input,
+						message: `Input not instance of ${temporalClassNames[key]}`,
+					});
+					return z.NEVER;
+				}
+			},
+			encode: (value) => value.toString(),
+		}),
+) as {
+	[K in TemporalType]: z.ZodCodec<
+		(typeof isoInputSchemas)[K],
+		(typeof temporalSchemas)[K]
+	>;
+};
+
 export const deserialize = <K extends TemporalType>(
 	input: string,
 	converter: (input: string) => string = identity(),

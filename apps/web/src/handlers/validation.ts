@@ -28,6 +28,7 @@ export const emailSchema = z.codec(
 	z.object({ lowercase: z.email(), original: z.email() }),
 	{
 		decode: (email) => ({ lowercase: email.toLowerCase(), original: email }),
+		/* c8 ignore next */
 		encode: ({ original }) => original,
 	},
 );
