@@ -55,11 +55,12 @@ test("Manual accept debts mutation error state", async ({
 	);
 	await expectScreenshotWithSchemes("manual-accept-debts-error.png", {
 		locator: errorMessage(),
-		// Card's rounded corner means the top-left pixel isn't the page background
+		// Card's rounded corner means the top-left pixel isn't the page background;
+		// inset far enough to clear the curve's antialiasing (varies slightly across browsers/OSes)
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
+				location: [16, 16],
 			},
 			...expectedPixels.slice(1),
 		],

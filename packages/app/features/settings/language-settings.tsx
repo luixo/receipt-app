@@ -35,6 +35,7 @@ export const LanguageSettings: React.FC = () => {
 		<View className="flex-row items-center gap-4">
 			<Text className="text-xl">{t("languages.header")}</Text>
 			<Select
+				testID="language-select"
 				items={entries(LANGUAGE_TEXT).map(([language, text]) => ({
 					language,
 					text,

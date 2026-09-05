@@ -21,6 +21,7 @@ export type Props<T extends object, K extends string> = {
 	getKey: (item: T) => K;
 	getTextValue?: (item: T) => string;
 	disallowEmptySelection?: boolean;
+	testID?: string;
 };
 
 // Generic component has to be a function
@@ -32,11 +33,13 @@ export function Select<T extends object, K extends string>({
 	renderValue,
 	onSelectionChange,
 	label,
+	testID,
 	...props
 }: Props<T, K>) {
 	return (
 		<SelectRaw<T>
 			{...props}
+			data-testid={testID}
 			aria-label={label}
 			renderValue={(values) =>
 				renderValue(values.map((value) => value.data).filter(isNonNullish))

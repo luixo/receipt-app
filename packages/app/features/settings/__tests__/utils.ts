@@ -13,7 +13,9 @@ type Fixtures = {
 	openSettings: (options?: {
 		manualAcceptDebts?: boolean;
 	}) => Promise<AuthPageResult>;
-	html: Locator;
+	// Settings are persisted as cookies (`apps/web/src/utils/store.ts`), not localStorage
+	getCookie: (name: string) => Promise<string | undefined>;
+	reload: () => Promise<void>;
 	languageSelectButton: Locator;
 	limitSelectButton: Locator;
 	colorModeAutoCheckbox: Locator;
@@ -37,12 +39,21 @@ export const test = originalTest.extend<Fixtures>({
 			return auth;
 		}),
 
-	html: ({ page }, use) => use(page.locator("html")),
+	getCookie: ({ page }, use) =>
+		use(async (name) => {
+			const cookies = await page.context().cookies();
+			const raw = cookies.find((cookie) => cookie.name === name)?.value;
+			return raw === undefined ? undefined : decodeURIComponent(raw);
+		}),
 
-	// Aria-label of the select trigger is translated (differs per language),
-	// so it can't be queried by accessible name across a language switch.
+	reload: ({ page }, use) =>
+		use(async () => {
+			await page.reload();
+			await page.locator("hydrated").waitFor({ state: "attached" });
+		}),
+
 	languageSelectButton: ({ page }, use) =>
-		use(page.locator('button[aria-haspopup="listbox"]').first()),
+		use(page.getByTestId("language-select")),
 
 	limitSelectButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Items per page" })),
