@@ -9,21 +9,28 @@ export const assignableRoleSchema = z.literal(["viewer", "editor"]);
 
 export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
-export const currencyCodeSchema = z
-	.string()
-	.overwrite((code) => code.toUpperCase())
-	.refine((code) => CURRENCY_CODES.includes(code), {
-		error: `Currency does not exist in currency list`,
-	})
-	.transform<CurrencyCode>(flavored);
+export const currencyCodeSchema = flavored<CurrencyCode>(
+	z.string().toUpperCase(),
+	"currency code",
+).refine((code) => CURRENCY_CODES.includes(code), {
+	error: `Currency does not exist in currency list`,
+});
 
-export const receiptIdSchema = z.uuid().transform<ReceiptId>(flavored);
-export const receiptItemIdSchema = z.uuid().transform<ReceiptItemId>(flavored);
-export const sessionIdSchema = z.uuid().transform<SessionId>(flavored);
-export const debtIdSchema = z.uuid().transform<DebtId>(flavored);
-export const emailSchema = z
-	.email({ message: "Invalid email address" })
-	.transform((email) => ({ lowercase: email.toLowerCase(), original: email }));
+export const receiptIdSchema = flavored<ReceiptId>(z.uuid(), "receipt id");
+export const receiptItemIdSchema = flavored<ReceiptItemId>(
+	z.uuid(),
+	"receipt item id",
+);
+export const sessionIdSchema = flavored<SessionId>(z.uuid(), "session id");
+export const debtIdSchema = flavored<DebtId>(z.uuid(), "debt id");
+export const emailSchema = z.codec(
+	z.email({ message: "Invalid email address" }),
+	z.object({ lowercase: z.email(), original: z.email() }),
+	{
+		decode: (email) => ({ lowercase: email.toLowerCase(), original: email }),
+		encode: ({ original }) => original,
+	},
+);
 
 export const UUID_REGEX =
 	/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
