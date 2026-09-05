@@ -31,5 +31,5 @@
 			"~tests/utils/*": ["./testing/utils/src/*"]
 		}
 	},
-	"include": ["**/*", "**/package.json"]
+	"include": ["**/*", ".opencode/**/*", "**/package.json"]
 }
