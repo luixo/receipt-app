@@ -7,7 +7,7 @@ import type { BackendModule, ParseKeys, ResourceKey } from "i18next";
 import type { I18nContext } from "~app/utils/i18n";
 import type { Language, Namespace } from "~app/utils/i18n-data";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
-import { env } from "~utils/env";
+import { env } from "~web/utils/env";
 
 const getCookie = (headers: Headers | undefined) =>
 	headers ? (headers.get("cookie") ?? "") : document.cookie;
