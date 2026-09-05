@@ -220,3 +220,5 @@ export type TRPCDecoratedQueryProcedure<K extends TRPCQueryKey> =
 export type TRPCDecoratedInfiniteQueryProcedure<
 	K extends TRPCInfiniteQueryKey,
 > = TRPCDecoratedQueryProcedures[K];
+
+export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
