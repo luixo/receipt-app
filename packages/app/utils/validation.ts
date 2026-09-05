@@ -24,7 +24,13 @@ const constrainLength = (
 		.min(min, { message: getMinimalLengthMessage(min, target) })
 		.max(max, { message: getMaximumLengthMessage(max, target) });
 
-export const flavored = <X>(x: string) => x as X;
+export const flavored = <X extends string>(out: z.ZodType<X>, name: string) =>
+	z
+		.codec(z.string(), out, {
+			decode: (val) => val as X,
+			encode: (val) => val as string,
+		})
+		.describe(`A branded type for ${name}`);
 
 export const MAX_LIMIT = 100;
 export const MAX_OFFSET = 10 ** 4;
@@ -151,10 +157,10 @@ export const debtAmountSchema = createNumberSchema("Debt amount", {
 	},
 });
 
-export const currencyCodeSchema = z
-	.string()
-	.transform<CurrencyCode>(flavored)
-	.transform((currencyCode) => currencyCode.toUpperCase());
+export const currencyCodeSchema = flavored<CurrencyCode>(
+	z.string().toUpperCase(),
+	"currency code",
+);
 
 export const currencySchema = z.object({
 	code: currencyCodeSchema,
@@ -166,8 +172,8 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 	decimals: currencyRateSchemaDecimal,
 });
 
-export const userIdSchema = z.uuid().transform<UserId>(flavored);
-export const accountIdSchema = z.uuid().transform<AccountId>(flavored);
+export const userIdSchema = flavored<UserId>(z.uuid(), "user id");
+export const accountIdSchema = flavored<AccountId>(z.uuid(), "account id");
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
