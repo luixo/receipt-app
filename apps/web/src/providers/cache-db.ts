@@ -1,7 +1,7 @@
 import { createClient } from "redis";
 
-import { env } from "~utils/env";
 import type { UnauthorizedContext } from "~web/handlers/context";
+import { env } from "~web/utils/env";
 
 export type CacheDbOptions = {
 	mock?: CacheInstance;

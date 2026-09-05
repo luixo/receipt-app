@@ -85,6 +85,7 @@
         "@ra/mobile": "workspace:*",
         "@ra/utils": "workspace:*",
         "@sentry/tanstackstart-react": "^10.62.0",
+        "@t3-oss/env-core": "^0.13.11",
         "@tanstack/devtools-vite": "^0.8.5",
         "@tanstack/react-devtools": "^0.10.9",
         "@tanstack/react-form-devtools": "^0.2.33",
@@ -218,7 +219,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@internationalized/date": "3.10.0",
-        "@t3-oss/env-core": "^0.13.11",
         "find-free-ports": "^3.1.1",
         "superjson": "^2.2.2",
         "zod": "catalog:",

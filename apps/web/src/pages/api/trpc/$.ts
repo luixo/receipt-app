@@ -11,7 +11,6 @@ import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import { getDatabase } from "~db/database";
-import { env } from "~utils/env";
 import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import { router } from "~web/handlers";
@@ -19,6 +18,7 @@ import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { getCookie } from "~web/utils/cookies";
+import { env } from "~web/utils/env";
 import { getReqHeader, getResHeaders } from "~web/utils/headers";
 
 /* c8 ignore start */

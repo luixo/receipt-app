@@ -17,6 +17,7 @@
 		"@ra/mobile": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@sentry/tanstackstart-react": "^10.62.0",
+		"@t3-oss/env-core": "^0.13.11",
 		"@tanstack/devtools-vite": "^0.8.5",
 		"@tanstack/react-devtools": "^0.10.9",
 		"@tanstack/react-form-devtools": "^0.2.33",

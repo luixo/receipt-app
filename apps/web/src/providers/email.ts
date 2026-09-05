@@ -1,7 +1,7 @@
 import * as postmark from "postmark";
 
-import { env } from "~utils/env";
 import type { UnauthorizedContext } from "~web/handlers/context";
+import { env } from "~web/utils/env";
 
 export type Email = {
 	address: string;

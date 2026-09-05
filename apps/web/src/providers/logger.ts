@@ -1,7 +1,7 @@
 import pino from "pino";
 import pinoPretty from "pino-pretty";
 
-import { env } from "~utils/env";
+import { env } from "~web/utils/env";
 
 export const baseLogger = pino(
 	{
