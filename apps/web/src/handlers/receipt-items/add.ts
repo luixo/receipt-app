@@ -142,5 +142,10 @@ export const batchFn: BatchLoadContextFn<
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add receipt item",
+		description:
+			"Adds a new item with a name, price and quantity to a given receiptId.",
+	})
 	.input(addItemSchema)
 	.mutation(queueCallFactory(batchFn));

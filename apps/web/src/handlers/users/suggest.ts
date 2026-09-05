@@ -132,5 +132,10 @@ const queueSuggestUserList = queueCallFactory<AuthorizedContext, Input, Output>(
 );
 
 export const procedure = authProcedure
+	.meta({
+		title: "Suggest users",
+		description:
+			"Returns a page of the current account's userIds fuzzy-matched by name against a search query.",
+	})
 	.input(inputSchema)
 	.query(queueSuggestUserList);

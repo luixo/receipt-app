@@ -418,5 +418,10 @@ export const batchFn: BatchLoadContextFn<
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add account connection intention",
+		description:
+			"Sends an account connection intention for a given userId to a given email, or accepts a matching vice-versa intention immediately.",
+	})
 	.input(addConnectionIntentionSchema)
 	.mutation(queueCallFactory(batchFn));

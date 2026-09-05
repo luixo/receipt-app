@@ -55,4 +55,11 @@ const queueUserList = queueCallFactory<AuthorizedContext, Input, Output>(
 		),
 );
 
-export const procedure = authProcedure.input(inputSchema).query(queueUserList);
+export const procedure = authProcedure
+	.meta({
+		title: "Get users, paged",
+		description:
+			"Returns a page of userIds owned by the current account, excluding the self-user.",
+	})
+	.input(inputSchema)
+	.query(queueUserList);

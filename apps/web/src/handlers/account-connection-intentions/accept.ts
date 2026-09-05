@@ -7,6 +7,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { accountIdSchema, userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Accept account connection intention",
+		description:
+			"Accepts an inbound account connection intention from a given accountId, merging the matching users and their debts.",
+	})
 	.input(
 		z.strictObject({
 			accountId: accountIdSchema,

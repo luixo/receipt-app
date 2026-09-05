@@ -28,6 +28,11 @@ export type NetContext = {
 
 export type UnauthorizedContext = NetContext & TestContextPicks;
 
+export type HandlerMeta = {
+	title: string;
+	description: string;
+};
+
 export type AuthorizedContext = inferProcedureBuilderResolverOptions<
 	typeof authProcedure
 >["ctx"];

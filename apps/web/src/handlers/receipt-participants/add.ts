@@ -183,5 +183,10 @@ export const batchFn: BatchLoadContextFn<
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add receipt participant",
+		description:
+			"Adds a given userId as a participant of a given receipt with an assigned role.",
+	})
 	.input(addParticipantSchema)
 	.mutation(queueCallFactory(batchFn));

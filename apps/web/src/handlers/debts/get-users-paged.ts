@@ -84,4 +84,11 @@ const queueUserList = queueCallFactory<AuthorizedContext, Input, Output>(
 		),
 );
 
-export const procedure = authProcedure.input(inputSchema).query(queueUserList);
+export const procedure = authProcedure
+	.meta({
+		title: "Get users with debts, paged",
+		description:
+			"Returns a page of userIds the current account has debts with, optionally excluding users whose debts are fully resolved.",
+	})
+	.input(inputSchema)
+	.query(queueUserList);

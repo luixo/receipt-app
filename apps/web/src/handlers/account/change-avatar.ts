@@ -48,6 +48,11 @@ const validateImage = (image: Buffer) => {
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Change account avatar",
+		description:
+			"Uploads and sets a new avatar image for the current account, or clears it if no avatar is provided.",
+	})
 	.input(avatarFormSchema)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;

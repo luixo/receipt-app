@@ -8,6 +8,11 @@ import { unauthProcedure } from "~web/handlers/trpc";
 import { setCookie } from "~web/utils/cookies";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Confirm email",
+		description:
+			"Confirms an account's email using a confirmation token and logs the account in.",
+	})
 	.input(
 		z.strictObject({
 			token: confirmEmailTokenSchema,

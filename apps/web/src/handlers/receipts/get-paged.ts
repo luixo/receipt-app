@@ -237,5 +237,10 @@ const queueReceiptList = queueCallFactory<AuthorizedContext, Input, Output>(
 );
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get receipts, paged",
+		description:
+			"Returns a page of the account's own and participated-in receipts, optionally filtered by a fuzzy name/item search query.",
+	})
 	.input(inputSchema)
 	.query(queueReceiptList);

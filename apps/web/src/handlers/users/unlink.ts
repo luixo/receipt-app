@@ -5,6 +5,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Unlink user",
+		description:
+			"Disconnects a user owned by the current account from its connected account, and vice versa.",
+	})
 	.input(
 		z.strictObject({
 			id: userIdSchema,

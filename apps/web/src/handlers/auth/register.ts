@@ -15,6 +15,11 @@ import { emailSchema } from "~web/handlers/validation";
 import { setCookie } from "~web/utils/cookies";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Register account",
+		description:
+			"Creates a new account and its self-user, sends a verification email if enabled, and starts a new session.",
+	})
 	.input(
 		z.strictObject({
 			email: emailSchema,
