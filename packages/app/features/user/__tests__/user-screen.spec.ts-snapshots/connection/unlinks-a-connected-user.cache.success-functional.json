@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"af468677-0243-4091-8a13-804335bc4af1\"}]": {
+			"state": {
+				"data": {
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"users.unlink": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "af468677-0243-4091-8a13-804335bc4af1"
+					}
+				}
+			}
+		}
+	}
+}

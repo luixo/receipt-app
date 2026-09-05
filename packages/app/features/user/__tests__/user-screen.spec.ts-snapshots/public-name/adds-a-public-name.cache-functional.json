@@ -1,0 +1,31 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"257bab0f-91ca-4ea5-9d8d-df147c06a1e1\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"users.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"users.update\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "257bab0f-91ca-4ea5-9d8d-df147c06a1e1",
+						"update": {
+							"type": "publicName",
+							"publicName": "Public nickname"
+						}
+					}
+				}
+			}
+		]
+	}
+}

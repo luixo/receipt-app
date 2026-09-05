@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"accountConnectionIntentions.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"userId": "93e6e25a-44de-4b4a-a7fe-56b3f743c2ad",
+						"email": "Rusty90@gmail.com"
+					}
+				}
+			}
+		]
+	}
+}

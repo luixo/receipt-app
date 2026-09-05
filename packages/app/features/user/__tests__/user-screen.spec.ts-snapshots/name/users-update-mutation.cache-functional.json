@@ -1,0 +1,31 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"a8454e57-5737-4356-a738-f447aaa164b0\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"users.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"users.update\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "a8454e57-5737-4356-a738-f447aaa164b0",
+						"update": {
+							"type": "name",
+							"name": "Updated name"
+						}
+					}
+				}
+			}
+		]
+	}
+}

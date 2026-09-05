@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"733bef92-a3b6-4d59-a497-6db41be0aa57\"}]": {
+			"state": {
+				"data": {
+					"publicName": "<undefined>"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"users.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "733bef92-a3b6-4d59-a497-6db41be0aa57",
+						"update": {
+							"type": "publicName",
+							"publicName": "<undefined>"
+						}
+					}
+				}
+			}
+		]
+	}
+}

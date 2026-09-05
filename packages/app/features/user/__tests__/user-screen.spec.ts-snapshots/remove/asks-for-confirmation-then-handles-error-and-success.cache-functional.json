@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"88355624-b0e0-4f72-b097-a2149284549e\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"users.remove": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"users.remove\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "88355624-b0e0-4f72-b097-a2149284549e"
+					}
+				}
+			}
+		]
+	}
+}
