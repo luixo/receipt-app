@@ -5,6 +5,10 @@ import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Remove user",
+		description: "Removes a user by id owned by the current account.",
+	})
 	.input(
 		z.strictObject({
 			id: userIdSchema,

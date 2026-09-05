@@ -6,6 +6,10 @@ import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Remove receipt item",
+		description: "Removes an item by id from its receipt.",
+	})
 	.input(
 		z.strictObject({
 			id: receiptItemIdSchema,

@@ -5,6 +5,10 @@ import type { UserId } from "~db/ids";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Change account name",
+		description: "Updates the display name of the current account's self-user.",
+	})
 	.input(z.strictObject({ name: userNameSchema }))
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;

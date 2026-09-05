@@ -105,5 +105,10 @@ const queueAddUser = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add user",
+		description:
+			"Creates a new user owned by the current account, optionally sending a connection intention to a given email.",
+	})
 	.input(addUserSchema)
 	.mutation(queueAddUser);

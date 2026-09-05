@@ -421,6 +421,11 @@ const verifyItemPayers = (
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add receipt",
+		description:
+			"Creates a receipt along with any given participants, items, item consumers and payers in a single transaction.",
+	})
 	.input(addReceiptSchema)
 	.mutation(async ({ input, ctx }) => {
 		const receiptId: ReceiptId = ctx.getUuid();

@@ -13,6 +13,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update receipt item",
+		description:
+			"Updates the name, price, or quantity of an item by id on its receipt.",
+	})
 	.input(
 		z.strictObject({
 			id: receiptItemIdSchema,

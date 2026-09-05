@@ -6,6 +6,11 @@ import { generatePasswordData, getHash } from "~utils/server/crypto";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Change account password",
+		description:
+			"Changes the current account's password after verifying the previous password matches.",
+	})
 	.input(
 		z.strictObject({
 			prevPassword: passwordSchema,

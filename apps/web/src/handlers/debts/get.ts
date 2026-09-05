@@ -98,5 +98,10 @@ const queueDebt = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get debt",
+		description:
+			"Returns a debt by id owned by the current account, including the counterparty's mirrored debt if one exists.",
+	})
 	.input(z.strictObject({ id: debtIdSchema }))
 	.query(queueDebt);

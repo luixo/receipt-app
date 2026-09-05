@@ -11,6 +11,11 @@ import { currencyCodeSchema, receiptIdSchema } from "~web/handlers/validation";
 type ReceiptUpdateObject = Updateable<DB["receipts"]>;
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update receipt",
+		description:
+			"Updates the name, issued date, or currency of a receipt owned by the current account.",
+	})
 	.input(
 		z.strictObject({
 			id: receiptIdSchema,

@@ -5,6 +5,11 @@ import { wait } from "~utils/promise";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Ping",
+		description:
+			"Test endpoint that waits a given timeout and echoes back a pong, optionally throwing an error.",
+	})
 	.input(
 		z.object({
 			timeout: z.number(),

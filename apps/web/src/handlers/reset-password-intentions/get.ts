@@ -6,6 +6,11 @@ import { getNow } from "~utils/date";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Get reset password intention",
+		description:
+			"Returns the account email for a valid, unexpired reset password token.",
+	})
 	.input(
 		z.strictObject({
 			token: resetPasswordTokenSchema,

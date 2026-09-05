@@ -7,13 +7,19 @@ export const DEFAULT_ACCOUNT_SETTINGS: Settings = {
 	manualAcceptDebts: false,
 };
 
-export const procedure = authProcedure.query(async ({ ctx }) => {
-	const { database } = ctx;
-	const account = await database
-		.selectFrom("accountSettings")
-		.select(["accountSettings.manualAcceptDebts"])
-		.where("accountSettings.accountId", "=", ctx.auth.accountId)
-		.limit(1)
-		.executeTakeFirst();
-	return account || DEFAULT_ACCOUNT_SETTINGS;
-});
+export const procedure = authProcedure
+	.meta({
+		title: "Get account settings",
+		description:
+			"Returns the current account's settings, falling back to defaults if none are set.",
+	})
+	.query(async ({ ctx }) => {
+		const { database } = ctx;
+		const account = await database
+			.selectFrom("accountSettings")
+			.select(["accountSettings.manualAcceptDebts"])
+			.where("accountSettings.accountId", "=", ctx.auth.accountId)
+			.limit(1)
+			.executeTakeFirst();
+		return account || DEFAULT_ACCOUNT_SETTINGS;
+	});

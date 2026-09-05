@@ -5,6 +5,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { debtIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Remove debt",
+		description:
+			"Removes a debt owned by the current account, and the counterparty's mirrored debt unless they require manual acceptance.",
+	})
 	.input(
 		z.strictObject({
 			id: debtIdSchema,

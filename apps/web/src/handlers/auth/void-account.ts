@@ -5,6 +5,11 @@ import { voidAccountTokenSchema } from "~app/utils/validation";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Void account",
+		description:
+			"Permanently deletes an unconfirmed account identified by its confirmation token.",
+	})
 	.input(
 		z.strictObject({
 			token: voidAccountTokenSchema,

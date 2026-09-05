@@ -9,6 +9,10 @@ import { DEFAULT_ACCOUNT_SETTINGS } from "./get";
 type SettingsUpdateObject = Updateable<DB["accountSettings"]>;
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update account settings",
+		description: "Updates a single account setting for the current account.",
+	})
 	.input(
 		z.discriminatedUnion("type", [
 			z.strictObject({

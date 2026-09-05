@@ -9,6 +9,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Suggest top users",
+		description:
+			"Returns the current account's users most recently active in debts or a given receipt, for quick selection.",
+	})
 	.input(
 		z.strictObject({
 			limit: limitSchema,

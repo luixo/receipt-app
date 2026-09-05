@@ -10,6 +10,11 @@ import { emailSchema } from "~web/handlers/validation";
 import { setCookie } from "~web/utils/cookies";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Log in",
+		description:
+			"Authenticates an account by email and password and starts a new session.",
+	})
 	.input(
 		z.strictObject({
 			email: emailSchema,

@@ -178,5 +178,10 @@ const queueAcceptIntention = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Accept debt intention",
+		description:
+			"Accepts a counterparty's pending debt change for a given debt id by creating or updating the mirrored debt on the current account.",
+	})
 	.input(acceptIntentionSchema)
 	.mutation(queueAcceptIntention);

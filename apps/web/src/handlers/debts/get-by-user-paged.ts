@@ -106,4 +106,11 @@ const queueDebtList = queueCallFactory<AuthorizedContext, Input, Output>(
 		queueList<Input, DebtId, Output>(inputs, (value) => fetchPage(ctx, value)),
 );
 
-export const procedure = authProcedure.input(inputSchema).query(queueDebtList);
+export const procedure = authProcedure
+	.meta({
+		title: "Get debts by user, paged",
+		description:
+			"Returns a page of debt ids owned by the current account for a given userId, optionally excluding resolved currencies.",
+	})
+	.input(inputSchema)
+	.query(queueDebtList);

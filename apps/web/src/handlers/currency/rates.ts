@@ -6,6 +6,11 @@ import { currencyCodeSchema } from "~web/handlers/validation";
 import { getExchangeRates } from "~web/providers/exchange-rate";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get exchange rates",
+		description:
+			"Returns exchange rates from a given currency to a list of other currencies.",
+	})
 	.input(
 		z.strictObject({
 			from: currencyCodeSchema,

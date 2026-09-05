@@ -5,6 +5,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { accountIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Remove account connection intention",
+		description:
+			"Cancels an outbound account connection intention sent to a given targetAccountId.",
+	})
 	.input(
 		z.strictObject({
 			targetAccountId: accountIdSchema,

@@ -68,5 +68,10 @@ const queueGetAllUser = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get all debts for user",
+		description:
+			"Returns the current account's debt amounts with a given userId, summed per currency.",
+	})
 	.input(getAllUserSchema)
 	.query(queueGetAllUser);

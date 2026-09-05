@@ -277,6 +277,11 @@ const queueReceipt = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get receipt",
+		description:
+			"Returns a receipt by id with its items, participants, payers and linked debts, if the account owns or participates in it.",
+	})
 	.input(
 		z.strictObject({
 			id: receiptIdSchema,

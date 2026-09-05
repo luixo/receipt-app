@@ -12,6 +12,11 @@ import {
 } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update receipt participant",
+		description:
+			"Updates the role of a userId participating in a given receipt.",
+	})
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
