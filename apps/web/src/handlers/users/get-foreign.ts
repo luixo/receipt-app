@@ -122,5 +122,10 @@ const queueUser = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get foreign user",
+		description:
+			"Returns a user by id owned by another account, provided they share a receipt with the current account.",
+	})
 	.input(z.strictObject({ id: userIdSchema }))
 	.query(queueUser);

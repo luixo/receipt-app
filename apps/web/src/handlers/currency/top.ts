@@ -9,6 +9,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get top currencies",
+		description:
+			"Returns the currencies used most in the last month across the account's receipts or debts, ordered by usage count.",
+	})
 	.input(
 		z.strictObject({
 			options: z.discriminatedUnion("type", [

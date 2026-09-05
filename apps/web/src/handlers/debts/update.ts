@@ -291,5 +291,10 @@ const queueUpdateDebt = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update debt",
+		description:
+			"Updates a debt owned by the current account, auto-updating the counterparty's mirrored debt unless they require manual acceptance.",
+	})
 	.input(updateDebtSchema)
 	.mutation(queueUpdateDebt);

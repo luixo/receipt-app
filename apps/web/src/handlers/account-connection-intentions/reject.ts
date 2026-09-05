@@ -5,6 +5,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { accountIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Reject account connection intention",
+		description:
+			"Rejects an inbound account connection intention from a given sourceAccountId.",
+	})
 	.input(
 		z.strictObject({
 			sourceAccountId: accountIdSchema,

@@ -240,5 +240,10 @@ export const batchFn: BatchLoadContextFn<
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add receipt item consumer",
+		description:
+			"Assigns a participating userId as a consumer of a given receipt item with a given part share.",
+	})
 	.input(addItemConsumerSchema)
 	.mutation(queueCallFactory(batchFn));

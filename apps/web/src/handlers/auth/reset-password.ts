@@ -10,6 +10,11 @@ import { generatePasswordData } from "~utils/server/crypto";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Reset password",
+		description:
+			"Sets a new password for the account matching a valid, unexpired reset password token.",
+	})
 	.input(
 		z.strictObject({
 			token: resetPasswordTokenSchema,

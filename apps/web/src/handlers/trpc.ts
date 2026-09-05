@@ -15,23 +15,36 @@ import {
 	getExpirationDate,
 } from "~web/handlers/auth/utils";
 import { queueCallFactory } from "~web/handlers/batch";
-import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
+import type {
+	HandlerMeta,
+	NetContext,
+	UnauthorizedContext,
+} from "~web/handlers/context";
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
 import { getCookie, setCookie } from "~web/utils/cookies";
 import { getReqHeader } from "~web/utils/headers";
 
-export const t = initTRPC.context<UnauthorizedContext>().create({
-	transformer,
-	errorFormatter: (opts) => {
-		const { shape, error, input } = opts;
-		return {
-			...shape,
-			message: formatErrorMessage(error, shape.message),
-			input,
-		};
-	},
-});
+export const t = initTRPC
+	.context<UnauthorizedContext>()
+	.meta<HandlerMeta>()
+	.create({
+		transformer,
+		errorFormatter: (opts) => {
+			const { shape, error, input } = opts;
+			return {
+				...shape,
+				message: formatErrorMessage(error, shape.message),
+				input,
+			};
+		},
+		defaultMeta: {
+			title:
+				"This is title stub, please add a `.meta()` to a handler emitting this",
+			description:
+				"This is a description stub, please add a `.meta()` to a handler emitting this",
+		},
+	});
 
 export const unauthProcedure = t.procedure.use(
 	async ({ ctx, type, path, next }) => {

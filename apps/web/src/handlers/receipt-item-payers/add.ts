@@ -235,5 +235,10 @@ export const batchFn: BatchLoadContextFn<
 };
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add receipt item payer",
+		description:
+			"Assigns a participating userId as a payer of a given receipt item with a given part share.",
+	})
 	.input(addItemPayerSchema)
 	.mutation(queueCallFactory(batchFn));

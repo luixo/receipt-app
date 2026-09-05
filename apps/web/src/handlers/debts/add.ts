@@ -294,5 +294,10 @@ const queueAddDebt = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Add debt",
+		description:
+			"Adds a debt for a given userId, auto-accepting the mirrored debt on the counterparty's account unless they require manual acceptance.",
+	})
 	.input(addDebtSchema)
 	.mutation(queueAddDebt);

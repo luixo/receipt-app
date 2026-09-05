@@ -68,5 +68,9 @@ const queueUser = queueCallFactory<
 });
 
 export const procedure = authProcedure
+	.meta({
+		title: "Get user",
+		description: "Returns a user by id owned by the current account.",
+	})
 	.input(z.strictObject({ id: userIdSchema }))
 	.query(queueUser);

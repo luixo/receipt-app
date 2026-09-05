@@ -8,6 +8,11 @@ import { MAX_INTENTIONS_AMOUNT, emailSchema } from "~web/handlers/validation";
 import { getEmailClient } from "~web/providers/email";
 
 export const procedure = unauthProcedure
+	.meta({
+		title: "Add reset password intention",
+		description:
+			"Sends a password reset email for a given email address, up to a daily limit of pending intentions.",
+	})
 	.input(
 		z.strictObject({
 			email: emailSchema,

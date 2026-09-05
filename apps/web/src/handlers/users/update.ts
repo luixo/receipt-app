@@ -8,6 +8,11 @@ import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
+	.meta({
+		title: "Update user",
+		description:
+			"Updates the name or public name of a user owned by the current account.",
+	})
 	.input(
 		z.strictObject({
 			id: userIdSchema,
