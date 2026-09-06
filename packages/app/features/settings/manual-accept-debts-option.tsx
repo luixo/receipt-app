@@ -37,6 +37,7 @@ export const ManualAcceptDebtsOption = suspendedFallback(
 		return (
 			<>
 				<Switch
+					testID="manual-accept-debts-switch"
 					isSelected={settings.manualAcceptDebts}
 					onValueChange={onChange}
 					thumbIcon={

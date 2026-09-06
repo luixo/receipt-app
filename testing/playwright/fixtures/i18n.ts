@@ -4,7 +4,7 @@ import url from "node:url";
 
 import { baseLanguage } from "~app/utils/i18n-data";
 import type { Language, Namespace, Resources } from "~app/utils/i18n-data";
-import { COOKIE_LANGUAGE_NAME } from "~web/utils/i18n";
+import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
 
 type Fixtures = {
 	setLanguageCookie: (language: Language) => Promise<void>;
@@ -21,7 +21,7 @@ export const i18nFixtures = test.extend<Fixtures>({
 		await use(async (language) => {
 			await page.context().addCookies([
 				{
-					name: COOKIE_LANGUAGE_NAME,
+					name: LANGUAGE_STORE_NAME,
 					value: language,
 					url: baseURL,
 				},

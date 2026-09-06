@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"accountSettings.get:[[]]": {
+			"state": {
+				"data": {
+					"manualAcceptDebts": false
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"accountSettings.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"accountSettings.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}
