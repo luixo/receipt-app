@@ -4,9 +4,8 @@ import type { Register, RouteMethodHandlerFn } from "@tanstack/react-start";
 import { proxyRequest } from "@tanstack/react-start/server";
 import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
-import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
-import { doNothing, fromEntries } from "remeda";
+import { doNothing } from "remeda";
 import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
@@ -15,11 +14,9 @@ import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import { router } from "~web/handlers";
 import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
-import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { getCookie } from "~web/utils/cookies";
 import { env } from "~web/utils/env";
-import { getReqHeader, getResHeaders } from "~web/utils/headers";
 
 /* c8 ignore start */
 const defaultGetDatabase = (req: Request) =>
@@ -137,13 +134,11 @@ const callback = async (
 		endpoint: DEFAULT_TRPC_ENDPOINT,
 		req: request,
 		router,
-		createContext: (opts) => {
-			const { req, res } = toReqRes(opts.req);
-			return createContext(
-				{ req, res, info: opts.info },
-				createContextRest(opts.req),
-			);
-		},
+		createContext: (opts) => ({
+			...createContextRest(opts.req),
+			reqHeaders: opts.req.headers,
+			resHeaders: new Headers(),
+		}),
 		onError: ({ error, type, path, ctx }) => {
 			/* c8 ignore start */
 			if (!ctx) {
@@ -177,13 +172,13 @@ const callback = async (
 			}
 			ctx.logger.error(
 				`[${error.code}] [${
-					getReqHeader(ctx, "user-agent") ?? "no-user-agent"
+					ctx.reqHeaders.get("user-agent") ?? "no-user-agent"
 				}] ${type} "${path}": ${error.message}`,
 			);
 		},
 		responseMeta: ({ ctx }) => ({
 			status: 200,
-			headers: ctx ? fromEntries(getResHeaders(ctx)) : {},
+			headers: ctx ? ctx.resHeaders : {},
 		}),
 		...getTestRequestHandlerProps(rest),
 	});

@@ -36,7 +36,7 @@ describe("debtIntentions.accept", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ id: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -53,7 +53,7 @@ describe("debtIntentions.accept", () => {
 			await insertDebt(ctx, accountId, userId);
 
 			const fakeDebtId = faker.string.uuid();
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeDebtId }),
 				"NOT_FOUND",
@@ -84,7 +84,7 @@ describe("debtIntentions.accept", () => {
 
 			const fakeDebtId = faker.string.uuid();
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runInBand([
 					() => caller.procedure({ id: foreignDebtId }),
@@ -129,7 +129,7 @@ describe("debtIntentions.accept", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: foreignDebtId }),
 			);
@@ -176,7 +176,7 @@ describe("debtIntentions.accept", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: debt.id }),
 			);
@@ -223,7 +223,7 @@ describe("debtIntentions.accept", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: debt.id }),
 			);
@@ -296,7 +296,7 @@ describe("debtIntentions.accept", () => {
 			await insertDebt(ctx, accountId, selfUserId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				runInBand([
 					() => caller.procedure({ id: newDebt.id }),

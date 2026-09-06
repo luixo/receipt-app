@@ -34,7 +34,7 @@ describe("sessions.cleanup", () => {
 				// long expired session
 				expirationTimestamp: subtract.zonedDateTime(now, { years: 1 }),
 			});
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 		});
 	});

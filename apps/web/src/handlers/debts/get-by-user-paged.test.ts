@@ -83,7 +83,7 @@ describe("debts.getByUserPaged", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -98,7 +98,7 @@ describe("debts.getByUserPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -113,7 +113,7 @@ describe("debts.getByUserPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -130,7 +130,7 @@ describe("debts.getByUserPaged", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -145,7 +145,7 @@ describe("debts.getByUserPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -160,7 +160,7 @@ describe("debts.getByUserPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -177,7 +177,7 @@ describe("debts.getByUserPaged", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -197,7 +197,7 @@ describe("debts.getByUserPaged", () => {
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakerUserId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ userId: fakerUserId, cursor: 0, limit: 1 }),
@@ -216,7 +216,7 @@ describe("debts.getByUserPaged", () => {
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ userId: foreignUserId, cursor: 0, limit: 1 }),
 				"FORBIDDEN",
@@ -234,7 +234,7 @@ describe("debts.getByUserPaged", () => {
 
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 1 });
 			expect(result).toStrictEqual<typeof result>({
 				items: [],
@@ -288,7 +288,7 @@ describe("debts.getByUserPaged", () => {
 				...userDebts,
 				...syncedDebts.map(([ours]) => ours),
 			]);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 100 });
 			expect(result).toStrictEqual<typeof result>({
 				items: debts,
@@ -306,7 +306,7 @@ describe("debts.getByUserPaged", () => {
 			const { id: anotherUserId } = await insertUser(ctx, accountId);
 			await insertDebt(ctx, accountId, anotherUserId, { currencyCode: "GEL" });
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 100 });
 			expect(result).toStrictEqual<typeof result>({
 				count: nonResolvedDebts.length,
@@ -327,7 +327,7 @@ describe("debts.getByUserPaged", () => {
 
 			const allDebts = [...nonResolvedDebts, ...resolvedDebts];
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				userId,
 				cursor: 0,
@@ -358,7 +358,7 @@ describe("debts.getByUserPaged", () => {
 				});
 			});
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId, cursor: 0, limit: 100 });
 			expect(result).toStrictEqual<typeof result>({
 				count: 0,
@@ -376,7 +376,7 @@ describe("debts.getByUserPaged", () => {
 
 			const limit = 3;
 			const cursor = 1;
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				userId,
 				cursor,
@@ -417,7 +417,7 @@ describe("debts.getByUserPaged", () => {
 				);
 
 				const limit = 2;
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ userId, cursor: 0, limit }),
 					() => caller.procedure({ userId, cursor: 2, limit }),
@@ -469,7 +469,7 @@ describe("debts.getByUserPaged", () => {
 					),
 				);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ userId, cursor: 0, limit: 2 }),
 					() =>

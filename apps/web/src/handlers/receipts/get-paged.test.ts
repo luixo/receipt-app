@@ -164,7 +164,7 @@ const runFunctionalTest = async (
 	const { accountId, sessionId, receipts } = await mockData(ctx);
 
 	const limit = 10;
-	const caller = createCaller(await createAuthContext(ctx, sessionId));
+	const caller = createCaller(createAuthContext(ctx, sessionId));
 	const sortedReceipts = sortReceipts(receipts);
 	const result = await caller.procedure(
 		modifyInput(
@@ -198,7 +198,7 @@ describe("receipts.getPaged", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0, orderBy: "date-desc" }),
 					"BAD_REQUEST",
@@ -208,7 +208,7 @@ describe("receipts.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -223,7 +223,7 @@ describe("receipts.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -240,7 +240,7 @@ describe("receipts.getPaged", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({ cursor: -1, limit: 1, orderBy: "date-desc" }),
@@ -251,7 +251,7 @@ describe("receipts.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -266,7 +266,7 @@ describe("receipts.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -283,7 +283,7 @@ describe("receipts.getPaged", () => {
 		describe("orderBy", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -306,7 +306,7 @@ describe("receipts.getPaged", () => {
 			// Verify other receipts do not interfere
 			await insertReceipt(ctx, otherAccountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				limit: 3,
 				cursor: 0,
@@ -339,7 +339,7 @@ describe("receipts.getPaged", () => {
 				}),
 			);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const firstPage = await caller.procedure({
 				limit,
 				cursor: 0,
@@ -505,7 +505,7 @@ describe("receipts.getPaged", () => {
 				const ascReceipts = sortedReceipts.toReversed().map(mapReceipt);
 
 				const limit = 2;
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ limit, cursor: 0, orderBy: "date-desc" }),
 					() => caller.procedure({ limit, cursor: 2, orderBy: "date-desc" }),
@@ -544,7 +544,7 @@ describe("receipts.getPaged", () => {
 			test("mixed success and fail", async ({ ctx }) => {
 				const { sessionId, receipts } = await mockData(ctx);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ limit: 2, cursor: 0, orderBy: "date-desc" }),
 					() =>

@@ -40,11 +40,11 @@ const handleWithError = (
 	procedureName: string,
 	callerName: string,
 ) => {
-	const errorMessage = ctx.req.headers["x-error"];
-	if (errorMessage !== undefined) {
+	const errorMessage = ctx.reqHeaders.get("x-error");
+	if (errorMessage !== null) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
-			message: String(errorMessage),
+			message: errorMessage,
 		});
 	}
 	return `${procedureName}, ${callerName}`;
@@ -62,7 +62,7 @@ const router = t.router({
 	authQuery: t.procedure
 		.use(async ({ ctx, next }) =>
 			next({
-				ctx: { ...ctx, auth: { email: ctx.req.headers["x-email"] } },
+				ctx: { ...ctx, auth: { email: ctx.reqHeaders.get("x-email") } },
 			}),
 		)
 		.query(({ ctx }) => handleWithError(ctx, "authQuery", "anyone")),
@@ -77,8 +77,8 @@ const router = t.router({
 	setHeader: t.procedure
 		.input(z.object({ name: z.string() }))
 		.query(({ ctx, input: { name } }) => {
-			ctx.res.setHeader("x-name", name);
-			ctx.res.setHeader("x-amount", 1);
+			ctx.resHeaders.set("x-name", name);
+			ctx.resHeaders.set("x-amount", "1");
 		}),
 });
 
