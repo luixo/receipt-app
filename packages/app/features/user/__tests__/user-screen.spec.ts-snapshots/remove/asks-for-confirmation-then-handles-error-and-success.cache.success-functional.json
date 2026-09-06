@@ -1,0 +1,11 @@
+{
+	"mutations": {
+		"users.remove": {
+			"1": {
+				"state": {
+					"status": "success"
+				}
+			}
+		}
+	}
+}

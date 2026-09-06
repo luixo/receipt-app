@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"a8454e57-5737-4356-a738-f447aaa164b0\"}]": {
+			"state": {
+				"data": {
+					"name": "Updated name"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"users.update": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "a8454e57-5737-4356-a738-f447aaa164b0",
+						"update": {
+							"type": "name",
+							"name": "Updated name"
+						}
+					}
+				}
+			}
+		}
+	}
+}

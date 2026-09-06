@@ -1,0 +1,8 @@
+{
+	"users.get": {
+		"clientCalls": 1
+	},
+	"users.remove": {
+		"clientCalls": 1
+	}
+}
