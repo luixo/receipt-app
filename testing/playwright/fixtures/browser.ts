@@ -1,3 +1,4 @@
+import type { Cookie } from "@playwright/test";
 import { test } from "@playwright/test";
 
 import type { StoreValues } from "~app/utils/store-data";
@@ -7,6 +8,9 @@ type CookieManager = {
 		name: K,
 		value: StoreValues[K],
 	) => Promise<void>;
+	getCookie: <K extends keyof StoreValues>(
+		name: K,
+	) => Promise<(Omit<Cookie, "value"> & { value: StoreValues[K] }) | undefined>;
 };
 
 type BrowserFixtures = {
@@ -25,6 +29,21 @@ export const browserFixtures = test.extend<BrowserFixtures>({
 						url: baseURL,
 					},
 				]);
+			},
+
+			getCookie: async (name) => {
+				const cookies = await browserContext.cookies();
+				const cookie = cookies.find(
+					(cookieLookup) => cookieLookup.name === name,
+				);
+				if (cookie === undefined) {
+					return undefined;
+				}
+				const { value, ...rest } = cookie;
+				return {
+					...rest,
+					value: value as StoreValues[typeof name],
+				};
 			},
 		});
 	},

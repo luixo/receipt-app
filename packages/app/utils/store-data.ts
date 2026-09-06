@@ -9,6 +9,7 @@ import {
 	lastColorModeSchema,
 	selectedColorModeSchema,
 } from "~app/utils/store/color-modes";
+import { LANGUAGE_STORE_NAME, languageSchema } from "~app/utils/store/language";
 import { LIMIT_STORE_NAME, limitSchema } from "~app/utils/store/limit";
 import {
 	LOCALE_STORE_NAME,
@@ -33,6 +34,8 @@ export const schemas = {
 	[TIMEZONE_STORE_NAME]: timezoneSchema,
 	// Syncing locale on SSR and CSR
 	[LOCALE_STORE_NAME]: localeSchema,
+	// User-chosen language
+	[LANGUAGE_STORE_NAME]: languageSchema,
 	// Local settings for a user
 	[SETTINGS_STORE_NAME]: settingsSchema,
 	// Last color schema used in this client
