@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"accountConnectionIntentions.remove": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"targetAccountId": "25592731-fe6a-44ea-a44f-6e22337155b2"
+					}
+				}
+			}
+		}
+	}
+}

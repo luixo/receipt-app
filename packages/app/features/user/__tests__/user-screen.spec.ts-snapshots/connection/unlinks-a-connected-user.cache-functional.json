@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"af468677-0243-4091-8a13-804335bc4af1\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"users.unlink": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"users.unlink\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "af468677-0243-4091-8a13-804335bc4af1"
+					}
+				}
+			}
+		]
+	}
+}
