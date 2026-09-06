@@ -29,7 +29,7 @@ export const verifyName = <T>(
 	describe("name", () => {
 		test("minimal length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MIN_RECEIPT_NAME_LENGTH - 1)),
 				"BAD_REQUEST",
@@ -39,7 +39,7 @@ export const verifyName = <T>(
 
 		test("maximum length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MAX_RECEIPT_NAME_LENGTH + 1)),
 				"BAD_REQUEST",
@@ -59,7 +59,7 @@ export const verifyCurrencyCode = <T>(
 	describe("currencyCode", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
 				"BAD_REQUEST",
@@ -79,7 +79,7 @@ export const verifyIssued = <T>(
 	describe("issued", () => {
 		test("not a date", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				// @ts-expect-error We test an error here
 				// oxlint-disable-next-line eslint-js/no-restricted-syntax
@@ -101,7 +101,7 @@ export const verifyReceiptId = <T>(
 	describe("id", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",

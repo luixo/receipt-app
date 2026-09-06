@@ -35,7 +35,7 @@ describe("accountConnectionIntentions.add", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +51,7 @@ describe("accountConnectionIntentions.add", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -66,7 +66,7 @@ describe("accountConnectionIntentions.add", () => {
 
 		test("user does not exist", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakeUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -87,7 +87,7 @@ describe("accountConnectionIntentions.add", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -107,7 +107,7 @@ describe("accountConnectionIntentions.add", () => {
 			await insertAccount(ctx);
 
 			const fakeEmail = faker.internet.email();
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -131,7 +131,7 @@ describe("accountConnectionIntentions.add", () => {
 				// Verify that other users don't affect error
 				await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -155,7 +155,7 @@ describe("accountConnectionIntentions.add", () => {
 				]);
 
 				const { id: userId } = await insertUser(ctx, accountId);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -180,7 +180,7 @@ describe("accountConnectionIntentions.add", () => {
 					userId,
 				);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -210,7 +210,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { id: userId } = await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -226,7 +226,7 @@ describe("accountConnectionIntentions.add", () => {
 		describe("multiple intentions", () => {
 			test("duplicate emails", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				const { email: otherEmail } = await insertAccount(ctx);
 
@@ -250,7 +250,7 @@ describe("accountConnectionIntentions.add", () => {
 
 			test("duplicate user ids", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				const { email: otherEmail } = await insertAccount(ctx);
 				const { email: anotherEmail } = await insertAccount(ctx);
@@ -270,7 +270,7 @@ describe("accountConnectionIntentions.add", () => {
 
 			test("mixed success and fail", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				const {
 					email: otherEmail,
@@ -328,7 +328,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ userId, email: otherEmail }),
 				);
@@ -361,7 +361,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ userId, email: otherEmail });
 				expect(result).toStrictEqual<typeof result>({
 					account: {
@@ -386,7 +386,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ userId, email: otherEmail }),
 				);
@@ -410,7 +410,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ userId, email: otherEmail });
 				expect(result).toStrictEqual<typeof result>({
 					account: {
@@ -453,7 +453,7 @@ describe("accountConnectionIntentions.add", () => {
 				accountId,
 			);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await runInBand([
 				() => caller.procedure({ userId, email: otherEmail }),
 				() => caller.procedure({ userId: anotherUserId, email: anotherEmail }),

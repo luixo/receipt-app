@@ -6,7 +6,6 @@ import { z } from "zod";
 import { test } from "~tests/backend/utils/test";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t, unauthProcedure } from "~web/handlers/trpc";
-import { getReqHeader } from "~web/utils/headers";
 
 import { queueCallFactory } from "./batch";
 import { getTestClient, withTestServer } from "./utils.test";
@@ -73,7 +72,7 @@ const queueElement = queueCallFactory<
 		});
 	},
 	{
-		getKey: (ctx) => getReqHeader(ctx, "x-test-id") ?? "unknown",
+		getKey: (ctx) => ctx.reqHeaders.get("x-test-id") ?? "unknown",
 	},
 );
 

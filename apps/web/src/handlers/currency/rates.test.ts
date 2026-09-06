@@ -31,7 +31,7 @@ describe("currency.rates", () => {
 
 		test(`invalid "from" currency code`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "foo", to: ["USD"] }),
 				"BAD_REQUEST",
@@ -41,7 +41,7 @@ describe("currency.rates", () => {
 
 		test(`invalid "to" currency code`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["USD", "bar"] }),
 				"BAD_REQUEST",
@@ -51,7 +51,7 @@ describe("currency.rates", () => {
 
 		test(`invalid "to" codes amount`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: [] }),
 				"BAD_REQUEST",
@@ -61,7 +61,7 @@ describe("currency.rates", () => {
 
 		test(`"to" and "from" codes are the same`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["EUR", "USD"] }),
 				"BAD_REQUEST",
@@ -78,7 +78,7 @@ describe("currency.rates", () => {
 					throw new Error('Throw on "getValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ from: "USD", to: ["EUR"] }),
 					"INTERNAL_SERVER_ERROR",
@@ -93,7 +93,7 @@ describe("currency.rates", () => {
 					throw new Error('Throw on "setValue" request');
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				// Throwing on setValue doesn't affect flow as result may be discarded
 				await caller.procedure({ from: "USD", to: ["EUR"] });
 			});
@@ -107,7 +107,7 @@ describe("currency.rates", () => {
 					throw new Error("Generic exchange rate mock error");
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -126,7 +126,7 @@ describe("currency.rates", () => {
 					Promise.resolve(getFakeRate()),
 				);
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
 				const result = await caller.procedure({
@@ -175,7 +175,7 @@ describe("currency.rates", () => {
 					/* empty */
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
 				const result = await caller.procedure({
@@ -229,7 +229,7 @@ describe("currency.rates", () => {
 					return Promise.resolve(fakeRates[currencyTo]?.toString() ?? null);
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					from: currencyFrom,
 					to: currenciesTo,
@@ -259,7 +259,7 @@ describe("currency.rates", () => {
 				Promise.resolve(getFakeRate().toString()),
 			);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const currencyFrom = "uSd";
 			const currenciesTo = ["EUR", "mop", "VnD"];
 			const result = await caller.procedure({

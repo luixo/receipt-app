@@ -69,7 +69,7 @@ describe("account.changeAvatar", () => {
 		describe("avatar", () => {
 			test("is too big in bytes", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -86,7 +86,7 @@ describe("account.changeAvatar", () => {
 
 			test("is too tall", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -102,7 +102,7 @@ describe("account.changeAvatar", () => {
 
 			test("is too wide", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -118,7 +118,7 @@ describe("account.changeAvatar", () => {
 
 			test("is not square", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -136,7 +136,7 @@ describe("account.changeAvatar", () => {
 
 			test("is not of allowed format", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -155,7 +155,7 @@ describe("account.changeAvatar", () => {
 		test("provider broken", async ({ ctx }) => {
 			ctx.s3Options.setBroken(true);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				async () =>
 					caller.procedure(
@@ -175,7 +175,7 @@ describe("account.changeAvatar", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getFormData()),
@@ -188,7 +188,7 @@ describe("account.changeAvatar", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, async () =>
 				caller.procedure(

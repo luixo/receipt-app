@@ -118,7 +118,7 @@ const updateDescribes = (getData: GetData) => {
 			},
 		});
 
-		const caller = createCaller(await createAuthContext(ctx, sessionId));
+		const caller = createCaller(createAuthContext(ctx, sessionId));
 		const results = await expectDatabaseDiffSnapshot(ctx, () =>
 			runInBand(updates.map((update) => () => caller.procedure(update))),
 		);
@@ -188,7 +188,7 @@ describe("debts.update", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -206,7 +206,7 @@ describe("debts.update", () => {
 		describe("update", () => {
 			test("should have at least one key", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -276,7 +276,7 @@ describe("debts.update", () => {
 			await insertDebt(ctx, accountId, userId);
 
 			const fakeDebtId = faker.string.uuid();
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -307,7 +307,7 @@ describe("debts.update", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			await insertDebt(ctx, accountId, userId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -324,7 +324,7 @@ describe("debts.update", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			const debt = await insertDebt(ctx, accountId, userId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runInBand([
 					() =>
@@ -595,7 +595,7 @@ describe("debts.update", () => {
 				const debt = await insertDebt(ctx, accountId, acceptingUserId);
 				const fakeDebtId = faker.string.uuid();
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() =>
 						caller.procedure({
@@ -628,7 +628,7 @@ describe("debts.update", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			const debt = await insertDebt(ctx, accountId, userId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				id: debt.id,
 				update: { amount: getRandomAmount() },

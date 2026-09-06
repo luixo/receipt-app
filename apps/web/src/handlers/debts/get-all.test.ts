@@ -36,7 +36,7 @@ describe("debts.getAll", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -78,7 +78,7 @@ describe("debts.getAll", () => {
 				amount: getAmount(),
 			});
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 
 			const resultEntries = fromEntries(
@@ -115,7 +115,7 @@ describe("debts.getAll", () => {
 				amount: -amount,
 			});
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{
@@ -139,7 +139,7 @@ describe("debts.getAll", () => {
 				amount: -2 * amount,
 			});
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{
@@ -162,7 +162,7 @@ describe("debts.getAll", () => {
 				amount: 0.2,
 			});
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{

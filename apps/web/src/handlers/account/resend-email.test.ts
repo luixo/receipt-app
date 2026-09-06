@@ -45,7 +45,7 @@ describe("account.resendEmail", () => {
 				sessionId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
@@ -69,7 +69,7 @@ describe("account.resendEmail", () => {
 					},
 				},
 			});
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
@@ -82,7 +82,7 @@ describe("account.resendEmail", () => {
 		test("email is not resent - service is disabled", async ({ ctx }) => {
 			ctx.emailOptions.setActive(false);
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"FORBIDDEN",
@@ -95,7 +95,7 @@ describe("account.resendEmail", () => {
 		}) => {
 			ctx.emailOptions.setBroken(true);
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"INTERNAL_SERVER_ERROR",
@@ -109,7 +109,7 @@ describe("account.resendEmail", () => {
 			await insertAccountWithSession(ctx);
 			await insertReadyForEmailAccount(ctx);
 			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const { email: returnEmail } = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);

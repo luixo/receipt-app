@@ -15,7 +15,6 @@ import { test } from "~tests/backend/utils/test";
 import { add, getNow, subtract } from "~utils/date";
 import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
-import { getResHeaders } from "~web/utils/headers";
 
 import { router } from "./index";
 
@@ -27,7 +26,7 @@ describe("procedures", () => {
 			// oxlint-disable-next-line no-param-reassign
 			ctx.logger.level = "trace";
 
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await caller.sessions.cleanup();
 			const loggedMessages = ctx.logger.getMessages();
 			expect(Array.isArray(loggedMessages)).toBe(true);
@@ -55,7 +54,7 @@ describe("procedures", () => {
 			// oxlint-disable-next-line no-param-reassign
 			ctx.logger.level = "trace";
 
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await caller.account.get().catch((error) => error);
 			const loggedMessages = ctx.logger.getMessages();
 			expect(Array.isArray(loggedMessages)).toBe(true);
@@ -83,7 +82,7 @@ describe("procedures", () => {
 
 	describe("auth procedure", () => {
 		test("no token provided", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() => caller.account.get(),
 				"UNAUTHORIZED",
@@ -93,8 +92,8 @@ describe("procedures", () => {
 
 		test("invalid uuid", async ({ ctx }) => {
 			const caller = createCaller(
-				await createContext(ctx, {
-					request: { headers: { cookie: "authToken=fake" } },
+				createContext(ctx, {
+					reqHeaders: { cookie: "authToken=fake" },
 				}),
 			);
 			await expectTRPCError(
@@ -109,8 +108,8 @@ describe("procedures", () => {
 			await insertAccountWithSession(ctx);
 
 			const caller = createCaller(
-				await createContext(ctx, {
-					request: { headers: { cookie: `authToken=${faker.string.uuid()}` } },
+				createContext(ctx, {
+					reqHeaders: { cookie: `authToken=${faker.string.uuid()}` },
 				}),
 			);
 			await expectTRPCError(
@@ -131,10 +130,10 @@ describe("procedures", () => {
 				},
 			});
 
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getResHeaders(context);
+			const responseHeaders = [...context.resHeaders.entries()];
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([]);
 		});
 
@@ -148,10 +147,10 @@ describe("procedures", () => {
 				},
 			});
 
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getResHeaders(context);
+			const responseHeaders = [...context.resHeaders.entries()];
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
@@ -164,7 +163,7 @@ describe("procedures", () => {
 			describe("context is regular", () => {
 				test("with non-admin role", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const { account } = await caller.account.get();
 					expect(account.id).toStrictEqual(accountId);
 				});
@@ -174,13 +173,11 @@ describe("procedures", () => {
 						account: { role: "admin" },
 					});
 					const caller = createCaller(
-						await createAuthContext(ctx, sessionId, {
-							request: {
-								headers: {
-									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-										email: "not@found.com",
-									})}`,
-								},
+						createAuthContext(ctx, sessionId, {
+							reqHeaders: {
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+									email: "not@found.com",
+								})}`,
 							},
 						}),
 					);
@@ -194,14 +191,12 @@ describe("procedures", () => {
 					});
 					const foreignAccount = await insertAccount(ctx);
 					const caller = createCaller(
-						await createAuthContext(ctx, sessionId, {
-							request: {
-								headers: {
-									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-										email: foreignAccount.email,
-									})}`,
-									"x-keep-real-auth": "true",
-								},
+						createAuthContext(ctx, sessionId, {
+							reqHeaders: {
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+									email: foreignAccount.email,
+								})}`,
+								"x-keep-real-auth": "true",
 							},
 						}),
 					);
@@ -215,13 +210,11 @@ describe("procedures", () => {
 					});
 					const foreignAccount = await insertAccount(ctx);
 					const caller = createCaller(
-						await createAuthContext(ctx, sessionId, {
-							request: {
-								headers: {
-									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-										email2: foreignAccount.email,
-									})}`,
-								},
+						createAuthContext(ctx, sessionId, {
+							reqHeaders: {
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+									email2: foreignAccount.email,
+								})}`,
 							},
 						}),
 					);
@@ -236,13 +229,11 @@ describe("procedures", () => {
 				});
 				const foreignAccount = await insertAccount(ctx);
 				const caller = createCaller(
-					await createAuthContext(ctx, sessionId, {
-						request: {
-							headers: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-									email: foreignAccount.email,
-								})}`,
-							},
+					createAuthContext(ctx, sessionId, {
+						reqHeaders: {
+							cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+								email: foreignAccount.email,
+							})}`,
 						},
 					}),
 				);
@@ -257,7 +248,7 @@ describe("procedures", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { role: "foo" },
 			});
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.admin.accounts(),
 				"UNAUTHORIZED",
@@ -269,7 +260,7 @@ describe("procedures", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { role: "admin" },
 			});
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const accounts = await caller.admin.accounts();
 			expect(accounts).toHaveLength(0);
 		});

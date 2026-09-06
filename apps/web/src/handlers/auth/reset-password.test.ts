@@ -19,7 +19,6 @@ import { test } from "~tests/backend/utils/test";
 import { getNow, subtract } from "~utils/date";
 import { getHash } from "~utils/server/crypto";
 import { t } from "~web/handlers/trpc";
-import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./reset-password";
 
@@ -29,7 +28,7 @@ describe("auth.resetPassword", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -44,7 +43,7 @@ describe("auth.resetPassword", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -57,7 +56,7 @@ describe("auth.resetPassword", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -71,7 +70,7 @@ describe("auth.resetPassword", () => {
 		});
 
 		test("no intention exists", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -91,7 +90,7 @@ describe("auth.resetPassword", () => {
 					minutes: 1,
 				}),
 			});
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -119,7 +118,7 @@ describe("auth.resetPassword", () => {
 				}),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(ctx, () =>
@@ -137,7 +136,7 @@ describe("auth.resetPassword", () => {
 			await expect(getHash(password, passwordSalt)).resolves.toStrictEqual(
 				passwordHash,
 			);
-			expect(getResHeaders(context)).toHaveLength(0);
+			expect([...context.resHeaders.entries()]).toHaveLength(0);
 		});
 	});
 });

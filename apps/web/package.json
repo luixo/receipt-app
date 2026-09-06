@@ -32,7 +32,6 @@
 		"@trpc/tanstack-react-query": "catalog:",
 		"cookie": "catalog:",
 		"dataloader": "catalog:",
-		"fetch-to-node": "^2.1.0",
 		"i18next": "catalog:",
 		"idb-keyval": "^6.2.1",
 		"image-size": "catalog:",

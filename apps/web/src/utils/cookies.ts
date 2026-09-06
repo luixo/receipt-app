@@ -6,7 +6,7 @@ import type { Temporal } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export const getCookie = (
-	cookieHeader: string | undefined,
+	cookieHeader: string | null,
 	cookieName: string,
 ): string | undefined => parse(cookieHeader ?? "")[cookieName];
 
@@ -28,12 +28,12 @@ export const getOptions = ({ expires, ...opts }: Options) => ({
 
 export const setCookie = createServerOnlyFn(
 	(
-		{ res }: Pick<UnauthorizedContext, "res">,
+		{ resHeaders }: Pick<UnauthorizedContext, "resHeaders">,
 		cookieName: string,
 		cookieValue: string,
 		opts: Options,
 	) => {
 		const newCookie = serialize(cookieName, cookieValue, getOptions(opts));
-		res.appendHeader("Set-Cookie", newCookie);
+		resHeaders.set("Set-Cookie", newCookie);
 	},
 );

@@ -10,23 +10,12 @@ import { withTestServer } from "~web/handlers/utils.test";
 import { getApiTrpcClient, getLoaderTrpcClient } from "./trpc";
 
 const router = t.router({
-	getSearch: t.procedure.query(
-		({ ctx }) => new URL(ctx.req.url ?? "", "http://localhost/").search,
+	getHeaders: t.procedure.query(({ ctx }) =>
+		fromEntries([...ctx.reqHeaders.entries()]),
 	),
-	getHeaders: t.procedure.query(({ ctx }) => ctx.req.headers),
 });
 
 describe("API calls", () => {
-	test("search params are passed through", async ({ ctx }) => {
-		await withTestServer(ctx, router, async ({ url }) => {
-			const urlObject = new URL(url);
-			urlObject.searchParams.set("foo", "bar");
-			const client = getApiTrpcClient<typeof router>(new Request(urlObject));
-			const resultSearch = await client.getSearch.query();
-			expect(resultSearch).toMatch(/foo=bar/);
-		});
-	});
-
 	test("headers are passed through", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
 			const adHocHeaders = Array.from(

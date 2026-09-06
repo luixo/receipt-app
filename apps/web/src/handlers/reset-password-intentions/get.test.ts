@@ -20,7 +20,7 @@ describe("resetPasswordIntentions.get", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -30,7 +30,7 @@ describe("resetPasswordIntentions.get", () => {
 		});
 
 		test("no intention token exists", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ token: intentionToken }),
@@ -40,7 +40,7 @@ describe("resetPasswordIntentions.get", () => {
 		});
 
 		test("intention token is expired", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const { id: accountId } = await insertAccount(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
 				expiresTimestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
@@ -62,7 +62,7 @@ describe("resetPasswordIntentions.get", () => {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ token });
 			expect(result).toStrictEqual<typeof result>({ email });
 		});

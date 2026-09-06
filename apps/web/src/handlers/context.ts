@@ -1,6 +1,4 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
-import type { TRPCRequestInfo } from "@trpc/server/http";
-import type { IncomingMessage, ServerResponse } from "node:http";
 
 import type { Database } from "~db/database";
 import type { TestContext } from "~tests/backend/utils/test";
@@ -21,9 +19,8 @@ type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
 };
 
 export type NetContext = {
-	req: IncomingMessage;
-	res: ServerResponse;
-	info: TRPCRequestInfo;
+	reqHeaders: Headers;
+	resHeaders: Headers;
 };
 
 export type UnauthorizedContext = NetContext & TestContextPicks;
@@ -36,17 +33,3 @@ export type HandlerMeta = {
 export type AuthorizedContext = inferProcedureBuilderResolverOptions<
 	typeof authProcedure
 >["ctx"];
-
-export const createContext = (
-	{
-		req,
-		res,
-		info,
-	}: { req: IncomingMessage; res: ServerResponse; info: TRPCRequestInfo },
-	testContext: TestContextPicks,
-): UnauthorizedContext => ({
-	info,
-	req,
-	res,
-	...testContext,
-});

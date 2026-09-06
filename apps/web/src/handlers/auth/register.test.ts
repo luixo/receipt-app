@@ -16,7 +16,6 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
-import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./register";
 
@@ -26,7 +25,7 @@ describe("auth.register", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -42,7 +41,7 @@ describe("auth.register", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +55,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -72,7 +71,7 @@ describe("auth.register", () => {
 
 		describe("name", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -86,7 +85,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -101,7 +100,7 @@ describe("auth.register", () => {
 		});
 
 		test("email already exist", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const {
 				account: { email: existingEmail },
 			} = await insertAccountWithSession(ctx);
@@ -121,7 +120,7 @@ describe("auth.register", () => {
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.setActive(false);
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -134,7 +133,7 @@ describe("auth.register", () => {
 			expect(result).toStrictEqual<typeof result>({
 				account: { id: result.account.id, verified: true },
 			});
-			const responseHeaders = getResHeaders(context);
+			const responseHeaders = [...context.resHeaders.entries()];
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);
@@ -155,7 +154,7 @@ describe("auth.register", () => {
 
 		test("email sent if active", async ({ ctx }) => {
 			const email = faker.internet.email();
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email,
@@ -177,7 +176,7 @@ describe("auth.register", () => {
 
 		test("email reports error if broken", async ({ ctx }) => {
 			ctx.emailOptions.setBroken(true);
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			await expectTRPCError(
 				() =>

@@ -44,14 +44,14 @@ declare module "@trpc/client" {
 
 export const noBatchContext = { batch: Symbol("no-batch") };
 
-export type Headers = Partial<Record<string, string>>;
+export type SimpleHeaders = Record<string, string>;
 
 export type GetLinksOptions = {
 	url: string;
 	debug?: boolean;
 	useBatch?: boolean;
 	keepError?: boolean;
-	headers?: Headers;
+	headers?: SimpleHeaders;
 	fetch?: Parameters<typeof httpLink>[0]["fetch"];
 	captureError: (error: Error) => string;
 	source: // Client-side rendering

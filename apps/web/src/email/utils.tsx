@@ -43,13 +43,7 @@ const generateEmail = async (
 	element: React.ReactElement,
 	titlePath: ParseKeys<"email">,
 ) => {
-	const language = getLanguageFromRequest(
-		new Headers(
-			entries(ctx.req.headers).filter(
-				(entry): entry is [string, string] => typeof entry[1] === "string",
-			),
-		),
-	);
+	const language = getLanguageFromRequest(ctx.reqHeaders);
 	const i18nContext = createI18nContext({
 		getLanguage: () => language,
 		beforeInit: (instance) => instance.use(getBackendModule()),

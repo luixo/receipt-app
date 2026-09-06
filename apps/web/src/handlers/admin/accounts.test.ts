@@ -52,7 +52,7 @@ describe("admin.accounts", () => {
 				anotherConnectedAccount.id,
 			]);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const accounts = await caller.procedure();
 
 			expect(accounts).toStrictEqual<typeof accounts>(

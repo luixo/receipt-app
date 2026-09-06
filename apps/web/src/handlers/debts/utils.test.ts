@@ -40,7 +40,7 @@ export const verifyAmount = <T>(
 	describe("amount", () => {
 		test("zero", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 0),
 				"BAD_REQUEST",
@@ -50,7 +50,7 @@ export const verifyAmount = <T>(
 
 		test("fraction precision", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 1.001),
 				"BAD_REQUEST",
@@ -60,7 +60,7 @@ export const verifyAmount = <T>(
 
 		test("too big", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 10 ** 15),
 				"BAD_REQUEST",
@@ -77,7 +77,7 @@ export const verifyNote = <T>(
 	describe("note", () => {
 		test("minimal length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MIN_DEBT_NOTE_LENGTH - 1)),
 				"BAD_REQUEST",
@@ -87,7 +87,7 @@ export const verifyNote = <T>(
 
 		test("maximum length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MAX_DEBT_NOTE_LENGTH + 1)),
 				"BAD_REQUEST",
@@ -107,7 +107,7 @@ export const verifyCurrencyCode = <T>(
 	describe("currencyCode", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
 				"BAD_REQUEST",
@@ -127,7 +127,7 @@ export const verifyTimestamp = <T>(
 	describe("timestamp", () => {
 		test("not a date", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				// @ts-expect-error We test an error here
 				// oxlint-disable-next-line eslint-js/no-restricted-syntax
@@ -149,7 +149,7 @@ export const verifyReceiptId = <T>(
 	describe("receiptId", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-uuid"),
 				"BAD_REQUEST",
@@ -166,7 +166,7 @@ export const verifyUserId = <T>(
 	describe("userId", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = await createAuthContext(ctx, sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",
