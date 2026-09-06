@@ -30,7 +30,7 @@ describe("account.changePassword", () => {
 			const otherType = types.find((lookupType) => lookupType !== type);
 			test("minimal length", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -44,7 +44,7 @@ describe("account.changePassword", () => {
 
 			test("maximum length", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -66,7 +66,7 @@ describe("account.changePassword", () => {
 			} = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -88,7 +88,7 @@ describe("account.changePassword", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({

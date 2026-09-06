@@ -65,7 +65,7 @@ const runTests = (
 			foreignReceiptId,
 		);
 
-		const caller = createCaller(await createAuthContext(ctx, sessionId));
+		const caller = createCaller(createAuthContext(ctx, sessionId));
 		await expectDatabaseDiffSnapshot(ctx, () =>
 			caller.procedure({
 				id: type === "own" ? receiptItemId : foreignReceiptItemId,
@@ -128,7 +128,7 @@ describe("receiptItems.update", () => {
 
 		test("receipt item does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeReceiptItemId = faker.string.uuid();
@@ -158,7 +158,7 @@ describe("receiptItems.update", () => {
 				foreignReceiptId,
 			);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -195,7 +195,7 @@ describe("receiptItems.update", () => {
 				foreignReceiptId,
 			);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -211,7 +211,7 @@ describe("receiptItems.update", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({

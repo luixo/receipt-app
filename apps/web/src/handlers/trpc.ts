@@ -23,7 +23,6 @@ import type {
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
 import { getCookie, setCookie } from "~web/utils/cookies";
-import { getReqHeader } from "~web/utils/headers";
 
 export const t = initTRPC
 	.context<UnauthorizedContext>()
@@ -69,11 +68,11 @@ export const unauthProcedure = t.procedure.use(
 );
 
 const getAuthToken = (ctx: UnauthorizedContext) =>
-	getCookie(getReqHeader(ctx, "cookie"), AUTH_COOKIE);
+	getCookie(ctx.reqHeaders.get("cookie"), AUTH_COOKIE);
 
 const getPretendAccountEmail = (ctx: NetContext): string | undefined => {
 	const pretendUserString = getCookie(
-		getReqHeader(ctx, "cookie"),
+		ctx.reqHeaders.get("cookie"),
 		PRETEND_USER_STORE_NAME,
 	);
 	if (!pretendUserString) {
@@ -148,7 +147,7 @@ const queueSession = queueCallFactory<
 			if (
 				pretendAccount &&
 				matchedSession.role === "admin" &&
-				!getReqHeader(ctx, "x-keep-real-auth")
+				!ctx.reqHeaders.get("x-keep-real-auth")
 			) {
 				return {
 					realAuth: auth,
@@ -215,7 +214,7 @@ const queueSession = queueCallFactory<
 				// If we've got here, auth token surely exists
 				// oxlint-disable-next-line typescript/no-non-null-assertion
 				getAuthToken(ctx)!,
-				getReqHeader(ctx, "x-keep-real-auth") ?? "",
+				ctx.reqHeaders.get("x-keep-real-auth") ?? "",
 			]
 				.filter(Boolean)
 				.join("/"),

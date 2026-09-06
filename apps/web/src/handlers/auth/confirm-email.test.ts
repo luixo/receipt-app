@@ -10,7 +10,6 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
-import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./confirm-email";
 
@@ -20,7 +19,7 @@ describe("auth.confirmEmail", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -30,7 +29,7 @@ describe("auth.confirmEmail", () => {
 		});
 
 		test("no confirmation token exists", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			await insertAccountWithSession(ctx);
 			await expectTRPCError(
@@ -53,7 +52,7 @@ describe("auth.confirmEmail", () => {
 			await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			assert.ok(
 				confirmationToken,
@@ -63,7 +62,7 @@ describe("auth.confirmEmail", () => {
 				caller.procedure({ token: confirmationToken }),
 			);
 			expect(result).toStrictEqual<typeof result>({ email });
-			const responseHeaders = getResHeaders(context);
+			const responseHeaders = [...context.resHeaders.entries()];
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

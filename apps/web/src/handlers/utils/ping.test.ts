@@ -12,13 +12,13 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 describe("utils.ping", () => {
 	describe("functionality", () => {
 		test("pong is sent", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ timeout: 0 });
 			expect(result).toBe<typeof result>("PONG");
 		});
 
 		test("error is thrown", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() => caller.procedure({ timeout: 0, error: true }),
 				"BAD_REQUEST",

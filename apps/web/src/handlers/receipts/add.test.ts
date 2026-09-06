@@ -66,7 +66,7 @@ describe("receipts.add", () => {
 		describe("participants", () => {
 			test("invalid uuid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const invalidUuid = "not-a-uuid";
 				await expectTRPCError(
 					() =>
@@ -86,7 +86,7 @@ describe("receipts.add", () => {
 		describe("items", () => {
 			test("invalid uuid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -107,7 +107,7 @@ describe("receipts.add", () => {
 
 		test("user does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await insertUser(ctx, accountId);
 			const fakeUserId = faker.string.uuid();
 			await expectTRPCError(
@@ -128,7 +128,7 @@ describe("receipts.add", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -153,7 +153,7 @@ describe("receipts.add", () => {
 					{ userId: selfUserId, role: "editor" },
 				];
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					expectTRPCError(
 						() => caller.procedure({ ...getValidReceipt(), participants }),
@@ -175,7 +175,7 @@ describe("receipts.add", () => {
 					{ userId: selfUserId, part: 1 },
 				];
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					expectTRPCError(
 						() => caller.procedure({ ...getValidReceipt(), payers }),
@@ -217,7 +217,7 @@ describe("receipts.add", () => {
 					},
 				];
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					expectTRPCError(
 						() =>
@@ -245,7 +245,7 @@ describe("receipts.add", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			await insertUser(ctx, foreignAccountId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceipt()),
 			);
@@ -277,7 +277,7 @@ describe("receipts.add", () => {
 				{ userId: selfUserId, role: "editor" },
 			];
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ ...getValidReceipt(), participants }),
 			);
@@ -308,7 +308,7 @@ describe("receipts.add", () => {
 				getValidReceiptItemNoReceiptId(),
 			];
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ ...getValidReceipt(), items: receiptItems }),
 			);
@@ -365,7 +365,7 @@ describe("receipts.add", () => {
 				},
 			];
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					...getValidReceipt(),
@@ -418,7 +418,7 @@ describe("receipts.add", () => {
 				{ userId: selfUserId, part: 22 },
 			];
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					...getValidReceipt(),

@@ -13,7 +13,6 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
-import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./login";
 
@@ -23,7 +22,7 @@ describe("auth.login", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -38,7 +37,7 @@ describe("auth.login", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +50,7 @@ describe("auth.login", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(await createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -65,7 +64,7 @@ describe("auth.login", () => {
 		});
 
 		test("account not found", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
 				() =>
@@ -82,7 +81,7 @@ describe("auth.login", () => {
 			const {
 				account: { email, password },
 			} = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -102,7 +101,7 @@ describe("auth.login", () => {
 				account: { email, password, avatarUrl },
 				name,
 			} = await insertAccountWithSession(ctx);
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ email, password }),
@@ -111,7 +110,7 @@ describe("auth.login", () => {
 				account: { id: accountId, verified: true, avatarUrl, role: undefined },
 				user: { name },
 			});
-			const responseHeaders = getResHeaders(context);
+			const responseHeaders = [...context.resHeaders.entries()];
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);
@@ -138,7 +137,7 @@ describe("auth.login", () => {
 			} = await insertAccountWithSession(ctx, {
 				account: { confirmation: {}, avatarUrl: null },
 			});
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const result = await caller.procedure({ email, password });
 			expect(result).toStrictEqual<typeof result>({
@@ -156,7 +155,7 @@ describe("auth.login", () => {
 			const {
 				account: { email, password },
 			} = await insertAccountWithSession(ctx);
-			const context = await createContext(ctx);
+			const context = createContext(ctx);
 			const caller = createCaller(context);
 			await caller.procedure({ email: email.toUpperCase(), password });
 		});

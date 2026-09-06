@@ -44,7 +44,7 @@ describe("debts.getUsersPaged", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0 }),
 					"BAD_REQUEST",
@@ -54,7 +54,7 @@ describe("debts.getUsersPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: MAX_LIMIT + 1 }),
 					"BAD_REQUEST",
@@ -64,7 +64,7 @@ describe("debts.getUsersPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: faker.number.float() }),
 					"BAD_REQUEST",
@@ -76,7 +76,7 @@ describe("debts.getUsersPaged", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: -1, limit: 1 }),
 					"BAD_REQUEST",
@@ -86,7 +86,7 @@ describe("debts.getUsersPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: MAX_OFFSET + 1, limit: 1 }),
 					"BAD_REQUEST",
@@ -96,7 +96,7 @@ describe("debts.getUsersPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: faker.number.float(), limit: 1 }),
 					"BAD_REQUEST",
@@ -117,7 +117,7 @@ describe("debts.getUsersPaged", () => {
 
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ cursor: 0, limit: 10 });
 			expect(result).toStrictEqual<typeof result>({
 				count: 0,
@@ -170,7 +170,7 @@ describe("debts.getUsersPaged", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ cursor: 0, limit: 10 });
 			const users = [
 				{ user, debts: userDebts },
@@ -209,7 +209,7 @@ describe("debts.getUsersPaged", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				cursor: 0,
 				limit: 10,
@@ -238,7 +238,7 @@ describe("debts.getUsersPaged", () => {
 
 			const limit = 3;
 			const cursor = 1;
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				cursor,
 				limit,
@@ -285,7 +285,7 @@ describe("debts.getUsersPaged", () => {
 				);
 
 				const limit = 2;
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ cursor: 0, limit }),
 					() => caller.procedure({ cursor: 2, limit }),
@@ -328,7 +328,7 @@ describe("debts.getUsersPaged", () => {
 					await insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
 				];
 
-				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([
 					() => caller.procedure({ cursor: 0, limit: 2 }),
 					() =>
