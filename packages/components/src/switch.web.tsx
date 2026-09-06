@@ -10,11 +10,21 @@ export type Props = Pick<
 	| "isReadOnly"
 	| "size"
 	| "className"
+	| "aria-label"
 > & {
 	thumbIcon?: React.ReactNode;
 	thumbClassName?: string;
+	testID?: string;
 };
 
-export const Switch: React.FC<Props> = ({ thumbClassName, ...props }) => (
-	<SwitchRaw {...props} classNames={{ thumb: thumbClassName }} />
+export const Switch: React.FC<Props> = ({
+	thumbClassName,
+	testID,
+	...props
+}) => (
+	<SwitchRaw
+		{...props}
+		classNames={{ thumb: thumbClassName }}
+		data-testid={testID}
+	/>
 );

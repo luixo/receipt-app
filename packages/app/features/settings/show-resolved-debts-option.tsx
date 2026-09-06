@@ -10,6 +10,7 @@ export const ShowResolvedDebtsOption: React.FC<
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
 	return (
 		<Switch
+			testID="show-resolved-debts-switch"
 			isSelected={showResolvedDebts}
 			onValueChange={setShowResolvedDebts}
 			thumbIcon={<Icon name="check" />}

@@ -56,6 +56,16 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 	page: async ({ page, javaScriptEnabled, api, baseURL }, use) => {
 		await page.emulateMedia({ colorScheme: "light" });
 
+		const pageAfterEach = async () => {
+			if (javaScriptEnabled) {
+				await page.locator("hydrated").waitFor({ state: "attached" });
+				// Remove rounding for dialogs to make screenshots more stable
+				await page.addStyleTag({
+					content: '[role="dialog"] { border-radius: 0 !important }',
+				});
+			}
+		};
+
 		const originalGoto = page.goto.bind(page);
 		// oxlint-disable-next-line no-param-reassign
 		page.goto = async (url, options) => {
@@ -67,13 +77,14 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 				waitUntil: javaScriptEnabled ? "commit" : "load",
 				...options,
 			});
-			if (javaScriptEnabled) {
-				await page.locator("hydrated").waitFor({ state: "attached" });
-				// Remove rounding for dialogs to make screenshots more stable
-				await page.addStyleTag({
-					content: '[role="dialog"] { border-radius: 0 !important }',
-				});
-			}
+			await pageAfterEach();
+			return result;
+		};
+		const originalReload = page.reload.bind(page);
+		// oxlint-disable-next-line no-param-reassign
+		page.reload = async (options) => {
+			const result = await originalReload(options);
+			await pageAfterEach();
 			return result;
 		};
 

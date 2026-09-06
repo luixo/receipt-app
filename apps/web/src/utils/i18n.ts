@@ -7,6 +7,7 @@ import type { BackendModule, ParseKeys, ResourceKey } from "i18next";
 import type { I18nContext } from "~app/utils/i18n";
 import type { Language, Namespace } from "~app/utils/i18n-data";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
+import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
 import { env } from "~web/utils/env";
 
 const getCookie = (headers: Headers | undefined) =>
@@ -30,13 +31,12 @@ const getHeaderLanguages = (headers: Headers | undefined) =>
 
 type Strategy = "cookie" | "header" | "baseLocale";
 const strategies: Strategy[] = ["cookie", "header", "baseLocale"];
-export const COOKIE_LANGUAGE_NAME = "receipt_language";
 export const getLanguageFromRequest = (headers: Headers | undefined) => {
 	for (const strategy of strategies) {
 		switch (strategy) {
 			case "cookie": {
 				const cookies = parse(getCookie(headers));
-				const cookieLanguage = cookies[COOKIE_LANGUAGE_NAME] ?? "";
+				const cookieLanguage = cookies[LANGUAGE_STORE_NAME] ?? "";
 				if (isLanguage(cookieLanguage)) {
 					return cookieLanguage;
 				}
