@@ -73,8 +73,10 @@ test.describe("Header", () => {
 		openDebtsExchangeScreen,
 		backLink,
 		page,
+		api,
 	}) => {
 		const { debtUser } = await mockDebts();
+		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
 		await openDebtsExchangeScreen(debtUser.id);
 		await backLink.click();
 		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);

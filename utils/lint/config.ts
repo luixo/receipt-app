@@ -231,7 +231,12 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 	[["**/*.native.ts{,x}"], ["native-only", "strict-native-only"]],
 	// Server code is allowed in these locations
 	[
-		["apps/web/src/handlers/**/*", "apps/web/src/pages/api/**/*", "testing/**"],
+		[
+			"apps/web/src/handlers/**/*",
+			"apps/web/src/pages/api/**/*",
+			"apps/web/src/entry/server.tsx",
+			"testing/**",
+		],
 		["client-only"],
 	],
 ];

@@ -76,7 +76,7 @@ test("'debtIntentions.accept' pending / error", async ({
 			await acceptAllIntentionButton.click();
 			await awaitCacheKey("debtIntentions.accept", {
 				success: debtsAmount - rejectedDebtsAmount,
-				error: rejectedDebtsAmount,
+				pending: rejectedDebtsAmount,
 			});
 			await verifyToastTexts([
 				`Accepting ${debtsAmount} debts..`,

@@ -1,5 +1,7 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import colors from "colors";
+
+import { serverFixtures as test } from "./server";
 
 type IgnoredPattern = string | RegExp;
 
@@ -40,6 +42,8 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/React does not recognize the `%s` prop on a DOM element/,
 ];
 
+const DEFAULT_SERVER_IGNORED = DEFAULT_IGNORED;
+
 type ConsoleFixtures = {
 	autoVerifyNoConsoleMessages: void;
 	consoleManager: {
@@ -59,25 +63,49 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 		});
 	},
 	autoVerifyNoConsoleMessages: [
-		async ({ page, consoleManager }, use, testInfo) => {
+		async ({ page, consoleManager, serverClient }, use, testInfo) => {
 			if (testInfo.project.name !== "functional") {
 				await use();
 				return;
 			}
 			await use();
-			const messages = await page.consoleMessages();
-			const ignored = [
+			const clientMessages = await page.consoleMessages();
+			const serverMessages = await serverClient.getTestErrors.query({
+				testId: testInfo.testId,
+			});
+			const messages = [
+				...clientMessages.map((message) => ({
+					kind: "client",
+					type: message.type(),
+					text: message.text(),
+				})),
+				...serverMessages.map((entry) => ({
+					kind: "server",
+					type: entry.type,
+					text: entry.text,
+				})),
+			];
+			const clientIgnored = [
 				...DEFAULT_CLIENT_IGNORED,
+				...consoleManager.getIgnored(),
+			];
+			const serverIgnored = [
+				...DEFAULT_SERVER_IGNORED,
 				...consoleManager.getIgnored(),
 			];
 			expect
 				.soft(
 					messages
-						.map((message) => {
-							if (isIgnored(ignored, message.text())) {
+						.map(({ kind, text, type }) => {
+							if (
+								isIgnored(
+									kind === "client" ? clientIgnored : serverIgnored,
+									text,
+								)
+							) {
 								return undefined;
 							}
-							return `${colors.magenta(`[${message.type()}]`)} ${message.text()}`;
+							return `${colors.magenta(`[${kind}][${type}]`)} ${text}`;
 						})
 						.filter(Boolean),
 				)

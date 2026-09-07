@@ -29,21 +29,20 @@ for (const path of criticalPaths) {
 			const { debtUser } = await mockDebts({
 				generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 			});
+			const pathErrorMessage = `Mock "${path}" error`;
 			const unmockError = api.mockFirst(path, () => {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Mock "${path}" error`,
+					message: pathErrorMessage,
 				});
 			});
-			consoleManager.ignore(new RegExp(`Mock "${path}" error`));
+			consoleManager.ignore(pathErrorMessage);
 			consoleManager.ignore(
 				new RegExp(
 					`Error in route match: /_protected/debts/user/${debtUser.id}/`,
 				),
 			);
-			const getAllUserErrorLocator = errorMessage(
-				`Mock "${path}" error`,
-			).first();
+			const getAllUserErrorLocator = errorMessage(pathErrorMessage).first();
 			await snapshotQueries(
 				async () => {
 					await openUserDebtsScreen(debtUser.id, { awaitCache: false });
