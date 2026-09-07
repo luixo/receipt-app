@@ -47,6 +47,27 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return debt;
 			});
+			api.mockFirst(
+				"debts.getAllUser",
+				({ input: { userId: lookupUserId } }) => {
+					if (lookupUserId !== baseMock.debtUser.id) {
+						throw new Error(
+							`Unexpected debt id in "debts.getAllUser": ${lookupUserId}`,
+						);
+					}
+					return [
+						{
+							currencyCode: debt.currencyCode,
+							sum: debt.amount,
+						},
+					];
+				},
+			);
+			api.mockFirst("debts.getByUserPaged", () => ({
+				cursor: 0,
+				count: 1,
+				items: [debt.id],
+			}));
 			api.mockFirst("debts.update", () => ({
 				updatedAt: getNow.zonedDateTime(),
 				reverseUpdated: false,
