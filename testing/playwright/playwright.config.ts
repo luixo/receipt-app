@@ -107,7 +107,7 @@ export default defineConfig({
 		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
 	/* Run your local dev server before starting the tests */
 	webServer: {
-		command: "bun run --silent web:start",
+		command: "bun run web:start",
 		cwd: rootDir,
 		reuseExistingServer: !(process.env.CI || process.env.PW_SERVER),
 		url: `${urlSettings.baseUrl}api/ping`,
