@@ -10,10 +10,14 @@ import {
 } from "@tanstack/react-router/ssr/server";
 import type { HandlerCallback } from "@tanstack/react-router/ssr/server";
 import { StartServer } from "@tanstack/react-start-server";
-import { createStartHandler } from "@tanstack/react-start/server";
+import { createStartHandler, getRequest } from "@tanstack/react-start/server";
 import { createServerEntry } from "@tanstack/react-start/server-entry";
 import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import ReactDOMServer from "react-dom/server";
+import { keys } from "remeda";
+
+import { encryptTag } from "~utils/server/tag";
+import { env } from "~web/utils/env";
 
 import type { TreeRouter } from "./router";
 
@@ -21,6 +25,27 @@ const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {
 	Sentry.init({ dsn: sentryDsn, tracesSampleRate: 1 });
 }
+
+/* oxlint-disable no-console */
+
+if (env.PLAYWRIGHT) {
+	const consoleLogMethods = {
+		log: console.log,
+		info: console.info,
+		warn: console.warn,
+		error: console.error,
+	};
+	for (const method of keys(consoleLogMethods)) {
+		console[method] = (...args) => {
+			const request = getRequest();
+			consoleLogMethods[method].apply(console, [
+				encryptTag(request.headers.get("x-test-id") ?? "unknown-id"),
+				...args,
+			]);
+		};
+	}
+}
+/* oxlint-enable no-console */
 
 // Adapted from TanStack's renderRouterToStream, logging only the error message
 // instead of React's ~100 line component stack:

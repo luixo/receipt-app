@@ -53,7 +53,7 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 };
 
 export const pageFixtures = test.extend<ExtendedPageFixtures>({
-	page: async ({ page, javaScriptEnabled, api, baseURL }, use) => {
+	page: async ({ page, javaScriptEnabled, api, baseURL }, use, testInfo) => {
 		await page.emulateMedia({ colorScheme: "light" });
 
 		const pageAfterEach = async () => {
@@ -66,6 +66,7 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 			}
 		};
 
+		await page.setExtraHTTPHeaders({ "x-test-id": testInfo.testId });
 		const originalGoto = page.goto.bind(page);
 		// oxlint-disable-next-line no-param-reassign
 		page.goto = async (url, options) => {

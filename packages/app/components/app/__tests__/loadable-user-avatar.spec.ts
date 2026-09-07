@@ -45,18 +45,19 @@ test("Shows an error when the owner fails to load", async ({
 		generateUsers: () => [],
 		generateReceiptItems: () => [],
 	});
+	const mockErrorMessage = `Mock "users.get" error`;
 	api.mockFirst("users.get", ({ input }) => {
 		if (input.id !== receipt.ownerUserId) {
 			throw new TRPCError({ code: "NOT_FOUND", message: "Unexpected user" });
 		}
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Mock "users.get" error`,
+			message: mockErrorMessage,
 		});
 	});
-	consoleManager.ignore(/Mock "users.get" error/);
+	consoleManager.ignore(mockErrorMessage);
 	await openReceipt(receipt.id, { awaitCache: false });
-	await expect(errorMessage(`Mock "users.get" error`).first()).toBeVisible();
+	await expect(errorMessage(mockErrorMessage).first()).toBeVisible();
 });
 
 test("Dims the fallback avatar when there are no payers", async ({

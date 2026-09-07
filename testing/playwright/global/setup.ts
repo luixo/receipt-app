@@ -2,11 +2,16 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
 import { capitalize } from "remeda";
 
-import { serverMessages } from "~tests/frontend/server-reporter";
+import { isIgnored } from "~tests/frontend/fixtures/console";
 import { promisifyServer } from "~utils/promise";
 import { getFreePort } from "~utils/server/port";
 
-import { appRouter } from "./router";
+import { appRouter, testErrorEntries } from "./router";
+
+const globalServerIgnored = [
+	// Messages on server startup start with `$ bun run ...`
+	/^\$ bun run/,
+];
 
 const globalSetup = async () => {
 	const portManagerPort = await getFreePort();
@@ -15,24 +20,20 @@ const globalSetup = async () => {
 	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
 	await httpServer.listen(portManagerPort);
 	return async () => {
-		if (serverMessages.length !== 0) {
-			const message = [
-				colors.red("Server errors occurred"),
-				...serverMessages.map((element) =>
-					[
-						element.suspectTests.length === 1
-							? element.suspectTests[0]
-							: [colors.dim("Suspect tests:"), ...element.suspectTests].join(
-									"\n",
-								),
-						`${colors.magenta(`[${capitalize(element.type)}]`)}: ${element.message}`,
-					].join("\n\n"),
-				),
-			].join("\n\n");
-			// oxlint-disable-next-line no-console
-			console.warn(message);
-			// TODO: Throw instead of warn
-			// throw new Error(message);
+		const unknownErrors = (testErrorEntries.unknown ?? []).filter(
+			(entry) => !isIgnored(globalServerIgnored, entry.text),
+		);
+		if (unknownErrors.length !== 0) {
+			throw new Error(
+				[
+					colors.red("Global server errors occurred"),
+					...unknownErrors.map(
+						(element) =>
+							`${colors.magenta(`[${capitalize(element.type)}]`)}: ${element.text.trim()}`,
+					),
+					colors.red("End of global server errors"),
+				].join("\n"),
+			);
 		}
 		await httpServer.close();
 	};

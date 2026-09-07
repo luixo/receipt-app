@@ -138,15 +138,13 @@ export const test = originalTest.extend<Fixtures>({
 					}
 					return receipt;
 				});
-				if (debts.length !== 0) {
-					api.mockFirst("debts.get", ({ input }) => {
-						const outcomingDebt = debts.find((debt) => debt.id === input.id);
-						if (!outcomingDebt) {
-							throw new Error(`Unexpected user id in "debts.get": ${input.id}`);
-						}
-						return outcomingDebt;
-					});
-				}
+				api.mockFirst("debts.get", ({ input }) => {
+					const outcomingDebt = debts.find((debt) => debt.id === input.id);
+					if (!outcomingDebt) {
+						throw new Error(`Unexpected user id in "debts.get": ${input.id}`);
+					}
+					return outcomingDebt;
+				});
 
 				return { ...result, debts };
 			},

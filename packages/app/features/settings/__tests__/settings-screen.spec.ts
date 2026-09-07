@@ -219,7 +219,7 @@ test.describe("Manually accept debts", () => {
 				await manualAcceptDebtsSwitch.click();
 				await expect(manualAcceptDebtsSwitch).toBeDisabled();
 				await expect(switchWithLoader).toBeVisible();
-				await awaitCacheKey("accountSettings.get");
+				await awaitCacheKey("accountSettings.update", { pending: 1 });
 			},
 			{ name: "loading" },
 		);

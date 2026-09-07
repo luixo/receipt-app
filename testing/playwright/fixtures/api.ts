@@ -1,5 +1,5 @@
+import { mergeTests } from "@playwright/test";
 import type { BrowserContext, Page } from "@playwright/test";
-import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
@@ -29,9 +29,10 @@ import type { TransformerResult } from "~utils/transformer";
 import type { MaybePromise } from "~utils/types";
 import { getCookie } from "~web/utils/cookies";
 
-import type { appRouter } from "../global/router";
+import { mockFixtures } from "./mock";
+import { serverFixtures } from "./server";
 
-import { mockFixtures as test } from "./mock";
+const test = mergeTests(mockFixtures, serverFixtures);
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";
 
@@ -187,9 +188,7 @@ const handleCall = async <K extends TRPCKey>(
 						cause: error,
 					});
 		if (!(error instanceof TRPCError) && error !== CLEANUP_MARK) {
-			// Unexpected error logging in Playwright helps debugging
-			// oxlint-disable-next-line no-console
-			console.error("Internal server error", error);
+			throw error;
 		}
 		if (error instanceof NoHandlerError) {
 			throw error;
@@ -542,20 +541,11 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 		{ auto: true },
 	],
 	globalApiManager: [
-		async ({}, use) => {
-			const managerPort = process.env.MANAGER_PORT;
-			const client = createTRPCClient<typeof appRouter>({
-				links: [
-					httpBatchStreamLink({
-						transformer,
-						url: `http://localhost:${managerPort}`,
-					}),
-				],
-			});
-			const { port, hash } = await client.lockPort.mutate();
+		async ({ serverClient }, use) => {
+			const { port, hash } = await serverClient.lockPort.mutate();
 			const workerManager = createWorkerManager(port);
 			const cleanup = await workerManager.start();
-			await client.release.mutate({ hash });
+			await serverClient.release.mutate({ hash });
 			await use(workerManager);
 			await cleanup();
 		},

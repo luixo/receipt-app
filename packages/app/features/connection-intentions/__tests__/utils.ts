@@ -34,9 +34,8 @@ export const test = originalTest.extend<Fixtures>({
 				})),
 			};
 			api.mockFirst("accountConnectionIntentions.getAll", intentions);
-			// `users.suggestTop` has no `enabled` gate in `UsersSuggest`, so it always
-			// fires while an inbound row is rendered - mock it by default.
 			api.mockFirst("users.suggestTop", { items: [] });
+			api.mockFirst("users.getPaged", { cursor: 0, count: 0, items: [] });
 			return intentions;
 		}),
 
