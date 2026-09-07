@@ -32,7 +32,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	});
 	await snapshotQueries(async () => {
 		await rejectButton.click();
-		await awaitCacheKey("accountConnectionIntentions.reject", { errored: 1 });
+		await awaitCacheKey("accountConnectionIntentions.reject", { error: 1 });
 		await verifyToastTexts(
 			`Error rejecting invite: Mock "accountConnectionIntentions.reject" error`,
 		);
@@ -46,7 +46,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 		async () => {
 			await rejectButton.click();
 			await awaitCacheKey("accountConnectionIntentions.reject", {
-				succeed: 1,
+				success: 1,
 			});
 		},
 		{ name: "success" },
@@ -102,7 +102,7 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	});
 	await snapshotQueries(async () => {
 		await confirmYesButton.click();
-		await awaitCacheKey("accountConnectionIntentions.accept", { errored: 1 });
+		await awaitCacheKey("accountConnectionIntentions.accept", { error: 1 });
 		await verifyToastTexts(
 			`Error accepting invite: Mock "accountConnectionIntentions.accept" error`,
 		);
@@ -125,7 +125,7 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 		async () => {
 			await confirmYesButton.click();
 			await awaitCacheKey("accountConnectionIntentions.accept", {
-				succeed: 1,
+				success: 1,
 			});
 		},
 		{ name: "success" },

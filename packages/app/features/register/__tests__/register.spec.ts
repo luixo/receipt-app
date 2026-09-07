@@ -52,7 +52,7 @@ test("'auth.register' mutation", async ({
 	await fillValidFields();
 	await snapshotQueries(async () => {
 		await registerButton.click();
-		await awaitCacheKey("auth.register", { errored: 1 });
+		await awaitCacheKey("auth.register", { error: 1 });
 		await verifyToastTexts(`Mock "auth.register" error`);
 	});
 	await expect(page).toHaveURL("/register");

@@ -227,7 +227,7 @@ test.describe("Manually accept debts", () => {
 		await snapshotQueries(
 			async () => {
 				pause.resolve();
-				await awaitCacheKey("accountSettings.update", { errored: 1 });
+				await awaitCacheKey("accountSettings.update", { error: 1 });
 				await verifyToastTexts(
 					`Account settings update failed: Mock "accountSettings.update" error`,
 				);

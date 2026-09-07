@@ -65,7 +65,7 @@ test("'auth.voidAccount' mutation", async ({
 		await verifyToastTexts(
 			`Void account failed: Mock "auth.voidAccount" error`,
 		);
-		await awaitCacheKey("auth.voidAccount", { errored: 1 });
+		await awaitCacheKey("auth.voidAccount", { error: 1 });
 	});
 	await expect(page).toHaveURL(`/void-account?token=${token}`);
 

@@ -38,7 +38,7 @@ test(`"auth.voidAccount" mutation`, async ({
 
 	await page.goto(`/void-account?token=${faker.string.uuid()}`);
 	await voidButton.click();
-	await awaitCacheKey("auth.voidAccount", { errored: 1 });
+	await awaitCacheKey("auth.voidAccount", { error: 1 });
 	await clearToasts();
 	await expectScreenshotWithSchemes("error.png");
 

@@ -309,14 +309,11 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"accountConnectionIntentions.getAll",
 ];
 
-type AmountsWith<T> = { succeed: T; errored: T };
+type AmountsWith<T> = { success: T; error: T; pending: T; idle: T };
 type RangeAwaitAmount = { min: number; max: number };
 type ActualAwaitAmounts = AmountsWith<number>;
 type ExpectedAwaitAmounts = AmountsWith<RangeAwaitAmount>;
-type AwaitOptions = {
-	awaitLoading: boolean;
-	total: boolean;
-};
+type AwaitOptions = { total: boolean };
 type AwaitOptionsObject =
 	| number
 	| ((
@@ -346,35 +343,40 @@ const getAmount = (
 ): ExpectedAwaitAmounts => {
 	if (typeof optionsObject === "number") {
 		return {
-			succeed: { min: optionsObject, max: optionsObject },
-			errored: { min: 0, max: Infinity },
+			success: { min: optionsObject, max: optionsObject },
+			error: { min: 0, max: Infinity },
+			pending: { min: 0, max: 0 },
+			idle: { min: 0, max: 0 },
 		};
 	}
 	if ("min" in optionsObject || "max" in optionsObject) {
 		const typedAmount = optionsObject as Partial<RangeAwaitAmount>;
 		return {
-			succeed: {
+			success: {
 				min: typedAmount.min ?? 0,
 				max: typedAmount.max ?? Infinity,
 			},
-			errored: { min: 0, max: Infinity },
+			error: { min: 0, max: Infinity },
+			pending: { min: 0, max: 0 },
+			idle: { min: 0, max: 0 },
 		};
 	}
 	const typedAmount = optionsObject as Partial<
 		AmountsWith<number | Partial<RangeAwaitAmount>>
 	>;
 	return {
-		succeed: getAmountElement(typedAmount.succeed),
-		errored: getAmountElement(typedAmount.errored),
+		success: getAmountElement(typedAmount.success),
+		error: getAmountElement(typedAmount.error),
+		pending: getAmountElement(typedAmount.pending),
+		idle: getAmountElement(typedAmount.idle),
 	};
 };
 
 const getOptions = (optionsObject: AwaitOptionsObject = 0): AwaitOptions => {
 	if (typeof optionsObject === "number") {
-		return { awaitLoading: true, total: false };
+		return { total: false };
 	}
 	return {
-		awaitLoading: optionsObject.awaitLoading ?? true,
 		total: optionsObject.total ?? false,
 	};
 };
@@ -616,49 +618,73 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 						if (!queryClient) {
 							throw new Error("window.queryClient is not defined yet");
 						}
+						const fromKeys = <T extends string, R>(
+							keys: T[],
+							mapper: (input: T) => R,
+						) =>
+							// oxlint-disable-next-line no-restricted-properties
+							Object.fromEntries(
+								keys.map((key) => [key, mapper(key)]),
+							) as Record<T, R>;
 						const getActualFactory =
-							(getMatched: () => Query[] | Mutation[]) => () => {
+							(getMatched: () => Query[] | Mutation[]) =>
+							(): ActualAwaitAmounts => {
 								const matched = getMatched();
-								const succeed = matched.filter(
-									(element) => element.state.status === "success",
+								return fromKeys(
+									["success", "error", "pending", "idle"] as const,
+									(status) =>
+										matched.filter((element) => element.state.status === status)
+											.length,
 								);
-								const errored = matched.filter(
-									(element) => element.state.status === "error",
-								);
-								return {
-									succeed: succeed.length,
-									errored: errored.length,
-									unresolved: matched.length - errored.length - succeed.length,
-								};
 							};
 						const formatExpectedRange = (expected: RangeAwaitAmount) => {
 							if (expected.min === expected.max) {
 								return `${expected.max}`;
 							}
 							if (expected.max === Infinity) {
-								return `${expected.min}+`;
+								return `${expected.min}-Inf`;
 							}
 							return `${expected.min}-${expected.max}`;
 						};
 						const getAccountedAmounts = (
-							actualAmounts: ActualAwaitAmounts & { unresolved: number },
+							actualAmounts: ActualAwaitAmounts,
 							prevAmounts: ActualAwaitAmounts,
 							options: AwaitOptions,
 						) => ({
-							errored:
-								actualAmounts.errored -
-								(options.total ? 0 : prevAmounts.errored),
-							succeed:
-								actualAmounts.succeed -
-								(options.total ? 0 : prevAmounts.succeed),
+							error:
+								actualAmounts.error - (options.total ? 0 : prevAmounts.error),
+							success:
+								actualAmounts.success -
+								(options.total ? 0 : prevAmounts.success),
+							pending: actualAmounts.pending,
+							idle: actualAmounts.idle,
 						});
+						const resolvedErrorFactory =
+							(
+								accountedAmounts: ReturnType<typeof getAccountedAmounts>,
+								expectedAmounts: ExpectedAwaitAmounts,
+							) =>
+							(type: keyof ReturnType<typeof getAccountedAmounts>) => {
+								if (
+									accountedAmounts[type] >= expectedAmounts[type].min &&
+									accountedAmounts[type] <= expectedAmounts[type].max
+								) {
+									return;
+								}
+								return `${type} entries: expected ${formatExpectedRange(
+									expectedAmounts[type],
+								)}, got ${accountedAmounts[type]}`;
+							};
 						const isResolved = (
-							actualAmounts: ActualAwaitAmounts & { unresolved: number },
+							actualAmounts: ActualAwaitAmounts,
 							prevAmounts: ActualAwaitAmounts,
 							expectedAmounts: ExpectedAwaitAmounts,
 							options: AwaitOptions,
 						) => {
-							if (actualAmounts.unresolved !== 0 && options.awaitLoading) {
+							if (
+								actualAmounts.pending !== 0 &&
+								expectedAmounts.pending.max <= 0
+							) {
 								return false;
 							}
 							const accountedAmounts = getAccountedAmounts(
@@ -666,11 +692,15 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 								prevAmounts,
 								options,
 							);
+							const resolvedError = resolvedErrorFactory(
+								accountedAmounts,
+								expectedAmounts,
+							);
 							return (
-								accountedAmounts.errored >= expectedAmounts.errored.min &&
-								accountedAmounts.errored <= expectedAmounts.errored.max &&
-								accountedAmounts.succeed >= expectedAmounts.succeed.min &&
-								accountedAmounts.succeed <= expectedAmounts.succeed.max
+								!resolvedError("error") &&
+								!resolvedError("success") &&
+								!resolvedError("pending") &&
+								!resolvedError("idle")
 							);
 						};
 						const awaitKey = async (
@@ -713,23 +743,21 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 										options,
 									);
 									unsubscribe();
+									const resolvedError = resolvedErrorFactory(
+										accountedAmounts,
+										expectedAmounts,
+									);
 									reject(
 										new Error(
-											`${name} await for "${key}" failed after ${timeoutInner}\n${[
-												`Succeed entries: expected ${formatExpectedRange(
-													expectedAmounts.succeed,
-												)}, got ${accountedAmounts.succeed}`,
-												expectedAmounts.errored.min === 0
-													? undefined
-													: `Errored entries: expected ${formatExpectedRange(
-															expectedAmounts.errored,
-														)}, got ${accountedAmounts.errored}`,
-												options.awaitLoading && actual.unresolved !== 0
-													? `${actual.unresolved} unresolved entries`
-													: undefined,
+											[
+												`${name} await for "${key}" failed after ${timeoutInner}`,
+												resolvedError("success"),
+												resolvedError("error"),
+												resolvedError("pending"),
+												resolvedError("idle"),
 											]
 												.filter(Boolean)
-												.join("; ")}`,
+												.join("\n"),
 										),
 									);
 								}, timeoutInner);
@@ -746,7 +774,7 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 								cacheKey,
 								// Queries might get updated, they don't keep updated like mutations
 								// It helps avoiding tracking a query switching from errored to succeed etc
-								{ succeed: 0, errored: 0 },
+								{ success: 0, error: 0, pending: 0, idle: 0 },
 								expectedAmounts,
 								options,
 								() => cache.findAll({ queryKey: [cacheKey.split(".")] }),
@@ -812,8 +840,10 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 					[
 						path,
 						awaitedCacheKeys[path] ?? {
-							succeed: 0,
-							errored: 0,
+							success: 0,
+							error: 0,
+							pending: 0,
+							idle: 0,
 						},
 						getAmount(optionsObject),
 						getOptions(optionsObject),
