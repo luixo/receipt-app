@@ -28,7 +28,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	});
 	await snapshotQueries(async () => {
 		await unlinkButton.click();
-		await awaitCacheKey("accountConnectionIntentions.remove", { errored: 1 });
+		await awaitCacheKey("accountConnectionIntentions.remove", { error: 1 });
 		await verifyToastTexts(
 			`Error removing invite: Mock "accountConnectionIntentions.remove" error`,
 		);
@@ -42,7 +42,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 		async () => {
 			await unlinkButton.click();
 			await awaitCacheKey("accountConnectionIntentions.remove", {
-				succeed: 1,
+				success: 1,
 			});
 		},
 		{ name: "success" },

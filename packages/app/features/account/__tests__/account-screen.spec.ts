@@ -195,7 +195,7 @@ test.describe("Password change", () => {
 
 		await snapshotQueries(async () => {
 			await submitPasswordButton.click();
-			await awaitCacheKey("account.changePassword", { errored: 1 });
+			await awaitCacheKey("account.changePassword", { error: 1 });
 			await verifyToastTexts(
 				`Error changing password: Mock "account.changePassword" error`,
 			);
@@ -214,6 +214,7 @@ test.describe("Password change", () => {
 				await submitPasswordButton.click();
 				await expect(submitPasswordButton).toBeDisabled();
 				await expect(buttonWithLoader).toBeVisible();
+				await awaitCacheKey("account.changePassword", { pending: 1 });
 			},
 			{ name: "loading" },
 		);
@@ -250,7 +251,7 @@ test("'account.logout' mutation", async ({
 
 	await snapshotQueries(async () => {
 		await logoutButton.click();
-		await awaitCacheKey("account.logout", { errored: 1 });
+		await awaitCacheKey("account.logout", { error: 1 });
 		await verifyToastTexts(`Logout failed: Mock "account.logout" error`);
 	});
 	await expect(page).toHaveURL("/account");
@@ -268,6 +269,7 @@ test("'account.logout' mutation", async ({
 			await logoutButton.click();
 			await expect(logoutButton).toBeDisabled();
 			await expect(buttonWithLoader).toBeVisible();
+			await awaitCacheKey("account.logout", { pending: 1 });
 		},
 		{ name: "loading" },
 	);

@@ -67,7 +67,7 @@ test.describe("Name", () => {
 		});
 		await snapshotQueries(async () => {
 			await saveNameButton.click();
-			await awaitCacheKey("users.update", { errored: 1 });
+			await awaitCacheKey("users.update", { error: 1 });
 			await verifyToastTexts(`Error updating user: Mock "users.update" error`);
 		});
 		await expect(saveNameButton).toBeEnabled();
@@ -129,7 +129,7 @@ test.describe("Public name", () => {
 		});
 		await snapshotQueries(async () => {
 			await savePublicNameButton.click();
-			await awaitCacheKey("users.update", { errored: 1 });
+			await awaitCacheKey("users.update", { error: 1 });
 			await verifyToastTexts(`Error updating user: Mock "users.update" error`);
 		});
 		await expect(savePublicNameButton).toBeEnabled();
@@ -212,7 +212,7 @@ test.describe("Connection", () => {
 		});
 		await snapshotQueries(async () => {
 			await linkButton.click();
-			await awaitCacheKey("accountConnectionIntentions.add", { errored: 1 });
+			await awaitCacheKey("accountConnectionIntentions.add", { error: 1 });
 			await verifyToastTexts(
 				`Error sending connection intention: Mock "accountConnectionIntentions.add" error`,
 			);
@@ -246,7 +246,7 @@ test.describe("Connection", () => {
 		await snapshotQueries(async () => {
 			await cancelRequestButton.click();
 			await awaitCacheKey("accountConnectionIntentions.remove", {
-				errored: 1,
+				error: 1,
 			});
 			await verifyToastTexts(
 				`Error removing invite: Mock "accountConnectionIntentions.remove" error`,
@@ -258,7 +258,7 @@ test.describe("Connection", () => {
 			async () => {
 				await cancelRequestButton.click();
 				await awaitCacheKey("accountConnectionIntentions.remove", {
-					succeed: 1,
+					success: 1,
 				});
 			},
 			{ name: "cancel" },
@@ -306,7 +306,7 @@ test.describe("Connection", () => {
 		});
 		await snapshotQueries(async () => {
 			await unlinkButton.click();
-			await awaitCacheKey("users.unlink", { errored: 1 });
+			await awaitCacheKey("users.unlink", { error: 1 });
 			await verifyToastTexts(`Error unlinking user: Mock "users.unlink" error`);
 		});
 
@@ -357,7 +357,7 @@ test.describe("Remove", () => {
 		});
 		await snapshotQueries(async () => {
 			await yesButton.click();
-			await awaitCacheKey("users.remove", { errored: 1 });
+			await awaitCacheKey("users.remove", { error: 1 });
 			await verifyToastTexts(`Error removing user: Mock "users.remove" error`);
 		});
 		await expect(page).toHaveURL(`/users/${targetUser.id}`);

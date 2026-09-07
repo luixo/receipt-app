@@ -47,9 +47,8 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
   - Default blacklist: `account.get`, `currency.getList`, `debtIntentions.getAll`, `accountConnectionIntentions.getAll`.
 - `awaitCacheKey(key, options)` — waits for a tRPC query or mutation to reach a target count in the cache.
   - Plain number → at least N successes.
-  - `{ errored: N }` → N errors.
-  - `{ succeed: M, errored: N }` → both.
-  - `{ total: true }` → count from the start of the test, not since the last call.
+  - `{ success: M, error: N, loading: O, idle: P }` → a given amount of queries in given statuses.
+  - `{ total: true }` → count success and error from the start of the test, not since the last call.
 
 ## Shared locators
 

@@ -55,7 +55,7 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 	}) => {
 		const token = faker.string.uuid();
 		const rawErrorMessage = "Mock 'resetPasswordIntentions.get' error";
-		consoleManager.ignore(new RegExp(`TRPCClientError: ${rawErrorMessage}`));
+		consoleManager.ignore(rawErrorMessage);
 		api.mockFirst("resetPasswordIntentions.get", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
@@ -96,6 +96,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		withLoader,
 		resetPasswordButton,
 		fillValidFields,
+		awaitCacheKey,
 	}) => {
 		api.mockFirst("resetPasswordIntentions.get", {
 			email: faker.internet.email(),
@@ -112,6 +113,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 			async () => {
 				await resetPasswordButton.click();
 				await expect(withLoader(page.getByRole("button"))).toBeVisible();
+				await awaitCacheKey("auth.resetPassword", { pending: 1 });
 			},
 			{ name: "loading" },
 		);

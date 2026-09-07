@@ -88,7 +88,7 @@ test("'debtIntentions.accept' mutation", async ({
 	});
 	await snapshotQueries(async () => {
 		await acceptIntentionDialogYesButton.click();
-		await awaitCacheKey("debtIntentions.accept", { errored: 1 });
+		await awaitCacheKey("debtIntentions.accept", { error: 1 });
 		await verifyToastTexts(`Mock "debtIntentions.accept" error`);
 	});
 	await expect(acceptIntentionButton).toBeVisible();

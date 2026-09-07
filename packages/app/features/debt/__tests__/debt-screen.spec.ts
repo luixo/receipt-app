@@ -142,7 +142,7 @@ test.describe("Amount", () => {
 		});
 		await snapshotQueries(async () => {
 			await saveAmountButton.click();
-			await awaitCacheKey("debts.update", { errored: 1 });
+			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
 		await expect(saveAmountButton).toBeEnabled();
@@ -215,7 +215,7 @@ test.describe("Note", () => {
 		});
 		await snapshotQueries(async () => {
 			await saveNoteButton.click();
-			await awaitCacheKey("debts.update", { errored: 1 });
+			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
 		await expect(saveNoteButton).toBeEnabled();
@@ -260,7 +260,7 @@ test.describe("Date", () => {
 		});
 		await snapshotQueries(async () => {
 			await fillDate(dateInput, nextDate);
-			await awaitCacheKey("debts.update", { errored: 1 });
+			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
 
@@ -391,7 +391,7 @@ test.describe("Remove", () => {
 		});
 		await snapshotQueries(async () => {
 			await removeDebtDialogYesButton.click();
-			await awaitCacheKey("debts.remove", { errored: 1 });
+			await awaitCacheKey("debts.remove", { error: 1 });
 			await verifyToastTexts(`Mock "debts.remove" error`);
 		});
 		await expect(page).toHaveURL(`/debts/${debt.id}`);

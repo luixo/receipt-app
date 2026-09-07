@@ -50,7 +50,7 @@ test("'auth.register' mutation", async ({
 	await registerButton.click();
 	await clearToasts();
 	registerErrorPause.resolve();
-	await awaitCacheKey("auth.register", { errored: 1 });
+	await awaitCacheKey("auth.register", { error: 1 });
 	await clearToasts();
 
 	// TODO: Figure out what error should look like on register action

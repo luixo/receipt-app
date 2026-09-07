@@ -72,7 +72,7 @@ test("'users.add' mutation", async ({
 	await snapshotQueries(
 		async () => {
 			await addButton.click();
-			await awaitCacheKey("users.add", { errored: 1 });
+			await awaitCacheKey("users.add", { error: 1 });
 			await verifyToastTexts(`Mock "users.add" error`);
 		},
 		{ name: "error" },

@@ -101,7 +101,7 @@ test("'receipts.add' mutation", async ({
 	await snapshotQueries(
 		async () => {
 			await addButton.click();
-			await awaitCacheKey("receipts.add", { errored: 1 });
+			await awaitCacheKey("receipts.add", { error: 1 });
 			await verifyToastTexts(`Mock "receipts.add" error`);
 		},
 		{ name: "error" },

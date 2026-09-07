@@ -75,8 +75,8 @@ test("'debtIntentions.accept' pending / error", async ({
 		async () => {
 			await acceptAllIntentionButton.click();
 			await awaitCacheKey("debtIntentions.accept", {
-				succeed: debtsAmount - rejectedDebtsAmount,
-				awaitLoading: false,
+				success: debtsAmount - rejectedDebtsAmount,
+				error: rejectedDebtsAmount,
 			});
 			await verifyToastTexts([
 				`Accepting ${debtsAmount} debts..`,
@@ -90,7 +90,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		async () => {
 			acceptIntentionLaterPause.resolve();
 			await awaitCacheKey("debtIntentions.accept", {
-				errored: rejectedDebtsAmount,
+				error: rejectedDebtsAmount,
 			});
 			await verifyToastTexts(
 				'Error accepting 2 debts: Mock "debtIntentions.accept" error',
@@ -115,7 +115,7 @@ test("'debtIntentions.accept' pending / error", async ({
 			);
 			await expect(page).toHaveURL("/debts");
 			await awaitCacheKey("debtIntentions.accept", {
-				succeed: debtsAmount,
+				success: debtsAmount,
 				total: true,
 			});
 		},

@@ -47,7 +47,7 @@ for (const path of criticalPaths) {
 			await snapshotQueries(
 				async () => {
 					await openUserDebtsScreen(debtUser.id, { awaitCache: false });
-					await awaitCacheKey(path, { errored: 1 });
+					await awaitCacheKey(path, { error: 1 });
 					await expect(getAllUserErrorLocator).toBeVisible();
 				},
 				{
@@ -61,10 +61,10 @@ for (const path of criticalPaths) {
 					await getAllUserErrorLocator
 						.locator("button", { hasText: "Refetch" })
 						.click();
-					await awaitCacheKey(path, { succeed: 1 });
+					await awaitCacheKey(path, { success: 1 });
 					await Promise.all(
 						otherPaths.map((anotherPath) =>
-							awaitCacheKey(anotherPath, { succeed: 1 }),
+							awaitCacheKey(anotherPath, { success: 1 }),
 						),
 					);
 				},
