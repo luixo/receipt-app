@@ -64,6 +64,11 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return { ...matchedDebt, userId: debtUser.id };
 			});
+			api.mockFirst("debts.getByUserPaged", () => ({
+				cursor: 0,
+				count: debts.length,
+				items: debts.map((debt) => debt.id),
+			}));
 			return { debts, debtUser };
 		}),
 

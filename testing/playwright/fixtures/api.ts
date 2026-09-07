@@ -107,6 +107,15 @@ type Controller = {
 	signal: AbortSignal;
 };
 
+class NoHandlerError extends Error {
+	public constructor(key: string, lastIndex = false) {
+		super(
+			`No handler for ${key}${lastIndex ? `, no middleware function below` : ""}`,
+		);
+		this.name = "NoHandlerError";
+	}
+}
+
 type CallType = "server" | "client";
 
 const API_PREFIX = "/api/trpc/";
@@ -119,7 +128,7 @@ const getHandlersResponse = <K extends TRPCKey>(
 	calls: number,
 ) => {
 	if (handlers.length === 0) {
-		throw new Error(`No handler for ${key}`);
+		throw new NoHandlerError(key);
 	}
 	const returnAtIndex = (
 		index: number,
@@ -132,9 +141,7 @@ const getHandlersResponse = <K extends TRPCKey>(
 				headers,
 				next: () => {
 					if (index === 0) {
-						throw new Error(
-							`No handler for ${key}, no middleware function below`,
-						);
+						throw new NoHandlerError(key, true);
 					}
 					return returnAtIndex(index - 1);
 				},
@@ -183,6 +190,9 @@ const handleCall = async <K extends TRPCKey>(
 			// Unexpected error logging in Playwright helps debugging
 			// oxlint-disable-next-line no-console
 			console.error("Internal server error", error);
+		}
+		if (error instanceof NoHandlerError) {
+			throw error;
 		}
 		return {
 			error: transformer.serialize({
@@ -457,6 +467,17 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 		api.mockLast("accountConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],
+		});
+		api.mockLast("debts.getAll", []);
+		api.mockLast("debts.getUsersPaged", {
+			count: 0,
+			cursor: 0,
+			items: [],
+		});
+		api.mockLast("users.getPaged", {
+			count: 0,
+			cursor: 0,
+			items: [],
 		});
 		const selfId = faker.string.uuid();
 		const selfUser = {
