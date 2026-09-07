@@ -72,7 +72,7 @@
 					"type": "TRPCClientError",
 					"message": "Mock \"debts.getAllUser\" error"
 				},
-				"errorUpdateCount": 2,
+				"errorUpdateCount": 1,
 				"fetchFailureCount": 1,
 				"fetchMeta": null,
 				"isInvalidated": false,

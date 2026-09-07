@@ -37,6 +37,7 @@ export const test = originalTest.extend<Fixtures>({
 					note: debt.note,
 				})),
 			);
+			api.mockFirst("debts.getAllUser", []);
 			return { debts, debtUser };
 		}),
 
