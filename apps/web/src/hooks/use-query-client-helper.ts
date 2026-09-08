@@ -1,6 +1,10 @@
 import React from "react";
 
-import type { DehydratedState, QueryClient } from "@tanstack/react-query";
+import type {
+	DehydratedState,
+	QueryClient,
+	hashKey,
+} from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
 import type { TRPCKey } from "~app/trpc";
@@ -16,6 +20,7 @@ declare global {
 		queryClient?: QueryClient;
 		querySubscriptions: Record<string, (() => void)[]>;
 		onCacheEvent: (key: TRPCKey, amounts: ActualCacheAmounts) => void;
+		hashKey: typeof hashKey;
 	}
 }
 
