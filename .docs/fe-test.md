@@ -49,6 +49,7 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
 - `awaitCacheKey(key, options)` — waits for a tRPC query or mutation to reach a target count in the cache.
   - Plain number → at least N successes.
   - `{ success: M, error: N, loading: O, idle: P }` → a given amount of queries in given statuses.
+  - `{ input: {...} }` → specify given input for this query to narrow it down.
   - `{ total: true }` → count success and error from the start of the test, not since the last call.
 
 ## Shared locators
