@@ -11,6 +11,8 @@ import { appRouter, testErrorEntries } from "./router";
 const globalServerIgnored = [
 	// Messages on server startup start with `$ bun run ...`
 	/^\$ bun run/,
+	// Some linux distros have problems with our locale
+	/setlocale: LC_ALL: cannot change locale/,
 ];
 
 const globalSetup = async () => {
