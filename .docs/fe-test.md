@@ -21,7 +21,7 @@ Full command to run tests in Docker:
 ```sh
 # Optionally add a single test file / grep for test case
 # Drop `--update-snapshots` to just verify snapshots match instead of regenerating them
-docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
 ```
 
 ## API mocking
