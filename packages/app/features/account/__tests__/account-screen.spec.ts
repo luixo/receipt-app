@@ -79,6 +79,7 @@ test.describe("Avatar", () => {
 		awaitCacheKey,
 		verifyToastTexts,
 		faker,
+		modal,
 	}) => {
 		await mockBase({ avatarUrl: faker.image.url() });
 		api.mockFirst("account.changeAvatar", undefined);
@@ -89,7 +90,7 @@ test.describe("Avatar", () => {
 
 		await removeAvatarButton.click();
 
-		const dialog = page.getByRole("dialog", { name: /Are you sure/ });
+		const dialog = modal("Remove avatar");
 		await expect(dialog).toBeVisible();
 
 		const yesButton = dialog.getByRole("button", { name: "Yes" });
@@ -109,7 +110,7 @@ test.describe("Avatar", () => {
 
 		await snapshotQueries(async () => {
 			await yesButton.click();
-			await awaitCacheKey("account.changeAvatar", { success: 2 });
+			await awaitCacheKey("account.changeAvatar");
 			await verifyToastTexts();
 		});
 	});

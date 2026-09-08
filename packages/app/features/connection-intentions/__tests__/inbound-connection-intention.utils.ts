@@ -17,11 +17,7 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	rejectButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Reject" })),
-	// The dialog's accessible name comes from its header content (confirmText +
-	// subtitle), not the `title` prop passed to `ConfirmModal` - narrow by that
-	// text so this doesn't accidentally match an unrelated dialog.
-	confirmDialog: ({ page }, use) =>
-		use(page.getByRole("dialog", { name: "Are you sure?" })),
+	confirmDialog: ({ page, modal }, use) => use(modal("Connect an account")),
 	confirmYesButton: ({ confirmDialog }, use) =>
 		use(confirmDialog.getByRole("button", { name: "Yes" })),
 	confirmNoButton: ({ confirmDialog }, use) =>
