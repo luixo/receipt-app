@@ -3,8 +3,10 @@ import type { Locator } from "@playwright/test";
 
 export type Fixtures = {
 	debtSyncStatus: Locator;
+	tooltip: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	debtSyncStatus: ({ page }, use) => use(page.getByTestId("debt-sync-status")),
+	tooltip: ({ page }, use) => use(page.getByRole("tooltip")),
 });
