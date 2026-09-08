@@ -1,3 +1,4 @@
+import { hashKey } from "@tanstack/react-query";
 import type { Mutation, Query } from "@tanstack/react-query";
 import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
 import type { RouterRecord } from "@trpc/server/unstable-core-do-not-import";
@@ -151,6 +152,12 @@ export const cacheFixtures = test.extend<CacheFixtures>({
 				(key: TRPCKey, values: ActualCacheAmounts) =>
 					cacheEventEmitter.emit(key, values),
 			);
+			// oxlint-disable-next-line no-unused-vars
+			await using binding = await page.exposeBinding(
+				"hashKey",
+				// oxlint-disable-next-line typescript/no-unsafe-argument
+				(_source, obj) => hashKey(obj),
+			);
 			await use({
 				subscribe: async ({ key, type, listener, input }) => {
 					let unsubscribeId = "unknown";
@@ -227,8 +234,8 @@ export const cacheFixtures = test.extend<CacheFixtures>({
 												queryKey !== keyInner ||
 												cacheNotifyEvent.type !== "updated" ||
 												(inputInner &&
-													JSON.stringify(rawQueryKey[1]?.input) !==
-														JSON.stringify(inputInner))
+													window.hashKey([rawQueryKey[1]?.input]) !==
+														window.hashKey([inputInner]))
 											) {
 												return;
 											}
