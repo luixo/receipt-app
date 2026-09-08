@@ -1,0 +1,61 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"test-id\"}]": {
+			"state": {
+				"data": {
+					"id": "test-id",
+					"amount": 10,
+					"currencyCode": "KRW",
+					"userId": "a02d8e10-6b12-42ad-b00b-1807b2931f87",
+					"timestamp": "2019-12-31",
+					"note": "Transferred from Javonte Rowe",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"d3197bf0-cc48-47c2-800f-088a51190a41\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"sum": -2665.05
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": {
+			"0": {
+				"state": {
+					"data": {
+						"id": "test-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"status": "success"
+				}
+			},
+			"1": {
+				"state": {
+					"data": {
+						"id": "test-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
