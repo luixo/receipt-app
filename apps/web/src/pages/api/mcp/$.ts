@@ -16,7 +16,6 @@ import { router as appRouter } from "~web/handlers";
 import type { HandlerMeta } from "~web/handlers/context";
 import { adminProcedure, authProcedure } from "~web/handlers/trpc";
 import { createContext } from "~web/pages/api/trpc/$";
-import { env } from "~web/utils/env";
 
 export type ProcedureInfo = {
 	path: string;
@@ -64,12 +63,6 @@ const forbiddenHandlers = new Set<TRPCKey>([
 	"utils.pingCache",
 	"sessions.cleanup",
 ]);
-
-// Falls back to a placeholder that matches no real session (every
-// auth-required call then fails with "Session id mismatch") when
-// MCP_SESSION_TOKEN isn't configured.
-const STATIC_SESSION_ID =
-	env.MCP_SESSION_TOKEN ?? "a69b47fc-6401-4137-978d-f361d3f79f00";
 
 const replacements = new Map<z.ZodType, z.ZodType>(
 	entries(temporalSchemas).map(([key, schema]) => [
@@ -130,10 +123,7 @@ const mapProcedures = (router: typeof appRouter): ProcedureInfo[] =>
 							.limit(1)
 							.executeTakeFirst()
 					: undefined;
-				request.headers.append(
-					"Cookie",
-					`authToken=${botSession?.sessionId ?? STATIC_SESSION_ID}`,
-				);
+				request.headers.append("Cookie", `authToken=${botSession?.sessionId}`);
 				const ctx = {
 					...context,
 					reqHeaders: request.headers,
