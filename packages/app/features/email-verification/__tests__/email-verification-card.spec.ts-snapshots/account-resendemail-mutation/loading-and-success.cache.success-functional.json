@@ -1,0 +1,14 @@
+{
+	"mutations": {
+		"account.resendEmail": {
+			"0": {
+				"state": {
+					"data": {
+						"email": "Kasey_Roberts82@yahoo.com"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

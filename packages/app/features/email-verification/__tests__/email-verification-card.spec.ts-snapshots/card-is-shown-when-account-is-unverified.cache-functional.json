@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"account.get:[[]]": {
+			"state": {
+				"data": {
+					"account": {
+						"id": "eef0abe4-c39e-4c5b-81f9-808c7b762d01",
+						"email": "Kirstin97@gmail.com",
+						"verified": false,
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>"
+					},
+					"user": {
+						"name": "Juliana"
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

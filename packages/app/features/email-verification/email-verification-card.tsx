@@ -31,6 +31,7 @@ export const EmailVerificationCard = suspendedFallback(
 		return (
 			<Card
 				className="min-w-fit self-center"
+				testID="email-verification-card"
 				header={
 					<Text className="text-warning text-center text-2xl">
 						{t("components.emailVerification.header")}
