@@ -235,6 +235,7 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 			"apps/web/src/handlers/**/*",
 			"apps/web/src/pages/api/**/*",
 			"apps/web/src/entry/server.tsx",
+			"apps/bot/src/**/*",
 			"testing/**",
 		],
 		["client-only"],
@@ -538,6 +539,8 @@ const disabledRules = {
 	"eslint/require-unicode-regexp": "off",
 	// TODO: fix this one
 	"eslint/no-warning-comments": "off",
+	// Why even?
+	"eslint/no-continue": "off",
 } satisfies DummyRuleMap;
 
 export default defineConfig({
@@ -638,6 +641,7 @@ export default defineConfig({
 						"**/*.spec.ts",
 					],
 				],
+				["apps/bot"],
 				["apps/mobile", ["babel.config.js", "metro.config.ts"]],
 				["packages/components"],
 				["packages/mutations"],
@@ -733,6 +737,7 @@ export default defineConfig({
 				"**/config.ts",
 				"**/*.config.ts",
 				"utils/scripts/**",
+				"apps/bot/src/**",
 				"apps/web/src/handlers/**",
 				"apps/web/src/pages/api/**",
 				"apps/web/src/entry/server.tsx",

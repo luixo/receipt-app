@@ -178,6 +178,29 @@ export const parsers = {
 } satisfies {
 	[K in TemporalType]: (input: TemporalInputMapping[K]) => TemporalMapping[K];
 };
+
+const isoInputShapes = {
+	plainDate: z.iso.date(),
+	plainTime: z.iso.time({ precision: 3 }),
+	plainDateTime: z.iso.datetime({ local: true, precision: 3 }),
+	zonedDateTime: z.string().meta({
+		description: "ISO 8601 date-time including an IANA time-zone annotation",
+		examples: ["2026-09-05T12:30:00.000+00:00[UTC]"],
+	}),
+} satisfies Record<TemporalType, z.ZodType>;
+
+export const isoInputSchemas = mapValues(isoInputShapes, (inputSchema, key) =>
+	z.codec(inputSchema, temporalSchemas[key], {
+		decode: (input) => parsers[key](input as never),
+		encode: (value) => value.toString(),
+	}),
+) as {
+	[K in TemporalType]: z.ZodCodec<
+		(typeof isoInputShapes)[K],
+		(typeof temporalSchemas)[K]
+	>;
+};
+
 export const deserialize = <K extends TemporalType>(
 	input: string,
 	converter: (input: string) => string = identity(),

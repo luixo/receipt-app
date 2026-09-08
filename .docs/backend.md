@@ -26,7 +26,7 @@ See `@.docs/be-test.md` for details.
 ## IDs and types
 
 - All primary keys are generated in the application layer via `ctx.getUuid()` — the DB never generates UUIDs. Cast to the appropriate flavored type: `const id: ReceiptId = ctx.getUuid()`.
-- IDs are nominal via `string & { __flavor?: "<table>" }` in `packages/db/src/ids.ts`. Zod schemas brand them via `.transform<XId>(flavored)`. New tables require a new entry in `ids.ts` and a corresponding schema in `validation.ts`.
+- IDs are nominal via `string & { __flavor?: "<table>" }` in `packages/db/src/ids.ts`. Zod schemas brand them via `.flavored<XId>(z.uuid())`. New tables require a new entry in `ids.ts` and a corresponding schema in `validation.ts`.
 - Use `ctx.getSalt()` for any password or crypto operation — not raw `crypto` — so tests can inject a deterministic salt.
 
 ## Temporal types

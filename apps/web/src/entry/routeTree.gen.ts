@@ -28,6 +28,7 @@ import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/d
 import { Route as ApiUtilsPingCacheRouteImport } from './../pages/api/utils/ping-cache'
 import { Route as ApiUtilsCleanupRouteImport } from './../pages/api/utils/cleanup'
 import { Route as ApiTrpcSplatRouteImport } from './../pages/api/trpc/$'
+import { Route as ApiMcpSplatRouteImport } from './../pages/api/mcp/$'
 import { Route as ProtectedUsersConnectionsRouteImport } from './../pages/_protected/users/connections'
 import { Route as ProtectedUsersAddRouteImport } from './../pages/_protected/users/add'
 import { Route as ProtectedUsersIdRouteImport } from './../pages/_protected/users/$id'
@@ -135,6 +136,11 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiMcpSplatRoute = ApiMcpSplatRouteImport.update({
+  id: '/api/mcp/$',
+  path: '/api/mcp/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProtectedUsersConnectionsRoute =
   ProtectedUsersConnectionsRouteImport.update({
     id: '/users/connections',
@@ -228,6 +234,7 @@ export interface FileRoutesByFullPath {
   '/users/$id': typeof ProtectedUsersIdRoute
   '/users/add': typeof ProtectedUsersAddRoute
   '/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
@@ -260,6 +267,7 @@ export interface FileRoutesByTo {
   '/users/$id': typeof ProtectedUsersIdRoute
   '/users/add': typeof ProtectedUsersAddRoute
   '/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
@@ -295,6 +303,7 @@ export interface FileRoutesById {
   '/_protected/users/$id': typeof ProtectedUsersIdRoute
   '/_protected/users/add': typeof ProtectedUsersAddRoute
   '/_protected/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/users/$id'
     | '/users/add'
     | '/users/connections'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/api/utils/ping-cache'
@@ -361,6 +371,7 @@ export interface FileRouteTypes {
     | '/users/$id'
     | '/users/add'
     | '/users/connections'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/api/utils/ping-cache'
@@ -395,6 +406,7 @@ export interface FileRouteTypes {
     | '/_protected/users/$id'
     | '/_protected/users/add'
     | '/_protected/users/connections'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/api/utils/ping-cache'
@@ -412,6 +424,7 @@ export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
   ApiPingRoute: typeof ApiPingRoute
+  ApiMcpSplatRoute: typeof ApiMcpSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
   ApiUtilsPingCacheRoute: typeof ApiUtilsPingCacheRoute
@@ -550,6 +563,13 @@ declare module '@tanstack/react-router' {
       path: '/api/trpc/$'
       fullPath: '/api/trpc/$'
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mcp/$': {
+      id: '/api/mcp/$'
+      path: '/api/mcp/$'
+      fullPath: '/api/mcp/$'
+      preLoaderRoute: typeof ApiMcpSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/users/connections': {
@@ -722,6 +742,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
   ApiPingRoute: ApiPingRoute,
+  ApiMcpSplatRoute: ApiMcpSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,
   ApiUtilsPingCacheRoute: ApiUtilsPingCacheRoute,
