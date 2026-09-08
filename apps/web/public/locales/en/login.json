@@ -1,5 +1,6 @@
 {
 	"header": "Login",
+	"telegramAlert": "You're logging in to link your Telegram bot.",
 	"form": {
 		"email": {
 			"label": "Email"

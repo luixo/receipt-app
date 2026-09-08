@@ -56,7 +56,11 @@ bot.command("start", async (ctx) => {
 	await ctx.reply("Authorize to let me act on your behalf:", {
 		reply_markup: new InlineKeyboard().webApp(
 			"Authorize",
-			`${env.WEB_BASE_URL}/bot-link`,
+			// Linking to /login directly (rather than the protected /bot-link,
+			// which redirects unauthenticated visitors to /login and drops the
+			// Telegram-provided init data along the way) - login itself reads
+			// init data via `?bot=telegram` and links it once signed in.
+			`${env.WEB_BASE_URL}/login?bot=telegram`,
 		),
 	});
 });

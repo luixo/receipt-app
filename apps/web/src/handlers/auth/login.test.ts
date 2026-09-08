@@ -1,22 +1,63 @@
 import { faker } from "@faker-js/faker";
-import { assert, describe, expect } from "vitest";
+import * as crypto from "node:crypto";
+import { entries } from "remeda";
+import { assert, describe, expect, vi } from "vitest";
 
 import {
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
 } from "~app/utils/validation";
 import { createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import {
+	assertDatabase,
+	insertAccountWithSession,
+} from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow, toDate } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
-import { procedure } from "./login";
+const { TEST_BOT_TOKEN } = vi.hoisted(() => ({
+	TEST_BOT_TOKEN: "test-bot-token",
+}));
+
+vi.mock(import("~web/utils/env"), async (importOriginal) => {
+	const original = await importOriginal();
+	return {
+		...original,
+		env: { ...original.env, TELEGRAM_BOT_TOKEN: TEST_BOT_TOKEN },
+	};
+});
+
+const { procedure } = await import("./login");
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
+
+const buildInitData = (fields: Record<string, string>) => {
+	const dataCheckString = entries(fields)
+		.toSorted(([a], [b]) => a.localeCompare(b))
+		.map(([key, value]) => `${key}=${value}`)
+		.join("\n");
+	const secretKey = crypto
+		.createHmac("sha256", "WebAppData")
+		.update(TEST_BOT_TOKEN)
+		.digest();
+	const hash = crypto
+		.createHmac("sha256", secretKey)
+		.update(dataCheckString)
+		.digest("hex");
+	return new URLSearchParams({ ...fields, hash }).toString();
+};
+
+const validInitDataFields = () => ({
+	auth_date: String(
+		Math.floor(toDate.zonedDateTime(getNow.zonedDateTime()).getTime() / 1000),
+	),
+	user: JSON.stringify({ id: 123_456_789 }),
+});
 
 describe("auth.login", () => {
 	describe("input verification", () => {
@@ -158,6 +199,25 @@ describe("auth.login", () => {
 			const context = createContext(ctx);
 			const caller = createCaller(context);
 			await caller.procedure({ email: email.toUpperCase(), password });
+		});
+
+		test("login successful - with Telegram init data", async ({ ctx }) => {
+			const {
+				accountId,
+				account: { email, password },
+			} = await insertAccountWithSession(ctx);
+			const context = createContext(ctx);
+			const caller = createCaller(context);
+			const initData = buildInitData(validInitDataFields());
+			await caller.procedure({ email, password, initData });
+			const database = assertDatabase(ctx);
+			const session = await database
+				.selectFrom("sessions")
+				.where("accountId", "=", accountId)
+				.where("botUserId", "is not", null)
+				.select("botUserId")
+				.executeTakeFirstOrThrow();
+			expect(session.botUserId).toBe("tg:123456789");
 		});
 	});
 });

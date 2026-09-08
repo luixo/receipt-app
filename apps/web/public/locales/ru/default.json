@@ -27,7 +27,8 @@
 		"login": "Вход",
 		"resetPassword": "Сбросить пароль",
 		"voidAccount": "Отмена регистрации",
-		"botLink": "Привязка бота"
+		"botLink": "Привязка бота",
+		"botSuccess": "Бот привязан"
 	},
 	"common": {
 		"andJoiner": " и "

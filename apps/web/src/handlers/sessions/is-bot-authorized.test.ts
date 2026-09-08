@@ -13,7 +13,7 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 describe("sessions.isBotAuthorized", () => {
 	describe("functionality", () => {
 		test("no session for bot user id", async ({ ctx }) => {
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ botUserId: "tg:1" });
 			expect(result).toStrictEqual<typeof result>({ authorized: false });
 		});
@@ -26,7 +26,7 @@ describe("sessions.isBotAuthorized", () => {
 					minutes: 1,
 				}),
 			});
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ botUserId: "tg:2" });
 			expect(result).toStrictEqual<typeof result>({ authorized: false });
 		});
@@ -34,7 +34,7 @@ describe("sessions.isBotAuthorized", () => {
 		test("session is valid", async ({ ctx }) => {
 			const { id: accountId } = await insertAccount(ctx);
 			await insertSession(ctx, accountId, { botUserId: "tg:3" });
-			const caller = createCaller(await createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ botUserId: "tg:3" });
 			expect(result).toStrictEqual<typeof result>({ authorized: true });
 		});

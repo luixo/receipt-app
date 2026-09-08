@@ -8,28 +8,12 @@ import { ErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationResult } from "~app/trpc";
+import { getTelegramInitData } from "~app/utils/telegram";
 import { useTRPC } from "~app/utils/trpc";
 import { ButtonLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { options as sessionsLinkBotOptions } from "~mutations/sessions/link-bot";
-
-declare global {
-	// Global augmentation requires `interface`, not `type`.
-	// oxlint-disable-next-line typescript/consistent-type-definitions
-	interface Window {
-		Telegram?: { WebApp?: { initData: string } };
-	}
-}
-
-// Unlike other packages/app screens, this one is inherently web/Telegram-only
-// (no mobile Mini App equivalent exists), so reading `window` directly here
-// rather than threading it through a cross-platform context is deliberate.
-// Guarded because this runs during SSR too, where `window` doesn't exist.
-// oxlint-disable no-restricted-globals
-const getInitData = () =>
-	typeof window === "undefined" ? undefined : window.Telegram?.WebApp?.initData;
-// oxlint-enable no-restricted-globals
 
 export const BotLink: React.FC<{
 	linkBotMutation: TRPCMutationResult<"sessions.linkBot">;
@@ -76,7 +60,7 @@ export const BotLinkScreen = () => {
 	// mounted, to avoid a hydration mismatch.
 	const [initData, setInitData] = React.useState<string | undefined>();
 	React.useEffect(() => {
-		setInitData(getInitData());
+		setInitData(getTelegramInitData());
 	}, []);
 	const linkBot = React.useCallback(() => {
 		if (!initData || linkBotMutation.status !== "idle") {

@@ -59,7 +59,7 @@ describe("sessions.linkBot", () => {
 	describe("functionality", () => {
 		test("bot token not configured", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const mutableEnv = env as { TELEGRAM_BOT_TOKEN?: string };
 			mutableEnv.TELEGRAM_BOT_TOKEN = undefined;
 			try {
@@ -75,7 +75,7 @@ describe("sessions.linkBot", () => {
 
 		test("invalid signature", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const initData = buildInitData(validFields(), { botToken: "wrong" });
 			await expectTRPCError(
 				() => caller.procedure({ initData }),
@@ -86,7 +86,7 @@ describe("sessions.linkBot", () => {
 
 		test("bot user id is linked", async ({ ctx }) => {
 			const { accountId, sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const initData = buildInitData(validFields());
 			await caller.procedure({ initData });
 			const database = assertDatabase(ctx);

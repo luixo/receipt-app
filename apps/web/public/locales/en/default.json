@@ -27,7 +27,8 @@
 		"login": "Login",
 		"resetPassword": "Reset password",
 		"voidAccount": "Void account",
-		"botLink": "Link bot"
+		"botLink": "Link bot",
+		"botSuccess": "Bot linked"
 	},
 	"common": {
 		"andJoiner": " and "

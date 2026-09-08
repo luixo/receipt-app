@@ -2,6 +2,7 @@
 import accountEn from "@ra/web/public/locales/en/account.json";
 import adminEn from "@ra/web/public/locales/en/admin.json";
 import botLinkEn from "@ra/web/public/locales/en/bot-link.json";
+import botSuccessEn from "@ra/web/public/locales/en/bot-success.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
 import emailEn from "@ra/web/public/locales/en/email.json";
@@ -15,6 +16,7 @@ import voidAccountEn from "@ra/web/public/locales/en/void-account.json";
 import accountRu from "@ra/web/public/locales/ru/account.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
 import botLinkRu from "@ra/web/public/locales/ru/bot-link.json";
+import botSuccessRu from "@ra/web/public/locales/ru/bot-success.json";
 import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
 import emailRu from "@ra/web/public/locales/ru/email.json";
@@ -44,6 +46,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		debts: debtsEn,
 		email: emailEn,
 		"bot-link": botLinkEn,
+		"bot-success": botSuccessEn,
 	},
 	ru: {
 		default: defaultRu,
@@ -59,5 +62,6 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		debts: debtsRu,
 		email: emailRu,
 		"bot-link": botLinkRu,
+		"bot-success": botSuccessRu,
 	},
 };
