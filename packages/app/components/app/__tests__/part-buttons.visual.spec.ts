@@ -55,7 +55,7 @@ test("Both buttons enabled", async ({
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(2),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("enabled.png", {
 		locator: partButtons,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
@@ -82,7 +82,7 @@ test("Down button disabled", async ({
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("down-disabled.png", {
 		locator: partButtons,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [

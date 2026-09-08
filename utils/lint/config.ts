@@ -709,10 +709,11 @@ export default defineConfig({
 			},
 		},
 		{
-			files: ["**/*.spec.ts"],
+			files: ["**/*.spec.ts", "testing/playwright/**"],
 			rules: {
 				// Playwright tests don't need vitest rules
 				"vitest/consistent-test-filename": "off",
+				"vitest/valid-expect": "off",
 			},
 		},
 		{

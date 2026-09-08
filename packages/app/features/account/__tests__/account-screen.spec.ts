@@ -109,7 +109,7 @@ test.describe("Avatar", () => {
 
 		await snapshotQueries(async () => {
 			await yesButton.click();
-			await awaitCacheKey("account.changeAvatar");
+			await awaitCacheKey("account.changeAvatar", { success: 2 });
 			await verifyToastTexts();
 		});
 	});

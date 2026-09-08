@@ -3,7 +3,6 @@ import { isNonNullish } from "remeda";
 
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
-import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
 import {
 	defaultGenerateDebtsFromReceipt,
 	ourDesynced,
@@ -14,6 +13,7 @@ import {
 	theirSynced,
 } from "~tests/frontend/generators/debts";
 import { defaultGenerateReceiptItemsWithConsumers } from "~tests/frontend/generators/receipts";
+import { getMutationsByKey } from "~tests/frontend/utils/queries";
 import { getNow } from "~utils/date";
 
 import { test } from "./debts.utils";
@@ -31,20 +31,21 @@ test.describe("Wrapper component", () => {
 		const { receipt } = await mockReceiptWithDebts();
 
 		const debtsGetPause = api.createPause();
+		const mockErrorMessage = `Mock "debts.get" error`;
 		api.mockFirst("debts.get", async () => {
 			await debtsGetPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "debts.get" error`,
+				message: mockErrorMessage,
 			});
 		});
-		await openReceipt(receipt.id);
+		await openReceipt(receipt);
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
 
-		consoleManager.ignore(/Mock "debts.get" error/);
+		consoleManager.ignore(mockErrorMessage);
 		debtsGetPause.resolve();
-		await expect(errorMessage(`Mock "debts.get" error`)).toBeVisible();
+		await expect(errorMessage(mockErrorMessage)).toBeVisible();
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
 	});
@@ -97,7 +98,7 @@ test.describe("Propagate debts button", () => {
 			generateDebts: (opts) =>
 				remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 		});
-		await openReceipt(receipt.id);
+		await openReceipt(receipt);
 		await expect(propagateDebtsButton).toBeVisible();
 		await expect(updateDebtsButton).toBeHidden();
 	});

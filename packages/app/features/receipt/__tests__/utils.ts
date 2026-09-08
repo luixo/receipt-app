@@ -42,7 +42,7 @@ type Fixtures = {
 		selfUserId: UserId;
 	}>;
 	openReceipt: (
-		id: ReceiptId,
+		receipt: { id: ReceiptId; ownerUserId: UserId },
 		options?: { awaitCache?: boolean },
 	) => Promise<void>;
 };
@@ -127,10 +127,12 @@ export const test = originalTest.extend<Fixtures>({
 		),
 
 	openReceipt: ({ page, awaitCacheKey }, use) =>
-		use(async (receiptId, { awaitCache = true } = {}) => {
-			await page.goto(`/receipts/${receiptId}`);
+		use(async (receipt, { awaitCache = true } = {}) => {
+			await page.goto(`/receipts/${receipt.id}`);
 			if (awaitCache) {
-				await awaitCacheKey("users.get");
+				await awaitCacheKey("users.get", {
+					input: { id: receipt.ownerUserId },
+				});
 			}
 		}),
 });

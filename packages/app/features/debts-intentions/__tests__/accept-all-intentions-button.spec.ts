@@ -114,10 +114,7 @@ test("'debtIntentions.accept' pending / error", async ({
 				`${rejectedDebtsAmount} debts accepted successfully`,
 			);
 			await expect(page).toHaveURL("/debts");
-			await awaitCacheKey("debtIntentions.accept", {
-				success: debtsAmount,
-				total: true,
-			});
+			await awaitCacheKey("debtIntentions.accept", { success: debtsAmount });
 		},
 		{
 			name: "success",
