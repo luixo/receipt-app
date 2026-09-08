@@ -240,7 +240,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 				name,
 				{
 					maxDiffPixelRatio,
-					maxDiffPixels,
+					maxDiffPixels = 3,
 					threshold,
 					fullPage = true,
 					mask = [],

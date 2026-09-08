@@ -13,10 +13,11 @@ No `.env` or `DATABASE_URL` is needed to build or run these tests. `PLAYWRIGHT=t
 
 ## Visual tests routine
 
-- **Visual tests must ONLY be run and their snapshots updated via Docker, never directly on a local machine.** Local browser binaries (even ones `playwright install` fetches) render slightly differently per OS/arch than the pinned CI image, so running or `--update-snapshots`-ing outside Docker produces false diffs and can silently corrupt committed snapshots with host-specific pixels.
-- **The build itself stays on the host**, Docker is only used to run/update the tests against that build.
+- **Visual tests may be run and their snapshots updated directly on a Linux host (which is true for most agents)**
+- **On non-Linux machines, run and update snapshots via Docker only.** Local browsers render differently per OS/arch than CI image, so running or `--update-snapshots`-ing outside Linux produces diffs.
+- **The build itself stays on the host**, Docker (when needed) is only used to run/update the tests against that build.
 
-Full command to run tests in Docker:
+To run tests in Docker (only needed on non-Linux hosts):
 
 ```sh
 # Optionally add a single test file / grep for test case
