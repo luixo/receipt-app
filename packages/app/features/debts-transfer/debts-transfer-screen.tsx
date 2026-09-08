@@ -214,7 +214,10 @@ const DebtsListForm = suspendedFallback<{
 		return (
 			<>
 				<form.AppForm>
-					<form.Form className="flex flex-col gap-4">
+					<form.Form
+						className="flex flex-col gap-4"
+						testID="debts-transfer-form"
+					>
 						<View className="flex gap-2">
 							{allCurrenciesWithSums.length === 0 ? (
 								<Text>{t("transfer.form.noDebts")}</Text>
