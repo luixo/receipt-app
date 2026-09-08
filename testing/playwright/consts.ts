@@ -1,7 +1,7 @@
 export const serverSettings = {
 	// Changing timezone here, change it in `playwright/package.json` as well
 	timezone: "UTC",
-	locale: "ru-RU",
+	locale: "ru-RU.utf8",
 };
 
 // Timezone and locale on a client should differ from those on a server
