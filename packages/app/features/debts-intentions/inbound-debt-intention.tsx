@@ -68,7 +68,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 
 	const { isPending } = acceptMutation;
 	return (
-		<DebtIntention intention={intention}>
+		<DebtIntention intention={intention} testID="inbound-debt-intention">
 			<ButtonGroup className="self-end" color="primary">
 				<Button
 					isDisabled={isPending}

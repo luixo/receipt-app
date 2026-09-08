@@ -1,0 +1,44 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
+			"state": {
+				"data": {
+					"id": "229936ae-1f75-422a-bed9-0a966e1804c1",
+					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
+					"currencyCode": "NGN",
+					"amount": 2179.11,
+					"timestamp": "2019-12-07",
+					"note": "via summopere sodalitas hic",
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-07",
+						"amount": 2179.11,
+						"currencyCode": "NGN"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "229936ae-1f75-422a-bed9-0a966e1804c1"
+					}
+				}
+			}
+		]
+	}
+}

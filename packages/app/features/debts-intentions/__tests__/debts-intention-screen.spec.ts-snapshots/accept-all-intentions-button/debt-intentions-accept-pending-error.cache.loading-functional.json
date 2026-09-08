@@ -1,19 +1,97 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
+		"debts.get:[{\"id\":\"33d24ca1-6b39-42f7-8eeb-f4f3f1911e03\"}]": {
 			"state": {
 				"data": {
-					"id": "229936ae-1f75-422a-bed9-0a966e1804c1",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "NGN",
-					"amount": 2179.11,
-					"timestamp": "2019-12-07",
-					"note": "via summopere sodalitas hic",
+					"id": "33d24ca1-6b39-42f7-8eeb-f4f3f1911e03",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "TMT",
+					"amount": 5730.5,
+					"timestamp": "2019-12-20",
+					"note": "deprecator decens conatus cognatus",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-20",
+						"amount": 5730.5,
+						"currencyCode": "TMT"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"529cc769-7e27-440a-80eb-41389c3be516\"}]": {
+			"state": {
+				"data": {
+					"id": "529cc769-7e27-440a-80eb-41389c3be516",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "SYP",
+					"amount": 5559.82,
+					"timestamp": "2019-12-09",
+					"note": "subito voluntarius conduco socius",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-09",
+						"amount": 5559.82,
+						"currencyCode": "SYP"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"6cb4e654-6a42-4013-82ca-0fb28cadf665\"}]": {
+			"state": {
+				"data": {
+					"id": "6cb4e654-6a42-4013-82ca-0fb28cadf665",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "MDL",
+					"amount": 4506.8,
+					"timestamp": "2019-12-18",
+					"note": "defaeco veniam celebrer curiositas",
 					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-07",
-						"amount": 2179.11,
+						"timestamp": "2019-12-18",
+						"amount": 4506.8,
+						"currencyCode": "MDL"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"b88d1c6f-e5c8-4517-b7be-c81fe78bbf20\"}]": {
+			"state": {
+				"data": {
+					"id": "b88d1c6f-e5c8-4517-b7be-c81fe78bbf20",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "NGN",
+					"amount": 723.07,
+					"timestamp": "2019-12-06",
+					"note": "carpo tergo admoneo quo",
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-06",
+						"amount": 723.07,
 						"currencyCode": "NGN"
 					},
 					"receiptId": "<undefined>"
@@ -26,21 +104,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"2724773d-3062-49b9-8cca-9a36a0b32d1c\"}]": {
+		"debts.get:[{\"id\":\"cecc00d3-bca1-4b77-8ed4-7d5e1c1e2c0d\"}]": {
 			"state": {
 				"data": {
-					"id": "2724773d-3062-49b9-8cca-9a36a0b32d1c",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "KZT",
-					"amount": 9772.07,
-					"timestamp": "2019-12-05",
-					"note": "colligo iusto chirographum cresco",
+					"id": "cecc00d3-bca1-4b77-8ed4-7d5e1c1e2c0d",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "COP",
+					"amount": 6513.87,
+					"timestamp": "2019-12-22",
+					"note": "utpote ratione combibo sto",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-05",
-						"amount": 9772.07,
-						"currencyCode": "KZT"
+						"timestamp": "2019-12-22",
+						"amount": 6513.87,
+						"currencyCode": "COP"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -52,99 +130,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"3383c440-1915-4425-902d-f3646c0b5a71\"}]": {
+		"debts.get:[{\"id\":\"fb6bc500-ea15-498f-81ee-104a76f7ac78\"}]": {
 			"state": {
 				"data": {
-					"id": "3383c440-1915-4425-902d-f3646c0b5a71",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "SHP",
-					"amount": -4551.98,
-					"timestamp": "2019-12-13",
-					"note": "antiquus suspendo virgo defero",
-					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-13",
-						"amount": -4551.98,
-						"currencyCode": "SHP"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 1,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"40c81ffd-5b8b-4263-9cd7-1533848360f2\"}]": {
-			"state": {
-				"data": {
-					"id": "40c81ffd-5b8b-4263-9cd7-1533848360f2",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "CNY",
-					"amount": -8075.21,
-					"timestamp": "2019-12-10",
-					"note": "tego vulgo ventosus antepono",
+					"id": "fb6bc500-ea15-498f-81ee-104a76f7ac78",
+					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"currencyCode": "MRU",
+					"amount": 5824.74,
+					"timestamp": "2019-12-27",
+					"note": "paulatim testimonium temeritas comitatus",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-10",
-						"amount": -8075.21,
-						"currencyCode": "CNY"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 2,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"50210be2-3813-4fb7-8978-a4592ef5ea0d\"}]": {
-			"state": {
-				"data": {
-					"id": "50210be2-3813-4fb7-8978-a4592ef5ea0d",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "ARS",
-					"amount": 4481.43,
-					"timestamp": "2019-12-07",
-					"note": "attollo pectus approbo ultra",
-					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-07",
-						"amount": 4481.43,
-						"currencyCode": "ARS"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 2,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"d7daed78-2ad5-4e24-bae1-6947aa738ff8\"}]": {
-			"state": {
-				"data": {
-					"id": "d7daed78-2ad5-4e24-bae1-6947aa738ff8",
-					"userId": "953747e9-dbcb-44a8-9b09-3cfb4c39175d",
-					"currencyCode": "KGS",
-					"amount": -5770.29,
-					"timestamp": "2019-12-05",
-					"note": "verto tamisium animus mollitia",
-					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-						"timestamp": "2019-12-05",
-						"amount": -5770.29,
-						"currencyCode": "KGS"
+						"timestamp": "2019-12-27",
+						"amount": 5824.74,
+						"currencyCode": "MRU"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -165,7 +165,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "229936ae-1f75-422a-bed9-0a966e1804c1"
+						"id": "b88d1c6f-e5c8-4517-b7be-c81fe78bbf20"
 					}
 				}
 			},
@@ -175,7 +175,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "3383c440-1915-4425-902d-f3646c0b5a71"
+						"id": "6cb4e654-6a42-4013-82ca-0fb28cadf665"
 					}
 				}
 			},
@@ -188,7 +188,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "50210be2-3813-4fb7-8978-a4592ef5ea0d"
+						"id": "529cc769-7e27-440a-80eb-41389c3be516"
 					}
 				}
 			},
@@ -201,7 +201,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "d7daed78-2ad5-4e24-bae1-6947aa738ff8"
+						"id": "cecc00d3-bca1-4b77-8ed4-7d5e1c1e2c0d"
 					}
 				}
 			},
@@ -214,7 +214,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "2724773d-3062-49b9-8cca-9a36a0b32d1c"
+						"id": "33d24ca1-6b39-42f7-8eeb-f4f3f1911e03"
 					}
 				}
 			},
@@ -227,7 +227,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "40c81ffd-5b8b-4263-9cd7-1533848360f2"
+						"id": "fb6bc500-ea15-498f-81ee-104a76f7ac78"
 					}
 				}
 			}

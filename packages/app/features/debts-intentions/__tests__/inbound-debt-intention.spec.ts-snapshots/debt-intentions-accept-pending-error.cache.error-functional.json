@@ -1,0 +1,23 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
+			"state": {
+				"isInvalidated": true
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debtIntentions.accept\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}
