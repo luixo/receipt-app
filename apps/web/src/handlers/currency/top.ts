@@ -6,7 +6,6 @@ import {
 	getParticipantsReceipts,
 } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import { currencyCodeSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
@@ -26,36 +25,30 @@ export const procedure = authProcedure
 			]),
 		}),
 	)
-	.output(
-		z
-			.strictObject({
-				currencyCode: currencyCodeSchema,
-				count: z.int(),
-			})
-			.array(),
-	)
 	.query(async ({ input, ctx }) => {
 		const minimalTimestamp = subtract.plainDate(getNow.plainDate(), {
 			months: 1,
 		});
 		switch (input.options.type) {
 			case "debts":
-				return ctx.database
-					.selectFrom("debts")
-					.select([
-						"currencyCode",
-						ctx.database.fn.count<number>("id").as("count"),
-					])
-					.where((eb) =>
-						eb("timestamp", ">", minimalTimestamp).and(
-							"debts.ownerAccountId",
-							"=",
-							ctx.auth.accountId,
-						),
-					)
-					.groupBy("currencyCode")
-					.orderBy("count", "desc")
-					.execute();
+				return {
+					items: await ctx.database
+						.selectFrom("debts")
+						.select([
+							"currencyCode",
+							ctx.database.fn.count<number>("id").as("count"),
+						])
+						.where((eb) =>
+							eb("timestamp", ">", minimalTimestamp).and(
+								"debts.ownerAccountId",
+								"=",
+								ctx.auth.accountId,
+							),
+						)
+						.groupBy("currencyCode")
+						.orderBy("count", "desc")
+						.execute(),
+				};
 			case "receipts": {
 				const topCurrenciesResult = await ctx.database
 					.with("mergedReceipts", () => {
@@ -89,10 +82,12 @@ export const procedure = authProcedure
 					.groupBy("currencyCode")
 					.orderBy("count", "desc")
 					.execute();
-				return topCurrenciesResult.map(({ currencyCode, count }) => ({
-					currencyCode,
-					count: Number(count),
-				}));
+				return {
+					items: topCurrenciesResult.map(({ currencyCode, count }) => ({
+						currencyCode,
+						count: Number(count),
+					})),
+				};
 			}
 		}
 	});

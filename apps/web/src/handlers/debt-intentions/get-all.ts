@@ -102,21 +102,23 @@ export const procedure = authProcedure
 				>
 			>()
 			.execute();
-		return debts.map<InboundIntention>((debt) => ({
-			id: debt.id,
-			userId: debt.userId,
-			amount: -Number(debt.amount),
-			currencyCode: debt.currencyCode,
-			updatedAt: debt.updatedAt,
-			timestamp: debt.timestamp,
-			note: debt.note,
-			receiptId: debt.receiptId || undefined,
-			current: debt.selfAmount
-				? {
-						amount: Number(debt.selfAmount),
-						timestamp: debt.selfTimestamp,
-						currencyCode: debt.selfCurrencyCode,
-					}
-				: undefined,
-		}));
+		return {
+			items: debts.map<InboundIntention>((debt) => ({
+				id: debt.id,
+				userId: debt.userId,
+				amount: -Number(debt.amount),
+				currencyCode: debt.currencyCode,
+				updatedAt: debt.updatedAt,
+				timestamp: debt.timestamp,
+				note: debt.note,
+				receiptId: debt.receiptId || undefined,
+				current: debt.selfAmount
+					? {
+							amount: Number(debt.selfAmount),
+							timestamp: debt.selfTimestamp,
+							currencyCode: debt.selfCurrencyCode,
+						}
+					: undefined,
+			})),
+		};
 	});

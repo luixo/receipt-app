@@ -12,5 +12,5 @@ export const procedure = unauthProcedure
 			.deleteFrom("resetPasswordIntentions")
 			.where("expiresTimestamp", "<", getNow.zonedDateTime())
 			.executeTakeFirstOrThrow();
-		return Number(result.numDeletedRows);
+		return { count: Number(result.numDeletedRows) };
 	});

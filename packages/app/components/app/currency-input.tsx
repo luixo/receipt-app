@@ -41,8 +41,8 @@ const useAutoLoadCurrency = (
 	React.useEffect(() => {
 		if (currenciesQuery.data && topCurrenciesQuery.data) {
 			onLoad(
-				currenciesQuery.data,
-				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode),
+				currenciesQuery.data.items,
+				topCurrenciesQuery.data.items.map(({ currencyCode }) => currencyCode),
 			);
 		}
 	}, [currenciesQuery.data, topCurrenciesQuery.data, onLoad]);

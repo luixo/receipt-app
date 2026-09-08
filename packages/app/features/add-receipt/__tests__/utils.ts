@@ -11,7 +11,7 @@ import type { ExtractFixture } from "~tests/frontend/types";
 type Fixtures = {
 	mockBase: () => Promise<
 		{
-			topCurrencies: TRPCQueryOutput<"currency.top">;
+			topCurrencies: TRPCQueryOutput<"currency.top">["items"];
 		} & Awaited<
 			ReturnType<
 				ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
@@ -32,10 +32,9 @@ export const test = originalTest.extend<Fixtures>({
 				currencyCode: generateCurrencyCode(faker),
 				count: faker.number.int(100),
 			}));
-			api.mockFirst(
-				"currency.top",
-				topCurrencies.toSorted((a, b) => a.count - b.count),
-			);
+			api.mockFirst("currency.top", {
+				items: topCurrencies.toSorted((a, b) => a.count - b.count),
+			});
 			return { topCurrencies, ...auth };
 		}),
 

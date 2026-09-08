@@ -15,15 +15,18 @@ type Controller = ControllerWith<{
 }>;
 
 type Debts = TRPCQueryOutput<"debts.getAll">;
-type Debt = Debts[number];
+type Debt = Debts["items"][number];
 
 const updateAllSums =
 	({ queryClient, procedure }: Controller) =>
-	(updater: UpdateFn<Debts>) =>
+	(updater: UpdateFn<Debts["items"]>) =>
 		withRef<Debts | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey(), (prevDebts) => {
 				ref.current = prevDebts;
-				return getUpdatedData(prevDebts, updater);
+				return getUpdatedData(prevDebts, (prevData) => ({
+					...prevData,
+					items: updater(prevData.items),
+				}));
 			});
 		});
 

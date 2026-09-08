@@ -26,11 +26,13 @@ const router = t.router({
 					message: errorMessage,
 				});
 			}
-			return removedSessions;
+			return { count: removedSessions };
 		}),
 	}),
 	resetPasswordIntentions: t.router({
-		cleanup: t.procedure.mutation(() => removedResetPasswordIntentions),
+		cleanup: t.procedure.mutation(() => ({
+			count: removedResetPasswordIntentions,
+		})),
 	}),
 });
 

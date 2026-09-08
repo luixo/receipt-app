@@ -14,7 +14,7 @@ describe("utils.ping", () => {
 		test("pong is sent", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ timeout: 0 });
-			expect(result).toBe<typeof result>("PONG");
+			expect(result).toStrictEqual<typeof result>({ message: "PONG" });
 		});
 
 		test("error is thrown", async ({ ctx }) => {

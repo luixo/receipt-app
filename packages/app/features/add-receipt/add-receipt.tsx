@@ -153,7 +153,7 @@ export const AddReceipt = () => {
 		trpc.currency.top.queryOptions({
 			options: { type: "receipts" },
 		}).queryKey,
-	)?.[0]?.currencyCode;
+	)?.items[0]?.currencyCode;
 	const defaultValues = {
 		name: "",
 		issued: getNow.plainDate(),

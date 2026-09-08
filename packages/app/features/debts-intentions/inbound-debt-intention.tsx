@@ -32,7 +32,7 @@ export const SkeletonInboundDebtIntention = () => {
 };
 
 type Props = {
-	intention: TRPCQueryOutput<"debtIntentions.getAll">[number];
+	intention: TRPCQueryOutput<"debtIntentions.getAll">["items"][number];
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {

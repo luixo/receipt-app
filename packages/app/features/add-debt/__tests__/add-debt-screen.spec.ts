@@ -121,7 +121,7 @@ test.describe("Invalid form disables submit button", () => {
 		const createPause = api.createPause();
 		api.mockFirst("currency.top", async () => {
 			await createPause.promise;
-			return topCurrencies.toSorted((a, b) => b.count - a.count);
+			return { items: topCurrencies.toSorted((a, b) => b.count - a.count) };
 		});
 
 		await page.goto("/debts/add");

@@ -2,28 +2,30 @@
 	"queries": {
 		"currency.top:[{\"options\":{\"type\":\"receipts\"}}]": {
 			"state": {
-				"data": [
-					{
-						"currencyCode": "WST",
-						"count": 58
-					},
-					{
-						"currencyCode": "GYD",
-						"count": 73
-					},
-					{
-						"currencyCode": "FJD",
-						"count": 76
-					},
-					{
-						"currencyCode": "CVE",
-						"count": 94
-					},
-					{
-						"currencyCode": "MXN",
-						"count": 100
-					}
-				],
+				"data": {
+					"items": [
+						{
+							"currencyCode": "WST",
+							"count": 58
+						},
+						{
+							"currencyCode": "GYD",
+							"count": 73
+						},
+						{
+							"currencyCode": "FJD",
+							"count": 76
+						},
+						{
+							"currencyCode": "CVE",
+							"count": 94
+						},
+						{
+							"currencyCode": "MXN",
+							"count": 100
+						}
+					]
+				},
 				"dataUpdateCount": 1,
 				"error": null,
 				"fetchMeta": null,

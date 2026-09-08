@@ -102,10 +102,12 @@ const UserDebtsGroup = suspendedFallback<{
 		const { data: debts } = useSuspenseQuery(
 			trpc.debts.getAllUser.queryOptions({ userId }),
 		);
-		const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		return (
 			<View className="flex-row items-center justify-center gap-4 px-16">
-				<DebtsGroup debts={showResolvedDebts ? debts : nonResolvedDebts} />
+				<DebtsGroup
+					debts={showResolvedDebts ? debts.items : nonResolvedDebts}
+				/>
 				{nonResolvedDebts.length > 1 ? (
 					<ButtonLink
 						color="primary"
@@ -117,7 +119,7 @@ const UserDebtsGroup = suspendedFallback<{
 						<Icon name="exchange" />
 					</ButtonLink>
 				) : null}
-				{debts.length === nonResolvedDebts.length ? null : (
+				{debts.items.length === nonResolvedDebts.length ? null : (
 					<ShowResolvedDebtsOption className="absolute right-0" />
 				)}
 			</View>

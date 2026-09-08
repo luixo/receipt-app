@@ -7,7 +7,7 @@ import {
 } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
-type Intention = TRPCQueryOutput<"debtIntentions.getAll">[number];
+type Intention = TRPCQueryOutput<"debtIntentions.getAll">["items"][number];
 
 export const options: UseContextedMutationOptions<
 	"debtIntentions.accept",

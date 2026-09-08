@@ -298,7 +298,7 @@ test.describe("Currency", () => {
 					currencyCode: "USD",
 				})),
 		});
-		api.mockFirst("currency.top", []);
+		api.mockFirst("currency.top", { items: [] });
 		await openDebtScreen(debt.id);
 
 		await currencyTriggerButton.click();
@@ -336,6 +336,9 @@ test.describe("Remove", () => {
 		});
 		await openDebtScreen(debt.id);
 		api.mockFirst("debts.remove", { reverseRemoved: false });
+		// Removal navigates to the user's debts page, which fetches these
+		api.mockFirst("debts.getAllUser", { items: [] });
+		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
 
 		await snapshotQueries(
 			async () => {
@@ -401,6 +404,9 @@ test.describe("Remove", () => {
 			await pause.promise;
 			return { reverseRemoved: false };
 		});
+		// Removal navigates to the user's debts page, which fetches these
+		api.mockFirst("debts.getAllUser", { items: [] });
+		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
 		await removeDebtButton.click();
 		await removeDebtDialogYesButton.click();
 		await expect(removeDebtButton).toBeDisabled();

@@ -31,11 +31,11 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 		const { data: debts } = useSuspenseQuery(
 			trpc.debts.getAllUser.queryOptions({ userId }),
 		);
-		const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		return (
 			<DebtsGroup
 				className="self-center"
-				debts={showResolvedDebts ? debts : nonResolvedDebts}
+				debts={showResolvedDebts ? debts.items : nonResolvedDebts}
 			/>
 		);
 	},

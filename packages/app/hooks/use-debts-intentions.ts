@@ -7,5 +7,5 @@ export const useDebtsIntentions = () => {
 	const { data: inboundDebts } = useSuspenseQuery(
 		trpc.debtIntentions.getAll.queryOptions(),
 	);
-	return inboundDebts.length;
+	return inboundDebts.items.length;
 };

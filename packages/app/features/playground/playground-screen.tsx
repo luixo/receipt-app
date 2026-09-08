@@ -304,7 +304,7 @@ export const PlaygroundScreen = () => {
 				{elements.map(({ data, status }, index) => (
 					// oxlint-disable-next-line react/no-array-index-key
 					<Text key={index} className="whitespace-pre text-red-500">
-						{status}: {data}
+						{status}: {data?.message}
 					</Text>
 				))}
 			</View>

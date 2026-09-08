@@ -34,7 +34,7 @@ export const SkeletonDebtIntention: React.FC<{ children?: ViewReactNode }> = ({
 	</Card>
 );
 
-type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
+type Intentions = TRPCQueryOutput<"debtIntentions.getAll">["items"];
 
 type Props = {
 	intention: Intentions[number];

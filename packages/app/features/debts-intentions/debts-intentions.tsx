@@ -33,7 +33,7 @@ const AggregatedIntentionGroup: React.FC<{ amount: number }> = ({ amount }) => (
 	</View>
 );
 
-const getLatestIntention = (intentions: IntentionsQuery["data"]) =>
+const getLatestIntention = (intentions: IntentionsQuery["data"]["items"]) =>
 	intentions.toSorted((intentionA, intentionB) =>
 		compare.plainDate(intentionB.timestamp, intentionA.timestamp),
 	)[0];
@@ -46,8 +46,8 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			trpc.debtIntentions.getAll.queryOptions(),
 		);
 		const aggregatedIntentions = React.useMemo(() => {
-			const intentionsByUser = intentions.reduce<
-				Record<UserId, IntentionsQuery["data"]>
+			const intentionsByUser = intentions.items.reduce<
+				Record<UserId, IntentionsQuery["data"]["items"]>
 			>((acc, intention) => {
 				const userIntentions = acc[intention.userId] || [];
 				userIntentions.push(intention);
@@ -71,15 +71,15 @@ export const DebtIntentions: React.FC = suspendedFallback(
 				return compare.plainDate(latestA.timestamp, latestB.timestamp);
 			});
 		}, [intentions]);
-		if (intentions.length === 0) {
+		if (intentions.items.length === 0) {
 			return <EmptyCard title={t("intentions.empty.title")} />;
 		}
 		return (
 			<View className="flex gap-8">
-				{intentions.length === 1 ? null : (
+				{intentions.items.length === 1 ? null : (
 					<AcceptAllIntentionsButton
-						key={intentions.map(({ id }) => id).length}
-						intentions={intentions}
+						key={intentions.items.map(({ id }) => id).length}
+						intentions={intentions.items}
 					/>
 				)}
 				{aggregatedIntentions.map(([userId, userIntentions]) => (

@@ -20,8 +20,8 @@ const DebtsAggregatedInner = suspendedFallback(
 			trpc.debts.getAll.queryOptions(),
 		);
 		const debts = showResolvedDebts
-			? allDebts
-			: allDebts.filter((debt) => debt.sum !== 0);
+			? allDebts.items
+			: allDebts.items.filter((debt) => debt.sum !== 0);
 		return <DebtsGroup debts={debts} className="px-12" />;
 	},
 	<DebtsGroupSkeleton amount={3} />,

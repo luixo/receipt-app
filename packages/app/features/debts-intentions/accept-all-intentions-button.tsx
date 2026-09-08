@@ -11,7 +11,7 @@ import { Button } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
 type Props = {
-	intentions: TRPCQueryOutput<"debtIntentions.getAll">;
+	intentions: TRPCQueryOutput<"debtIntentions.getAll">["items"];
 } & React.ComponentProps<typeof Button>;
 
 export const AcceptAllIntentionsButton: React.FC<Props> = ({

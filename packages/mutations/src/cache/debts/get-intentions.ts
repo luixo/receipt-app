@@ -21,14 +21,17 @@ type Controller = ControllerWith<{
 }>;
 
 type DebtsIntentions = TRPCQueryOutput<"debtIntentions.getAll">;
-type Intention = DebtsIntentions[number];
+type Intention = DebtsIntentions["items"][number];
 
 const updateIntentions = (
 	{ queryClient, procedure }: Controller,
 	updater: (intentions: Intention[]) => Intention[],
 ) =>
 	queryClient.setQueryData(procedure.queryKey(), (prevIntentions) =>
-		getUpdatedData(prevIntentions, updater),
+		getUpdatedData(prevIntentions, (prevData) => ({
+			...prevData,
+			items: updater(prevData.items),
+		})),
 	);
 
 const updateIntention =

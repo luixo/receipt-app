@@ -262,7 +262,7 @@ describe("procedures", () => {
 			});
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const accounts = await caller.admin.accounts();
-			expect(accounts).toHaveLength(0);
+			expect(accounts.items).toHaveLength(0);
 		});
 	});
 });

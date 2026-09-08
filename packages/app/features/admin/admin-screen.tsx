@@ -62,7 +62,9 @@ const SkeletonAdminUserCard: React.FC = () => (
 );
 
 const AdminUserCard: React.FC<
-	TRPCQueryOutput<"admin.accounts">[number] & { children?: ViewReactNode }
+	TRPCQueryOutput<"admin.accounts">["items"][number] & {
+		children?: ViewReactNode;
+	}
 > = ({ user, account, children }) => (
 	<Card bodyClassName="flex-row items-start justify-between">
 		<User
@@ -120,7 +122,9 @@ const AdminScreenInner = suspendedFallback(
 			[],
 		);
 		const pretendUserAccount = pretendUser.email
-			? accounts.find((element) => element.account.email === pretendUser.email)
+			? accounts.items.find(
+					(element) => element.account.email === pretendUser.email,
+				)
 			: null;
 		return (
 			<View className="flex flex-col items-stretch gap-2">
@@ -135,7 +139,7 @@ const AdminScreenInner = suspendedFallback(
 					<AdminCard />
 				)}
 				<Divider />
-				{accounts
+				{accounts.items
 					.filter((element) => pretendUser.email !== element.account.email)
 					.map((element) => (
 						<AdminUserCard key={element.account.id} {...element}>

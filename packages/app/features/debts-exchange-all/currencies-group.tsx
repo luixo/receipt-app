@@ -50,7 +50,7 @@ export const CurrenciesGroup = suspendedFallback<Props>(
 		const { data: debts } = useSuspenseQuery(
 			trpc.debts.getAllUser.queryOptions({ userId }),
 		);
-		const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		const isSelectedOther =
 			selectedCurrencyCode !== undefined &&
 			!nonResolvedDebts.some(

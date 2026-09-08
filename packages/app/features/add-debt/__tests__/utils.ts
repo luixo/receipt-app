@@ -13,7 +13,7 @@ import type { ExtractFixture } from "~tests/frontend/types";
 type Fixtures = {
 	mockBase: () => Promise<
 		{
-			topCurrencies: TRPCQueryOutput<"currency.top">;
+			topCurrencies: TRPCQueryOutput<"currency.top">["items"];
 			users: ReturnType<GenerateUsers>;
 		} & Awaited<
 			ReturnType<
@@ -37,10 +37,9 @@ export const test = originalTest.extend<Fixtures>({
 				currencyCode: generateCurrencyCode(faker),
 				count: faker.number.int(100),
 			}));
-			api.mockFirst(
-				"currency.top",
-				topCurrencies.toSorted((a, b) => b.count - a.count),
-			);
+			api.mockFirst("currency.top", {
+				items: topCurrencies.toSorted((a, b) => b.count - a.count),
+			});
 			const users = defaultGenerateUsers({ faker });
 			api.mockFirst("users.suggestTop", { items: users.map((u) => u.id) });
 			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });

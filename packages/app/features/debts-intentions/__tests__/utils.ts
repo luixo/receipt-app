@@ -25,9 +25,8 @@ export const test = originalTest.extend<Fixtures>({
 				amount: { min: 3, max: 6 },
 				userId: debtUser.id,
 			});
-			api.mockFirst(
-				"debtIntentions.getAll",
-				debts.map((debt) => ({
+			api.mockFirst("debtIntentions.getAll", {
+				items: debts.map((debt) => ({
 					id: debt.id,
 					userId: debt.userId,
 					currencyCode: debt.currencyCode,
@@ -36,8 +35,8 @@ export const test = originalTest.extend<Fixtures>({
 					updatedAt: debt.updatedAt,
 					note: debt.note,
 				})),
-			);
-			api.mockFirst("debts.getAllUser", []);
+			});
+			api.mockFirst("debts.getAllUser", { items: [] });
 			return { debts, debtUser };
 		}),
 

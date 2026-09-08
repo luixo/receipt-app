@@ -55,12 +55,14 @@ export const test = originalTest.extend<Fixtures>({
 							`Unexpected debt id in "debts.getAllUser": ${lookupUserId}`,
 						);
 					}
-					return [
-						{
-							currencyCode: debt.currencyCode,
-							sum: debt.amount,
-						},
-					];
+					return {
+						items: [
+							{
+								currencyCode: debt.currencyCode,
+								sum: debt.amount,
+							},
+						],
+					};
 				},
 			);
 			api.mockFirst("debts.getByUserPaged", () => ({

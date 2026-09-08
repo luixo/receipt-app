@@ -24,5 +24,5 @@ export const procedure = unauthProcedure
 				message: "This is bad!",
 			});
 		}
-		return "PONG";
+		return { message: "PONG" as const };
 	});

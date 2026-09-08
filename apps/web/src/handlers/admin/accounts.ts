@@ -26,18 +26,20 @@ export const procedure = adminProcedure
 				"accounts.email",
 			])
 			.execute();
-		return result.map((element) => ({
-			account: {
-				email: element.email,
-				id: element.accountId,
-				avatarUrl: element.avatarUrl ?? undefined,
-			},
-			user:
-				element.userId && element.name
-					? {
-							id: element.userId,
-							name: element.name,
-						}
-					: undefined,
-		}));
+		return {
+			items: result.map((element) => ({
+				account: {
+					email: element.email,
+					id: element.accountId,
+					avatarUrl: element.avatarUrl ?? undefined,
+				},
+				user:
+					element.userId && element.name
+						? {
+								id: element.userId,
+								name: element.name,
+							}
+						: undefined,
+			})),
+		};
 	});
