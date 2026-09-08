@@ -17,7 +17,7 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	rejectButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Reject" })),
-	confirmDialog: ({ page, modal }, use) => use(modal("Connect an account")),
+	confirmDialog: ({ modal }, use) => use(modal("Connect an account")),
 	confirmYesButton: ({ confirmDialog }, use) =>
 		use(confirmDialog.getByRole("button", { name: "Yes" })),
 	confirmNoButton: ({ confirmDialog }, use) =>
