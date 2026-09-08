@@ -1,3 +1,4 @@
+import type { Locator } from "@playwright/test";
 import assert from "node:assert";
 
 import { test as originalTest } from "~tests/frontend/fixtures";
@@ -7,16 +8,22 @@ import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockDebts: (options: { generateDebts?: GenerateDebts }) => {
+	mockDebts: (options: { generateDebts?: GenerateDebts }) => Promise<{
 		debts: ReturnType<GenerateDebts>;
 		debtUser: ReturnType<GenerateUsers>[number];
-	};
+	}>;
 	openDebtIntentions: () => Promise<void>;
+	acceptButton: Locator;
+	acceptAndEditButton: Locator;
+	rejectButton: Locator;
+	inboundDebtIntentionRow: Locator;
+	acceptAllIntentionButton: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockDebts: ({ api, faker }, use) =>
-		use(({ generateDebts = defaultGenerateDebts }) => {
+	mockDebts: ({ api, page, faker }, use) =>
+		use(async ({ generateDebts = defaultGenerateDebts }) => {
+			await api.mockUtils.authPage({ page });
 			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
@@ -45,4 +52,15 @@ export const test = originalTest.extend<Fixtures>({
 			await page.goto(`/debts/intentions`);
 			await awaitCacheKey("debtIntentions.getAll");
 		}),
+
+	acceptButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Accept", exact: true })),
+	acceptAndEditButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Accept and edit" })),
+	rejectButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Reject" })),
+	inboundDebtIntentionRow: ({ page }, use) =>
+		use(page.getByTestId("inbound-debt-intention")),
+	acceptAllIntentionButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Accept all intentions" })),
 });

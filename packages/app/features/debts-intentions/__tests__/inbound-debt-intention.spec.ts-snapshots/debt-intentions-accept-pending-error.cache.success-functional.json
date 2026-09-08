@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"229936ae-1f75-422a-bed9-0a966e1804c1\"}]": {
+			"state": {
+				"data": {
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+				},
+				"dataUpdateCount": 2,
+				"isInvalidated": false
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": {
+			"1": {
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "229936ae-1f75-422a-bed9-0a966e1804c1"
+					}
+				}
+			}
+		}
+	}
+}
