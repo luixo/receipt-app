@@ -26,8 +26,8 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 			<DebtsGroup
 				debts={
 					showResolvedDebts
-						? debts
-						: debts.filter((element) => element.sum !== 0)
+						? debts.items
+						: debts.items.filter((element) => element.sum !== 0)
 				}
 			/>
 		);

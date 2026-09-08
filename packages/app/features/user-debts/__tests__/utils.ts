@@ -52,7 +52,7 @@ export const test = originalTest.extend<Fixtures>({
 					{},
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", aggregatedDebts);
+			api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
 			api.mockFirst("debts.getByUserPaged", {
 				items: debts.map(({ id }) => id),
 				count: debts.length,

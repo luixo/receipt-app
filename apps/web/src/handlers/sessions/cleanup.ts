@@ -12,5 +12,5 @@ export const procedure = unauthProcedure
 			.deleteFrom("sessions")
 			.where("expirationTimestamp", "<", getNow.zonedDateTime())
 			.executeTakeFirstOrThrow();
-		return Number(result.numDeletedRows);
+		return { count: Number(result.numDeletedRows) };
 	});

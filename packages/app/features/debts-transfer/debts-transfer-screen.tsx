@@ -83,10 +83,12 @@ const DebtsListForm = suspendedFallback<{
 			trpc.users.get.queryOptions(toUserId ? { id: toUserId } : skipToken),
 		);
 		const [showResolvedDebts] = useShowResolvedDebts();
-		const nonResolvedDebts = fromUserData.filter(
+		const nonResolvedDebts = fromUserData.items.filter(
 			(element) => element.sum !== 0,
 		);
-		const aggregatedDebts = showResolvedDebts ? fromUserData : nonResolvedDebts;
+		const aggregatedDebts = showResolvedDebts
+			? fromUserData.items
+			: nonResolvedDebts;
 
 		const allCurrenciesWithSums = React.useMemo(
 			() => [
@@ -219,7 +221,8 @@ const DebtsListForm = suspendedFallback<{
 							) : (
 								<>
 									<View className="flex-row gap-4 self-end">
-										{fromUserData.length === nonResolvedDebts.length ? null : (
+										{fromUserData.items.length ===
+										nonResolvedDebts.length ? null : (
 											<ShowResolvedDebtsOption />
 										)}
 										<Button color="secondary" onPress={setAllMax}>

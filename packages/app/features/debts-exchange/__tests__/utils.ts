@@ -53,7 +53,7 @@ export const test = originalTest.extend<Fixtures>({
 					{},
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", aggregatedDebts);
+			api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				const matchedDebt = debts.find((debt) => debt.id === lookupId);
 				if (!matchedDebt) {

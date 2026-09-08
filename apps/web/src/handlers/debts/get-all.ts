@@ -20,8 +20,10 @@ export const procedure = authProcedure
 			.groupBy(["debts.currencyCode"])
 			.execute();
 
-		return debts.map(({ currencyCode, sum }) => ({
-			currencyCode,
-			sum: Number(sum),
-		}));
+		return {
+			items: debts.map(({ currencyCode, sum }) => ({
+				currencyCode,
+				sum: Number(sum),
+			})),
+		};
 	});

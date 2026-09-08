@@ -117,7 +117,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 		const { data: debts } = useSuspenseQuery(
 			trpc.debts.getAllUser.queryOptions({ userId }),
 		);
-		const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		const allCurrencyCodes = unique([
 			...nonResolvedDebts.map((debt) => debt.currencyCode),
 			selectedCurrencyCode,

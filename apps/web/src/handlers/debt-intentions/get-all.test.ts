@@ -50,7 +50,7 @@ describe("debt-intenions.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>([]);
+			expect(result).toStrictEqual<typeof result>({ items: [] });
 		});
 
 		test("debt intentions are fetched", async ({ ctx }) => {
@@ -108,8 +108,8 @@ describe("debt-intenions.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>(
-				[
+			expect(result).toStrictEqual<typeof result>({
+				items: [
 					{
 						id: debtToUpdate.id,
 						userId,
@@ -137,7 +137,7 @@ describe("debt-intenions.getAll", () => {
 						current: undefined,
 					},
 				].toSorted((a, b) => compare.zonedDateTime(b.updatedAt, a.updatedAt)),
-			);
+			});
 		});
 	});
 });

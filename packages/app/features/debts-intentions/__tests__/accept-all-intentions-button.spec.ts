@@ -101,6 +101,8 @@ test("'debtIntentions.accept' pending / error", async ({
 	);
 
 	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debts.getAllUser", { items: [] });
+	api.mockFirst("debts.getAll", { items: [] });
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,
 		cursor: 0,

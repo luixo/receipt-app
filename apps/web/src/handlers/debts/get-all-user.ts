@@ -40,7 +40,7 @@ const getData = async (ctx: AuthorizedContext, inputs: readonly Input[]) => {
 const queueGetAllUser = queueCallFactory<
 	AuthorizedContext,
 	Input,
-	{ currencyCode: CurrencyCode; sum: number }[]
+	{ items: { currencyCode: CurrencyCode; sum: number }[] }
 >((ctx) => async (inputs) => {
 	const { users, aggregatedDebts } = await getData(ctx, inputs);
 	return inputs.map((debt) => {
@@ -60,10 +60,12 @@ const queueGetAllUser = queueCallFactory<
 		const filteredDebts = aggregatedDebts.filter(
 			(aggregatedDebt) => aggregatedDebt.userId === debt.userId,
 		);
-		return filteredDebts.map(({ currencyCode, sum }) => ({
-			currencyCode,
-			sum: Number(sum),
-		}));
+		return {
+			items: filteredDebts.map(({ currencyCode, sum }) => ({
+				currencyCode,
+				sum: Number(sum),
+			})),
+		};
 	});
 });
 

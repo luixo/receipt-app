@@ -51,7 +51,7 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ page, api }, use) =>
 		use(async () => {
 			const { user } = await api.mockUtils.authPage({ page });
-			api.mockFirst("currency.top", []);
+			api.mockFirst("currency.top", { items: [] });
 			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
 			api.mockFirst("users.suggestTop", { items: [] });
 			return { selfUser: user };

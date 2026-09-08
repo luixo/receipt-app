@@ -90,7 +90,7 @@ const useDebtsByIds = (debtIds: DebtId[]) => {
 
 const useDividers = (debts: TRPCQueryOutput<"debts.get">[], userId: UserId) => {
 	const trpc = useTRPC();
-	const { data: aggregatedDebts = [] } = useQuery(
+	const { data: aggregatedDebts = { items: [] } } = useQuery(
 		trpc.debts.getAllUser.queryOptions({ userId }),
 	);
 	return React.useMemo(() => {
@@ -121,7 +121,10 @@ const useDividers = (debts: TRPCQueryOutput<"debts.get">[], userId: UserId) => {
 			},
 			{
 				sums: fromEntries(
-					aggregatedDebts.map(({ currencyCode, sum }) => [currencyCode, -sum]),
+					aggregatedDebts.items.map(({ currencyCode, sum }) => [
+						currencyCode,
+						-sum,
+					]),
 				),
 				resolvedDebtIds: [],
 				resolvedCurrencies: [],
