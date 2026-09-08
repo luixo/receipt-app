@@ -2,24 +2,28 @@ import { stream as grammyStream } from "@grammyjs/stream";
 import type { StreamFlavor } from "@grammyjs/stream";
 import { EventType, chat } from "@tanstack/ai";
 import type { Context } from "grammy";
-import { Bot } from "grammy";
+import { Bot, InlineKeyboard } from "grammy";
 
 import { adapter } from "./adapter";
 import { SYSTEM_PROMPT, createQueue } from "./chat";
 import { env } from "./env";
-import { mcpClient } from "./mcp";
+import { getChatMcpClient, mcpClient } from "./mcp";
 
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
-// One fixed backend account for every chat until per-Telegram-user
 const historyByChatId = new Map<number, ChatMessage[]>();
 
 const bot = new Bot<StreamFlavor<Context>>(env.TELEGRAM_BOT_TOKEN);
 bot.use(grammyStream());
 
 const toolStatusLabel = (toolName: string) => `🔧 Calling ${toolName}…`;
+const toBotUserId = (telegramUserId: number) => `tg:${telegramUserId}`;
 
-const respond = async (ctx: Context, history: ChatMessage[]) => {
+const respond = async (
+	ctx: Context,
+	history: ChatMessage[],
+	botUserId: string,
+) => {
 	const queue = createQueue(ctx);
 	queue.start();
 
@@ -27,7 +31,10 @@ const respond = async (ctx: Context, history: ChatMessage[]) => {
 		adapter,
 		systemPrompts: [SYSTEM_PROMPT],
 		messages: history,
-		mcp: { clients: [mcpClient], connection: "keep-alive" },
+		mcp: {
+			clients: [await getChatMcpClient(botUserId)],
+			connection: "keep-alive",
+		},
 		stream: true,
 	});
 
@@ -45,13 +52,34 @@ const respond = async (ctx: Context, history: ChatMessage[]) => {
 	return queue.finalize();
 };
 
+bot.command("start", async (ctx) => {
+	await ctx.reply("Authorize to let me act on your behalf:", {
+		reply_markup: new InlineKeyboard().webApp(
+			"Authorize",
+			`${env.WEB_BASE_URL}/bot-link`,
+		),
+	});
+});
+
 bot.on("message:text", async (ctx) => {
 	const chatId = ctx.chat.id;
+	const botUserId = toBotUserId(ctx.from.id);
+	const authCheck = await mcpClient.callTool("sessions_isBotAuthorized", {
+		botUserId,
+	});
+	const authorized = Boolean(
+		(authCheck.structuredContent as { authorized?: boolean } | undefined)
+			?.authorized,
+	);
+	if (!authorized) {
+		await ctx.reply("Please authorize first with /start");
+		return;
+	}
 	const history = historyByChatId.get(chatId) ?? [];
 	historyByChatId.set(chatId, history);
 	history.push({ role: "user", content: ctx.message.text });
 	try {
-		const finalText = await respond(ctx, history);
+		const finalText = await respond(ctx, history, botUserId);
 		history.push({ role: "assistant", content: finalText });
 	} catch (error) {
 		// oxlint-disable-next-line no-console

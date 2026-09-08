@@ -20,6 +20,7 @@ export const getExpirationDate = () =>
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,
 	accountId: AccountId,
+	botUserId?: string,
 ) => {
 	const uuid: SessionId = ctx.getUuid();
 	const expirationDate = getExpirationDate();
@@ -29,6 +30,7 @@ export const createAuthorizationSession = async (
 			accountId,
 			sessionId: uuid,
 			expirationTimestamp: expirationDate,
+			botUserId,
 		})
 		.executeTakeFirst();
 	return {

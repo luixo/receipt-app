@@ -1,0 +1,19 @@
+{
+	"header": "Link bot",
+	"error": {
+		"title": "Can't link the bot",
+		"description": "Open this page from the bot's \"Authorize\" button in Telegram."
+	},
+	"success": {
+		"header": "Bot linked!",
+		"home": "To home page"
+	},
+	"retryButton": "Retry",
+	"toasts": {
+		"linkBot": {
+			"mutate": "Linking bot..",
+			"success": "Bot linked!",
+			"error": "Failed to link bot: {{errors, uniqueErrors}}"
+		}
+	}
+}

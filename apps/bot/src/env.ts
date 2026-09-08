@@ -7,6 +7,8 @@ export const env = createEnv({
 		TELEGRAM_BOT_TOKEN: z.string(),
 		OPENROUTER_MODEL: z.literal(OPENROUTER_CHAT_MODELS).optional(),
 		MCP_SERVER_URL: z.url().catch("http://localhost:3000/api/mcp"),
+		// Public HTTPS URL the bot-link Mini App page is reachable at.
+		WEB_BASE_URL: z.url(),
 	},
 	// This is the only place it can be used
 	/* oxlint-disable node/no-process-env */

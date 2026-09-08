@@ -10,7 +10,7 @@ import { entries } from "remeda";
 import z from "zod";
 
 import type { TRPCKey, TRPCMutationKey, TRPCQueryKey } from "~app/trpc";
-import { isoInputSchemas, temporalSchemas } from "~utils/date";
+import { getNow, isoInputSchemas, temporalSchemas } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import { router as appRouter } from "~web/handlers";
 import type { HandlerMeta } from "~web/handlers/context";
@@ -114,9 +114,28 @@ const mapProcedures = (router: typeof appRouter): ProcedureInfo[] =>
 					: replaceSchema(inputSchema as unknown as z.ZodType),
 			forbidden: forbiddenHandlers.has(path),
 			call: async (request: Request, input: unknown) => {
-				request.headers.append("Cookie", `authToken=${STATIC_SESSION_ID}`);
+				const context = createContext(request);
+				const botUserId = request.headers.get("X-Bot-User-Id");
+				const botSession = botUserId
+					? await context.database
+							.selectFrom("sessions")
+							.where((eb) =>
+								eb("botUserId", "=", botUserId).and(
+									"expirationTimestamp",
+									">",
+									getNow.zonedDateTime(),
+								),
+							)
+							.select("sessionId")
+							.limit(1)
+							.executeTakeFirst()
+					: undefined;
+				request.headers.append(
+					"Cookie",
+					`authToken=${botSession?.sessionId ?? STATIC_SESSION_ID}`,
+				);
 				const ctx = {
-					...createContext(request),
+					...context,
 					reqHeaders: request.headers,
 					// We'll not use this
 					resHeaders: new Headers(),

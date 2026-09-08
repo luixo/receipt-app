@@ -15,6 +15,7 @@ export const SESSIONS = {
 	INDEXES: {
 		SESSION_ID: "sessions:sessionId:index",
 		ACCOUNT_ID: "sessions:accountId:index",
+		BOT_USER_ID: "sessions:botUserId:index",
 	},
 } as const;
 

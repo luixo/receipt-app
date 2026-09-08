@@ -20,6 +20,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
     "sessions": {
       "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
         "accountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "botUserId": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
         "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
@@ -77,6 +78,7 @@ exports[`auth.register > functionality > register successful 1`] = `
     "sessions": {
       "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
         "accountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "botUserId": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
         "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",

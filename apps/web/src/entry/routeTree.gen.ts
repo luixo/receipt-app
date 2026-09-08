@@ -20,6 +20,7 @@ import { Route as PublicPlaygroundRouteImport } from './../pages/_public/playgro
 import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
+import { Route as ProtectedBotLinkRouteImport } from './../pages/_protected/bot-link'
 import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
 import { Route as ProtectedAccountRouteImport } from './../pages/_protected/account'
 import { Route as ProtectedUsersIndexRouteImport } from './../pages/_protected/users/index'
@@ -94,6 +95,11 @@ const PublicConfirmEmailRoute = PublicConfirmEmailRouteImport.update({
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBotLinkRoute = ProtectedBotLinkRouteImport.update({
+  id: '/bot-link',
+  path: '/bot-link',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
@@ -217,6 +223,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
   '/settings': typeof ProtectedSettingsRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
   '/settings': typeof ProtectedSettingsRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/_public': typeof PublicRouteWithChildren
   '/_protected/account': typeof ProtectedAccountRoute
   '/_protected/admin': typeof ProtectedAdminRoute
+  '/_protected/bot-link': typeof ProtectedBotLinkRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
   '/_public/login': typeof PublicLoginRoute
@@ -321,6 +330,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/admin'
+    | '/bot-link'
     | '/settings'
     | '/confirm-email'
     | '/login'
@@ -354,6 +364,7 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/admin'
+    | '/bot-link'
     | '/settings'
     | '/confirm-email'
     | '/login'
@@ -389,6 +400,7 @@ export interface FileRouteTypes {
     | '/_public'
     | '/_protected/account'
     | '/_protected/admin'
+    | '/_protected/bot-link'
     | '/_protected/settings'
     | '/_public/confirm-email'
     | '/_public/login'
@@ -507,6 +519,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/bot-link': {
+      id: '/_protected/bot-link'
+      path: '/bot-link'
+      fullPath: '/bot-link'
+      preLoaderRoute: typeof ProtectedBotLinkRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin': {
@@ -669,6 +688,7 @@ declare module '@tanstack/react-router' {
 interface ProtectedRouteChildren {
   ProtectedAccountRoute: typeof ProtectedAccountRoute
   ProtectedAdminRoute: typeof ProtectedAdminRoute
+  ProtectedBotLinkRoute: typeof ProtectedBotLinkRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedDebtsIdRoute: typeof ProtectedDebtsIdRoute
   ProtectedDebtsAddRoute: typeof ProtectedDebtsAddRoute
@@ -691,6 +711,7 @@ interface ProtectedRouteChildren {
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAccountRoute: ProtectedAccountRoute,
   ProtectedAdminRoute: ProtectedAdminRoute,
+  ProtectedBotLinkRoute: ProtectedBotLinkRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedDebtsIdRoute: ProtectedDebtsIdRoute,
   ProtectedDebtsAddRoute: ProtectedDebtsAddRoute,

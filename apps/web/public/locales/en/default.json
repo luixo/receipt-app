@@ -26,7 +26,8 @@
 		"register": "Register",
 		"login": "Login",
 		"resetPassword": "Reset password",
-		"voidAccount": "Void account"
+		"voidAccount": "Void account",
+		"botLink": "Link bot"
 	},
 	"common": {
 		"andJoiner": " and "

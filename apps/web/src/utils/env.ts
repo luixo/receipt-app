@@ -19,6 +19,8 @@ export const env = createEnv({
 		S3_SECRET_KEY: z.string(),
 		// Session used to authenticate MCP tool calls (see ~web/pages/api/mcp/$).
 		MCP_SESSION_TOKEN: z.uuid().optional(),
+		// Used to verify Telegram Mini App init data (see sessions.linkBot).
+		TELEGRAM_BOT_TOKEN: z.string().optional(),
 	},
 	clientPrefix: "VITE_",
 	client: {},

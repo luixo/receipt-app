@@ -1,6 +1,7 @@
 // (*)
 import type accountEn from "@ra/web/public/locales/en/account.json";
 import type adminEn from "@ra/web/public/locales/en/admin.json";
+import type botLinkEn from "@ra/web/public/locales/en/bot-link.json";
 import type debtsEn from "@ra/web/public/locales/en/debts.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
 import type emailEn from "@ra/web/public/locales/en/email.json";
@@ -13,6 +14,7 @@ import type usersEn from "@ra/web/public/locales/en/users.json";
 import type voidAccountEn from "@ra/web/public/locales/en/void-account.json";
 import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
+import type botLinkRu from "@ra/web/public/locales/ru/bot-link.json";
 import type debtsRu from "@ra/web/public/locales/ru/debts.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
 import type emailRu from "@ra/web/public/locales/ru/email.json";
@@ -54,6 +56,7 @@ export const namespaces: Record<Namespace, true> = {
 	users: true,
 	debts: true,
 	email: true,
+	"bot-link": true,
 };
 
 export type Resources = {
@@ -69,6 +72,7 @@ export type Resources = {
 	users: typeof usersEn;
 	debts: typeof debtsEn;
 	email: typeof emailEn;
+	"bot-link": typeof botLinkEn;
 };
 
 type ValidatedResources = AssertAllEqual<
@@ -88,6 +92,7 @@ type ValidatedResources = AssertAllEqual<
 			users: typeof usersRu;
 			debts: typeof debtsRu;
 			email: typeof emailRu;
+			"bot-link": typeof botLinkRu;
 		},
 	]
 >;

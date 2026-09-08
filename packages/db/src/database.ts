@@ -83,8 +83,15 @@ const deserializeRegexes = {
 const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	const separatedInput = input.replace(" ", "T");
 	if (addTimezone) {
-		const match = /[-+]\d\d(?<shift>:\d\d)?$/.exec(input);
 		/* c8 ignore start */
+		// Kysely's own migration-bookkeeping table stores plain
+		// `.toISOString()`-formatted strings (trailing "Z"), unlike real
+		// postgres timestamptz columns (which the pg driver always renders
+		// with a "+00"-style offset) - treat it the same as UTC.
+		if (input.endsWith("Z")) {
+			return `${separatedInput.slice(0, -1)}+00[UTC]`;
+		}
+		const match = /[-+]\d\d(?<shift>:\d\d)?$/.exec(input);
 		if (match) {
 			const isUTC = match[0] === "+00" || match[0] === "+00:00";
 			// Removing this hack will create a mismatch between data from DB and expected results
