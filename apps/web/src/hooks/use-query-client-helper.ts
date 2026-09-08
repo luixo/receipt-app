@@ -4,9 +4,9 @@ import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
 import type { TRPCKey } from "~app/trpc";
+import type { ActualCacheAmounts } from "~tests/frontend/fixtures/cache";
 import { promisifyEvent } from "~utils/promise";
 import { transformer } from "~utils/transformer";
-import type { ActualCacheAmounts } from "~tests/frontend/fixtures/cache";
 
 declare global {
 	// external interface extension
