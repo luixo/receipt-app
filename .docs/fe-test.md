@@ -22,7 +22,7 @@ To run tests in Docker (only needed on non-Linux hosts):
 ```sh
 # Optionally add a single test file / grep for test case
 # Drop `--update-snapshots` to just verify snapshots match instead of regenerating them
-docker run --rm -v ${PWD}:/work/ -w /work/ --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ --user "$(id -u):$(id -g)" -e HOME=/tmp --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g --prefix /tmp/npm-global \"bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")\" && export PATH=\"/tmp/npm-global/bin:\$PATH\" && PW_SERVER=true bun run frontend:test --update-snapshots"
 ```
 
 ## API mocking
