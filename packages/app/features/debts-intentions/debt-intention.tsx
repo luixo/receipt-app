@@ -39,9 +39,14 @@ type Intentions = TRPCQueryOutput<"debtIntentions.getAll">["items"];
 type Props = {
 	intention: Intentions[number];
 	children?: ViewReactNode;
+	testID?: string;
 };
 
-export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
+export const DebtIntention: React.FC<Props> = ({
+	intention,
+	children,
+	testID,
+}) => {
 	const { formatPlainDate, formatZonedDateTime } = useFormat();
 	const locale = useLocale();
 	const intentionDataComponent = (
@@ -57,7 +62,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 		</View>
 	);
 	return (
-		<Card bodyClassName="gap-4">
+		<Card bodyClassName="gap-4" testID={testID}>
 			{intention.current ? (
 				<View className="flex-col gap-2 sm:flex-row">
 					<View className="flex-row gap-2">

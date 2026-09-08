@@ -1,0 +1,47 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"87ee3729-4463-468c-9bf5-6bb70f57b1b8\"}]": {
+			"state": {
+				"data": {
+					"id": "87ee3729-4463-468c-9bf5-6bb70f57b1b8",
+					"userId": "9e187464-3f33-41b4-a088-7e028a709d77",
+					"currencyCode": "TOP",
+					"amount": -3700.36,
+					"timestamp": "2019-12-02",
+					"note": "vindico custodia est trucido",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"timestamp": "2019-12-02",
+						"amount": -3700.36,
+						"currencyCode": "TOP"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": [
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "87ee3729-4463-468c-9bf5-6bb70f57b1b8"
+					}
+				}
+			}
+		]
+	}
+}
