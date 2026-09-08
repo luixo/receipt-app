@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"account.get:[[]]": {
+			"state": {
+				"data": {
+					"account": {
+						"id": "bad152e9-7bef-4348-a676-c71d11b78947",
+						"email": "Beau.Kautzer@hotmail.com",
+						"verified": true,
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>"
+					},
+					"user": {
+						"name": "Luis"
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
