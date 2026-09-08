@@ -107,7 +107,7 @@ Visual regression tests are run in a docker image (to be consistent on CI enviro
 NB: To expose host network on MacOS and Windows you [need](https://docs.docker.com/engine/network/tutorials/host/#prerequisites) to enable it manually in Docker settings.
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')"
 ```
 
 2. (in Docker) Install runtime
@@ -135,7 +135,7 @@ PW_SERVER=true bun run frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --entrypoint /bin/bash "mcr.microsoft.com/playwright:v$(grep -m1 '"playwright":' package.json | sed -E 's/.*"([0-9.]+)".*/\1/')" -c "npm install -g "bun@$(node -p "require('./package.json').packageManager.replace(/^bun@/,'').split('+')[0]")" && PW_SERVER=true bun run frontend:test --update-snapshots"
 ```
 
 ### Tests structure
