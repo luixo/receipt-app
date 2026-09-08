@@ -1,7 +1,8 @@
-import { test as base, mergeTests } from "@playwright/test";
+import { test as baseTest, mergeTests } from "@playwright/test";
 
 import { apiFixtures } from "./fixtures/api";
 import { browserFixtures } from "./fixtures/browser";
+import { cacheFixtures } from "./fixtures/cache";
 import { consoleFixtures } from "./fixtures/console";
 import { currencyFixtures } from "./fixtures/currency";
 import { formFixtures } from "./fixtures/form";
@@ -15,7 +16,7 @@ import { toastsFixtures } from "./fixtures/toasts";
 import { tooltipFixtures } from "./fixtures/tooltip";
 
 export const test = mergeTests(
-	base,
+	baseTest,
 	skipFixtures,
 	currencyFixtures,
 	mockFixtures,
@@ -28,7 +29,7 @@ export const test = mergeTests(
 	apiFixtures,
 	pageFixtures,
 	queriesFixtures,
+	cacheFixtures,
 	formFixtures,
 );
-
 export { expect } from "@playwright/test";

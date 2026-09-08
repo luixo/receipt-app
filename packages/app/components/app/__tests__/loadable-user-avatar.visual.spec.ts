@@ -27,7 +27,7 @@ test("Loading skeleton", async ({
 		await usersGetPause.promise;
 		return next();
 	});
-	await openReceipt(receipt.id, { awaitCache: false });
+	await openReceipt(receipt, { awaitCache: false });
 	await expectScreenshotWithSchemes("skeleton.png", {
 		locator: userAvatarSkeleton.first(),
 	});
@@ -46,7 +46,7 @@ test("Dimmed fallback avatar", async ({
 		generateUsers: () => [],
 		generateReceiptItems: () => [],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("dimmed.png", {
 		locator: userAvatar.last(),
 	});

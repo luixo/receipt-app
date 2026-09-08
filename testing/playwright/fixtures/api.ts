@@ -200,10 +200,7 @@ const handleCall = async <K extends TRPCKey>(
 					code: trpcError.code,
 					httpStatus: getHTTPStatusCodeFromError(trpcError),
 					path: name,
-					stack:
-						error instanceof TRPCError || error instanceof Error
-							? error.stack
-							: trpcError.stack,
+					stack: error instanceof Error ? error.stack : trpcError.stack,
 				},
 				message: trpcError.message,
 			}) as unknown as TRPCErrorShape,

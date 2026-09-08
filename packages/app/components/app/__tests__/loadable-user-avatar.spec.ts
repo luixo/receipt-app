@@ -27,7 +27,7 @@ test("Shows a skeleton while the owner is loading", async ({
 		await usersGetPause.promise;
 		return next();
 	});
-	await openReceipt(receipt.id, { awaitCache: false });
+	await openReceipt(receipt, { awaitCache: false });
 	await expect(userAvatarSkeleton.first()).toBeVisible();
 	usersGetPause.resolve();
 	await expect(userAvatar.first()).toBeVisible();
@@ -56,7 +56,7 @@ test("Shows an error when the owner fails to load", async ({
 		});
 	});
 	consoleManager.ignore(mockErrorMessage);
-	await openReceipt(receipt.id, { awaitCache: false });
+	await openReceipt(receipt, { awaitCache: false });
 	await expect(errorMessage(mockErrorMessage).first()).toBeVisible();
 });
 
@@ -69,6 +69,6 @@ test("Dims the fallback avatar when there are no payers", async ({
 		generateUsers: () => [],
 		generateReceiptItems: () => [],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expect(userAvatar.last()).toHaveClass(/grayscale/);
 });

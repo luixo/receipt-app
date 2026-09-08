@@ -96,6 +96,17 @@ type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
 
 export type TRPCQueryKey = keyof TRPCQueryValues;
 
+export type RawQueryKey = [
+	TRPCSplitQueryKey,
+	(
+		| {
+				input: readonly [TRPCQueryInput<TRPCQueryKey>];
+				type: "query" | "infinite";
+		  }
+		| undefined
+	),
+];
+
 export type TRPCSplitQueryKey<K extends TRPCQueryKey = TRPCQueryKey> =
 	SplitStringByComma<K>;
 
@@ -175,6 +186,8 @@ export type TRPCTanstackQueryKey<K extends TRPCQueryKey> =
 
 export type TRPCMutationKey = keyof TRPCMutationValues;
 
+export type RawMutationKey = [TRPCSplitMutationKey];
+
 export type TRPCSplitMutationKey<K extends TRPCMutationKey = TRPCMutationKey> =
 	SplitStringByComma<K> & string[];
 
@@ -222,3 +235,8 @@ export type TRPCDecoratedInfiniteQueryProcedure<
 > = TRPCDecoratedQueryProcedures[K];
 
 export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
+export type TRPCInput<K extends TRPCKey> = K extends TRPCQueryKey
+	? TRPCQueryInput<K>
+	: K extends TRPCMutationKey
+		? TRPCMutationInput<K>
+		: never;

@@ -76,7 +76,7 @@ export const test = originalTest.extend<Fixtures>({
 
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
 		use(async (receipt) => {
-			await openReceipt(receipt.id);
+			await openReceipt(receipt);
 			const debtsAmount =
 				receipt.debts.direction === "outcoming"
 					? receipt.debts.debts.length
@@ -146,7 +146,7 @@ export const test = originalTest.extend<Fixtures>({
 					return outcomingDebt;
 				});
 
-				return { ...result, debts };
+				return { ...result, receipt, debts };
 			},
 		),
 });

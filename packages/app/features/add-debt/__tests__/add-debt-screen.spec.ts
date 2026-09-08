@@ -34,7 +34,7 @@ test("userId query param pre-selects user", async ({
 	assert.ok(user);
 
 	await page.goto(`/debts/add?userId=${user.id}`);
-	await awaitCacheKey("users.get");
+	await awaitCacheKey("users.get", { input: { id: user.id } });
 
 	await expect(
 		page.getByTestId("user").filter({ hasText: user.name }),

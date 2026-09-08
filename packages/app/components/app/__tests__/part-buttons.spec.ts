@@ -59,7 +59,7 @@ test("Clicking up increases the consumer's part", async ({
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(2),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 
 	await snapshotQueries(async () => {
 		await partButtonsUp.first().click();
@@ -78,7 +78,7 @@ test("Down button is disabled when the part is at the minimum", async ({
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expect(partButtonsDown.first()).toBeDisabled();
 	await expect(partButtonsUp.first()).toBeEnabled();
 });

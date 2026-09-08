@@ -21,7 +21,7 @@ test("Propagate state", async ({
 		generateDebts: (opts) =>
 			remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("propagate.png", {
 		locator: [propagateDebtsButton],
 	});
@@ -40,7 +40,7 @@ test("Sync state", async ({
 		generateDebts: (opts) =>
 			remapDebts(ourDesynced)(defaultGenerateDebtsFromReceipt(opts)),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("sync.png", {
 		locator: [updateDebtsButton],
 	});
@@ -57,7 +57,7 @@ test("Synced state", async ({
 	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("synced.png", {
 		locator: [syncedDebtsButton],
 	});

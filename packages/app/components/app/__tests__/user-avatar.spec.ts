@@ -26,7 +26,7 @@ test("Renders a generated avatar for a user without a connected account", async 
 			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
 		],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	const payerAvatar = userAvatar.last();
 	await expect(payerAvatar).toBeVisible();
 	await expect(payerAvatar).not.toHaveClass(/grayscale/);
@@ -57,7 +57,7 @@ test("Renders the connected account image when an avatar url is set", async ({
 			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
 		],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	const payerAvatar = userAvatar.last();
 	const image = payerAvatar.locator("img").first();
 	await expect(image).toHaveAttribute("src", mockAvatar);

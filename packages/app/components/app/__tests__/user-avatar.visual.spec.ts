@@ -35,7 +35,7 @@ test("Generated avatar (no connected account)", async ({
 			},
 		],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("generated.png", {
 		locator: userAvatar.last(),
 	});
@@ -68,7 +68,7 @@ test("Connected account image", async ({
 			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
 		],
 	});
-	await openReceipt(receipt.id);
+	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("connected-account.png", {
 		locator: userAvatar.last(),
 	});

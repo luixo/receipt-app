@@ -3,8 +3,10 @@ import React from "react";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
+import type { TRPCKey } from "~app/trpc";
 import { promisifyEvent } from "~utils/promise";
 import { transformer } from "~utils/transformer";
+import type { ActualCacheAmounts } from "~tests/frontend/fixtures/cache";
 
 declare global {
 	// external interface extension
@@ -12,6 +14,8 @@ declare global {
 	interface Window {
 		getDehydratedCache?: (timeout: number) => Promise<DehydratedState>;
 		queryClient?: QueryClient;
+		querySubscriptions: Record<string, (() => void)[]>;
+		onCacheEvent: (key: TRPCKey, amounts: ActualCacheAmounts) => void;
 	}
 }
 
