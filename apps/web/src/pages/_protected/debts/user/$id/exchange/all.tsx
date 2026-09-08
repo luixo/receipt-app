@@ -20,7 +20,9 @@ export const Route = createFileRoute("/_protected/debts/user/$id/exchange/all")(
 				trpc.debts.getAllUser.queryOptions({ userId: ctx.params.id }),
 			);
 			if (ctx.deps.from) {
-				const nonResolvedDebts = debts.filter((element) => element.sum !== 0);
+				const nonResolvedDebts = debts.items.filter(
+					(element) => element.sum !== 0,
+				);
 				await ctx.context.queryClient.fetchQuery(
 					trpc.currency.rates.queryOptions({
 						from: ctx.deps.from,

@@ -6,4 +6,4 @@ export const procedure = authProcedure
 		title: "Get currency list",
 		description: "Returns the list of all supported currency codes.",
 	})
-	.query(() => CURRENCY_CODES);
+	.query(() => ({ items: CURRENCY_CODES }));

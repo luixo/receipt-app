@@ -432,7 +432,9 @@ const createApiManager = async (
 
 const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 	noAuthPage: () => {
-		const unmockCurrency = api.mockLast("currency.getList", CURRENCY_CODES);
+		const unmockCurrency = api.mockLast("currency.getList", {
+			items: CURRENCY_CODES,
+		});
 		const unmockAccount = api.mockLast("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -458,13 +460,13 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 				url: urlSettings.baseUrl,
 			},
 		]);
-		api.mockLast("currency.getList", CURRENCY_CODES);
-		api.mockLast("debtIntentions.getAll", []);
+		api.mockLast("currency.getList", { items: CURRENCY_CODES });
+		api.mockLast("debtIntentions.getAll", { items: [] });
 		api.mockLast("accountConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],
 		});
-		api.mockLast("debts.getAll", []);
+		api.mockLast("debts.getAll", { items: [] });
 		api.mockLast("debts.getUsersPaged", {
 			count: 0,
 			cursor: 0,

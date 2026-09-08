@@ -43,11 +43,13 @@ describe("currency.top", () => {
 			const debtsResult = await caller.procedure({
 				options: { type: "debts" },
 			});
-			expect(debtsResult).toStrictEqual<typeof debtsResult>([]);
+			expect(debtsResult).toStrictEqual<typeof debtsResult>({ items: [] });
 			const receiptsResult = await caller.procedure({
 				options: { type: "receipts" },
 			});
-			expect(receiptsResult).toStrictEqual<typeof receiptsResult>([]);
+			expect(receiptsResult).toStrictEqual<typeof receiptsResult>({
+				items: [],
+			});
 		});
 
 		test("top debts currencies returned", async ({ ctx }) => {
@@ -71,20 +73,22 @@ describe("currency.top", () => {
 			);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ options: { type: "debts" } });
-			expect(result).toStrictEqual<typeof result>([
-				{
-					count: 3,
-					currencyCode: "USD",
-				},
-				{
-					count: 2,
-					currencyCode: "EUR",
-				},
-				{
-					count: 1,
-					currencyCode: "GEL",
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						count: 3,
+						currencyCode: "USD",
+					},
+					{
+						count: 2,
+						currencyCode: "EUR",
+					},
+					{
+						count: 1,
+						currencyCode: "GEL",
+					},
+				],
+			});
 		});
 
 		test("top receipt currencies returned", async ({ ctx }) => {
@@ -138,20 +142,22 @@ describe("currency.top", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ options: { type: "receipts" } });
-			expect(result).toStrictEqual<typeof result>([
-				{
-					count: 2,
-					currencyCode: "GEL",
-				},
-				{
-					count: 1,
-					currencyCode: "AMD",
-				},
-				{
-					count: 1,
-					currencyCode: "USD",
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						count: 2,
+						currencyCode: "GEL",
+					},
+					{
+						count: 1,
+						currencyCode: "AMD",
+					},
+					{
+						count: 1,
+						currencyCode: "USD",
+					},
+				],
+			});
 		});
 	});
 });

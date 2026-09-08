@@ -78,7 +78,8 @@ export const useParticipantsWithDebts = (
 	const debts = useSuspenseQueries({
 		queries: debtIds
 			.filter(
-				(debtId) => !intentions.some((intention) => intention.id === debtId),
+				(debtId) =>
+					!intentions.items.some((intention) => intention.id === debtId),
 			)
 			.map((debtId) => trpc.debts.get.queryOptions({ id: debtId })),
 	});
@@ -91,7 +92,7 @@ export const useParticipantsWithDebts = (
 					: debt.data.userId === receipt.ownerUserId &&
 						participantUserId === receipt.selfUserId,
 			)?.data;
-			const incomingIntention = intentions.find(
+			const incomingIntention = intentions.items.find(
 				(intention) =>
 					intention.userId === participantUserId &&
 					intention.receiptId === receipt.id,

@@ -55,8 +55,8 @@ describe("admin.accounts", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const accounts = await caller.procedure();
 
-			expect(accounts).toStrictEqual<typeof accounts>(
-				[
+			expect(accounts).toStrictEqual<typeof accounts>({
+				items: [
 					getAccountShape(foreignAccount),
 					getAccountShape(anotherForeignAccount),
 					getAccountShape(connectedAccount, foreignUser),
@@ -77,7 +77,7 @@ describe("admin.accounts", () => {
 					}
 					return emailComparison;
 				}),
-			);
+			});
 		});
 	});
 });

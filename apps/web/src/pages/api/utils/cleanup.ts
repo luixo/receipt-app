@@ -8,11 +8,13 @@ export const Route = createFileRoute("/api/utils/cleanup")({
 			POST: async ({ request }) => {
 				const client = getApiTrpcClient(request);
 				try {
-					const [removedSessions, removedResetPasswordIntentions] =
-						await Promise.all([
-							client.sessions.cleanup.mutate(),
-							client.resetPasswordIntentions.cleanup.mutate(),
-						]);
+					const [
+						{ count: removedSessions },
+						{ count: removedResetPasswordIntentions },
+					] = await Promise.all([
+						client.sessions.cleanup.mutate(),
+						client.resetPasswordIntentions.cleanup.mutate(),
+					]);
 
 					return new Response(
 						`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,

@@ -61,13 +61,13 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 		);
 		const topCurrencyCodes = React.useMemo(
 			() =>
-				topCurrencies
+				topCurrencies.items
 					.map(({ currencyCode }) => currencyCode)
 					.filter((code) => !hiddenCurrencies.includes(code)),
 			[hiddenCurrencies, topCurrencies],
 		);
 		const codes = React.useMemo(
-			() => currencies.filter((code) => !hiddenCurrencies.includes(code)),
+			() => currencies.items.filter((code) => !hiddenCurrencies.includes(code)),
 			[hiddenCurrencies, currencies],
 		);
 		onLoad?.(codes, topCurrencyCodes);
@@ -82,7 +82,7 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 			<View className="flex-row flex-wrap gap-2">
 				{formattedCurrencies.map(({ code, description }, index) => (
 					<React.Fragment key={code}>
-						{index === topCurrencies.length && index !== 0 ? (
+						{index === topCurrencies.items.length && index !== 0 ? (
 							<Divider className="my-2" />
 						) : null}
 						<Button

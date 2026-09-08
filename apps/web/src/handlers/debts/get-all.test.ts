@@ -38,7 +38,7 @@ describe("debts.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>([]);
+			expect(result).toStrictEqual<typeof result>({ items: [] });
 		});
 
 		test("multiple currency & users debts", async ({ ctx }) => {
@@ -82,7 +82,7 @@ describe("debts.getAll", () => {
 			const result = await caller.procedure();
 
 			const resultEntries = fromEntries(
-				result.map(({ currencyCode, sum }) => [currencyCode, sum]),
+				result.items.map(({ currencyCode, sum }) => [currencyCode, sum]),
 			);
 
 			const expectedDebts = mapValues(
@@ -117,12 +117,14 @@ describe("debts.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: 0,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: 0,
+					},
+				],
+			});
 		});
 
 		test("negative sum", async ({ ctx }) => {
@@ -141,12 +143,14 @@ describe("debts.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: -amount,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: -amount,
+					},
+				],
+			});
 		});
 
 		test("sums are parsed on DB side", async ({ ctx }) => {
@@ -164,12 +168,14 @@ describe("debts.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: 0.3,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: 0.3,
+					},
+				],
+			});
 		});
 	});
 });

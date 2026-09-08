@@ -100,7 +100,7 @@ describe("debts.getAllUser", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
-			expect(result).toStrictEqual<typeof result>([]);
+			expect(result).toStrictEqual<typeof result>({ items: [] });
 		});
 
 		test("multiple currency debts for single user", async ({ ctx }) => {
@@ -137,7 +137,7 @@ describe("debts.getAllUser", () => {
 			const result = await caller.procedure({ userId });
 
 			const resultEntries = fromEntries(
-				result.map(({ currencyCode, sum }) => [currencyCode, sum]),
+				result.items.map(({ currencyCode, sum }) => [currencyCode, sum]),
 			);
 
 			expect(resultEntries).toStrictEqual<typeof resultEntries>(
@@ -161,12 +161,14 @@ describe("debts.getAllUser", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: 0,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: 0,
+					},
+				],
+			});
 		});
 
 		test("negative sum", async ({ ctx }) => {
@@ -185,12 +187,14 @@ describe("debts.getAllUser", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: -amount,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: -amount,
+					},
+				],
+			});
 		});
 
 		test("sums are parsed on DB side", async ({ ctx }) => {
@@ -208,12 +212,14 @@ describe("debts.getAllUser", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
-			expect(result).toStrictEqual<typeof result>([
-				{
-					currencyCode: "USD",
-					sum: 0.3,
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>({
+				items: [
+					{
+						currencyCode: "USD",
+						sum: 0.3,
+					},
+				],
+			});
 		});
 
 		describe("multiple intentions", () => {
@@ -255,7 +261,7 @@ describe("debts.getAllUser", () => {
 				]);
 				const resultsEntries = results.map((result) =>
 					fromEntries(
-						result.map(({ currencyCode, sum }) => [currencyCode, sum]),
+						result.items.map(({ currencyCode, sum }) => [currencyCode, sum]),
 					),
 				);
 				expect(resultsEntries).toStrictEqual<typeof resultsEntries>([
@@ -291,7 +297,7 @@ describe("debts.getAllUser", () => {
 							.catch((error) => error),
 				]);
 				const successfulEntries = fromEntries(
-					results[0].map(({ currencyCode, sum }) => [currencyCode, sum]),
+					results[0].items.map(({ currencyCode, sum }) => [currencyCode, sum]),
 				);
 				expect(successfulEntries).toStrictEqual<typeof successfulEntries>(
 					getSums(firstUserDebts),

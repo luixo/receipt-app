@@ -39,15 +39,17 @@ export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 		);
 		const [showResolvedDebts] = useShowResolvedDebts();
 		const debts = showResolvedDebts
-			? userDebts
-			: userDebts.filter(({ sum }) => sum !== 0);
+			? userDebts.items
+			: userDebts.items.filter(({ sum }) => sum !== 0);
 		return (
 			<CardLink
 				to="/debts/user/$id"
 				params={{ id: userId }}
 				bodyClassName={cn(
 					baseClassName,
-					userDebts.every(({ sum }) => sum === 0) ? "opacity-50" : undefined,
+					userDebts.items.every(({ sum }) => sum === 0)
+						? "opacity-50"
+						: undefined,
 				)}
 			>
 				<LoadableUser id={userId} />

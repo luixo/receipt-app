@@ -53,7 +53,7 @@ const updateUser = (
 			return userIds;
 		}
 		// If user will have no debts - we should update all pages
-		if (allDebts.every((debt) => debt.sum === 0)) {
+		if (allDebts.items.every((debt) => debt.sum === 0)) {
 			void queryClient.invalidateQueries(procedure.queryFilter(input));
 		}
 		// If user will have debts and they're not on the page - they might be next time
