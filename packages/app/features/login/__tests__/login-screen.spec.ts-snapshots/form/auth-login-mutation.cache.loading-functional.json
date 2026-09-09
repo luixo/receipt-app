@@ -1,0 +1,17 @@
+{
+	"mutations": {
+		"auth.login": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"email": "Damaris.Kris@yahoo.com",
+						"password": "GWGkWsN2ZFbx0vD"
+					}
+				}
+			}
+		}
+	}
+}
