@@ -8,21 +8,19 @@ import { createLink } from "@tanstack/react-router";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
 
-const RawLink = createLink(
-	({
-		testID,
-		...props
-	}: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof LinkRaw>> & {
-		testID?: string;
-	}) => <LinkRaw {...props} data-testid={testID} />,
-);
+const RawLink = ({
+	testID,
+	...props
+}: RightJoinProps<CreateLinkProps, React.ComponentProps<typeof LinkRaw>> & {
+	testID?: string;
+}) => <LinkRaw {...props} data-testid={testID} />;
 export type Props = Omit<LinkProps, "children" | "color"> & {
 	children?: React.ReactNode;
 	className?: string;
 	color?: "foreground" | "primary";
 	testID?: string;
 };
-export const Link: React.FC<Props> = RawLink;
+export const Link: React.FC<Props> = createLink(RawLink);
 
 export const ButtonLink = createLink(
 	(
