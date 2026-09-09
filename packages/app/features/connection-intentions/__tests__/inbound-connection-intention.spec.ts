@@ -13,7 +13,6 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
-	openConnectionIntentions,
 	rejectButton,
 	awaitCacheKey,
 	verifyToastTexts,
@@ -22,7 +21,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	const { inbound } = await mockConnectionIntentions({ inboundAmount: 1 });
 	const [intention] = inbound;
 	assert.ok(intention);
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 
 	api.mockFirst("accountConnectionIntentions.reject", () => {
 		throw new TRPCError({
@@ -58,7 +57,6 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
-	openConnectionIntentions,
 	mockSuggestedUsers,
 	confirmDialog,
 	confirmYesButton,
@@ -78,7 +76,7 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	const [firstUser, secondUser] = mockSuggestedUsers(2);
 	assert.ok(firstUser);
 	assert.ok(secondUser);
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 
 	const input = suggestInput("Please choose a user below to accept intention");
 	const firstOption = suggestOption(firstUser.name);

@@ -12,7 +12,6 @@ type Fixtures = {
 		debts: ReturnType<GenerateDebts>;
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
-	openDebtIntentions: () => Promise<void>;
 	acceptButton: Locator;
 	acceptAndEditButton: Locator;
 	rejectButton: Locator;
@@ -21,9 +20,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockDebts: ({ api, page, faker }, use) =>
+	mockDebts: ({ api, faker }, use) =>
 		use(async ({ generateDebts = defaultGenerateDebts }) => {
-			await api.mockUtils.authPage({ page });
+			await api.mockUtils.authPage();
 			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
@@ -45,12 +44,6 @@ export const test = originalTest.extend<Fixtures>({
 			});
 			api.mockFirst("debts.getAllUser", { items: [] });
 			return { debts, debtUser };
-		}),
-
-	openDebtIntentions: ({ page, awaitCacheKey }, use) =>
-		use(async () => {
-			await page.goto(`/debts/intentions`);
-			await awaitCacheKey("debtIntentions.getAll");
 		}),
 
 	acceptButton: ({ page }, use) =>

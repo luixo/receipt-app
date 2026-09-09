@@ -9,7 +9,6 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
-	openConnectionIntentions,
 	unlinkButton,
 	awaitCacheKey,
 	verifyToastTexts,
@@ -18,7 +17,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	const { outbound } = await mockConnectionIntentions({ outboundAmount: 1 });
 	const [intention] = outbound;
 	assert.ok(intention);
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 
 	api.mockFirst("accountConnectionIntentions.remove", () => {
 		throw new TRPCError({

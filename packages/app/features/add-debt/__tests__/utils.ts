@@ -1,7 +1,6 @@
 import type { Locator } from "@playwright/test";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
@@ -22,7 +21,6 @@ type Fixtures = {
 			>
 		>
 	>;
-	openAddDebtScreen: (opts?: { userId?: UserId }) => Promise<void>;
 	addButton: Locator;
 	amountInput: Locator;
 	currencyInput: Locator;
@@ -32,9 +30,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, faker, page }, use) =>
+	mockBase: ({ api, faker }, use) =>
 		use(async () => {
-			const auth = await api.mockUtils.authPage({ page });
+			const auth = await api.mockUtils.authPage();
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
 				count: faker.number.int(100),
@@ -47,11 +45,6 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
 			api.mockUtils.mockUsers(...users);
 			return { topCurrencies, users, ...auth };
-		}),
-
-	openAddDebtScreen: ({ page }, use) =>
-		use(async ({ userId } = {}) => {
-			await page.goto(`/debts/add${userId ? `?userId=${userId}` : ""}`);
 		}),
 
 	addButton: ({ page }, use) =>

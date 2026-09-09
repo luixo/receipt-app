@@ -33,7 +33,7 @@ test("On load", async ({
 	assert.ok(topCurrency);
 
 	await snapshotQueries(async () => {
-		await page.goto("/receipts/add");
+		await page.navigate({ to: "/receipts/add" });
 		await awaitCacheKey("currency.top");
 	});
 	await expect(page).toHaveTitle("RA - Add receipt");
@@ -49,14 +49,14 @@ test("On load", async ({
 
 test.describe("'Add' button disabled", () => {
 	test("On invalid name input", async ({
-		page,
 		mockBase,
 		addButton,
 		nameInput,
+		page,
 	}) => {
 		await mockBase();
 
-		await page.goto("/receipts/add");
+		await page.navigate({ to: "/receipts/add" });
 		await nameInput.fill("x");
 		await expect(addButton).toBeDisabled();
 		await nameInput.fill("xx");
@@ -93,7 +93,7 @@ test("'receipts.add' mutation", async ({
 	const receiptDate = add.plainDate(getNow.plainDate(), { months: 1 });
 	const receiptCurrencyCode = "USD";
 
-	await page.goto("/receipts/add");
+	await page.navigate({ to: "/receipts/add" });
 	await nameInput.fill(receiptName);
 	await fillDate(dateInput, receiptDate);
 	await fillCurrency(currencyInput, receiptCurrencyCode);
@@ -106,7 +106,7 @@ test("'receipts.add' mutation", async ({
 		},
 		{ name: "error" },
 	);
-	await expect(page).toHaveURL("/receipts/add");
+	await page.expectUrl({ to: "/receipts/add" });
 
 	const createPause = api.createPause();
 	api.mockFirst("receipts.add", async () => {
@@ -157,5 +157,5 @@ test("'receipts.add' mutation", async ({
 		},
 		{ name: "success", blacklistKeys: "users.get" },
 	);
-	await expect(page).toHaveURL(`/receipts/${receiptId}`);
+	await page.expectUrl({ to: "/receipts/$id", params: { id: receiptId } });
 });

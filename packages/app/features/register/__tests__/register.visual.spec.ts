@@ -13,7 +13,7 @@ test("Regular usage", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await page.goto("/register");
+	await page.navigate({ to: "/register" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Register");
 	await expectScreenshotWithSchemes("empty.png");
 	await fillValidFields();
@@ -45,7 +45,7 @@ test("'auth.register' mutation", async ({
 		});
 	});
 
-	await page.goto("/register");
+	await page.navigate({ to: "/register" });
 	await fillValidFields();
 	await registerButton.click();
 	await clearToasts();
@@ -75,7 +75,7 @@ test("Errors in fields", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await page.goto("/register");
+	await page.navigate({ to: "/register" });
 	await fillInvalidFields();
 
 	await expectScreenshotWithSchemes("fill-errors.png");

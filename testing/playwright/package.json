@@ -13,6 +13,7 @@
 		"@ra/utils": "workspace:*",
 		"@ra/web": "workspace:*",
 		"@tanstack/react-query": "catalog:",
+		"@tanstack/router-core": "catalog:",
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
 		"@types/uuid": "catalog:",

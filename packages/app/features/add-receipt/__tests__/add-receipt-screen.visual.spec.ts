@@ -27,7 +27,7 @@ test("Form", async ({
 	fillCurrency,
 }) => {
 	await mockBase();
-	await page.goto("/receipts/add");
+	await page.navigate({ to: "/receipts/add" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Add receipt",
 	);
@@ -48,7 +48,7 @@ test("Errors in form", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	await mockBase();
-	await page.goto("/receipts/add");
+	await page.navigate({ to: "/receipts/add" });
 	await nameInput.fill("x");
 	await expectScreenshotWithSchemes("fill-name-error.png", {
 		locator: nameInputWrapper,
@@ -84,7 +84,7 @@ test("'receipts.add' mutation", async ({
 		});
 	});
 
-	await page.goto("/receipts/add");
+	await page.navigate({ to: "/receipts/add" });
 	await nameInput.fill(faker.lorem.words());
 	await fillDate(dateInput, add.plainDate(getNow.plainDate(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");

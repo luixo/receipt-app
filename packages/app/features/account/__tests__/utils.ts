@@ -34,9 +34,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, page }, use) =>
+	mockBase: ({ api }, use) =>
 		use(async ({ avatarUrl } = {}) => {
-			const auth = await api.mockUtils.authPage({ page });
+			const auth = await api.mockUtils.authPage();
 			if (avatarUrl !== undefined) {
 				api.mockFirst("account.get", {
 					account: { ...auth.account, avatarUrl },

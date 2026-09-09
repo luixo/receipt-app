@@ -348,7 +348,10 @@ test.describe("Remove", () => {
 			},
 			{ blacklistKeys: ["debts.getAllUser", "debts.getByUserPaged"] },
 		);
-		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
+		await page.expectUrl({
+			to: "/debts/user/$id",
+			params: { id: debtUser.id },
+		});
 	});
 
 	test("asks for confirmation, then handles error and success", async ({
@@ -397,7 +400,7 @@ test.describe("Remove", () => {
 			await awaitCacheKey("debts.remove", { error: 1 });
 			await verifyToastTexts(`Mock "debts.remove" error`);
 		});
-		await expect(page).toHaveURL(`/debts/${debt.id}`);
+		await page.expectUrl({ to: "/debts/$id", params: { id: debt.id } });
 
 		const pause = api.createPause();
 		api.mockFirst("debts.remove", async () => {
@@ -424,6 +427,9 @@ test.describe("Remove", () => {
 				blacklistKeys: ["debts.getAllUser", "debts.getByUserPaged"],
 			},
 		);
-		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
+		await page.expectUrl({
+			to: "/debts/user/$id",
+			params: { id: debtUser.id },
+		});
 	});
 });

@@ -34,19 +34,28 @@ test.describe("Header", () => {
 		await mockBase();
 		await openDebtsTransferScreen();
 		await backLink.click();
-		await expect(page).toHaveURL("/debts");
+		await page.expectUrl({ to: "/debts" });
 	});
 
 	test("Back button goes to user debts when from user selected", async ({
+		api,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		backLink,
 		page,
 	}) => {
-		const { fromUser } = await mockDebtsTransfer();
+		const { fromUser, debts } = await mockDebtsTransfer();
+		api.mockFirst("debts.getByUserPaged", {
+			items: debts.map((debt) => debt.id),
+			count: 0,
+			cursor: 0,
+		});
 		await openDebtsTransferScreen({ fromUserId: fromUser.id });
 		await backLink.click();
-		await expect(page).toHaveURL(`/debts/user/${fromUser.id}`);
+		await page.expectUrl({
+			to: "/debts/user/$id",
+			params: { id: fromUser.id },
+		});
 	});
 });
 
@@ -336,6 +345,7 @@ test.describe("'debts.add' mutation", () => {
 			},
 			{
 				name: "success",
+				blacklistKeys: ["users.suggest"],
 			},
 		);
 	});

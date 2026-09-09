@@ -1,0 +1,19 @@
+{
+	"mutations": {
+		"debtIntentions.accept": [
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "8336b0cc-00ec-402c-b6db-33a3de3cd75b"
+					}
+				}
+			}
+		]
+	}
+}

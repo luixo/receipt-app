@@ -42,9 +42,9 @@ type Fixtures = {
 const mergedTest = mergeTests(originalTest, usersSuggestFixture);
 
 export const test = mergedTest.extend<Fixtures>({
-	mockBase: ({ page, api, faker }, use) =>
+	mockBase: ({ api, faker }, use) =>
 		use(async () => {
-			await api.mockUtils.authPage({ page });
+			await api.mockUtils.authPage();
 			const [fromUser, toUser] = defaultGenerateUsers({ faker, amount: 2 });
 			assert.ok(fromUser);
 			assert.ok(toUser);
@@ -78,14 +78,10 @@ export const test = mergedTest.extend<Fixtures>({
 
 	openDebtsTransferScreen: ({ page, awaitCacheKey }, use) =>
 		use(async ({ fromUserId, toUserId, awaitCache = true } = {}) => {
-			const searchParams = new URLSearchParams();
-			if (fromUserId) {
-				searchParams.set("from", fromUserId);
-			}
-			if (toUserId) {
-				searchParams.set("to", toUserId);
-			}
-			await page.goto(`/debts/transfer?${searchParams.toString()}`);
+			await page.navigate({
+				to: "/debts/transfer",
+				search: { to: toUserId, from: fromUserId },
+			});
 			if (awaitCache) {
 				if (fromUserId || toUserId) {
 					await awaitCacheKey("users.get", { success: 2 });

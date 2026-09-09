@@ -25,9 +25,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, faker, page }, use) =>
+	mockBase: ({ api, faker }, use) =>
 		use(async () => {
-			const auth = await api.mockUtils.authPage({ page });
+			const auth = await api.mockUtils.authPage();
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
 				count: faker.number.int(100),

@@ -1,18 +1,8 @@
-import type { Locator, Page } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { ExtractFixture } from "~tests/frontend/types";
-
-type AuthPageResult = Awaited<
-	ReturnType<
-		ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
-	>
->;
 
 type Fixtures = {
-	openSettings: (options?: {
-		manualAcceptDebts?: boolean;
-	}) => Promise<AuthPageResult>;
 	languageSelectButton: Locator;
 	limitSelectButton: Locator;
 	colorModeAutoCheckbox: Locator;
@@ -24,18 +14,7 @@ type Fixtures = {
 	refreshButton: Locator;
 };
 
-const getSelectOption = (page: Page, name: string) =>
-	page.getByRole("option", { name, exact: true });
-
 export const test = originalTest.extend<Fixtures>({
-	openSettings: ({ api, page }, use) =>
-		use(async ({ manualAcceptDebts = false } = {}) => {
-			const auth = await api.mockUtils.authPage({ page });
-			api.mockFirst("accountSettings.get", { manualAcceptDebts });
-			await page.goto("/settings");
-			return auth;
-		}),
-
 	languageSelectButton: ({ page }, use) =>
 		use(page.getByTestId("language-select")),
 
@@ -60,5 +39,3 @@ export const test = originalTest.extend<Fixtures>({
 	refreshButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Reset cache" })),
 });
-
-export { getSelectOption };

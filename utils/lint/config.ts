@@ -206,6 +206,15 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		selector: "MemberExpression[object.name='React'][property.name='memo']",
 		message: "No need to use `React.memo`, we have a react compiler turned on",
 	},
+	{
+		selector: "MemberExpression[object.name='page'][property.name='goto']",
+		message: "User page.navigate instead of page.goto",
+	},
+	{
+		selector:
+			"MemberExpression[object.callee.name='expect'][object.arguments.0.name='page'][property.name='toHaveURL']",
+		message: "User page.navigate instead of page.goto",
+	},
 ] as const;
 
 const getNoRestrictedSyntax = (...omittedTags: RestrictedTag[]): DummyRule => [
@@ -621,6 +630,8 @@ export default defineConfig({
 						assertFunctionNames: [
 							"expectScreenshotWithSchemes",
 							"snapshotQueries",
+							"expectUrl",
+							"page.expectUrl",
 						],
 					},
 				],
@@ -798,6 +809,16 @@ export default defineConfig({
 				"eslint-js/no-restricted-syntax": getNoRestrictedSyntax(...tags),
 			},
 		})),
+		{
+			files: ["**/*.spec.ts"],
+			rules: {
+				"eslint/no-unused-vars": ["error", { argsIgnorePattern: "^page$" }],
+				"eslint-js/no-restricted-syntax": [
+					"error",
+					...noRestrictedSyntaxGeneral.map(omit(["omitTags"])),
+				],
+			},
+		},
 	],
 	ignorePatterns: [
 		".history/",

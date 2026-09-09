@@ -11,7 +11,7 @@ test("On load without token", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await snapshotQueries(() => page.goto("/void-account"));
+	await snapshotQueries(() => page.navigate({ to: "/void-account" }));
 	await expect(page).toHaveTitle("RA - Void account");
 	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
 		"Something went wrong",

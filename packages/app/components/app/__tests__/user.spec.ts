@@ -10,7 +10,7 @@ const test = mergeTests(usersFixture, userFixture);
 test("No connected account - no description", async ({
 	faker,
 	mockBase,
-	openUsersScreen,
+	page,
 	user,
 }) => {
 	const {
@@ -26,7 +26,7 @@ test("No connected account - no description", async ({
 		],
 	});
 	assert.ok(firstUser);
-	await openUsersScreen();
+	await page.navigate({ to: "/users" });
 	const userLocator = user.filter({ hasText: firstUser.name });
 	await expect(userLocator).toBeVisible();
 	await expect(userLocator).not.toContainText("@");
@@ -35,8 +35,8 @@ test("No connected account - no description", async ({
 test("Connected account - description", async ({
 	faker,
 	mockBase,
-	openUsersScreen,
 	user,
+	page,
 }) => {
 	const {
 		users: [firstUser],
@@ -56,7 +56,7 @@ test("Connected account - description", async ({
 	});
 	assert.ok(firstUser);
 	assert.ok(firstUser.connectedAccount);
-	await openUsersScreen();
+	await page.navigate({ to: "/users" });
 	const userLocator = user.filter({ hasText: firstUser.name });
 	await expect(userLocator).toBeVisible();
 	await expect(userLocator).toContainText(firstUser.connectedAccount.email);

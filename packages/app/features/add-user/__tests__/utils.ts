@@ -1,16 +1,8 @@
 import type { Locator } from "@playwright/test";
 
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { ExtractFixture } from "~tests/frontend/types";
 
 type Fixtures = {
-	mockBase: () => Promise<
-		Awaited<
-			ReturnType<
-				ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
-			>
-		>
-	>;
 	addButton: Locator;
 	nameInput: Locator;
 	emailInput: Locator;
@@ -18,9 +10,6 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, page }, use) =>
-		use(async () => api.mockUtils.authPage({ page })),
-
 	addButton: ({ page }, use) =>
 		use(page.locator("button[type=submit]", { hasText: "Add user" })),
 

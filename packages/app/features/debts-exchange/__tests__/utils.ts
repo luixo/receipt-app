@@ -28,9 +28,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ page, api, faker }, use) =>
+	mockBase: ({ api, faker }, use) =>
 		use(async () => {
-			await api.mockUtils.authPage({ page });
+			await api.mockUtils.authPage();
 			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
@@ -74,7 +74,10 @@ export const test = originalTest.extend<Fixtures>({
 
 	openDebtsExchangeScreen: ({ page, awaitCacheKey }, use) =>
 		use(async (userId, { awaitCache = true } = {}) => {
-			await page.goto(`/debts/user/${userId}/exchange/`);
+			await page.navigate({
+				to: "/debts/user/$id/exchange",
+				params: { id: userId },
+			});
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
 				await awaitCacheKey("debts.getAllUser");

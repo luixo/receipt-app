@@ -8,13 +8,12 @@ type Fixtures = {
 		inboundAmount?: number;
 		outboundAmount?: number;
 	}) => Promise<Intentions>;
-	openConnectionIntentions: () => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockConnectionIntentions: ({ api, faker, page }, use) =>
+	mockConnectionIntentions: ({ api, faker }, use) =>
 		use(async ({ inboundAmount = 0, outboundAmount = 0 } = {}) => {
-			await api.mockUtils.authPage({ page });
+			await api.mockUtils.authPage();
 			const intentions: Intentions = {
 				inbound: Array.from({ length: inboundAmount }, () => ({
 					account: {
@@ -37,11 +36,5 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("users.suggestTop", { items: [] });
 			api.mockFirst("users.getPaged", { cursor: 0, count: 0, items: [] });
 			return intentions;
-		}),
-
-	openConnectionIntentions: ({ page, awaitCacheKey }, use) =>
-		use(async () => {
-			await page.goto("/users/connections");
-			await awaitCacheKey("accountConnectionIntentions.getAll");
 		}),
 });

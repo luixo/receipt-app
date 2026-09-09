@@ -9,8 +9,8 @@ import { test } from "./utils";
 
 test("Accept button is visible and clickable", async ({
 	api,
+	page,
 	mockDebts,
-	openDebtIntentions,
 	acceptButton,
 	awaitCacheKey,
 	verifyToastTexts,
@@ -19,7 +19,7 @@ test("Accept button is visible and clickable", async ({
 	await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	await openDebtIntentions();
+	await page.navigate({ to: "/debts/intentions" });
 
 	await expect(acceptButton).toBeVisible();
 
@@ -36,7 +36,6 @@ test("'debtIntentions.accept' pending / error", async ({
 	page,
 	api,
 	mockDebts,
-	openDebtIntentions,
 	acceptButton,
 	awaitCacheKey,
 	verifyToastTexts,
@@ -47,7 +46,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	});
 	const [debt] = debts;
 	assert.ok(debt);
-	await openDebtIntentions();
+	await page.navigate({ to: "/debts/intentions" });
 
 	const mockErrorMessage = `Mock "debtIntentions.accept" error`;
 	const acceptPause = api.createPause();
@@ -73,7 +72,7 @@ test("'debtIntentions.accept' pending / error", async ({
 			acceptPause.resolve();
 			await awaitCacheKey("debtIntentions.accept", { error: 1 });
 			await verifyToastTexts(`Error accepting debt: ${mockErrorMessage}`);
-			await expect(page).toHaveURL("/debts/intentions");
+			await page.expectUrl({ to: "/debts/intentions" });
 		},
 		{ name: "error" },
 	);
@@ -89,7 +88,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	await snapshotQueries(
 		async () => {
 			await acceptButton.click();
-			await expect(page).toHaveURL("/debts/intentions");
+			await page.expectUrl({ to: "/debts/intentions" });
 			await awaitCacheKey("debtIntentions.accept");
 		},
 		{
@@ -104,11 +103,10 @@ test("'debtIntentions.accept' pending / error", async ({
 	);
 });
 
-test("Accept and edit button navigates to debt screen on success", async ({
+test("Accept and edit button navigates to debt page on success", async ({
 	page,
 	api,
 	mockDebts,
-	openDebtIntentions,
 	acceptAndEditButton,
 	awaitCacheKey,
 	snapshotQueries,
@@ -118,7 +116,7 @@ test("Accept and edit button navigates to debt screen on success", async ({
 	});
 	const [debt] = debts;
 	assert.ok(debt);
-	await openDebtIntentions();
+	await page.navigate({ to: "/debts/intentions" });
 
 	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
 	api.mockFirst("debts.getAllUser", { items: [] });
@@ -132,7 +130,7 @@ test("Accept and edit button navigates to debt screen on success", async ({
 	await snapshotQueries(
 		async () => {
 			await acceptAndEditButton.click();
-			await expect(page).toHaveURL(`/debts/${debt.id}`);
+			await page.expectUrl({ to: "/debts/$id", params: { id: debt.id } });
 			await awaitCacheKey("debtIntentions.accept");
 		},
 		{
@@ -149,14 +147,14 @@ test("Accept and edit button navigates to debt screen on success", async ({
 });
 
 test("Reject button is visible but disabled", async ({
+	page,
 	mockDebts,
-	openDebtIntentions,
 	rejectButton,
 }) => {
 	await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	await openDebtIntentions();
+	await page.navigate({ to: "/debts/intentions" });
 
 	await expect(rejectButton).toBeVisible();
 	await expect(rejectButton).toBeDisabled();

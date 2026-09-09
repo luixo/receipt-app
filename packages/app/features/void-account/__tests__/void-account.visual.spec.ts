@@ -12,7 +12,8 @@ test("Open with token", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await page.goto(`/void-account?token=${faker.string.uuid()}`);
+	const token = faker.string.uuid();
+	await page.navigate({ to: "/void-account", search: { token } });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Void account",
 	);
@@ -36,7 +37,8 @@ test(`"auth.voidAccount" mutation`, async ({
 		});
 	});
 
-	await page.goto(`/void-account?token=${faker.string.uuid()}`);
+	const token = faker.string.uuid();
+	await page.navigate({ to: "/void-account", search: { token } });
 	await voidButton.click();
 	await awaitCacheKey("auth.voidAccount", { error: 1 });
 	await clearToasts();

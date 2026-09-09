@@ -12,11 +12,13 @@ import { test } from "./utils";
 test.describe("Language", () => {
 	test("user can switch language", async ({
 		page,
-		openSettings,
+		api,
 		languageSelectButton,
 		cookieManager,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		await expect(languageSelectButton).toHaveText("English");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 			"Settings",
@@ -56,14 +58,16 @@ test.describe("Language", () => {
 
 test.describe("Color mode", () => {
 	test("auto checkbox toggles manual switch, switch toggles applied theme", async ({
-		openSettings,
+		api,
 		colorModeAutoCheckbox,
 		colorModeSwitch,
 		html,
 		page,
 		cookieManager,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		await expect(colorModeAutoCheckbox).toBeChecked();
 		await expect(colorModeSwitch).toBeDisabled();
 		await expect(html).toHaveAttribute("data-theme", "light");
@@ -108,12 +112,14 @@ test.describe("Color mode", () => {
 
 test.describe("Show resolved debts", () => {
 	test("user can toggle show resolved debts, saved choice survives a reload", async ({
-		openSettings,
+		api,
 		showResolvedDebtsSwitch,
 		cookieManager,
 		page,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		await expect(showResolvedDebtsSwitch).not.toBeChecked();
 		expect(await cookieManager.getCookie(SETTINGS_STORE_NAME)).toBeUndefined();
 
@@ -138,11 +144,13 @@ test.describe("Show resolved debts", () => {
 test.describe("Default limit", () => {
 	test("user can change default limit, saved choice survives a reload", async ({
 		page,
-		openSettings,
+		api,
 		limitSelectButton,
 		cookieManager,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		await expect(limitSelectButton).toHaveText("Items per page");
 		expect(await cookieManager.getCookie(LIMIT_STORE_NAME)).toBeUndefined();
 
@@ -171,13 +179,15 @@ test.describe("Default limit", () => {
 test.describe("Manually accept debts", () => {
 	test("'accountSettings.update' mutation success", async ({
 		api,
-		openSettings,
+		page,
 		manualAcceptDebtsSwitch,
 		snapshotQueries,
 		awaitCacheKey,
 		verifyToastTexts,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		await expect(manualAcceptDebtsSwitch).not.toBeChecked();
 		api.mockFirst("accountSettings.update", undefined);
 
@@ -192,7 +202,7 @@ test.describe("Manually accept debts", () => {
 
 	test("'accountSettings.update' mutation pending / error", async ({
 		api,
-		openSettings,
+		page,
 		manualAcceptDebtsSwitch,
 		manualAcceptDebtsResetButton,
 		errorMessage,
@@ -201,7 +211,9 @@ test.describe("Manually accept debts", () => {
 		verifyToastTexts,
 		withLoader,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 		const pause = api.createPause();
 		api.mockFirst("accountSettings.update", async () => {
 			await pause.promise;
@@ -247,11 +259,14 @@ test.describe("Manually accept debts", () => {
 
 test.describe("Refresh", () => {
 	test("user can refresh cached data", async ({
-		openSettings,
+		api,
+		page,
 		refreshButton,
 		snapshotQueries,
 	}) => {
-		await openSettings();
+		await api.mockUtils.authPage();
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
 
 		// Refetches everything currently mounted, e.g. `accountSettings.get`
 		await snapshotQueries(async () => {

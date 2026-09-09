@@ -8,7 +8,7 @@ const test = mergeTests(addDebtTest, currenciesPickerTest);
 
 test("Currency modal open", async ({
 	api,
-	openAddDebtScreen,
+	page,
 	mockBase,
 	expectScreenshotWithSchemes,
 	currencyInput,
@@ -16,7 +16,7 @@ test("Currency modal open", async ({
 }) => {
 	await mockBase();
 	api.mockFirst("currency.top", { items: [] });
-	await openAddDebtScreen();
+	await page.navigate({ to: "/debts/add" });
 	await currencyInput.click();
 	await expect(currenciesPicker).toBeVisible();
 	await expectScreenshotWithSchemes("modal.png", {
