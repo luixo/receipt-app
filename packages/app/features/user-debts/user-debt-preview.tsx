@@ -39,6 +39,7 @@ const UserDebtPreviewShape: React.FC<
 }) => (
 	<View
 		className={cn("flex flex-1 flex-col items-stretch", className)}
+		testID="user-debt-preview"
 		{...props}
 	>
 		<View className="flex-1 flex-row gap-2 p-3 sm:p-2">

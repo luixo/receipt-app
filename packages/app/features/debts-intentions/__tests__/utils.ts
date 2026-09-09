@@ -2,14 +2,16 @@ import type { Locator } from "@playwright/test";
 import assert from "node:assert";
 
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import type { GenerateDebtIntentions } from "~tests/frontend/generators/debts";
+import { defaultGenerateDebtIntentions } from "~tests/frontend/generators/debts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockDebts: (options: { generateDebts?: GenerateDebts }) => Promise<{
-		debts: ReturnType<GenerateDebts>;
+	mockDebts: (options: {
+		generateDebtIntentions?: GenerateDebtIntentions;
+	}) => Promise<{
+		debtIntenions: ReturnType<GenerateDebtIntentions>;
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
 	acceptButton: Locator;
@@ -21,29 +23,21 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	mockDebts: ({ api, faker }, use) =>
-		use(async ({ generateDebts = defaultGenerateDebts }) => {
+		use(async ({ generateDebtIntentions = defaultGenerateDebtIntentions }) => {
 			await api.mockUtils.authPage();
 			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
-			const debts = generateDebts({
+			const debtIntenions = generateDebtIntentions({
 				faker,
 				amount: { min: 3, max: 6 },
 				userId: debtUser.id,
 			});
 			api.mockFirst("debtIntentions.getAll", {
-				items: debts.map((debt) => ({
-					id: debt.id,
-					userId: debt.userId,
-					currencyCode: debt.currencyCode,
-					amount: debt.amount,
-					timestamp: debt.timestamp,
-					updatedAt: debt.updatedAt,
-					note: debt.note,
-				})),
+				items: debtIntenions,
 			});
 			api.mockFirst("debts.getAllUser", { items: [] });
-			return { debts, debtUser };
+			return { debtIntenions, debtUser };
 		}),
 
 	acceptButton: ({ page }, use) =>

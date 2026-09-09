@@ -1,0 +1,31 @@
+{
+	"queries": {
+		"debts.getAll:[[]]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock \"getUsersPaged\" error"
+				},
+				"errorUpdateCount": 1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
