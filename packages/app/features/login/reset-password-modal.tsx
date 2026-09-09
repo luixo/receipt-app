@@ -87,6 +87,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	return (
 		<Modal
 			isOpen={isModalOpen}
+			label={t("forgotPassword.modal.header")}
 			onOpenChange={switchModalOpen}
 			header={<Text variant="h3">{t("forgotPassword.modal.header")}</Text>}
 		>

@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"auth.login": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"auth.login\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"email": "Damaris.Kris@yahoo.com",
+						"password": "GWGkWsN2ZFbx0vD"
+					}
+				}
+			}
+		]
+	}
+}
