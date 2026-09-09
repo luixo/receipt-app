@@ -1,38 +1,31 @@
 import { expect } from "@playwright/test";
 import type { Page as OriginalPage, Page } from "@playwright/test";
-import type { LinkOptions } from "@tanstack/router-core";
 import { defaultStringifySearch, interpolatePath } from "@tanstack/router-core";
 
-import type { RoutePath } from "~app/utils/navigation";
+import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
 import type { ExtractFixture } from "~tests/frontend/types";
 import { apiCookieNames } from "~utils/mocks";
-import type { TreeRouter } from "~web/entry/router";
 
 import { apiFixtures as test } from "./api";
 
-type NavigationTarget<K extends RoutePath> = Omit<
-	LinkOptions<TreeRouter, "/", K>,
-	"from" | "href"
->;
-
 type RoutedPage = OriginalPage & {
-	navigate: <K extends RoutePath>(
-		target: NavigationTarget<K>,
+	navigate: <K extends RouteTo>(
+		target: NavigationOptions<K>,
 		options?: Parameters<Page["goto"]>[1],
 	) => ReturnType<OriginalPage["goto"]>;
-	expectUrl: <K extends RoutePath>(
-		target: NavigationTarget<K>,
+	expectUrl: <K extends RouteTo>(
+		target: NavigationOptions<K>,
 		options?: Parameters<
 			ReturnType<typeof expect<OriginalPage>>["toHaveURL"]
 		>[1],
 	) => Promise<void>;
 };
 
-const buildUrl = <K extends RoutePath>({
+const buildUrl = <K extends RouteTo>({
 	to,
 	params = {},
 	search,
-}: NavigationTarget<K>) => {
+}: NavigationOptions<K>) => {
 	const { interpolatedPath, isMissingParams } = interpolatePath({
 		path: to,
 		params: params === true ? {} : params,
