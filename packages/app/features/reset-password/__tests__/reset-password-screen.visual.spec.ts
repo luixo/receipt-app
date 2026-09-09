@@ -15,7 +15,7 @@ test("On load without token", async ({
 	api.mockFirst("resetPasswordIntentions.get", {
 		email: faker.internet.email(),
 	});
-	await page.goto("/reset-password");
+	await page.navigate({ to: "/reset-password" });
 	await expectScreenshotWithSchemes("empty.png");
 });
 
@@ -37,7 +37,8 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 			await getIntentionsPause.promise;
 			return next();
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await expectScreenshotWithSchemes("query/loading.png", {
 			locator: skeleton,
 		});
@@ -47,7 +48,8 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		api.mockFirst("resetPasswordIntentions.get", {
 			email: faker.internet.email(),
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await expectScreenshotWithSchemes("query/success.png", {
 			locator: page.getByRole("heading", { level: 3 }),
 		});
@@ -71,7 +73,8 @@ test.describe("'auth.resetPassword' mutation", () => {
 			await resetPasswordPause.promise;
 			return next();
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await resetPasswordButton.click();
 		await expectScreenshotWithSchemes("mutation/loading.png", {
@@ -97,7 +100,8 @@ test.describe("'auth.resetPassword' mutation", () => {
 				message: "Mock 'auth.resetPassword' error",
 			});
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await resetPasswordButton.click();
 		await clearToasts();
@@ -118,7 +122,8 @@ test.describe("form", () => {
 		api.mockFirst("resetPasswordIntentions.get", {
 			email: faker.internet.email(),
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillInvalidFields();
 		await expectScreenshotWithSchemes("invalid.png", {
 			mask: [page.getByRole("heading", { level: 3 })],

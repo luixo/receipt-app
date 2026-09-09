@@ -36,7 +36,7 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
 ## Auth helpers
 
 - `api.mockUtils.noAuthPage()` — mocks `account.get` to throw UNAUTHORIZED and mocks the currency list. Returns `{ unmockAccount, unmockCurrency }` for cleanup.
-- `api.mockUtils.authPage({ page })` — sets the auth cookie and mocks `account.get`, `accountSettings.get`, `debtIntentions.getAll`, etc. with sensible defaults. Returns `{ user, account }` with faker-generated data.
+- `api.mockUtils.authPage()` — sets the auth cookie and mocks `account.get`, `accountSettings.get`, `debtIntentions.getAll`, etc. with sensible defaults. Returns `{ user, account }` with faker-generated data.
 - `api.mockUtils.mockUsers(...users)` — registers user fixtures resolvable via `users.get`.
 
 ## Cache and query assertions
@@ -79,7 +79,7 @@ Fixture-provided locators available in every spec:
 ## Faker and time
 
 - The `faker` fixture is seeded deterministically from the test title — tests produce the same random data on every run. `faker.temporal.between` / `faker.temporal.recent` generate Temporal types directly.
-- Time is frozen server-side to `2020-01-01`. Browser `Date` is also overridden to the time of `page.goto()`.
+- Time is frozen server-side to `2020-01-01`. Browser `Date` is also overridden to the time of page navigation.
 
 ## Timezone and locale
 
@@ -87,7 +87,8 @@ Server runs at UTC / `ru-RU`; browser client is set to `America/Los_Angeles` / `
 
 ## Navigation
 
-Always call `await page.goto(url)` after all mocks are set up. The custom `goto` waits for the `<hydrated>` marker, so the page is fully hydrated before any assertions run.
+Always call `await page.navigate({ to: '/debts/$id', params: { id: debtId } })` after all mocks are set up. Argument is strongly typed with project's navigations available.
+To verify current url use `await page.expectUrl(...)` with the same argument.
 
 ## NumberInput (react-aria)
 

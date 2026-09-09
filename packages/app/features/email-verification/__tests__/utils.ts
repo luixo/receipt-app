@@ -16,9 +16,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, page }, use) =>
+	mockBase: ({ api }, use) =>
 		use(async () => {
-			const auth = await api.mockUtils.authPage({ page });
+			const auth = await api.mockUtils.authPage();
 			const unverifiedAccount = { ...auth.account, verified: false };
 			api.mockFirst("account.get", {
 				account: unverifiedAccount,

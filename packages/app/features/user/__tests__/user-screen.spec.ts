@@ -360,7 +360,7 @@ test.describe("Remove", () => {
 			await awaitCacheKey("users.remove", { error: 1 });
 			await verifyToastTexts(`Error removing user: Mock "users.remove" error`);
 		});
-		await expect(page).toHaveURL(`/users/${targetUser.id}`);
+		await page.expectUrl({ to: "/users/$id", params: { id: targetUser.id } });
 
 		const pause = api.createPause();
 		api.mockFirst("users.remove", async () => {
@@ -381,6 +381,6 @@ test.describe("Remove", () => {
 			},
 			{ name: "success", skipQueries: true, blacklistKeys: "users.getPaged" },
 		);
-		await expect(page).toHaveURL("/users");
+		await page.expectUrl({ to: "/users" });
 	});
 });

@@ -4,11 +4,13 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test.beforeEach(async ({ openSettings }) => {
-	await openSettings();
+test.beforeEach(async ({ api, page }) => {
+	await api.mockUtils.authPage();
+	api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+	await page.navigate({ to: "/settings" });
 });
 
-test("Settings screen", async ({ page, expectScreenshotWithSchemes }) => {
+test("Settings page", async ({ page, expectScreenshotWithSchemes }) => {
 	await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 	await expectScreenshotWithSchemes("screen.png");
 });

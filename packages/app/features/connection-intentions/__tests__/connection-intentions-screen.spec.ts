@@ -5,27 +5,27 @@ import { test } from "./connection-intentions-screen.utils";
 test("Page header", async ({
 	page,
 	mockConnectionIntentions,
-	openConnectionIntentions,
+
 	backLink,
 }) => {
 	await mockConnectionIntentions();
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Connection intentions",
 	);
 	await backLink.click();
-	await expect(page).toHaveURL("/users");
+	await page.expectUrl({ to: "/users" });
 });
 
 test("Empty state", async ({
 	mockConnectionIntentions,
-	openConnectionIntentions,
+	page,
 	emptyCard,
 	inboundHeading,
 	outboundHeading,
 }) => {
 	await mockConnectionIntentions();
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 	await expect(emptyCard("All done 👍")).toBeVisible();
 	await expect(inboundHeading).not.toBeAttached();
 	await expect(outboundHeading).not.toBeAttached();
@@ -34,7 +34,7 @@ test("Empty state", async ({
 test("Inbound only", async ({
 	faker,
 	mockConnectionIntentions,
-	openConnectionIntentions,
+	page,
 	emptyCard,
 	inboundHeading,
 	outboundHeading,
@@ -42,7 +42,7 @@ test("Inbound only", async ({
 }) => {
 	const inboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ inboundAmount });
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 	await expect(inboundHeading).toBeVisible();
 	await expect(inboundRows).toHaveCount(inboundAmount);
 	await expect(outboundHeading).not.toBeAttached();
@@ -52,7 +52,7 @@ test("Inbound only", async ({
 test("Outbound only", async ({
 	faker,
 	mockConnectionIntentions,
-	openConnectionIntentions,
+	page,
 	emptyCard,
 	inboundHeading,
 	outboundHeading,
@@ -60,7 +60,7 @@ test("Outbound only", async ({
 }) => {
 	const outboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ outboundAmount });
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 	await expect(outboundHeading).toBeVisible();
 	await expect(outboundRows).toHaveCount(outboundAmount);
 	await expect(inboundHeading).not.toBeAttached();
@@ -71,7 +71,7 @@ test("Mixed inbound and outbound", async ({
 	page,
 	faker,
 	mockConnectionIntentions,
-	openConnectionIntentions,
+
 	inboundHeading,
 	outboundHeading,
 	inboundRows,
@@ -80,7 +80,7 @@ test("Mixed inbound and outbound", async ({
 	const inboundAmount = faker.number.int({ min: 2, max: 4 });
 	const outboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ inboundAmount, outboundAmount });
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
 	await expect(inboundHeading).toBeVisible();
 	await expect(outboundHeading).toBeVisible();
 	await expect(inboundRows).toHaveCount(inboundAmount);

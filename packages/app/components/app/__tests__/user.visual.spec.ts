@@ -10,7 +10,8 @@ const test = mergeTests(usersFixture, userFixture, userAvatarFixture);
 test("No connected account", async ({
 	faker,
 	mockBase,
-	openUsersScreen,
+	page,
+	awaitCacheKey,
 	user,
 	expectScreenshotWithSchemes,
 	userAvatar,
@@ -30,7 +31,8 @@ test("No connected account", async ({
 		],
 	});
 	assert.ok(firstUser);
-	await openUsersScreen();
+	await page.navigate({ to: "/users" });
+	await awaitCacheKey("users.getPaged");
 	await expectScreenshotWithSchemes("no-account.png", {
 		locator: user.filter({ hasText: firstUser.name }),
 		mask: [userAvatar],
@@ -42,9 +44,10 @@ test("No connected account", async ({
 });
 
 test("Connected account", async ({
+	page,
+	awaitCacheKey,
 	faker,
 	mockBase,
-	openUsersScreen,
 	user,
 	userAvatar,
 	expectScreenshotWithSchemes,
@@ -68,7 +71,8 @@ test("Connected account", async ({
 		],
 	});
 	assert.ok(firstUser);
-	await openUsersScreen();
+	await page.navigate({ to: "/users" });
+	await awaitCacheKey("users.getPaged");
 	await expectScreenshotWithSchemes("connected-account.png", {
 		locator: user.filter({ hasText: firstUser.name }),
 		mask: [userAvatar],
@@ -81,10 +85,11 @@ test("Connected account", async ({
 
 test("Loading skeleton", async ({
 	api,
+	page,
+	awaitCacheKey,
 	mockBase,
 	userSkeleton,
 	expectScreenshotWithSchemes,
-	openUsersScreen,
 	skip,
 	faker,
 }, testInfo) => {
@@ -107,7 +112,8 @@ test("Loading skeleton", async ({
 		await usersGetPause.promise;
 		return next();
 	});
-	await openUsersScreen();
+	await page.navigate({ to: "/users" });
+	await awaitCacheKey("users.getPaged");
 	await expectScreenshotWithSchemes("skeleton.png", { locator: userSkeleton });
 	usersGetPause.resolve();
 });

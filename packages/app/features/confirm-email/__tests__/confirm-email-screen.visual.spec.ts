@@ -8,7 +8,7 @@ test("Empty card on error", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	api.mockUtils.noAuthPage();
-	await page.goto("/confirm-email");
+	await page.navigate({ to: "/confirm-email" });
 	await expectScreenshotWithSchemes("empty.png");
 });
 
@@ -27,7 +27,8 @@ test.describe("States", () => {
 				message: "Mock 'auth.confirmEmail' error",
 			});
 		});
-		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/confirm-email", search: { token } });
 		await clearToasts(1);
 		await expectScreenshotWithSchemes("error.png");
 	});
@@ -45,7 +46,8 @@ test.describe("States", () => {
 			await confirmPause.promise;
 			return next();
 		});
-		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/confirm-email", search: { token } });
 		await clearToasts();
 		await expectScreenshotWithSchemes("loading.png");
 	});
@@ -64,8 +66,9 @@ test.describe("States", () => {
 			await confirmPause.promise;
 			return { email: faker.internet.email() };
 		});
-		await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
-		await api.mockUtils.authPage({ page });
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/confirm-email", search: { token } });
+		await api.mockUtils.authPage();
 		await clearToasts(1);
 		confirmPause.resolve();
 		await clearToasts(1);

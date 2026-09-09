@@ -12,11 +12,11 @@ test("Card is hidden when account is verified", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	await api.mockUtils.authPage({ page });
+	await api.mockUtils.authPage();
 
 	await snapshotQueries(
 		async () => {
-			await page.goto("/account");
+			await page.navigate({ to: "/account" });
 			await awaitCacheKey("account.get");
 		},
 		{ whitelistKeys: ["account.get"] },
@@ -38,7 +38,7 @@ test("Card is shown when account is unverified", async ({
 
 	await snapshotQueries(
 		async () => {
-			await page.goto("/account");
+			await page.navigate({ to: "/account" });
 			await awaitCacheKey("account.get");
 		},
 		{ whitelistKeys: ["account.get"] },
@@ -74,7 +74,7 @@ test.describe("'account.resendEmail' mutation", () => {
 				message: `Mock "account.resendEmail" error`,
 			});
 		});
-		await page.goto("/account");
+		await page.navigate({ to: "/account" });
 		await expect(resendButton).toBeVisible();
 
 		await snapshotQueries(
@@ -87,7 +87,7 @@ test.describe("'account.resendEmail' mutation", () => {
 			},
 			{ whitelistKeys: ["account.get"] },
 		);
-		await expect(page).toHaveURL("/account");
+		await page.expectUrl({ to: "/account" });
 
 		await expect(emailVerificationCard).toBeVisible();
 		await expect(resendButton).toBeVisible();
@@ -111,7 +111,7 @@ test.describe("'account.resendEmail' mutation", () => {
 			await resendPause.promise;
 			return { email: account.email };
 		});
-		await page.goto("/account");
+		await page.navigate({ to: "/account" });
 		await expect(resendButton).toBeVisible();
 
 		const buttonWithLoader = withLoader(resendButton);
@@ -140,6 +140,6 @@ test.describe("'account.resendEmail' mutation", () => {
 			},
 			{ name: "success", skipQueries: true, whitelistKeys: ["account.get"] },
 		);
-		await expect(page).toHaveURL("/account");
+		await page.expectUrl({ to: "/account" });
 	});
 });

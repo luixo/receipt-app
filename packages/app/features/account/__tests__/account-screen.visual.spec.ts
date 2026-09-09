@@ -4,7 +4,7 @@ import { test } from "./utils";
 
 test.beforeEach(async ({ mockBase, page }) => {
 	await mockBase();
-	await page.goto("/account");
+	await page.navigate({ to: "/account" });
 });
 
 test("All panels hidden", async ({ page, expectScreenshotWithSchemes }) => {

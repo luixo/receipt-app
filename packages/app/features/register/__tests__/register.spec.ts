@@ -7,7 +7,7 @@ import { test } from "./utils";
 test("On load", async ({ page, api, registerButton, snapshotQueries }) => {
 	api.mockUtils.noAuthPage();
 
-	await snapshotQueries(() => page.goto("/register"));
+	await snapshotQueries(() => page.navigate({ to: "/register" }));
 	await expect(page).toHaveTitle("RA - Register");
 	await expect(registerButton).toBeDisabled();
 });
@@ -20,7 +20,7 @@ test("Invalid form disables submit button", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await page.goto("/register");
+	await page.navigate({ to: "/register" });
 	await fillInvalidFields();
 	await expect(registerButton).toBeDisabled();
 });
@@ -48,17 +48,17 @@ test("'auth.register' mutation", async ({
 		});
 	});
 
-	await page.goto("/register");
+	await page.navigate({ to: "/register" });
 	await fillValidFields();
 	await snapshotQueries(async () => {
 		await registerButton.click();
 		await awaitCacheKey("auth.register", { error: 1 });
 		await verifyToastTexts(`Mock "auth.register" error`);
 	});
-	await expect(page).toHaveURL("/register");
+	await page.expectUrl({ to: "/register" });
 
 	const registerPause = api.createPause();
-	await api.mockUtils.authPage({ page });
+	await api.mockUtils.authPage();
 	api.mockFirst("auth.register", async () => {
 		await registerPause.promise;
 		return { account: { id: "test", verified: true } };
@@ -92,5 +92,5 @@ test("'auth.register' mutation", async ({
 			name: "success",
 		},
 	);
-	await expect(page).toHaveURL("/receipts");
+	await page.expectUrl({ to: "/receipts" });
 });

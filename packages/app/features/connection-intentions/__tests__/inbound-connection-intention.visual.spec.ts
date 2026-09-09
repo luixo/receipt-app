@@ -9,12 +9,13 @@ const test = mergeTests(localTest, usersSuggestFixture);
 test("Row", async ({
 	page,
 	mockConnectionIntentions,
-	openConnectionIntentions,
 	expectScreenshotWithSchemes,
 	usersSuggest,
+	awaitCacheKey,
 }) => {
 	await mockConnectionIntentions({ inboundAmount: 1 });
-	await openConnectionIntentions();
+	await page.navigate({ to: "/users/connections" });
+	await awaitCacheKey("accountConnectionIntentions.getAll");
 	await expectScreenshotWithSchemes("row.png", {
 		locator: page.getByTestId("inbound-connection-intention"),
 		mask: [usersSuggest],

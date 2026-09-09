@@ -13,11 +13,10 @@ test("On load", async ({
 	mockBase,
 	snapshotQueries,
 	awaitCacheKey,
-	openAddDebtScreen: openAddDebtsScreen,
 }) => {
 	await mockBase();
 	await snapshotQueries(async () => {
-		await openAddDebtsScreen();
+		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
 		await awaitCacheKey("users.suggestTop");
 	});
@@ -29,13 +28,12 @@ test("userId query param pre-selects user", async ({
 	page,
 	mockBase,
 	awaitCacheKey,
-	openAddDebtScreen: openAddDebtsScreen,
 }) => {
 	const { users } = await mockBase();
 	const [user] = users;
 	assert.ok(user);
 
-	await openAddDebtsScreen({ userId: user.id });
+	await page.navigate({ to: "/debts/add", search: { userId: user.id } });
 	await awaitCacheKey("users.get", { input: { id: user.id } });
 
 	await expect(
@@ -45,7 +43,7 @@ test("userId query param pre-selects user", async ({
 
 test.describe("Invalid form disables submit button", () => {
 	test("on invalid amount", async ({
-		openAddDebtScreen: openAddDebtsScreen,
+		page,
 		addButton,
 		amountInput,
 		mockBase,
@@ -56,7 +54,7 @@ test.describe("Invalid form disables submit button", () => {
 		const [user] = users;
 		assert.ok(user);
 
-		await openAddDebtsScreen();
+		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
 		await awaitCacheKey("users.suggestTop");
 		await fillValidForm(user);
@@ -67,7 +65,7 @@ test.describe("Invalid form disables submit button", () => {
 	});
 
 	test("on empty note", async ({
-		openAddDebtScreen: openAddDebtsScreen,
+		page,
 		addButton,
 		noteInput,
 		mockBase,
@@ -78,7 +76,7 @@ test.describe("Invalid form disables submit button", () => {
 		const [user] = users;
 		assert.ok(user);
 
-		await openAddDebtsScreen();
+		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
 		await awaitCacheKey("users.suggestTop");
 		await fillValidForm(user);
@@ -88,7 +86,7 @@ test.describe("Invalid form disables submit button", () => {
 	});
 
 	test("on missing user", async ({
-		openAddDebtScreen: openAddDebtsScreen,
+		page,
 		addButton,
 		amountInput,
 		noteInput,
@@ -97,7 +95,7 @@ test.describe("Invalid form disables submit button", () => {
 	}) => {
 		await mockBase();
 
-		await openAddDebtsScreen();
+		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
 		await awaitCacheKey("users.suggestTop");
 
@@ -109,7 +107,7 @@ test.describe("Invalid form disables submit button", () => {
 	});
 
 	test("on missing currency", async ({
-		openAddDebtScreen: openAddDebtsScreen,
+		page,
 		addButton,
 		api,
 		mockBase,
@@ -126,7 +124,7 @@ test.describe("Invalid form disables submit button", () => {
 			return { items: topCurrencies.toSorted((a, b) => b.count - a.count) };
 		});
 
-		await openAddDebtsScreen();
+		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("users.suggestTop");
 
 		await fillValidForm(user);
@@ -153,7 +151,6 @@ test("'debts.add' mutation", async ({
 	awaitCacheKey,
 	fillValidForm,
 	faker,
-	openAddDebtScreen: openAddDebtsScreen,
 }) => {
 	const { users, topCurrencies } = await mockBase();
 	const [user] = users;
@@ -169,7 +166,7 @@ test("'debts.add' mutation", async ({
 		});
 	});
 
-	await openAddDebtsScreen();
+	await page.navigate({ to: "/debts/add" });
 	await awaitCacheKey("currency.top");
 	await awaitCacheKey("users.suggestTop");
 
@@ -183,7 +180,7 @@ test("'debts.add' mutation", async ({
 		},
 		{ name: "error" },
 	);
-	await expect(page).toHaveURL(`/debts/add?userId=${user.id}`);
+	await page.expectUrl({ to: "/debts/add", search: { userId: user.id } });
 
 	const createPause = api.createPause();
 	api.mockFirst("debts.add", async () => {
@@ -230,5 +227,5 @@ test("'debts.add' mutation", async ({
 		},
 		{ name: "success", blacklistKeys: "users.get", skipQueries: true },
 	);
-	await expect(page).toHaveURL(`/debts/${debtId}`);
+	await page.expectUrl({ to: "/debts/$id", params: { id: debtId } });
 });

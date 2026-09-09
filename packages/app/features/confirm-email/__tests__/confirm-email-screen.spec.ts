@@ -7,15 +7,8 @@ import { expect, test } from "~tests/frontend/fixtures";
 test("On load without token", async ({ page, api, snapshotQueries }) => {
 	api.mockUtils.noAuthPage();
 
-	await snapshotQueries(() => page.goto("/confirm-email"));
+	await snapshotQueries(() => page.navigate({ to: "/confirm-email" }));
 	await expect(page).toHaveTitle("RA - Confirm email");
-	// see https://github.com/TanStack/router/issues/5383
-	await expect(async () => {
-		const count = await page.getByRole("heading", { level: 2 }).count();
-		if (count !== 1) {
-			throw new Error("Expected to have single h2");
-		}
-	}).toPass();
 	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
 		"Something went wrong",
 	);
@@ -42,13 +35,13 @@ test.describe("'auth.confirmEmail' mutation", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/confirm-email?token=${token}`);
+				await page.navigate({ to: "/confirm-email", search: { token } });
 				await expect(loader).toBeVisible();
 				await verifyToastTexts("Confirming email..");
 			},
 			{ name: "loading" },
 		);
-		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+		await page.expectUrl({ to: "/confirm-email", search: { token } });
 	});
 
 	test("error", async ({
@@ -70,13 +63,13 @@ test.describe("'auth.confirmEmail' mutation", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/confirm-email?token=${token}`);
+				await page.navigate({ to: "/confirm-email", search: { token } });
 				await expect(errorMessage(rawErrorMessage)).toBeVisible();
 				await verifyToastTexts(`Email confirmation failed: ${rawErrorMessage}`);
 			},
 			{ name: "error" },
 		);
-		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+		await page.expectUrl({ to: "/confirm-email", search: { token } });
 	});
 
 	test("success", async ({
@@ -93,8 +86,8 @@ test.describe("'auth.confirmEmail' mutation", () => {
 		api.mockLast("receipts.getPaged", { count: 0, cursor: 0, items: [] });
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/confirm-email?token=${token}`);
-				await api.mockUtils.authPage({ page });
+				await page.navigate({ to: "/confirm-email", search: { token } });
+				await api.mockUtils.authPage();
 				await verifyToastTexts(`Email "${confirmedEmail}" confirmed!`);
 			},
 			{ name: "success", blacklistKeys: ["receipts.getPaged"] },
@@ -105,7 +98,7 @@ test.describe("'auth.confirmEmail' mutation", () => {
 		await expect(page.getByRole("heading", { level: 4 })).toHaveText(
 			"Email verification successful!",
 		);
-		await expect(page).toHaveURL(`/confirm-email?token=${token}`);
+		await page.expectUrl({ to: "/confirm-email", search: { token } });
 	});
 });
 
@@ -120,11 +113,12 @@ test("Navigating back to the home page", async ({ page, api, faker }) => {
 		);
 		return { email: faker.internet.email() };
 	});
-	await page.goto(`/confirm-email?token=${faker.string.uuid()}`);
+	const token = faker.string.uuid();
+	await page.navigate({ to: "/confirm-email", search: { token } });
+	await api.mockUtils.authPage();
 	unmockAccount();
-	await api.mockUtils.authPage({ page });
 	api.mockFirst("receipts.getPaged", { items: [], count: 0, cursor: 0 });
 	confirmEmailPause.resolve();
 	await page.getByRole("button", { name: "To home page" }).click();
-	await expect(page).toHaveURL("/receipts");
+	await page.expectUrl({ to: "/receipts" });
 });

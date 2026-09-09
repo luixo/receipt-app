@@ -12,7 +12,7 @@ test("On load without token", async ({ page, api, faker, snapshotQueries }) => {
 	api.mockFirst("resetPasswordIntentions.get", {
 		email: faker.internet.email(),
 	});
-	await snapshotQueries(() => page.goto("/reset-password"));
+	await snapshotQueries(() => page.navigate({ to: "/reset-password" }));
 	await expect(page).toHaveTitle("RA - Reset password");
 	await expect(page.getByRole("heading", { level: 2 })).toHaveText(
 		"Something went wrong",
@@ -37,12 +37,12 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/reset-password?token=${token}`);
+				await page.navigate({ to: "/reset-password", search: { token } });
 				await expect(skeleton).toBeVisible();
 			},
 			{ name: "query-loading" },
 		);
-		await expect(page).toHaveURL(`/reset-password?token=${token}`);
+		await page.expectUrl({ to: "/reset-password", search: { token } });
 	});
 
 	test("error", async ({
@@ -64,12 +64,12 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/reset-password?token=${token}`);
+				await page.navigate({ to: "/reset-password", search: { token } });
 				await expect(errorMessage(rawErrorMessage)).toBeVisible();
 			},
 			{ name: "error" },
 		);
-		await expect(page).toHaveURL(`/reset-password?token=${token}`);
+		await page.expectUrl({ to: "/reset-password", search: { token } });
 	});
 
 	test("success", async ({ page, api, snapshotQueries, faker }) => {
@@ -78,12 +78,12 @@ test.describe("'resetPasswordIntentions.get' query", () => {
 		api.mockFirst("resetPasswordIntentions.get", { email });
 		await snapshotQueries(
 			async () => {
-				await page.goto(`/reset-password?token=${token}`);
+				await page.navigate({ to: "/reset-password", search: { token } });
 				await expect(page.getByRole("heading", { level: 3 })).toHaveText(email);
 			},
 			{ name: "success", blacklistKeys: ["receipts.getPaged"] },
 		);
-		await expect(page).toHaveURL(`/reset-password?token=${token}`);
+		await page.expectUrl({ to: "/reset-password", search: { token } });
 	});
 });
 
@@ -107,7 +107,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 			await resetPasswordPause.promise;
 			return next();
 		});
-		await page.goto(`/reset-password?token=${token}`);
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await snapshotQueries(
 			async () => {
@@ -117,7 +117,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 			},
 			{ name: "loading" },
 		);
-		await expect(page).toHaveURL(`/reset-password?token=${token}`);
+		await page.expectUrl({ to: "/reset-password", search: { token } });
 	});
 
 	test("error", async ({
@@ -141,7 +141,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 				message: rawErrorMessage,
 			});
 		});
-		await page.goto(`/reset-password?token=${token}`);
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await snapshotQueries(
 			async () => {
@@ -151,7 +151,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 			},
 			{ name: "error" },
 		);
-		await expect(page).toHaveURL(`/reset-password?token=${token}`);
+		await page.expectUrl({ to: "/reset-password", search: { token } });
 	});
 
 	test("success", async ({
@@ -167,17 +167,18 @@ test.describe("'auth.resetPassword' mutation", () => {
 			email: faker.internet.email(),
 		});
 		api.mockFirst("auth.resetPassword", undefined);
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await snapshotQueries(
 			async () => {
-				await api.mockUtils.authPage({ page });
+				await api.mockUtils.authPage();
 				await resetPasswordButton.click();
 				await verifyToastTexts("Password successfully reset");
 			},
 			{ name: "success" },
 		);
-		await expect(page).toHaveURL("/login");
+		await page.expectUrl({ to: "/login" });
 	});
 });
 
@@ -193,7 +194,8 @@ test.describe("form", () => {
 		api.mockFirst("resetPasswordIntentions.get", {
 			email: faker.internet.email(),
 		});
-		await page.goto(`/reset-password?token=${faker.string.uuid()}`);
+		const token = faker.string.uuid();
+		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillInvalidFields();
 		await expect(
 			page
