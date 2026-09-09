@@ -16,7 +16,7 @@ test("Form", async ({
 	const [user] = users;
 	assert.ok(user);
 
-	await page.goto("/debts/add");
+	await page.navigate({ to: "/debts/add" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Add debt");
 	await expectScreenshotWithSchemes("empty.png");
 
@@ -37,7 +37,7 @@ test.describe("Errors in form", () => {
 		skip(testInfo, "only-biggest");
 		await mockBase();
 
-		await page.goto("/debts/add");
+		await page.navigate({ to: "/debts/add" });
 
 		await amountInput.fill("0");
 		await amountInput.press("Tab");
@@ -80,7 +80,7 @@ test.describe("'debts.add' mutation", () => {
 			};
 		});
 
-		await page.goto("/debts/add");
+		await page.navigate({ to: "/debts/add" });
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 			"Add debt",
 		);

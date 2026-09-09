@@ -79,7 +79,10 @@ test.describe("Header", () => {
 		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
 		await openDebtsExchangeScreen(debtUser.id);
 		await backLink.click();
-		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
+		await page.expectUrl({
+			to: "/debts/user/$id",
+			params: { id: debtUser.id },
+		});
 	});
 });
 
@@ -128,7 +131,10 @@ test("Exchange all to one button", async ({
 	await openDebtsExchangeScreen(debtUser.id);
 	api.mockFirst("currency.top", { items: [] });
 	await exchangeAllToOneButton.click();
-	await expect(page).toHaveURL(`/debts/user/${debtUser.id}/exchange/all`);
+	await page.expectUrl({
+		to: "/debts/user/$id/exchange/all",
+		params: { id: debtUser.id },
+	});
 });
 
 test("Exchange to specific currency button", async ({
@@ -141,5 +147,8 @@ test("Exchange to specific currency button", async ({
 	await expect(exchangeSpecificButton).toBeDisabled();
 	// The specific page is not yet implemented
 	// await exchangeSpecificButton.click();
-	// await expect(page).toHaveURL(`/debts/user/${debtUser.id}/exchange/specific`);
+	// await page.expectUrl({
+	// 	to: "/debts/user/$id/exchange/specific",
+	// 	params: { id: debtUser.id },
+	// });
 });

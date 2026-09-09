@@ -8,7 +8,7 @@ test.describe("Avatar", () => {
 	test.describe("editor open", () => {
 		test.beforeEach(async ({ mockBase, page, avatarButton }) => {
 			await mockBase();
-			await page.goto("/account");
+			await page.navigate({ to: "/account" });
 			await avatarButton.click();
 		});
 
@@ -84,7 +84,7 @@ test.describe("Avatar", () => {
 		await mockBase({ avatarUrl: faker.image.url() });
 		api.mockFirst("account.changeAvatar", undefined);
 
-		await page.goto("/account");
+		await page.navigate({ to: "/account" });
 		await avatarButton.click();
 		await expect(removeAvatarButton).toBeVisible();
 
@@ -119,7 +119,7 @@ test.describe("Avatar", () => {
 test.describe("Password change", () => {
 	test.beforeEach(async ({ mockBase, page, changePasswordShowButton }) => {
 		await mockBase();
-		await page.goto("/account");
+		await page.navigate({ to: "/account" });
 		await changePasswordShowButton.click();
 	});
 
@@ -248,14 +248,14 @@ test("'account.logout' mutation", async ({
 			message: `Mock "account.logout" error`,
 		});
 	});
-	await page.goto("/account");
+	await page.navigate({ to: "/account" });
 
 	await snapshotQueries(async () => {
 		await logoutButton.click();
 		await awaitCacheKey("account.logout", { error: 1 });
 		await verifyToastTexts(`Logout failed: Mock "account.logout" error`);
 	});
-	await expect(page).toHaveURL("/account");
+	await page.expectUrl({ to: "/account" });
 
 	api.mockUtils.noAuthPage();
 	const pause = api.createPause();
@@ -280,7 +280,7 @@ test("'account.logout' mutation", async ({
 			pause.resolve();
 			await awaitCacheKey("account.logout");
 			await verifyToastTexts("Logout successful, redirecting..");
-			await expect(page).toHaveURL("/receipts");
+			await page.expectUrl({ to: "/receipts" });
 		},
 		{
 			name: "success",

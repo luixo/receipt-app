@@ -1,5 +1,5 @@
 import { mergeTests } from "@playwright/test";
-import type { BrowserContext, Page } from "@playwright/test";
+import type { BrowserContext } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
@@ -430,7 +430,15 @@ const createApiManager = async (
 	};
 };
 
-const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
+const getMockUtils = ({
+	api,
+	faker,
+	context,
+}: {
+	api: ApiManager;
+	faker: ExtendedFaker;
+	context: BrowserContext;
+}) => ({
 	noAuthPage: () => {
 		const unmockCurrency = api.mockLast("currency.getList", {
 			items: CURRENCY_CODES,
@@ -452,8 +460,8 @@ const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 			unmockReceipts,
 		};
 	},
-	authPage: async ({ page }: { page: Page }) => {
-		await page.context().addCookies([
+	authPage: async () => {
+		await context.addCookies([
 			{
 				name: AUTH_COOKIE,
 				value: "fake-test-auth-cookie",
@@ -533,7 +541,7 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 				globalApiManager,
 				context,
 			);
-			await use({ ...api, mockUtils: getMockUtils(api, faker) });
+			await use({ ...api, mockUtils: getMockUtils({ api, faker, context }) });
 			await context.close();
 			await cleanup();
 		},

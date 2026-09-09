@@ -4,14 +4,16 @@ import { test } from "./utils";
 
 test("Row", async ({
 	mockDebts,
-	openDebtIntentions,
+	page,
+	awaitCacheKey,
 	expectScreenshotWithSchemes,
 	inboundDebtIntentionRow,
 }) => {
 	await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	await openDebtIntentions();
+	await page.navigate({ to: "/debts/intentions" });
+	await awaitCacheKey("debtIntentions.getAll");
 	await expectScreenshotWithSchemes("inbound-row.png", {
 		locator: inboundDebtIntentionRow,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [

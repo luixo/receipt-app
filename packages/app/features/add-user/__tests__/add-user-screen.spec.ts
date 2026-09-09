@@ -7,13 +7,13 @@ import { test } from "./utils";
 test("On load", async ({
 	page,
 	addButton,
-	mockBase,
 	snapshotQueries,
 	awaitCacheKey,
+	api,
 }) => {
-	await mockBase();
+	await api.mockUtils.authPage();
 	await snapshotQueries(async () => {
-		await page.goto("/users/add");
+		await page.navigate({ to: "/users/add" });
 		await awaitCacheKey("account.get");
 	});
 	await expect(page).toHaveTitle("RA - Add user");
@@ -21,9 +21,9 @@ test("On load", async ({
 });
 
 test.describe("Invalid form disables submit button", () => {
-	test.beforeEach(async ({ mockBase, page, awaitCacheKey, fillValidForm }) => {
-		await mockBase();
-		await page.goto("/users/add");
+	test.beforeEach(async ({ api, page, awaitCacheKey, fillValidForm }) => {
+		await api.mockUtils.authPage();
+		await page.navigate({ to: "/users/add" });
 		await awaitCacheKey("account.get");
 		await fillValidForm();
 	});
@@ -46,7 +46,6 @@ test("'users.add' mutation", async ({
 	addButton,
 	nameInput,
 	emailInput,
-	mockBase,
 	snapshotQueries,
 	withLoader,
 	verifyToastTexts,
@@ -54,7 +53,7 @@ test("'users.add' mutation", async ({
 	fillValidForm,
 	faker,
 }) => {
-	await mockBase();
+	await api.mockUtils.authPage();
 	const userId = faker.string.uuid();
 	const userName = "Test user";
 
@@ -65,7 +64,7 @@ test("'users.add' mutation", async ({
 		});
 	});
 
-	await page.goto("/users/add");
+	await page.navigate({ to: "/users/add" });
 	await awaitCacheKey("account.get");
 	await fillValidForm(userName);
 
@@ -77,7 +76,7 @@ test("'users.add' mutation", async ({
 		},
 		{ name: "error" },
 	);
-	await expect(page).toHaveURL("/users/add");
+	await page.expectUrl({ to: "/users/add" });
 
 	const createPause = api.createPause();
 	api.mockFirst("users.add", async () => {
@@ -120,5 +119,5 @@ test("'users.add' mutation", async ({
 		},
 		{ name: "success", blacklistKeys: "users.get", skipQueries: true },
 	);
-	await expect(page).toHaveURL(`/users/${userId}`);
+	await page.expectUrl({ to: "/users/$id", params: { id: userId } });
 });

@@ -14,8 +14,9 @@ test("On load with token", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
+	const token = faker.string.uuid();
 	await snapshotQueries(() =>
-		page.goto(`/void-account?token=${faker.string.uuid()}`),
+		page.navigate({ to: "/void-account", search: { token } }),
 	);
 	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 		"Are you sure you want to void your account?",
@@ -33,9 +34,10 @@ test("Navigating back to the home page", async ({
 	faker,
 }) => {
 	api.mockUtils.noAuthPage();
-	await page.goto(`/void-account?token=${faker.string.uuid()}`);
+	const token = faker.string.uuid();
+	await page.navigate({ to: "/void-account", search: { token } });
 	await cancelButton.click();
-	await expect(page).toHaveURL("/login");
+	await page.expectUrl({ to: "/login" });
 });
 
 test("'auth.voidAccount' mutation", async ({
@@ -58,7 +60,7 @@ test("'auth.voidAccount' mutation", async ({
 	});
 
 	const token = faker.string.uuid();
-	await page.goto(`/void-account?token=${token}`);
+	await page.navigate({ to: "/void-account", search: { token } });
 
 	await snapshotQueries(async () => {
 		await voidButton.click();
@@ -67,7 +69,7 @@ test("'auth.voidAccount' mutation", async ({
 		);
 		await awaitCacheKey("auth.voidAccount", { error: 1 });
 	});
-	await expect(page).toHaveURL(`/void-account?token=${token}`);
+	await page.expectUrl({ to: "/void-account", search: { token } });
 
 	const voidAccountPause = api.createPause();
 	api.mockFirst("auth.voidAccount", async () => {
@@ -86,7 +88,7 @@ test("'auth.voidAccount' mutation", async ({
 		},
 		{ name: "loading" },
 	);
-	await expect(page).toHaveURL(`/void-account?token=${token}`);
+	await page.expectUrl({ to: "/void-account", search: { token } });
 
 	await snapshotQueries(
 		async () => {
@@ -102,7 +104,7 @@ test("'auth.voidAccount' mutation", async ({
 	await expect(page.getByRole("heading", { level: 4 })).toHaveText(
 		"Account removed succesfully",
 	);
-	await expect(page).toHaveURL(`/void-account?token=${token}`);
+	await page.expectUrl({ to: "/void-account", search: { token } });
 	await page.getByText("To login page").click();
-	await expect(page).toHaveURL("/login");
+	await page.expectUrl({ to: "/login" });
 });

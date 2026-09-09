@@ -4,15 +4,15 @@ import { test } from "./utils";
 
 test("Form", async ({
 	page,
-	mockBase,
+	api,
 	addButton,
 	fillValidForm,
 	awaitCacheKey,
 	expectScreenshotWithSchemes,
 }) => {
-	await mockBase();
+	await api.mockUtils.authPage();
 
-	await page.goto("/users/add");
+	await page.navigate({ to: "/users/add" });
 	await awaitCacheKey("account.get");
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Add user");
 	await expectScreenshotWithSchemes("empty.png");
@@ -25,7 +25,7 @@ test("Form", async ({
 test.describe("Errors in form", () => {
 	test("on field errors", async ({
 		page,
-		mockBase,
+		api,
 		nameInput,
 		emailInput,
 		awaitCacheKey,
@@ -33,9 +33,9 @@ test.describe("Errors in form", () => {
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-biggest");
-		await mockBase();
+		await api.mockUtils.authPage();
 
-		await page.goto("/users/add");
+		await page.navigate({ to: "/users/add" });
 		await awaitCacheKey("account.get");
 
 		// fill then clear: isDirty stays true so the error renders
@@ -58,7 +58,6 @@ test.describe("'users.add' mutation", () => {
 	test("loading", async ({
 		page,
 		api,
-		mockBase,
 		addButton,
 		fillValidForm,
 		awaitCacheKey,
@@ -66,7 +65,7 @@ test.describe("'users.add' mutation", () => {
 		faker,
 		expectScreenshotWithSchemes,
 	}) => {
-		await mockBase();
+		await api.mockUtils.authPage();
 
 		const createPause = api.createPause();
 		api.mockFirst("users.add", async () => {
@@ -74,7 +73,7 @@ test.describe("'users.add' mutation", () => {
 			return { id: faker.string.uuid(), connection: undefined };
 		});
 
-		await page.goto("/users/add");
+		await page.navigate({ to: "/users/add" });
 		await awaitCacheKey("account.get");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 			"Add user",

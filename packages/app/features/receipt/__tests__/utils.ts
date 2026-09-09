@@ -48,9 +48,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ page, api }, use) =>
+	mockBase: ({ api }, use) =>
 		use(async () => {
-			const { user } = await api.mockUtils.authPage({ page });
+			const { user } = await api.mockUtils.authPage();
 			api.mockFirst("currency.top", { items: [] });
 			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
 			api.mockFirst("users.suggestTop", { items: [] });
@@ -128,7 +128,7 @@ export const test = originalTest.extend<Fixtures>({
 
 	openReceipt: ({ page, awaitCacheKey }, use) =>
 		use(async (receipt, { awaitCache = true } = {}) => {
-			await page.goto(`/receipts/${receipt.id}`);
+			await page.navigate({ to: "/receipts/$id", params: { id: receipt.id } });
 			if (awaitCache) {
 				await awaitCacheKey("users.get", {
 					input: { id: receipt.ownerUserId },

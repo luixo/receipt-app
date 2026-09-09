@@ -9,7 +9,7 @@ test("Card on account page", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	await mockBase();
-	await page.goto("/account");
+	await page.navigate({ to: "/account" });
 	await expect(emailVerificationCard).toBeVisible();
 	await expectScreenshotWithSchemes("account-page.png", {
 		locator: emailVerificationCard,
@@ -42,7 +42,7 @@ test("Loading", async ({
 		await resendPause.promise;
 		return { email: faker.internet.email() };
 	});
-	await page.goto("/account");
+	await page.navigate({ to: "/account" });
 	await resendButton.click();
 	await awaitCacheKey("account.resendEmail", { pending: 1 });
 	await expectScreenshotWithSchemes("loading.png", {
@@ -72,7 +72,7 @@ test("Success", async ({
 	skip(testInfo, "only-biggest");
 	await mockBase();
 	api.mockFirst("account.resendEmail", { email: "verification@example.com" });
-	await page.goto("/account");
+	await page.navigate({ to: "/account" });
 	await resendButton.click();
 	await awaitCacheKey("account.resendEmail");
 	await expectScreenshotWithSchemes("success.png", {

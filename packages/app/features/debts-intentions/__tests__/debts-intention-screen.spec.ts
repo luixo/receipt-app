@@ -8,32 +8,35 @@ import { test } from "./utils";
 
 test.describe("Accept all intentions button", () => {
 	test("Button is invisible when there is no intentions", async ({
+		page,
 		mockDebts,
-		openDebtIntentions,
 		acceptAllIntentionButton,
+		awaitCacheKey,
 	}) => {
 		await mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
 		});
-		await openDebtIntentions();
+		await page.navigate({ to: "/debts/intentions" });
+		await awaitCacheKey("debtIntentions.getAll");
 		await expect(acceptAllIntentionButton).not.toBeAttached();
 	});
 
 	test("Button is invisible when there is just 1 intention", async ({
+		page,
 		mockDebts,
-		openDebtIntentions,
 		acceptAllIntentionButton,
+		awaitCacheKey,
 	}) => {
 		await mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 		});
-		await openDebtIntentions();
+		await page.navigate({ to: "/debts/intentions" });
+		await awaitCacheKey("debtIntentions.getAll");
 		await expect(acceptAllIntentionButton).not.toBeAttached();
 	});
 
 	test("'debtIntentions.accept' pending / error", async ({
 		mockDebts,
-		openDebtIntentions,
 		acceptAllIntentionButton,
 		awaitCacheKey,
 		api,
@@ -47,7 +50,7 @@ test.describe("Accept all intentions button", () => {
 			generateDebts: (opts) =>
 				defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 		});
-		await openDebtIntentions();
+		await page.navigate({ to: "/debts/intentions" });
 		const acceptIntentionLaterPause = api.createPause();
 		const rejectedDebtsIds = new Set(
 			debts
@@ -89,7 +92,7 @@ test.describe("Accept all intentions button", () => {
 				await verifyToastTexts(
 					'Error accepting 2 debts: Mock "debtIntentions.accept" error',
 				);
-				await expect(page).toHaveURL("/debts/intentions");
+				await page.expectUrl({ to: "/debts/intentions" });
 			},
 			{ name: "error" },
 		);
@@ -110,7 +113,7 @@ test.describe("Accept all intentions button", () => {
 				await verifyToastTexts(
 					`${rejectedDebtsAmount} debts accepted successfully`,
 				);
-				await expect(page).toHaveURL("/debts");
+				await page.expectUrl({ to: "/debts" });
 				await awaitCacheKey("debtIntentions.accept", { success: debtsAmount });
 			},
 			{
