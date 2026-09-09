@@ -1,20 +1,20 @@
 import * as React from "react";
 
-import type { LinkOptions } from "@tanstack/router-core";
+import type { NavigateOptions } from "@tanstack/router-core";
 import { doNothing } from "remeda";
 
 import type {
 	OutputRouteSearchParams,
 	PathParams,
 	RouteId,
-	RoutePath,
+	RouteTo,
 	SearchParamStateByRoute,
 } from "~app/utils/navigation";
 import type { TreeRouter } from "~web/entry/router";
 
 export type NavigationContext = {
-	useNavigate: () => <K extends RoutePath>(
-		options: Omit<LinkOptions<TreeRouter, "/", K>, "from" | "href">,
+	useNavigate: () => <K extends RouteTo>(
+		options: Omit<NavigateOptions<TreeRouter, "/", K>, "from" | "href">,
 	) => void;
 	useParams: <K extends RouteId>(routeKey: K) => PathParams<K>;
 	usePush: () => (url: string) => void;

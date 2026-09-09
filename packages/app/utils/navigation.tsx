@@ -2,7 +2,8 @@ import React from "react";
 
 import type { RegisteredRouter, RouteById } from "@tanstack/react-router";
 import type {
-	NavigateOptions,
+	LinkOptions as RawLinkOptions,
+	NavigateOptions as RawNavigationOptions,
 	ValidateNavigateOptions,
 } from "@tanstack/router-core";
 import { z } from "zod";
@@ -20,10 +21,7 @@ import {
 	voidAccountTokenSchema,
 } from "~app/utils/validation";
 import type { TreeRouter } from "~web/entry/router";
-import type {
-	FileRoutesByFullPath,
-	FileRoutesById,
-} from "~web/entry/routeTree.gen";
+import type { FileRoutesById, FileRoutesByTo } from "~web/entry/routeTree.gen";
 
 declare module "@react-types/shared" {
 	// oxlint-disable-next-line typescript/consistent-type-definitions
@@ -33,7 +31,7 @@ declare module "@react-types/shared" {
 }
 
 export type RouteId = keyof FileRoutesById;
-export type RoutePath = keyof FileRoutesByFullPath;
+export type RouteTo = keyof FileRoutesByTo;
 export type PathParams<K extends RouteId> = RouteById<
 	RegisteredRouter["routeTree"],
 	K
@@ -54,7 +52,7 @@ export type SearchParamStateByRoute<
 			| ((
 					prevState: OutputRouteSearchParams<K>[P],
 			  ) => InputRouteSearchParams<K>[P]),
-		options?: NavigateOptions<TreeRouter, "/">,
+		options?: RawNavigationOptions<TreeRouter, "/">,
 	) => void,
 ];
 export type SearchParamState<
@@ -66,6 +64,16 @@ export type SearchParamStateDefaulted<
 	K extends RouteId,
 	P extends keyof OutputRouteSearchParams<K>,
 > = [NonNullable<SearchParamState<K, P>[0]>, SearchParamState<K, P>[1]];
+
+export type NavigationOptions<K extends RouteTo> = Omit<
+	RawNavigationOptions<TreeRouter, "/", K>,
+	"from" | "href"
+>;
+
+export type LinkOptions<K extends RouteTo> = Omit<
+	RawLinkOptions<TreeRouter, "/", K>,
+	"from" | "href"
+>;
 
 export const getPathHooks = <K extends RouteId>(key: K) => {
 	const useQueryState = <P extends keyof OutputRouteSearchParams<K>>(

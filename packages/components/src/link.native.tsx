@@ -5,6 +5,7 @@ import type { RightJoinProps } from "@heroui/react";
 import { keys, omit, pick } from "remeda";
 
 import { NavigationContext } from "~app/contexts/navigation-context";
+import type { LinkOptions, RouteTo } from "~app/utils/navigation";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
 import { Text } from "~components/text";
@@ -12,7 +13,7 @@ import { cn } from "~components/utils";
 
 import type { Props } from "./link";
 
-type LinkProps = Parameters<ReturnType<NavigationContext["useNavigate"]>>[0];
+type LinkProps = LinkOptions<RouteTo>;
 const allLinkProps: Record<keyof LinkProps, true> = {
 	search: true,
 	params: true,
