@@ -1,0 +1,46 @@
+{
+	"queries": {
+		"account.get:[[]]": {
+			"state": {
+				"data": {
+					"account": {
+						"id": "test-account-id",
+						"verified": true,
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>",
+						"email": "Damaris.Kris@yahoo.com"
+					},
+					"user": {
+						"name": "Test user"
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"auth.login": {
+			"1": {
+				"state": {
+					"data": {
+						"account": {
+							"id": "test-account-id",
+							"verified": true,
+							"avatarUrl": "<undefined>",
+							"role": "<undefined>"
+						},
+						"user": {
+							"name": "Test user"
+						}
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
