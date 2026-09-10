@@ -1,0 +1,8 @@
+{
+	"currency.rates": {
+		"serverCalls": 1
+	},
+	"debts.getAllUser": {
+		"serverCalls": 1
+	}
+}

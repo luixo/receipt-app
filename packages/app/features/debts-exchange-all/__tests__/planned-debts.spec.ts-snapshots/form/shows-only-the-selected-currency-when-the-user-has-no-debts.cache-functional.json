@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"currency.rates:[{\"from\":\"SZL\",\"to\":[]}]": {
+			"state": {
+				"data": {},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"60966907-ce75-414b-b1f5-486121112cbe\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

@@ -11,6 +11,7 @@ export const Button: React.FC<ButtonProps> = ({ testID, ...props }) => (
 	<ButtonRaw {...props} data-testid={testID} />
 );
 
-export const ButtonGroup: React.FC<ButtonGroupProps> = (props) => (
-	<ButtonGroupRaw {...props} />
-);
+export const ButtonGroup: React.FC<ButtonGroupProps> = ({
+	testID,
+	...props
+}) => <ButtonGroupRaw {...props} data-testid={testID} />;
