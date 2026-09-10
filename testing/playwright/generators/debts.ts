@@ -40,6 +40,29 @@ export const defaultGenerateDebts = ({
 		userId,
 	}));
 
+export type GenerateDebtIntentions = GeneratorFnWithAmount<
+	TRPCQueryOutput<"debtIntentions.getAll">["items"][number],
+	{ userId: UserId }
+>;
+
+export const defaultGenerateDebtIntentions = ({
+	faker,
+	amount = { min: 3, max: 6 },
+	userId,
+}: Parameters<GenerateDebtIntentions>[0]): ReturnType<GenerateDebtIntentions> =>
+	generateAmount(faker, amount, () => ({
+		id: faker.string.uuid(),
+		userId,
+		amount: faker.number.float({ min: -10_000, max: 10_000, multipleOf: 0.01 }),
+		currencyCode: generateCurrencyCode(faker),
+		timestamp: faker.temporal.recent.plainDate({
+			days: 30,
+			refDate: getNow.plainDate(),
+		}),
+		updatedAt: getNow.zonedDateTime(),
+		note: faker.lorem.words(4),
+	}));
+
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"debts.get">[],
 	{

@@ -1,5 +1,6 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { test as debtsTest } from "~app/features/debts/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
@@ -15,13 +16,16 @@ test("Shows a skeleton while the user is loading", async ({
 	user,
 	userSkeleton,
 }) => {
-	const { debtUser } = await mockDebts();
+	const {
+		users: [firstUser],
+	} = await mockDebts();
+	assert.ok(firstUser);
 	const usersGetPause = api.createPause();
 	api.mockFirst("users.get", async ({ next }) => {
 		await usersGetPause.promise;
 		return next();
 	});
-	await openUserDebtsScreen(debtUser.id, { awaitCache: false });
+	await openUserDebtsScreen(firstUser.id, { awaitCache: false });
 	await expect(userSkeleton).toBeVisible();
 	usersGetPause.resolve();
 	await expect(user).toBeVisible();
@@ -35,16 +39,20 @@ test("Shows an error when the user fails to load", async ({
 	errorMessage,
 	consoleManager,
 }) => {
-	const { debtUser } = await mockDebts();
+	const {
+		users: [firstUser],
+	} = await mockDebts();
+	assert.ok(firstUser);
+	const mockErrorMessage = `Mock "users.get" error`;
 	api.mockFirst("users.get", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Mock "users.get" error`,
+			message: mockErrorMessage,
 		});
 	});
-	consoleManager.ignore(/Mock "users.get" error/);
-	await openUserDebtsScreen(debtUser.id, { awaitCache: false });
-	await expect(errorMessage(`Mock "users.get" error`).first()).toBeVisible();
+	consoleManager.ignore(mockErrorMessage);
+	await openUserDebtsScreen(firstUser.id, { awaitCache: false });
+	await expect(errorMessage(mockErrorMessage).first()).toBeVisible();
 });
 
 test("Renders the loaded user", async ({
@@ -52,7 +60,10 @@ test("Renders the loaded user", async ({
 	openUserDebtsScreen,
 	user,
 }) => {
-	const { debtUser } = await mockDebts();
-	await openUserDebtsScreen(debtUser.id);
-	await expect(user.filter({ hasText: debtUser.name })).toBeVisible();
+	const {
+		users: [firstUser],
+	} = await mockDebts();
+	assert.ok(firstUser);
+	await openUserDebtsScreen(firstUser.id);
+	await expect(user.filter({ hasText: firstUser.name })).toBeVisible();
 });

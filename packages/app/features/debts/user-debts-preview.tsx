@@ -51,6 +51,7 @@ export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 						? "opacity-50"
 						: undefined,
 				)}
+				testID="user-debts-preview"
 			>
 				<LoadableUser id={userId} />
 				<View className="flex flex-row items-center justify-center gap-2">

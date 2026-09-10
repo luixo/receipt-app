@@ -1,0 +1,23 @@
+{
+	"queries": {
+		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":true},\"limit\":10}]": {
+			"state": {
+				"data": {
+					"count": 3,
+					"cursor": 0,
+					"items": [
+						"ac393110-0284-4a1b-8041-9411949e9b78",
+						"fd17b4aa-dd9c-4fa7-bb86-976b2df4dc19",
+						"46036963-c3d4-4221-8a97-668e3019eaf4"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

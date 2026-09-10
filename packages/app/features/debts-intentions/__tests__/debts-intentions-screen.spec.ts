@@ -14,7 +14,8 @@ test.describe("Accept all intentions button", () => {
 		awaitCacheKey,
 	}) => {
 		await mockDebts({
-			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
+			generateDebtIntentions: (opts) =>
+				defaultGenerateDebts({ ...opts, amount: 0 }),
 		});
 		await page.navigate({ to: "/debts/intentions" });
 		await awaitCacheKey("debtIntentions.getAll");
@@ -28,7 +29,8 @@ test.describe("Accept all intentions button", () => {
 		awaitCacheKey,
 	}) => {
 		await mockDebts({
-			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+			generateDebtIntentions: (opts) =>
+				defaultGenerateDebts({ ...opts, amount: 1 }),
 		});
 		await page.navigate({ to: "/debts/intentions" });
 		await awaitCacheKey("debtIntentions.getAll");
@@ -46,14 +48,14 @@ test.describe("Accept all intentions button", () => {
 	}) => {
 		const debtsAmount = 6;
 		const rejectedDebtsAmount = 2;
-		const { debts, debtUser } = await mockDebts({
-			generateDebts: (opts) =>
+		const { debtIntenions, debtUser } = await mockDebts({
+			generateDebtIntentions: (opts) =>
 				defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 		});
 		await page.navigate({ to: "/debts/intentions" });
 		const acceptIntentionLaterPause = api.createPause();
 		const rejectedDebtsIds = new Set(
-			debts
+			debtIntenions
 				.filter((_, index) => index < rejectedDebtsAmount)
 				.map((debt) => debt.id),
 		);

@@ -1,0 +1,8 @@
+{
+	"debts.getAllUser": {
+		"clientCalls": 10
+	},
+	"debts.getUsersPaged": {
+		"clientCalls": 1
+	}
+}
