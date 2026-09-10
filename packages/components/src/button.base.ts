@@ -40,4 +40,6 @@ export type ButtonGroupProps = Pick<
 	| "radius"
 	| "isDisabled"
 	| "isIconOnly"
->;
+> & {
+	testID?: string;
+};

@@ -1,0 +1,96 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Converted to ARS 2.14",
+						"currencyCode": "PKR",
+						"userId": "42ea2c11-669e-4c79-8956-150606be3d02",
+						"amount": 1871.33,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Converted to -ARS 4.60",
+						"currencyCode": "INR",
+						"userId": "42ea2c11-669e-4c79-8956-150606be3d02",
+						"amount": -982.57,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Converted to -ARS 2.22",
+						"currencyCode": "UZS",
+						"userId": "42ea2c11-669e-4c79-8956-150606be3d02",
+						"amount": -1702.59,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Converted to -ARS 14.43",
+						"currencyCode": "LYD",
+						"userId": "42ea2c11-669e-4c79-8956-150606be3d02",
+						"amount": -9983.87,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"note": "Converted from -PKR 1,871, ₹982.57, UZS 1,702.59, LYD 9,983.870",
+						"currencyCode": "ARS",
+						"userId": "42ea2c11-669e-4c79-8956-150606be3d02",
+						"amount": 19.11,
+						"timestamp": "2019-12-31"
+					}
+				}
+			}
+		]
+	}
+}

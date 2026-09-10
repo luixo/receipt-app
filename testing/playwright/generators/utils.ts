@@ -1,11 +1,11 @@
+import type { NumberOrRange } from "@faker-js/faker";
+
 import type { ExtendedFaker } from "~tests/utils/faker";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
-export type GeneratedAmount = number | { min: number; max: number };
-
 export const generateAmount = <T>(
 	faker: ExtendedFaker,
-	generatedAmount: GeneratedAmount,
+	generatedAmount: NumberOrRange,
 	generatorFn: () => T,
 ): T[] => {
 	const amount =
@@ -22,8 +22,13 @@ export type GeneratorFnWithFaker<O, I = object> = (
 
 export type GeneratorFnWithAmount<O, I = object> = GeneratorFnWithFaker<
 	O[],
-	{ amount?: GeneratedAmount } & I
+	{ amount?: NumberOrRange } & I
 >;
 
 export const generateCurrencyCode = (faker: ExtendedFaker) =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
+
+export const generateCurrencyCodes = (
+	faker: ExtendedFaker,
+	amount?: NumberOrRange,
+) => faker.helpers.arrayElements(CURRENCY_CODES, amount);

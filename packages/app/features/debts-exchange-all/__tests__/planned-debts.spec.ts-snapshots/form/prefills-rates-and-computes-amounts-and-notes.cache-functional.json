@@ -1,0 +1,44 @@
+{
+	"queries": {
+		"currency.rates:[{\"from\":\"NAD\",\"to\":[\"BOB\",\"BGN\"]}]": {
+			"state": {
+				"data": {
+					"BOB": 72.74,
+					"BGN": 272.44
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"1ba4759b-640b-4bc9-abdd-d08e540770c2\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "NAD",
+							"sum": -7901.26
+						},
+						{
+							"currencyCode": "BOB",
+							"sum": -3897.26
+						},
+						{
+							"currencyCode": "BGN",
+							"sum": -4511.27
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
