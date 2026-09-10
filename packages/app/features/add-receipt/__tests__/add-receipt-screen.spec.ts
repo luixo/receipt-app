@@ -132,7 +132,6 @@ test("'receipts.add' mutation", async ({
 	await expect(buttonWithLoader).toBeVisible();
 	const inputs = await page.locator("input").all();
 	for (const input of inputs) {
-		// oxlint-disable-next-line no-await-in-loop
 		await expect(input).toBeDisabled();
 	}
 

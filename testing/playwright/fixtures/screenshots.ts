@@ -149,7 +149,6 @@ const stableScreenshot = async (
 		}),
 		timestamp: performance.now(),
 	});
-	/* oxlint-disable no-await-in-loop */
 	while (checks.length !== 0) {
 		const clipBoundingBox = locator
 			? await mergeClip(Array.isArray(locator) ? locator : [locator])
@@ -207,7 +206,6 @@ const stableScreenshot = async (
 	// We definitely went through screenshotting this time
 	// oxlint-disable-next-line typescript/no-non-null-assertion
 	return (screenshot || prevScreenshot)!.buffer;
-	/* oxlint-enable no-await-in-loop */
 };
 
 type MapExpectedPixels = (options: {
