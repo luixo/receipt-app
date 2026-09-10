@@ -36,6 +36,7 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 			<DebtsGroup
 				className="self-center"
 				debts={showResolvedDebts ? debts.items : nonResolvedDebts}
+				hasResolvedDebts={!showResolvedDebts && debts.items.length !== 0}
 			/>
 		);
 	},

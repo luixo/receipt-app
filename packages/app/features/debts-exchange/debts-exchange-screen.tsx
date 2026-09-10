@@ -29,6 +29,7 @@ const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
 						? debts.items
 						: debts.items.filter((element) => element.sum !== 0)
 				}
+				hasResolvedDebts={!showResolvedDebts && debts.items.length !== 0}
 			/>
 		);
 	},

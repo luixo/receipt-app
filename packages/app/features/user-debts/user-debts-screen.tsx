@@ -107,6 +107,7 @@ const UserDebtsGroup = suspendedFallback<{
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					debts={showResolvedDebts ? debts.items : nonResolvedDebts}
+					hasResolvedDebts={!showResolvedDebts && debts.items.length !== 0}
 				/>
 				{nonResolvedDebts.length > 1 ? (
 					<ButtonLink

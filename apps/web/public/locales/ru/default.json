@@ -100,7 +100,8 @@
 			"pickButton": "Выбрать валюту"
 		},
 		"debtsGroup": {
-			"noDebtsYet": "Долгов пока нет"
+			"noDebtsYet": "Долгов пока нет",
+			"allResolved": "Все долги погашены"
 		},
 		"emailVerification": {
 			"header": "Почта не подтверждена!",

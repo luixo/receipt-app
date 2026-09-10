@@ -55,7 +55,13 @@ export const UserDebtsPreview = suspendedFallback<{ userId: UserId }>(
 			>
 				<LoadableUser id={userId} />
 				<View className="flex flex-row items-center justify-center gap-2">
-					<DebtsGroup className="shrink-0" debts={debts} />
+					<DebtsGroup
+						className="shrink-0"
+						debts={debts}
+						hasResolvedDebts={
+							!showResolvedDebts && userDebts.items.length !== 0
+						}
+					/>
 				</View>
 			</CardLink>
 		);

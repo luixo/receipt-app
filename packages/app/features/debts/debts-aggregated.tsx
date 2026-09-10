@@ -22,7 +22,13 @@ const DebtsAggregatedInner = suspendedFallback(
 		const debts = showResolvedDebts
 			? allDebts.items
 			: allDebts.items.filter((debt) => debt.sum !== 0);
-		return <DebtsGroup debts={debts} className="px-12" />;
+		return (
+			<DebtsGroup
+				debts={debts}
+				hasResolvedDebts={!showResolvedDebts && allDebts.items.length !== 0}
+				className="px-12"
+			/>
+		);
 	},
 	<DebtsGroupSkeleton amount={3} />,
 );

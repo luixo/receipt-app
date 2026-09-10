@@ -73,9 +73,15 @@ export const DebtsGroupSkeleton: React.FC<{
 
 type Props = {
 	debts: DebtElement[];
+	hasResolvedDebts?: boolean;
 } & React.ComponentProps<typeof View>;
 
-export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
+export const DebtsGroup: React.FC<Props> = ({
+	debts,
+	hasResolvedDebts = false,
+	className,
+	...props
+}) => {
 	const { t } = useTranslation("default");
 	return (
 		<View
@@ -96,7 +102,11 @@ export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
 				))}
 			</SeparatedDebts>
 			{debts.length === 0 ? (
-				<Text>{t("components.debtsGroup.noDebtsYet")}</Text>
+				<Text>
+					{hasResolvedDebts
+						? t("components.debtsGroup.allResolved")
+						: t("components.debtsGroup.noDebtsYet")}
+				</Text>
 			) : null}
 		</View>
 	);

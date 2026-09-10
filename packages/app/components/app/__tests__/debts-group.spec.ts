@@ -92,6 +92,27 @@ test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
 	await expect(debtsGroup).toHaveText("No debts yet");
 });
 
+test("All resolved debts shows the resolved message", async ({
+	mockDebts,
+	openUserDebtsScreen,
+	debtsGroup,
+}) => {
+	const {
+		users: [firstUser],
+	} = await mockDebts({
+		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+		generateDebts: ({ faker, userId }) =>
+			defaultGenerateDebts({ faker, amount: 2, userId }).map((debt, index) => ({
+				...debt,
+				currencyCode: "USD",
+				amount: index === 0 ? 100 : -100,
+			})),
+	});
+	assert.ok(firstUser);
+	await openUserDebtsScreen(firstUser.id);
+	await expect(debtsGroup).toHaveText("All debts are resolved!");
+});
+
 test("Rounding", async ({
 	mockDebts,
 	openUserDebtsScreen,
