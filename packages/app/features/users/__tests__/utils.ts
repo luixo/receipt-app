@@ -1,11 +1,20 @@
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { ExtractFixture } from "~tests/frontend/types";
+
+type AuthPageResult = Awaited<
+	ReturnType<
+		ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
+	>
+>;
 
 type Fixtures = {
-	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<{
-		users: ReturnType<GenerateUsers>;
-	}>;
+	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<
+		{
+			users: ReturnType<GenerateUsers>;
+		} & AuthPageResult
+	>;
 };
 
 export const test = originalTest.extend<Fixtures>({
