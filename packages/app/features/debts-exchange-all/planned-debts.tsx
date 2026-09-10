@@ -214,7 +214,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 
 		return (
 			<form.AppForm>
-				<form.Form className="flex flex-col gap-4">
+				<form.Form className="flex flex-col gap-4" testID="planned-debts-form">
 					{allCurrencyCodes.map((currencyCode) => {
 						const selected = selectedCurrencyCode === currencyCode;
 						const debt = getDebt(
@@ -235,7 +235,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 									>
 										{formatCurrency(locale, currencyCode, round(debt.amount))}
 									</Text>
-									<View className="flex-1">
+									<View className="flex-1" testID="planned-debt-row">
 										{selected ? null : (
 											<form.AppField
 												// Reload input on selected currency code change, otherwise
@@ -294,7 +294,10 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 	() => {
 		const { t } = useTranslation("debts");
 		return (
-			<View className="flex flex-col gap-4">
+			<View
+				className="flex flex-col gap-4"
+				testID="planned-debts-form-skeleton"
+			>
 				{Array.from({ length: 3 }).map((_, index) => (
 					// oxlint-disable-next-line react/no-array-index-key
 					<View className="gap-1" key={index}>

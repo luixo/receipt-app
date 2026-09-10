@@ -1,0 +1,143 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"test-debt-id\"}]": {
+			"state": {
+				"data": {
+					"id": "test-debt-id",
+					"amount": -63.03,
+					"currencyCode": "IRR",
+					"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+					"timestamp": "2019-12-31",
+					"note": "Converted from MRU 4,104.41, -MZN 7,639.62, -PGK 8,519.20, -KWD 7,191.220, -£30.36",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 6,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to -IRR 6",
+						"currencyCode": "MRU",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": -4104.41,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to IRR 41",
+						"currencyCode": "MZN",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": 7639.62,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to IRR 19",
+						"currencyCode": "PGK",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": 8519.2,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to IRR 8",
+						"currencyCode": "KWD",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": 7191.22,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to IRR 0",
+						"currencyCode": "GBP",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": 30.36,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted from MRU 4,104.41, -MZN 7,639.62, -PGK 8,519.20, -KWD 7,191.220, -£30.36",
+						"currencyCode": "IRR",
+						"userId": "6f7cced6-9154-4875-b8ab-8851845da148",
+						"amount": -63.03,
+						"timestamp": "2019-12-31"
+					}
+				}
+			}
+		]
+	}
+}
