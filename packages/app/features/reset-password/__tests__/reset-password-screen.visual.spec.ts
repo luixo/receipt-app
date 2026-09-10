@@ -104,7 +104,7 @@ test.describe("'auth.resetPassword' mutation", () => {
 		await page.navigate({ to: "/reset-password", search: { token } });
 		await fillValidFields();
 		await resetPasswordButton.click();
-		await clearToasts();
+		await clearToasts(1, { filter: "Error" });
 		await expectScreenshotWithSchemes("mutation/error.png", {
 			mask: [page.getByRole("heading", { level: 3 })],
 		});

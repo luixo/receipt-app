@@ -29,7 +29,7 @@ test.describe("States", () => {
 		});
 		const token = faker.string.uuid();
 		await page.navigate({ to: "/confirm-email", search: { token } });
-		await clearToasts(1);
+		await clearToasts(1, { filter: "Error" });
 		await expectScreenshotWithSchemes("error.png");
 	});
 

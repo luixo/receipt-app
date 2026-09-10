@@ -250,10 +250,10 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 				} = {},
 			) => {
 				await page.evaluate(() => document.fonts.ready);
-				const visibleToasts = await toast.count();
-				if (visibleToasts !== 0) {
+				const toastTextContents = await toast.allTextContents();
+				if (toastTextContents.length !== 0) {
 					throw new Error(
-						"There are visible toasts, please clear toasts before making a screenshot!",
+						`There are visible toasts, please clear toasts before making a screenshot!\n${toastTextContents.map((text) => `Toast "${text}"`).join("\n")}`,
 					);
 				}
 				const stickyMenu = page.getByTestId("sticky-menu");

@@ -62,7 +62,7 @@
 	"packageManager": "bun@1.4.0",
 	"catalog": {
 		"@heroui/react": "2.8.4",
-		"@playwright/test": "1.62.1",
+		"@playwright/test": "1.63.0",
 		"@tanstack/react-query": "5.80.6",
 		"@tanstack/react-router": "1.170.16",
 		"@tanstack/router-core": "1.171.13",
@@ -79,7 +79,7 @@
 		"i18next": "25.8.0",
 		"image-size": "2.0.2",
 		"jimp": "1.6.1",
-		"playwright": "1.62.1",
+		"playwright": "1.63.0",
 		"kysely": "^0.29.5",
 		"react": "19.2.0",
 		"react-dom": "19.2.0",
