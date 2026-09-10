@@ -32,6 +32,9 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
 - `api.mockFirst(key, handler)` — pushes a handler to the top of the stack (highest priority). Handlers can be a plain value, an async function, or throw `TRPCError` to simulate errors.
 - `api.mockLast(key, handler)` — pushes a handler to the bottom (baseline/default).
 - `api.createPause()` — returns `PromiseWithResolvers<void>`; `await pause.promise` inside a handler suspends the call; `pause.resolve()` / `pause.reject()` resumes it. Use to test loading states.
+- Always throw `TRPCError` in mock handlers, never plain `Error`.
+- Mock handler calls the destination page (if navigation is going on), not just the current one.
+- Intentional errors (e.g., testing mutation failure UI) might trip `autoVerifyNoConsoleMessages`. Use `consoleManager.ignore(message)` to suppress expected errors.
 
 ## Auth helpers
 
@@ -51,6 +54,10 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
   - `{ success: M, error: N, loading: O, idle: P }` → a given amount of queries in given statuses.
   - `{ input: {...} }` → specify given input for this query to narrow it down.
   - `{ total: true }` → count success and error from the start of the test, not since the last call.
+
+## SSR and loading states
+
+Don't pause an SSR-prefetched query — the SSR stream hangs until server kills it (`ERR_EMPTY_RESPONSE`).
 
 ## Shared locators
 
@@ -75,6 +82,19 @@ Fixture-provided locators available in every spec:
 - `expectScreenshotWithSchemes(name, opts)` — takes a screenshot in both light and dark mode, joins them side-by-side, and compares to a named snapshot. No visible toasts are allowed before calling. Masks the sticky menu by default. Pass `locator` to clip to a specific element.
 - When using a locator, always use a named locator fixture defined in `utils.ts` (e.g. `avatarForm`) rather than inline expressions like `page.locator("form").first()`. This keeps visual tests readable and lets fixture names serve as stable contracts.
 - Visual snapshots live in `*-snapshots/` directories next to the spec.
+- When clipping to an element with rounded corners or shadows (e.g., a `Card`), the (0,0) pixel hits an antialiased blend that varies by renderer and never matches exactly. Use `mapExpectedPixels` to probe a solid interior pixel instead:
+  ```ts
+  expectScreenshotWithSchemes("card", {
+  	locator: cardLocator,
+  	mapExpectedPixels: ({ expectedPixels, colorMode }) => [
+  		{
+  			...expectedPixels[0],
+  			rgb: colorMode === "light" ? "#d8e9fd" : "#001125",
+  		},
+  		...expectedPixels.slice(1),
+  	],
+  });
+  ```
 
 ## Faker and time
 
