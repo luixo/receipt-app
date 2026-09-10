@@ -32,7 +32,6 @@ export const getExchangeRateOptions = (): ExchangeRateOptionsMock => {
 				};
 				let lastResult: ExchangeRateResult = -1;
 				for (const interceptor of interceptors) {
-					// oxlint-disable-next-line no-await-in-loop
 					lastResult = await interceptor(from, to, next);
 					// see https://github.com/microsoft/TypeScript/issues/9998
 					// "bad behavior on locals" section

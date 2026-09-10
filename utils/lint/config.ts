@@ -547,6 +547,8 @@ const disabledRules = {
 	"eslint/require-unicode-regexp": "off",
 	// TODO: fix this one
 	"eslint/no-warning-comments": "off",
+	// I didn't find the case when it helped
+	"eslint/no-await-in-loop": "off",
 } satisfies DummyRuleMap;
 
 export default defineConfig({
