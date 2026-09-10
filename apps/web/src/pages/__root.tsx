@@ -27,6 +27,7 @@ import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useI18nHelper } from "~web/hooks/use-i18-helper";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
+import { useRouterQueryBridge } from "~web/hooks/use-router-query-bridge";
 import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
@@ -43,6 +44,7 @@ const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
 	useToastHelper();
 	useQueryClientHelper();
+	useRouterQueryBridge();
 	useI18nHelper();
 	useHydratedMark();
 	return null;

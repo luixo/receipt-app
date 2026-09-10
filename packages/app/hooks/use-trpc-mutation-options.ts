@@ -153,13 +153,14 @@ export const useTrpcMutationOptions = <
 					successArgs: [result, vars, sureLifecycleContext],
 					toastObject,
 				});
-				onSuccess?.(result, vars, sureLifecycleContext);
 				finalizeFn?.();
-				return onSuccessTrpc?.(...getTrpcArgs(internalContext))(
+				const trpcResult = onSuccessTrpc?.(...getTrpcArgs(internalContext))(
 					result,
 					vars,
 					sureLifecycleContext,
 				);
+				onSuccess?.(result, vars, sureLifecycleContext);
+				return trpcResult;
 			},
 			onSettled: (result, error, vars, internalContext) => {
 				// We're sure `internalContext` exists here

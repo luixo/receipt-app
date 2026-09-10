@@ -229,3 +229,51 @@ test("'debts.add' mutation", async ({
 	);
 	await page.expectUrl({ to: "/debts/$id", params: { id: debtId } });
 });
+
+test("navigating to a newly added debt doesn't refetch it", async ({
+	page,
+	api,
+	addButton,
+	mockBase,
+	awaitCacheKey,
+	fillValidForm,
+	faker,
+}) => {
+	const { users, topCurrencies } = await mockBase();
+	const [user] = users;
+	assert.ok(user);
+	const [topCurrency] = topCurrencies.toSorted((a, b) => b.count - a.count);
+	assert.ok(topCurrency);
+	const debtId = faker.string.uuid();
+
+	api.mockFirst("debts.add", () => ({
+		id: debtId,
+		updatedAt: getNow.zonedDateTime(),
+		reverseAccepted: false,
+	}));
+	const [debt] = defaultGenerateDebts({ faker, userId: user.id, amount: 1 });
+	assert.ok(debt);
+	api.mockFirst("debts.get", ({ input: { id } }) => {
+		if (id !== debtId) {
+			throw new TRPCError({
+				code: "NOT_FOUND",
+				message: `Debt "${id}" not found`,
+			});
+		}
+		return { ...debt, id: debtId, currencyCode: topCurrency.currencyCode };
+	});
+
+	await page.navigate({ to: "/debts/add" });
+	await awaitCacheKey("currency.top");
+	await awaitCacheKey("users.suggestTop");
+	await fillValidForm(user);
+
+	api.clearActions();
+	await addButton.click();
+	await page.expectUrl({ to: "/debts/$id", params: { id: debtId } });
+
+	const debtsGetActions = api
+		.getActions()
+		.filter(([, name]) => name === "debts.get");
+	expect(debtsGetActions).toHaveLength(0);
+});
