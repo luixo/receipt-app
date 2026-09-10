@@ -1,0 +1,19 @@
+{
+	"queries": {
+		"users.getPaged:[{\"cursor\":0,\"limit\":10}]": {
+			"state": {
+				"data": {
+					"cursor": 0,
+					"count": 0,
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

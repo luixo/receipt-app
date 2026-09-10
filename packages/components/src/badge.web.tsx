@@ -11,14 +11,20 @@ export type Props = {
 	children: ViewReactNode;
 	isInvisible?: boolean;
 	className?: string;
+	testID?: string;
 };
 
-export const Badge: React.FC<Props> = ({ content = "", ...props }) => (
+export const Badge: React.FC<Props> = ({
+	content = "",
+	testID = "badge",
+	...props
+}) => (
 	<BadgeRaw
 		placement="top-right"
 		size="lg"
 		content={content}
 		isDot={!content}
+		data-testid={testID}
 		{...props}
 	/>
 );
