@@ -1,0 +1,71 @@
+{
+	"queries": {
+		"users.get:[{\"id\":\"62d66ff2-43f8-4172-ac21-19a580fb84ac\"}]": {
+			"state": {
+				"data": {
+					"id": "62d66ff2-43f8-4172-ac21-19a580fb84ac",
+					"name": "Rosalie Anderson",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"75eb3ea2-fa1f-441b-b56e-661c142cdf6b\"}]": {
+			"state": {
+				"data": {
+					"id": "75eb3ea2-fa1f-441b-b56e-661c142cdf6b",
+					"name": "Gordon Haag",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.get:[{\"id\":\"a0490294-ede6-4190-a283-88bd95035ad3\"}]": {
+			"state": {
+				"data": {
+					"id": "a0490294-ede6-4190-a283-88bd95035ad3",
+					"name": "Cristal Reichert",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"users.getPaged:[{\"cursor\":0,\"limit\":10}]": {
+			"state": {
+				"data": {
+					"cursor": 0,
+					"count": 3,
+					"items": [
+						"75eb3ea2-fa1f-441b-b56e-661c142cdf6b",
+						"a0490294-ede6-4190-a283-88bd95035ad3",
+						"62d66ff2-43f8-4172-ac21-19a580fb84ac"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
