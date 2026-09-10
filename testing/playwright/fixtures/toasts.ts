@@ -13,7 +13,7 @@ type ToastsFixtures = {
 		textOrTexts?: string | string[],
 		timeout?: number,
 	) => Promise<void>;
-	clearToasts: (amount?: number) => Promise<void>;
+	clearToasts: (amount?: number, opts?: { filter?: string }) => Promise<void>;
 };
 
 export const toastsFixtures = test.extend<ToastsFixtures>({
@@ -61,15 +61,16 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 		);
 	},
 	clearToasts: async ({ page, toast }, use) => {
-		await use(async (amount = 1) => {
+		await use(async (amount = 1, { filter } = {}) => {
 			if (amount === 0) {
 				return;
 			}
 			let toastsLeft = amount;
 			const startTimestamp = getNow.plainDateTime();
+			const filteredToast = filter ? toast.filter({ hasText: filter }) : toast;
 			await expect(async () => {
-				const toastCount = await toast.count();
-				if (toastCount !== 0) {
+				const toasts = await filteredToast.count();
+				if (toasts !== 0) {
 					const removeToastsAmount = await page.evaluate(() => {
 						const { removeToasts } = window;
 						if (!removeToasts) {
@@ -95,7 +96,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 				}
 				throw new Error(`Expected to have ${toastsLeft} more toasts.`);
 			}).toPass();
-			await expect.poll(() => toast.count()).toEqual(0);
+			await expect.poll(() => filteredToast.count()).toEqual(0);
 		});
 	},
 });
