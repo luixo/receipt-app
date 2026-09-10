@@ -1,6 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import assert from "node:assert";
-import { entries } from "remeda";
+import { entries, flat, fromEntries, mapValues, values } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UserId } from "~db/ids";
@@ -12,11 +11,14 @@ import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<{
-		debtUser: ReturnType<GenerateUsers>[number];
+		users: ReturnType<GenerateUsers>;
 	}>;
-	mockDebts: (options?: { generateDebts?: GenerateDebts }) => Promise<{
+	mockDebts: (options?: {
+		generateUsers?: GenerateUsers;
+		generateDebts?: GenerateDebts;
+	}) => Promise<{
 		debts: ReturnType<GenerateDebts>;
-		debtUser: ReturnType<GenerateUsers>[number];
+		users: ReturnType<GenerateUsers>;
 	}>;
 	openUserDebtsScreen: (
 		userId: UserId,
@@ -24,56 +26,80 @@ type Fixtures = {
 	) => Promise<void>;
 };
 
+const aggregateDebts = (
+	debts: ReturnType<GenerateDebts>,
+): { currencyCode: CurrencyCode; sum: number }[] =>
+	entries(
+		debts.reduce<Record<CurrencyCode, number>>(
+			(acc, { currencyCode, amount }) => ({
+				...acc,
+				[currencyCode]: (acc[currencyCode] || 0) + amount,
+			}),
+			{},
+		),
+	).map(([currencyCode, sum]) => ({ currencyCode, sum }));
+
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(async ({ generateUsers = defaultGenerateUsers } = {}) => {
 			await api.mockUtils.authPage();
-			const users = generateUsers({ faker, amount: 1 });
-			const [debtUser] = users;
-			assert.ok(debtUser);
-			api.mockFirst(
-				"users.get",
-				({ input, next }) =>
-					users.find((user) => user.id === input.id) || next(),
-			);
-			return { debtUser };
+			const users = generateUsers({ faker, amount: 3 });
+			api.mockUtils.mockUsers(...users);
+			return { users };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
-		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { debtUser } = await mockBase();
-			const debts = generateDebts({ faker, userId: debtUser.id });
-			const aggregatedDebts = entries(
-				debts.reduce<Record<CurrencyCode, number>>(
-					(acc, { currencyCode, amount }) => ({
-						...acc,
-						[currencyCode]: (acc[currencyCode] || 0) + amount,
+		use(
+			async ({ generateUsers, generateDebts = defaultGenerateDebts } = {}) => {
+				const { users } = await mockBase({ generateUsers });
+				const debtsByUsers = fromEntries(
+					users.map(
+						(user) =>
+							[user.id, generateDebts({ faker, userId: user.id })] as const,
+					),
+				);
+				const aggregatedDebtsByUsers = mapValues(debtsByUsers, (debts) =>
+					aggregateDebts(debts),
+				);
+				const allDebts = flat(values(debtsByUsers));
+				const aggregatedDebts = aggregateDebts(allDebts);
+				api.mockFirst("debts.getAll", { items: aggregatedDebts });
+				api.mockFirst("debts.getAllUser", ({ input: { userId } }) => ({
+					items: aggregatedDebtsByUsers[userId] ?? [],
+				}));
+				api.mockFirst(
+					"debts.getUsersPaged",
+					({ input: { cursor, limit } }) => ({
+						count: users.length,
+						cursor,
+						items: users.map((user) => user.id).slice(cursor, cursor + limit),
 					}),
-					{},
-				),
-			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
-			api.mockFirst("debts.getUsersPaged", {
-				count: 1,
-				cursor: 0,
-				items: [debtUser.id],
-			});
-			api.mockFirst("debts.getByUserPaged", {
-				cursor: 0,
-				count: debts.length,
-				items: debts.map(({ id }) => id),
-			});
-			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
-				const matchedDebt = debts.find((debt) => debt.id === lookupId);
-				if (!matchedDebt) {
-					throw new TRPCError({
-						code: "NOT_FOUND",
-						message: `Expected to have debt id "${lookupId}", but none found`,
-					});
-				}
-				return matchedDebt;
-			});
-			return { debts, debtUser };
-		}),
+				);
+				api.mockFirst(
+					"debts.getByUserPaged",
+					({ input: { userId, cursor, limit } }) => {
+						const userDebts = debtsByUsers[userId] ?? [];
+						return {
+							count: userDebts.length,
+							cursor,
+							items: userDebts
+								.map(({ id }) => id)
+								.slice(cursor, cursor + limit),
+						};
+					},
+				);
+				api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
+					const matchedDebt = allDebts.find((debt) => debt.id === lookupId);
+					if (!matchedDebt) {
+						throw new TRPCError({
+							code: "NOT_FOUND",
+							message: `Expected to have debt id "${lookupId}", but none found`,
+						});
+					}
+					return matchedDebt;
+				});
+				return { debts: allDebts, users };
+			},
+		),
 
 	openUserDebtsScreen: ({ page, awaitCacheKey }, use) =>
 		use(async (userId, { awaitCache = true, awaitDebts = 0 } = {}) => {

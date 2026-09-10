@@ -3,8 +3,8 @@
 		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"7a512c27-8c73-4184-9394-401a98ee65c4\"}]": {
 			"state": {
 				"data": {
-					"cursor": 0,
 					"count": 3,
+					"cursor": 0,
 					"items": [
 						"f39ed41e-be08-464b-a095-23209b3f2044",
 						"1447bb22-8d8f-4c19-a19f-9d2c1dea4888",

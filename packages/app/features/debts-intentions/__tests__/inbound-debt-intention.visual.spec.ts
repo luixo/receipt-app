@@ -10,7 +10,8 @@ test("Row", async ({
 	inboundDebtIntentionRow,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 	await awaitCacheKey("debtIntentions.getAll");

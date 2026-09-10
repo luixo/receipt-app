@@ -7,6 +7,7 @@ import { formatCurrency } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 
@@ -26,9 +27,13 @@ for (const path of criticalPaths) {
 			awaitCacheKey,
 			consoleManager,
 		}) => {
-			const { debtUser } = await mockDebts({
+			const {
+				users: [firstUser],
+			} = await mockDebts({
+				generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 				generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 			});
+			assert.ok(firstUser);
 			const pathErrorMessage = `Mock "${path}" error`;
 			const unmockError = api.mockFirst(path, () => {
 				throw new TRPCError({
@@ -39,13 +44,13 @@ for (const path of criticalPaths) {
 			consoleManager.ignore(pathErrorMessage);
 			consoleManager.ignore(
 				new RegExp(
-					`Error in route match: /_protected/debts/user/${debtUser.id}/`,
+					`Error in route match: /_protected/debts/user/${firstUser.id}/`,
 				),
 			);
 			const getAllUserErrorLocator = errorMessage(pathErrorMessage).first();
 			await snapshotQueries(
 				async () => {
-					await openUserDebtsScreen(debtUser.id, { awaitCache: false });
+					await openUserDebtsScreen(firstUser.id, { awaitCache: false });
 					await awaitCacheKey(path, { error: 1 });
 					await expect(getAllUserErrorLocator).toBeVisible();
 				},
@@ -77,10 +82,13 @@ for (const path of criticalPaths) {
 }
 
 test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
-	const { debtUser } = await mockDebts({
+	const {
+		users: [firstUser],
+	} = await mockDebts({
 		generateDebts: () => [],
 	});
-	await openUserDebtsScreen(debtUser.id);
+	assert.ok(firstUser);
+	await openUserDebtsScreen(firstUser.id);
 	await expect(debtsGroup).toHaveText("No debts yet");
 });
 
@@ -89,7 +97,10 @@ test("Rounding", async ({
 	openUserDebtsScreen,
 	debtsGroupElement,
 }) => {
-	const { debtUser } = await mockDebts({
+	const {
+		users: [firstUser],
+	} = await mockDebts({
+		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
 			assert.ok(debt);
@@ -109,7 +120,8 @@ test("Rounding", async ({
 			];
 		},
 	});
-	await openUserDebtsScreen(debtUser.id, { awaitDebts: 2 });
+	assert.ok(firstUser);
+	await openUserDebtsScreen(firstUser.id, { awaitDebts: 2 });
 
 	await expect(debtsGroupElement.first()).toHaveText(
 		formatCurrency(localSettings.locale, "USD", 1.23),

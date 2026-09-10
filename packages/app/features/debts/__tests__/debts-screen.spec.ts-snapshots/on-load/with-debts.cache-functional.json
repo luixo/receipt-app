@@ -1,0 +1,191 @@
+{
+	"queries": {
+		"debts.getAll:[[]]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "USD",
+							"sum": 7565.56
+						},
+						{
+							"currencyCode": "AMD",
+							"sum": 841.26
+						},
+						{
+							"currencyCode": "IDR",
+							"sum": 4896.73
+						},
+						{
+							"currencyCode": "LAK",
+							"sum": 7786.74
+						},
+						{
+							"currencyCode": "BIF",
+							"sum": -6599.17
+						},
+						{
+							"currencyCode": "RON",
+							"sum": 5336.22
+						},
+						{
+							"currencyCode": "DOP",
+							"sum": -8467.31
+						},
+						{
+							"currencyCode": "CHF",
+							"sum": 8455.63
+						},
+						{
+							"currencyCode": "DJF",
+							"sum": -2589.63
+						},
+						{
+							"currencyCode": "GYD",
+							"sum": -9811.46
+						},
+						{
+							"currencyCode": "QAR",
+							"sum": -7199.26
+						},
+						{
+							"currencyCode": "ZAR",
+							"sum": -2457.5
+						},
+						{
+							"currencyCode": "BDT",
+							"sum": -6735.79
+						},
+						{
+							"currencyCode": "NGN",
+							"sum": 5701.53
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"54904b27-421d-4dab-b7c9-672756214de4\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "DOP",
+							"sum": -8467.31
+						},
+						{
+							"currencyCode": "CHF",
+							"sum": 8455.63
+						},
+						{
+							"currencyCode": "DJF",
+							"sum": -2589.63
+						},
+						{
+							"currencyCode": "GYD",
+							"sum": -9811.46
+						},
+						{
+							"currencyCode": "QAR",
+							"sum": -7199.26
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"7c83335d-e4a7-4ea4-8777-d5e9723b5dd5\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "USD",
+							"sum": 7565.56
+						},
+						{
+							"currencyCode": "AMD",
+							"sum": 841.26
+						},
+						{
+							"currencyCode": "IDR",
+							"sum": 4896.73
+						},
+						{
+							"currencyCode": "LAK",
+							"sum": 7786.74
+						},
+						{
+							"currencyCode": "BIF",
+							"sum": -6599.17
+						},
+						{
+							"currencyCode": "RON",
+							"sum": 5336.22
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"818bb356-a9db-4444-b440-cc7f4401ce6d\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "ZAR",
+							"sum": -2457.5
+						},
+						{
+							"currencyCode": "BDT",
+							"sum": -6735.79
+						},
+						{
+							"currencyCode": "NGN",
+							"sum": 5701.53
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+			"state": {
+				"data": {
+					"count": 3,
+					"cursor": 0,
+					"items": [
+						"7c83335d-e4a7-4ea4-8777-d5e9723b5dd5",
+						"54904b27-421d-4dab-b7c9-672756214de4",
+						"818bb356-a9db-4444-b440-cc7f4401ce6d"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

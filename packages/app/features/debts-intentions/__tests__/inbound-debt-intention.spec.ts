@@ -17,7 +17,8 @@ test("Accept button is visible and clickable", async ({
 	snapshotQueries,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 
@@ -41,11 +42,12 @@ test("'debtIntentions.accept' pending / error", async ({
 	verifyToastTexts,
 	snapshotQueries,
 }) => {
-	const { debts } = await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+	const { debtIntenions } = await mockDebts({
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	const [debt] = debts;
-	assert.ok(debt);
+	const [debtIntenion] = debtIntenions;
+	assert.ok(debtIntenion);
 	await page.navigate({ to: "/debts/intentions" });
 
 	const mockErrorMessage = `Mock "debtIntentions.accept" error`;
@@ -82,7 +84,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,
 		cursor: 0,
-		items: [debt.userId],
+		items: [debtIntenion.userId],
 	});
 
 	await snapshotQueries(
@@ -111,11 +113,12 @@ test("Accept and edit button navigates to debt page on success", async ({
 	awaitCacheKey,
 	snapshotQueries,
 }) => {
-	const { debts } = await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+	const { debtIntenions } = await mockDebts({
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	const [debt] = debts;
-	assert.ok(debt);
+	const [debtIntention] = debtIntenions;
+	assert.ok(debtIntention);
 	await page.navigate({ to: "/debts/intentions" });
 
 	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
@@ -123,14 +126,26 @@ test("Accept and edit button navigates to debt page on success", async ({
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,
 		cursor: 0,
-		items: [debt.userId],
+		items: [debtIntention.userId],
 	});
-	api.mockFirst("debts.get", debt);
+	api.mockFirst("debts.get", {
+		id: debtIntention.id,
+		userId: debtIntention.userId,
+		receiptId: debtIntention.receiptId,
+		note: debtIntention.note,
+		amount: debtIntention.amount,
+		currencyCode: debtIntention.currencyCode,
+		timestamp: debtIntention.timestamp,
+		updatedAt: debtIntention.updatedAt,
+	});
 
 	await snapshotQueries(
 		async () => {
 			await acceptAndEditButton.click();
-			await page.expectUrl({ to: "/debts/$id", params: { id: debt.id } });
+			await page.expectUrl({
+				to: "/debts/$id",
+				params: { id: debtIntention.id },
+			});
 			await awaitCacheKey("debtIntentions.accept");
 		},
 		{
@@ -152,7 +167,8 @@ test("Reject button is visible but disabled", async ({
 	rejectButton,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 

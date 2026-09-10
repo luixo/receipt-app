@@ -9,7 +9,8 @@ test("Empty state", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 0 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 	await awaitCacheKey("debtIntentions.getAll");
@@ -24,7 +25,8 @@ test("Single intention", async ({
 	inboundDebtIntentionRow,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 	await awaitCacheKey("debtIntentions.getAll");
@@ -41,7 +43,8 @@ test("Multiple intentions with accept all button", async ({
 	inboundDebtIntentionRow,
 }) => {
 	await mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 2 }),
+		generateDebtIntentions: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 2 }),
 	});
 	await page.navigate({ to: "/debts/intentions" });
 	await awaitCacheKey("debtIntentions.getAll");

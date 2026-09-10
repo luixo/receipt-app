@@ -1,0 +1,160 @@
+{
+	"queries": {
+		"debts.getAllUser:[{\"userId\":\"0573c3a0-25b5-4603-8ca6-cee7adf4807d\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"1801f47d-869f-43cd-8f1e-655991ff82d6\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"4ace9db6-88e2-4aba-a07d-03128d4b2808\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"71670693-8a4a-4cce-8df8-93cbb34a9a1c\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"81542beb-88d8-43df-9a65-29fab3a6a9e5\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"84bc2141-32aa-4627-ae1f-79d621238f15\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"bcae7246-e353-4724-a697-8c342c73da1e\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"c084f132-f82d-417f-b50c-25e24e02bdb9\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"edc1b084-89d3-46fa-ad32-4532aa073e1b\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"f3920460-c806-4635-a282-33960a57d597\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getUsersPaged:[{\"cursor\":10,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+			"state": {
+				"data": {
+					"count": 25,
+					"cursor": 10,
+					"items": [
+						"81542beb-88d8-43df-9a65-29fab3a6a9e5",
+						"4ace9db6-88e2-4aba-a07d-03128d4b2808",
+						"1801f47d-869f-43cd-8f1e-655991ff82d6",
+						"84bc2141-32aa-4627-ae1f-79d621238f15",
+						"71670693-8a4a-4cce-8df8-93cbb34a9a1c",
+						"0573c3a0-25b5-4603-8ca6-cee7adf4807d",
+						"f3920460-c806-4635-a282-33960a57d597",
+						"bcae7246-e353-4724-a697-8c342c73da1e",
+						"edc1b084-89d3-46fa-ad32-4532aa073e1b",
+						"c084f132-f82d-417f-b50c-25e24e02bdb9"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

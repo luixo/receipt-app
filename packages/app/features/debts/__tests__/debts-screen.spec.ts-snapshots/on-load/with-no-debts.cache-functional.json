@@ -1,0 +1,32 @@
+{
+	"queries": {
+		"debts.getAll:[[]]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+			"state": {
+				"data": {
+					"count": 0,
+					"cursor": 0,
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

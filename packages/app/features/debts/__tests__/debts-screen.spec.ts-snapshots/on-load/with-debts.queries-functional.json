@@ -1,0 +1,11 @@
+{
+	"debts.getAll": {
+		"serverCalls": 1
+	},
+	"debts.getAllUser": {
+		"serverCalls": 3
+	},
+	"debts.getUsersPaged": {
+		"serverCalls": 1
+	}
+}
