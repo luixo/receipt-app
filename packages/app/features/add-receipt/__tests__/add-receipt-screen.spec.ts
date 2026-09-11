@@ -2,20 +2,15 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
+import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
-import { add, getNow, subtract } from "~utils/date";
+import { add, formatters, getNow, serialize, subtract } from "~utils/date";
 
 import { test as localTest } from "./utils";
 
-const test = mergeTests(
-	localTest,
-	currencyInputTest,
-	currenciesPickerTest,
-	dateInputTest,
-);
+const test = mergeTests(localTest, currencyInputTest, currenciesPickerTest);
 
 test("On load", async ({
 	page,
@@ -25,7 +20,6 @@ test("On load", async ({
 	mockBase,
 	dateInput,
 	currencyInput,
-	expectDate,
 	expectCurrency,
 }) => {
 	const { topCurrencies } = await mockBase();
@@ -38,11 +32,13 @@ test("On load", async ({
 	});
 	await expect(page).toHaveTitle("RA - Add receipt");
 	await expect(addButton).toBeDisabled();
-	await expectDate(
-		dateInput,
+	await expect(dateInput).toHaveValue(
 		// We use negative timezone offset in tests hence in our browser
 		// its yesterday (compared to mocked date) at the moment
-		subtract.plainDate(getNow.plainDate(), { days: 1 }),
+		formatters.plainDate(
+			subtract.plainDate(getNow.plainDate(), { days: 1 }),
+			localSettings.locale,
+		),
 	);
 	await expectCurrency(currencyInput, topCurrency.currencyCode);
 });
@@ -77,7 +73,6 @@ test("'receipts.add' mutation", async ({
 	verifyToastTexts,
 	awaitCacheKey,
 	faker,
-	fillDate,
 	fillCurrency,
 }) => {
 	const { user: selfUser } = await mockBase();
@@ -95,7 +90,7 @@ test("'receipts.add' mutation", async ({
 
 	await page.navigate({ to: "/receipts/add" });
 	await nameInput.fill(receiptName);
-	await fillDate(dateInput, receiptDate);
+	await dateInput.fill(serialize(receiptDate));
 	await fillCurrency(currencyInput, receiptCurrencyCode);
 
 	await snapshotQueries(
