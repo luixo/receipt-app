@@ -29,13 +29,16 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 			message: `Mock "accountConnectionIntentions.reject" error`,
 		});
 	});
-	await snapshotQueries(async () => {
-		await rejectButton.click();
-		await awaitCacheKey("accountConnectionIntentions.reject", { error: 1 });
-		await verifyToastTexts(
-			`Error rejecting invite: Mock "accountConnectionIntentions.reject" error`,
-		);
-	});
+	await snapshotQueries(
+		async () => {
+			await rejectButton.click();
+			await awaitCacheKey("accountConnectionIntentions.reject", { error: 1 });
+			await verifyToastTexts(
+				`Error rejecting invite: Mock "accountConnectionIntentions.reject" error`,
+			);
+		},
+		{ blacklistKeys: ["users.suggestTop"] },
+	);
 	await expect(page.getByLabel("Email to connect")).toHaveValue(
 		intention.account.email,
 	);
@@ -48,7 +51,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 				success: 1,
 			});
 		},
-		{ name: "success" },
+		{ name: "success", blacklistKeys: ["users.suggestTop"] },
 	);
 	await expect(page.getByLabel("Email to connect")).not.toBeAttached();
 });
