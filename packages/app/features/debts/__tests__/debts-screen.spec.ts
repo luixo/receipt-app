@@ -175,6 +175,44 @@ test("Changing a debt currency moves its sum between aggregated groups", async (
 	);
 });
 
+test("User with all zero debt sums isn't shown on /debts", async ({
+	page,
+	mockDebts,
+	awaitCacheKey,
+	userDebtsPreview,
+}) => {
+	let userIndex = 0;
+	await mockDebts({
+		generateUsers: (opts) =>
+			defaultGenerateUsers({ ...opts, amount: 3 }).slice(0, 2),
+		generateDebts: (opts) => {
+			userIndex += 1;
+			const [debt] = defaultGenerateDebts({ ...opts, amount: 1 });
+			assert.ok(debt);
+			if (userIndex === 1) {
+				return [{ ...debt, amount: 10, currencyCode: "USD" }];
+			}
+			return [
+				{ ...debt, amount: 5, currencyCode: "USD" },
+				{
+					...debt,
+					id: `${debt.id.slice(0, -1)}b`,
+					amount: -5,
+					currencyCode: "USD",
+				},
+			];
+		},
+	});
+	await page.navigate({ to: "/debts" });
+	await awaitCacheKey("debts.getUsersPaged");
+	await awaitCacheKey("debts.getAllUser", { success: 2 });
+
+	await expect(userDebtsPreview).toHaveCount(1);
+	await expect(userDebtsPreview.first()).toContainText(
+		formatCurrency(localSettings.locale, "USD", 10),
+	);
+});
+
 test("Pagination is visible when there are many users", async ({
 	page,
 	mockPagedUsers,
