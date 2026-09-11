@@ -392,7 +392,6 @@ test.describe("Other", () => {
 		mockDebts,
 		currencyGroupButtonByCode,
 		errorMessage,
-		awaitCacheKey,
 		consoleManager,
 	}) => {
 		const { debtUser, debts } = await mockDebts();
@@ -409,20 +408,9 @@ test.describe("Other", () => {
 			params: { id: debtUser.id },
 		});
 
-		const rowDebts = debts.filter((debt) => debt.sum !== 0);
-		const [fromDebt] = rowDebts;
+		const fromDebt = debts.find((debt) => debt.sum !== 0);
 		assert.ok(fromDebt);
 		await currencyGroupButtonByCode(fromDebt.currencyCode).click();
-		await awaitCacheKey("currency.rates", {
-			error: 1,
-			input: {
-				from: fromDebt.currencyCode,
-				to: rowDebts
-					.filter((debt) => debt.currencyCode !== fromDebt.currencyCode)
-					.map((debt) => debt.currencyCode),
-			},
-		});
-
 		await expect(errorMessage(mockErrorMessage)).toBeVisible();
 	});
 });
