@@ -3,6 +3,7 @@ import type { ReceiptId, UserId } from "~db/ids";
 
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
+import { mergeUpdaterResults } from "../utils";
 
 import {
 	applySumUpdate,
@@ -27,31 +28,84 @@ export const options: UseContextedMutationOptions<
 	mutationKey: "debts.update",
 	onMutate:
 		(controllerContext, { currDebt }) =>
-		(updateObject) =>
-			updateRevertDebts(controllerContext, {
+		(updateObject) => {
+			const { update } = updateObject;
+			const newCurrencyCode = update.currencyCode;
+			const isCurrencyChange =
+				newCurrencyCode !== undefined &&
+				newCurrencyCode !== currDebt.currencyCode;
+			if (isCurrencyChange) {
+				const movedCurrencyCode = newCurrencyCode as CurrencyCode;
+				const newAmount = update.amount ?? currDebt.amount;
+				return updateRevertDebts(controllerContext, {
+					getAll: (controller) =>
+						mergeUpdaterResults(
+							controller.update(
+								currDebt.currencyCode,
+								(sum) => sum - currDebt.amount,
+								(updatedSum) => () => updatedSum + currDebt.amount,
+							),
+							controller.update(
+								movedCurrencyCode,
+								(sum) => sum + newAmount,
+								(updatedSum) => () => updatedSum - newAmount,
+							),
+						),
+					getAllUser: (controller) =>
+						mergeUpdaterResults(
+							controller.update(
+								currDebt.userId,
+								currDebt.currencyCode,
+								(sum) => sum - currDebt.amount,
+								(updatedSum) => () => updatedSum + currDebt.amount,
+							),
+							controller.update(
+								currDebt.userId,
+								movedCurrencyCode,
+								(sum) => sum + newAmount,
+								(updatedSum) => () => updatedSum - newAmount,
+							),
+						),
+					getUsersPaged: (controller) => controller.update(currDebt.userId),
+					getByUserPaged: (controller) => {
+						controller.invalidate(currDebt.userId, {
+							filters: { showResolved: false },
+						});
+						return undefined;
+					},
+					get: (controller) =>
+						controller.update(
+							updateObject.id,
+							applyUpdate(update),
+							getRevert(update),
+						),
+					getIntentions: undefined,
+				});
+			}
+			return updateRevertDebts(controllerContext, {
 				getAll: (controller) =>
 					controller.update(
 						currDebt.currencyCode,
-						applySumUpdate(currDebt.amount, updateObject.update),
-						getSumRevert(currDebt.amount, updateObject.update),
+						applySumUpdate(currDebt.amount, update),
+						getSumRevert(currDebt.amount, update),
 					),
 				getAllUser: (controller) =>
 					controller.update(
 						currDebt.userId,
 						currDebt.currencyCode,
-						applySumUpdate(currDebt.amount, updateObject.update),
-						getSumRevert(currDebt.amount, updateObject.update),
+						applySumUpdate(currDebt.amount, update),
+						getSumRevert(currDebt.amount, update),
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
 				getByUserPaged: (controller) => {
 					// Updating currency code or amount might change resolved list status
-					if (updateObject.update.currencyCode || updateObject.update.amount) {
+					if (update.currencyCode || update.amount) {
 						controller.invalidate(currDebt.userId, {
 							filters: { showResolved: false },
 						});
 					}
 					// Updating timestamp might change position in a list
-					if (updateObject.update.timestamp) {
+					if (update.timestamp) {
 						controller.invalidate(currDebt.userId);
 					}
 					return undefined;
@@ -59,11 +113,12 @@ export const options: UseContextedMutationOptions<
 				get: (controller) =>
 					controller.update(
 						updateObject.id,
-						applyUpdate(updateObject.update),
-						getRevert(updateObject.update),
+						applyUpdate(update),
+						getRevert(update),
 					),
 				getIntentions: undefined,
-			}),
+			});
+		},
 	onSuccess:
 		(controllerContext, { currDebt }) =>
 		(result, updateObject) => {

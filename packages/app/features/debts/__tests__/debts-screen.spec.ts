@@ -2,17 +2,21 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
+import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as debtsGroupTest } from "~app/components/app/__tests__/debts-group.utils";
+import { formatCurrency } from "~app/utils/currency";
+import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateDebtIntentions,
 	defaultGenerateDebts,
 } from "~tests/frontend/generators/debts";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { getNow } from "~utils/date";
 
 import { test as debtsScreenTest } from "./debts-screen.utils";
 
-const test = mergeTests(debtsGroupTest, debtsScreenTest);
+const test = mergeTests(debtsGroupTest, debtsScreenTest, currenciesPickerTest);
 
 test.describe("On load", () => {
 	test("with debts", async ({
@@ -93,6 +97,81 @@ test("Show resolved debts toggle filters debts", async ({
 			await awaitCacheKey("debts.getAll");
 		},
 		{ name: "hide-resolved" },
+	);
+});
+
+test("Changing a debt currency moves its sum between aggregated groups", async ({
+	api,
+	page,
+	mockDebts,
+	awaitCacheKey,
+	currencyButton,
+	currenciesPicker,
+	verifyToastTexts,
+}) => {
+	const { debts, users } = await mockDebts({
+		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+		generateDebts: (opts) =>
+			defaultGenerateDebts({ ...opts, amount: 1 }).map((debt) => ({
+				...debt,
+				amount: 10,
+				currencyCode: "USD",
+			})),
+	});
+	const [debt] = debts;
+	const [user] = users;
+	assert.ok(debt);
+	assert.ok(user);
+	api.mockFirst("currency.top", { items: [] });
+	api.mockFirst("debts.update", () => ({
+		updatedAt: getNow.zonedDateTime(),
+		reverseUpdated: false,
+	}));
+
+	await page.navigate({ to: "/debts/$id", params: { id: debt.id } });
+	await awaitCacheKey("debts.get");
+
+	// The /debts aggregates live only in the app query client; this screen
+	// doesn't load them, so seed them with the same data the /debts screen
+	// would have. A previous bug displaced the sum between currency groups
+	// on currency change.
+	const aggregateKey = [["debts", "getAll"], { type: "query" }] as const;
+	const userAggregateKey = [
+		["debts", "getAllUser"],
+		{ input: { userId: user.id }, type: "query" },
+	] as const;
+	await page.evaluate(
+		({ getAllKey, getAllUserKey }) => {
+			const aggregate = { items: [{ currencyCode: "USD", sum: 10 }] };
+			// oxlint-disable-next-line no-restricted-globals
+			window.queryClient?.setQueryData(JSON.parse(getAllKey), aggregate);
+			// oxlint-disable-next-line no-restricted-globals
+			window.queryClient?.setQueryData(JSON.parse(getAllUserKey), aggregate);
+		},
+		{
+			getAllKey: JSON.stringify(aggregateKey),
+			getAllUserKey: JSON.stringify(userAggregateKey),
+		},
+	);
+
+	await page.getByTestId("currency-trigger-button").click();
+	await expect(currenciesPicker).toBeVisible();
+	await currencyButton("EUR").click();
+	await awaitCacheKey("debts.update");
+	await verifyToastTexts("Debt updated successfully");
+
+	await page
+		.getByTestId("sticky-menu")
+		.getByRole("link", { name: "Debts" })
+		.click();
+	await page.expectUrl({ to: "/debts" });
+
+	const aggregatedGroup = page.getByTestId("debts-group").first();
+	await expect(aggregatedGroup).toContainText(
+		formatCurrency(localSettings.locale, "EUR", 10),
+	);
+	await expect(aggregatedGroup).not.toContainText(
+		formatCurrency(localSettings.locale, "USD", 10),
 	);
 });
 

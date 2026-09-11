@@ -1,6 +1,6 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { replaceInArray } from "~utils/array";
+import { upsertInArray } from "~utils/array";
 
 import type {
 	ControllerContext,
@@ -35,10 +35,11 @@ const update =
 	(updater: UpdateFn<number>) =>
 		withRef<Debt | undefined>((ref) => {
 			updateAllSums(controller)((prevData) =>
-				replaceInArray<(typeof prevData)[number]>(
+				upsertInArray<(typeof prevData)[number]>(
 					prevData,
 					(entry) => entry.currencyCode === currencyCode,
 					(entry) => ({ ...entry, sum: updater(entry.sum) }),
+					{ currencyCode, sum: 0 },
 					ref,
 				),
 			);
