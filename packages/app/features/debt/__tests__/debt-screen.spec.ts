@@ -1,14 +1,13 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
-import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as debtSyncStatusTest } from "~app/components/app/__tests__/debt-sync-status.utils";
 import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow, subtract } from "~utils/date";
+import { formatters, getNow, serialize, subtract } from "~utils/date";
 
 import { test as debtControlButtonsTest } from "./debt-control-buttons.utils";
 import { test as localTest } from "./debt-screen.utils";
@@ -17,7 +16,6 @@ const test = mergeTests(
 	localTest,
 	currenciesPickerTest,
 	debtControlButtonsTest,
-	dateInputTest,
 	debtSyncStatusTest,
 );
 
@@ -32,7 +30,6 @@ test("On load", async ({
 	saveNoteButton,
 	userPreview,
 	removeDebtButton,
-	expectDate,
 	debtSyncStatus,
 }) => {
 	const { debt, debtUser } = await mockDebt();
@@ -44,7 +41,9 @@ test("On load", async ({
 	);
 	await expect(userPreview.filter({ hasText: debtUser.name })).toBeVisible();
 	expect(Number(await amountInput.inputValue())).toBe(Math.abs(debt.amount));
-	await expectDate(dateInput, debt.timestamp);
+	await expect(dateInput).toHaveValue(
+		formatters.plainDate(debt.timestamp, localSettings.locale),
+	);
 	await expect(noteInput).toHaveValue(debt.note);
 	await expect(saveAmountButton).not.toBeAttached();
 	await expect(saveNoteButton).not.toBeAttached();
@@ -243,7 +242,6 @@ test.describe("Date", () => {
 		mockDebt,
 		openDebtScreen,
 		dateInput,
-		fillDate,
 		snapshotQueries,
 		awaitCacheKey,
 		verifyToastTexts,
@@ -259,7 +257,7 @@ test.describe("Date", () => {
 			});
 		});
 		await snapshotQueries(async () => {
-			await fillDate(dateInput, nextDate);
+			await dateInput.fill(serialize(nextDate));
 			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
@@ -270,7 +268,7 @@ test.describe("Date", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await fillDate(dateInput, nextDate);
+				await dateInput.fill(serialize(nextDate));
 				await awaitCacheKey("debts.update");
 				await verifyToastTexts("Debt updated successfully");
 			},
