@@ -3,6 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import type { Temporal } from "~utils/date";
 import { getNow, subtract } from "~utils/date";
 
@@ -150,6 +151,7 @@ export type GenerateReceipt = GeneratorFnWithFaker<
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptParticipants: ReturnType<GenerateReceiptParticipants>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
+		receiptDebts: ReturnType<GenerateDebts>;
 		users: ReturnType<GenerateUsers>;
 	}
 >;
@@ -160,6 +162,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptItemsWithConsumers: receiptItemsConsumers,
 	receiptParticipants,
 	receiptPayers,
+	receiptDebts,
 }) => ({
 	id: receiptBase.id,
 	createdAt: getNow.zonedDateTime(),
@@ -170,7 +173,10 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	selfUserId,
 	debts: {
 		direction: "outcoming",
-		debts: [],
+		debts: receiptDebts.map((debt) => ({
+			id: debt.id,
+			userId: debt.userId,
+		})),
 	},
 	items: receiptItemsConsumers,
 	participants: receiptParticipants,

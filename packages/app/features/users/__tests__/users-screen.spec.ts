@@ -70,7 +70,7 @@ test("Pagination", async ({
 	page,
 	api,
 	mockPagedUsers,
-	usersPagination,
+	paginationBlock,
 	loader,
 	awaitCacheKey,
 	snapshotQueries,
@@ -80,7 +80,7 @@ test("Pagination", async ({
 
 	await page.navigate({ to: "/users" });
 	await awaitCacheKey("users.getPaged");
-	await expect(usersPagination).toBeVisible();
+	await expect(paginationBlock).toBeVisible();
 
 	const pause = api.createPause();
 	api.mockFirst("users.getPaged", async ({ next }) => {
@@ -90,7 +90,7 @@ test("Pagination", async ({
 
 	await snapshotQueries(
 		async () => {
-			await usersPagination
+			await paginationBlock
 				.getByRole("button", { name: "pagination item 2" })
 				.click();
 			await awaitCacheKey("users.getPaged", {

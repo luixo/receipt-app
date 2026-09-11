@@ -110,7 +110,12 @@ export type Props = Pick<
 	testID?: string;
 };
 
-export const Icon = ({ name, className, testID, ...props }: Props) => {
+export const Icon = ({
+	name,
+	className,
+	testID = `${name}-icon`,
+	...props
+}: Props) => {
 	const Component = mapping[name];
 	return (
 		<Component

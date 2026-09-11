@@ -48,6 +48,7 @@ export const RemoveButton: React.FC<Props> = ({
 				<Button
 					onPress={noConfirm ? onRemove : openModal}
 					color="danger"
+					testID="remove-button"
 					{...props}
 					isDisabled={props.isDisabled || mutation.isPending}
 					isLoading={props.isLoading || mutation.isPending}

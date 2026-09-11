@@ -20,6 +20,7 @@ export const SearchBar: React.FC<
 					{startContent}
 				</>
 			}
+			testID="search-bar"
 			value={value}
 			onValueChange={onValueChange}
 			placeholder={t("searchBar.placeholder")}

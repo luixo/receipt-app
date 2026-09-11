@@ -16,7 +16,7 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	const { t } = useTranslation("receipts");
 
 	if (receipt.debts.direction === "outcoming") {
-		throw new Error("Unexpected owner control button with outcoming debt");
+		throw new Error("Unexpected guest control button with outcoming debt");
 	}
 	if (!receipt.debts.id) {
 		return null;

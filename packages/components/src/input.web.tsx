@@ -50,6 +50,7 @@ export type Props = Pick<
 	labelPlacement?: "outside" | "inside" | "outside-left";
 	variant?: "flat" | "bordered";
 	inputClassName?: string;
+	testID?: string;
 };
 
 export const Input: React.FC<Props> = ({
@@ -61,6 +62,7 @@ export const Input: React.FC<Props> = ({
 	onKeyPress,
 	continuousMutations,
 	inputClassName,
+	testID,
 	...props
 }) => {
 	const innerRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -102,6 +104,7 @@ export const Input: React.FC<Props> = ({
 			}}
 			type={type ?? "text"}
 			endContent={endContent}
+			data-testid={testID}
 		/>
 	);
 };

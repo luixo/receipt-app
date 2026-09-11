@@ -99,7 +99,7 @@ test("Show resolved debts toggle filters debts", async ({
 test("Pagination is visible when there are many users", async ({
 	page,
 	mockPagedUsers,
-	debtsPagination,
+	paginationBlock,
 	awaitCacheKey,
 }) => {
 	await mockPagedUsers();
@@ -107,14 +107,14 @@ test("Pagination is visible when there are many users", async ({
 	await page.navigate({ to: "/debts" });
 	await awaitCacheKey("debts.getUsersPaged");
 
-	await expect(debtsPagination).toBeVisible();
+	await expect(paginationBlock).toBeVisible();
 });
 
 test("Loading state shows spinner on page change", async ({
 	page,
 	api,
 	mockPagedUsers,
-	debtsPagination,
+	paginationBlock,
 	loader,
 	awaitCacheKey,
 	snapshotQueries,
@@ -128,7 +128,7 @@ test("Loading state shows spinner on page change", async ({
 
 	await page.navigate({ to: "/debts" });
 	await awaitCacheKey("debts.getUsersPaged");
-	await expect(debtsPagination).toBeVisible();
+	await expect(paginationBlock).toBeVisible();
 
 	const pause = api.createPause();
 	api.mockFirst("debts.getUsersPaged", async ({ next }) => {
@@ -138,7 +138,7 @@ test("Loading state shows spinner on page change", async ({
 
 	await snapshotQueries(
 		async () => {
-			await debtsPagination
+			await paginationBlock
 				.getByRole("button", { name: "pagination item 2" })
 				.click();
 			await awaitCacheKey("debts.getUsersPaged", {
@@ -158,18 +158,21 @@ test("Loading state shows spinner on page change", async ({
 });
 
 test.describe("Header aside", () => {
-	test("Add debt button", async ({ page, mockDebts }) => {
+	test("Add debt button", async ({ api, page, mockDebts }) => {
 		await mockDebts();
 		await page.navigate({ to: "/debts" });
 
+		api.mockFirst("currency.top", () => ({ items: [] }));
+		api.mockFirst("users.suggestTop", () => ({ items: [] }));
 		await page.getByRole("button", { name: "Add debt" }).click();
 		await page.expectUrl({ to: "/debts/add" });
 	});
 
-	test("Transfer button", async ({ page, mockDebts }) => {
+	test("Transfer button", async ({ api, page, mockDebts }) => {
 		await mockDebts();
 		await page.navigate({ to: "/debts" });
 
+		api.mockFirst("users.suggestTop", () => ({ items: [] }));
 		await page.getByRole("button", { name: "Transfer" }).click();
 		await page.expectUrl({ to: "/debts/transfer" });
 	});

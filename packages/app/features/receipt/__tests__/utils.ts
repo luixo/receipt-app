@@ -1,6 +1,8 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptId, UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
+import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
+import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -32,6 +34,7 @@ type Fixtures = {
 		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
 		generateReceiptPayers?: GenerateReceiptPayers;
 		generateReceipt?: GenerateReceipt;
+		generateDebts?: GenerateDebtsFromReceipt;
 	}) => Promise<{
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receipt: ReturnType<GenerateReceipt>;
@@ -39,6 +42,7 @@ type Fixtures = {
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		users: ReturnType<GenerateUsers>;
+		receiptDebts: ReturnType<GenerateDebtsFromReceipt>;
 		selfUserId: UserId;
 	}>;
 	openReceipt: (
@@ -56,7 +60,10 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("users.suggestTop", { items: [] });
 			return { selfUser: user };
 		}),
-	mockReceipt: ({ api, faker, mockBase }, use) =>
+	mockReceipt: (
+		{ api, faker, mockBase, fromUnitToSubunit, fromSubunitToUnit },
+		use,
+	) =>
 		use(
 			async ({
 				generateReceiptBase = defaultGenerateReceiptBase,
@@ -66,6 +73,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceiptItemsWithConsumers = defaultGenerateReceiptItemsWithConsumers,
 				generateReceiptPayers = defaultGenerateReceiptPayers,
 				generateReceipt = defaultGenerateReceipt,
+				generateDebts = defaultGenerateDebtsFromReceipt,
 			} = {}) => {
 				const { selfUser } = await mockBase();
 				const users = generateUsers({ faker });
@@ -86,6 +94,16 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItems,
 					participants,
 				});
+				const debts = generateDebts({
+					faker,
+					selfUserId: selfUser.id,
+					receiptBase,
+					receiptItemsWithConsumers,
+					participants,
+					receiptPayers,
+					fromUnitToSubunit,
+					fromSubunitToUnit,
+				});
 				const receipt = generateReceipt({
 					faker,
 					selfUserId: selfUser.id,
@@ -94,6 +112,7 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItemsWithConsumers,
 					receiptPayers,
 					users,
+					receiptDebts: debts,
 				});
 				api.mockFirst("receipts.get", ({ input }) => {
 					if (input.id !== receiptBase.id) {
@@ -109,6 +128,11 @@ export const test = originalTest.extend<Fixtures>({
 						users.find((user) => user.id === input.id) || next(),
 				);
 				api.mockFirst(
+					"debts.get",
+					({ input, next }) =>
+						debts.find((debt) => debt.id === input.id) || next(),
+				);
+				api.mockFirst(
 					"users.getForeign",
 					({ input, next }) =>
 						users.find((user) => user.id === input.id) || next(),
@@ -120,6 +144,7 @@ export const test = originalTest.extend<Fixtures>({
 					participants,
 					receiptItemsWithConsumers,
 					receiptPayers,
+					receiptDebts: debts,
 					users,
 					selfUserId: selfUser.id,
 				};

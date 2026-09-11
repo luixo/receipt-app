@@ -13,6 +13,7 @@ export const SuspendedOverlay: React.FC<Props> = ({ isPending, children }) => (
 	<Overlay
 		className="gap-2"
 		overlay={isPending ? <Spinner size="lg" /> : undefined}
+		testID="suspended-overlay"
 	>
 		{children}
 	</Overlay>
