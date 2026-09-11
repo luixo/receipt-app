@@ -8,7 +8,7 @@ import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow, subtract } from "~utils/date";
+import { getNow, serialize, subtract } from "~utils/date";
 
 import { test as debtControlButtonsTest } from "./debt-control-buttons.utils";
 import { test as localTest } from "./debt-screen.utils";
@@ -243,7 +243,6 @@ test.describe("Date", () => {
 		mockDebt,
 		openDebtScreen,
 		dateInput,
-		fillDate,
 		snapshotQueries,
 		awaitCacheKey,
 		verifyToastTexts,
@@ -259,7 +258,7 @@ test.describe("Date", () => {
 			});
 		});
 		await snapshotQueries(async () => {
-			await fillDate(dateInput, nextDate);
+			await dateInput.fill(serialize(nextDate));
 			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
@@ -270,7 +269,7 @@ test.describe("Date", () => {
 		});
 		await snapshotQueries(
 			async () => {
-				await fillDate(dateInput, nextDate);
+				await dateInput.fill(serialize(nextDate));
 				await awaitCacheKey("debts.update");
 				await verifyToastTexts("Debt updated successfully");
 			},
