@@ -12,12 +12,18 @@ export type Props = {
 	icon?: React.ReactNode;
 	size?: React.ComponentProps<typeof CheckboxRaw>["size"];
 	children?: string;
+	testID?: string;
 };
 
-export const Checkbox: React.FC<Props> = ({ children, ...props }) => (
+export const Checkbox: React.FC<Props> = ({
+	children,
+	testID = "checkbox",
+	...props
+}) => (
 	<CheckboxRaw
 		{...props}
 		classNames={children ? undefined : { wrapper: "me-0" }}
+		data-testid={testID}
 	>
 		{children}
 	</CheckboxRaw>

@@ -21,14 +21,14 @@ import { test } from "./debts.utils";
 test.describe("Wrapper component", () => {
 	test("'debts.get' pending / error", async ({
 		api,
-		mockReceiptWithDebts,
+		mockReceipt,
 		propagateDebtsButton,
 		updateDebtsButton,
 		errorMessage,
 		openReceipt,
 		consoleManager,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts();
+		const { receipt } = await mockReceipt();
 
 		const debtsGetPause = api.createPause();
 		const mockErrorMessage = `Mock "debts.get" error`;
@@ -53,12 +53,12 @@ test.describe("Wrapper component", () => {
 
 test.describe("Propagate debts button", () => {
 	test("Our debts desynced w/ receipt, their debts synced w/ ours", async ({
-		mockReceiptWithDebts,
+		mockReceipt,
 		openReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts({
+		const { receipt } = await mockReceipt({
 			generateDebts: (opts) =>
 				remapDebts(
 					ourDesynced,
@@ -71,12 +71,12 @@ test.describe("Propagate debts button", () => {
 	});
 
 	test("Our debts synced w/ receipt, their debts desynced w/ ours", async ({
-		mockReceiptWithDebts,
+		mockReceipt,
 		openReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts({
+		const { receipt } = await mockReceipt({
 			generateDebts: (opts) =>
 				remapDebts(
 					ourSynced,
@@ -89,12 +89,12 @@ test.describe("Propagate debts button", () => {
 	});
 
 	test("Our debts don't exist", async ({
-		mockReceiptWithDebts,
+		mockReceipt,
 		openReceipt,
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts({
+		const { receipt } = await mockReceipt({
 			generateDebts: (opts) =>
 				remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 		});
@@ -104,12 +104,12 @@ test.describe("Propagate debts button", () => {
 	});
 
 	test("Some debts desynced w/ receipt, some debts don't exist", async ({
-		mockReceiptWithDebts,
+		mockReceipt,
 		openReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts({
+		const { receipt } = await mockReceipt({
 			generateDebts: (opts) =>
 				remapDebts([ourDesynced, ourNonExistent])(
 					defaultGenerateDebtsFromReceipt(opts),
@@ -121,12 +121,12 @@ test.describe("Propagate debts button", () => {
 	});
 
 	test("Our debts are synced w/ receipts, their debts are synced w/ ours", async ({
-		mockReceiptWithDebts,
+		mockReceipt,
 		openReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = await mockReceiptWithDebts({
+		const { receipt } = await mockReceipt({
 			generateDebts: (opts) =>
 				remapDebts(ourSynced)(defaultGenerateDebtsFromReceipt(opts)),
 		});
@@ -141,7 +141,7 @@ test.describe("Mutations", () => {
 		api,
 		faker,
 		updateDebtsButton,
-		mockReceiptWithDebts,
+		mockReceipt,
 		awaitCacheKey,
 		openReceiptWithDebts,
 		snapshotQueries,
@@ -151,11 +151,11 @@ test.describe("Mutations", () => {
 		let originalDebtsAmount = 0;
 		const {
 			receipt,
-			debts,
+			receiptDebts,
 			participants,
 			receiptItemsWithConsumers,
 			receiptPayers,
-		} = await mockReceiptWithDebts({
+		} = await mockReceipt({
 			generateDebts: (opts) => {
 				const originalDebts = defaultGenerateDebtsFromReceipt(opts);
 				originalDebtsAmount = originalDebts.length;
@@ -170,7 +170,7 @@ test.describe("Mutations", () => {
 		});
 		api.mockFirst("debts.add", ({ input: addedDebt }) => ({
 			id:
-				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
+				receiptDebts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
 			updatedAt: getNow.zonedDateTime(),
 			reverseAccepted:
@@ -241,7 +241,7 @@ test.describe("Mutations", () => {
 		// Validate sums of updated debts match expected
 		expect(updatedDebts.map(([, amount]) => amount)).toStrictEqual(
 			updatedDebts.map(([debtId]) => {
-				const matchedDebt = debts.find((debt) => debt.id === debtId);
+				const matchedDebt = receiptDebts.find((debt) => debt.id === debtId);
 				return participantTuples.find(
 					([participantId]) => participantId === matchedDebt?.userId,
 				)?.[1];

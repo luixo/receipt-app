@@ -17,7 +17,7 @@ export const generateAmount = <T>(
 };
 
 export type GeneratorFnWithFaker<O, I = object> = (
-	opts: { faker: ExtendedFaker } & I,
+	opts: { faker: ExtendedFaker; index?: number } & I,
 ) => O;
 
 export type GeneratorFnWithAmount<O, I = object> = GeneratorFnWithFaker<

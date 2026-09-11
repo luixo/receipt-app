@@ -9,14 +9,14 @@ import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 import { test } from "./debts.utils";
 
 test("Propagate state", async ({
-	mockReceiptWithDebts,
+	mockReceipt,
 	openReceipt,
 	propagateDebtsButton,
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { receipt } = await mockReceiptWithDebts({
+	const { receipt } = await mockReceipt({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
@@ -28,14 +28,14 @@ test("Propagate state", async ({
 });
 
 test("Sync state", async ({
-	mockReceiptWithDebts,
+	mockReceipt,
 	openReceipt,
 	updateDebtsButton,
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { receipt } = await mockReceiptWithDebts({
+	const { receipt } = await mockReceipt({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourDesynced)(defaultGenerateDebtsFromReceipt(opts)),
@@ -47,14 +47,14 @@ test("Sync state", async ({
 });
 
 test("Synced state", async ({
-	mockReceiptWithDebts,
+	mockReceipt,
 	openReceipt,
 	syncedDebtsButton,
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { receipt } = await mockReceiptWithDebts({
+	const { receipt } = await mockReceipt({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 	});
 	await openReceipt(receipt);

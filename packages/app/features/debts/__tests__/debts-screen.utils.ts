@@ -5,7 +5,6 @@ import { test as debtsTest } from "./utils";
 type Fixtures = {
 	mockPagedUsers: () => Promise<void>;
 	showResolvedDebtsSwitch: Locator;
-	debtsPagination: Locator;
 	userDebtsPreview: Locator;
 	debtIntentionsButton: Locator;
 };
@@ -46,9 +45,6 @@ export const test = debtsTest.extend<Fixtures>({
 
 	showResolvedDebtsSwitch: ({ page }, use) =>
 		use(page.getByTestId("show-resolved-debts-switch")),
-
-	debtsPagination: ({ page }, use) =>
-		use(page.getByRole("navigation", { name: /pagination/i })),
 
 	userDebtsPreview: ({ page }, use) =>
 		use(page.getByTestId("user-debts-preview")),

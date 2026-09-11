@@ -8,7 +8,6 @@ type Fixtures = {
 	mockPagedUsers: () => Promise<void>;
 	userRow: Locator;
 	userSkeleton: Locator;
-	usersPagination: Locator;
 	headerAside: Locator;
 	addUserButton: Locator;
 	connectionsButton: Locator;
@@ -27,9 +26,6 @@ export const test = usersTest.extend<Fixtures>({
 	userRow: ({ page }, use) => use(page.getByTestId("user")),
 
 	userSkeleton: ({ page }, use) => use(page.getByTestId("user-skeleton")),
-
-	usersPagination: ({ page }, use) =>
-		use(page.getByRole("navigation", { name: /pagination/i })),
 
 	headerAside: ({ page }, use) => use(page.getByTestId("header-aside")),
 

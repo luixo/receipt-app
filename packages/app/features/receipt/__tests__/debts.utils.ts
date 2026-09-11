@@ -1,13 +1,7 @@
 import type { Locator } from "@playwright/test";
 
 import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
 import type { GenerateReceipt } from "~tests/frontend/generators/receipts";
-import {
-	defaultGenerateReceipt,
-	defaultGenerateReceiptBase,
-} from "~tests/frontend/generators/receipts";
-import type { ExtractFixture } from "~tests/frontend/types";
 
 import { test as originalTest } from "./utils";
 
@@ -16,22 +10,6 @@ type LocalGenerateReceipt = (
 		debts: ReturnType<GenerateDebtsFromReceipt>;
 	},
 ) => ReturnType<GenerateReceipt>;
-
-const localDefaultGenerateReceipt: LocalGenerateReceipt = ({
-	debts,
-	...opts
-}) => {
-	const generatedReceipt = defaultGenerateReceipt(opts);
-	return {
-		...generatedReceipt,
-		debts: {
-			direction: "outcoming",
-			debts: debts.map((debt) => ({ id: debt.id, userId: debt.userId })),
-		},
-	};
-};
-
-type MockReceipt = ExtractFixture<typeof originalTest>["mockReceipt"];
 
 type Fixtures = {
 	sendDebtButton: Locator;
@@ -43,19 +21,6 @@ type Fixtures = {
 	openReceiptWithDebts: (
 		receipt: ReturnType<LocalGenerateReceipt>,
 	) => Promise<void>;
-	mockReceiptWithDebts: (
-		options?: Omit<
-			NonNullable<Parameters<MockReceipt>[0]>,
-			"generateReceipt"
-		> & {
-			generateDebts?: GenerateDebtsFromReceipt;
-			generateReceipt?: LocalGenerateReceipt;
-		},
-	) => Promise<
-		Awaited<ReturnType<MockReceipt>> & {
-			debts: ReturnType<GenerateDebtsFromReceipt>;
-		}
-	>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -85,68 +50,4 @@ export const test = originalTest.extend<Fixtures>({
 						: undefined;
 			await awaitCacheKey("debts.get", debtsAmount || undefined);
 		}),
-
-	mockReceiptWithDebts: (
-		{ api, faker, mockReceipt, fromUnitToSubunit, fromSubunitToUnit },
-		use,
-	) =>
-		use(
-			async ({
-				generateReceiptBase = defaultGenerateReceiptBase,
-				generateUsers,
-				generateReceiptItems,
-				generateReceiptParticipants,
-				generateReceiptItemsWithConsumers,
-				generateReceiptPayers,
-				generateDebts = defaultGenerateDebtsFromReceipt,
-				generateReceipt = localDefaultGenerateReceipt,
-			} = {}) => {
-				const result = await mockReceipt({
-					generateReceiptBase,
-					generateUsers,
-					generateReceiptItems,
-					generateReceiptParticipants,
-					generateReceiptItemsWithConsumers,
-					generateReceiptPayers,
-					generateReceipt: defaultGenerateReceipt,
-				});
-				const debts = generateDebts({
-					faker,
-					selfUserId: result.selfUserId,
-					receiptBase: result.receiptBase,
-					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
-					participants: result.participants,
-					receiptPayers: result.receiptPayers,
-					fromUnitToSubunit,
-					fromSubunitToUnit,
-				});
-				const receipt = generateReceipt({
-					faker,
-					selfUserId: result.selfUserId,
-					receiptBase: result.receiptBase,
-					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
-					receiptParticipants: result.participants,
-					receiptPayers: result.receiptPayers,
-					users: result.users,
-					debts,
-				});
-				api.mockFirst("receipts.get", ({ input }) => {
-					if (input.id !== receipt.id) {
-						throw new Error(
-							`Unexpected receipt id in "receipts.get": ${input.id}`,
-						);
-					}
-					return receipt;
-				});
-				api.mockFirst("debts.get", ({ input }) => {
-					const outcomingDebt = debts.find((debt) => debt.id === input.id);
-					if (!outcomingDebt) {
-						throw new Error(`Unexpected user id in "debts.get": ${input.id}`);
-					}
-					return outcomingDebt;
-				});
-
-				return { ...result, receipt, debts };
-			},
-		),
 });

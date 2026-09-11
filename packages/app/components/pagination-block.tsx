@@ -64,6 +64,7 @@ export function PaginationBlockShape<T>({
 						"sm:justify-between": totalCount > limit,
 					},
 				)}
+				testID="pagination-block"
 			>
 				<View className="flex w-full flex-row items-center justify-between gap-2 sm:w-auto">
 					{selection ? (
