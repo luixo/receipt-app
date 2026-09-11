@@ -345,6 +345,104 @@ test.describe("Mutations", () => {
 		});
 	});
 
+	test("After exchange-all submit, aggregate sums stay exact and every added debt gets a matching their entry", async ({
+		api,
+		mockDebts,
+		sendButton,
+		awaitCacheKey,
+		page,
+	}) => {
+		const { debtUser } = await mockDebts({
+			generateDebts: (opts) => {
+				const [usdDebt, eurDebt] = defaultGenerateDebts({
+					...opts,
+					amount: 2,
+				});
+				assert.ok(usdDebt);
+				assert.ok(eurDebt);
+				return [
+					{ ...usdDebt, currencyCode: "USD", amount: 100.1 },
+					{ ...eurDebt, currencyCode: "EUR", amount: 20.02 },
+				];
+			},
+		});
+		api.mockFirst("debts.add", ({ input }) => ({
+			id: `${(input as { currencyCode: string }).currencyCode}-added`,
+			updatedAt: getNow.zonedDateTime(),
+			reverseAccepted: true,
+		}));
+
+		await page.navigate({
+			to: "/debts/user/$id/exchange/all",
+			params: { id: debtUser.id },
+			search: { from: "USD" },
+		});
+		// Failing the aggregate refetch after the mutation keeps the cache at the
+		// value the mutation wrote, which is exactly what we want to assert.
+		api.mockFirst("debts.getAllUser", () => {
+			throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+		});
+		await sendButton.click();
+		await awaitCacheKey("debts.add", { success: 2 });
+
+		const userAggregateKey = [
+			["debts", "getAllUser"],
+			{ input: { userId: debtUser.id }, type: "query" },
+		] as const;
+		const aggregate = await page.evaluate(
+			(key) =>
+				// oxlint-disable-next-line no-restricted-globals
+				window.queryClient?.getQueryData<{
+					items: { currencyCode: string; sum: number }[];
+				}>(JSON.parse(key) as string[]),
+			JSON.stringify(userAggregateKey),
+		);
+		assert.ok(aggregate);
+		const usdSum = aggregate.items.find(
+			({ currencyCode }) => currencyCode === "USD",
+		)?.sum;
+		const eurSum = aggregate.items.find(
+			({ currencyCode }) => currencyCode === "EUR",
+		)?.sum;
+		// A raw float sum (e.g. 100.1 + 0.05 = 100.14999999999999) used to leak
+		// into the aggregate and into subsequent exchange payloads.
+		assert.ok(usdSum !== undefined);
+		assert.equal(usdSum, round(usdSum));
+		expect(eurSum).toStrictEqual(0);
+
+		const newDebts = await page.evaluate(
+			({ usdKey, eurKey }) => {
+				// oxlint-disable-next-line no-restricted-globals
+				const client = window.queryClient;
+				return [
+					client?.getQueryData<{
+						amount: number;
+						their?: { amount: number };
+					}>(JSON.parse(usdKey) as string[]),
+					client?.getQueryData<{
+						amount: number;
+						their?: { amount: number };
+					}>(JSON.parse(eurKey) as string[]),
+				];
+			},
+			{
+				usdKey: JSON.stringify([
+					["debts", "get"],
+					{ input: { id: "USD-added" }, type: "query" },
+				]),
+				eurKey: JSON.stringify([
+					["debts", "get"],
+					{ input: { id: "EUR-added" }, type: "query" },
+				]),
+			},
+		);
+		expect(newDebts).toHaveLength(2);
+		for (const debt of newDebts) {
+			assert.ok(debt);
+			expect(debt.their?.amount).toStrictEqual(debt.amount);
+		}
+	});
+
 	test("Shows mutation error on the submit button", async ({
 		api,
 		page,

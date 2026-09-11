@@ -7,6 +7,8 @@ import {
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
+import { addToSum } from "./utils";
+
 export const options: UseContextedMutationOptions<
 	"debts.remove",
 	{ debt: TRPCQueryOutput<"debts.get"> }
@@ -19,15 +21,15 @@ export const options: UseContextedMutationOptions<
 				getAll: (controller) =>
 					controller.update(
 						currDebt.currencyCode,
-						(sum) => sum - currDebt.amount,
-						() => (sum) => sum + currDebt.amount,
+						(sum) => addToSum(sum, -currDebt.amount),
+						() => (sum) => addToSum(sum, currDebt.amount),
 					),
 				getAllUser: (controller) =>
 					controller.update(
 						currDebt.userId,
 						currDebt.currencyCode,
-						(sum) => sum - currDebt.amount,
-						() => (sum) => sum + currDebt.amount,
+						(sum) => addToSum(sum, -currDebt.amount),
+						() => (sum) => addToSum(sum, currDebt.amount),
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
 				getByUserPaged: undefined,

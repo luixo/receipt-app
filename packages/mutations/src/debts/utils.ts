@@ -2,10 +2,13 @@ import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import { getNow } from "~utils/date";
 import type { Temporal } from "~utils/date";
+import { round } from "~utils/math";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../types";
+
+export const addToSum = (sum: number, amount: number) => round(sum + amount);
 
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
@@ -20,7 +23,7 @@ export const applySumUpdate =
 	(sum) => {
 		if (update.amount !== undefined) {
 			const delta = update.amount - prevAmount;
-			return sum + delta;
+			return addToSum(sum, delta);
 		}
 		return sum;
 	};
@@ -54,7 +57,7 @@ export const getSumRevert =
 	(currentSum) => {
 		if (update.amount !== undefined) {
 			const delta = updatedSum - prevAmount;
-			return currentSum - delta;
+			return addToSum(currentSum, -delta);
 		}
 		return currentSum;
 	};

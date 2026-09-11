@@ -6,6 +6,7 @@ import type { UseContextedMutationOptions } from "../context";
 import { mergeUpdaterResults } from "../utils";
 
 import {
+	addToSum,
 	applySumUpdate,
 	applyUpdate,
 	getRevert,
@@ -42,13 +43,13 @@ export const options: UseContextedMutationOptions<
 						mergeUpdaterResults(
 							controller.update(
 								currDebt.currencyCode,
-								(sum) => sum - currDebt.amount,
-								(updatedSum) => () => updatedSum + currDebt.amount,
+								(sum) => addToSum(sum, -currDebt.amount),
+								(updatedSum) => () => addToSum(updatedSum, currDebt.amount),
 							),
 							controller.update(
 								movedCurrencyCode,
-								(sum) => sum + newAmount,
-								(updatedSum) => () => updatedSum - newAmount,
+								(sum) => addToSum(sum, newAmount),
+								(updatedSum) => () => addToSum(updatedSum, -newAmount),
 							),
 						),
 					getAllUser: (controller) =>
@@ -56,14 +57,14 @@ export const options: UseContextedMutationOptions<
 							controller.update(
 								currDebt.userId,
 								currDebt.currencyCode,
-								(sum) => sum - currDebt.amount,
-								(updatedSum) => () => updatedSum + currDebt.amount,
+								(sum) => addToSum(sum, -currDebt.amount),
+								(updatedSum) => () => addToSum(updatedSum, currDebt.amount),
 							),
 							controller.update(
 								currDebt.userId,
 								movedCurrencyCode,
-								(sum) => sum + newAmount,
-								(updatedSum) => () => updatedSum - newAmount,
+								(sum) => addToSum(sum, newAmount),
+								(updatedSum) => () => addToSum(updatedSum, -newAmount),
 							),
 						),
 					getUsersPaged: (controller) => controller.update(currDebt.userId),
