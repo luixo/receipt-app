@@ -61,7 +61,6 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	},
 	backLink: ({ page }, use) => use(page.getByTestId("back-link")),
 	suspendedOverlay: ({ page }, use) =>
-		use(page.getByTestId("suspended-overlay").visible()),
-	paginationBlock: ({ page }, use) =>
-		use(page.getByTestId("pagination-block").visible()),
+		use(page.getByTestId("suspended-overlay")),
+	paginationBlock: ({ page }, use) => use(page.getByTestId("pagination-block")),
 });

@@ -24,12 +24,18 @@ type Fixtures = {
 		options?: { awaitCache?: boolean; awaitDebts?: number },
 	) => Promise<void>;
 	debtAmount: Locator;
+	debtPreview: Locator;
+	debtPagination: Locator;
+	removeDebtsButton: Locator;
+	showResolvedButton: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(async () => {
 			await api.mockUtils.authPage();
+			api.mockLast("currency.top", { items: [] });
+			api.mockLast("users.suggestTop", { items: [] });
 			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
@@ -84,4 +90,11 @@ export const test = originalTest.extend<Fixtures>({
 			}
 		}),
 	debtAmount: ({ page }, use) => use(page.getByTestId("preview-debt-amount")),
+	debtPreview: ({ page }, use) => use(page.getByTestId("user-debt-preview")),
+	debtPagination: ({ paginationBlock }, use) =>
+		use(paginationBlock.getByRole("navigation", { name: /pagination/i })),
+	removeDebtsButton: ({ paginationBlock }, use) =>
+		use(paginationBlock.getByTestId("remove-button")),
+	showResolvedButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Show resolved debts" })),
 });
