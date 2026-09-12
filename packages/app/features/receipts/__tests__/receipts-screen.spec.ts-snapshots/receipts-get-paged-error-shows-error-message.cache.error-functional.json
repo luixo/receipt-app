@@ -1,0 +1,18 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock \"getPaged\" error"
+				},
+				"errorUpdateCount": 1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

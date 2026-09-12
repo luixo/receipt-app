@@ -1,0 +1,43 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"61278ed0-9e34-4c60-9b70-e8bc9d9d4bc9\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		},
+		"receipts.get:[{\"id\":\"79e2123a-b0f1-4543-a7fa-c669f0036531\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		},
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receipts.remove": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "79e2123a-b0f1-4543-a7fa-c669f0036531"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "61278ed0-9e34-4c60-9b70-e8bc9d9d4bc9"
+					}
+				}
+			}
+		]
+	}
+}

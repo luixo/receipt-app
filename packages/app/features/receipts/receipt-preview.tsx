@@ -47,9 +47,10 @@ const ReceiptPreviewShape: React.FC<
 	return (
 		<View
 			className={cn(
-				"overflow-hidden first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
+				"w-full overflow-hidden first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
 				className,
 			)}
+			testID="receipt-preview"
 			{...props}
 		>
 			<View className="flex-row justify-between gap-2">
@@ -133,12 +134,7 @@ export const ReceiptPreview = suspendedFallback<{
 			(item) => item.consumers.length === 0,
 		);
 		const title = (
-			<Link
-				className="flex flex-col items-start"
-				to="/receipts/$id"
-				params={{ id: receipt.id }}
-				color="foreground"
-			>
+			<>
 				<View className="flex flex-row items-center gap-2">
 					<Tooltip
 						content={t("receipt.emptyItems", { amount: emptyItems.length })}
@@ -164,71 +160,73 @@ export const ReceiptPreview = suspendedFallback<{
 				<Text className="text-default-400 text-xs">
 					{formatPlainDate(receipt.issued)}
 				</Text>
-			</Link>
+			</>
 		);
 		const sum = round(
 			receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
 		);
 		return (
-			<ReceiptPreviewShape
-				className={isSelected ? "bg-secondary/20" : undefined}
-				title={title}
-				checkbox={
-					<Checkbox
-						isSelected={isSelected}
-						onValueChange={isRemoving ? undefined : onValueChange}
-						isDisabled={isRemoving}
-						color="secondary"
-					/>
-				}
-				infoTooltip={
-					matchedItems.length === 0 ? null : (
-						<View>
-							{matchedItems.map(
-								({ id: itemId, highlights: itemHighlights }) => {
-									const matchedItem = receipt.items.find(
-										(item) => item.id === itemId,
-									);
-									if (!matchedItem) {
+			<Link to="/receipts/$id" params={{ id: receipt.id }} color="foreground">
+				<ReceiptPreviewShape
+					className={isSelected ? "bg-secondary/20" : undefined}
+					title={title}
+					checkbox={
+						<Checkbox
+							isSelected={isSelected}
+							onValueChange={isRemoving ? undefined : onValueChange}
+							isDisabled={isRemoving}
+							color="secondary"
+						/>
+					}
+					infoTooltip={
+						matchedItems.length === 0 ? null : (
+							<View>
+								{matchedItems.map(
+									({ id: itemId, highlights: itemHighlights }) => {
+										const matchedItem = receipt.items.find(
+											(item) => item.id === itemId,
+										);
+										if (!matchedItem) {
+											return (
+												<Text key={itemId}>
+													{t("receipt.matchedItem.notFound")}
+												</Text>
+											);
+										}
 										return (
 											<Text key={itemId}>
-												{t("receipt.matchedItem.notFound")}
+												{/* This casting intentional, text can be rendered inside text */}
+												{/* It's a rare case so once-in-a-while casting is cheaper than expanding Text children type */}
+												{
+													(
+														<Trans
+															t={t}
+															i18nKey="receipt.matchedItem.found"
+															components={{
+																name: (
+																	<HighlightText intervals={itemHighlights}>
+																		{matchedItem.name}
+																	</HighlightText>
+																),
+															}}
+														/>
+													) as unknown as string
+												}
 											</Text>
 										);
-									}
-									return (
-										<Text key={itemId}>
-											{/* This casting intentional, text can be rendered inside text */}
-											{/* It's a rare case so once-in-a-while casting is cheaper than expanding Text children type */}
-											{
-												(
-													<Trans
-														t={t}
-														i18nKey="receipt.matchedItem.found"
-														components={{
-															name: (
-																<HighlightText intervals={itemHighlights}>
-																	{matchedItem.name}
-																</HighlightText>
-															),
-														}}
-													/>
-												) as unknown as string
-											}
-										</Text>
-									);
-								},
-							)}
-						</View>
-					)
-				}
-				sum={
-					<Text className="font-medium">
-						{formatCurrency(locale, receipt.currencyCode, sum)}
-					</Text>
-				}
-				icon={<ReceiptPreviewSyncIcon receipt={receipt} />}
-			/>
+									},
+								)}
+							</View>
+						)
+					}
+					sum={
+						<Text className="font-medium">
+							{formatCurrency(locale, receipt.currencyCode, sum)}
+						</Text>
+					}
+					icon={<ReceiptPreviewSyncIcon receipt={receipt} />}
+				/>
+			</Link>
 		);
 	},
 	<ReceiptPreviewSkeleton />,

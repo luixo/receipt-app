@@ -1,0 +1,25 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{\"ownedByMe\":false},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"data": {
+					"count": 1,
+					"cursor": 0,
+					"items": [
+						{
+							"id": "3bd1d307-0288-4f2c-aef7-8de145eeacd6",
+							"highlights": [],
+							"matchedItems": []
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
