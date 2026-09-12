@@ -1,5 +1,6 @@
 # Testing
 coverage/
+coverage-server/
 playwright-report/
 blob-report/
 test-results/

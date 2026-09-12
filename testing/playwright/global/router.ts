@@ -1,5 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { Queue } from "async-await-queue";
+import type { CoverageMapData } from "istanbul-lib-coverage";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -22,6 +23,8 @@ export const addTestServerError = ({
 	testErrorEntries[testId].push({ type, text });
 };
 
+export const coverageData: CoverageMapData[] = [];
+
 export const appRouter = router({
 	lockPort: procedure
 		.output(z.strictObject({ port: z.number(), hash: z.string() }))
@@ -37,6 +40,9 @@ export const appRouter = router({
 	getTestErrors: procedure
 		.input(z.strictObject({ testId: z.string() }))
 		.query(({ input: { testId } }) => testErrorEntries[testId] ?? []),
+	addCoverage: procedure.input(z.unknown().array()).mutation(({ input }) => {
+		coverageData.push(...(input as CoverageMapData[]));
+	}),
 });
 
 export type AppRouter = typeof appRouter;

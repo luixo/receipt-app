@@ -107,7 +107,8 @@ export default defineConfig({
 		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
 	/* Run your local dev server before starting the tests */
 	webServer: {
-		command: "bun run web:start",
+		// Node writes NODE_V8_COVERAGE data; Bun does not support this format.
+		command: "bun run web:start:node",
 		cwd: rootDir,
 		reuseExistingServer: !(process.env.CI || process.env.PW_SERVER),
 		url: `${urlSettings.baseUrl}api/ping`,
@@ -119,6 +120,10 @@ export default defineConfig({
 			S3_ENDPOINT: "https://fake-endpoint.org",
 			PORT: urlSettings.port.toString(),
 			PLAYWRIGHT: "true",
+			NODE_V8_COVERAGE: path.join(
+				rootDir,
+				"testing/playwright/coverage-server",
+			),
 		},
 		name: serverName,
 	},

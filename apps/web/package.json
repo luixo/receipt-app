@@ -6,7 +6,8 @@
 	"scripts": {
 		"build": "bun --bun vite build --configLoader native",
 		"dev": "bun --bun vite dev --configLoader native",
-		"start": "bun run --tsconfig-override tsconfig.bun.json .output/server/index.mjs"
+		"start": "bun run --tsconfig-override tsconfig.bun.json .output/server/index.mjs",
+		"start:node": "node .output/server/index.mjs"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",

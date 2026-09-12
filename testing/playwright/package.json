@@ -6,6 +6,7 @@
 		"test": "TZ=UTC bun run --env-file=../../.env,../../.env.local playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
+		"@ampproject/remapping": "^2.2.1",
 		"@faker-js/faker": "catalog:",
 		"@playwright/test": "catalog:",
 		"@ra/app": "workspace:*",
@@ -17,11 +18,16 @@
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
 		"@types/uuid": "catalog:",
+		"ast-v8-to-istanbul": "^1.0.5",
 		"async-await-queue": "^2.1.4",
 		"colors": "^1.4.0",
 		"deep-object-diff": "catalog:",
+		"istanbul-lib-coverage": "^3.2.2",
+		"istanbul-lib-report": "^3.0.1",
+		"istanbul-reports": "^3.2.0",
 		"jimp": "catalog:",
 		"playwright": "catalog:",
+		"rolldown": "^1.2.3",
 		"timekeeper": "catalog:",
 		"uuid": "catalog:",
 		"zod": "catalog:"

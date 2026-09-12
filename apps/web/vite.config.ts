@@ -33,9 +33,12 @@ const optimizedDeps = [
 const rootDir = path.resolve(import.meta.dirname, "../..");
 
 const webDir = path.join(rootDir, "apps/web");
-const config = defineConfig({
+const config = defineConfig(({ mode }) => ({
 	root: rootDir,
 	publicDir: path.join(webDir, "public"),
+	build: {
+		sourcemap: mode === "test",
+	},
 	resolve: {
 		extensions: [
 			// Prioritizing .ts(x) over .js(x) to keep proper imports
@@ -74,7 +77,9 @@ const config = defineConfig({
 			},
 		}),
 		nitro({
-			preset: "bun",
+			preset: mode === "test" ? "node-server" : "bun",
+			sourcemap: mode === "test",
+			experimental: mode === "test" ? { sourcemapMinify: false } : undefined,
 			output: { dir: path.join(webDir, ".output") },
 			publicAssets: [{ dir: path.join(webDir, "public"), maxAge: 0 }],
 		}),
@@ -135,7 +140,7 @@ const config = defineConfig({
 	server: {
 		port: Number(process.env.PORT) || 3000,
 	},
-});
+}));
 
 // We need this to place stats.json
 await fsp.mkdir(path.resolve(rootDir, "dist")).catch((error) => {
