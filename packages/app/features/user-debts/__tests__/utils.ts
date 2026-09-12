@@ -91,8 +91,10 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 	debtAmount: ({ page }, use) => use(page.getByTestId("preview-debt-amount")),
 	debtPreview: ({ page }, use) => use(page.getByTestId("user-debt-preview")),
+	debtPagination: ({ paginationBlock }, use) =>
+		use(paginationBlock.getByRole("navigation", { name: /pagination/i })),
 	removeDebtsButton: ({ paginationBlock }, use) =>
-		use(paginationBlock.getByTestId("trash-icon")),
+		use(paginationBlock.getByTestId("remove-button")),
 	showResolvedButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Show resolved debts" })),
 });

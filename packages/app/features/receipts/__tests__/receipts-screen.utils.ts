@@ -49,7 +49,7 @@ export const test = receiptsTest.extend<Fixtures>({
 		use(paginationBlock.getByTestId("remove-button")),
 
 	searchReceiptsInput: ({ paginationBlock }, use) =>
-		use(paginationBlock.getByTestId("search-bar").visible()),
+		use(paginationBlock.getByTestId("search-bar")),
 
 	emptyItemsBadge: ({ receiptPreview }, use) =>
 		use(receiptPreview.getByTestId("badge")),
