@@ -5,6 +5,7 @@ import assert from "node:assert";
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { expect } from "~tests/frontend/fixtures";
 import { add, getNow, subtract } from "~utils/date";
 
@@ -158,4 +159,142 @@ test("'receipts.add' mutation", async ({
 		{ name: "success", blacklistKeys: "users.get" },
 	);
 	await page.expectUrl({ to: "/receipts/$id", params: { id: receiptId } });
+});
+
+test("Newly added receipt is on the /receipts list after navigating back", async ({
+	page,
+	api,
+	mockBase,
+	nameInput,
+	addButton,
+	awaitCacheKey,
+}) => {
+	const { user } = await mockBase();
+	const existingName = "Existing receipt";
+	const newName = "Newly added receipt";
+	const existingId = "existing-receipt";
+	const newReceiptId = "new-receipt";
+
+	const receipts = new Map<string, TRPCQueryOutput<"receipts.get">>();
+	const seedReceipt = (id: string, name: string) =>
+		receipts.set(id, {
+			id,
+			debts: { direction: "outcoming", debts: [] },
+			name,
+			currencyCode: "USD",
+			issued: getNow.plainDate(),
+			createdAt: getNow.zonedDateTime(),
+			participants: [],
+			items: [],
+			payers: [],
+			ownerUserId: user.id,
+			selfUserId: user.id,
+		});
+	seedReceipt(existingId, existingName);
+
+	let pagedItems: TRPCQueryOutput<"receipts.getPaged">["items"] = [
+		{ id: existingId, highlights: [], matchedItems: [] },
+	];
+	api.mockFirst("receipts.getPaged", () => ({
+		items: pagedItems,
+		count: pagedItems.length,
+		cursor: -1,
+	}));
+	api.mockFirst("receipts.get", ({ input }) => {
+		const receipt = receipts.get(input.id);
+		if (!receipt) {
+			throw new TRPCError({ code: "NOT_FOUND" });
+		}
+		return receipt;
+	});
+
+	await page.navigate({ to: "/receipts" });
+	await awaitCacheKey("receipts.getPaged");
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+
+	await page.navigate({ to: "/receipts/add" });
+	await nameInput.fill(newName);
+	api.mockFirst("receipts.add", () => ({
+		id: newReceiptId,
+		createdAt: getNow.zonedDateTime(),
+		participants: [],
+		items: [],
+		payers: [],
+	}));
+	await addButton.click();
+	await awaitCacheKey("receipts.add");
+	await page.expectUrl({ to: "/receipts/$id", params: { id: newReceiptId } });
+
+	seedReceipt(newReceiptId, newName);
+	pagedItems = [
+		{ id: existingId, highlights: [], matchedItems: [] },
+		{ id: newReceiptId, highlights: [], matchedItems: [] },
+	];
+
+	await page.getByTestId("back-link").click();
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+	await expect(page.getByRole("link", { name: newName })).toBeVisible();
+});
+
+test("Server-added receipt appears on /receipts after navigating away and back", async ({
+	page,
+	api,
+	mockBase,
+	awaitCacheKey,
+}) => {
+	const { user } = await mockBase();
+	const existingName = "Existing receipt";
+	const newName = "Receipt added elsewhere";
+	const existingId = "existing-receipt";
+	const newReceiptId = "new-receipt";
+
+	const receipts = new Map<string, TRPCQueryOutput<"receipts.get">>();
+	const seedReceipt = (id: string, name: string) =>
+		receipts.set(id, {
+			id,
+			debts: { direction: "outcoming", debts: [] },
+			name,
+			currencyCode: "USD",
+			issued: getNow.plainDate(),
+			createdAt: getNow.zonedDateTime(),
+			participants: [],
+			items: [],
+			payers: [],
+			ownerUserId: user.id,
+			selfUserId: user.id,
+		});
+	seedReceipt(existingId, existingName);
+
+	let pagedItems: TRPCQueryOutput<"receipts.getPaged">["items"] = [
+		{ id: existingId, highlights: [], matchedItems: [] },
+	];
+	api.mockFirst("receipts.getPaged", () => ({
+		items: pagedItems,
+		count: pagedItems.length,
+		cursor: -1,
+	}));
+	api.mockFirst("receipts.get", ({ input }) => {
+		const receipt = receipts.get(input.id);
+		if (!receipt) {
+			throw new TRPCError({ code: "NOT_FOUND" });
+		}
+		return receipt;
+	});
+
+	await page.navigate({ to: "/receipts" });
+	await awaitCacheKey("receipts.getPaged");
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+
+	seedReceipt(newReceiptId, newName);
+	pagedItems = [
+		{ id: existingId, highlights: [], matchedItems: [] },
+		{ id: newReceiptId, highlights: [], matchedItems: [] },
+	];
+
+	await page.navigate({ to: "/debts" });
+	await page.expectUrl({ to: "/debts" });
+	await page.navigate({ to: "/receipts" });
+
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+	await expect(page.getByRole("link", { name: newName })).toBeVisible();
 });
