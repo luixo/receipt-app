@@ -5,8 +5,11 @@
 	"sideEffects": false,
 	"main": "src/index.ts",
 	"dependencies": {
+		"@ampproject/remapping": "^2.2.1",
 		"@internationalized/date": "3.10.0",
+		"ast-v8-to-istanbul": "^1.0.5",
 		"find-free-ports": "^3.1.1",
+		"rolldown": "^1.2.3",
 		"superjson": "^2.2.2",
 		"zod": "catalog:"
 	}

@@ -64,7 +64,6 @@ jobs:
           name: web-build
           path: |
             apps/web/.output
-            !*.map
           retention-days: 0
           include-hidden-files: true
           if-no-files-found: error
@@ -116,8 +115,6 @@ jobs:
         shardTotal: [4]
     container:
       image: mcr.microsoft.com/playwright:v1.63.0
-    outputs:
-      coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
       - uses: actions/checkout@v6
       - name: Ensure unzip is available
@@ -140,8 +137,16 @@ jobs:
           name: blob-report-${{ matrix.shardIndex }}
           path: testing/playwright/blob-report
           retention-days: 1
+      - name: Upload frontend coverage data
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage-${{ matrix.shardIndex }}
+          path: testing/playwright/coverage
+          retention-days: 1
+          if-no-files-found: error
 
-  merge-reports:
+  merge-frontend-reports:
     name: Merge Playwright reports
     if: ${{ !cancelled() }}
     needs: frontend-test
@@ -165,10 +170,44 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
+  merge-frontend-coverage:
+    name: Merge frontend coverage
+    if: ${{ !cancelled() }}
+    needs: frontend-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-env
+      - name: Download coverage data from shards
+        uses: actions/download-artifact@v8
+        with:
+          path: frontend-coverage
+          pattern: frontend-coverage-*
+      - name: Merge coverage reports
+        run: >-
+          bunx mcr merge --reports v8,console-details,lcovonly
+          --inputDir frontend-coverage/frontend-coverage-1,frontend-coverage/frontend-coverage-2,frontend-coverage/frontend-coverage-3,frontend-coverage/frontend-coverage-4
+          --outputDir testing/playwright/coverage
+      - name: Upload frontend coverage report
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage-report
+          path: testing/playwright/coverage
+          retention-days: 30
+          if-no-files-found: error
+      - name: Pass coverage percent to output
+        id: coverage-percent
+        run: |
+          COVERAGE=$(node -e 'console.log(Object.entries(require("./testing/playwright/coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
+          echo "Coverage is $COVERAGE"
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
   update-badges:
     name: Badges
     runs-on: ubuntu-latest
-    needs: backend-test
+    needs:
+      - backend-test
+      - merge-frontend-coverage
     steps:
       - name: Backend coverage badge
         uses: schneegans/dynamic-badges-action@v1.8.0
@@ -181,6 +220,19 @@ jobs:
           label: Backend coverage
           message: ${{ needs.backend-test.outputs.coverage }}%
           valColorRange: ${{ needs.backend-test.outputs.coverage }}
+          minColorRange: 50
+          maxColorRange: 100
+      - name: Frontend coverage badge
+        uses: schneegans/dynamic-badges-action@v1.8.0
+        env:
+          branch: ${{ github.ref == 'refs/heads/main' && 'main' || github.event.pull_request.number }}
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 878178ea4ba8d28122cc72204df909e7
+          filename: frontend_coverage_${{ env.branch }}.json
+          label: Frontend coverage
+          message: ${{ needs.merge-frontend-coverage.outputs.coverage }}%
+          valColorRange: ${{ needs.merge-frontend-coverage.outputs.coverage }}
           minColorRange: 50
           maxColorRange: 100
 
