@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{\"ownedByMe\":true},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"data": {
+					"count": 2,
+					"cursor": 0,
+					"items": [
+						{
+							"id": "eb92b841-43ec-4bd9-9e81-6fb4975be918",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "46cd51e2-841d-46bc-b6f6-4ad3db37b390",
+							"highlights": [],
+							"matchedItems": []
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-asc\"}]": {
+			"state": {
+				"data": {
+					"count": 3,
+					"cursor": 0,
+					"items": [
+						{
+							"id": "2fbc9198-ac96-4dae-a7bf-a29e76926636",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "1b9a8efa-8497-474d-a62c-42bab5192478",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "72f4a707-3c8f-47de-b243-a501a81a6138",
+							"highlights": [],
+							"matchedItems": []
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"data": {
+					"count": 0,
+					"cursor": 0,
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

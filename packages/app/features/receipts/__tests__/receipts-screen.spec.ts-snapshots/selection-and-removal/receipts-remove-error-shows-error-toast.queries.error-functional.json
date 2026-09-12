@@ -1,0 +1,8 @@
+{
+	"receipts.get": {
+		"clientCalls": 1
+	},
+	"receipts.remove": {
+		"clientCalls": 1
+	}
+}

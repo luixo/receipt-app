@@ -1,0 +1,1990 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"10b8bf11-82f1-450d-be6f-6dd8988b1001\"}]": {
+			"state": {
+				"data": {
+					"id": "10b8bf11-82f1-450d-be6f-6dd8988b1001",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "decerno quos usitas",
+					"currencyCode": "XOF",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "cf644080-2eac-4d61-998d-df92981ea272",
+							"price": 307.79,
+							"quantity": 82,
+							"name": "Electronic Ceramic Chips",
+							"createdAt": "2019-12-07T23:28:23.245+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-10T09:13:52.911+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-18T04:18:44.829+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-31T05:30:49.175+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T22:48:35.684+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "95623283-d93d-449b-81ed-5f586dbd468c",
+							"price": 593.89,
+							"quantity": 91,
+							"name": "Modern Rubber Pizza",
+							"createdAt": "2019-12-20T16:55:08.259+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-26T15:01:40.886+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-28T14:28:04.181+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-26T11:26:00.646+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-24T13:52:36.633+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "a366cce4-444e-4d0e-9058-ac42647063cd",
+							"price": 355.08,
+							"quantity": 31,
+							"name": "Sleek Bamboo Ball",
+							"createdAt": "2019-12-07T07:15:18.185+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-28T18:20:16.025+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-20T16:04:32.22+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-08T10:43:20.451+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-13T11:36:40.822+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "f98cfbc5-55c4-4e4f-9e2f-e301c2575800",
+							"price": 717.12,
+							"quantity": 79,
+							"name": "Rustic Cotton Car",
+							"createdAt": "2019-12-07T15:54:35.493+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-28T19:45:21.833+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-14T06:23:05.229+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T07:20:18.598+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-20T18:50:38.365+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "e35aede6-1071-4aa8-9349-f0ee712e2ab3",
+							"price": 432.38,
+							"quantity": 20,
+							"name": "Modern Plastic Hat",
+							"createdAt": "2019-12-31T05:07:53.713+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T16:48:47.652+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-31T10:05:09.303+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T17:42:43.808+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T11:52:43.21+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-31T06:14:37.893+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-28T15:02:16.234+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-30T08:20:44.689+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-29T07:33:08.169+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"290de887-1828-4856-9cf1-187ecfcd1432\"}]": {
+			"state": {
+				"data": {
+					"id": "290de887-1828-4856-9cf1-187ecfcd1432",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "ver centum avarus",
+					"currencyCode": "STN",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "7f9df0e0-2fb0-4535-ad52-80f5f1229f04",
+							"price": 565.1,
+							"quantity": 78,
+							"name": "Handcrafted Concrete Table",
+							"createdAt": "2019-12-17T06:39:05.299+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-24T04:12:41.837+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-29T16:28:31.333+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-25T03:27:36.829+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-20T23:45:33.872+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "922f576c-837d-44ef-9487-c9dd68c1edc3",
+							"price": 422.15,
+							"quantity": 44,
+							"name": "Gorgeous Granite Shirt",
+							"createdAt": "2019-12-22T08:40:45.363+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-23T17:48:18.345+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-24T19:39:03.005+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T10:10:40.479+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-24T12:28:24.782+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "bebf2aa5-be2d-4735-9197-2238e1b58de3",
+							"price": 949.98,
+							"quantity": 75,
+							"name": "Licensed Bamboo Shoes",
+							"createdAt": "2019-12-09T15:17:38.899+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-10T18:40:20.83+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-30T18:51:51.844+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-11T15:49:35.236+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-13T00:10:38.052+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "d294b6ad-60fe-40bf-a77e-11e998e080d1",
+							"price": 915.76,
+							"quantity": 2,
+							"name": "Awesome Bamboo Mouse",
+							"createdAt": "2019-12-05T14:54:16.706+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-25T23:06:58.814+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T23:22:36.397+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-21T14:58:03.825+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-10T00:13:39.633+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "ddea24cf-a4f3-4547-8ca4-370b1f9628bc",
+							"price": 37.32,
+							"quantity": 56,
+							"name": "Oriental Rubber Shirt",
+							"createdAt": "2019-12-17T09:29:29.317+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-21T06:09:01.365+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-21T15:35:25.633+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-23T20:15:32.277+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-29T14:09:20.913+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "b1090d65-afac-492b-b4b5-d213a58bca5c",
+							"price": 162.36,
+							"quantity": 14,
+							"name": "Tasty Rubber Tuna",
+							"createdAt": "2019-12-31T11:31:02.22+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T15:37:15.696+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T18:06:51.171+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T17:22:40.611+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-31T22:13:27.103+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "dd8045c8-5907-4231-8268-9929839c9c22",
+							"price": 365.24,
+							"quantity": 86,
+							"name": "Handmade Metal Towels",
+							"createdAt": "2019-12-14T04:36:24.792+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-16T01:51:44.507+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-21T09:25:08.66+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-15T14:14:55.395+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-22T00:59:40.979+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-29T14:02:22.436+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-28T19:45:00.678+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-30T12:35:48.212+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-31T06:22:44.74+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"2edc2690-0d76-4a5b-bbfb-ab2670499131\"}]": {
+			"state": {
+				"data": {
+					"id": "2edc2690-0d76-4a5b-bbfb-ab2670499131",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "perspiciatis auctor patruus",
+					"currencyCode": "GHS",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "40b4c0bc-801a-4df8-930d-bd83170f4012",
+							"price": 557.39,
+							"quantity": 83,
+							"name": "Practical Gold Chair",
+							"createdAt": "2019-12-04T07:51:31.744+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-20T06:36:41.328+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-15T02:26:41.93+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-08T06:35:17.693+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-11T06:09:32.548+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "555fc0cc-fc45-4f18-b20d-3d62e176cd40",
+							"price": 62.58,
+							"quantity": 13,
+							"name": "Luxurious Silk Table",
+							"createdAt": "2019-12-13T10:35:26.258+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-15T13:56:46.887+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-30T14:46:33.493+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-18T22:59:48.538+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-20T13:13:44.796+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "47bd3954-d3e8-4c2a-a691-21cce3d7a99a",
+							"price": 665.34,
+							"quantity": 64,
+							"name": "Handmade Cotton Table",
+							"createdAt": "2019-12-24T09:33:33.295+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-24T16:41:17.015+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T04:05:03.17+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-24T14:10:11.975+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-31T00:40:05.662+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "74077b97-4e48-4e3c-86e7-477c937238f1",
+							"price": 889.54,
+							"quantity": 11,
+							"name": "Tasty Ceramic Pizza",
+							"createdAt": "2019-12-10T11:50:47.393+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-29T02:44:07.932+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-13T14:51:07.259+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-25T12:06:28.937+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-15T17:45:58.191+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-30T04:12:02.588+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-29T20:59:13.884+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-31T05:41:21.301+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-28T11:25:56.803+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"629578f9-7dfc-4779-9533-1f8ea84308bf\"}]": {
+			"state": {
+				"data": {
+					"id": "629578f9-7dfc-4779-9533-1f8ea84308bf",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "acsi tactus celo",
+					"currencyCode": "BSD",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "8bb4a67d-d74a-4778-8eb0-b06e9f0be879",
+							"price": 221.56,
+							"quantity": 66,
+							"name": "Fresh Marble Chicken",
+							"createdAt": "2019-12-04T23:18:04.249+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-14T06:01:16.303+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-05T08:52:54.812+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-24T19:29:25.375+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-22T07:53:39.577+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "d6e17ceb-ac89-4a94-b4e1-b9a1f1bbbcf3",
+							"price": 658.43,
+							"quantity": 38,
+							"name": "Oriental Steel Cheese",
+							"createdAt": "2019-12-23T21:54:05.022+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T22:50:00.554+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T18:34:31.309+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-30T16:45:31.532+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-28T07:51:36.654+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "a3ccb905-4b4b-402e-9785-6e1a51356dec",
+							"price": 237.47,
+							"quantity": 77,
+							"name": "Awesome Concrete Chips",
+							"createdAt": "2019-12-22T03:33:46.832+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-22T11:20:49.271+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-26T19:40:15.227+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-30T13:10:31.145+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-22T13:20:41.864+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-28T05:16:47.45+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-28T23:47:27.026+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-28T02:59:26.701+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-28T02:37:42.18+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"6e36df85-86d6-4dd6-9a57-37fb3d0f5e18\"}]": {
+			"state": {
+				"data": {
+					"id": "6e36df85-86d6-4dd6-9a57-37fb3d0f5e18",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cruentus amplus communis",
+					"currencyCode": "CDF",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "9dd72c24-cfb4-4c3f-a1ae-801a8df20a21",
+							"price": 566.45,
+							"quantity": 49,
+							"name": "Fantastic Gold Computer",
+							"createdAt": "2019-12-28T15:09:50.626+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-29T14:11:17.14+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-29T12:43:24.939+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T05:44:08.825+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-30T15:36:51.846+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "3c0db2b9-9b21-4ee9-89c4-1fd7fe5eea22",
+							"price": 721.58,
+							"quantity": 54,
+							"name": "Refined Rubber Sausages",
+							"createdAt": "2019-12-06T08:42:42.484+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-15T17:23:46.856+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-13T01:55:10.383+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-19T04:20:42.92+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-11T01:16:55.286+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "8bc3d7b7-455a-4944-a47b-c10f10af7b8a",
+							"price": 437.23,
+							"quantity": 28,
+							"name": "Intelligent Metal Salad",
+							"createdAt": "2019-12-29T03:25:15.398+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-30T05:12:04.901+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-29T10:10:03.662+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T21:06:15.902+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T21:45:53.327+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "d71e96fc-bc65-46dc-b793-556d99d25c4a",
+							"price": 1.2,
+							"quantity": 70,
+							"name": "Recycled Plastic Salad",
+							"createdAt": "2019-12-12T03:55:48.868+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-19T21:56:41.074+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-13T16:41:50.27+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-14T14:26:13.789+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-21T14:01:21.927+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "9f660cd9-bc5d-49b9-9c4c-52ece7329b24",
+							"price": 104.2,
+							"quantity": 95,
+							"name": "Oriental Bronze Car",
+							"createdAt": "2019-12-18T16:41:35.447+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-24T21:27:26.062+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-27T05:44:26.919+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-30T08:09:14.678+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-25T11:29:30.044+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-28T10:50:34.785+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-29T07:18:41.682+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-28T08:59:42.266+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-27T01:21:17.086+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"809ad475-3bfd-4587-a9b7-7d21c087eb3a\"}]": {
+			"state": {
+				"data": {
+					"id": "809ad475-3bfd-4587-a9b7-7d21c087eb3a",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "stipes adhuc tollo",
+					"currencyCode": "SDG",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "a52c2477-ce5b-44d2-8d3e-b700f946e036",
+							"price": 349.78,
+							"quantity": 72,
+							"name": "Unbranded Plastic Table",
+							"createdAt": "2019-12-27T07:39:00.411+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-29T10:00:35.287+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-29T23:40:17.254+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-29T17:44:22.919+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T08:11:23.843+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "3a9827b0-5d98-4cba-b8f7-afe75b3fa220",
+							"price": 785.49,
+							"quantity": 83,
+							"name": "Recycled Concrete Chair",
+							"createdAt": "2019-12-01T11:45:14.784+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T15:28:02.18+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-04T11:50:33.427+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-20T22:28:42.639+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-08T12:57:38.157+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "59ccb288-56f6-4768-af14-ab230fe423a2",
+							"price": 937.39,
+							"quantity": 82,
+							"name": "Ergonomic Silk Shoes",
+							"createdAt": "2019-12-14T04:15:34.634+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-25T16:15:51.925+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-24T14:06:35.937+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-27T12:20:03.713+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-14T20:44:00.254+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-27T20:01:04.469+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-28T07:25:43.929+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-29T19:08:40.833+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-29T16:09:31.385+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"be5c0af5-4e34-462e-b9ed-1228ce7d0775\"}]": {
+			"state": {
+				"data": {
+					"id": "be5c0af5-4e34-462e-b9ed-1228ce7d0775",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cunae aranea carmen",
+					"currencyCode": "AFN",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "0ed25d72-00d8-4f41-8739-2d40d834e23e",
+							"price": 449.84,
+							"quantity": 27,
+							"name": "Oriental Plastic Computer",
+							"createdAt": "2019-12-09T23:17:20.373+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-19T17:32:33.185+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-28T15:19:28.416+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-25T03:51:38.522+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-29T15:29:19.57+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "6d312deb-35c4-48da-ab20-edaeb4d0fe81",
+							"price": 19.95,
+							"quantity": 8,
+							"name": "Incredible Bamboo Cheese",
+							"createdAt": "2019-12-28T20:25:30.101+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-29T22:41:50.285+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T08:34:59.737+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-29T23:44:34.629+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-29T01:40:09.113+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "cfb73b5b-9929-430d-88b5-c8ee306b0527",
+							"price": 697.12,
+							"quantity": 75,
+							"name": "Soft Cotton Towels",
+							"createdAt": "2019-12-15T21:42:27.841+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T13:06:18.907+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-17T11:27:10.104+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-21T05:13:28.159+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-20T21:17:59.77+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "54258fbc-fdf4-4835-9f12-279c07baad17",
+							"price": 557.26,
+							"quantity": 66,
+							"name": "Tasty Steel Fish",
+							"createdAt": "2019-12-09T04:34:15.736+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-10T17:53:51.719+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-19T00:18:00.541+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-27T20:06:09.203+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-23T21:11:47.243+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-29T19:58:09.45+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-31T03:33:50.947+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-30T03:09:43.512+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-30T07:48:17.308+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"c2a47fc4-b1aa-4326-94cb-eaff40affeca\"}]": {
+			"state": {
+				"data": {
+					"id": "c2a47fc4-b1aa-4326-94cb-eaff40affeca",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cariosus comminor arguo",
+					"currencyCode": "IDR",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "4353fcfd-2cf4-434d-8813-34cd97824a10",
+							"price": 979.67,
+							"quantity": 88,
+							"name": "Awesome Aluminum Hat",
+							"createdAt": "2019-12-16T17:07:58.728+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-18T22:03:40.727+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-21T15:17:38.734+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-30T17:20:31.309+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-19T07:29:48.925+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "2f5db298-293b-4d85-a183-77c6a76fb299",
+							"price": 381.52,
+							"quantity": 62,
+							"name": "Bespoke Gold Bike",
+							"createdAt": "2019-12-08T02:20:14.12+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-16T23:26:10.28+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-08T22:55:25.066+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-19T16:33:03.834+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-30T06:34:31.839+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "4f1ceef2-43ae-4f05-952b-cbc4458bec24",
+							"price": 678.3,
+							"quantity": 58,
+							"name": "Tasty Ceramic Pizza",
+							"createdAt": "2019-12-15T14:51:29.037+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-26T22:36:11.824+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-17T05:30:47.56+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-27T09:19:58.62+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-31T05:06:24.252+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "289a302d-09be-4c56-b281-2149ed678778",
+							"price": 556.71,
+							"quantity": 90,
+							"name": "Frozen Steel Salad",
+							"createdAt": "2019-12-14T18:53:49.907+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-16T17:49:32.388+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-19T21:42:32.429+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-29T00:42:18.774+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-19T22:56:12.189+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "8bb52603-43a7-4619-aee5-a32d3b41295b",
+							"price": 696.02,
+							"quantity": 63,
+							"name": "Recycled Gold Towels",
+							"createdAt": "2019-12-24T10:10:12.426+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-27T00:40:40.265+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-29T23:15:24.42+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-28T05:05:03.388+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-27T22:40:38.786+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "5fabb9d2-9cca-42ad-8db0-348466833a06",
+							"price": 541.15,
+							"quantity": 28,
+							"name": "Soft Gold Pants",
+							"createdAt": "2019-12-12T06:29:25.955+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-24T05:01:06.99+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-13T05:36:56.01+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-26T06:43:17.078+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-21T03:12:15.134+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "d163470a-ca44-4491-9543-abab7ea9c73d",
+							"price": 64.42,
+							"quantity": 59,
+							"name": "Handcrafted Rubber Salad",
+							"createdAt": "2019-12-13T19:23:47.902+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-28T15:31:58.06+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T03:00:51.38+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-29T03:32:55.81+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T16:08:13.09+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 1
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "203a45a7-906b-4a4d-b7b2-868eec5db7c7",
+							"price": 163.64,
+							"quantity": 25,
+							"name": "Fantastic Marble Bacon",
+							"createdAt": "2019-12-23T07:28:09.906+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-30T17:23:49.707+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-27T06:43:17.122+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-28T11:57:24.175+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-23T11:59:05.221+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-29T06:25:40.871+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-29T07:45:17.953+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-27T20:25:02.985+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-30T13:27:40.088+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"c58fda4b-fa05-4605-8175-3f151f828fda\"}]": {
+			"state": {
+				"data": {
+					"id": "c58fda4b-fa05-4605-8175-3f151f828fda",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "substantia adulatio ciminatio",
+					"currencyCode": "TRY",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "8f0df177-5803-4490-a7d6-cb77799463a6",
+							"price": 580.41,
+							"quantity": 24,
+							"name": "Modern Plastic Shoes",
+							"createdAt": "2019-12-07T00:22:03.206+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-18T01:19:53.119+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T10:30:23.392+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-28T13:06:37.739+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-26T06:09:27.129+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "59432396-fe7b-4e07-ba6f-03f95d60d409",
+							"price": 839.01,
+							"quantity": 19,
+							"name": "Handcrafted Concrete Chicken",
+							"createdAt": "2019-12-16T19:31:59.113+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-17T09:51:35.504+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-22T05:33:18.574+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T21:58:25.324+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-27T10:21:59.248+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "2b4009a8-72ee-4702-9965-bade467fa9ed",
+							"price": 327.27,
+							"quantity": 9,
+							"name": "Elegant Concrete Ball",
+							"createdAt": "2019-12-30T01:46:40.744+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-30T16:11:48.078+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-30T23:37:59.155+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-30T10:12:39.498+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-30T11:57:13.134+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 3
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "ed937abc-d44d-4179-8bf8-fc65eb8ff7bd",
+							"price": 158.3,
+							"quantity": 26,
+							"name": "Oriental Gold Keyboard",
+							"createdAt": "2019-12-30T10:37:47.637+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-31T23:25:21.312+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-30T16:51:17.743+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T00:23:31.344+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-31T18:34:19.558+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "648945cf-022e-4ef0-8241-c04a139d976b",
+							"price": 483.15,
+							"quantity": 18,
+							"name": "Ergonomic Steel Soap",
+							"createdAt": "2019-12-03T07:20:06.452+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-25T10:13:26.257+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-05T04:41:42.087+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-25T18:02:15.089+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-07T19:28:04.437+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-29T06:22:20.264+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-27T00:03:37.672+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-27T13:34:13.001+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-30T18:30:03.017+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"f06d4ff3-3d3c-440f-a6b5-952b0b471fdd\"}]": {
+			"state": {
+				"data": {
+					"id": "f06d4ff3-3d3c-440f-a6b5-952b0b471fdd",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "comedo solus illum",
+					"currencyCode": "MOP",
+					"issued": "2020-01-01",
+					"ownerUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfUserId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
+					"items": [
+						{
+							"id": "e6bdac77-7512-4b08-a5f6-7792921d4d63",
+							"price": 178.07,
+							"quantity": 39,
+							"name": "Fantastic Bronze Pants",
+							"createdAt": "2019-12-08T02:22:12.529+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-17T03:30:54.102+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-20T02:28:24.546+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-31T08:20:10.146+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-14T00:54:09.88+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "ad32c711-63cf-4da5-9397-69b8ba191d76",
+							"price": 544.46,
+							"quantity": 94,
+							"name": "Refined Aluminum Sausages",
+							"createdAt": "2019-12-19T14:42:24.449+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-29T10:40:19.844+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-27T00:50:35.603+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-25T09:57:46.521+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-22T13:50:10.277+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "d309e3df-c1c6-4cbc-8a4c-bc7bba5acf95",
+							"price": 906.38,
+							"quantity": 59,
+							"name": "Tasty Metal Chair",
+							"createdAt": "2019-12-06T06:30:32.818+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-19T14:06:20.452+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-19T09:04:49.134+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-23T07:41:55.657+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-13T17:45:51.229+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "db165930-e234-470a-ace4-eb989dac40ba",
+							"price": 938.18,
+							"quantity": 84,
+							"name": "Fantastic Ceramic Keyboard",
+							"createdAt": "2019-12-23T10:34:54.73+00:00[UTC]",
+							"consumers": [
+								{
+									"createdAt": "2019-12-26T09:29:39.155+00:00[UTC]",
+									"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+									"part": 2
+								},
+								{
+									"createdAt": "2019-12-24T16:19:42.443+00:00[UTC]",
+									"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+									"part": 1
+								},
+								{
+									"createdAt": "2019-12-24T11:52:04.861+00:00[UTC]",
+									"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+									"part": 3
+								},
+								{
+									"createdAt": "2019-12-28T00:05:13.932+00:00[UTC]",
+									"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+									"part": 2
+								}
+							],
+							"payers": []
+						}
+					],
+					"participants": [
+						{
+							"userId": "1018ec43-045e-41be-a2ea-5954c3566d68",
+							"role": "editor",
+							"createdAt": "2019-12-28T18:14:14.827+00:00[UTC]"
+						},
+						{
+							"userId": "ff16bb78-01c7-4cc5-9405-4c1d81a2793f",
+							"role": "editor",
+							"createdAt": "2019-12-27T00:39:33.742+00:00[UTC]"
+						},
+						{
+							"userId": "0f2607c2-1058-4437-969e-6f0a35b587bd",
+							"role": "editor",
+							"createdAt": "2019-12-29T03:52:57.61+00:00[UTC]"
+						},
+						{
+							"userId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+							"role": "owner",
+							"createdAt": "2019-12-28T08:29:45.608+00:00[UTC]"
+						}
+					],
+					"payers": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.getPaged:[{\"cursor\":10,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"data": {
+					"count": 25,
+					"cursor": 10,
+					"items": [
+						{
+							"id": "809ad475-3bfd-4587-a9b7-7d21c087eb3a",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "f06d4ff3-3d3c-440f-a6b5-952b0b471fdd",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "10b8bf11-82f1-450d-be6f-6dd8988b1001",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "be5c0af5-4e34-462e-b9ed-1228ce7d0775",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "290de887-1828-4856-9cf1-187ecfcd1432",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "629578f9-7dfc-4779-9533-1f8ea84308bf",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "6e36df85-86d6-4dd6-9a57-37fb3d0f5e18",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "2edc2690-0d76-4a5b-bbfb-ab2670499131",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "c2a47fc4-b1aa-4326-94cb-eaff40affeca",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "c58fda4b-fa05-4605-8175-3f151f828fda",
+							"highlights": [],
+							"matchedItems": []
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
