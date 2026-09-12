@@ -58,7 +58,7 @@ const globalSetup = async () => {
 		const { coverage: serverCoverage } = (await response.json()) as {
 			coverage: CoverageMapData[];
 		};
-		generateCoverageReport({
+		await generateCoverageReport({
 			client: clientCoverage,
 			server: serverCoverage,
 		});

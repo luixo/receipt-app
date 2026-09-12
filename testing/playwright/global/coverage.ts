@@ -1,9 +1,12 @@
+import convert from "ast-v8-to-istanbul";
 import libCoverage from "istanbul-lib-coverage";
 import type { CoverageMapData } from "istanbul-lib-coverage";
 import libReport from "istanbul-lib-report";
 import reports from "istanbul-reports";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { parseAstAsync } from "rolldown/parseAst";
 
 const localDir = import.meta.dirname;
 const rootDir = path.join(localDir, "../../../");
@@ -29,6 +32,31 @@ const IGNORED_PATHS = [
 	/apps\/web\/src\/app.css/,
 ];
 
+const isIncluded = (filePath: string) => {
+	const relativePath = path.relative(rootDir, filePath);
+	return (
+		INCLUDED_DIRS.some(
+			(dir) => relativePath === dir || relativePath.startsWith(`${dir}/`),
+		) &&
+		!IGNORED_PATHS.some((ignored) =>
+			typeof ignored === "string"
+				? ignored === relativePath
+				: ignored.test(relativePath),
+		)
+	);
+};
+
+const getProjectFiles = async (directory: string): Promise<string[]> => {
+	const entries = await fs.readdir(directory, { withFileTypes: true });
+	const files = await Promise.all(
+		entries.map(async (entry) => {
+			const filePath = path.join(directory, entry.name);
+			return entry.isDirectory() ? getProjectFiles(filePath) : [filePath];
+		}),
+	);
+	return files.flat();
+};
+
 export const prepareCoverageEnv = async () => {
 	await fs.rm(clientCoverageDir, { recursive: true, force: true });
 	await fs.mkdir(clientCoverageDir);
@@ -36,7 +64,7 @@ export const prepareCoverageEnv = async () => {
 	await fs.mkdir(serverCoverageDir);
 };
 
-export const generateCoverageReport = (coverage: {
+export const generateCoverageReport = async (coverage: {
 	client: CoverageMapData[];
 	server: CoverageMapData[];
 }) => {
@@ -48,19 +76,40 @@ export const generateCoverageReport = (coverage: {
 	for (const data of [...coverage.client, ...coverage.server]) {
 		coverageMap.merge(data);
 	}
-	coverageMap.filter((filePath) => {
-		const relativePath = path.relative(rootDir, filePath);
-		return (
-			INCLUDED_DIRS.some(
-				(dir) => relativePath === dir || relativePath.startsWith(`${dir}/`),
-			) &&
-			!IGNORED_PATHS.some((ignored) =>
-				typeof ignored === "string"
-					? ignored === relativePath
-					: ignored.test(relativePath),
-			)
-		);
-	});
+	if (process.env.COVERAGE_ALL === "true") {
+		const existingFiles = new Set(coverageMap.files());
+		for (const directory of INCLUDED_DIRS) {
+			for (const filePath of await getProjectFiles(
+				path.join(rootDir, directory),
+			)) {
+				const fileUrl = pathToFileURL(filePath).href;
+				if (
+					/\.[cm]?[jt]sx?$/.test(filePath) &&
+					isIncluded(filePath) &&
+					!existingFiles.has(fileUrl)
+				) {
+					const code = await fs.readFile(filePath, "utf8");
+					coverageMap.merge(
+						await convert({
+							code,
+							coverage: { url: fileUrl, functions: [] },
+							ast: await parseAstAsync(code, {
+								lang: filePath.endsWith(".tsx")
+									? "tsx"
+									: filePath.endsWith(".ts")
+										? "ts"
+										: "js",
+							}),
+						}),
+					);
+					existingFiles.add(fileUrl);
+				}
+			}
+		}
+	}
+	coverageMap.filter((filePath) => 
+		isIncluded(filePath)
+	);
 	const coverageContext = libReport.createContext({
 		dir: clientCoverageDir,
 		coverageMap,
