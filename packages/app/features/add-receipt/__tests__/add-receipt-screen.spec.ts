@@ -298,3 +298,84 @@ test("Server-added receipt appears on /receipts after navigating away and back",
 	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
 	await expect(page.getByRole("link", { name: newName })).toBeVisible();
 });
+
+test("Newly added receipt survives a bottom-bar round trip through /users", async ({
+	page,
+	api,
+	mockBase,
+	nameInput,
+	addButton,
+	awaitCacheKey,
+}) => {
+	const { user } = await mockBase();
+	const existingName = "Existing receipt";
+	const newName = "Newly added receipt";
+	const existingId = "existing-receipt";
+	const newReceiptId = "new-receipt";
+
+	const receipts = new Map<string, TRPCQueryOutput<"receipts.get">>();
+	const seedReceipt = (id: string, name: string) =>
+		receipts.set(id, {
+			id,
+			debts: { direction: "outcoming", debts: [] },
+			name,
+			currencyCode: "USD",
+			issued: getNow.plainDate(),
+			createdAt: getNow.zonedDateTime(),
+			participants: [],
+			items: [],
+			payers: [],
+			ownerUserId: user.id,
+			selfUserId: user.id,
+		});
+	seedReceipt(existingId, existingName);
+
+	const pagedItems: TRPCQueryOutput<"receipts.getPaged">["items"] = [
+		{ id: existingId, highlights: [], matchedItems: [] },
+		{ id: newReceiptId, highlights: [], matchedItems: [] },
+	];
+	api.mockFirst("receipts.getPaged", () => ({
+		items: pagedItems,
+		count: pagedItems.length,
+		cursor: -1,
+	}));
+	api.mockFirst("receipts.get", ({ input }) => {
+		const receipt = receipts.get(input.id);
+		if (!receipt) {
+			throw new TRPCError({ code: "NOT_FOUND" });
+		}
+		return receipt;
+	});
+
+	await page.navigate({ to: "/receipts" });
+	await awaitCacheKey("receipts.getPaged");
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+
+	await page.navigate({ to: "/receipts/add" });
+	await nameInput.fill(newName);
+	api.mockFirst("receipts.add", () => ({
+		id: newReceiptId,
+		createdAt: getNow.zonedDateTime(),
+		participants: [],
+		items: [],
+		payers: [],
+	}));
+	await addButton.click();
+	await awaitCacheKey("receipts.add");
+
+	seedReceipt(newReceiptId, newName);
+
+	await page
+		.getByTestId("sticky-menu")
+		.getByRole("link", { name: "Users" })
+		.click();
+	await page.expectUrl({ to: "/users" });
+	await page
+		.getByTestId("sticky-menu")
+		.getByRole("link", { name: "Receipts" })
+		.click();
+	await page.expectUrl({ to: "/receipts" });
+
+	await expect(page.getByRole("link", { name: existingName })).toBeVisible();
+	await expect(page.getByRole("link", { name: newName })).toBeVisible();
+});
