@@ -7,12 +7,14 @@ type IgnoredPattern = string | RegExp;
 
 export const DEFAULT_IGNORED: IgnoredPattern[] = [];
 
-export const isIgnored = (patterns: IgnoredPattern[], message: string) =>
-	patterns.some((ignoredElement) =>
+export const isIgnored = (patterns: IgnoredPattern[], message: string) => {
+	const trimmedMessage = message.trim();
+	return patterns.some((ignoredElement) =>
 		typeof ignoredElement === "string"
-			? message.includes(ignoredElement)
-			: message.match(ignoredElement),
+			? trimmedMessage.includes(ignoredElement)
+			: trimmedMessage.match(ignoredElement),
 	);
+};
 
 const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	...DEFAULT_IGNORED,
