@@ -1,0 +1,8 @@
+{
+	"receipts.get": {
+		"serverCalls": 3
+	},
+	"receipts.getPaged": {
+		"serverCalls": 1
+	}
+}

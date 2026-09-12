@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"c7b6dd7c-f9cc-4005-b618-058152b9b0c3\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		},
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receipts.remove": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "c7b6dd7c-f9cc-4005-b618-058152b9b0c3"
+					}
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"f1fa19b6-5b93-4cd8-9288-b26b64afd6ec\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"receipts.remove": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receipts.remove\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "f1fa19b6-5b93-4cd8-9288-b26b64afd6ec"
+					}
+				}
+			}
+		]
+	}
+}

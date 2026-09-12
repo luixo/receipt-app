@@ -1,0 +1,145 @@
+{
+	"queries": {
+		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":25,\"orderBy\":\"date-desc\"}]": {
+			"state": {
+				"data": {
+					"count": 25,
+					"cursor": 0,
+					"items": [
+						{
+							"id": "2c7a9e1d-f6c4-4365-a4e8-8382f4ca388c",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "72d760a6-285b-49d2-a0d0-d21a4fb0d692",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "1ec6ba89-cbde-4242-a8eb-19fa377eb78b",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "649ecfbb-b83c-44f5-b84a-857e0d6ca381",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "68a92daa-568d-44c3-9e8a-545fe5730f4e",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "0f8b1991-a04f-4cea-9cf0-2459b0606e8a",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "2ea93fa8-9a9d-4f9d-9647-5bf9ed460e36",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "f1be9d22-16e3-41ba-becb-7f0ba6251dce",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "d561dbd0-516a-402c-84d7-77b0133c4ca5",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "2a75d53a-0c7e-4163-b832-8892b9c62007",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "67431088-e727-4c46-948f-38420f93a71b",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "879068b7-f5e6-4112-84d6-4f7c4a6a4fa6",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "2d7bcc84-7d88-40b0-847a-2f78027b2788",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "b9d06b95-2527-489b-a77d-98eeaf9eb857",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "c2958ee9-839e-4ba4-8ebd-63d32a42916d",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "04f84bbe-5ff3-45e7-8433-12d48773017d",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "2fc3876e-b770-4260-861d-964067ba841d",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "767d631e-0542-43d9-be0d-e4cd11cc2269",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "5422df95-a980-449a-920d-48df1048d2dc",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "c07b746d-6ab4-4129-b975-cd5d3b365d3c",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "75e1efc3-9d1e-4d41-a60b-ebc0098de5c6",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "f718235b-e61f-47d7-8ad2-05d567fe3b09",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "23eb8eaa-c931-4962-8ca5-1eef42fece32",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "eeabe543-ac42-46f4-ad4b-2434d18b50de",
+							"highlights": [],
+							"matchedItems": []
+						},
+						{
+							"id": "e1f2f67e-c1c6-46de-b157-9f3b22249a50",
+							"highlights": [],
+							"matchedItems": []
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
