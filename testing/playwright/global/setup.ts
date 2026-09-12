@@ -55,7 +55,9 @@ const globalSetup = async () => {
 		if (!response.ok) {
 			throw new Error(`Failed to stop server coverage: ${response.status}`);
 		}
-		const serverCoverage = (await response.json()) as CoverageMapData[];
+		const { coverage: serverCoverage } = (await response.json()) as {
+			coverage: CoverageMapData[];
+		};
 		generateCoverageReport({
 			client: clientCoverage,
 			server: serverCoverage,

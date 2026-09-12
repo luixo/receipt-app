@@ -1,6 +1,6 @@
-import { createCoverageMap } from "istanbul-lib-coverage";
+import libCoverage from "istanbul-lib-coverage";
 import type { CoverageMapData } from "istanbul-lib-coverage";
-import { createContext as createCoverageContext } from "istanbul-lib-report";
+import libReport from "istanbul-lib-report";
 import reports from "istanbul-reports";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -8,8 +8,6 @@ import path from "node:path";
 const localDir = import.meta.dirname;
 const rootDir = path.join(localDir, "../../../");
 const playwrightDir = path.join(rootDir, "testing/playwright");
-const webPublicDir = path.join(rootDir, "apps/web/.output/public");
-
 const clientCoverageDir = path.join(playwrightDir, "coverage");
 const serverCoverageDir = path.join(playwrightDir, "coverage-server");
 
@@ -46,11 +44,24 @@ export const generateCoverageReport = (coverage: {
 	console.log(
 		`Generating coverage from ${coverage.client.length} client and ${coverage.server.length} server data points`,
 	);
-	const coverageMap = createCoverageMap();
+	const coverageMap = libCoverage.createCoverageMap();
 	for (const data of [...coverage.client, ...coverage.server]) {
 		coverageMap.merge(data);
 	}
-	const coverageContext = createCoverageContext({
+	coverageMap.filter((filePath) => {
+		const relativePath = path.relative(rootDir, filePath);
+		return (
+			INCLUDED_DIRS.some(
+				(dir) => relativePath === dir || relativePath.startsWith(`${dir}/`),
+			) &&
+			!IGNORED_PATHS.some((ignored) =>
+				typeof ignored === "string"
+					? ignored === relativePath
+					: ignored.test(relativePath),
+			)
+		);
+	});
+	const coverageContext = libReport.createContext({
 		dir: clientCoverageDir,
 		coverageMap,
 	});
