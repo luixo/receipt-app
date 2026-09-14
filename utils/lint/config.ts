@@ -245,6 +245,7 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 			"apps/web/src/pages/api/**/*",
 			"apps/web/src/entry/server.tsx",
 			"testing/**",
+			"utils/**",
 		],
 		["client-only"],
 	],
@@ -388,6 +389,8 @@ const disabledRules = {
 	// We see no evil in nested ternaries
 	"no-nested-ternary": "off",
 	"unicorn/no-nested-ternary": "off",
+	// We see no evil in continue
+	"no-continue": "off",
 	// This is guarded by typescript
 	"consistent-return": "off",
 	// Typescript version is typescript/switch-exhaustiveness-check
@@ -825,6 +828,7 @@ export default defineConfig({
 	ignorePatterns: [
 		".history/",
 		"**/.output/",
+		"**/.vercel/",
 		"**/.tanstack/",
 		"**/.nitro/",
 		"**/.expo/",
