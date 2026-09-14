@@ -53,6 +53,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							variant="bordered"
 							color="secondary"
 							onPress={openEditModal}
+							aria-label="Edit user"
 						>
 							<Icon name="pencil" className="size-6" />
 						</Button>
@@ -86,6 +87,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 				onOpenChange={closeEditModal}
 				header={<Text className="text-xl">{t("user.modal.editTitle")}</Text>}
 				bodyClassName="flex flex-col gap-4 py-6"
+				label={t("user.modal.editTitle")}
 			>
 				<User id={userId} onRemove={onUserRemove} />
 			</Modal>
