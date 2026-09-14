@@ -12,10 +12,13 @@ import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockBase: () => Promise<{
+	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<{
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
-	mockDebts: (options?: { generateDebts?: GenerateDebts }) => Promise<{
+	mockDebts: (options?: {
+		generateUsers?: GenerateUsers;
+		generateDebts?: GenerateDebts;
+	}) => Promise<{
 		debts: ReturnType<GenerateDebts>;
 		debtUser: ReturnType<GenerateUsers>[number];
 	}>;
@@ -24,52 +27,62 @@ type Fixtures = {
 		options?: { awaitCache?: boolean; awaitDebts?: number },
 	) => Promise<void>;
 	debtAmount: Locator;
+	debtPreview: Locator;
+	removeDebtsButton: Locator;
+	showResolvedButton: Locator;
+	debtCheckbox: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
-		use(async () => {
+		use(async ({ generateUsers = defaultGenerateUsers } = {}) => {
 			await api.mockUtils.authPage();
-			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
+			api.mockLast("currency.top", { items: [] });
+			api.mockLast("users.suggestTop", { items: [] });
+			const [debtUser] = generateUsers({ faker, amount: 1 });
 			assert.ok(debtUser);
 			api.mockUtils.mockUsers(debtUser);
 			return { debtUser };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
-		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { debtUser } = await mockBase();
-			const debts = generateDebts({
-				faker,
-				amount: { min: 3, max: 6 },
-				userId: debtUser.id,
-			});
-			const aggregatedDebts = entries(
-				debts.reduce<Record<CurrencyCode, number>>(
-					(acc, { currencyCode, amount }) => ({
-						...acc,
-						[currencyCode]: (acc[currencyCode] || 0) + amount,
-					}),
-					{},
-				),
-			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
-			api.mockFirst("debts.getByUserPaged", {
-				items: debts.map(({ id }) => id),
-				count: debts.length,
-				cursor: 0,
-			});
-			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
-				const matchedDebt = debts.find((debt) => debt.id === lookupId);
-				if (!matchedDebt) {
-					throw new TRPCError({
-						code: "NOT_FOUND",
-						message: `Expected to have debt id "${lookupId}", but none found`,
-					});
-				}
-				return { ...matchedDebt, userId: debtUser.id };
-			});
-			return { debts, debtUser };
-		}),
+		use(
+			async ({ generateDebts = defaultGenerateDebts, generateUsers } = {}) => {
+				const { debtUser } = await mockBase({ generateUsers });
+				const debts = generateDebts({
+					faker,
+					amount: { min: 3, max: 6 },
+					userId: debtUser.id,
+				});
+				const aggregatedDebts = entries(
+					debts.reduce<Record<CurrencyCode, number>>(
+						(acc, { currencyCode, amount }) => ({
+							...acc,
+							[currencyCode]: (acc[currencyCode] || 0) + amount,
+						}),
+						{},
+					),
+				).map(([currencyCode, sum]) => ({ currencyCode, sum }));
+				api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
+				api.mockFirst("debts.getByUserPaged", ({ input }) => ({
+					items: debts
+						.map(({ id }) => id)
+						.slice(input.cursor, input.limit + input.cursor),
+					count: debts.length,
+					cursor: input.cursor,
+				}));
+				api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
+					const matchedDebt = debts.find((debt) => debt.id === lookupId);
+					if (!matchedDebt) {
+						throw new TRPCError({
+							code: "NOT_FOUND",
+							message: `Expected to have debt id "${lookupId}", but none found`,
+						});
+					}
+					return { ...matchedDebt, userId: debtUser.id };
+				});
+				return { debts, debtUser };
+			},
+		),
 
 	openUserDebts: ({ page, awaitCacheKey }, use) =>
 		use(async (userId, { awaitCache = true, awaitDebts } = {}) => {
@@ -84,4 +97,11 @@ export const test = originalTest.extend<Fixtures>({
 			}
 		}),
 	debtAmount: ({ page }, use) => use(page.getByTestId("preview-debt-amount")),
+	debtPreview: ({ page }, use) => use(page.getByTestId("user-debt-preview")),
+	removeDebtsButton: ({ paginationBlock }, use) =>
+		use(paginationBlock.getByTestId("remove-button")),
+	showResolvedButton: ({ page }, use) =>
+		use(page.getByRole("button", { name: "Show resolved debts" })),
+	debtCheckbox: ({ debtPreview }, use) =>
+		use(debtPreview.getByTestId("checkbox")),
 });
