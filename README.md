@@ -18,4 +18,4 @@ Based on Tanstack Start on web (and someday Expo on mobile).
 
 Currently, mobile version is neglected until migrating to React Native components.
 
-Web version is CD'd on Vercel.
+Web version is CD'd on a private server.

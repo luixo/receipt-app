@@ -825,7 +825,6 @@ export default defineConfig({
 	ignorePatterns: [
 		".history/",
 		"**/.output/",
-		"**/.vercel/",
 		"**/.tanstack/",
 		"**/.nitro/",
 		"**/.expo/",
