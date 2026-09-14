@@ -116,11 +116,9 @@ jobs:
         shardTotal: [4]
     container:
       image: mcr.microsoft.com/playwright:v1.63.0
+      options: --user pwuser
     steps:
       - uses: actions/checkout@v6
-      - name: Ensure unzip is available
-        # Playwright image doesn't ship unzip, which bun setup needs
-        run: apt-get update && apt-get install -y unzip
       - uses: ./.github/actions/setup-env
       - name: Fetch web build
         uses: actions/download-artifact@v8
@@ -129,8 +127,7 @@ jobs:
           path: apps/web/.output
       - name: Run frontend tests
         id: tests
-        # see https://github.com/microsoft/playwright/issues/6500
-        run: HOME=/root bun run frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        run: bun run frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
       - name: Upload Playwright report chunks
         uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
