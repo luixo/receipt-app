@@ -11,7 +11,6 @@ export const env = createEnv({
 		BASE_URL: z.url().optional(),
 		MAILER_SENDER: z.string().optional(),
 		MAILER_TOKEN: z.string().optional(),
-		VERCEL: z.coerce.boolean().catch(false),
 		S3_BUCKET: z.string(),
 		S3_ENDPOINT: z.url(),
 		S3_REGION: z.string(),

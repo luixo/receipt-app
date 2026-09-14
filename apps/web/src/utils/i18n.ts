@@ -8,7 +8,6 @@ import type { I18nContext } from "~app/utils/i18n";
 import type { Language, Namespace } from "~app/utils/i18n-data";
 import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
 import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
-import { env } from "~web/utils/env";
 
 const getCookie = (headers: Headers | undefined) =>
 	headers ? (headers.get("cookie") ?? "") : document.cookie;
@@ -64,11 +63,7 @@ const readBackend = createIsomorphicFn()
 		const fs = await import("node:fs/promises");
 		const url = await import("node:url");
 		/* oxlint-enable import/no-nodejs-modules */
-		const publicPath = import.meta.env.DEV
-			? `../../public`
-			: env.VERCEL
-				? "./static"
-				: "../../public";
+		const publicPath = import.meta.env.DEV ? `../../public` : "../../public";
 		const jsonUrl = new url.URL(
 			`${publicPath}/locales/${language}/${namespace}.json`,
 			import.meta.url,
