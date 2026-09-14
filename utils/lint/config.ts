@@ -307,6 +307,9 @@ const overriddenRules = {
 		},
 	],
 
+	// We don't want `next` to trigger this rule
+	"node/callback-return": ["error", ["callback", "cb"]],
+
 	// Custom devDependencies
 	"import-js/no-extraneous-dependencies": [
 		"error",
