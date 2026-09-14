@@ -20,7 +20,13 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 const getFormData = (bits?: Buffer[]) => {
 	const formData = new FormData();
 	if (bits) {
-		formData.append("avatar", new File(bits, "avatar.png") as Blob);
+		formData.append(
+			"avatar",
+			new File(
+				bits.map((bit) => Uint8Array.from(bit)),
+				"avatar.png",
+			),
+		);
 	}
 	return formData;
 };
