@@ -48,8 +48,6 @@ export const t = initTRPC
 export const unauthProcedure = t.procedure.use(
 	async ({ ctx, type, path, next }) => {
 		const start = performance.now();
-		// This is false positive: next has a returning value
-		// oxlint-disable-next-line node/callback-return
 		const result = await next();
 		const duration = performance.now() - start;
 		const options = {

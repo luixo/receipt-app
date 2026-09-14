@@ -26,8 +26,6 @@ const mapError =
 	() =>
 	({ next, op }) =>
 		observable((observer) =>
-			// This is a false positive
-			// oxlint-disable-next-line node/callback-return
 			next(op).subscribe({
 				next: (value) => observer.next(value),
 				error: (error) => observer.error(mapper(error)),
