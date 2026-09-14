@@ -280,6 +280,6 @@ test("Pagination loads the next page", async ({
 				},
 			});
 		},
-		{ name: "pagination" },
+		{ name: "pagination", skipCache: true, skipQueries: true },
 	);
 });

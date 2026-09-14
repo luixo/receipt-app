@@ -8,6 +8,7 @@ import { debtsWithDividers } from "./user-debts-list.utils";
 
 test("Multiple dividers", async ({
 	openUserDebts,
+	api,
 	mockDebts,
 	cookieManager,
 	evenDebtsDivider,
@@ -23,6 +24,11 @@ test("Multiple dividers", async ({
 	const { debtUser, debts } = await mockDebts({
 		generateDebts: getGenerateDebts(onlyDebts),
 	});
+	api.mockFirst("debts.getByUserPaged", ({ input }) => ({
+		items: debts.map(({ id }) => id),
+		count: debts.length,
+		cursor: input.cursor,
+	}));
 	await openUserDebts(debtUser.id, { awaitDebts: debts.length });
 	await expect(evenDebtsDivider.or(debtAmount)).toHaveText(
 		debtsWithDividers.toReversed().map((debtOrDivider) => {

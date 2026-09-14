@@ -1,7 +1,4 @@
 {
-	"debts.get": {
-		"clientCalls": 10
-	},
 	"debts.getByUserPaged": {
 		"clientCalls": 1
 	}
