@@ -116,8 +116,6 @@ jobs:
         shardTotal: [4]
     container:
       image: mcr.microsoft.com/playwright:v1.63.0
-    outputs:
-      coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
       - uses: actions/checkout@v6
       - name: Ensure unzip is available
