@@ -1,6 +1,6 @@
 # Receipt App
 
-![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/luixo/878178ea4ba8d28122cc72204df909e7/raw/backend_coverage_master.json)
+![Backend coverage badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/luixo/878178ea4ba8d28122cc72204df909e7/raw/backend_coverage_master.json)
 
 ## What is this?
 
