@@ -220,6 +220,7 @@ export const generateCoverageReport = ({
 			printConsole ? "text" : undefined,
 			"html",
 			"lcovonly",
+			"json",
 			"json-summary",
 		] as const
 	).filter(isNonNullish)) {
