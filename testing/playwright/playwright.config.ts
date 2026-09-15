@@ -120,10 +120,14 @@ export default defineConfig({
 			S3_ENDPOINT: "https://fake-endpoint.org",
 			PORT: urlSettings.port.toString(),
 			PLAYWRIGHT: "true",
-			NODE_V8_COVERAGE: path.join(
-				rootDir,
-				"testing/playwright/coverage/data/server",
-			),
+			...(process.env.COVERAGE
+				? {
+						NODE_V8_COVERAGE: path.join(
+							rootDir,
+							"testing/playwright/coverage/data/server",
+						),
+					}
+				: {}),
 		},
 		name: serverName,
 	},

@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
+
 import { serverFixtures as test } from "./server";
 
 const rootDir = path.join(import.meta.dirname, "../../../");
@@ -15,7 +16,11 @@ const clientCoverageDir = path.join(playwrightDir, "coverage/data/client");
 export const coverageFixtures = test.extend<CoverageFixtures>({
 	coverage: [
 		async ({ page, serverClient, javaScriptEnabled }, use, testInfo) => {
-			if (testInfo.project.name !== "functional" || !javaScriptEnabled) {
+			if (
+				testInfo.project.name !== "functional" ||
+				!javaScriptEnabled ||
+				!process.env.COVERAGE
+			) {
 				return use();
 			}
 			await page.coverage.startJSCoverage({ resetOnNavigation: false });
