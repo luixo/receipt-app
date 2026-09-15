@@ -59,6 +59,7 @@
 	"pre-commit": [
 		"install:immutable",
 		"typecheck",
+		"format",
 		"lint-staged"
 	],
 	"packageManager": "bun@1.4.0",
