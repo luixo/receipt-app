@@ -7,7 +7,6 @@ import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { formatters, getNow, serialize, subtract } from "~utils/date";
 
 import { test as debtControlButtonsTest } from "./debt-control-buttons.utils";
 import { test as localTest } from "./debt-screen.utils";
@@ -42,7 +41,9 @@ test("On load", async ({
 	await expect(userPreview.filter({ hasText: debtUser.name })).toBeVisible();
 	expect(Number(await amountInput.inputValue())).toBe(Math.abs(debt.amount));
 	await expect(dateInput).toHaveValue(
-		formatters.plainDate(debt.timestamp, localSettings.locale),
+		debt.timestamp.toLocaleString(localSettings.locale, {
+			dateStyle: "medium",
+		}),
 	);
 	await expect(noteInput).toHaveValue(debt.note);
 	await expect(saveAmountButton).not.toBeAttached();
@@ -149,7 +150,10 @@ test.describe("Amount", () => {
 		const pause = api.createPause();
 		api.mockFirst("debts.update", async () => {
 			await pause.promise;
-			return { updatedAt: getNow.zonedDateTime(), reverseUpdated: false };
+			return {
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
+				reverseUpdated: false,
+			};
 		});
 		await snapshotQueries(
 			async () => {
@@ -220,7 +224,7 @@ test.describe("Note", () => {
 		await expect(saveNoteButton).toBeEnabled();
 
 		api.mockFirst("debts.update", {
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseUpdated: false,
 		});
 		await snapshotQueries(
@@ -248,7 +252,7 @@ test.describe("Date", () => {
 	}) => {
 		const { debt } = await mockDebt();
 		await openDebtScreen(debt.id);
-		const nextDate = subtract.plainDate(debt.timestamp, { days: 3 });
+		const nextDate = debt.timestamp.subtract({ days: 3 });
 
 		api.mockFirst("debts.update", () => {
 			throw new TRPCError({
@@ -257,18 +261,18 @@ test.describe("Date", () => {
 			});
 		});
 		await snapshotQueries(async () => {
-			await dateInput.fill(serialize(nextDate));
+			await dateInput.fill(nextDate.toString());
 			await awaitCacheKey("debts.update", { error: 1 });
 			await verifyToastTexts(`Mock "debts.update" error`);
 		});
 
 		api.mockFirst("debts.update", {
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseUpdated: false,
 		});
 		await snapshotQueries(
 			async () => {
-				await dateInput.fill(serialize(nextDate));
+				await dateInput.fill(nextDate.toString());
 				await awaitCacheKey("debts.update");
 				await verifyToastTexts("Debt updated successfully");
 			},

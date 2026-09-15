@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
 import type { DB } from "~db/types.gen";
-import { temporalSchemas } from "~utils/date";
+import { temporalSchemas } from "~utils/temporal";
 import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema, receiptIdSchema } from "~web/handlers/validation";
 

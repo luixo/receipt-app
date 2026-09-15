@@ -5,7 +5,6 @@ import {
 	passwordSchema,
 	resetPasswordTokenSchema,
 } from "~app/utils/validation";
-import { getNow } from "~utils/date";
 import { generatePasswordData } from "~utils/server/crypto";
 import { unauthProcedure } from "~web/handlers/trpc";
 
@@ -29,7 +28,7 @@ export const procedure = unauthProcedure
 				eb("token", "=", input.token).and(
 					"resetPasswordIntentions.expiresTimestamp",
 					">",
-					getNow.zonedDateTime(),
+					Temporal.Now.zonedDateTimeISO(),
 				),
 			)
 			.innerJoin("accounts", (qb) =>

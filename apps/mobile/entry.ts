@@ -4,6 +4,8 @@
 // But it does not
 // Expo Go version of the app runs ok nevertheless
 import "react-native/Libraries/Renderer/shims/ReactNative";
+// Hermes (React Native runtime) has no native `Temporal`, so we ship the polyfill and assign it to the global.
+import "~utils/temporal-polyfill";
 // It is expected to have .js extensions for these polyfills
 import "@formatjs/intl-pluralrules/polyfill-force.js";
 import "@formatjs/intl-pluralrules/locale-data/en.js";

@@ -9,7 +9,6 @@ import {
 	generateCurrencyCode,
 	generateCurrencyCodes,
 } from "~tests/frontend/generators/utils";
-import { getNow } from "~utils/date";
 import { round } from "~utils/math";
 
 import { getPlannedDebtsAmount, test } from "./utils";
@@ -271,7 +270,7 @@ test.describe("Mutations", () => {
 			await createPause.promise;
 			return {
 				id: "test-debt-id",
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseAccepted: false,
 			};
 		});
@@ -306,7 +305,7 @@ test.describe("Mutations", () => {
 		const { debtUser, debts } = await mockDebts();
 		api.mockFirst("debts.add", () => ({
 			id: "test-debt-id",
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseAccepted: false,
 		}));
 		assert.ok(debts[0]);

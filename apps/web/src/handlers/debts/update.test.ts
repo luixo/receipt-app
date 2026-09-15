@@ -24,7 +24,6 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
 
@@ -79,7 +78,7 @@ const getDefaultGetResult: GetResult = ({
 	counterParty,
 	reverseUpdatedOverride,
 }) => ({
-	updatedAt: add.zonedDateTime(getNow.zonedDateTime(), { minutes: 1 }),
+	updatedAt: Temporal.Now.zonedDateTimeISO().add({ minutes: 1 }),
 	reverseUpdated:
 		counterParty === "auto-accept-no-exist" ||
 		(reverseUpdatedOverride ?? counterParty === "auto-accept"),
@@ -343,7 +342,7 @@ describe("debts.update", () => {
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
-				updatedAt: add.zonedDateTime(getNow.zonedDateTime(), { minutes: 1 }),
+				updatedAt: Temporal.Now.zonedDateTimeISO().add({ minutes: 1 }),
 				reverseUpdated: undefined,
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
@@ -376,7 +375,7 @@ describe("debts.update", () => {
 						{
 							id: debt.id,
 							update: {
-								timestamp: parsers.plainDate("2020-06-01"),
+								timestamp: Temporal.PlainDate.from("2020-06-01"),
 							},
 						},
 					],
@@ -458,7 +457,7 @@ describe("debts.update", () => {
 							id: debt.id,
 							update: {
 								amount: getRandomAmount(),
-								timestamp: parsers.plainDate("2020-06-01"),
+								timestamp: Temporal.PlainDate.from("2020-06-01"),
 								note: faker.lorem.words(),
 								currencyCode: getRandomCurrencyCode(),
 								receiptId,
@@ -478,7 +477,7 @@ describe("debts.update", () => {
 						{ id: debt.id, update: { amount: getRandomAmount() } },
 						{
 							id: debt.id,
-							update: { timestamp: parsers.plainDate("2020-06-01") },
+							update: { timestamp: Temporal.PlainDate.from("2020-06-01") },
 						},
 					],
 					results: [
@@ -635,7 +634,7 @@ describe("debts.update", () => {
 			});
 
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: add.zonedDateTime(getNow.zonedDateTime(), { minutes: 1 }),
+				updatedAt: Temporal.Now.zonedDateTimeISO().add({ minutes: 1 }),
 				reverseUpdated: undefined,
 			});
 		});

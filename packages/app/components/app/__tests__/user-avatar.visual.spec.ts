@@ -1,7 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
 import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
-import { getNow } from "~utils/date";
 
 import { test as userAvatarFixture } from "./user-avatar.utils";
 
@@ -31,7 +30,7 @@ test("Generated avatar (no connected account)", async ({
 			{
 				userId,
 				part: 1,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 			},
 		],
 	});
@@ -65,7 +64,7 @@ test("Connected account image", async ({
 		generateUsers: () => [user],
 		generateReceiptItems: () => [],
 		generateReceiptPayers: () => [
-			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
+			{ userId: user.id, part: 1, createdAt: Temporal.Now.zonedDateTimeISO() },
 		],
 	});
 	await openReceipt(receipt);

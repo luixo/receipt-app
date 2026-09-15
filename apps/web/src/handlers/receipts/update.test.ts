@@ -19,7 +19,6 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -162,7 +161,7 @@ describe("receipts.update", () => {
 		test("update issued", async ({ ctx }) => {
 			await runTest(ctx, () => ({
 				type: "issued",
-				issued: parsers.plainDate("2020-06-01"),
+				issued: Temporal.PlainDate.from("2020-06-01"),
 			}));
 		});
 

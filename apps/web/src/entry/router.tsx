@@ -29,7 +29,6 @@ import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import { getNow, serialize } from "~utils/date";
 import { apiCookieNames } from "~utils/mocks";
 import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
@@ -127,7 +126,7 @@ export const getRouter = () => {
 			baseUrl: request ? getHostUrl(request.url) : "",
 			i18nContext,
 			queryClient,
-			nowTimestamp: serialize<"zonedDateTime">(getNow.zonedDateTime()),
+			nowTimestamp: Temporal.Now.zonedDateTimeISO().toString(),
 		},
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: RootErrorComponent,

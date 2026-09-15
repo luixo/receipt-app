@@ -6,7 +6,6 @@ import type {
 } from "~app/features/receipt/hooks";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
-import { getNow } from "~utils/date";
 
 import type { Form, Item, Participant, Payer } from "./state";
 
@@ -39,7 +38,7 @@ const useAddItem = (setItems: SetItems) =>
 						quantity,
 						consumers: [],
 						payers: [],
-						createdAt: getNow.zonedDateTime(),
+						createdAt: Temporal.Now.zonedDateTimeISO(),
 					},
 				],
 				options,
@@ -121,7 +120,7 @@ const useAddItemConsumer = (setItems: SetItems) => {
 						...(prevItem.consumers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
-						{ userId, part, createdAt: getNow.zonedDateTime() },
+						{ userId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
 					],
 				}),
 				options,
@@ -188,7 +187,7 @@ const useAddItemPayer = (setItems: SetItems) => {
 						...(prevItem.payers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
-						{ userId, part, createdAt: getNow.zonedDateTime() },
+						{ userId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
 					],
 				}),
 				options,
@@ -250,7 +249,7 @@ const useAddPayer = (setPayers: SetPayers) =>
 				(prevPayers) => [
 					// Remove accidentally added double participants
 					...prevPayers.filter((payer) => payer.userId !== userId),
-					{ createdAt: getNow.zonedDateTime(), userId, part },
+					{ createdAt: Temporal.Now.zonedDateTimeISO(), userId, part },
 				],
 				options,
 			),
@@ -312,7 +311,7 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 					...prevParticipants.filter(
 						(participant) => participant.userId !== userId,
 					),
-					{ createdAt: getNow.zonedDateTime(), role, userId },
+					{ createdAt: Temporal.Now.zonedDateTimeISO(), role, userId },
 				],
 				options,
 			),

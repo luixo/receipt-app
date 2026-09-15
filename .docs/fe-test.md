@@ -98,8 +98,8 @@ Fixture-provided locators available in every spec:
 
 ## Faker and time
 
-- The `faker` fixture is seeded deterministically from the test title — tests produce the same random data on every run. `faker.temporal.between` / `faker.temporal.recent` generate Temporal types directly.
-- Time is frozen server-side to `2020-01-01`. Browser `Date` is also overridden to the time of page navigation.
+- The `faker` fixture is seeded deterministically from the test title — tests produce the same random data on every run.
+- Time is frozen server-side to `2020-01-01`. Browser `Date` / `Temporal.Now` are also overridden to the time of page navigation.
 
 ## Timezone and locale
 

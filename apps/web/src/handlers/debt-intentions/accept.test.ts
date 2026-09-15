@@ -19,7 +19,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
 
@@ -77,7 +76,9 @@ describe("debtIntentions.accept", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+					createdAt: Temporal.ZonedDateTime.from(
+						"2020-05-01T00:00:00.000[GMT]",
+					),
 					receiptId: foreignReceiptId,
 				},
 			);
@@ -93,7 +94,7 @@ describe("debtIntentions.accept", () => {
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -114,7 +115,9 @@ describe("debtIntentions.accept", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+					createdAt: Temporal.ZonedDateTime.from(
+						"2020-05-01T00:00:00.000[GMT]",
+					),
 					receiptId: foreignReceiptId,
 				},
 			);
@@ -134,7 +137,7 @@ describe("debtIntentions.accept", () => {
 				caller.procedure({ id: foreignDebtId }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 			});
 		});
 
@@ -158,8 +161,10 @@ describe("debtIntentions.accept", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
-						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+						timestamp: Temporal.PlainDate.from("2020-04-01"),
+						createdAt: Temporal.ZonedDateTime.from(
+							"2020-05-01T00:00:00.000[GMT]",
+						),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -181,7 +186,7 @@ describe("debtIntentions.accept", () => {
 				caller.procedure({ id: debt.id }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: add.zonedDateTime(debt.updatedAt, { minutes: 1 }),
+				updatedAt: debt.updatedAt.add({ minutes: 1 }),
 			});
 		});
 
@@ -206,8 +211,10 @@ describe("debtIntentions.accept", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
-						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+						timestamp: Temporal.PlainDate.from("2020-04-01"),
+						createdAt: Temporal.ZonedDateTime.from(
+							"2020-05-01T00:00:00.000[GMT]",
+						),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -228,7 +235,7 @@ describe("debtIntentions.accept", () => {
 				caller.procedure({ id: debt.id }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: add.zonedDateTime(debt.updatedAt, { minutes: 1 }),
+				updatedAt: debt.updatedAt.add({ minutes: 1 }),
 			});
 		});
 
@@ -249,7 +256,11 @@ describe("debtIntentions.accept", () => {
 				ctx,
 				foreignAccountId,
 				foreignToSelfUserId,
-				{ createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]") },
+				{
+					createdAt: Temporal.ZonedDateTime.from(
+						"2020-05-01T00:00:00.000[GMT]",
+					),
+				},
 			);
 			// A connected with our updatedAt ahead
 			const [updatedDebtAhead] = await insertSyncedDebts(
@@ -262,8 +273,10 @@ describe("debtIntentions.accept", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
-						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+						timestamp: Temporal.PlainDate.from("2020-04-01"),
+						createdAt: Temporal.ZonedDateTime.from(
+							"2020-05-01T00:00:00.000[GMT]",
+						),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -279,8 +292,10 @@ describe("debtIntentions.accept", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
-						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+						timestamp: Temporal.PlainDate.from("2020-04-01"),
+						createdAt: Temporal.ZonedDateTime.from(
+							"2020-05-01T00:00:00.000[GMT]",
+						),
 						note: faker.lorem.words(),
 					}),
 					ahead: "their",
@@ -307,12 +322,12 @@ describe("debtIntentions.accept", () => {
 			expect(result).toStrictEqual<typeof result>([
 				{ updatedAt: newDebt.updatedAt },
 				{
-					updatedAt: add.zonedDateTime(updatedDebtAhead.updatedAt, {
+					updatedAt: updatedDebtAhead.updatedAt.add({
 						minutes: 1,
 					}),
 				},
 				{
-					updatedAt: add.zonedDateTime(updatedDebtBehind.updatedAt, {
+					updatedAt: updatedDebtBehind.updatedAt.add({
 						minutes: 1,
 					}),
 				},

@@ -1,7 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
-import { getNow } from "~utils/date";
-import type { Temporal } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -43,7 +41,7 @@ export const applyUpdate =
 		}
 		const updateSyncable = isUpdateSyncable(update);
 		if (updateSyncable) {
-			nextDebt.updatedAt = getNow.zonedDateTime();
+			nextDebt.updatedAt = Temporal.Now.zonedDateTimeISO();
 		}
 		return nextDebt;
 	};

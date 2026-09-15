@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { add, getNow } from "~utils/date";
 import { generateResetPasswordEmail } from "~web/email/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
 import { MAX_INTENTIONS_AMOUNT, emailSchema } from "~web/handlers/validation";
@@ -33,7 +32,7 @@ export const procedure = unauthProcedure
 			});
 		}
 		const uuid: string = ctx.getUuid();
-		const expirationDate = add.zonedDateTime(getNow.zonedDateTime(), {
+		const expirationDate = Temporal.Now.zonedDateTimeISO().add({
 			days: 1,
 		});
 		if (!ctx.emailOptions.getActive()) {
@@ -48,7 +47,7 @@ export const procedure = unauthProcedure
 				eb("resetPasswordIntentions.accountId", "=", account.id).and(
 					"expiresTimestamp",
 					">",
-					getNow.zonedDateTime(),
+					Temporal.Now.zonedDateTimeISO(),
 				),
 			)
 			.select("expiresTimestamp")

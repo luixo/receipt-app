@@ -3,7 +3,6 @@ import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow } from "~utils/date";
 
 import { test } from "./utils";
 
@@ -187,7 +186,7 @@ test("'debts.add' mutation", async ({
 		await createPause.promise;
 		return {
 			id: debtId,
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseAccepted: false,
 		};
 	});

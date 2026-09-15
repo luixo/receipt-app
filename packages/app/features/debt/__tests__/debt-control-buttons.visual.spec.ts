@@ -1,5 +1,3 @@
-import { add } from "~utils/date";
-
 import { generateDebtWithUpdated, test } from "./debt-control-buttons.utils";
 
 test("Button", async ({
@@ -12,7 +10,7 @@ test("Button", async ({
 	skip(testInfo, "only-biggest");
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			add.zonedDateTime(updatedAt, { seconds: 1 }),
+			updatedAt.add({ seconds: 1 }),
 		),
 	});
 	await openDebtScreen(debt.id);
@@ -30,7 +28,7 @@ test("Dialog", async ({
 }) => {
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			add.zonedDateTime(updatedAt, { seconds: 1 }),
+			updatedAt.add({ seconds: 1 }),
 		),
 	});
 	await openDebtScreen(debt.id);

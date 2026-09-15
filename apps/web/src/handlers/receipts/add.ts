@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
-import { temporalSchemas } from "~utils/date";
+import { temporalSchemas } from "~utils/temporal";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
 import {

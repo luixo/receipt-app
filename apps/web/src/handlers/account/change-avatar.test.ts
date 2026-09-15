@@ -209,10 +209,7 @@ describe("account.changeAvatar", () => {
 				ctx.s3Options.mock.endpoint,
 				ctx.s3Options.mock.bucket,
 				key,
-			].join(
-				"/",
-				// oxlint-disable-next-line eslint-js/no-restricted-syntax
-			)}?lastModified=${Date.now()}`;
+			].join("/")}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
 			expect(result).toStrictEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.s3Options.mock.getMessages();

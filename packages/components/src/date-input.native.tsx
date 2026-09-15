@@ -8,7 +8,6 @@ import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
 import { Input } from "~components/input";
 import { getMutationLoading } from "~components/utils";
-import { fromDate, getNow, localTimeZone, parsers } from "~utils/date";
 
 import type { Props } from "./date-input";
 
@@ -33,11 +32,7 @@ export const DateInput: React.FC<Props> = ({
 				}
 				onValueChange={(nextValue) => {
 					// Manual update - or by automation tool
-					onValueChange(
-						parsers.plainDate(
-							nextValue as Parameters<typeof parsers.plainDate>[0],
-						),
-					);
+					onValueChange(Temporal.PlainDate.from(nextValue));
 				}}
 				isReadOnly={import.meta.env.MODE !== "test"}
 				label={label || t("components.dateInput.label")}
@@ -51,11 +46,23 @@ export const DateInput: React.FC<Props> = ({
 				modal
 				open={open}
 				mode="date"
-				date={(value || getNow.plainDate()).toDate(localTimeZone)}
+				date={
+					// oxlint-disable-next-line eslint-js/no-restricted-syntax
+					new Date(
+						(value || Temporal.Now.plainDateISO())
+							.toPlainDateTime(Temporal.PlainTime.from("00:00"))
+							.toZonedDateTime(Temporal.Now.timeZoneId())
+							.toInstant().epochMilliseconds,
+					)
+				}
 				locale={locale}
 				onConfirm={(date) => {
 					setClose();
-					onValueChange(fromDate.plainDate(date));
+					onValueChange(
+						Temporal.Instant.fromEpochMilliseconds(date.getTime())
+							.toZonedDateTimeISO(Temporal.Now.timeZoneId())
+							.toPlainDate(),
+					);
 				}}
 				onCancel={setClose}
 				title={label || t("components.dateInput.label")}

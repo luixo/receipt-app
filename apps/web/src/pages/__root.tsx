@@ -20,8 +20,6 @@ import { InnerProvider } from "~app/providers/inner";
 import type { I18nContext } from "~app/utils/i18n";
 import type { StoreValues } from "~app/utils/store-data";
 import { ToastProvider } from "~components/toast";
-import type { TemporalInputMapping } from "~utils/date";
-import { parsers } from "~utils/date";
 import appCss from "~web/app.css?url";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useI18nHelper } from "~web/hooks/use-i18-helper";
@@ -121,7 +119,7 @@ const RootComponent = () => {
 	const storeContext = React.useMemo(
 		() =>
 			getStoreContext(
-				parsers.zonedDateTime(data.nowTimestamp),
+				Temporal.ZonedDateTime.from(data.nowTimestamp),
 				data.initialValues,
 			),
 		[data.initialValues, data.nowTimestamp],
@@ -167,7 +165,7 @@ const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 
 export type RouterContext = {
 	baseUrl: string;
-	nowTimestamp: TemporalInputMapping["zonedDateTime"];
+	nowTimestamp: string;
 	initialValues: StoreValues;
 	isTest: boolean;
 } & EphemeralContext;

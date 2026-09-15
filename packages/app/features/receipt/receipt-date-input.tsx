@@ -7,8 +7,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { DateInput } from "~components/date-input";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
-import type { Temporal } from "~utils/date";
-import { areEqual } from "~utils/date";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -28,7 +26,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 
 	const saveDate = React.useCallback(
 		(nextDate: Temporal.PlainDate) => {
-			if (areEqual.plainDate(nextDate, receipt.issued)) {
+			if (Temporal.PlainDate.compare(nextDate, receipt.issued) === 0) {
 				return;
 			}
 			updateReceiptMutation.mutate({

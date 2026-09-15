@@ -7,7 +7,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
 import type { UserId } from "~db/ids";
-import { compare } from "~utils/date";
 
 const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debts">) =>
 	receipt.debts.direction === "outcoming"
@@ -28,7 +27,7 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 		return 1;
 	}
 	// Sort everyone else by createdAt timestamp
-	return compare.zonedDateTime(a.createdAt, b.createdAt);
+	return Temporal.ZonedDateTime.compare(a.createdAt, b.createdAt);
 };
 
 export const useParticipants = (
