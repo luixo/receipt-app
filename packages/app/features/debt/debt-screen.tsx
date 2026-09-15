@@ -46,8 +46,6 @@ import { View } from "~components/view";
 import type { DebtId, UserId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
-import type { Temporal } from "~utils/date";
-import { areEqual } from "~utils/date";
 
 import { DebtControlButtons } from "./debt-control-buttons";
 
@@ -237,7 +235,7 @@ const DebtDateInput = suspendedFallback<{
 
 		const saveDate = React.useCallback(
 			(nextDate: Temporal.PlainDate) => {
-				if (areEqual.plainDate(nextDate, debt.timestamp)) {
+				if (Temporal.PlainDate.compare(nextDate, debt.timestamp) === 0) {
 					return;
 				}
 				updateMutation.mutate({

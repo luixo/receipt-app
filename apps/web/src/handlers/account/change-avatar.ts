@@ -72,8 +72,7 @@ export const procedure = authProcedure
 		await s3Client.putObject(avatarKey, validatedImage);
 		const url = `${[s3Client.endpoint, s3Client.bucket, avatarKey].join(
 			"/",
-			// oxlint-disable-next-line eslint-js/no-restricted-syntax
-		)}?lastModified=${Date.now()}`;
+		)}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
 		await database
 			.updateTable("accounts")
 			.set({ avatarUrl: url })

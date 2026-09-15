@@ -26,7 +26,7 @@ import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
 import { DateInput } from "~components/date-input";
 import { options as debtsAddOptions } from "~mutations/debts/add";
-import { getNow, temporalSchemas } from "~utils/date";
+import { temporalSchemas } from "~utils/temporal";
 
 const formSchema = z.object({
 	amount: debtAmountSchema,
@@ -59,7 +59,7 @@ export const AddDebtScreen = () => {
 	const defaultValues: Partial<Form> = {
 		note: "",
 		direction: "+",
-		timestamp: getNow.plainDate(),
+		timestamp: Temporal.Now.plainDateISO(),
 		userId: undefined,
 	};
 

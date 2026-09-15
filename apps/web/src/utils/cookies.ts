@@ -2,7 +2,6 @@ import { createServerOnlyFn } from "@tanstack/react-start";
 import type { SerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
 
-import type { Temporal } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export const getCookie = (
@@ -22,7 +21,9 @@ type Options = Omit<SerializeOptions, "expires"> & {
 
 export const getOptions = ({ expires, ...opts }: Options) => ({
 	...DEFAULT_SET_COOKIE_OPTIONS,
-	expires: expires.toDate(),
+	// It seems to be the simplest way to comply with the library
+	// oxlint-disable-next-line eslint-js/no-restricted-syntax
+	expires: new Date(expires.toInstant().epochMilliseconds),
 	...opts,
 });
 

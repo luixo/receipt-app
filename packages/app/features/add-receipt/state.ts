@@ -2,8 +2,7 @@ import { z } from "zod";
 
 import type { TRPCMutationInput } from "~app/trpc";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
-import type { Temporal } from "~utils/date";
-import { temporalSchemas } from "~utils/date";
+import { temporalSchemas } from "~utils/temporal";
 
 export type { Item, Payer } from "~app/features/receipt-components/state";
 

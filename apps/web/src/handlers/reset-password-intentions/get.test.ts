@@ -9,7 +9,6 @@ import {
 } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
@@ -43,7 +42,7 @@ describe("resetPasswordIntentions.get", () => {
 			const caller = createCaller(createContext(ctx));
 			const { id: accountId } = await insertAccount(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
+				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
 			});

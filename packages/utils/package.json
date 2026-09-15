@@ -2,11 +2,13 @@
 	"name": "@ra/utils",
 	"version": "0.0.0",
 	"type": "module",
-	"sideEffects": false,
+	"sideEffects": [
+		"src/temporal-polyfill.ts"
+	],
 	"main": "src/index.ts",
 	"dependencies": {
 		"@ampproject/remapping": "^2.2.1",
-		"@internationalized/date": "3.10.0",
+		"@js-temporal/polyfill": "0.5.1",
 		"ast-v8-to-istanbul": "^1.0.5",
 		"find-free-ports": "^3.1.1",
 		"istanbul-lib-coverage": "^3.2.2",

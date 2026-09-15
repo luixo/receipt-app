@@ -24,7 +24,6 @@ import type {
 	TRPCQueryKey,
 } from "~app/trpc";
 import type { ApiManager } from "~tests/frontend/fixtures/api";
-import { isTemporalObject, serialize } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import type { DeepPartial } from "~utils/types";
 
@@ -75,8 +74,13 @@ const serializeData = (input: unknown): unknown => {
 	if (Array.isArray(input)) {
 		return input.map((element) => serializeData(element));
 	}
-	if (isTemporalObject(input)) {
-		return serialize(input);
+	if (
+		input instanceof Temporal.ZonedDateTime ||
+		input instanceof Temporal.PlainDate ||
+		input instanceof Temporal.PlainDateTime ||
+		input instanceof Temporal.PlainTime
+	) {
+		return input.toString();
 	}
 	if (isObjectType(input)) {
 		return mapValues(input, (value) => serializeData(value));

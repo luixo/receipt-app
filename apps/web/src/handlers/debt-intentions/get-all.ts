@@ -3,7 +3,6 @@ import type { Selectable } from "kysely";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
-import type { Temporal } from "~utils/date";
 import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 

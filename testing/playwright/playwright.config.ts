@@ -1,3 +1,4 @@
+import "~utils/temporal-polyfill";
 import type { Project, ReporterDescription } from "@playwright/test";
 import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";

@@ -2,7 +2,6 @@ import type { Locator } from "@playwright/test";
 
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { Temporal } from "~utils/date";
 
 import { test as originalTest } from "./utils";
 

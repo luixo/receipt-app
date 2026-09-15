@@ -4,7 +4,6 @@ import { z } from "zod";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
 import type { AccountId, UserId } from "~db/ids";
-import { getNow } from "~utils/date";
 import { generatePasswordData } from "~utils/server/crypto";
 import {
 	createAuthorizationSession,
@@ -64,7 +63,7 @@ export const procedure = unauthProcedure
 				passwordSalt: passwordData.salt,
 				confirmationToken: emailServiceActive ? confirmationToken : null,
 				confirmationTokenTimestamp: emailServiceActive
-					? getNow.zonedDateTime()
+					? Temporal.Now.zonedDateTimeISO()
 					: null,
 			})
 			.execute();

@@ -5,7 +5,6 @@ import assert from "node:assert";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow } from "~utils/date";
 
 import { test as originalTest } from "./utils";
 
@@ -318,7 +317,7 @@ test.describe("'debts.add' mutation", () => {
 			await createPause.promise;
 			return {
 				id: "test-id",
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseAccepted: false,
 			};
 		});

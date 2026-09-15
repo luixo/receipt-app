@@ -8,7 +8,6 @@ import {
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
@@ -20,19 +19,19 @@ describe("sessions.cleanup", () => {
 		test("sessions are removed", async ({ ctx }) => {
 			// Verifying other sessions are not affected
 			await insertAccountWithSession(ctx);
-			const now = getNow.zonedDateTime();
+			const now = Temporal.Now.zonedDateTimeISO();
 			const { id: accountId } = await insertAccount(ctx);
 			await insertSession(ctx, accountId, {
 				// non-expired session
-				expirationTimestamp: add.zonedDateTime(now, { minutes: 1 }),
+				expirationTimestamp: now.add({ minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// just expired session
-				expirationTimestamp: subtract.zonedDateTime(now, { minutes: 1 }),
+				expirationTimestamp: now.subtract({ minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// long expired session
-				expirationTimestamp: subtract.zonedDateTime(now, { years: 1 }),
+				expirationTimestamp: now.subtract({ years: 1 }),
 			});
 			const caller = createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

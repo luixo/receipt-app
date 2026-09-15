@@ -36,7 +36,6 @@ import { Button } from "~components/button";
 import { DateInput } from "~components/date-input";
 import type { UserId } from "~db/ids";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
-import { getNow } from "~utils/date";
 import type { UseStateReturn } from "~utils/react";
 
 import { useActionsHooks, useAddReceiptContext } from "./hooks";
@@ -78,7 +77,7 @@ const ContextedAddReceipt = suspendedFallback<{
 		const receiptId = React.useId();
 		const participants = useParticipants({
 			id: receiptId,
-			createdAt: getNow.zonedDateTime(),
+			createdAt: Temporal.Now.zonedDateTimeISO(),
 			issued: formValues.issued,
 			currencyCode: formValues.currencyCode ?? "???",
 			participants: rawParticipants,
@@ -156,7 +155,7 @@ export const AddReceipt = () => {
 	)?.items[0]?.currencyCode;
 	const defaultValues = {
 		name: "",
-		issued: getNow.plainDate(),
+		issued: Temporal.Now.plainDateISO(),
 		currencyCode: optimisticCurrencyCode,
 	} satisfies Partial<Form>;
 	const form = useAppForm({

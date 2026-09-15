@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
 import { expect } from "~tests/frontend/fixtures";
-import { add, getNow, subtract } from "~utils/date";
 
 import { generateDebtWithUpdated, test } from "./debt-control-buttons.utils";
 
@@ -22,7 +21,7 @@ test("Hidden when our version is already up to date", async ({
 }) => {
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			subtract.zonedDateTime(updatedAt, {
+			updatedAt.subtract({
 				seconds: 1,
 			}),
 		),
@@ -41,7 +40,7 @@ test("Dialog is rendered properly", async ({
 }) => {
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			add.zonedDateTime(updatedAt, {
+			updatedAt.add({
 				seconds: 1,
 			}),
 		),
@@ -71,7 +70,7 @@ test("'debtIntentions.accept' mutation", async ({
 }) => {
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			add.zonedDateTime(updatedAt, {
+			updatedAt.add({
 				seconds: 1,
 			}),
 		),
@@ -93,7 +92,9 @@ test("'debtIntentions.accept' mutation", async ({
 	});
 	await expect(acceptIntentionButton).toBeVisible();
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debtIntentions.accept", {
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
+	});
 	await acceptIntentionButton.click();
 	await snapshotQueries(
 		async () => {

@@ -16,7 +16,6 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow, subtract } from "~utils/date";
 import { getHash } from "~utils/server/crypto";
 import { t } from "~web/handlers/trpc";
 
@@ -86,7 +85,7 @@ describe("auth.resetPassword", () => {
 		test("intention expires", async ({ ctx }) => {
 			const { accountId } = await insertAccountWithSession(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
+				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
 			});
@@ -113,7 +112,7 @@ describe("auth.resetPassword", () => {
 			// Verifying other intentions of the same user are removed
 			await insertResetPasswordIntention(ctx, accountId);
 			await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: subtract.zonedDateTime(getNow.zonedDateTime(), {
+				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
 			});

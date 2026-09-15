@@ -28,7 +28,6 @@ import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
-import { getNow } from "~utils/date";
 import { round } from "~utils/math";
 
 const createFormSchema = (t: TFunction<"debts">) =>
@@ -181,7 +180,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 							currencyCode,
 							userId,
 							amount: debt.amount,
-							timestamp: getNow.plainDate(),
+							timestamp: Temporal.Now.plainDateISO(),
 						};
 						addMutation.mutate(mutationVars);
 						return [...acc, hashKey([mutationVars])];

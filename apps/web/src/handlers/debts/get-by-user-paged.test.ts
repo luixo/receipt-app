@@ -20,7 +20,6 @@ import {
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
-import { compare } from "~utils/date";
 import { getRandomAmount } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
@@ -30,7 +29,10 @@ import { procedure } from "./get-by-user-paged";
 const mapDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 	debts
 		.toSorted((a, b) => {
-			const timestampSort = compare.plainDate(a.timestamp, b.timestamp);
+			const timestampSort = Temporal.PlainDate.compare(
+				a.timestamp,
+				b.timestamp,
+			);
 			if (timestampSort !== 0) {
 				return timestampSort;
 			}

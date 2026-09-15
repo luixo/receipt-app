@@ -3,7 +3,6 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UserId } from "~db/ids";
-import { add, getNow } from "~utils/date";
 
 import type {
 	GenerateReceiptBase,
@@ -27,15 +26,16 @@ export const defaultGenerateDebts = ({
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
 		currencyCode: generateCurrencyCode(faker),
-		createdAt: getNow.zonedDateTime(),
-		timestamp: faker.temporal.recent.plainDate({
-			days: 30,
-			refDate: getNow.plainDate(),
-		}),
+		createdAt: Temporal.Now.zonedDateTimeISO(),
+		timestamp: Temporal.Instant.from(
+			faker.date.recent({ days: 30 }).toISOString(),
+		)
+			.toZonedDateTimeISO(Temporal.Now.timeZoneId())
+			.toPlainDate(),
 		note: faker.lorem.words(4),
 		receiptId: undefined,
 		amount: faker.number.float({ min: -10_000, max: 10_000, multipleOf: 0.01 }),
-		updatedAt: getNow.zonedDateTime(),
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
 		their: undefined,
 		userId,
 	}));
@@ -55,11 +55,12 @@ export const defaultGenerateDebtIntentions = ({
 		userId,
 		amount: faker.number.float({ min: -10_000, max: 10_000, multipleOf: 0.01 }),
 		currencyCode: generateCurrencyCode(faker),
-		timestamp: faker.temporal.recent.plainDate({
-			days: 30,
-			refDate: getNow.plainDate(),
-		}),
-		updatedAt: getNow.zonedDateTime(),
+		timestamp: Temporal.Instant.from(
+			faker.date.recent({ days: 30 }).toISOString(),
+		)
+			.toZonedDateTimeISO(Temporal.Now.timeZoneId())
+			.toPlainDate(),
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
 		note: faker.lorem.words(4),
 	}));
 
@@ -110,9 +111,9 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
 				amount: participantSum.balance,
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				their: {
-					updatedAt: getNow.zonedDateTime(),
+					updatedAt: Temporal.Now.zonedDateTimeISO(),
 					currencyCode: receiptBase.currencyCode,
 					timestamp: receiptBase.issued,
 					amount: participantSum.balance,
@@ -157,7 +158,7 @@ export const theirNonExistent: MapDebt = (debt) => ({
 export const theirSynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		updatedAt: add.zonedDateTime(debt.updatedAt, { seconds: 1 }),
+		updatedAt: debt.updatedAt.add({ seconds: 1 }),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount,
@@ -167,7 +168,7 @@ export const theirSynced: MapDebt = (debt) => ({
 export const theirDesynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		updatedAt: add.zonedDateTime(debt.updatedAt, { seconds: 1 }),
+		updatedAt: debt.updatedAt.add({ seconds: 1 }),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount + 1,

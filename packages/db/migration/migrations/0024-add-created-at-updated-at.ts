@@ -16,11 +16,10 @@ import {
 	USERS,
 } from "~db/migration/consts";
 import { isTestEnv } from "~db/migration/utils";
-import { parsers } from "~utils/date";
 
 const updateColumn = "updatedAt";
 // Project inception date
-const defaultCreatedDate = parsers.zonedDateTime(
+const defaultCreatedDate = Temporal.ZonedDateTime.from(
 	"2020-12-04T07:10:00.000[GMT]",
 );
 

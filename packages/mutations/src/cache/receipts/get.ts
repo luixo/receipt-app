@@ -2,7 +2,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
-import type { Temporal } from "~utils/date";
 
 import type {
 	ControllerContext,

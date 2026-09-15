@@ -8,7 +8,6 @@ import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import type { ViewHandle } from "~components/view.base";
 import type { ReceiptItemId } from "~db/ids";
-import { compare } from "~utils/date";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { useReceiptContext } from "./context";
@@ -64,7 +63,9 @@ export const ReceiptItems: React.FC = () => {
 	const itemsRef = React.useRef<Record<ReceiptItemId, ViewHandle | null>>({});
 	const sortedItems = React.useMemo(
 		() =>
-			items.toSorted((a, b) => compare.zonedDateTime(a.createdAt, b.createdAt)),
+			items.toSorted((a, b) =>
+				Temporal.ZonedDateTime.compare(a.createdAt, b.createdAt),
+			),
 		[items],
 	);
 	if (items.length === 0) {

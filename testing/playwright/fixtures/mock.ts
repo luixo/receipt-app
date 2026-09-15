@@ -1,12 +1,13 @@
-import { en } from "@faker-js/faker";
+import { Faker, en } from "@faker-js/faker";
 import { test } from "@playwright/test";
 import timekeeper from "timekeeper";
 
 import { addAttachment } from "~tests/frontend/utils/test-info";
-import { ExtendedFaker, setSeed } from "~tests/utils/faker";
+import { setSeed } from "~tests/utils/faker";
+import { freezeTemporal } from "~tests/utils/temporal-freeze";
 
 type MockFixtures = {
-	faker: ExtendedFaker;
+	faker: Faker;
 	reportFakerData: void;
 };
 type MockWorkerFixtures = {
@@ -15,7 +16,7 @@ type MockWorkerFixtures = {
 
 export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 	faker: async ({}, use, testInfo) => {
-		const localFaker = new ExtendedFaker({ locale: [en] });
+		const localFaker = new Faker({ locale: [en] });
 		// Remove first element as it is a file name
 		setSeed(localFaker, testInfo.titlePath.slice(1).join(" / "));
 		await use(localFaker);
@@ -33,6 +34,7 @@ export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 		async ({}, use) => {
 			// oxlint-disable-next-line eslint-js/no-restricted-syntax
 			timekeeper.freeze(new Date("2020-01-01"));
+			freezeTemporal(Temporal.PlainDateTime.from("2020-01-01T00:00:00"));
 			await use();
 			timekeeper.reset();
 		},

@@ -12,7 +12,6 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./top";
@@ -67,7 +66,7 @@ describe("currency.top", () => {
 				currencyCodes.map((currencyCode) =>
 					insertDebt(ctx, accountId, otherUserId, {
 						currencyCode,
-						timestamp: subtract.plainDate(getNow.plainDate(), { months: 1 }),
+						timestamp: Temporal.Now.plainDateISO().subtract({ months: 1 }),
 					}),
 				),
 			);
@@ -108,7 +107,7 @@ describe("currency.top", () => {
 				accountId,
 				{
 					currencyCode: "EUR",
-					issued: subtract.plainDate(getNow.plainDate(), { months: 1 }),
+					issued: Temporal.Now.plainDateISO().subtract({ months: 1 }),
 				},
 			);
 			await insertReceiptParticipant(ctx, selfOutdatedReceiptId, userId);
@@ -131,7 +130,7 @@ describe("currency.top", () => {
 				otherAccountId,
 				{
 					currencyCode: "AMD",
-					issued: subtract.plainDate(getNow.plainDate(), { months: 1 }),
+					issued: Temporal.Now.plainDateISO().subtract({ months: 1 }),
 				},
 			);
 			await insertReceiptParticipant(

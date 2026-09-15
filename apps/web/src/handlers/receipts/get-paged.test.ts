@@ -22,7 +22,6 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { compare, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 
@@ -30,7 +29,7 @@ import { procedure } from "./get-paged";
 
 type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const sortReceipts = (receipts: MockReceipt[]) =>
-	receipts.toSorted((a, b) => compare.plainDate(b.issued, a.issued));
+	receipts.toSorted((a, b) => Temporal.PlainDate.compare(b.issued, a.issued));
 
 const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
 	id: receipt.id,
@@ -56,7 +55,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Self receipt
 	const selfReceipt = await insertReceipt(ctx, accountId, {
-		issued: parsers.plainDate("2020-01-06"),
+		issued: Temporal.PlainDate.from("2020-01-06"),
 	});
 	// Self receipt: participants
 	await insertReceiptParticipant(ctx, selfReceipt.id, selfUserId);
@@ -73,7 +72,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Other self receipt
 	const otherSelfReceipt = await insertReceipt(ctx, accountId, {
-		issued: parsers.plainDate("2020-02-06"),
+		issued: Temporal.PlainDate.from("2020-02-06"),
 	});
 	const otherSelfReceiptWithItems = {
 		...otherSelfReceipt,
@@ -92,7 +91,7 @@ const mockData = async (ctx: TestContext) => {
 		accountId,
 	]);
 	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
-		issued: parsers.plainDate("2020-03-06"),
+		issued: Temporal.PlainDate.from("2020-03-06"),
 	});
 	// Foreign receipt: participants
 	await Promise.all([
@@ -112,7 +111,7 @@ const mockData = async (ctx: TestContext) => {
 
 	// Other foreign receipt
 	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
-		issued: parsers.plainDate("2020-04-06"),
+		issued: Temporal.PlainDate.from("2020-04-06"),
 		name: "T'zolkin",
 	});
 	// Other foreign receipt: participants
@@ -365,7 +364,7 @@ describe("receipts.getPaged", () => {
 				modifyInput: (input) => ({ ...input, orderBy: "date-asc" }),
 				modifyOutput: (receipts) =>
 					receipts
-						.toSorted((a, b) => compare.plainDate(a.issued, b.issued))
+						.toSorted((a, b) => Temporal.PlainDate.compare(a.issued, b.issued))
 						.map(mapReceipt),
 			});
 		});

@@ -17,7 +17,6 @@ import {
 	defaultGenerateReceiptItems,
 	defaultGenerateReceiptParticipants,
 } from "~tests/frontend/generators/receipts";
-import { getNow } from "~utils/date";
 
 import { test } from "./receipts-screen.utils";
 
@@ -76,7 +75,7 @@ test("Full screen", async ({
 					{
 						userId: opts.selfUserId,
 						role: "editor" as const,
-						createdAt: getNow.zonedDateTime(),
+						createdAt: Temporal.Now.zonedDateTimeISO(),
 					},
 				];
 			}
