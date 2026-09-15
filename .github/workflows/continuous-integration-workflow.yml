@@ -127,6 +127,8 @@ jobs:
       - name: Run frontend tests
         id: tests
         run: bun run frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+        env:
+          COVERAGE: true
       - name: Upload Playwright report chunks
         uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}

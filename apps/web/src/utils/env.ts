@@ -8,6 +8,7 @@ export const env = createEnv({
 		ERA_API_KEY: z.string(),
 		EMAIL_SERVICE_ACTIVE: z.coerce.boolean().catch(false),
 		PLAYWRIGHT: z.coerce.boolean().catch(false),
+		COVERAGE: z.coerce.boolean().catch(false),
 		BASE_URL: z.url().optional(),
 		MAILER_SENDER: z.string().optional(),
 		MAILER_TOKEN: z.string().optional(),

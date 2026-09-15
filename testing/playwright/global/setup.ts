@@ -56,6 +56,21 @@ const handleErrors = () => {
 	}
 };
 
+const handleCoverage = async () => {
+	if (!process.env.COVERAGE) {
+		return;
+	}
+	const serverCoverage = await getServerCoverage();
+	baseLogger.info(
+		`Generating coverage from ${clientCoverage.length} client and ${keys(serverCoverage).length} server data points`,
+	);
+	await generateCoverageReport({
+		client: await mapJsCoverage(clientCoverage),
+		server: serverCoverage,
+	});
+	baseLogger.info("Coverage generated.");
+};
+
 const globalSetup = async () => {
 	await prepareCoverageEnv();
 	const portManagerPort = await getFreePort();
@@ -65,15 +80,7 @@ const globalSetup = async () => {
 	await httpServer.listen(portManagerPort);
 	return async () => {
 		handleErrors();
-		const serverCoverage = await getServerCoverage();
-		baseLogger.info(
-			`Generating coverage from ${clientCoverage.length} client and ${keys(serverCoverage).length} server data points`,
-		);
-		await generateCoverageReport({
-			client: await mapJsCoverage(clientCoverage),
-			server: serverCoverage,
-		});
-		baseLogger.info("Coverage generated.");
+		await handleCoverage();
 		await httpServer.close();
 	};
 };
