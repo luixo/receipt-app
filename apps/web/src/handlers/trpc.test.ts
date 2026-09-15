@@ -12,7 +12,6 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { add, getNow, subtract } from "~utils/date";
 import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
 
@@ -122,11 +121,9 @@ describe("procedures", () => {
 		test("session is not auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: add.zonedDateTime(
-						getNow.zonedDateTime(),
-						SESSION_REFRESH_DURATION,
-						{ seconds: 1 },
-					),
+					expirationTimestamp: Temporal.Now.zonedDateTimeISO()
+						.add(SESSION_REFRESH_DURATION)
+						.add({ seconds: 1 }),
 				},
 			});
 
@@ -140,10 +137,9 @@ describe("procedures", () => {
 		test("session is auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: subtract.zonedDateTime(
-						add.zonedDateTime(getNow.zonedDateTime(), SESSION_REFRESH_DURATION),
-						{ seconds: 1 },
-					),
+					expirationTimestamp: Temporal.Now.zonedDateTimeISO()
+						.add(SESSION_REFRESH_DURATION)
+						.subtract({ seconds: 1 }),
 				},
 			});
 

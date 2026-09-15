@@ -4,7 +4,6 @@ import assert from "node:assert";
 import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
-import { getNow } from "~utils/date";
 
 import { test as userAvatarFixture } from "./user-avatar.utils";
 
@@ -23,7 +22,7 @@ test("Renders a generated avatar for a user without a connected account", async 
 		generateReceiptItems: () => [],
 		// The only payer, so their (non-dimmed) avatar is the "payed by" preview.
 		generateReceiptPayers: () => [
-			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
+			{ userId: user.id, part: 1, createdAt: Temporal.Now.zonedDateTimeISO() },
 		],
 	});
 	await openReceipt(receipt);
@@ -54,7 +53,7 @@ test("Renders the connected account image when an avatar url is set", async ({
 		generateUsers: () => [user],
 		generateReceiptItems: () => [],
 		generateReceiptPayers: () => [
-			{ userId: user.id, part: 1, createdAt: getNow.zonedDateTime() },
+			{ userId: user.id, part: 1, createdAt: Temporal.Now.zonedDateTimeISO() },
 		],
 	});
 	await openReceipt(receipt);

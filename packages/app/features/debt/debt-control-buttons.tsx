@@ -11,7 +11,6 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
-import { isFirstEarlier } from "~utils/date";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -69,7 +68,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	return (
 		<>
 			{intention &&
-			isFirstEarlier.zonedDateTime(debt.updatedAt, intention.updatedAt) ? (
+			Temporal.ZonedDateTime.compare(debt.updatedAt, intention.updatedAt) <
+				0 ? (
 				<ConfirmModal
 					onConfirm={acceptSyncIntention}
 					title={t("debt.acceptIntention.title")}

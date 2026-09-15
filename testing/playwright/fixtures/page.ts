@@ -65,6 +65,16 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {
 			Date.now = () => mockedTimestamp;
+			// That's basically a copy of `testing/utils/src/temporal-freeze.ts`
+			const instant = () =>
+				Temporal.Instant.fromEpochMilliseconds(mockedTimestamp);
+			const zonedDateTime = () =>
+				instant().toZonedDateTimeISO(Temporal.Now.timeZoneId());
+			Temporal.Now.instant = instant;
+			Temporal.Now.zonedDateTimeISO = zonedDateTime;
+			Temporal.Now.plainDateTimeISO = () => zonedDateTime().toPlainDateTime();
+			Temporal.Now.plainDateISO = () => zonedDateTime().toPlainDate();
+			Temporal.Now.plainTimeISO = () => zonedDateTime().toPlainTime();
 			// oxlint-disable-next-line no-implicit-globals no-global-assign
 			Date = class extends Date {
 				// Browser may crumble with an extra member accessibility parameter

@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { resetPasswordTokenSchema } from "~app/utils/validation";
-import { getNow } from "~utils/date";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
@@ -24,7 +23,7 @@ export const procedure = unauthProcedure
 				eb("token", "=", input.token).and(
 					"expiresTimestamp",
 					">",
-					getNow.zonedDateTime(),
+					Temporal.Now.zonedDateTimeISO(),
 				),
 			)
 			.innerJoin("accounts", (qb) =>

@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { limitSchema } from "~app/utils/validation";
 import type { UserId } from "~db/ids";
-import { getNow, subtract } from "~utils/date";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
@@ -38,7 +37,7 @@ export const procedure = authProcedure
 			...(input.filterIds || []),
 			ctx.auth.accountId as UserId,
 		];
-		const monthAgo = subtract.plainDate(getNow.plainDate(), { months: 1 });
+		const monthAgo = Temporal.Now.plainDateISO().subtract({ months: 1 });
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
 			const { receiptId } = options;

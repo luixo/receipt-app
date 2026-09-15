@@ -9,7 +9,6 @@ import { Icon } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
-import { compare } from "~utils/date";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -25,7 +24,7 @@ const getContent = (
 	if (synced) {
 		return t("components.debtSyncStatus.inSync");
 	}
-	return compare.zonedDateTime(debt.updatedAt, theirDebt.updatedAt)
+	return Temporal.ZonedDateTime.compare(debt.updatedAt, theirDebt.updatedAt)
 		? t("components.debtSyncStatus.outOfSyncWe")
 		: t("components.debtSyncStatus.outOfSyncThey");
 };
@@ -70,7 +69,10 @@ export const DebtSyncStatus: React.FC<Props> = ({
 					} top-0`}
 				>
 					{synced ? null : theirDebt?.updatedAt &&
-					  compare.zonedDateTime(theirDebt.updatedAt, debt.updatedAt) > 0 ? (
+					  Temporal.ZonedDateTime.compare(
+							theirDebt.updatedAt,
+							debt.updatedAt,
+					  ) > 0 ? (
 						<Icon name="incoming" className={iconClassName} />
 					) : (
 						<Icon name="outcoming" className={iconClassName} />

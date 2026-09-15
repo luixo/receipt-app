@@ -5,8 +5,7 @@ import { useLocale } from "~app/hooks/use-locale";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
 import { useSsrValue } from "~app/hooks/use-ssr-value";
 import { TIMEZONE_STORE_NAME } from "~app/utils/store/timezone";
-import type { TemporalType } from "~utils/date";
-import { formatters } from "~utils/date";
+import type { TemporalMapping } from "~utils/temporal";
 
 export const useFormat = () => {
 	const [timezone, localTimezone] = useSsrValue(TIMEZONE_STORE_NAME);
@@ -15,23 +14,31 @@ export const useFormat = () => {
 	const effectiveTimezone = isMounted ? localTimezone : timezone;
 	const locale = useLocale();
 	return React.useMemo<{
-		[K in TemporalType as `format${Capitalize<K>}`]: (
-			date: Parameters<(typeof formatters)[K]>[0],
-			options?: Parameters<(typeof formatters)[K]>[2],
+		[K in keyof TemporalMapping as `format${Capitalize<K>}`]: (
+			date: TemporalMapping[K],
+			options?: Intl.DateTimeFormatOptions,
 		) => string;
 	}>(
 		() => ({
 			formatPlainDate: (date, options) =>
-				formatters.plainDate(date, locale, options),
+				date.toLocaleString(locale, { dateStyle: "medium", ...options }),
 			formatPlainTime: (date, options) =>
-				formatters.plainTime(date, locale, options),
+				date.toLocaleString(locale, { timeStyle: "short", ...options }),
 			formatPlainDateTime: (date, options) =>
-				formatters.plainDateTime(date, locale, options),
-			formatZonedDateTime: (date, options) =>
-				formatters.zonedDateTime(date, locale, {
-					timeZone: effectiveTimezone,
+				date.toLocaleString(locale, {
+					dateStyle: "medium",
+					timeStyle: "short",
 					...options,
 				}),
+			// `ZonedDateTime` carries its own time zone, so convert instead
+			formatZonedDateTime: (date, { timeZone, ...rest } = {}) =>
+				date
+					.withTimeZone(timeZone ?? effectiveTimezone)
+					.toLocaleString(locale, {
+						dateStyle: "medium",
+						timeStyle: "short",
+						...rest,
+					}),
 		}),
 		[effectiveTimezone, locale],
 	);

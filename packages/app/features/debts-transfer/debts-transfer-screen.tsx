@@ -42,7 +42,6 @@ import { cn } from "~components/utils";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
-import { getNow } from "~utils/date";
 
 const formSchema = z
 	.record(currencyCodeSchema, debtAmountSchema.or(z.literal(0)))
@@ -141,7 +140,7 @@ const DebtsListForm = suspendedFallback<{
 							currencyCode,
 							userId: fromUserId,
 							amount: -amount,
-							timestamp: getNow.plainDate(),
+							timestamp: Temporal.Now.plainDateISO(),
 						};
 						addMutation.mutate(fromMutationVars);
 						const toMutationVars = {
@@ -151,7 +150,7 @@ const DebtsListForm = suspendedFallback<{
 							currencyCode,
 							userId: toUser.id,
 							amount,
-							timestamp: getNow.plainDate(),
+							timestamp: Temporal.Now.plainDateISO(),
 						};
 						addMutation.mutate(toMutationVars);
 						return [

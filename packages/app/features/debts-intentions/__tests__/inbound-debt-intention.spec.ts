@@ -3,7 +3,6 @@ import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow } from "~utils/date";
 
 import { test } from "./utils";
 
@@ -24,7 +23,9 @@ test("Accept button is visible and clickable", async ({
 
 	await expect(acceptButton).toBeVisible();
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debtIntentions.accept", {
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
+	});
 
 	await snapshotQueries(async () => {
 		await acceptButton.click();
@@ -79,7 +80,9 @@ test("'debtIntentions.accept' pending / error", async ({
 		{ name: "error" },
 	);
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debtIntentions.accept", {
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
+	});
 	api.mockFirst("debts.getAllUser", { items: [] });
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,
@@ -121,7 +124,9 @@ test("Accept and edit button navigates to debt page on success", async ({
 	assert.ok(debtIntention);
 	await page.navigate({ to: "/debts/intentions" });
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: getNow.zonedDateTime() });
+	api.mockFirst("debtIntentions.accept", {
+		updatedAt: Temporal.Now.zonedDateTimeISO(),
+	});
 	api.mockFirst("debts.getAllUser", { items: [] });
 	api.mockFirst("debts.getUsersPaged", {
 		count: 1,

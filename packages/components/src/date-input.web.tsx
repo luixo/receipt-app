@@ -2,6 +2,7 @@ import type React from "react";
 
 import { Calendar } from "@heroui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
+import { CalendarDate } from "@internationalized/date";
 import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -9,8 +10,6 @@ import { useFormat } from "~app/hooks/use-format";
 import { Input } from "~components/input";
 import type { MutationsProp } from "~components/utils";
 import { getMutationLoading } from "~components/utils";
-import { parsers } from "~utils/date";
-import type { Temporal } from "~utils/date";
 
 export type Props = {
 	value: Temporal.PlainDate | undefined;
@@ -43,11 +42,7 @@ export const DateInput: React.FC<Props> = ({
 						value={value ? formatPlainDate(value) : ""}
 						onValueChange={(nextValue) => {
 							// Manual update - or by automation tool
-							onValueChange(
-								parsers.plainDate(
-									nextValue as Parameters<typeof parsers.plainDate>[0],
-								),
-							);
+							onValueChange(Temporal.PlainDate.from(nextValue));
 						}}
 						isReadOnly={import.meta.env.MODE !== "test"}
 						label={label || t("components.dateInput.label")}
@@ -58,13 +53,19 @@ export const DateInput: React.FC<Props> = ({
 				</div>
 			</PopoverTrigger>
 			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
-				<Calendar<Temporal.PlainDate>
-					onChange={(nextValue) => {
-						onValueChange(nextValue);
+				<Calendar<CalendarDate>
+					onChange={(nextValue: CalendarDate) => {
+						onValueChange(
+							Temporal.PlainDate.from({
+								year: nextValue.year,
+								month: nextValue.month,
+								day: nextValue.day,
+							}),
+						);
 						setClose();
 					}}
 					showMonthAndYearPickers
-					value={value}
+					value={value && new CalendarDate(value.year, value.month, value.day)}
 					isDisabled={isDisabled}
 				/>
 			</PopoverContent>

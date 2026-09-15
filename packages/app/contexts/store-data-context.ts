@@ -7,8 +7,6 @@ import {
 	getStoreValuesFromInitialValues,
 } from "~app/utils/store-data";
 import type { StoreStates, StoreValues } from "~app/utils/store-data";
-import type { Temporal } from "~utils/date";
-import { getNow } from "~utils/date";
 
 // The data above + data we add on each render
 export type StoreData = {
@@ -30,6 +28,6 @@ export const StoreDataContext = React.createContext<StoreDataContextType>({
 		doNothing,
 		doNothing,
 	),
-	nowTimestamp: getNow.zonedDateTime(),
+	nowTimestamp: Temporal.Now.zonedDateTimeISO(),
 	isFirstRender: true,
 });

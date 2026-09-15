@@ -39,8 +39,6 @@ import { Tooltip } from "~components/tooltip";
 import { User } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
-import { getNow } from "~utils/date";
-import type { Temporal } from "~utils/date";
 
 const SELECT_ITEMS = ["foo", "bar", "baz"];
 
@@ -500,7 +498,8 @@ export const PlaygroundScreen = () => {
 				)}
 			</View>
 			<Text className="whitespace-pre text-red-500">
-				Current time in tz: {format.formatZonedDateTime(getNow.zonedDateTime())}
+				Current time in tz:{" "}
+				{format.formatZonedDateTime(Temporal.Now.zonedDateTimeISO())}
 			</Text>
 			{[
 				"font-thin",

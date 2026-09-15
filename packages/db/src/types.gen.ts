@@ -5,7 +5,6 @@
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { AccountId, DebtId, ReceiptId, ReceiptItemId, SessionId, UserId } from "~db/ids";
-import type { Temporal } from "~utils/date";
 import type { ColumnType } from "kysely";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>

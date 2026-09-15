@@ -1,3 +1,4 @@
+import type { Faker } from "@faker-js/faker";
 import { mergeTests } from "@playwright/test";
 import type { BrowserContext } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
@@ -20,7 +21,6 @@ import type {
 import { AUTH_COOKIE } from "~app/utils/auth";
 import type { AccountId, UserId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
-import type { ExtendedFaker } from "~tests/utils/faker";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
 import { promisifyEvent, promisifyServer } from "~utils/promise";
@@ -436,7 +436,7 @@ const getMockUtils = ({
 	context,
 }: {
 	api: ApiManager;
-	faker: ExtendedFaker;
+	faker: Faker;
 	context: BrowserContext;
 }) => ({
 	noAuthPage: () => {

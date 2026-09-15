@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getNow } from "~utils/date";
 
 import { test } from "./utils";
 
@@ -61,7 +60,7 @@ test.describe("Accept all intentions button", () => {
 		);
 		api.mockFirst("debtIntentions.accept", async ({ input }) => {
 			if (!rejectedDebtsIds.has(input.id)) {
-				return { updatedAt: getNow.zonedDateTime() };
+				return { updatedAt: Temporal.Now.zonedDateTimeISO() };
 			}
 			await acceptIntentionLaterPause.promise;
 			throw new TRPCError({
@@ -100,7 +99,7 @@ test.describe("Accept all intentions button", () => {
 		);
 
 		api.mockFirst("debtIntentions.accept", {
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 		});
 		api.mockFirst("debts.getAllUser", { items: [] });
 		api.mockFirst("debts.getUsersPaged", {

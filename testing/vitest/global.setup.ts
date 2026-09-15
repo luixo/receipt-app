@@ -1,3 +1,4 @@
+import "~utils/temporal-polyfill";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import type { TestProject } from "vitest/node";
 

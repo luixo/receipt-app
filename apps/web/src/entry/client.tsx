@@ -1,4 +1,6 @@
 /// <reference types="vite/client" />
+// Native `Temporal` is available in all modern browsers except Safari
+import "~utils/temporal-polyfill";
 import React from "react";
 
 import * as Sentry from "@sentry/tanstackstart-react";

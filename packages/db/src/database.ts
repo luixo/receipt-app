@@ -12,8 +12,7 @@ import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
 import type { DB } from "~db/types.gen";
-import type { TemporalType } from "~utils/date";
-import { isTemporalObject, parsers, serialize } from "~utils/date";
+import type { TemporalMapping } from "~utils/temporal";
 
 export type Database = Kysely<DB>;
 
@@ -49,10 +48,10 @@ const temporalMapping = {
 	[types.builtins.TIMESTAMP as typeof types.TypeId.TIMESTAMP]: "plainDateTime",
 	[types.builtins.TIMESTAMPTZ as typeof types.TypeId.TIMESTAMPTZ]:
 		"zonedDateTime",
-	[types.builtins.TIME as typeof types.TypeId.TIME]: "plainDate",
+	[types.builtins.TIME as typeof types.TypeId.TIME]: "plainTime",
 	// This is incorrect, but we don't use timetz type
 	[types.builtins.TIMETZ as typeof types.TypeId.TIMETZ]: "plainTime",
-} satisfies Record<TemporalBuiltinType, TemporalType>;
+} satisfies Record<TemporalBuiltinType, keyof TemporalMapping>;
 export const temporalParsers = mapValues(
 	temporalMapping,
 	() => (input: string) => input,
@@ -64,22 +63,28 @@ const dbParsers: Partial<Record<BuiltinType, TypeParser>> = {
 	[types.builtins.INT8 as typeof types.TypeId.INT8]: Number,
 	/* c8 ignore stop */
 };
-const calendarISOToDatabaseISO = (input: string) =>
-	input.replace("T", " ").replace(/\[.*\]$/, "");
 const serializer: Serializer = (input) => {
-	if (isTemporalObject(input)) {
-		return calendarISOToDatabaseISO(serialize(input));
+	if (
+		input instanceof Temporal.ZonedDateTime ||
+		input instanceof Temporal.PlainDate ||
+		input instanceof Temporal.PlainDateTime ||
+		input instanceof Temporal.PlainTime
+	) {
+		return input
+			.toString()
+			.replace("T", " ")
+			.replace(/\[.*\]$/, "");
 	}
 	return defaultSerializer(input);
 };
 const deserializeRegexes = {
 	plainDate: /^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/,
-	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,9})?$/,
 	plainDateTime:
-		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,9})?$/,
 	zonedDateTime:
-		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
-} satisfies Record<TemporalType, RegExp>;
+		/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,9})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
+} satisfies Record<keyof TemporalMapping, RegExp>;
 const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	const separatedInput = input.replace(" ", "T");
 	if (addTimezone) {
@@ -95,6 +100,14 @@ const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 	}
 	return separatedInput;
 };
+const temporalFrom = {
+	/* c8 ignore start */
+	plainTime: (input: string) => Temporal.PlainTime.from(input),
+	plainDate: (input: string) => Temporal.PlainDate.from(input),
+	plainDateTime: (input: string) => Temporal.PlainDateTime.from(input),
+	zonedDateTime: (input: string) => Temporal.ZonedDateTime.from(input),
+	/* c8 ignore stop */
+} satisfies Record<keyof TemporalMapping, (input: string) => unknown>;
 const deserializer: Deserializer = (input) => {
 	if (input === null) {
 		return null;
@@ -108,9 +121,8 @@ const deserializer: Deserializer = (input) => {
 		);
 		if (regexTypeMatch) {
 			const [type] = regexTypeMatch;
-			return parsers[type](
-				// oxlint-disable-next-line typescript/no-explicit-any typescript/no-unsafe-argument
-				databaseISOToCalendarISO(input, type.startsWith("zoned")) as any,
+			return temporalFrom[type](
+				databaseISOToCalendarISO(input, type.startsWith("zoned")),
 			);
 		}
 	}

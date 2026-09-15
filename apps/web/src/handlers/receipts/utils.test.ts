@@ -11,15 +11,13 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import type { Temporal } from "~utils/date";
-import { getNow } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
 export const getValidReceipt = () => ({
 	name: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
-	issued: getNow.plainDate(),
+	issued: Temporal.Now.plainDateISO(),
 });
 
 export const verifyName = <T>(
@@ -85,7 +83,7 @@ export const verifyIssued = <T>(
 				// oxlint-disable-next-line eslint-js/no-restricted-syntax
 				() => runProcedure(context, new Date()),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}issued": Input not instance of CalendarDate`,
+				`Zod error\n\nAt "${prefix}issued": Input not instance of PlainDate`,
 			);
 		});
 	});

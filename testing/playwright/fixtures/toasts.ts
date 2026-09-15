@@ -1,7 +1,6 @@
 import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-import { getNow } from "~utils/date";
 import { DESCRIPTION_CLASSNAME, MAX_VISIBLE_TOASTS } from "~utils/toast";
 
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
@@ -66,7 +65,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 				return;
 			}
 			let toastsLeft = amount;
-			const startTimestamp = getNow.plainDateTime();
+			const startTimestamp = Temporal.Now.plainDateTimeISO();
 			const filteredToast = filter ? toast.filter({ hasText: filter }) : toast;
 			await expect(async () => {
 				const toasts = await filteredToast.count();
@@ -89,7 +88,10 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 					);
 				}
 				if (
-					getNow.plainDateTime().compare(startTimestamp) > SKIP_TOAST_TIMEOUT
+					Temporal.PlainDateTime.compare(
+						Temporal.Now.plainDateTimeISO(),
+						startTimestamp,
+					) > SKIP_TOAST_TIMEOUT
 				) {
 					// This is for flaky browsers that tend to miss a toast or two
 					return;

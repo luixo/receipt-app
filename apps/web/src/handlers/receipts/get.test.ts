@@ -21,7 +21,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { compare, getNow, subtract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
@@ -46,7 +45,10 @@ const getItems = (
 					createdAt: consumer.createdAt,
 				}))
 				.toSorted((a, b) => {
-					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+					const delta = Temporal.ZonedDateTime.compare(
+						b.createdAt,
+						a.createdAt,
+					);
 					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 				}),
 			payers: payers
@@ -57,12 +59,15 @@ const getItems = (
 					createdAt: payer.createdAt,
 				}))
 				.toSorted((a, b) => {
-					const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+					const delta = Temporal.ZonedDateTime.compare(
+						b.createdAt,
+						a.createdAt,
+					);
 					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 				}),
 		}))
 		.toSorted((a, b) => {
-			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+			const delta = Temporal.ZonedDateTime.compare(b.createdAt, a.createdAt);
 			return delta === 0 ? a.id.localeCompare(b.id) : delta;
 		});
 
@@ -76,7 +81,7 @@ const getParticipants = (
 			createdAt: participant.createdAt,
 		}))
 		.toSorted((a, b) => {
-			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+			const delta = Temporal.ZonedDateTime.compare(b.createdAt, a.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 		});
 
@@ -88,7 +93,7 @@ const getPayers = (payers: Awaited<ReturnType<typeof insertReceiptPayer>>[]) =>
 			createdAt: payer.createdAt,
 		}))
 		.toSorted((a, b) => {
-			const delta = compare.zonedDateTime(b.createdAt, a.createdAt);
+			const delta = Temporal.ZonedDateTime.compare(b.createdAt, a.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
 		});
 
@@ -167,7 +172,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -197,7 +202,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -238,7 +243,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -275,7 +280,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -314,7 +319,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -369,7 +374,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -466,7 +471,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -495,7 +500,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -537,12 +542,12 @@ describe("receipts.get", () => {
 					role: "viewer",
 				}),
 				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId, {
-					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 10,
 					}),
 				}),
 				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id, {
-					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 20,
 					}),
 				}),
@@ -551,7 +556,7 @@ describe("receipts.get", () => {
 			const [foreignPayer, connectedPayer, ownerPayer] = await Promise.all([
 				insertReceiptPayer(ctx, receipt.id, foreignPayerUser.id),
 				insertReceiptPayer(ctx, receipt.id, foreignConnectedUser.id, {
-					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 20,
 					}),
 				}),
@@ -560,13 +565,13 @@ describe("receipts.get", () => {
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
 				insertReceiptItem(ctx, receipt.id, {
-					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 20,
 					}),
 				}),
 				// item with 1 participant & 1 payer
 				insertReceiptItem(ctx, receipt.id, {
-					createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 10,
 					}),
 				}),
@@ -590,7 +595,7 @@ describe("receipts.get", () => {
 					receiptItems[0].id,
 					connectedParticipant.userId,
 					{
-						createdAt: subtract.zonedDateTime(getNow.zonedDateTime(), {
+						createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 							milliseconds: 20,
 						}),
 					},
@@ -629,7 +634,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,

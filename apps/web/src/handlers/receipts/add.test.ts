@@ -18,7 +18,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
 import { getValidReceiptItem } from "~web/handlers/receipt-items/utils.test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
@@ -252,7 +251,7 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				participants: [],
 				items: [],
 				payers: [],
@@ -284,9 +283,9 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				participants: participants.map(() => ({
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				})),
 				items: [],
 				payers: [],
@@ -318,12 +317,12 @@ describe("receipts.add", () => {
 			}
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				participants: [],
 				items: receiptItems.map((_item, index) => ({
 					// oxlint-disable-next-line typescript/no-non-null-assertion
 					id: result.items[index]!.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					consumers: undefined,
 					payers: undefined,
 				})),
@@ -379,21 +378,21 @@ describe("receipts.add", () => {
 			}
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 				participants: participants.map(() => ({
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				})),
 				items: receiptItems.map((item, index) => ({
 					// oxlint-disable-next-line typescript/no-non-null-assertion
 					id: result.items[index]!.id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					consumers: item.consumers?.map((consumer) => ({
 						userId: consumer.userId,
-						createdAt: getNow.zonedDateTime(),
+						createdAt: Temporal.Now.zonedDateTimeISO(),
 					})),
 					payers: item.payers?.map((payer) => ({
 						userId: payer.userId,
-						createdAt: getNow.zonedDateTime(),
+						createdAt: Temporal.Now.zonedDateTimeISO(),
 					})),
 				})),
 				payers: [],
@@ -432,12 +431,14 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				createdAt: getNow.zonedDateTime(),
-				participants: payers.map(() => ({ createdAt: getNow.zonedDateTime() })),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
+				participants: payers.map(() => ({
+					createdAt: Temporal.Now.zonedDateTimeISO(),
+				})),
 				items: [],
 				payers: payers.map((payer) => ({
 					userId: payer.userId,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				})),
 			});
 		});

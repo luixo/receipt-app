@@ -12,7 +12,6 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { compare, parsers } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -89,8 +88,10 @@ describe("debt-intenions.getAll", () => {
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: originalDebt.amount + 1,
-						timestamp: parsers.plainDate("2020-04-01"),
-						createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+						timestamp: Temporal.PlainDate.from("2020-04-01"),
+						createdAt: Temporal.ZonedDateTime.from(
+							"2020-05-01T00:00:00.000[GMT]",
+						),
 						note: faker.lorem.words(),
 						receiptId: foreignReceiptId,
 					}),
@@ -102,7 +103,9 @@ describe("debt-intenions.getAll", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					createdAt: parsers.zonedDateTime("2020-05-01T00:00:00.000[GMT]"),
+					createdAt: Temporal.ZonedDateTime.from(
+						"2020-05-01T00:00:00.000[GMT]",
+					),
 				},
 			);
 
@@ -136,7 +139,9 @@ describe("debt-intenions.getAll", () => {
 						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
-				].toSorted((a, b) => compare.zonedDateTime(b.updatedAt, a.updatedAt)),
+				].toSorted((a, b) =>
+					Temporal.ZonedDateTime.compare(b.updatedAt, a.updatedAt),
+				),
 			});
 		});
 	});

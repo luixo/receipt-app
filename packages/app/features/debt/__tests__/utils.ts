@@ -6,7 +6,6 @@ import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
-import { getNow } from "~utils/date";
 
 type Fixtures = {
 	mockBase: () => Promise<{
@@ -71,7 +70,7 @@ export const test = originalTest.extend<Fixtures>({
 				items: [debt.id],
 			}));
 			api.mockFirst("debts.update", () => ({
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseUpdated: false,
 			}));
 			return { debt, ...baseMock };

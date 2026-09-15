@@ -6,7 +6,6 @@ import { test as currenciesPickerTest } from "~app/components/app/__tests__/curr
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
-import { add, formatters, getNow, serialize, subtract } from "~utils/date";
 
 import { test as localTest } from "./utils";
 
@@ -35,10 +34,9 @@ test("On load", async ({
 	await expect(dateInput).toHaveValue(
 		// We use negative timezone offset in tests hence in our browser
 		// its yesterday (compared to mocked date) at the moment
-		formatters.plainDate(
-			subtract.plainDate(getNow.plainDate(), { days: 1 }),
-			localSettings.locale,
-		),
+		Temporal.Now.plainDateISO()
+			.subtract({ days: 1 })
+			.toLocaleString(localSettings.locale, { dateStyle: "medium" }),
 	);
 	await expectCurrency(currencyInput, topCurrency.currencyCode);
 });
@@ -85,12 +83,12 @@ test("'receipts.add' mutation", async ({
 
 	const receiptName = faker.lorem.words();
 	const receiptId = faker.string.uuid();
-	const receiptDate = add.plainDate(getNow.plainDate(), { months: 1 });
+	const receiptDate = Temporal.Now.plainDateISO().add({ months: 1 });
 	const receiptCurrencyCode = "USD";
 
 	await page.navigate({ to: "/receipts/add" });
 	await nameInput.fill(receiptName);
-	await dateInput.fill(serialize(receiptDate));
+	await dateInput.fill(receiptDate.toString());
 	await fillCurrency(currencyInput, receiptCurrencyCode);
 
 	await snapshotQueries(
@@ -108,7 +106,7 @@ test("'receipts.add' mutation", async ({
 		await createPause.promise;
 		return {
 			id: receiptId,
-			createdAt: getNow.zonedDateTime(),
+			createdAt: Temporal.Now.zonedDateTimeISO(),
 			participants: [],
 			items: [],
 			payers: [],
@@ -136,7 +134,7 @@ test("'receipts.add' mutation", async ({
 		name: receiptName,
 		currencyCode: receiptCurrencyCode,
 		issued: receiptDate,
-		createdAt: getNow.zonedDateTime(),
+		createdAt: Temporal.Now.zonedDateTimeISO(),
 		participants: [],
 		items: [],
 		payers: [],

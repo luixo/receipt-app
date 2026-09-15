@@ -1,30 +1,36 @@
 import { keys } from "remeda";
 import { SuperJSON } from "superjson";
 
-import type { TemporalMapping } from "~utils/date";
-import {
-	deserialize as deserializeDate,
-	serialize as serializeDate,
-	temporalClasses,
-	temporalSchemas,
-} from "~utils/date";
+import type { TemporalMapping } from "~utils/temporal";
 
 const superJSONInstance = new SuperJSON({ dedupe: true });
-for (const key of keys(temporalSchemas)) {
+const temporalEntries = {
+	plainTime: Temporal.PlainTime,
+	plainDate: Temporal.PlainDate,
+	plainDateTime: Temporal.PlainDateTime,
+	zonedDateTime: Temporal.ZonedDateTime,
+} satisfies Record<keyof TemporalMapping, unknown>;
+for (const key of keys(temporalEntries)) {
+	const Class = temporalEntries[key];
 	superJSONInstance.registerCustom<
 		TemporalMapping[keyof TemporalMapping],
 		string
 	>(
 		{
 			isApplicable: (input): input is TemporalMapping[typeof key] =>
-				input instanceof temporalClasses[key],
-			serialize: serializeDate,
+				input instanceof Class,
+			serialize: (input) => input.toString(),
 			deserialize: (input) => {
-				const deserializedData = deserializeDate(input);
-				if (!deserializedData) {
-					throw new Error(`Could not deserialize date "${input}"`);
+				switch (key) {
+					case "plainTime":
+						return Temporal.PlainTime.from(input);
+					case "plainDate":
+						return Temporal.PlainDate.from(input);
+					case "plainDateTime":
+						return Temporal.PlainDateTime.from(input);
+					case "zonedDateTime":
+						return Temporal.ZonedDateTime.from(input);
 				}
-				return deserializedData;
 			},
 		},
 		key,

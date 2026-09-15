@@ -9,7 +9,10 @@ export default defineProject({
 	},
 	test: {
 		name: "db",
-		setupFiles: path.resolve(vitestRoot, "./database.setup.ts"),
+		setupFiles: [
+			path.resolve(vitestRoot, "./polyfills.setup.ts"),
+			path.resolve(vitestRoot, "./database.setup.ts"),
+		],
 		include: ["src/**/*.test.ts"],
 	},
 });

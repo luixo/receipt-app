@@ -10,8 +10,6 @@ import {
 
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import { rotate } from "~utils/array";
-import type { Temporal } from "~utils/date";
-import { compare } from "~utils/date";
 import { getIndexByString } from "~utils/hash";
 
 type ReceiptItem = {
@@ -38,7 +36,7 @@ const getSortUsersByReceipt = (
 ) => {
 	const mappedParticipants = rotate(
 		participants.toSorted((participantA, participantB) => {
-			const createdDelta = compare.zonedDateTime(
+			const createdDelta = Temporal.ZonedDateTime.compare(
 				participantA.createdAt,
 				participantB.createdAt,
 			);

@@ -1,4 +1,4 @@
-import { en, faker as globalFaker } from "@faker-js/faker";
+import { Faker, en, faker as globalFaker } from "@faker-js/faker";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { RunnerTestCase } from "vitest";
 import { test as originalTest } from "vitest";
@@ -14,7 +14,7 @@ import { getExchangeRateOptions } from "~tests/backend/utils/mocks/exchange-rate
 import type { LoggerMock } from "~tests/backend/utils/mocks/logger";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
-import { ExtendedFaker, setSeed } from "~tests/utils/faker";
+import { setSeed } from "~tests/utils/faker";
 
 type FileContext = {
 	logger: LoggerMock;
@@ -60,7 +60,7 @@ export type TestContext = FakerContext &
 export type TestFixture = { ctx: TestContext };
 
 export const createStableFaker = (input: string) => {
-	const instance = new ExtendedFaker({ locale: en });
+	const instance = new Faker({ locale: en });
 	setSeed(instance, input);
 	return instance;
 };

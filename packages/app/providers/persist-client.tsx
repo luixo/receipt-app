@@ -6,7 +6,6 @@ import type { AsyncStorage } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
-import { serializeDuration } from "~utils/date";
 
 const isKeyEqual = <
 	T1 extends TRPCQueryKey,
@@ -37,7 +36,10 @@ export const PersisterProvider: React.FC<Props> = ({ storage, children }) => {
 	>(
 		() => ({
 			persister: createAsyncStoragePersister({ storage }),
-			maxAge: serializeDuration({ months: 1 }),
+			maxAge: Temporal.Duration.from({ months: 1 }).total({
+				unit: "seconds",
+				relativeTo: Temporal.Now.plainDateISO(),
+			}),
 			dehydrateOptions: {
 				shouldDehydrateQuery: (query) => {
 					const trpcQuery = query as unknown as TRPCQuery<TRPCQueryKey>;

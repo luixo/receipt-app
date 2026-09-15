@@ -1,7 +1,6 @@
 import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
-import { getNow } from "~utils/date";
 
 import { test } from "./utils";
 
@@ -75,7 +74,7 @@ test.describe("'debts.add' mutation", () => {
 			await createPause.promise;
 			return {
 				id: faker.string.uuid(),
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseAccepted: false,
 			};
 		});

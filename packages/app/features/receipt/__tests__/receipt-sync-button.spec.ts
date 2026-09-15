@@ -14,7 +14,6 @@ import {
 } from "~tests/frontend/generators/debts";
 import { defaultGenerateReceiptItemsWithConsumers } from "~tests/frontend/generators/receipts";
 import { getMutationsByKey } from "~tests/frontend/utils/queries";
-import { getNow } from "~utils/date";
 
 import { test } from "./debts.utils";
 
@@ -172,7 +171,7 @@ test.describe("Mutations", () => {
 			id:
 				receiptDebts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseAccepted:
 				addedDebt.userId
 					.split("")
@@ -181,7 +180,7 @@ test.describe("Mutations", () => {
 				0,
 		}));
 		api.mockFirst("debts.update", ({ input: updatedDebt }) => ({
-			updatedAt: getNow.zonedDateTime(),
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseUpdated:
 				updatedDebt.id
 					.split("")

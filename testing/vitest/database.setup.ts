@@ -4,7 +4,7 @@ import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 
 import { getDatabase } from "~db/database";
-import { serializeDuration } from "~utils/date";
+import { freezeTemporal } from "~tests/utils/temporal-freeze";
 import { transformer } from "~utils/transformer";
 import type { Writeable } from "~utils/types";
 
@@ -58,12 +58,13 @@ beforeAll(
 			await client.releaseDatabase.mutate({ databaseName });
 		};
 	},
-	serializeDuration({ seconds: 10 }),
+	Temporal.Duration.from({ seconds: 10 }).total("milliseconds"),
 );
 
 beforeEach(({ task }) => {
 	// oxlint-disable-next-line eslint-js/no-restricted-syntax
 	timekeeper.freeze(new Date("2020-01-01"));
+	freezeTemporal(Temporal.PlainDateTime.from("2020-01-01T00:00:00"));
 	return async () => {
 		timekeeper.reset();
 		if (task.file.fileContext.database) {

@@ -1,5 +1,4 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import { getNow } from "~utils/date";
 
 import {
 	update as updateDebts,
@@ -34,7 +33,7 @@ export const options: UseContextedMutationOptions<
 				getUsersPaged: (controller) => controller.update(intention.userId),
 				getByUserPaged: undefined,
 				get: (controller) => {
-					const updatedAt = getNow.zonedDateTime();
+					const updatedAt = Temporal.Now.zonedDateTimeISO();
 					if (intention.current) {
 						return controller.update(
 							intention.id,

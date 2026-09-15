@@ -1,5 +1,4 @@
 import type { ReceiptItemId } from "~db/ids";
-import { getNow } from "~utils/date";
 
 import {
 	update as updateReceipts,
@@ -22,7 +21,7 @@ export const options: UseContextedMutationOptions<
 					name: variables.name,
 					price: variables.price,
 					quantity: variables.quantity,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 					consumers: [],
 					payers: [],
 				}),

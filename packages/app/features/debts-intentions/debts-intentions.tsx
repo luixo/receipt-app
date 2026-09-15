@@ -13,7 +13,6 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { View } from "~components/view";
 import type { UserId } from "~db/ids";
-import { compare } from "~utils/date";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import {
@@ -35,7 +34,7 @@ const AggregatedIntentionGroup: React.FC<{ amount: number }> = ({ amount }) => (
 
 const getLatestIntention = (intentions: IntentionsQuery["data"]["items"]) =>
 	intentions.toSorted((intentionA, intentionB) =>
-		compare.plainDate(intentionB.timestamp, intentionA.timestamp),
+		Temporal.PlainDate.compare(intentionB.timestamp, intentionA.timestamp),
 	)[0];
 
 export const DebtIntentions: React.FC = suspendedFallback(
@@ -56,7 +55,10 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			return entries(
 				mapValues(intentionsByUser, (userIntentions) =>
 					userIntentions.toSorted((intentionA, intentionB) =>
-						compare.plainDate(intentionA.timestamp, intentionB.timestamp),
+						Temporal.PlainDate.compare(
+							intentionA.timestamp,
+							intentionB.timestamp,
+						),
 					),
 				),
 			).toSorted(([, groupedIntentionsA], [, groupedIntentionsB]) => {
@@ -68,7 +70,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 				if (!latestB) {
 					return 1;
 				}
-				return compare.plainDate(latestA.timestamp, latestB.timestamp);
+				return Temporal.PlainDate.compare(latestA.timestamp, latestB.timestamp);
 			});
 		}, [intentions]);
 		if (intentions.items.length === 0) {

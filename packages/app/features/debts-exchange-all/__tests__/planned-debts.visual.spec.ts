@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
-import { getNow } from "~utils/date";
 
 import { getPlannedDebtsAmount, test } from "./utils";
 
@@ -107,7 +106,7 @@ test.describe("Mutation", () => {
 			await createPause.promise;
 			return {
 				id: "test-debt-id",
-				updatedAt: getNow.zonedDateTime(),
+				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseAccepted: false,
 			};
 		});

@@ -8,7 +8,6 @@ import { ProtectedPage } from "~app/components/protected-page";
 import type { TRPCError } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { Spinner } from "~components/spinner";
-import { getNow } from "~utils/date";
 import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
@@ -42,7 +41,7 @@ export const Route = createFileRoute("/_protected")({
 							"set-cookie": serialize(
 								AUTH_COOKIE,
 								"",
-								getOptions({ expires: getNow.zonedDateTime() }),
+								getOptions({ expires: Temporal.Now.zonedDateTimeISO() }),
 							),
 						},
 					});

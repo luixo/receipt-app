@@ -16,7 +16,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 import { UUID_REGEX } from "~web/handlers/validation";
@@ -134,7 +133,7 @@ describe("receiptItems.add", () => {
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
 				id: results[0].id,
-				createdAt: getNow.zonedDateTime(),
+				createdAt: Temporal.Now.zonedDateTimeISO(),
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -179,15 +178,15 @@ describe("receiptItems.add", () => {
 			expect(results).toStrictEqual<typeof results>([
 				{
 					id: results[0].id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				},
 				{
 					id: results[1].id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				},
 				{
 					id: results[2].id,
-					createdAt: getNow.zonedDateTime(),
+					createdAt: Temporal.Now.zonedDateTimeISO(),
 				},
 			]);
 		});

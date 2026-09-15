@@ -1,5 +1,4 @@
 import type { ReceiptItemId, UserId } from "~db/ids";
-import type { Temporal } from "~utils/date";
 
 export type { Participant } from "~app/hooks/use-participants";
 

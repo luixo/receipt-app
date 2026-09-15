@@ -1,7 +1,5 @@
 import { mergeTests } from "@playwright/test";
 
-import { add } from "~utils/date";
-
 import {
 	test as debtControlButtonsTest,
 	generateDebtWithUpdated,
@@ -18,7 +16,7 @@ test("Screen", async ({
 }) => {
 	const { debt } = await mockDebt({
 		generateDebts: generateDebtWithUpdated((updatedAt) =>
-			add.zonedDateTime(updatedAt, { seconds: 1 }),
+			updatedAt.add({ seconds: 1 }),
 		),
 	});
 	await openDebtScreen(debt.id);

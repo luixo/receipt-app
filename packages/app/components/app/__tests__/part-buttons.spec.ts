@@ -8,7 +8,6 @@ import type {
 } from "~tests/frontend/generators/receipts";
 import { defaultGenerateReceiptItems } from "~tests/frontend/generators/receipts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { add } from "~utils/date";
 
 import { test as partButtonsFixture } from "./part-buttons.utils";
 
@@ -38,7 +37,7 @@ const generateReceiptItemsWithConsumers =
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant, index) => ({
-				createdAt: add.zonedDateTime(item.createdAt, { seconds: index + 1 }),
+				createdAt: item.createdAt.add({ seconds: index + 1 }),
 				userId: participant.userId,
 				part,
 			})),

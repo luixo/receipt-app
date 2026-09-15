@@ -12,8 +12,6 @@ import type {
 } from "~db/ids";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
-import type { Temporal } from "~utils/date";
-import { add, getNow } from "~utils/date";
 import { generatePasswordData } from "~utils/server/crypto";
 import type { Role } from "~web/handlers/receipts/utils";
 
@@ -109,7 +107,7 @@ export const insertAccount = async (
 				? data.confirmation.token || ctx.getTestUuid()
 				: undefined,
 			confirmationTokenTimestamp: data.confirmation
-				? data.confirmation.timestamp || getNow.zonedDateTime()
+				? data.confirmation.timestamp || Temporal.Now.zonedDateTimeISO()
 				: undefined,
 			avatarUrl:
 				data.avatarUrl === null
@@ -236,7 +234,7 @@ export const insertSession = async (
 			accountId,
 			expirationTimestamp:
 				data.expirationTimestamp ||
-				add.zonedDateTime(getNow.zonedDateTime(), { years: 1 }),
+				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
 		})
 		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();
@@ -261,7 +259,7 @@ export const insertResetPasswordIntention = async (
 			accountId,
 			expiresTimestamp:
 				data.expiresTimestamp ||
-				add.zonedDateTime(getNow.zonedDateTime(), { years: 1 }),
+				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
 			token: data.token || ctx.getTestUuid(),
 		})
 		.returning(["expiresTimestamp", "token"])
@@ -305,8 +303,8 @@ export const insertDebt = async (
 			amount:
 				data.amount?.toString() ??
 				(faker.datatype.boolean() ? "" : "-") + faker.finance.amount(),
-			timestamp: data.timestamp ?? getNow.plainDate(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			timestamp: data.timestamp ?? Temporal.Now.plainDateISO(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 			note: data.note ?? faker.lorem.sentence(),
 			receiptId: data.receiptId ?? null,
 		})
@@ -444,8 +442,8 @@ export const insertReceipt = async (
 			ownerAccountId,
 			name: data.name ?? faker.lorem.words(2),
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
-			issued: data.issued ?? getNow.plainDate(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
+			issued: data.issued ?? Temporal.Now.plainDateISO(),
 		})
 		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
@@ -494,7 +492,7 @@ export const insertReceiptParticipant = async (
 			receiptId,
 			userId,
 			role: userId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
@@ -519,7 +517,7 @@ export const insertReceiptPayer = async (
 			itemId: receiptId as ReceiptItemId,
 			userId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["createdAt", "part"])
 		.executeTakeFirstOrThrow();
@@ -561,7 +559,7 @@ export const insertReceiptItem = async (
 			quantity: (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["id", "name", "price", "quantity", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -592,7 +590,7 @@ export const insertReceiptItemConsumer = async (
 			userId,
 			itemId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -623,7 +621,7 @@ export const insertReceiptItemPayer = async (
 			userId,
 			itemId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -648,7 +646,7 @@ export const insertAccountConnectionIntention = async (
 			accountId,
 			targetAccountId,
 			userId,
-			createdAt: data.createdAt ?? getNow.zonedDateTime(),
+			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.executeTakeFirstOrThrow();
 };

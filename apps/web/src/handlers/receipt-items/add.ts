@@ -8,7 +8,6 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import type { ReceiptItemId } from "~db/ids";
-import type { Temporal } from "~utils/date";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";

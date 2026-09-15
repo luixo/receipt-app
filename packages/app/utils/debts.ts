@@ -1,5 +1,4 @@
 import type { TRPCQueryOutput } from "~app/trpc";
-import { areEqual } from "~utils/date";
 
 type DebtPartial = Pick<
 	TRPCQueryOutput<"debts.get">,
@@ -9,7 +8,7 @@ type DebtPartial = Pick<
 export const areDebtsSynced = (debt: DebtPartial, theirDebt: DebtPartial) =>
 	debt.amount === theirDebt.amount &&
 	debt.currencyCode === theirDebt.currencyCode &&
-	areEqual.plainDate(debt.timestamp, theirDebt.timestamp);
+	Temporal.PlainDate.compare(debt.timestamp, theirDebt.timestamp) === 0;
 
 export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<
@@ -22,4 +21,4 @@ export const isDebtInSyncWithReceipt = (
 ) =>
 	receiptDebt.currencyCode === debt.currencyCode &&
 	receiptDebt.participantSum === debt.amount &&
-	areEqual.plainDate(receiptDebt.issued, debt.timestamp);
+	Temporal.PlainDate.compare(receiptDebt.issued, debt.timestamp) === 0;

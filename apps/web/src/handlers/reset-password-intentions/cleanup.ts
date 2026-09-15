@@ -1,4 +1,3 @@
-import { getNow } from "~utils/date";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
@@ -10,7 +9,7 @@ export const procedure = unauthProcedure
 		const { database } = ctx;
 		const result = await database
 			.deleteFrom("resetPasswordIntentions")
-			.where("expiresTimestamp", "<", getNow.zonedDateTime())
+			.where("expiresTimestamp", "<", Temporal.Now.zonedDateTimeISO())
 			.executeTakeFirstOrThrow();
 		return { count: Number(result.numDeletedRows) };
 	});

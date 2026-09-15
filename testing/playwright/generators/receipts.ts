@@ -4,8 +4,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import type { Temporal } from "~utils/date";
-import { getNow, subtract } from "~utils/date";
 
 import type { GenerateUsers } from "./users";
 import type { GeneratorFnWithFaker } from "./utils";
@@ -22,7 +20,7 @@ export const defaultGenerateReceiptBase: GenerateReceiptBase = ({ faker }) => ({
 	id: faker.string.uuid(),
 	name: faker.lorem.words(),
 	currencyCode: generateCurrencyCode(faker),
-	issued: getNow.plainDate(),
+	issued: Temporal.Now.plainDateISO(),
 	role: "owner",
 });
 
@@ -42,10 +40,17 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		price: Number(faker.finance.amount()),
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
-		createdAt: faker.temporal.between.zonedDateTime({
-			from: subtract.zonedDateTime(getNow.zonedDateTime(), { months: 1 }),
-			to: getNow.zonedDateTime(),
-		}),
+		createdAt: Temporal.Instant.from(
+			faker.date
+				.between({
+					from: Temporal.Now.zonedDateTimeISO()
+						.subtract({ months: 1 })
+						.toInstant()
+						.toString(),
+					to: Temporal.Now.zonedDateTimeISO().toInstant().toString(),
+				})
+				.toISOString(),
+		).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 	}));
 
 export type GenerateReceiptParticipants = GeneratorFnWithFaker<
@@ -63,19 +68,17 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			...users.map((user) => ({
 				userId: user.id,
 				role: "editor" as const,
-				createdAt: faker.temporal.recent.zonedDateTime({
-					days: 5,
-					refDate: getNow.zonedDateTime(),
-				}),
+				createdAt: Temporal.Instant.from(
+					faker.date.recent({ days: 5 }).toISOString(),
+				).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 			})),
 			addSelf
 				? {
 						userId: selfUserId,
 						role: "owner" as const,
-						createdAt: faker.temporal.recent.zonedDateTime({
-							days: 5,
-							refDate: getNow.zonedDateTime(),
-						}),
+						createdAt: Temporal.Instant.from(
+							faker.date.recent({ days: 5 }).toISOString(),
+						).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 					}
 				: undefined,
 		].filter(isNonNullish);
@@ -99,19 +102,17 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 		...users.map((user) => ({
 			userId: user.id,
 			part: 1,
-			createdAt: faker.temporal.recent.zonedDateTime({
-				days: 5,
-				refDate: getNow.zonedDateTime(),
-			}),
+			createdAt: Temporal.Instant.from(
+				faker.date.recent({ days: 5 }).toISOString(),
+			).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 		})),
 		addSelf
 			? {
 					userId: selfUserId,
 					part: 1,
-					createdAt: faker.temporal.recent.zonedDateTime({
-						days: 5,
-						refDate: getNow.zonedDateTime(),
-					}),
+					createdAt: Temporal.Instant.from(
+						faker.date.recent({ days: 5 }).toISOString(),
+					).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 				}
 			: undefined,
 	].filter(isNonNullish);
@@ -133,10 +134,14 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant) => ({
-				createdAt: faker.temporal.between.zonedDateTime({
-					from: item.createdAt,
-					to: getNow.zonedDateTime(),
-				}),
+				createdAt: Temporal.Instant.from(
+					faker.date
+						.between({
+							from: item.createdAt.toInstant().toString(),
+							to: Temporal.Now.zonedDateTimeISO().toInstant().toString(),
+						})
+						.toISOString(),
+				).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
 				userId: participant.userId,
 				part: faker.number.int({ min: 1, max: 3 }),
 			})),
@@ -165,7 +170,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptDebts,
 }) => ({
 	id: receiptBase.id,
-	createdAt: getNow.zonedDateTime(),
+	createdAt: Temporal.Now.zonedDateTimeISO(),
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,
