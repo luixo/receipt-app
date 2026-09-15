@@ -13,11 +13,12 @@ jobs:
     if: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Replace Pull Request Body
-        uses: ivangabriele/find-and-replace-pull-request-body@v1.1.5
+        uses: step-security/update-pr-description@v1
         with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          find: "{{PR_NUMBER}}"
-          replace: ${{ github.event.pull_request.number }}
+          content: ${{ github.event.pull_request.number }}
+          regex: "{{PR_NUMBER}}"
+          regexFlags: "g"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   format:
     name: Format
