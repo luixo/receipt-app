@@ -1,7 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 
-
 import { serverFixtures as test } from "./server";
 
 const rootDir = path.join(import.meta.dirname, "../../../");
