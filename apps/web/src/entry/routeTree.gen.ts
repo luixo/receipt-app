@@ -13,6 +13,7 @@ import { Route as PublicRouteImport } from './../pages/_public'
 import { Route as ProtectedRouteImport } from './../pages/_protected'
 import { Route as IndexRouteImport } from './../pages/index'
 import { Route as ApiPingRouteImport } from './../pages/api/ping'
+import { Route as ApiCoverageRouteImport } from './../pages/api/coverage'
 import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
 import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
 import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
@@ -58,6 +59,11 @@ const IndexRoute = IndexRouteImport.update({
 const ApiPingRoute = ApiPingRouteImport.update({
   id: '/api/ping',
   path: '/api/ping',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCoverageRoute = ApiCoverageRouteImport.update({
+  id: '/api/coverage',
+  path: '/api/coverage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicVoidAccountRoute = PublicVoidAccountRouteImport.update({
@@ -218,6 +224,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
+  '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
   '/debts/add': typeof ProtectedDebtsAddRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/void-account': typeof PublicVoidAccountRoute
+  '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
   '/debts/add': typeof ProtectedDebtsAddRoute
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/_public/register': typeof PublicRegisterRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
   '/_public/void-account': typeof PublicVoidAccountRoute
+  '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
   '/_protected/debts/add': typeof ProtectedDebtsAddRoute
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/void-account'
+    | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
     | '/debts/add'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/void-account'
+    | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
     | '/debts/add'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '/_public/register'
     | '/_public/reset-password'
     | '/_public/void-account'
+    | '/api/coverage'
     | '/api/ping'
     | '/_protected/debts/$id'
     | '/_protected/debts/add'
@@ -411,6 +423,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  ApiCoverageRoute: typeof ApiCoverageRoute
   ApiPingRoute: typeof ApiPingRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
@@ -445,6 +458,13 @@ declare module '@tanstack/react-router' {
       path: '/api/ping'
       fullPath: '/api/ping'
       preLoaderRoute: typeof ApiPingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/coverage': {
+      id: '/api/coverage'
+      path: '/api/coverage'
+      fullPath: '/api/coverage'
+      preLoaderRoute: typeof ApiCoverageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/void-account': {
@@ -721,6 +741,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  ApiCoverageRoute: ApiCoverageRoute,
   ApiPingRoute: ApiPingRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,

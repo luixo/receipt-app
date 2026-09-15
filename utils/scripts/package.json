@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"verify-routers": "bun verify-routers.ts"
+		"verify-routers": "bun verify-routers.ts",
+		"merge-coverage": "bun merge-coverage.ts"
 	},
 	"devDependencies": {
 		"diff": "^9.0.0"
