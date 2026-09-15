@@ -1,5 +1,6 @@
 import { initTRPC } from "@trpc/server";
 import { Queue } from "async-await-queue";
+import type { Coverage } from "playwright/test";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -22,6 +23,8 @@ export const addTestServerError = ({
 	testErrorEntries[testId].push({ type, text });
 };
 
+export const coverageData: Awaited<ReturnType<Coverage["stopJSCoverage"]>> = [];
+
 export const appRouter = router({
 	lockPort: procedure
 		.output(z.strictObject({ port: z.number(), hash: z.string() }))
@@ -37,6 +40,11 @@ export const appRouter = router({
 	getTestErrors: procedure
 		.input(z.strictObject({ testId: z.string() }))
 		.query(({ input: { testId } }) => testErrorEntries[testId] ?? []),
+	addCoverage: procedure.input(z.unknown().array()).mutation(({ input }) => {
+		coverageData.push(
+			...(input as Awaited<ReturnType<Coverage["stopJSCoverage"]>>),
+		);
+	}),
 });
 
 export type AppRouter = typeof appRouter;

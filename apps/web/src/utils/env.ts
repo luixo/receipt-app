@@ -16,6 +16,7 @@ export const env = createEnv({
 		S3_REGION: z.string(),
 		S3_ACCESS_KEY_ID: z.string(),
 		S3_SECRET_KEY: z.string(),
+		NODE_V8_COVERAGE: z.string().optional(),
 	},
 	clientPrefix: "VITE_",
 	client: {},
