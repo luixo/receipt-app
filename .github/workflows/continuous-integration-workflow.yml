@@ -183,6 +183,13 @@ jobs:
           pattern: frontend-coverage-*
       - name: Merge coverage reports
         run: bun frontend:merge-coverage
+      - name: Report coverage
+        uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          name: frontend
+          working-directory: testing/playwright
+          json-summary-path: coverage/report/coverage-summary.json
+          json-final-path: coverage/report/coverage-final.json
       - name: Upload frontend coverage report
         uses: actions/upload-artifact@v7
         with:
