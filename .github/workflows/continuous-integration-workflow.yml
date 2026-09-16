@@ -18,6 +18,7 @@ jobs:
           content: ${{ github.event.pull_request.number }}
           regex: "{{PR_NUMBER}}"
           regexFlags: "g"
+          appendContentOnMatchOnly: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
   format:
