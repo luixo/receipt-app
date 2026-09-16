@@ -1,3 +1,7 @@
+// Playwright image is served with node.js v24 at the moment, remove when upgraded to v26
+// See https://github.com/microsoft/playwright/blob/main/utils/docker/Dockerfile.jammy#L7
+import "~utils/temporal-polyfill";
+
 // `react-native-reanimated` uses `global.__some_var` expression
 // Bundling this in Vite results in `self.__some_var` expression in SSR
 // A simple way to mitigate this problem is to override global `self` in globalThis

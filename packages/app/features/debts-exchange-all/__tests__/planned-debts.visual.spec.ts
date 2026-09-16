@@ -135,7 +135,6 @@ test.describe("Mutation", () => {
 		sendButton,
 		awaitCacheKey,
 		verifyToastTexts,
-		consoleManager,
 		plannedDebtsForm,
 		skip,
 	}, testInfo) => {
@@ -150,7 +149,6 @@ test.describe("Mutation", () => {
 				message: mockErrorMessage,
 			});
 		});
-		consoleManager.ignore(mockErrorMessage);
 		await page.navigate({
 			to: "/debts/user/$id/exchange/all",
 			params: { id: debtUser.id },
