@@ -210,6 +210,8 @@ jobs:
   update-badges:
     name: Badges
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - backend-test
       - merge-frontend-coverage
@@ -240,6 +242,14 @@ jobs:
           valColorRange: ${{ needs.merge-frontend-coverage.outputs.coverage }}
           minColorRange: 50
           maxColorRange: 100
+      - name: Bust badge cache
+        if: ${{ github.ref != 'refs/heads/main' }}
+        uses: step-security/update-pr-description@v1
+        with:
+          content: run=${{ github.run_id }}
+          regex: "run=[0-9]+"
+          regexFlags: "g"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   check-generated-db-types:
     name: Check generated DB types
