@@ -6,7 +6,7 @@ import { stopCoverage, takeCoverage } from "node:v8";
 import { mapV8Coverage, mergeCoverageMaps } from "~utils/server/coverage";
 import { env } from "~web/utils/env";
 
-const rootDir = path.join(import.meta.dirname, "../../../../..");
+const rootDir = process.cwd();
 
 // oxlint-disable-next-line func-style
 async function* getCoverage() {
