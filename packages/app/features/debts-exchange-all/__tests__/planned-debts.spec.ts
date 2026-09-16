@@ -352,7 +352,6 @@ test.describe("Mutations", () => {
 		awaitCacheKey,
 		verifyToastTexts,
 		snapshotQueries,
-		consoleManager,
 	}) => {
 		const { debtUser, debts } = await mockDebts();
 		const mockErrorMessage = `Mock "debts.add" error`;
@@ -364,7 +363,6 @@ test.describe("Mutations", () => {
 		});
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
-		consoleManager.ignore(mockErrorMessage);
 		await page.navigate({
 			to: "/debts/user/$id/exchange/all",
 			params: { id: debtUser.id },

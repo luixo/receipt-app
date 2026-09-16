@@ -220,7 +220,6 @@ test.describe("Sorting and filters", () => {
 	});
 
 	test("Search filters receipts by name", async ({
-		page,
 		mockReceipts,
 		openReceiptsScreen,
 		searchReceiptsInput,
@@ -540,7 +539,6 @@ test.describe("Selection and removal", () => {
 	});
 
 	test("'receipts.remove' error shows error toast", async ({
-		page,
 		api,
 		mockReceipts,
 		openReceiptsScreen,
@@ -548,7 +546,6 @@ test.describe("Selection and removal", () => {
 		removeReceiptsButton,
 		verifyToastTexts,
 		awaitCacheKey,
-		consoleManager,
 		snapshotQueries,
 		receiptPreviewNamed,
 	}) => {
@@ -566,7 +563,6 @@ test.describe("Selection and removal", () => {
 				message: mockErrorMessage,
 			});
 		});
-		consoleManager.ignore(mockErrorMessage);
 
 		await snapshotQueries(
 			async () => {

@@ -42,11 +42,6 @@ for (const path of criticalPaths) {
 				});
 			});
 			consoleManager.ignore(pathErrorMessage);
-			consoleManager.ignore(
-				new RegExp(
-					`Error in route match: /_protected/debts/user/${firstUser.id}/`,
-				),
-			);
 			const getAllUserErrorLocator = errorMessage(pathErrorMessage).first();
 			await snapshotQueries(
 				async () => {

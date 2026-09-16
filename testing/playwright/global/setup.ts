@@ -1,10 +1,10 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
 import type { CoverageMapData } from "istanbul-lib-coverage";
-import { capitalize, entries, keys } from "remeda";
+import { entries, isNonNullish, keys } from "remeda";
 
 import { urlSettings } from "~tests/frontend/consts";
-import { isIgnored } from "~tests/frontend/fixtures/console";
+import { getIgnoredIndex } from "~tests/frontend/fixtures/console";
 import {
 	generateCoverageReport,
 	prepareCoverageEnv,
@@ -26,7 +26,7 @@ const globalServerIgnored = [
 	/^\$ node/,
 	// Some linux distros have problems with our locale
 	/setlocale: LC_ALL: cannot change locale/,
-];
+].map((pattern) => ({ pattern, used: false }));
 
 const getServerCoverage = async () => {
 	const response = await fetch(new URL("api/coverage", urlSettings.baseUrl), {
@@ -45,15 +45,21 @@ const handleErrors = () => {
 			// oxlint-disable-next-line typescript/no-non-null-assertion
 			UNKNOWN_IDS.has(key) ? values! : [],
 		)
-		.filter((entry) => !isIgnored(globalServerIgnored, entry.text));
+		.map((entry) => {
+			const ignoredIndex = getIgnoredIndex(globalServerIgnored, entry.text);
+			if (ignoredIndex === -1) {
+				return `${colors.magenta(`[server-global][${entry.type}]`)} ${entry.text}${entry.text.length === entry.text.trim().length ? "" : " (trimmed length is different)"}`;
+			}
+			// oxlint-disable-next-line typescript/no-non-null-assertion
+			globalServerIgnored[ignoredIndex]!.used = true;
+			return undefined;
+		})
+		.filter(isNonNullish);
 	if (unknownErrors.length !== 0) {
 		throw new Error(
 			[
 				colors.red("Global server errors occurred"),
-				...unknownErrors.map(
-					(element) =>
-						`${colors.magenta(`[${capitalize(element.type)}]`)}: ${element.text.trim()}`,
-				),
+				...unknownErrors,
 				colors.red("End of global server errors"),
 			].join("\n"),
 		);
