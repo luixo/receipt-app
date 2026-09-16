@@ -1,16 +1,10 @@
-const TAG_TEMPLATE = `<<<%tag%>>>`;
+const TAG_DELIMITER = "\u001F";
 
-export const encryptTag = (tag: string) => TAG_TEMPLATE.replace("tag", tag);
+export const encryptTag = (tag: string) =>
+	`${TAG_DELIMITER}${tag}${TAG_DELIMITER}`;
 export const decryptTag = (message: string) => {
-	const match = new RegExp(
-		`${TAG_TEMPLATE.replace("tag", "(?<tag>.*)")}(?<message>.*)`,
-	).exec(message);
-	if (match) {
-		return {
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			tag: match.groups!.tag!,
-			// oxlint-disable-next-line typescript/no-non-null-assertion
-			message: match.groups!.message!,
-		};
+	const parts = message.split(TAG_DELIMITER);
+	if (parts.length >= 3) {
+		return { tag: parts[1], message: parts.slice(2).join(TAG_DELIMITER) };
 	}
 };
