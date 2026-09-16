@@ -171,8 +171,11 @@ export const mapJsCoverage = async (
 							return source;
 						}
 						const sourcePath = source.replace(/\?.*$/, "");
-						return path.isAbsolute(sourcePath)
-							? path.relative(repositoryRoot, sourcePath)
+						const absolutePath = sourcePath.startsWith("file:")
+							? fileURLToPath(sourcePath)
+							: sourcePath;
+						return path.isAbsolute(absolutePath)
+							? path.relative(repositoryRoot, absolutePath)
 							: sourcePath;
 					}),
 				},
