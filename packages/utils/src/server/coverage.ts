@@ -127,10 +127,10 @@ export async function* mapV8Coverage(
 				version: 3,
 				file: resolvedSourceMap.file,
 				names: resolvedSourceMap.names,
-				sourceRoot: "",
+				sourceRoot: resolvedSourceMap.sourceRoot,
 				sources: resolvedSourceMap.sources.map((source) =>
 					source?.startsWith("file:")
-						? path.relative(repositoryRoot, fileURLToPath(source))
+						? path.relative(repositoryRoot, fileURLToPath(source)) || "."
 						: source,
 				),
 				sourcesContent: resolvedSourceMap.sourcesContent,
@@ -146,10 +146,7 @@ type CoverageEntry = Awaited<
 	ReturnType<PlaywrightCoverage["stopJSCoverage"]>
 >[number];
 
-export const mapJsCoverage = async (
-	entries: CoverageEntry[],
-	repositoryRoot: string,
-) => {
+export const mapJsCoverage = async (entries: CoverageEntry[]) => {
 	baseLogger.info("Start js coverage mapping");
 	const coverageMap = istanbulCoverage.createCoverageMap();
 	for (const entry of entries) {
@@ -157,8 +154,9 @@ export const mapJsCoverage = async (
 			continue;
 		}
 		const ast = await parseAstAsync(entry.source ?? "");
+		const sourceMapPath = `${getBundlePath(entry.url)}.map`;
 		const sourceMap = JSON.parse(
-			await fs.readFile(`${getBundlePath(entry.url)}.map`, "utf8"),
+			await fs.readFile(sourceMapPath, "utf8"),
 		) as EncodedSourceMap;
 		coverageMap.merge(
 			await convert({
@@ -173,10 +171,8 @@ export const mapJsCoverage = async (
 						const sourcePath = source.replace(/\?.*$/, "");
 						const absolutePath = sourcePath.startsWith("file:")
 							? fileURLToPath(sourcePath)
-							: sourcePath;
-						return path.isAbsolute(absolutePath)
-							? path.relative(repositoryRoot, absolutePath)
-							: sourcePath;
+							: path.resolve(path.dirname(sourceMapPath), sourcePath);
+						return pathToFileURL(absolutePath).href;
 					}),
 				},
 				coverage: {

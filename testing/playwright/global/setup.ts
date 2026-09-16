@@ -1,7 +1,6 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
 import type { CoverageMapData } from "istanbul-lib-coverage";
-import path from "node:path";
 import { capitalize, entries, keys } from "remeda";
 
 import { urlSettings } from "~tests/frontend/consts";
@@ -20,8 +19,6 @@ import {
 	coverageData as clientCoverage,
 	testErrorEntries,
 } from "./router";
-
-const rootDir = path.join(import.meta.dirname, "../../../");
 
 const globalServerIgnored = [
 	// Messages on server startup start with `$ bun run ...` or `$ node ...`
@@ -72,7 +69,7 @@ const handleCoverage = async () => {
 		`Generating coverage from ${clientCoverage.length} client and ${keys(serverCoverage).length} server data points`,
 	);
 	await generateCoverageReport({
-		client: await mapJsCoverage(clientCoverage, rootDir),
+		client: await mapJsCoverage(clientCoverage),
 		server: serverCoverage,
 	});
 	baseLogger.info("Coverage generated.");
