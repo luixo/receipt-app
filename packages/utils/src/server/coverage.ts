@@ -18,6 +18,21 @@ import { baseLogger } from "~web/providers/logger";
 
 const rootDir = path.join(import.meta.dirname, "../../../..");
 
+/* oxlint-disable node/no-process-env */
+const reportRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
+/* oxlint-enable node/no-process-env */
+
+const normalizeCoveragePath = (filePath: string) => {
+	const repositoryMarker = `${path.sep}${path.basename(reportRoot)}${path.sep}${path.basename(reportRoot)}${path.sep}`;
+	const markerIndex = filePath.lastIndexOf(repositoryMarker);
+	return markerIndex === -1
+		? filePath
+		: path.join(
+				reportRoot,
+				filePath.slice(markerIndex + repositoryMarker.length),
+			);
+};
+
 const getBundlePath = (entryUrl: string) =>
 	path.join(rootDir, "apps/web/.output/public", new URL(entryUrl).pathname);
 
@@ -177,7 +192,7 @@ export const mapJsCoverage = async (entries: CoverageEntry[]) => {
 						const absolutePath = sourcePath.startsWith("file:")
 							? fileURLToPath(sourcePath)
 							: path.resolve(path.dirname(sourceMapPath), sourcePath);
-						return pathToFileURL(absolutePath).href;
+						return pathToFileURL(normalizeCoveragePath(absolutePath)).href;
 					}),
 				},
 				coverage: {
