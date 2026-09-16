@@ -1,7 +1,7 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
 import type { CoverageMapData } from "istanbul-lib-coverage";
-import { capitalize, keys } from "remeda";
+import { capitalize, entries, keys } from "remeda";
 
 import { urlSettings } from "~tests/frontend/consts";
 import { isIgnored } from "~tests/frontend/fixtures/console";
@@ -38,10 +38,14 @@ const getServerCoverage = async () => {
 	return (await response.json()) as CoverageMapData;
 };
 
+const UNKNOWN_IDS = new Set(["unknown", "no-test-id"]);
 const handleErrors = () => {
-	const unknownErrors = (testErrorEntries.unknown ?? []).filter(
-		(entry) => !isIgnored(globalServerIgnored, entry.text),
-	);
+	const unknownErrors = entries(testErrorEntries)
+		.flatMap(([key, values]) =>
+			// oxlint-disable-next-line typescript/no-non-null-assertion
+			UNKNOWN_IDS.has(key) ? values! : [],
+		)
+		.filter((entry) => !isIgnored(globalServerIgnored, entry.text));
 	if (unknownErrors.length !== 0) {
 		throw new Error(
 			[
