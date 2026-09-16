@@ -236,7 +236,9 @@ export const generateCoverageReport = ({
 	printConsole?: boolean;
 }) => {
 	const coverageContext = createCoverageContext({ dir, coverageMap });
-	const projectRoot = path.resolve(process.cwd(), "../..");
+	/* oxlint-disable node/no-process-env */
+	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
+	/* oxlint-enable node/no-process-env */
 	for (const reporter of (
 		[
 			printConsole ? "text" : undefined,
