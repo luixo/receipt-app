@@ -130,7 +130,12 @@ export async function* mapV8Coverage(
 				sourceRoot: resolvedSourceMap.sourceRoot,
 				sources: resolvedSourceMap.sources.map((source) =>
 					source?.startsWith("file:")
-						? path.relative(repositoryRoot, fileURLToPath(source)) || "."
+						? pathToFileURL(
+								path.resolve(
+									repositoryRoot,
+									path.relative(repositoryRoot, fileURLToPath(source)),
+								),
+							).href
 						: source,
 				),
 				sourcesContent: resolvedSourceMap.sourcesContent,
@@ -240,6 +245,8 @@ export const generateCoverageReport = ({
 			"json-summary",
 		] as const
 	).filter(isNonNullish)) {
-		reports.create(reporter).execute(coverageContext);
+		reports
+			.create(reporter, reporter === "lcovonly" ? { projectRoot: rootDir } : {})
+			.execute(coverageContext);
 	}
 };
