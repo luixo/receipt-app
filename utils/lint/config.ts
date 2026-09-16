@@ -820,7 +820,6 @@ export default defineConfig({
 		{
 			files: ["**/*.spec.ts"],
 			rules: {
-				"eslint/no-unused-vars": ["error", { argsIgnorePattern: "^page$" }],
 				"eslint-js/no-restricted-syntax": [
 					"error",
 					...noRestrictedSyntaxGeneral.map(omit(["omitTags"])),

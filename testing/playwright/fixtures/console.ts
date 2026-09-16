@@ -4,19 +4,27 @@ import colors from "colors";
 import { serverFixtures as test } from "./server";
 
 type IgnoredPattern = string | RegExp;
+type IgnoredPatternState = {
+	pattern: IgnoredPattern;
+	used: boolean;
+};
 
 export const DEFAULT_IGNORED: IgnoredPattern[] = [];
 
-export const isIgnored = (patterns: IgnoredPattern[], message: string) => {
+export const getIgnoredIndex = (
+	patterns: IgnoredPatternState[],
+	message: string,
+) => {
 	const trimmedMessage = message.trim();
-	return patterns.some((ignoredElement) =>
+	const ignoredIndex = patterns.findIndex(({ pattern: ignoredElement }) =>
 		typeof ignoredElement === "string"
 			? trimmedMessage.includes(ignoredElement)
 			: trimmedMessage.match(ignoredElement),
 	);
+	return ignoredIndex;
 };
 
-const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
+const DEFAULT_CLIENT_IGNORED: IgnoredPatternState[] = [
 	...DEFAULT_IGNORED,
 	// see https://github.com/adobe/react-spectrum/blob/fb1525eded030ad8ac8ad43d92b893d5a3256567/packages/dev/docs/pages/blog/building-a-button-part-1.mdx#L96
 	"MouseEvent.mozInputSource is deprecated. Use PointerEvent.pointerType instead.",
@@ -42,9 +50,11 @@ const DEFAULT_CLIENT_IGNORED: IgnoredPattern[] = [
 	/Refused to apply style from .* because its MIME type .* is not a supported stylesheet MIME type, and strict MIME checking is enabled./,
 	// Happens while running on dev, fix later
 	/React does not recognize the `%s` prop on a DOM element/,
-];
+].map((pattern) => ({ pattern, used: false }));
 
-const DEFAULT_SERVER_IGNORED = DEFAULT_IGNORED;
+const DEFAULT_SERVER_IGNORED: IgnoredPatternState[] = DEFAULT_IGNORED.map(
+	(pattern) => ({ pattern, used: false }),
+);
 
 type ConsoleFixtures = {
 	autoVerifyNoConsoleMessages: void;
@@ -87,30 +97,39 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 					text: entry.text,
 				})),
 			];
-			const clientIgnored = [
-				...DEFAULT_CLIENT_IGNORED,
-				...consoleManager.getIgnored(),
-			];
-			const serverIgnored = [
-				...DEFAULT_SERVER_IGNORED,
-				...consoleManager.getIgnored(),
-			];
+			const localIgnored = consoleManager.getIgnored().map((pattern) => ({
+				pattern,
+				used: false,
+			}));
+			const clientIgnored = [...localIgnored, ...DEFAULT_CLIENT_IGNORED];
+			const serverIgnored = [...localIgnored, ...DEFAULT_SERVER_IGNORED];
 			expect
 				.soft(
 					messages
 						.map(({ kind, text, type }) => {
-							if (
-								isIgnored(
-									kind === "client" ? clientIgnored : serverIgnored,
-									text,
-								)
-							) {
-								return undefined;
+							const ignoredIndex = getIgnoredIndex(
+								kind === "client" ? clientIgnored : serverIgnored,
+								text,
+							);
+							if (ignoredIndex === -1) {
+								return `${colors.magenta(`[${kind}][${type}]`)} ${text}`;
 							}
-							return `${colors.magenta(`[${kind}][${type}]`)} ${text}`;
+							// We might get an index in the default ignored array
+							if (localIgnored[ignoredIndex]) {
+								localIgnored[ignoredIndex].used = true;
+							}
+							return undefined;
 						})
 						.filter(Boolean),
 				)
+				.toStrictEqual([]);
+			const unused = localIgnored
+				.filter(({ used }) => !used)
+				.map(({ pattern }) => pattern.toString());
+			expect
+				.soft(unused, {
+					message: `There are unused console ignores:\n${unused.join("\n")}`,
+				})
 				.toStrictEqual([]);
 		},
 		{ auto: true },
