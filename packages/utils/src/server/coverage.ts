@@ -71,7 +71,10 @@ export const mergeCoverageMaps = async (
 };
 
 // oxlint-disable-next-line func-style
-export async function* mapV8Coverage(coverage: V8Coverage) {
+export async function* mapV8Coverage(
+	coverage: V8Coverage,
+	repositoryRoot: string,
+) {
 	for (const entry of coverage.result) {
 		if (
 			!entry.url ||
@@ -124,8 +127,12 @@ export async function* mapV8Coverage(coverage: V8Coverage) {
 				version: 3,
 				file: resolvedSourceMap.file,
 				names: resolvedSourceMap.names,
-				sourceRoot: resolvedSourceMap.sourceRoot,
-				sources: resolvedSourceMap.sources,
+				sourceRoot: "",
+				sources: resolvedSourceMap.sources.map((source) =>
+					source?.startsWith("file:")
+						? path.relative(repositoryRoot, fileURLToPath(source))
+						: source,
+				),
 				sourcesContent: resolvedSourceMap.sourcesContent,
 				mappings: resolvedSourceMap.mappings as string,
 			},
@@ -139,7 +146,10 @@ type CoverageEntry = Awaited<
 	ReturnType<PlaywrightCoverage["stopJSCoverage"]>
 >[number];
 
-export const mapJsCoverage = async (entries: CoverageEntry[]) => {
+export const mapJsCoverage = async (
+	entries: CoverageEntry[],
+	repositoryRoot: string,
+) => {
 	baseLogger.info("Start js coverage mapping");
 	const coverageMap = istanbulCoverage.createCoverageMap();
 	for (const entry of entries) {
@@ -155,9 +165,16 @@ export const mapJsCoverage = async (entries: CoverageEntry[]) => {
 				code: entry.source ?? "",
 				sourceMap: {
 					...sourceMap,
-					sources: sourceMap.sources.map((source) =>
-						source ? source.replace(/\?.*$/, "") : source,
-					),
+					sourceRoot: "",
+					sources: sourceMap.sources.map((source) => {
+						if (!source) {
+							return source;
+						}
+						const sourcePath = source.replace(/\?.*$/, "");
+						return path.isAbsolute(sourcePath)
+							? path.relative(repositoryRoot, sourcePath)
+							: sourcePath;
+					}),
 				},
 				coverage: {
 					url: pathToFileURL(getBundlePath(entry.url)).href,
