@@ -235,10 +235,19 @@ export const generateCoverageReport = ({
 	coverageMap: CoverageMap;
 	printConsole?: boolean;
 }) => {
+	const projectRoot = coverageMap.files().reduce((root, filePath) => {
+		if (root !== rootDir || !path.isAbsolute(filePath)) {
+			return root;
+		}
+		const parts = filePath.split(path.sep);
+		for (let index = 1; index < parts.length - 1; index += 1) {
+			if (parts[index] && parts[index] === parts[index + 1]) {
+				return parts.slice(0, index + 2).join(path.sep);
+			}
+		}
+		return root;
+	}, rootDir);
 	const coverageContext = createCoverageContext({ dir, coverageMap });
-	/* oxlint-disable node/no-process-env */
-	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
-	/* oxlint-enable node/no-process-env */
 	for (const reporter of (
 		[
 			printConsole ? "text" : undefined,
