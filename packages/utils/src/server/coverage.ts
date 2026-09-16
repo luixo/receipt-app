@@ -238,18 +238,19 @@ export const generateCoverageReport = ({
 	/* oxlint-disable node/no-process-env */
 	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
 	/* oxlint-enable node/no-process-env */
+	const repositoryMarker = `${path.sep}${path.basename(projectRoot)}${path.sep}${path.basename(projectRoot)}${path.sep}`;
 	const normalizedCoverageMap = istanbulCoverage.createCoverageMap(
 		fromEntries(
 			objectEntries(coverageMap.data).map(([filePath, fileCoverage]) => {
-				const parts = filePath.split(path.sep);
-				const duplicateRootIndex = parts.findIndex(
-					(part, index) => part && part === parts[index + 1],
-				);
-				if (duplicateRootIndex === -1) {
+				const markerIndex = filePath.lastIndexOf(repositoryMarker);
+				if (markerIndex === -1) {
 					return [filePath, fileCoverage];
 				}
 				return [
-					path.join(projectRoot, ...parts.slice(duplicateRootIndex + 2)),
+					path.join(
+						projectRoot,
+						filePath.slice(markerIndex + repositoryMarker.length),
+					),
 					fileCoverage,
 				];
 			}),
