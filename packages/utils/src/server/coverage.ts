@@ -241,7 +241,7 @@ export async function* getEmptyCoverage(directories: string[]) {
 	}
 }
 
-export const generateCoverageReport = ({
+export const generateCoverageReport = async ({
 	dir,
 	coverageMap,
 	printConsole = false,
@@ -288,4 +288,11 @@ export const generateCoverageReport = ({
 			.create(reporter, reporter === "lcovonly" ? { projectRoot } : {})
 			.execute(coverageContext);
 	}
+	const lcovPath = path.join(dir, "lcov.info");
+	const lcovFile = await fs.readFile(lcovPath, "utf8");
+	const lcov = lcovFile.replaceAll(
+		/^SF:.*\/(?<repository>[^/]+)\/\k<repository>\/(?<path>.*)$/gm,
+		"SF:$<path>",
+	);
+	await fs.writeFile(lcovPath, lcov);
 };

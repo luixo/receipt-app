@@ -47,7 +47,7 @@ const coverageMap = await mergeCoverageMaps(getCoverageMap());
 baseLogger.info(
 	`Total coverage:\n${JSON.stringify(coverageMap.getCoverageSummary(), null, 2)}`,
 );
-generateCoverageReport({
+await generateCoverageReport({
 	dir: path.join(rootDir, "testing/playwright/coverage/report"),
 	coverageMap,
 });
