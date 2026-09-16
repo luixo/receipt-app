@@ -236,6 +236,7 @@ export const generateCoverageReport = ({
 	printConsole?: boolean;
 }) => {
 	const coverageContext = createCoverageContext({ dir, coverageMap });
+	const projectRoot = path.resolve(process.cwd(), "../..");
 	for (const reporter of (
 		[
 			printConsole ? "text" : undefined,
@@ -246,7 +247,7 @@ export const generateCoverageReport = ({
 		] as const
 	).filter(isNonNullish)) {
 		reports
-			.create(reporter, reporter === "lcovonly" ? { projectRoot: rootDir } : {})
+			.create(reporter, reporter === "lcovonly" ? { projectRoot } : {})
 			.execute(coverageContext);
 	}
 };
