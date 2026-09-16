@@ -37,11 +37,14 @@ if (env.PLAYWRIGHT) {
 	};
 	for (const method of keys(consoleLogMethods)) {
 		console[method] = (...args) => {
-			const request = getRequest();
-			consoleLogMethods[method].apply(console, [
-				encryptTag(request.headers.get("x-test-id") ?? "unknown-id"),
-				...args,
-			]);
+			let testId = "unknown";
+			try {
+				const request = getRequest();
+				testId = request.headers.get("x-test-id") ?? "no-test-id";
+			} catch {
+				/* empty */
+			}
+			consoleLogMethods[method].apply(console, [encryptTag(testId), ...args]);
 		};
 	}
 }
