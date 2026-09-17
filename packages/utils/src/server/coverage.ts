@@ -263,23 +263,27 @@ export const generateCoverageReport = async ({
 	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
 	/* oxlint-enable node/no-process-env */
 	const repositoryMarker = `${path.sep}${path.basename(projectRoot)}${path.sep}${path.basename(projectRoot)}${path.sep}`;
+	/* oxlint-disable node/no-sync */
 	const normalizedCoverageMap = istanbulCoverage.createCoverageMap(
 		fromEntries(
-			objectEntries(coverageMap.data).map(([filePath, fileCoverage]) => {
+			objectEntries(coverageMap.data).flatMap(([filePath, fileCoverage]) => {
 				const markerIndex = filePath.lastIndexOf(repositoryMarker);
 				if (markerIndex === -1) {
-					return [filePath, fileCoverage];
+					return fsSync.statSync(filePath).isFile()
+						? [[filePath, fileCoverage]]
+						: [];
 				}
-				return [
-					path.join(
-						projectRoot,
-						filePath.slice(markerIndex + repositoryMarker.length),
-					),
-					fileCoverage,
-				];
+				const normalizedPath = path.join(
+					projectRoot,
+					filePath.slice(markerIndex + repositoryMarker.length),
+				);
+				return fsSync.statSync(normalizedPath).isFile()
+					? [[normalizedPath, fileCoverage]]
+					: [];
 			}),
 		),
 	);
+	/* oxlint-enable node/no-sync */
 	const coverageContext = createCoverageContext({
 		dir,
 		coverageMap: normalizedCoverageMap,
