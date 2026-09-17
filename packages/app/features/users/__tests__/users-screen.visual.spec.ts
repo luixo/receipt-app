@@ -74,9 +74,11 @@ test("Error state", async ({
 	expectScreenshotWithSchemes,
 	errorMessage,
 	awaitCacheKey,
+	consoleManager,
 }) => {
 	await mockBase();
-	const mockErrorMessage = `Mock "getPaged" error`;
+	const mockErrorMessage = `Mock "users.getPaged" error`;
+	consoleManager.ignore(mockErrorMessage);
 	api.mockFirst("users.getPaged", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
