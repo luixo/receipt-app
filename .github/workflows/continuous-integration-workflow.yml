@@ -249,6 +249,7 @@ jobs:
           content: run=${{ github.run_id }}
           regex: "run=[0-9]+"
           regexFlags: "g"
+          appendContentOnMatchOnly: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
   check-generated-db-types:
