@@ -35,7 +35,7 @@ export const generateCoverageReport = async (
 		path.join(coverageDir, "data/total-coverage.json"),
 		JSON.stringify(coverageMap.data),
 	);
-	genericGenerateCoverageReport({
+	await genericGenerateCoverageReport({
 		dir: path.join(coverageDir, "report"),
 		coverageMap,
 	});
