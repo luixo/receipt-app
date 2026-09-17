@@ -6,6 +6,7 @@ import istanbulCoverage from "istanbul-lib-coverage";
 import type { CoverageMap, CoverageMapData } from "istanbul-lib-coverage";
 import { createContext as createCoverageContext } from "istanbul-lib-report";
 import reports from "istanbul-reports";
+import fsSync from "node:fs";
 import * as fs from "node:fs/promises";
 import type { Profiler } from "node:inspector";
 import type { Module } from "node:module";
@@ -31,6 +32,14 @@ const normalizeCoveragePath = (filePath: string) => {
 				reportRoot,
 				filePath.slice(markerIndex + repositoryMarker.length),
 			);
+};
+
+const normalizeReportPath = (filePath: string) => {
+	const repositoryMarker = `${path.sep}${path.basename(rootDir)}${path.sep}${path.basename(rootDir)}${path.sep}`;
+	const markerIndex = filePath.lastIndexOf(repositoryMarker);
+	return markerIndex === -1
+		? filePath
+		: path.join(rootDir, filePath.slice(markerIndex + repositoryMarker.length));
 };
 
 const getBundlePath = (entryUrl: string) =>
@@ -274,6 +283,10 @@ export const generateCoverageReport = async ({
 	const coverageContext = createCoverageContext({
 		dir,
 		coverageMap: normalizedCoverageMap,
+		/* oxlint-disable node/no-sync */
+		sourceFinder: (filePath) =>
+			fsSync.readFileSync(normalizeReportPath(filePath), "utf8"),
+		/* oxlint-enable node/no-sync */
 	});
 	for (const reporter of (
 		[
