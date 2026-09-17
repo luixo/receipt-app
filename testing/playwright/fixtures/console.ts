@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import colors from "colors";
+import { countBy, isNonNullish, map, pipe, unique } from "remeda";
 
 import { serverFixtures as test } from "./server";
 
@@ -9,7 +10,23 @@ type IgnoredPatternState = {
 	used: boolean;
 };
 
-export const DEFAULT_IGNORED: IgnoredPattern[] = [];
+const DEV_ONLY_PATTERNS = [
+	// SSR-injected initial data
+	/Injected From Server/,
+	// Vite debug data
+	/\[vite\]/,
+	// React DevTools info
+	/React DevTools/,
+	// Happens while running on dev
+	/Refused to apply style from .* because its MIME type .* is not a supported stylesheet MIME type, and strict MIME checking is enabled./,
+	// Happens while running on dev, fix later
+	/React does not recognize the `%s` prop on a DOM element/,
+];
+
+export const DEFAULT_IGNORED: IgnoredPattern[] = [
+	// TODO: figure out the problem with preloaded resources
+	/The resource .*? was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it wasn't preloaded for nothing./,
+];
 
 export const getIgnoredIndex = (
 	patterns: IgnoredPatternState[],
@@ -26,35 +43,19 @@ export const getIgnoredIndex = (
 
 const DEFAULT_CLIENT_IGNORED: IgnoredPatternState[] = [
 	...DEFAULT_IGNORED,
+	...(process.env.CI ? [] : DEV_ONLY_PATTERNS),
 	// see https://github.com/adobe/react-spectrum/blob/fb1525eded030ad8ac8ad43d92b893d5a3256567/packages/dev/docs/pages/blog/building-a-button-part-1.mdx#L96
 	"MouseEvent.mozInputSource is deprecated. Use PointerEvent.pointerType instead.",
 	"Cannot record touch end without a touch start.",
 	// TODO: find out what forms cause this and how to remove the warning
 	// See https://github.com/luixo/receipt-app/commit/4c7597344d97d60c49f08f7261a73a9df57a056b
 	"WARN: A component changed from uncontrolled to controlled.",
-	// SSR-injected initial data
-	/Injected From Server/,
-	// Vite debug data
-	/\[vite\]/,
-	// React DevTools info
-	/React DevTools/,
-	// Will be fixed later!
-	/A text node cannot be a child of a <View>/,
-	// Sometimes happens in tests, doesn't seem to affect anything
-	/net::ERR_SSL_PROTOCOL_ERROR/,
-	// Sometimes happens in tests, doesn't seem to affect anything
-	/Error reading data from TLS socket/,
-	// Sometimes happens in tests, doesn't seem to affect anything
-	/The resource .* was preloaded using link preload but not used within a few seconds from the window's load event/,
-	// Happens while running on dev
-	/Refused to apply style from .* because its MIME type .* is not a supported stylesheet MIME type, and strict MIME checking is enabled./,
-	// Happens while running on dev, fix later
-	/React does not recognize the `%s` prop on a DOM element/,
 ].map((pattern) => ({ pattern, used: false }));
 
-const DEFAULT_SERVER_IGNORED: IgnoredPatternState[] = DEFAULT_IGNORED.map(
-	(pattern) => ({ pattern, used: false }),
-);
+const DEFAULT_SERVER_IGNORED = [
+	...DEFAULT_IGNORED,
+	...(process.env.CI ? [] : DEV_ONLY_PATTERNS),
+].map((pattern) => ({ pattern, used: false }));
 
 type ConsoleFixtures = {
 	autoVerifyNoConsoleMessages: void;
@@ -76,7 +77,8 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 	},
 	autoVerifyNoConsoleMessages: [
 		async ({ page, consoleManager, serverClient }, use, testInfo) => {
-			if (testInfo.project.name !== "functional") {
+			// Firefox emits hard-to-track errors and every test is already covered in other browser
+			if (testInfo.project.use.defaultBrowserType === "firefox") {
 				await use();
 				return;
 			}
@@ -103,26 +105,31 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 			}));
 			const clientIgnored = [...localIgnored, ...DEFAULT_CLIENT_IGNORED];
 			const serverIgnored = [...localIgnored, ...DEFAULT_SERVER_IGNORED];
-			expect
-				.soft(
-					messages
-						.map(({ kind, text, type }) => {
-							const ignoredIndex = getIgnoredIndex(
-								kind === "client" ? clientIgnored : serverIgnored,
-								text,
-							);
-							if (ignoredIndex === -1) {
-								return `${colors.magenta(`[${kind}][${type}]`)} ${text}`;
-							}
-							// We might get an index in the default ignored array
-							if (localIgnored[ignoredIndex]) {
-								localIgnored[ignoredIndex].used = true;
-							}
-							return undefined;
-						})
-						.filter(Boolean),
-				)
-				.toStrictEqual([]);
+			const unmatchedErrors = messages
+				.map(({ kind, text, type }) => {
+					const ignoredIndex = getIgnoredIndex(
+						kind === "client" ? clientIgnored : serverIgnored,
+						text,
+					);
+					if (ignoredIndex === -1) {
+						return `${colors.magenta(`[${kind}][${type}]`)} ${text}`;
+					}
+					// We might get an index in the default ignored array
+					if (localIgnored[ignoredIndex]) {
+						localIgnored[ignoredIndex].used = true;
+					}
+					return undefined;
+				})
+				.filter(isNonNullish);
+			const counts = countBy(unmatchedErrors, (value) => value);
+			const groupedUnmatchedErrors = pipe(
+				unmatchedErrors,
+				unique(),
+				map((value) =>
+					(counts[value] ?? 0) > 1 ? `(x${counts[value]}) ${value}` : value,
+				),
+			);
+			expect.soft(groupedUnmatchedErrors).toStrictEqual([]);
 			const unused = localIgnored
 				.filter(({ used }) => !used)
 				.map(({ pattern }) => pattern.toString());
