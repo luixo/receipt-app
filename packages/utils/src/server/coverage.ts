@@ -281,7 +281,12 @@ export const generateCoverageReport = async ({
 			continue;
 		}
 		/* oxlint-enable node/no-sync */
-		normalizedCoverageMap.merge({ [normalizedPath]: fileCoverage });
+		normalizedCoverageMap.merge({
+			[normalizedPath]: {
+				...("toJSON" in fileCoverage ? fileCoverage.toJSON() : fileCoverage),
+				path: normalizedPath,
+			},
+		} as CoverageMapData);
 	}
 	const coverageContext = createCoverageContext({
 		dir,
