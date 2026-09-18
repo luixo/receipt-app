@@ -22,7 +22,6 @@ export default defineConfig({
 				path.resolve(rootPath, "apps/web/src/providers/**/*"),
 				path.resolve(rootPath, "apps/web/src/hooks/**/*"),
 				path.resolve(rootPath, "apps/web/src/entry/**/*"),
-				path.resolve(rootPath, "apps/web/src/pages/*"),
 				path.resolve(rootPath, "apps/web/src/pages/!(api)**/*"),
 				path.resolve(rootPath, "apps/web/src/utils/navigation.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/request.ts"),
