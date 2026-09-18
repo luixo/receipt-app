@@ -119,7 +119,6 @@ const callback = async (
 	if (proxyPort) {
 		return redirectTestHandler(request, cookieHeader, proxyPort);
 	}
-	/* c8 ignore start */
 	if (import.meta.env.MODE === "test" && env.PLAYWRIGHT) {
 		return Response.json({
 			error: transformer.serialize({
@@ -131,7 +130,6 @@ const callback = async (
 			}),
 		});
 	}
-	/* c8 ignore stop */
 	return fetchRequestHandler({
 		endpoint: DEFAULT_TRPC_ENDPOINT,
 		req: request,
@@ -147,9 +145,7 @@ const callback = async (
 				return;
 			}
 			/* c8 ignore stop */
-			/* c8 ignore next */
 			if (error instanceof TRPCError && !error.message) {
-				/* c8 ignore start */
 				const errors =
 					error.cause instanceof AggregateError ? error.cause.errors : [error];
 				const internalConnectionError = errors.find(
@@ -169,7 +165,6 @@ const callback = async (
 						message: `Can't connect to the ${internalConnectionError.address}:${internalConnectionError.port}`,
 					});
 				}
-				/* c8 ignore stop */
 			}
 			if (error.code === "UNAUTHORIZED" && path === "account.get") {
 				// Do not log an attempt to fetch the account without a cookie

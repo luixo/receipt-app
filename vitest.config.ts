@@ -14,7 +14,10 @@ export default defineConfig({
 			enabled: true,
 			skipFull: true,
 			thresholds: {
-				"100": true,
+				lines: 100,
+				functions: 100,
+				statements: 100,
+				branches: 99.5,
 			},
 			reporter: ["text", "html", "lcov", "json-summary", "json"],
 			include: ["apps/web/src/**/*.{ts,tsx}", "packages/db/src/**/*.{ts,tsx}"],
