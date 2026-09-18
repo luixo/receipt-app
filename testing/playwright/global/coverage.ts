@@ -1,12 +1,8 @@
 import type { CoverageMap, CoverageMapData } from "istanbul-lib-coverage";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { values } from "remeda";
+import { entries, keys } from "remeda";
 
-import {
-	generateCoverageReport as genericGenerateCoverageReport,
-	mergeCoverageMaps,
-} from "~utils/server/coverage";
 import { baseLogger } from "~web/providers/logger";
 
 const localDir = import.meta.dirname;
@@ -28,16 +24,16 @@ export const prepareCoverageEnv = async () => {
 export const generateCoverageReport = async (
 	data: Record<string, CoverageMap | CoverageMapData>,
 ) => {
-	baseLogger.info("Start generating coverage report");
-	const coverageMap = await mergeCoverageMaps(values(data));
-	await fs.mkdir(path.join(coverageDir, "data"), { recursive: true });
-	await fs.writeFile(
-		path.join(coverageDir, "data/total-coverage.json"),
-		JSON.stringify(coverageMap.data),
+	baseLogger.info(
+		`Writing coverage chunks: ${entries(data)
+			.map(([name, coverage]) => `${name}=${keys(coverage.data).length}`)
+			.join(", ")}`,
 	);
-	await genericGenerateCoverageReport({
-		dir: path.join(coverageDir, "report"),
-		coverageMap,
-	});
-	baseLogger.info("Coverage report done");
+	await fs.mkdir(path.join(coverageDir, "data"), { recursive: true });
+	for (const [name, coverage] of entries(data)) {
+		await fs.writeFile(
+			path.join(coverageDir, `data/${name}-coverage.json`),
+			JSON.stringify(coverage.data),
+		);
+	}
 };

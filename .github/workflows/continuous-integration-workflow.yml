@@ -141,7 +141,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage-${{ matrix.shardIndex }}
-          path: testing/playwright/coverage/data/total-coverage.json
+          path: testing/playwright/coverage/data
           retention-days: 1
           if-no-files-found: error
 
