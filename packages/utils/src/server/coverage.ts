@@ -12,7 +12,7 @@ import type { Profiler } from "node:inspector";
 import type { Module } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { fromEntries, isNonNullish, entries as objectEntries } from "remeda";
+import { isNonNullish, entries as objectEntries } from "remeda";
 import { parseAstAsync } from "rolldown/parseAst";
 
 import { baseLogger } from "~web/providers/logger";
@@ -263,27 +263,26 @@ export const generateCoverageReport = async ({
 	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
 	/* oxlint-enable node/no-process-env */
 	const repositoryMarker = `${path.sep}${path.basename(projectRoot)}${path.sep}${path.basename(projectRoot)}${path.sep}`;
-	/* oxlint-disable node/no-sync */
-	const normalizedCoverageMap = istanbulCoverage.createCoverageMap(
-		fromEntries(
-			objectEntries(coverageMap.data).flatMap(([filePath, fileCoverage]) => {
-				const markerIndex = filePath.lastIndexOf(repositoryMarker);
-				if (markerIndex === -1) {
-					return fsSync.statSync(filePath).isFile()
-						? [[filePath, fileCoverage]]
-						: [];
-				}
-				const normalizedPath = path.join(
-					projectRoot,
-					filePath.slice(markerIndex + repositoryMarker.length),
-				);
-				return fsSync.statSync(normalizedPath).isFile()
-					? [[normalizedPath, fileCoverage]]
-					: [];
-			}),
-		),
-	);
-	/* oxlint-enable node/no-sync */
+	const normalizedCoverageMap = istanbulCoverage.createCoverageMap();
+	for (const [filePath, fileCoverage] of objectEntries(coverageMap.data)) {
+		const markerIndex = filePath.lastIndexOf(repositoryMarker);
+		const normalizedPath =
+			markerIndex === -1
+				? filePath
+				: path.join(
+						projectRoot,
+						filePath.slice(markerIndex + repositoryMarker.length),
+					);
+		/* oxlint-disable node/no-sync */
+		if (
+			path.isAbsolute(normalizedPath) &&
+			!fsSync.statSync(normalizedPath).isFile()
+		) {
+			continue;
+		}
+		/* oxlint-enable node/no-sync */
+		normalizedCoverageMap.merge({ [normalizedPath]: fileCoverage });
+	}
 	const coverageContext = createCoverageContext({
 		dir,
 		coverageMap: normalizedCoverageMap,
