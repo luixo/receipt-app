@@ -669,6 +669,7 @@ export default defineConfig({
 				["utils/format", true],
 				["testing/utils", true],
 				["testing/vitest", true],
+				["testing/mobile", true],
 				["testing/playwright", true],
 			] satisfies Parameters<typeof getExtraneousDependenciesConfig>[]
 		).map(([dir, devDependencies]) => ({
