@@ -28,10 +28,17 @@ export const Modal: React.FC<Props> = ({
 	closeButton,
 }) => {
 	const slots = modal();
+	// Opening is controlled by `isOpen`; only native dismissals should update it.
+	// Forwarding the library's open-sync callback breaks toggle-style callers.
+	const handleOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen && isOpen) {
+			onOpenChange(false);
+		}
+	};
 	return (
 		<BottomSheet
 			isOpen={isOpen}
-			onOpenChange={onOpenChange}
+			onOpenChange={handleOpenChange}
 			testID={testID}
 			aria-label={label}
 			className={className}

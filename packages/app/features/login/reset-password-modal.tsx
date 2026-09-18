@@ -70,12 +70,12 @@ const ResetPasswordModalForm: React.FC<{
 
 type Props = {
 	isModalOpen: boolean;
-	switchModalOpen: () => void;
+	closeModal: () => void;
 };
 
 export const ResetPasswordModal: React.FC<Props> = ({
 	isModalOpen,
-	switchModalOpen,
+	closeModal,
 }) => {
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
@@ -88,7 +88,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		<Modal
 			isOpen={isModalOpen}
 			label={t("forgotPassword.modal.header")}
-			onOpenChange={switchModalOpen}
+			onOpenChange={closeModal}
 			header={<Text variant="h3">{t("forgotPassword.modal.header")}</Text>}
 		>
 			{resetPasswordMutation.status === "success" ? (

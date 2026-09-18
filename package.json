@@ -20,6 +20,7 @@
 		"format:verify": "oxfmt --check",
 		"frontend:merge-coverage": "bun run --cwd utils/scripts merge-coverage",
 		"frontend:test": "bun run --cwd testing/playwright test",
+		"mobile:test": "bun run --cwd testing/mobile test",
 		"install:immutable": "bun install --frozen-lockfile",
 		"lint": "oxlint",
 		"lint:fix": "oxlint --fix",

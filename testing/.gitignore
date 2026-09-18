@@ -1,5 +1,6 @@
 # Testing
 coverage/
 playwright-report/
+mobilewright-report/
 blob-report/
 test-results/
