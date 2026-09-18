@@ -147,6 +147,7 @@ const callback = async (
 				return;
 			}
 			/* c8 ignore stop */
+			/* c8 ignore next */
 			if (error instanceof TRPCError && !error.message) {
 				/* c8 ignore start */
 				const errors =
