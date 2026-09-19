@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebtIntention } from "~app/trpc-types";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
@@ -32,7 +32,7 @@ export const SkeletonInboundDebtIntention = () => {
 };
 
 type Props = {
-	intention: TRPCQueryOutput<"debtIntentions.getAll">["items"][number];
+	intention: TRPCDebtIntention;
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {

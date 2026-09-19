@@ -18,6 +18,7 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "~app/trpc";
+import type { TRPCUser } from "~app/trpc-types";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import type { AccountId, UserId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
@@ -516,7 +517,7 @@ const getMockUtils = ({
 		});
 		return { user: selfUser, account: selfAccount };
 	},
-	mockUsers: (...users: TRPCQueryOutput<"users.get">[]) => {
+	mockUsers: (...users: TRPCUser[]) => {
 		api.mockFirst(
 			"users.get",
 			({ input, next }) => users.find((user) => user.id === input.id) || next(),

@@ -3,20 +3,19 @@ import React from "react";
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 
 import { useDecimals } from "~app/hooks/use-decimals";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCReceipt, TRPCReceiptParticipant } from "~app/trpc-types";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
 import type { UserId } from "~db/ids";
 
-const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debts">) =>
+const getDebtIds = (receipt: Pick<TRPCReceipt, "debts">) =>
 	receipt.debts.direction === "outcoming"
 		? receipt.debts.debts.map(({ id }) => id)
 		: receipt.debts.id
 			? [receipt.debts.id]
 			: [];
 
-type OriginalParticipant =
-	TRPCQueryOutput<"receipts.get">["participants"][number];
+type OriginalParticipant = TRPCReceiptParticipant;
 
 const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 	// Sort first by owner
@@ -30,9 +29,7 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 	return Temporal.ZonedDateTime.compare(a.createdAt, b.createdAt);
 };
 
-export const useParticipants = (
-	receipt: Omit<TRPCQueryOutput<"receipts.get">, "name">,
-) => {
+export const useParticipants = (receipt: Omit<TRPCReceipt, "name">) => {
 	const { fromUnitToSubunit, fromSubunitToUnit } = useDecimals();
 	return React.useMemo(() => {
 		const participantsSums = getParticipantSums(
@@ -66,7 +63,7 @@ export const useParticipants = (
 };
 
 export const useParticipantsWithDebts = (
-	receipt: Omit<TRPCQueryOutput<"receipts.get">, "name">,
+	receipt: Omit<TRPCReceipt, "name">,
 ) => {
 	const participants = useParticipants(receipt);
 	const trpc = useTRPC();

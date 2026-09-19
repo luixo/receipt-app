@@ -7,7 +7,7 @@ import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebt, TRPCReceipt } from "~app/trpc-types";
 import { areDebtsSynced } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
@@ -19,7 +19,7 @@ import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receipt: TRPCReceipt;
 	participant: Participant;
 	outcomingDebtId?: DebtId;
 };
@@ -86,7 +86,7 @@ export const ReceiptParticipantDebtActions = suspendedFallback<
 			),
 		);
 		const updateDebt = React.useCallback(
-			(currentDebt: TRPCQueryOutput<"debts.get">) => {
+			(currentDebt: TRPCDebt) => {
 				updateMutation.mutate({
 					id: currentDebt.id,
 					update: {

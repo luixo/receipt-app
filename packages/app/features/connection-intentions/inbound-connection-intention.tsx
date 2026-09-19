@@ -9,7 +9,7 @@ import {
 } from "~app/components/app/users-suggest";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCAccountConnectionIntentions } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
@@ -40,7 +40,7 @@ export const SkeletonInboundConnectionIntention = () => {
 };
 
 type Props = {
-	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];
+	intention: TRPCAccountConnectionIntentions["inbound"][number];
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {

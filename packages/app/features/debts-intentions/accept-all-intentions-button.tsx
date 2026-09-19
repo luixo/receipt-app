@@ -5,13 +5,13 @@ import { useTranslation } from "react-i18next";
 
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebtIntentions } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
 type Props = {
-	intentions: TRPCQueryOutput<"debtIntentions.getAll">["items"];
+	intentions: TRPCDebtIntentions;
 } & React.ComponentProps<typeof Button>;
 
 export const AcceptAllIntentionsButton: React.FC<Props> = ({

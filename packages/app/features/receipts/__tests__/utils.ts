@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCReceipt } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
 import type {
@@ -25,7 +25,7 @@ import type { ExtractFixture } from "~tests/frontend/types";
 
 export type { ReceiptId } from "~db/ids";
 
-type Receipt = TRPCQueryOutput<"receipts.get">;
+type Receipt = TRPCReceipt;
 
 type Fixtures = {
 	mockBase: () => Promise<

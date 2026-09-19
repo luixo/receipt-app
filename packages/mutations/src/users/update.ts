@@ -1,4 +1,5 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { TRPCForeignUser, TRPCUser } from "~app/trpc-types";
 import type { UserId } from "~db/ids";
 
 import {
@@ -8,7 +9,7 @@ import {
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
-type UserSnapshot = TRPCQueryOutput<"users.get">;
+type UserSnapshot = TRPCUser;
 
 const applyUpdate =
 	(
@@ -37,10 +38,7 @@ const getRevert =
 		}
 	};
 
-type OwnUserSnapshot = Exclude<
-	TRPCQueryOutput<"users.getForeign">,
-	{ remoteId: UserId }
->;
+type OwnUserSnapshot = Exclude<TRPCForeignUser, { remoteId: UserId }>;
 
 const applyForeignUpdate =
 	(

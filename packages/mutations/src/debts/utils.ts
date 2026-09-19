@@ -1,11 +1,12 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { TRPCDebt } from "~app/trpc-types";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../types";
 
-type DebtSnapshot = TRPCQueryOutput<"debts.get">;
+type DebtSnapshot = TRPCDebt;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
 const isUpdateSyncable = (update: DebtUpdateObject) =>

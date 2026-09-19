@@ -2,7 +2,7 @@ import type React from "react";
 
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebtIntentions } from "~app/trpc-types";
 import { formatCurrency } from "~app/utils/currency";
 import { Card } from "~components/card";
 import { Icon } from "~components/icons";
@@ -34,7 +34,7 @@ export const SkeletonDebtIntention: React.FC<{ children?: ViewReactNode }> = ({
 	</Card>
 );
 
-type Intentions = TRPCQueryOutput<"debtIntentions.getAll">["items"];
+type Intentions = TRPCDebtIntentions;
 
 type Props = {
 	intention: Intentions[number];

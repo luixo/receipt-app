@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCUser } from "~app/trpc-types";
 import type { ReceiptId, UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
@@ -24,7 +24,7 @@ import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: () => Promise<{
-		selfUser: TRPCQueryOutput<"users.get">;
+		selfUser: TRPCUser;
 	}>;
 	mockReceipt: (options?: {
 		generateReceiptBase?: GenerateReceiptBase;

@@ -1,11 +1,12 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { TRPCReceiptItem } from "~app/trpc-types";
 import type { ReceiptId } from "~db/ids";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
-type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
+type ReceiptItem = TRPCReceiptItem;
 
 const applyUpdate =
 	(

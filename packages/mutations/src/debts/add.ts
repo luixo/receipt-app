@@ -1,14 +1,11 @@
-import type {
-	TRPCMutationInput,
-	TRPCMutationOutput,
-	TRPCQueryOutput,
-} from "~app/trpc";
+import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
+import type { TRPCDebt } from "~app/trpc-types";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-type DebtSnapshot = TRPCQueryOutput<"debts.get">;
+type DebtSnapshot = TRPCDebt;
 type AddResult = TRPCMutationOutput<"debts.add">;
 
 const createDebt = (

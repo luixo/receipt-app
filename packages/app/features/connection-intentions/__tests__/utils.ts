@@ -1,7 +1,7 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCAccountConnectionIntentions } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 
-type Intentions = TRPCQueryOutput<"accountConnectionIntentions.getAll">;
+type Intentions = TRPCAccountConnectionIntentions;
 
 type Fixtures = {
 	mockConnectionIntentions: (options?: {

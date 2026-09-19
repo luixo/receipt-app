@@ -3,7 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { identity } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryInput } from "~app/trpc";
+import type { TRPCReceiptPage } from "~app/trpc-types";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import type { AccountId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -40,7 +41,7 @@ const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
-type Output = TRPCQueryOutput<"receipts.getPaged">;
+type Output = TRPCReceiptPage;
 
 const mockData = async (ctx: TestContext) => {
 	const {

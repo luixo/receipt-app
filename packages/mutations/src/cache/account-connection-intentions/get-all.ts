@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCAccountConnectionIntentions } from "~app/trpc-types";
 import type { AccountId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -20,7 +20,7 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["accountConnectionIntentions"]["getAll"];
 }>;
 
-type Intentions = TRPCQueryOutput<"accountConnectionIntentions.getAll">;
+type Intentions = TRPCAccountConnectionIntentions;
 type InboundIntention = Intentions["inbound"][number];
 type OutboundIntention = Intentions["outbound"][number];
 

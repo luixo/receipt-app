@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCCurrencies, TRPCUser } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
@@ -13,7 +13,7 @@ import type { ExtractFixture } from "~tests/frontend/types";
 type Fixtures = {
 	mockBase: () => Promise<
 		{
-			topCurrencies: TRPCQueryOutput<"currency.top">["items"];
+			topCurrencies: TRPCCurrencies;
 			users: ReturnType<GenerateUsers>;
 		} & Awaited<
 			ReturnType<
@@ -26,7 +26,7 @@ type Fixtures = {
 	currencyInput: Locator;
 	dateInput: Locator;
 	noteInput: Locator;
-	fillValidForm: (user: TRPCQueryOutput<"users.get">) => Promise<void>;
+	fillValidForm: (user: TRPCUser) => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -62,7 +62,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(page.getByRole("textbox", { name: "Debt note" })),
 
 	fillValidForm: ({ amountInput, noteInput, fillUser }, use) =>
-		use(async (user: TRPCQueryOutput<"users.get">) => {
+		use(async (user: TRPCUser) => {
 			await fillUser(user);
 			await amountInput.fill("10");
 			// Tab out to trigger react-aria NumberField's blur/commit

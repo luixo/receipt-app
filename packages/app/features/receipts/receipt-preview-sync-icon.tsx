@@ -2,7 +2,7 @@ import type React from "react";
 
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCReceipt } from "~app/trpc-types";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
@@ -38,7 +38,7 @@ const StatusButton: React.FC<{ type: "synced" | "desynced" | "unsynced" }> = ({
 };
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receipt: TRPCReceipt;
 };
 
 export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(

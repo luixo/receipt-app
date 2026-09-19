@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebtIntentionsQuery } from "~app/trpc-types";
 import type { DebtId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -20,7 +20,7 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debtIntentions"]["getAll"];
 }>;
 
-type DebtsIntentions = TRPCQueryOutput<"debtIntentions.getAll">;
+type DebtsIntentions = TRPCDebtIntentionsQuery;
 type Intention = DebtsIntentions["items"][number];
 
 const updateIntentions = (

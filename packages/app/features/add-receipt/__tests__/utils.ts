@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCCurrencies } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import {
 	generateAmount,
@@ -11,7 +11,7 @@ import type { ExtractFixture } from "~tests/frontend/types";
 type Fixtures = {
 	mockBase: () => Promise<
 		{
-			topCurrencies: TRPCQueryOutput<"currency.top">["items"];
+			topCurrencies: TRPCCurrencies;
 		} & Awaited<
 			ReturnType<
 				ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]

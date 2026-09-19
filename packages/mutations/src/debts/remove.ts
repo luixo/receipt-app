@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCDebt } from "~app/trpc-types";
 
 import {
 	update as updateDebts,
@@ -9,7 +9,7 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"debts.remove",
-	{ debt: TRPCQueryOutput<"debts.get"> }
+	{ debt: TRPCDebt }
 > = {
 	mutationKey: "debts.remove",
 	onMutate:

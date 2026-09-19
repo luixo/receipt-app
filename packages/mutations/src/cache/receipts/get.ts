@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCReceipt } from "~app/trpc-types";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -21,7 +21,7 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["get"];
 }>;
 
-type Receipt = TRPCQueryOutput<"receipts.get">;
+type Receipt = TRPCReceipt;
 
 type ReceiptItems = Receipt["items"];
 type ReceiptItem = ReceiptItems[number];
