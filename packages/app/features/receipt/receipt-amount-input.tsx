@@ -6,7 +6,7 @@ import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCReceipt } from "~app/trpc-types";
+import type { Receipt } from "~app/trpc-types";
 import { getCurrencySymbol } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
@@ -16,7 +16,7 @@ import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
 
 type Props = {
-	receipt: TRPCReceipt;
+	receipt: Receipt;
 	isLoading: boolean;
 };
 

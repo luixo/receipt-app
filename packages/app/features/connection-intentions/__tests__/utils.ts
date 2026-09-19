@@ -1,20 +1,18 @@
-import type { TRPCAccountConnectionIntentions } from "~app/trpc-types";
+import type { AccountConnectionIntentions } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
-
-type Intentions = TRPCAccountConnectionIntentions;
 
 type Fixtures = {
 	mockConnectionIntentions: (options?: {
 		inboundAmount?: number;
 		outboundAmount?: number;
-	}) => Promise<Intentions>;
+	}) => Promise<AccountConnectionIntentions>;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	mockConnectionIntentions: ({ api, faker }, use) =>
 		use(async ({ inboundAmount = 0, outboundAmount = 0 } = {}) => {
 			await api.mockUtils.authPage();
-			const intentions: Intentions = {
+			const intentions: AccountConnectionIntentions = {
 				inbound: Array.from({ length: inboundAmount }, () => ({
 					account: {
 						id: faker.string.uuid(),

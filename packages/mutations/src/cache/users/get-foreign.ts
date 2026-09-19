@@ -1,4 +1,4 @@
-import type { TRPCForeignUser } from "~app/trpc-types";
+import type { ForeignUser } from "~app/trpc-types";
 import type { UserId } from "~db/ids";
 
 import type {
@@ -19,13 +19,12 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["users"]["getForeign"];
 }>;
 
-type User = TRPCForeignUser;
-type OwnUser = Exclude<TRPCForeignUser, { remoteId: string }>;
+type OwnUser = Exclude<ForeignUser, { remoteId: string }>;
 
 const update =
 	({ queryClient, procedure }: Controller, userId: UserId) =>
-	(updater: UpdateFn<User>) =>
-		withRef<User | undefined>((ref) => {
+	(updater: UpdateFn<ForeignUser>) =>
+		withRef<ForeignUser | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
 				ref.current = user;
 				return getUpdatedData(user, updater);

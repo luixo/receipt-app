@@ -1,6 +1,6 @@
 import { isNonNullish } from "remeda";
 
-import type { TRPCDebt, TRPCDebtIntention } from "~app/trpc-types";
+import type { Debt, DebtIntention } from "~app/trpc-types";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UserId } from "~db/ids";
 
@@ -13,7 +13,7 @@ import type {
 import { generateAmount, generateCurrencyCode } from "./utils";
 import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
 
-export type GenerateDebts = GeneratorFnWithAmount<TRPCDebt, { userId: UserId }>;
+export type GenerateDebts = GeneratorFnWithAmount<Debt, { userId: UserId }>;
 
 export const defaultGenerateDebts = ({
 	faker,
@@ -38,7 +38,7 @@ export const defaultGenerateDebts = ({
 	}));
 
 export type GenerateDebtIntentions = GeneratorFnWithAmount<
-	TRPCDebtIntention,
+	DebtIntention,
 	{ userId: UserId }
 >;
 
@@ -62,7 +62,7 @@ export const defaultGenerateDebtIntentions = ({
 	}));
 
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
-	TRPCDebt[],
+	Debt[],
 	{
 		selfUserId: UserId;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;

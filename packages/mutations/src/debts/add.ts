@@ -1,17 +1,16 @@
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
-import type { TRPCDebt } from "~app/trpc-types";
+import type { Debt } from "~app/trpc-types";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-type DebtSnapshot = TRPCDebt;
 type AddResult = TRPCMutationOutput<"debts.add">;
 
 const createDebt = (
 	{ id, updatedAt, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
-): DebtSnapshot => {
+): Debt => {
 	const timestamp = updateObject.timestamp || Temporal.Now.plainDateISO();
 	return {
 		id,

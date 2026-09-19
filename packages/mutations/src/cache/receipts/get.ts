@@ -1,4 +1,11 @@
-import type { TRPCReceipt } from "~app/trpc-types";
+import type {
+	Receipt,
+	ReceiptItem,
+	ReceiptItems,
+	ReceiptParticipant,
+	ReceiptParticipants,
+	ReceiptPayers,
+} from "~app/trpc-types";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -21,19 +28,11 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["get"];
 }>;
 
-type Receipt = TRPCReceipt;
-
-type ReceiptItems = Receipt["items"];
-type ReceiptItem = ReceiptItems[number];
 type ReceiptItemConsumers = ReceiptItem["consumers"];
 type ReceiptItemConsumer = ReceiptItemConsumers[number];
 type ReceiptItemPayers = ReceiptItem["payers"];
 type ReceiptItemPayer = ReceiptItemPayers[number];
 
-type ReceiptParticipants = Receipt["participants"];
-type ReceiptParticipant = ReceiptParticipants[number];
-
-type ReceiptPayers = Receipt["payers"];
 type ReceiptPayer = ReceiptPayers[number];
 
 const upsert = ({ queryClient, procedure }: Controller, receipt: Receipt) =>

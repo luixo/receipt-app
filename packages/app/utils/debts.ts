@@ -1,6 +1,6 @@
-import type { TRPCDebt, TRPCReceipt } from "~app/trpc-types";
+import type { Debt, Receipt } from "~app/trpc-types";
 
-type DebtPartial = Pick<TRPCDebt, "amount" | "currencyCode" | "timestamp">;
+type DebtPartial = Pick<Debt, "amount" | "currencyCode" | "timestamp">;
 
 export const areDebtsSynced = (debt: DebtPartial, theirDebt: DebtPartial) =>
 	debt.amount === theirDebt.amount &&
@@ -8,7 +8,7 @@ export const areDebtsSynced = (debt: DebtPartial, theirDebt: DebtPartial) =>
 	Temporal.PlainDate.compare(debt.timestamp, theirDebt.timestamp) === 0;
 
 export const isDebtInSyncWithReceipt = (
-	receiptDebt: Pick<TRPCReceipt, "currencyCode" | "issued" | "id"> & {
+	receiptDebt: Pick<Receipt, "currencyCode" | "issued" | "id"> & {
 		participantSum: number;
 	},
 	debt: DebtPartial,

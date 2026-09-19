@@ -1,23 +1,21 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 
-export type TRPCAccountConnectionIntentions =
+export type AccountConnectionIntentions =
 	TRPCQueryOutput<"accountConnectionIntentions.getAll">;
-export type TRPCConnectedAccount =
-	TRPCQueryOutput<"users.get">["connectedAccount"];
-export type TRPCCurrencies = TRPCQueryOutput<"currency.top">["items"];
-export type TRPCDebt = TRPCQueryOutput<"debts.get">;
-export type TRPCDebtsByUserPage = TRPCQueryOutput<"debts.getByUserPaged">;
-export type TRPCDebtIntention =
+export type ConnectedAccount = TRPCQueryOutput<"users.get">["connectedAccount"];
+export type Currencies = TRPCQueryOutput<"currency.top">["items"];
+export type Debt = TRPCQueryOutput<"debts.get">;
+export type DebtsByUserPage = TRPCQueryOutput<"debts.getByUserPaged">;
+export type DebtIntention =
 	TRPCQueryOutput<"debtIntentions.getAll">["items"][number];
-export type TRPCDebtIntentions =
-	TRPCQueryOutput<"debtIntentions.getAll">["items"];
-export type TRPCDebtIntentionsQuery = TRPCQueryOutput<"debtIntentions.getAll">;
-export type TRPCForeignUser = TRPCQueryOutput<"users.getForeign">;
-export type TRPCReceipt = TRPCQueryOutput<"receipts.get">;
-export type TRPCReceiptItem = TRPCReceipt["items"][number];
-export type TRPCReceiptParticipant = TRPCReceipt["participants"][number];
-export type TRPCReceiptPayers = TRPCReceipt["payers"];
-export type TRPCReceiptParticipants = TRPCReceipt["participants"];
-export type TRPCReceiptItems = TRPCReceipt["items"];
-export type TRPCReceiptPage = TRPCQueryOutput<"receipts.getPaged">;
-export type TRPCUser = TRPCQueryOutput<"users.get">;
+export type DebtIntentions = TRPCQueryOutput<"debtIntentions.getAll">["items"];
+export type DebtIntentionsQuery = TRPCQueryOutput<"debtIntentions.getAll">;
+export type ForeignUser = TRPCQueryOutput<"users.getForeign">;
+export type Receipt = TRPCQueryOutput<"receipts.get">;
+export type ReceiptItem = Receipt["items"][number];
+export type ReceiptParticipant = Receipt["participants"][number];
+export type ReceiptPayers = Receipt["payers"];
+export type ReceiptParticipants = Receipt["participants"];
+export type ReceiptItems = Receipt["items"];
+export type ReceiptPage = TRPCQueryOutput<"receipts.getPaged">;
+export type User = TRPCQueryOutput<"users.get">;

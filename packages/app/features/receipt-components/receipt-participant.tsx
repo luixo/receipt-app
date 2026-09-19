@@ -14,7 +14,7 @@ import { useAutosave, useAutosaveEffect } from "~app/hooks/use-autosave";
 import { useRoundParts } from "~app/hooks/use-decimals";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import type { TRPCDebt } from "~app/trpc-types";
+import type { Debt } from "~app/trpc-types";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
@@ -38,7 +38,7 @@ import type { Participant } from "./state";
 const getParticipantError = (
 	t: TFunction<"receipts">,
 	participant: Participant,
-	debt: TRPCDebt | undefined,
+	debt: Debt | undefined,
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
 	isSelfParticipant: boolean,

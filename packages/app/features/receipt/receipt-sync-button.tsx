@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCReceipt } from "~app/trpc-types";
+import type { Receipt } from "~app/trpc-types";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
@@ -17,7 +17,7 @@ import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 type Props = {
-	receipt: TRPCReceipt;
+	receipt: Receipt;
 	isLoading: boolean;
 };
 

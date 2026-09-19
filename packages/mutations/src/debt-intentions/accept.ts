@@ -1,4 +1,4 @@
-import type { TRPCDebtIntention } from "~app/trpc-types";
+import type { DebtIntention } from "~app/trpc-types";
 
 import {
 	update as updateDebts,
@@ -6,11 +6,9 @@ import {
 } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
-type Intention = TRPCDebtIntention;
-
 export const options: UseContextedMutationOptions<
 	"debtIntentions.accept",
-	{ intention: Intention }
+	{ intention: DebtIntention }
 > = {
 	mutationKey: "debtIntentions.accept",
 	onMutate:

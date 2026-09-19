@@ -1,4 +1,4 @@
-import type { TRPCDebt } from "~app/trpc-types";
+import type { Debt } from "~app/trpc-types";
 import type { DebtId } from "~db/ids";
 
 import type {
@@ -17,8 +17,6 @@ import {
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debts"]["get"];
 }>;
-
-type Debt = TRPCDebt;
 
 const update =
 	({ queryClient, procedure }: Controller, debtId: DebtId) =>

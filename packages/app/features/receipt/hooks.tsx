@@ -12,7 +12,7 @@ import type {
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput } from "~app/trpc";
-import type { TRPCReceipt } from "~app/trpc-types";
+import type { Receipt } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
@@ -348,7 +348,7 @@ const useUpdateItemPayerPart = (receiptId: ReceiptId) => {
 	);
 };
 
-export const useActionHooks = (receipt: TRPCReceipt) => ({
+export const useActionHooks = (receipt: Receipt) => ({
 	addItem: useAddItem(receipt.id),
 	removeItem: useRemoveItem(receipt.id),
 	updateItemName: useUpdateItemName(receipt.id),
@@ -388,7 +388,7 @@ export type ReceiptContext = {
 };
 
 export const useGetReceiptContext = (
-	receipt: TRPCReceipt,
+	receipt: Receipt,
 	receiptDisabled: boolean,
 	renderParticipantActions: ReceiptContext["renderParticipantActions"],
 ): ReceiptContext => {
