@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Receipt } from "~app/trpc-types";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { receiptNameSchema } from "~app/utils/validation";
@@ -13,7 +13,7 @@ import { SaveButton } from "~components/save-button";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receipt: Receipt;
 	isLoading: boolean;
 	unsetEditing: () => void;
 };

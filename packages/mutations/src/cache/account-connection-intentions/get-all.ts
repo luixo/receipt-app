@@ -1,4 +1,8 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type {
+	AccountConnectionIntentions,
+	InboundIntention,
+	OutboundIntention,
+} from "~app/trpc-types";
 import type { AccountId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -20,10 +24,6 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["accountConnectionIntentions"]["getAll"];
 }>;
 
-type Intentions = TRPCQueryOutput<"accountConnectionIntentions.getAll">;
-type InboundIntention = Intentions["inbound"][number];
-type OutboundIntention = Intentions["outbound"][number];
-
 type Direction = "inbound" | "outbound";
 type IntentionMapping = {
 	inbound: InboundIntention;
@@ -32,7 +32,9 @@ type IntentionMapping = {
 
 const updateIntentions = (
 	{ queryClient, procedure }: Controller,
-	updater: (intentions: Intentions) => Intentions,
+	updater: (
+		intentions: AccountConnectionIntentions,
+	) => AccountConnectionIntentions,
 ) =>
 	queryClient.setQueryData(procedure.queryKey(), (intentions) =>
 		getUpdatedData(intentions, updater),

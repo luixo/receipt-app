@@ -136,8 +136,6 @@ describe("debt-intenions.getAll", () => {
 						updatedAt: debtToCreate.updatedAt,
 						timestamp: debtToCreate.timestamp,
 						note: debtToCreate.note,
-						receiptId: debtToCreate.receiptId || undefined,
-						current: undefined,
 					},
 				].toSorted((a, b) =>
 					Temporal.ZonedDateTime.compare(b.updatedAt, a.updatedAt),
