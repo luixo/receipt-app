@@ -24,7 +24,10 @@ const getCoverageFiles = async (directory: string): Promise<string[]> => {
 	const entries = await fs.readdir(directory, { recursive: true });
 	return entries
 		.map((entry) => {
-			if (!/^(?:client|server)-coverage\.json$/.test(path.basename(entry))) {
+			if (
+				!/^(?:client|server)-coverage\.json$/.test(path.basename(entry)) &&
+				path.basename(entry) !== "coverage-final.json"
+			) {
 				return undefined;
 			}
 			return path.join(directory, entry);
