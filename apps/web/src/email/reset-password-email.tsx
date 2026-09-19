@@ -1,33 +1,29 @@
 import React from "react";
 
-import { Email } from "./email";
+import { Button, Heading, Text } from "@react-email/components";
+
+import { EmailLayout, button, subheading } from "./email";
+
+/* oxlint-disable react/jsx-no-literals */
 
 type Props = {
+	baseUrl: string;
 	token: string;
 };
 
-export const ResetPasswordEmail: React.FC<Props> = ({ token }) => (
-	<Email
-		title="Receipt App reset password"
-		footerChildren={[
-			{ type: "text", text: "This link will expire in the next 24 hours." },
-		]}
+export const ResetPasswordEmail: React.FC<Props> = ({ baseUrl, token }) => (
+	<EmailLayout
+		preview="Receipt App reset password"
+		baseUrl={baseUrl}
+		footerNote={<Text>This link will expire in the next 24 hours.</Text>}
 	>
-		{[
-			{ type: "text", text: "Forgot your password?", size: "h3" },
-			{
-				type: "text",
-				text: "We received a request to reset your password.",
-			},
-			{
-				type: "action",
-				text: "Reset my password",
-				href: `reset-password?token=${token}`,
-			},
-			{
-				type: "text",
-				text: "Didn’t request a password reset? You can ignore this message.",
-			},
-		]}
-	</Email>
+		<Heading as="h3" style={subheading}>
+			Forgot your password?
+		</Heading>
+		<Text>We received a request to reset your password.</Text>
+		<Button href={`${baseUrl}reset-password?token=${token}`} style={button}>
+			Reset my password
+		</Button>
+		<Text>Didn’t request a password reset? You can ignore this message.</Text>
+	</EmailLayout>
 );

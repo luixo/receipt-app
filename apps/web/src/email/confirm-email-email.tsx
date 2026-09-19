@@ -1,33 +1,30 @@
 import React from "react";
 
-import { Email } from "./email";
+import { Button, Heading, Text } from "@react-email/components";
+
+import { EmailLayout, button, subheading } from "./email";
+
+/* oxlint-disable react/jsx-no-literals */
 
 type Props = {
+	baseUrl: string;
 	token: string;
 };
 
-export const ConfirmEmailEmail: React.FC<Props> = ({ token }) => (
-	<Email title="Receipt App confirm email">
-		{[
-			{ type: "text", text: "✨Welcome to Receipt App✨", size: "h3" },
-			{
-				type: "text",
-				text: "Happy counting!",
-			},
-			{
-				type: "action",
-				text: "Confirm email",
-				href: `confirm-email?token=${token}`,
-			},
-			{
-				type: "text",
-				text: "Didn’t register in Receipt App? Click below to void your account.",
-			},
-			{
-				type: "action",
-				text: "Void account",
-				href: `void-account?token=${token}`,
-			},
-		]}
-	</Email>
+export const ConfirmEmailEmail: React.FC<Props> = ({ baseUrl, token }) => (
+	<EmailLayout preview="Receipt App confirm email" baseUrl={baseUrl}>
+		<Heading as="h3" style={subheading}>
+			✨Welcome to Receipt App✨
+		</Heading>
+		<Text>Happy counting!</Text>
+		<Button href={`${baseUrl}confirm-email?token=${token}`} style={button}>
+			Confirm email
+		</Button>
+		<Text>
+			Didn’t register in Receipt App? Click below to void your account.
+		</Text>
+		<Button href={`${baseUrl}void-account?token=${token}`} style={button}>
+			Void account
+		</Button>
+	</EmailLayout>
 );
