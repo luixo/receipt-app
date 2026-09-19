@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Account } from "~app/trpc-types";
 
 import type {
 	ControllerContext,
@@ -16,8 +16,6 @@ import {
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["account"]["get"];
 }>;
-
-type Account = TRPCQueryOutput<"account.get">;
 
 const invalidateAccount =
 	({ queryClient, procedure }: Controller) =>

@@ -1,4 +1,11 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type {
+	Receipt,
+	ReceiptItem,
+	ReceiptItemConsumer,
+	ReceiptItemPayer,
+	ReceiptParticipant,
+	ReceiptPayer,
+} from "~app/trpc-types";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -20,21 +27,6 @@ import {
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["get"];
 }>;
-
-type Receipt = TRPCQueryOutput<"receipts.get">;
-
-type ReceiptItems = Receipt["items"];
-type ReceiptItem = ReceiptItems[number];
-type ReceiptItemConsumers = ReceiptItem["consumers"];
-type ReceiptItemConsumer = ReceiptItemConsumers[number];
-type ReceiptItemPayers = ReceiptItem["payers"];
-type ReceiptItemPayer = ReceiptItemPayers[number];
-
-type ReceiptParticipants = Receipt["participants"];
-type ReceiptParticipant = ReceiptParticipants[number];
-
-type ReceiptPayers = Receipt["payers"];
-type ReceiptPayer = ReceiptPayers[number];
 
 const upsert = ({ queryClient, procedure }: Controller, receipt: Receipt) =>
 	queryClient.setQueryData(procedure.queryKey({ id: receipt.id }), receipt);
@@ -78,8 +70,8 @@ const updateAll =
 
 const updateItems =
 	(controller: Controller, receiptId: ReceiptId) =>
-	(updater: UpdateFn<ReceiptItems>) =>
-		withRef<ReceiptItems | undefined>((ref) => {
+	(updater: UpdateFn<ReceiptItem[]>) =>
+		withRef<ReceiptItem[] | undefined>((ref) => {
 			update(
 				controller,
 				receiptId,
@@ -147,8 +139,8 @@ const removeItem = (
 
 const updateItemConsumers =
 	(controller: Controller, receiptId: ReceiptId, itemId: ReceiptItemId) =>
-	(updater: UpdateFn<ReceiptItemConsumers>) =>
-		withRef<ReceiptItemConsumers | undefined>((ref) => {
+	(updater: UpdateFn<ReceiptItemConsumer[]>) =>
+		withRef<ReceiptItemConsumer[] | undefined>((ref) => {
 			updateItem(
 				controller,
 				receiptId,
@@ -213,8 +205,8 @@ const addItemConsumer =
 
 const updateItemPayers =
 	(controller: Controller, receiptId: ReceiptId, itemId: ReceiptItemId) =>
-	(updater: UpdateFn<ReceiptItemPayers>) =>
-		withRef<ReceiptItemPayers | undefined>((ref) => {
+	(updater: UpdateFn<ReceiptItemPayer[]>) =>
+		withRef<ReceiptItemPayer[] | undefined>((ref) => {
 			updateItem(
 				controller,
 				receiptId,
@@ -279,8 +271,8 @@ const addItemPayer =
 
 const updateParticipants =
 	(controller: Controller, receiptId: ReceiptId) =>
-	(updater: UpdateFn<ReceiptParticipants>) =>
-		withRef<ReceiptParticipants | undefined>((ref) => {
+	(updater: UpdateFn<ReceiptParticipant[]>) =>
+		withRef<ReceiptParticipant[] | undefined>((ref) => {
 			update(
 				controller,
 				receiptId,
@@ -339,8 +331,8 @@ const removeParticipant = (
 
 const updatePayers =
 	(controller: Controller, receiptId: ReceiptId) =>
-	(updater: UpdateFn<ReceiptPayers>) =>
-		withRef<ReceiptPayers | undefined>((ref) => {
+	(updater: UpdateFn<ReceiptPayer[]>) =>
+		withRef<ReceiptPayer[] | undefined>((ref) => {
 			update(
 				controller,
 				receiptId,
@@ -491,8 +483,8 @@ export const getRevertController = ({
 		updateItemConsumers: (
 			receiptId: ReceiptId,
 			itemId: ReceiptItemId,
-			updater: UpdateFn<ReceiptItemConsumers>,
-			revertUpdater: SnapshotFn<ReceiptItemConsumers>,
+			updater: UpdateFn<ReceiptItemConsumer[]>,
+			revertUpdater: SnapshotFn<ReceiptItemConsumer[]>,
 		) =>
 			applyUpdateFnWithRevert(
 				updateItemConsumers(controller, receiptId, itemId),
@@ -543,8 +535,8 @@ export const getRevertController = ({
 		updateItemPayers: (
 			receiptId: ReceiptId,
 			itemId: ReceiptItemId,
-			updater: UpdateFn<ReceiptItemPayers>,
-			revertUpdater: SnapshotFn<ReceiptItemPayers>,
+			updater: UpdateFn<ReceiptItemPayer[]>,
+			revertUpdater: SnapshotFn<ReceiptItemPayer[]>,
 		) =>
 			applyUpdateFnWithRevert(
 				updateItemPayers(controller, receiptId, itemId),

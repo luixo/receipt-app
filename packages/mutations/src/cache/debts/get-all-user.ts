@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { AggregatedDebt, AggregatedDebts } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UserId } from "~db/ids";
 import { upsertInArray } from "~utils/array";
@@ -15,12 +15,9 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debts"]["getAllUser"];
 }>;
 
-type AggregatedDebts = TRPCQueryOutput<"debts.getAllUser">;
-type AggregatedDebt = AggregatedDebts["items"][number];
-
 const updateAllSums =
 	({ queryClient, procedure }: Controller, userId: UserId) =>
-	(updater: UpdateFn<AggregatedDebts["items"]>) =>
+	(updater: UpdateFn<AggregatedDebt[]>) =>
 		withRef<AggregatedDebts | undefined>((ref) => {
 			queryClient.setQueryData(procedure.queryKey({ userId }), (prevDebts) => {
 				ref.current = prevDebts;

@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { DebtIntention } from "~app/trpc-types";
 import type { DebtId } from "~db/ids";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
@@ -20,12 +20,9 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["debtIntentions"]["getAll"];
 }>;
 
-type DebtsIntentions = TRPCQueryOutput<"debtIntentions.getAll">;
-type Intention = DebtsIntentions["items"][number];
-
 const updateIntentions = (
 	{ queryClient, procedure }: Controller,
-	updater: (intentions: Intention[]) => Intention[],
+	updater: (intentions: DebtIntention[]) => DebtIntention[],
 ) =>
 	queryClient.setQueryData(procedure.queryKey(), (prevIntentions) =>
 		getUpdatedData(prevIntentions, (prevData) => ({
@@ -36,8 +33,8 @@ const updateIntentions = (
 
 const updateIntention =
 	(controller: Controller, debtId: DebtId) =>
-	(updater: (intention: Intention) => Intention) =>
-		withRef<Intention | undefined>((ref) => {
+	(updater: (intention: DebtIntention) => DebtIntention) =>
+		withRef<DebtIntention | undefined>((ref) => {
 			updateIntentions(controller, (intentions) =>
 				replaceInArray(
 					intentions,
@@ -49,7 +46,7 @@ const updateIntention =
 		}).current;
 
 const removeIntention = (controller: Controller, debtId: DebtId) =>
-	withRef<ItemWithIndex<Intention> | undefined>((ref) => {
+	withRef<ItemWithIndex<DebtIntention> | undefined>((ref) => {
 		updateIntentions(controller, (intentions) =>
 			removeFromArray(intentions, (intention) => intention.id === debtId, ref),
 		);
@@ -57,7 +54,7 @@ const removeIntention = (controller: Controller, debtId: DebtId) =>
 
 const addIntention = (
 	controller: Controller,
-	intention: Intention,
+	intention: DebtIntention,
 	index = 0,
 ) => {
 	updateIntentions(controller, (intentions) =>
@@ -69,8 +66,8 @@ const updateRevert =
 	(controller: Controller) =>
 	(
 		debtId: DebtId,
-		updateFn: UpdateFn<Intention>,
-		revertFn?: SnapshotFn<Intention>,
+		updateFn: UpdateFn<DebtIntention>,
+		revertFn?: SnapshotFn<DebtIntention>,
 	) =>
 		applyUpdateFnWithRevert(
 			updateIntention(controller, debtId),
@@ -79,7 +76,8 @@ const updateRevert =
 		);
 
 const update =
-	(controller: Controller) => (debtId: DebtId, updateFn: UpdateFn<Intention>) =>
+	(controller: Controller) =>
+	(debtId: DebtId, updateFn: UpdateFn<DebtIntention>) =>
 		updateIntention(controller, debtId)(updateFn);
 
 const removeRevert = (controller: Controller) => (debtId: DebtId) =>
@@ -92,7 +90,7 @@ const remove = (controller: Controller) => (debtId: DebtId) =>
 	removeIntention(controller, debtId);
 
 const addRevert =
-	(controller: Controller) => (intention: Intention, index?: number) =>
+	(controller: Controller) => (intention: DebtIntention, index?: number) =>
 		applyWithRevert(
 			() => addIntention(controller, intention, index),
 			() => {
@@ -101,13 +99,13 @@ const addRevert =
 		);
 
 const add =
-	(controller: Controller) => (intention: Intention, index?: number) =>
+	(controller: Controller) => (intention: DebtIntention, index?: number) =>
 		addIntention(controller, intention, index);
 
 const invalidate =
 	({ queryClient, procedure }: Controller) =>
 	() =>
-		withRef<Intention[] | undefined>((ref) => {
+		withRef<DebtIntention[] | undefined>((ref) => {
 			ref.current = queryClient.getQueryData(procedure.queryKey());
 			void queryClient.invalidateQueries(procedure.queryFilter());
 		}).current;

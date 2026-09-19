@@ -1,4 +1,5 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { ReceiptItemPayer } from "~app/trpc-types";
 import type { ReceiptId } from "~db/ids";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
@@ -6,10 +7,6 @@ import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
 import { getPayersItems } from "./utils";
-
-type Receipt = TRPCQueryOutput<"receipts.get">;
-type ReceiptItem = Receipt["items"][number];
-type ReceiptItemPayer = ReceiptItem["payers"][number];
 
 const applyUpdate =
 	(

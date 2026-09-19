@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { User } from "~app/trpc-types";
 import type { UserId } from "~db/ids";
 
 import type {
@@ -17,8 +17,6 @@ import {
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["users"]["get"];
 }>;
-
-type User = TRPCQueryOutput<"users.get">;
 
 const update =
 	({ queryClient, procedure }: Controller, userId: UserId) =>

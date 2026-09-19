@@ -8,7 +8,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { ReceiptPageEntry } from "~app/trpc-types";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
@@ -106,7 +106,7 @@ export const ReceiptPreview = suspendedFallback<{
 	highlights: Interval[];
 	isSelected: boolean;
 	onValueChange: (nextValue: boolean) => void;
-	matchedItems: TRPCQueryOutput<"receipts.getPaged">["items"][number]["matchedItems"];
+	matchedItems: ReceiptPageEntry["matchedItems"];
 	filterQuery: string;
 }>(
 	({

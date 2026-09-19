@@ -6,13 +6,11 @@ import { useTranslation } from "react-i18next";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Debt } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
-
-type Debt = TRPCQueryOutput<"debts.get">;
 
 type Props = {
 	debt: Debt;

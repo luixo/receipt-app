@@ -1,11 +1,11 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { Debt } from "~app/trpc-types";
 import type { DebtId, ReceiptId, UserId } from "~db/ids";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../types";
 
-type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
 const isUpdateSyncable = (update: DebtUpdateObject) =>
@@ -24,7 +24,7 @@ export const applySumUpdate =
 	};
 
 export const applyUpdate =
-	(update: DebtUpdateObject): UpdateFn<DebtSnapshot> =>
+	(update: DebtUpdateObject): UpdateFn<Debt> =>
 	(debt) => {
 		const nextDebt = { ...debt };
 		if (update.amount !== undefined) {
@@ -58,7 +58,7 @@ export const getSumRevert =
 	};
 
 export const getRevert =
-	(update: DebtUpdateObject): SnapshotFn<DebtSnapshot> =>
+	(update: DebtUpdateObject): SnapshotFn<Debt> =>
 	(snapshot) =>
 	(debt) => {
 		const revertDebt = { ...debt };

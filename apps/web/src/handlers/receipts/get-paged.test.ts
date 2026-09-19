@@ -3,7 +3,8 @@ import { TRPCError } from "@trpc/server";
 import { identity } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryInput } from "~app/trpc";
+import type { ReceiptPageEntry } from "~app/trpc-types";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import type { AccountId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -31,7 +32,7 @@ type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const sortReceipts = (receipts: MockReceipt[]) =>
 	receipts.toSorted((a, b) => Temporal.PlainDate.compare(b.issued, a.issued));
 
-const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
+const mapReceipt = (receipt: MockReceipt): ReceiptPageEntry => ({
 	id: receipt.id,
 	highlights: [],
 	matchedItems: [],
@@ -40,8 +41,6 @@ const mapReceipt = (receipt: MockReceipt): Output["items"][number] => ({
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
-type Output = TRPCQueryOutput<"receipts.getPaged">;
-
 const mockData = async (ctx: TestContext) => {
 	const {
 		sessionId,
@@ -157,7 +156,7 @@ const runFunctionalTest = async (
 		modifyOutput?: (
 			receipts: MockReceipt[],
 			opts: { accountId: AccountId },
-		) => Output["items"];
+		) => ReceiptPageEntry[];
 	} = {},
 ) => {
 	const { accountId, sessionId, receipts } = await mockData(ctx);

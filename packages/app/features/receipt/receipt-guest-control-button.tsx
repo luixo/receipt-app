@@ -2,11 +2,9 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Receipt } from "~app/trpc-types";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
-
-type Receipt = TRPCQueryOutput<"receipts.get">;
 
 type Props = {
 	receipt: Receipt;

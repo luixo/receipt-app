@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { getUserAvatarProps } from "~app/components/app/user-avatar";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { User as UserType } from "~app/trpc-types";
 import { Skeleton } from "~components/skeleton";
 import { User as RawUser } from "~components/user";
 import { cn } from "~components/utils";
@@ -25,7 +25,7 @@ export const SkeletonUser: React.FC<
 export type Props = {
 	id: UserId;
 	name: string;
-	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
+	connectedAccount?: UserType["connectedAccount"];
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const User: React.FC<Props> = ({

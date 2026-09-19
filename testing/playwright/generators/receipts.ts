@@ -1,6 +1,11 @@
 import { isNonNullish } from "remeda";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type {
+	Receipt,
+	ReceiptItem,
+	ReceiptParticipant,
+	ReceiptPayer,
+} from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
@@ -54,7 +59,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 	}));
 
 export type GenerateReceiptParticipants = GeneratorFnWithFaker<
-	TRPCQueryOutput<"receipts.get">["participants"],
+	ReceiptParticipant[],
 	{
 		selfUserId: UserId;
 		users: ReturnType<GenerateUsers>;
@@ -84,7 +89,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 		].filter(isNonNullish);
 
 export type GenerateReceiptPayers = GeneratorFnWithFaker<
-	TRPCQueryOutput<"receipts.get">["payers"],
+	ReceiptPayer[],
 	{
 		selfUserId: UserId;
 		users: ReturnType<GenerateUsers>;
@@ -118,7 +123,7 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 	].filter(isNonNullish);
 
 export type GenerateReceiptItemsWithConsumers = GeneratorFnWithFaker<
-	TRPCQueryOutput<"receipts.get">["items"],
+	ReceiptItem[],
 	{
 		receiptItems: ReturnType<GenerateReceiptItems>;
 		participants: ReturnType<GenerateReceiptParticipants>;
@@ -149,7 +154,7 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 		}));
 
 export type GenerateReceipt = GeneratorFnWithFaker<
-	TRPCQueryOutput<"receipts.get">,
+	Receipt,
 	{
 		selfUserId: UserId;
 		receiptBase: ReturnType<GenerateReceiptBase>;
