@@ -153,11 +153,13 @@ export async function* mapV8Coverage(
 				names: resolvedSourceMap.names,
 				sourceRoot: resolvedSourceMap.sourceRoot,
 				sources: resolvedSourceMap.sources.map((source) =>
-					source?.startsWith("file:")
+					source
 						? pathToFileURL(
 								path.resolve(
 									repositoryRoot,
-									path.relative(repositoryRoot, fileURLToPath(source)),
+									source.startsWith("file:")
+										? path.relative(repositoryRoot, fileURLToPath(source))
+										: source,
 								),
 							).href
 						: source,
