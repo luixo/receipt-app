@@ -6,6 +6,8 @@ import { stopCoverage, takeCoverage } from "node:v8";
 import { mapV8Coverage, mergeCoverageMaps } from "~utils/server/coverage";
 import { env } from "~web/utils/env";
 
+const rootDir = process.cwd();
+
 // oxlint-disable-next-line func-style
 async function* getCoverage() {
 	const serverCoveragePath = env.NODE_V8_COVERAGE;
@@ -28,6 +30,7 @@ async function* getCoverage() {
 			JSON.parse(
 				await fs.readFile(path.join(serverCoveragePath, serverFile), "utf8"),
 			) as Parameters<typeof mapV8Coverage>[0],
+			rootDir,
 		);
 	}
 }

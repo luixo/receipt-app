@@ -6,17 +6,41 @@ import istanbulCoverage from "istanbul-lib-coverage";
 import type { CoverageMap, CoverageMapData } from "istanbul-lib-coverage";
 import { createContext as createCoverageContext } from "istanbul-lib-report";
 import reports from "istanbul-reports";
+import fsSync from "node:fs";
 import * as fs from "node:fs/promises";
 import type { Profiler } from "node:inspector";
 import type { Module } from "node:module";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { isNonNullish } from "remeda";
+import { isNonNullish, entries as objectEntries } from "remeda";
 import { parseAstAsync } from "rolldown/parseAst";
 
 import { baseLogger } from "~web/providers/logger";
 
 const rootDir = path.join(import.meta.dirname, "../../../..");
+
+/* oxlint-disable node/no-process-env */
+const reportRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
+/* oxlint-enable node/no-process-env */
+
+const normalizeCoveragePath = (filePath: string) => {
+	const repositoryMarker = `${path.sep}${path.basename(reportRoot)}${path.sep}${path.basename(reportRoot)}${path.sep}`;
+	const markerIndex = filePath.lastIndexOf(repositoryMarker);
+	return markerIndex === -1
+		? filePath
+		: path.join(
+				reportRoot,
+				filePath.slice(markerIndex + repositoryMarker.length),
+			);
+};
+
+const normalizeReportPath = (filePath: string) => {
+	const repositoryMarker = `${path.sep}${path.basename(rootDir)}${path.sep}${path.basename(rootDir)}${path.sep}`;
+	const markerIndex = filePath.lastIndexOf(repositoryMarker);
+	return markerIndex === -1
+		? filePath
+		: path.join(rootDir, filePath.slice(markerIndex + repositoryMarker.length));
+};
 
 const getBundlePath = (entryUrl: string) =>
 	path.join(rootDir, "apps/web/.output/public", new URL(entryUrl).pathname);
@@ -71,7 +95,10 @@ export const mergeCoverageMaps = async (
 };
 
 // oxlint-disable-next-line func-style
-export async function* mapV8Coverage(coverage: V8Coverage) {
+export async function* mapV8Coverage(
+	coverage: V8Coverage,
+	repositoryRoot: string,
+) {
 	for (const entry of coverage.result) {
 		if (
 			!entry.url ||
@@ -125,7 +152,18 @@ export async function* mapV8Coverage(coverage: V8Coverage) {
 				file: resolvedSourceMap.file,
 				names: resolvedSourceMap.names,
 				sourceRoot: resolvedSourceMap.sourceRoot,
-				sources: resolvedSourceMap.sources,
+				sources: resolvedSourceMap.sources.map((source) =>
+					source
+						? pathToFileURL(
+								path.resolve(
+									repositoryRoot,
+									source.startsWith("file:")
+										? path.relative(repositoryRoot, fileURLToPath(source))
+										: source,
+								),
+							).href
+						: source,
+				),
 				sourcesContent: resolvedSourceMap.sourcesContent,
 				mappings: resolvedSourceMap.mappings as string,
 			},
@@ -147,17 +185,26 @@ export const mapJsCoverage = async (entries: CoverageEntry[]) => {
 			continue;
 		}
 		const ast = await parseAstAsync(entry.source ?? "");
+		const sourceMapPath = `${getBundlePath(entry.url)}.map`;
 		const sourceMap = JSON.parse(
-			await fs.readFile(`${getBundlePath(entry.url)}.map`, "utf8"),
+			await fs.readFile(sourceMapPath, "utf8"),
 		) as EncodedSourceMap;
 		coverageMap.merge(
 			await convert({
 				code: entry.source ?? "",
 				sourceMap: {
 					...sourceMap,
-					sources: sourceMap.sources.map((source) =>
-						source ? source.replace(/\?.*$/, "") : source,
-					),
+					sourceRoot: "",
+					sources: sourceMap.sources.map((source) => {
+						if (!source) {
+							return source;
+						}
+						const sourcePath = source.replace(/\?.*$/, "");
+						const absolutePath = sourcePath.startsWith("file:")
+							? fileURLToPath(sourcePath)
+							: path.resolve(path.dirname(sourceMapPath), sourcePath);
+						return pathToFileURL(normalizeCoveragePath(absolutePath)).href;
+					}),
 				},
 				coverage: {
 					url: pathToFileURL(getBundlePath(entry.url)).href,
@@ -205,7 +252,7 @@ export async function* getEmptyCoverage(directories: string[]) {
 	}
 }
 
-export const generateCoverageReport = ({
+export const generateCoverageReport = async ({
 	dir,
 	coverageMap,
 	printConsole = false,
@@ -214,7 +261,43 @@ export const generateCoverageReport = ({
 	coverageMap: CoverageMap;
 	printConsole?: boolean;
 }) => {
-	const coverageContext = createCoverageContext({ dir, coverageMap });
+	/* oxlint-disable node/no-process-env */
+	const projectRoot = process.env.GITHUB_WORKSPACE ?? rootDir;
+	/* oxlint-enable node/no-process-env */
+	const repositoryMarker = `${path.sep}${path.basename(projectRoot)}${path.sep}${path.basename(projectRoot)}${path.sep}`;
+	const normalizedCoverageMap = istanbulCoverage.createCoverageMap();
+	for (const [filePath, fileCoverage] of objectEntries(coverageMap.data)) {
+		const markerIndex = filePath.lastIndexOf(repositoryMarker);
+		const normalizedPath =
+			markerIndex === -1
+				? filePath
+				: path.join(
+						projectRoot,
+						filePath.slice(markerIndex + repositoryMarker.length),
+					);
+		/* oxlint-disable node/no-sync */
+		if (
+			path.isAbsolute(normalizedPath) &&
+			!fsSync.statSync(normalizedPath).isFile()
+		) {
+			continue;
+		}
+		/* oxlint-enable node/no-sync */
+		normalizedCoverageMap.merge({
+			[normalizedPath]: {
+				...("toJSON" in fileCoverage ? fileCoverage.toJSON() : fileCoverage),
+				path: normalizedPath,
+			},
+		} as CoverageMapData);
+	}
+	const coverageContext = createCoverageContext({
+		dir,
+		coverageMap: normalizedCoverageMap,
+		/* oxlint-disable node/no-sync */
+		sourceFinder: (filePath) =>
+			fsSync.readFileSync(normalizeReportPath(filePath), "utf8"),
+		/* oxlint-enable node/no-sync */
+	});
 	for (const reporter of (
 		[
 			printConsole ? "text" : undefined,
@@ -224,6 +307,15 @@ export const generateCoverageReport = ({
 			"json-summary",
 		] as const
 	).filter(isNonNullish)) {
-		reports.create(reporter).execute(coverageContext);
+		reports
+			.create(reporter, reporter === "lcovonly" ? { projectRoot } : {})
+			.execute(coverageContext);
 	}
+	const lcovPath = path.join(dir, "lcov.info");
+	const lcovFile = await fs.readFile(lcovPath, "utf8");
+	const lcov = lcovFile.replaceAll(
+		/^SF:.*\/(?<repository>[^/]+)\/\k<repository>\/(?<path>.*)$/gm,
+		"SF:$<path>",
+	);
+	await fs.writeFile(lcovPath, lcov);
 };

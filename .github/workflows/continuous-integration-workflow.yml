@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage-${{ matrix.shardIndex }}
-          path: testing/playwright/coverage/data/total-coverage.json
+          path: testing/playwright/coverage/data
           retention-days: 1
           if-no-files-found: error
 
@@ -172,7 +172,9 @@ jobs:
 
   merge-frontend-coverage:
     name: Merge frontend coverage
-    needs: frontend-test
+    needs:
+      - backend-test
+      - frontend-test
     runs-on: ubuntu-latest
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
@@ -184,6 +186,11 @@ jobs:
         with:
           path: frontend-coverage
           pattern: frontend-coverage-*
+      - name: Download backend coverage data
+        uses: actions/download-artifact@v8
+        with:
+          name: backend-coverage-report
+          path: frontend-coverage/backend
       - name: Merge coverage reports
         run: bun frontend:merge-coverage
       - name: Report coverage
