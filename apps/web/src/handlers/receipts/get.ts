@@ -5,7 +5,6 @@ import { z } from "zod";
 import type { AccountId, DebtId, ReceiptId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
-import type { Role } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptIdSchema } from "~web/handlers/validation";
 
@@ -212,7 +211,7 @@ const mapReceipt = (
 		})),
 		participants: participants.map((participant) => ({
 			...participant,
-			role: participant.role as Role,
+			role: participant.role,
 		})),
 		debts: getReceiptDebts(
 			debts,
