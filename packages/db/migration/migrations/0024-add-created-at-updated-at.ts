@@ -70,12 +70,10 @@ const addAccountConnectionsIntentionsUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
-	await db
-		.updateTable("accountConnectionsIntentions")
-		.set({
-			updatedAt: (eb) => eb.ref("accountConnectionsIntentions.createdAt"),
-		})
-		.execute();
+	await sql`
+		UPDATE ${sql.table("accountConnectionsIntentions")}
+		SET "updatedAt" = "createdAt"
+	`.execute(db);
 	await sql`
 	CREATE TRIGGER ${sql.id(
 		ACCOUNT_CONNECTIONS_INTENTIONS.TRIGGERS.UPDATE_TIMESTAMP,

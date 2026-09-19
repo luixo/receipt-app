@@ -18,14 +18,28 @@ export const procedure = authProcedure
 	.mutation(async ({ ctx, input }) => {
 		const { database } = ctx;
 		const intention = await database
-			.selectFrom("accountConnectionsIntentions")
-			.select(["accountId", "targetAccountId"])
+			.selectFrom("users")
+			.leftJoin("users as reciprocalUsers", (qb) =>
+				qb
+					.onRef(
+						"reciprocalUsers.ownerAccountId",
+						"=",
+						"users.connectedAccountId",
+					)
+					.onRef(
+						"reciprocalUsers.connectedAccountId",
+						"=",
+						"users.ownerAccountId",
+					),
+			)
+			.select(["users.id"])
 			.where((eb) =>
 				eb.and({
-					accountId: ctx.auth.accountId,
-					targetAccountId: input.targetAccountId,
+					"users.ownerAccountId": ctx.auth.accountId,
+					"users.connectedAccountId": input.targetAccountId,
 				}),
 			)
+			.where("reciprocalUsers.id", "is", null)
 			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
@@ -35,12 +49,8 @@ export const procedure = authProcedure
 			});
 		}
 		await database
-			.deleteFrom("accountConnectionsIntentions")
-			.where((eb) =>
-				eb.and({
-					accountId: intention.accountId,
-					targetAccountId: intention.targetAccountId,
-				}),
-			)
-			.execute();
+			.updateTable("users")
+			.set({ connectedAccountId: null })
+			.where("id", "=", intention.id)
+			.executeTakeFirst();
 	});

@@ -43,26 +43,17 @@ exports[`users.add > functionality > user is added - public name, no email 1`] =
 exports[`users.add > functionality > user is added - with email > doesn't have a vice versa intention 1`] = `
 {
   "added": {
-    "accountConnectionsIntentions": {
-      "accountId:4c1b6fc3-9c77-4c44-8645-3e92b1097dd7|targetAccountId:b676dec2-bbf7-4d78-8799-281f6327c0d2": {
-        "accountId": "4c1b6fc3-9c77-4c44-8645-3e92b1097dd7",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "targetAccountId": "b676dec2-bbf7-4d78-8799-281f6327c0d2",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "0b8cc418-b968-4ecb-986b-e04199fcc0ac",
-      },
-    },
     "users": {
       "id:0b8cc418-b968-4ecb-986b-e04199fcc0ac": {
         "acceptReceipts": false,
-        "connectedAccountId": null,
+        "connectedAccountId": "b676dec2-bbf7-4d78-8799-281f6327c0d2",
         "createdAt": "2020-01-01 00:00:00+00",
         "exposeReceipts": false,
         "id": "0b8cc418-b968-4ecb-986b-e04199fcc0ac",
         "name": "Brendon Wisozk",
         "ownerAccountId": "4c1b6fc3-9c77-4c44-8645-3e92b1097dd7",
         "publicName": null,
-        "updatedAt": "2020-01-01 00:00:00+00",
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -86,16 +77,10 @@ exports[`users.add > functionality > user is added - with email > has a vice ver
       },
     },
   },
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:b11c5d75-cf7f-4dea-8daa-7a20978f3160|targetAccountId:09ac0425-3313-43b4-b634-0e9b82be31c5": undefined,
-    },
-  },
   "updated": {
     "users": {
       "id:d0549777-2079-42d9-b1ee-1c9b1e26c243": {
-        "connectedAccountId": "09ac0425-3313-43b4-b634-0e9b82be31c5",
-        "updatedAt": "2020-01-01 00:01:00+00",
+        "updatedAt": "2020-01-01 00:02:00+00",
       },
     },
   },

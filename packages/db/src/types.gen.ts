@@ -13,14 +13,6 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
-export interface AccountConnectionsIntention {
-  accountId: AccountId;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  targetAccountId: AccountId;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
-}
-
 export interface Account {
   avatarUrl: string | null;
   confirmationToken: string | null;
@@ -125,7 +117,6 @@ export interface User {
 }
 
 export interface DB {
-  accountConnectionsIntentions: AccountConnectionsIntention;
   accounts: Account;
   accountSettings: AccountSetting;
   debts: Debt;
