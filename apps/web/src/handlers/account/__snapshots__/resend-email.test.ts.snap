@@ -16,7 +16,7 @@ exports[`account.resendEmail > functionality > email is resent 1`] = `
 
 exports[`account.resendEmail > functionality > email is resent 2`] = `
 "
-	<!doctype html lang="en">
+	<!doctype html>
 	<html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width" />

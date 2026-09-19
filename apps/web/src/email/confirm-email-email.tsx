@@ -1,33 +1,38 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Email } from "./email";
 
 type Props = {
 	token: string;
 };
 
-export const ConfirmEmailEmail: React.FC<Props> = ({ token }) => (
-	<Email title="Receipt App confirm email">
-		{[
-			{ type: "text", text: "✨Welcome to Receipt App✨", size: "h3" },
-			{
-				type: "text",
-				text: "Happy counting!",
-			},
-			{
-				type: "action",
-				text: "Confirm email",
-				href: `confirm-email?token=${token}`,
-			},
-			{
-				type: "text",
-				text: "Didn’t register in Receipt App? Click below to void your account.",
-			},
-			{
-				type: "action",
-				text: "Void account",
-				href: `void-account?token=${token}`,
-			},
-		]}
-	</Email>
-);
+export const ConfirmEmailEmail: React.FC<Props> = ({ token }) => {
+	const { t } = useTranslation("email");
+	return (
+		<Email title={t("confirmEmail.title")}>
+			{[
+				{ type: "text", text: t("confirmEmail.welcome"), size: "h3" },
+				{
+					type: "text",
+					text: t("confirmEmail.greeting"),
+				},
+				{
+					type: "action",
+					text: t("confirmEmail.confirm"),
+					href: `confirm-email?token=${token}`,
+				},
+				{
+					type: "text",
+					text: t("confirmEmail.notRegistered"),
+				},
+				{
+					type: "action",
+					text: t("confirmEmail.voidAccount"),
+					href: `void-account?token=${token}`,
+				},
+			]}
+		</Email>
+	);
+};

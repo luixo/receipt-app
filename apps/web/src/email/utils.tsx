@@ -53,12 +53,12 @@ const generateEmail = async (
 	const t = i18nContext.getNamespacedTranslation("email");
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
 	const markup = `
-	<!doctype html lang="en">
-	<html lang="en">
+	<!doctype html>
+	<html lang="${language}">
 		<head>
 			<meta name="viewport" content="width=device-width" />
 			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-			<title>Receipt App</title>
+			<title>${t("header")}</title>
 			${STYLE_REPLACER}
 		</head>
 		<body>${ReactDOMServer.renderToStaticMarkup(

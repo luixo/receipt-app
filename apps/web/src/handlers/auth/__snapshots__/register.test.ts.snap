@@ -44,7 +44,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
 
 exports[`auth.register > functionality > email sent if active 2`] = `
 "
-	<!doctype html lang="en">
+	<!doctype html>
 	<html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width" />

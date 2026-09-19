@@ -4,6 +4,22 @@
 		"confirmEmail": "Confirm email in Receipt App"
 	},
 	"header": "Receipt App",
+	"confirmEmail": {
+		"title": "Receipt App confirm email",
+		"welcome": "✨Welcome to Receipt App✨",
+		"greeting": "Happy counting!",
+		"confirm": "Confirm email",
+		"notRegistered": "Didn’t register in Receipt App? Click below to void your account.",
+		"voidAccount": "Void account"
+	},
+	"resetPassword": {
+		"title": "Receipt App reset password",
+		"expiration": "This link will expire in the next 24 hours.",
+		"forgot": "Forgot your password?",
+		"requestReceived": "We received a request to reset your password.",
+		"reset": "Reset my password",
+		"notRequested": "Didn’t request a password reset? You can ignore this message."
+	},
 	"footer": {
 		"link": "Contact us on receipt@luixo.me",
 		"unsubscribe": "You can click <a>unsubscribe</a>, but there is nothing to unsubscribe from.",
