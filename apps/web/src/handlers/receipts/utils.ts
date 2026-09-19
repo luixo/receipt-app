@@ -26,6 +26,19 @@ export const getAccessRole = async (
 		.innerJoin("accounts", (jb) =>
 			jb.onRef("accounts.id", "=", "users.connectedAccountId"),
 		)
+		.innerJoin("users as reciprocalUsers", (jb) =>
+			jb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
+		)
 		.where((eb) =>
 			eb.and({
 				"accounts.id": accountId,
@@ -69,6 +82,19 @@ export const getParticipantsReceipts = (
 		)
 		.innerJoin("receiptParticipants", (jb) =>
 			jb.onRef("receiptParticipants.userId", "=", "users.id"),
+		)
+		.innerJoin("users as reciprocalUsers", (jb) =>
+			jb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
 		)
 		.innerJoin("receipts", (jb) =>
 			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),

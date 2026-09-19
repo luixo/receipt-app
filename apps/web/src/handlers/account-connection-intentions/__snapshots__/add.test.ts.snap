@@ -2,14 +2,11 @@
 
 exports[`accountConnectionIntentions.add > functionality > account connection intention added > avatar url exists 1`] = `
 {
-  "added": {
-    "accountConnectionsIntentions": {
-      "accountId:5f7c257e-533e-4e6e-892a-7ac9a11f082d|targetAccountId:4b9cc8ce-fd83-458e-aab0-380ad161a965": {
-        "accountId": "5f7c257e-533e-4e6e-892a-7ac9a11f082d",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "targetAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3",
+  "updated": {
+    "users": {
+      "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
+        "connectedAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -18,16 +15,10 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 
 exports[`accountConnectionIntentions.add > functionality > account connection intention collapse - has a vice versa intention > avatar url exists 1`] = `
 {
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:4b9cc8ce-fd83-458e-aab0-380ad161a965|targetAccountId:5f7c257e-533e-4e6e-892a-7ac9a11f082d": undefined,
-    },
-  },
   "updated": {
     "users": {
       "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
-        "connectedAccountId": "5f7c257e-533e-4e6e-892a-7ac9a11f082d",
-        "updatedAt": "2020-01-01 00:01:00+00",
+        "updatedAt": "2020-01-01 00:02:00+00",
       },
       "id:b9fc248f-10cc-42f1-98b2-6d4a62666168": {
         "connectedAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
@@ -40,14 +31,11 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 
 exports[`accountConnectionIntentions.add > input verification > multiple intentions > mixed success and fail 1`] = `
 {
-  "added": {
-    "accountConnectionsIntentions": {
-      "accountId:1d263b1a-801e-44e4-a018-32c2cbc9f60e|targetAccountId:fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc": {
-        "accountId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "targetAccountId": "fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc",
-        "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3",
+  "updated": {
+    "users": {
+      "id:c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3": {
+        "connectedAccountId": "fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc",
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },

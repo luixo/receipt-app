@@ -39,6 +39,19 @@ export const procedure = authProcedure
 					ctx.auth.accountId,
 				),
 			)
+			.innerJoin("users as reciprocalUsers", (qb) =>
+				qb
+					.onRef(
+						"reciprocalUsers.ownerAccountId",
+						"=",
+						"users.connectedAccountId",
+					)
+					.onRef(
+						"reciprocalUsers.connectedAccountId",
+						"=",
+						"users.ownerAccountId",
+					),
+			)
 			.innerJoin("debts as theirDebts", (qb) =>
 				qb.onRef("theirDebts.userId", "=", "users.id"),
 			)

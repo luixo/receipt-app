@@ -641,13 +641,13 @@ export const insertAccountConnectionIntention = async (
 ) => {
 	const database = assertDatabase(ctx);
 	await database
-		.insertInto("accountConnectionsIntentions")
-		.values({
-			accountId,
-			targetAccountId,
-			userId,
-			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
+		.updateTable("users")
+		.set({
+			connectedAccountId: targetAccountId,
+			...(data.createdAt ? { updatedAt: data.createdAt } : {}),
 		})
+		.where("ownerAccountId", "=", accountId)
+		.where("id", "=", userId)
 		.executeTakeFirstOrThrow();
 };
 

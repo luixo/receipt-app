@@ -2,9 +2,12 @@
 
 exports[`accountConnectionIntentions.remove > functionality > account connection intention is removed 1`] = `
 {
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:bb1fc619-2cf1-4501-afee-242ac49a0db8|targetAccountId:73bd681b-844d-4c94-ac9c-40ddb798633d": undefined,
+  "updated": {
+    "users": {
+      "id:5d31ae04-8dee-4412-891d-da6b70f41666": {
+        "connectedAccountId": null,
+        "updatedAt": "2020-01-01 00:02:00+00",
+      },
     },
   },
 }

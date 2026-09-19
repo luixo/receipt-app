@@ -22,10 +22,28 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const user = await ctx.database
 			.selectFrom("users")
+			.leftJoin("users as reciprocalUsers", (qb) =>
+				qb
+					.onRef(
+						"reciprocalUsers.ownerAccountId",
+						"=",
+						"users.connectedAccountId",
+					)
+					.onRef(
+						"reciprocalUsers.connectedAccountId",
+						"=",
+						"users.ownerAccountId",
+					),
+			)
 			.leftJoin("accounts", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accounts.id"),
 			)
-			.select(["users.id", "accounts.email", "users.ownerAccountId"])
+			.select([
+				"users.id",
+				"accounts.email",
+				"users.ownerAccountId",
+				"reciprocalUsers.id as reciprocalUserId",
+			])
 			.where("users.id", "=", input.userId)
 			.limit(1)
 			.executeTakeFirst();
@@ -41,7 +59,7 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (user.email) {
+		if (user.email && user.reciprocalUserId) {
 			throw new TRPCError({
 				code: "CONFLICT",
 				message: `User "${input.userId}" is already connected to an account with email "${user.email}".`,
@@ -71,14 +89,28 @@ export const procedure = authProcedure
 			});
 		}
 		const intention = await database
-			.selectFrom("accountConnectionsIntentions")
-			.select("userId")
+			.selectFrom("users")
+			.leftJoin("users as reciprocalUsers", (qb) =>
+				qb
+					.onRef(
+						"reciprocalUsers.ownerAccountId",
+						"=",
+						"users.connectedAccountId",
+					)
+					.onRef(
+						"reciprocalUsers.connectedAccountId",
+						"=",
+						"users.ownerAccountId",
+					),
+			)
+			.select("users.id as userId")
 			.where((eb) =>
 				eb.and({
-					accountId: targetAccount.id,
-					targetAccountId: ctx.auth.accountId,
+					"users.ownerAccountId": targetAccount.id,
+					"users.connectedAccountId": ctx.auth.accountId,
 				}),
 			)
+			.where("reciprocalUsers.id", "is", null)
 			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
@@ -90,25 +122,9 @@ export const procedure = authProcedure
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.updateTable("users")
-				.set({ connectedAccountId: ctx.auth.accountId })
-				.where((eb) =>
-					eb.and({ ownerAccountId: targetAccount.id, id: intention.userId }),
-				)
-				.executeTakeFirst();
-			await tx
-				.updateTable("users")
 				.set({ connectedAccountId: targetAccount.id })
 				.where((eb) =>
 					eb.and({ ownerAccountId: ctx.auth.accountId, id: input.userId }),
-				)
-				.executeTakeFirst();
-			await tx
-				.deleteFrom("accountConnectionsIntentions")
-				.where((eb) =>
-					eb.and({
-						accountId: targetAccount.id,
-						targetAccountId: ctx.auth.accountId,
-					}),
 				)
 				.executeTakeFirst();
 		});
