@@ -13,6 +13,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
+export type ReceiptRole = "editor" | "owner" | "viewer";
+
 export interface AccountConnectionsIntention {
   accountId: AccountId;
   createdAt: Generated<Temporal.ZonedDateTime>;
@@ -82,7 +84,7 @@ export interface ReceiptItem {
 export interface ReceiptParticipant {
   createdAt: Generated<Temporal.ZonedDateTime>;
   receiptId: ReceiptId;
-  role: string;
+  role: Generated<ReceiptRole>;
   updatedAt: Generated<Temporal.ZonedDateTime>;
   userId: UserId;
 }

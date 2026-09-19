@@ -12,6 +12,7 @@ if (!databaseUrl) {
 export default defineConfig({
 	kysely: getDatabase({
 		connectionString: databaseUrl,
+		serialization: null,
 	}),
 	migrations: {
 		migrationFolder: "migration/migrations",

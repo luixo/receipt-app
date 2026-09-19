@@ -101,7 +101,9 @@ const getParticipants = (
 			receiptId: input.receiptId,
 			userId: input.userId,
 			role:
-				matchedReceipt.ownerAccountId === input.userId ? "owner" : input.role,
+				matchedReceipt.ownerAccountId === input.userId
+					? ("owner" as const)
+					: input.role,
 		};
 	});
 
