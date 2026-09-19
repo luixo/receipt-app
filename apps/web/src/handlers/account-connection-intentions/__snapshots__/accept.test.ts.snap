@@ -2,19 +2,10 @@
 
 exports[`accountConnectionIntentions.accept > functionality > account connection intention is accepted 1`] = `
 {
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:7a988727-0208-4ed9-b46c-ae2d6734c1eb|targetAccountId:ee616fa5-9be1-457b-8946-614a6c8088b3": undefined,
-    },
-  },
   "updated": {
     "users": {
-      "id:1e7e2626-a3b4-4473-acdf-7ae563571faa": {
-        "connectedAccountId": "7a988727-0208-4ed9-b46c-ae2d6734c1eb",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
-      "id:bb23b271-5cfb-42a1-ac77-a14f2b2ddb50": {
-        "connectedAccountId": "ee616fa5-9be1-457b-8946-614a6c8088b3",
+      "id:847d8b4f-021f-4b1f-be54-add428d31bb0": {
+        "connectedAccountId": "10e66818-f859-4541-9d12-04a16d2e0db3",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -52,19 +43,10 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
       },
     },
   },
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:abe3f702-b036-4293-972b-f7c1a164d9cd|targetAccountId:6cd26971-98bb-4120-808c-36555ab43ede": undefined,
-    },
-  },
   "updated": {
     "users": {
       "id:5bfaa329-134b-441e-a055-d9918cb8660f": {
         "connectedAccountId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
-      "id:9de5bd27-b8d8-46a6-a55c-a05f98926c07": {
-        "connectedAccountId": "6cd26971-98bb-4120-808c-36555ab43ede",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -90,17 +72,8 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
       },
     },
   },
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:0de22606-b399-45ec-bd99-c0c252ecee5e|targetAccountId:3b7312c0-43dd-41fe-8957-c853908b97d1": undefined,
-    },
-  },
   "updated": {
     "users": {
-      "id:909c1133-7d2e-4492-820b-a496bf97c1eb": {
-        "connectedAccountId": "3b7312c0-43dd-41fe-8957-c853908b97d1",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
       "id:e6bb471f-5154-45c7-bca0-b02d3fd14f02": {
         "connectedAccountId": "0de22606-b399-45ec-bd99-c0c252ecee5e",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -112,19 +85,10 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 
 exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > none are auto-accepted 1`] = `
 {
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:11294055-863e-4d7b-93b0-42aabfa4d3d5|targetAccountId:f52d884a-1a45-4e7f-a4f6-940e9f38f143": undefined,
-    },
-  },
   "updated": {
     "users": {
       "id:20546404-a1a4-4d97-b382-7de80b3d9d10": {
         "connectedAccountId": "11294055-863e-4d7b-93b0-42aabfa4d3d5",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
-      "id:a86393bb-e3ba-4064-a9a3-b2b2c1fea1e9": {
-        "connectedAccountId": "f52d884a-1a45-4e7f-a4f6-940e9f38f143",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -150,19 +114,10 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
       },
     },
   },
-  "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:351a0390-a676-4b8c-a007-7baf42b48921|targetAccountId:965c9aa3-5fc1-489f-b80d-e64d92dc5e0b": undefined,
-    },
-  },
   "updated": {
     "users": {
       "id:bf380b97-a198-4307-9d88-639db6c2c666": {
         "connectedAccountId": "351a0390-a676-4b8c-a007-7baf42b48921",
-        "updatedAt": "2020-01-01 00:01:00+00",
-      },
-      "id:d49f8cad-e715-4743-b6a6-fa5a356b69d0": {
-        "connectedAccountId": "965c9aa3-5fc1-489f-b80d-e64d92dc5e0b",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

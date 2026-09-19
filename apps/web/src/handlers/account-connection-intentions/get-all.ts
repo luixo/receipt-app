@@ -10,39 +10,42 @@ export const procedure = authProcedure
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const relatedIntentions = await database
-			.selectFrom("accountConnectionsIntentions")
+			.selectFrom("users")
 			.innerJoin("accounts as sourceAccounts", (qb) =>
-				qb.onRef(
-					"accountConnectionsIntentions.accountId",
-					"=",
-					"sourceAccounts.id",
-				),
+				qb.onRef("users.ownerAccountId", "=", "sourceAccounts.id"),
 			)
 			.innerJoin("accounts as targetAccounts", (qb) =>
-				qb.onRef(
-					"accountConnectionsIntentions.targetAccountId",
-					"=",
-					"targetAccounts.id",
-				),
+				qb.onRef("users.connectedAccountId", "=", "targetAccounts.id"),
 			)
-			.innerJoin("users", (qb) =>
-				qb.onRef("users.id", "=", "accountConnectionsIntentions.userId"),
+			.leftJoin("users as reciprocalUsers", (qb) =>
+				qb
+					.onRef(
+						"reciprocalUsers.ownerAccountId",
+						"=",
+						"users.connectedAccountId",
+					)
+					.onRef(
+						"reciprocalUsers.connectedAccountId",
+						"=",
+						"users.ownerAccountId",
+					),
 			)
+			.where("reciprocalUsers.id", "is", null)
 			.where((eb) =>
-				eb.or({
-					accountId: ctx.auth.accountId,
-					targetAccountId: ctx.auth.accountId,
-				}),
+				eb.or([
+					eb("users.ownerAccountId", "=", ctx.auth.accountId),
+					eb("users.connectedAccountId", "=", ctx.auth.accountId),
+				]),
 			)
 			.select([
-				"accountConnectionsIntentions.accountId",
-				"accountConnectionsIntentions.targetAccountId",
+				"users.ownerAccountId as accountId",
+				"targetAccounts.id as targetAccountId",
 				"users.id as userId",
 				"users.name",
 				"sourceAccounts.email as sourceAccountEmail",
 				"targetAccounts.email as targetAccountEmail",
 			])
-			.orderBy("accountConnectionsIntentions.createdAt", "desc")
+			.orderBy("users.updatedAt", "desc")
 			.orderBy("users.id")
 			.execute();
 		return relatedIntentions.reduce<{

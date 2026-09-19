@@ -12,7 +12,6 @@ import type {
 import {
 	assertDatabase,
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertDebt,
@@ -159,54 +158,24 @@ describe("accountConnectionIntentions.accept", () => {
 
 		test("target intention is not found", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
-
 			const { id: foreignAccountId, email: foreignEmail } =
 				await insertAccount(ctx);
-			const { id: foreignToOuterUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: outerToSelfUserId } = await insertUser(ctx, outerAccountId);
-			const { id: outerToForeignUserId } = await insertUser(
-				ctx,
-				outerAccountId,
-			);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				foreignAccountId,
-				selfToForeignUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				outerAccountId,
-				selfToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				accountId,
-				outerToSelfUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				outerAccountId,
-				foreignToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				foreignAccountId,
-				outerToForeignUserId,
-			);
+			const { id: selfToForeignUserId } = await insertUser(ctx, accountId, {
+				connectedAccountId: foreignAccountId,
+			});
+			await insertUser(ctx, accountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: foreignAccountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -224,62 +193,28 @@ describe("accountConnectionIntentions.accept", () => {
 	describe("functionality", () => {
 		test("account connection intention is accepted", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
-
 			const {
 				id: foreignAccountId,
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,
 			} = await insertAccount(ctx);
-			const { id: foreignToSelfUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-			const { id: foreignToOuterUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: outerToSelfUserId } = await insertUser(ctx, outerAccountId);
-			const { id: outerToForeignUserId } = await insertUser(
-				ctx,
-				outerAccountId,
-			);
-
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				accountId,
-				foreignToSelfUserId,
-			);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				outerAccountId,
-				selfToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				accountId,
-				outerToSelfUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				outerAccountId,
-				foreignToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				foreignAccountId,
-				outerToForeignUserId,
-			);
+			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
+			await insertUser(ctx, accountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: foreignAccountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -297,24 +232,15 @@ describe("accountConnectionIntentions.accept", () => {
 
 		test("empty avatar url is returned", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-
 			const {
 				id: foreignAccountId,
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,
 			} = await insertAccount(ctx, { avatarUrl: null });
-			const { id: foreignToSelfUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				accountId,
-				foreignToSelfUserId,
-			);
+			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: accountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -362,6 +288,7 @@ describe("accountConnectionIntentions.accept", () => {
 				const { id: foreignToSelfUserId } = await insertUser(
 					ctx,
 					foreignAccountId,
+					{ connectedAccountId: selfAccountId },
 				);
 				const { id: extraForeignForeignUserId } = await insertUser(
 					ctx,
@@ -382,13 +309,6 @@ describe("accountConnectionIntentions.accept", () => {
 				// Verify non-related debts don't get accepted
 				await insertDebt(ctx, selfAccountId, extraSelfForeignUserId);
 				await insertDebt(ctx, foreignAccountId, extraForeignForeignUserId);
-
-				await insertAccountConnectionIntention(
-					ctx,
-					foreignAccountId,
-					selfAccountId,
-					foreignToSelfUserId,
-				);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>

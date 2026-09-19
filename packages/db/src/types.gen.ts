@@ -15,14 +15,6 @@ export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type ReceiptRole = "editor" | "owner" | "viewer";
 
-export interface AccountConnectionsIntention {
-  accountId: AccountId;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  targetAccountId: AccountId;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
-}
-
 export interface Account {
   avatarUrl: string | null;
   confirmationToken: string | null;
@@ -127,7 +119,6 @@ export interface User {
 }
 
 export interface DB {
-  accountConnectionsIntentions: AccountConnectionsIntention;
   accounts: Account;
   accountSettings: AccountSetting;
   debts: Debt;

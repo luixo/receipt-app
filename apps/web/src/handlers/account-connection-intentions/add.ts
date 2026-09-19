@@ -26,6 +26,19 @@ const getTargetUsers = async (
 			"in",
 			intentions.map((intention) => intention.userId),
 		)
+		.leftJoin("users as reciprocalUsers", (qb) =>
+			qb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
+		)
 		.leftJoin("accounts", (qb) =>
 			qb.onRef("accounts.id", "=", "users.connectedAccountId"),
 		)
@@ -34,6 +47,7 @@ const getTargetUsers = async (
 			"users.name",
 			"accounts.email",
 			"users.ownerAccountId",
+			"reciprocalUsers.id as reciprocalUserId",
 		])
 		.execute();
 
@@ -53,11 +67,17 @@ const getTargetAccounts = async (
 				.onRef("users.connectedAccountId", "=", "accounts.id")
 				.on("users.ownerAccountId", "=", ctx.auth.accountId),
 		)
+		.leftJoin("users as reciprocalUsers", (qb) =>
+			qb
+				.onRef("reciprocalUsers.ownerAccountId", "=", "accounts.id")
+				.on("reciprocalUsers.connectedAccountId", "=", ctx.auth.accountId),
+		)
 		.select([
 			"accounts.id",
 			"accounts.avatarUrl",
 			"accounts.email",
 			"users.name as userName",
+			"reciprocalUsers.id as reciprocalUserId",
 		])
 		.execute();
 
@@ -72,28 +92,40 @@ const getDirectIntentions = async (
 		return [];
 	}
 	return ctx.database
-		.selectFrom("accountConnectionsIntentions")
-		.where("accountConnectionsIntentions.accountId", "=", ctx.auth.accountId)
+		.selectFrom("users")
+		.leftJoin("users as reciprocalUsers", (qb) =>
+			qb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
+		)
+		.where("users.ownerAccountId", "=", ctx.auth.accountId)
+		.where("users.connectedAccountId", "is not", null)
+		.where("reciprocalUsers.id", "is", null)
 		.where((qb) =>
 			qb.or([
 				qb(
-					"accountConnectionsIntentions.targetAccountId",
+					"users.connectedAccountId",
 					"in",
 					targetAccounts.map(({ id }) => id),
 				),
 				qb(
-					"accountConnectionsIntentions.userId",
+					"users.id",
 					"in",
 					targetUsers.map(({ id }) => id),
 				),
 			]),
 		)
-		.innerJoin("users", (qb) =>
-			qb.onRef("users.id", "=", "accountConnectionsIntentions.userId"),
-		)
 		.select([
-			"accountConnectionsIntentions.userId",
-			"accountConnectionsIntentions.targetAccountId",
+			"users.id as userId",
+			"users.connectedAccountId as targetAccountId",
 			"users.name",
 		])
 		.execute();
@@ -108,21 +140,28 @@ const getViceVersaIntentions = async (
 		return [];
 	}
 	return ctx.database
-		.selectFrom("accountConnectionsIntentions")
+		.selectFrom("users")
+		.leftJoin("users as reciprocalUsers", (qb) =>
+			qb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
+		)
 		.where(
-			"accountConnectionsIntentions.accountId",
+			"users.ownerAccountId",
 			"in",
 			targetAccounts.map(({ id }) => id),
 		)
-		.where(
-			"accountConnectionsIntentions.targetAccountId",
-			"=",
-			ctx.auth.accountId,
-		)
-		.select([
-			"accountConnectionsIntentions.userId",
-			"accountConnectionsIntentions.accountId",
-		])
+		.where("users.connectedAccountId", "=", ctx.auth.accountId)
+		.where("reciprocalUsers.id", "is", null)
+		.select(["users.id as userId", "users.ownerAccountId as accountId"])
 		.execute();
 };
 
@@ -172,7 +211,7 @@ const getIntentionsOrErrors = (
 				message: `User "${intention.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (targetUser.email) {
+		if (targetUser.email && targetUser.reciprocalUserId) {
 			return new TRPCError({
 				code: "CONFLICT",
 				message: `User "${intention.userId}" is already connected to account "${targetUser.email}".`,
@@ -187,7 +226,7 @@ const getIntentionsOrErrors = (
 				message: `Account with email "${intention.email.original}" does not exist.`,
 			});
 		}
-		if (targetAccount.userName) {
+		if (targetAccount.userName && targetAccount.reciprocalUserId) {
 			return new TRPCError({
 				code: "CONFLICT",
 				message: `Account with email "${intention.email.original}" is already connected to user "${targetAccount.userName}".`,
@@ -283,19 +322,6 @@ const insertViceVersaIntentions = async (
 					)
 					.executeTakeFirst(),
 			),
-			tx
-				.deleteFrom("accountConnectionsIntentions")
-				.where(
-					"accountConnectionsIntentions.targetAccountId",
-					"=",
-					ctx.auth.accountId,
-				)
-				.where(
-					"accountConnectionsIntentions.accountId",
-					"in",
-					intentions.map((intention) => intention.targetAccount.id),
-				)
-				.executeTakeFirst(),
 		]),
 	);
 };
@@ -308,15 +334,19 @@ const insertDirectIntentions = async (
 		return;
 	}
 	await ctx.database
-		.insertInto("accountConnectionsIntentions")
-		.values(
-			intentions.map((intention) => ({
-				accountId: ctx.auth.accountId,
-				targetAccountId: intention.targetAccount.id,
-				userId: intention.asUser.id,
-			})),
-		)
-		.execute();
+		.transaction()
+		.execute((tx) =>
+			Promise.all(
+				intentions.map((intention) =>
+					tx
+						.updateTable("users")
+						.set({ connectedAccountId: intention.targetAccount.id })
+						.where("ownerAccountId", "=", ctx.auth.accountId)
+						.where("id", "=", intention.asUser.id)
+						.executeTakeFirst(),
+				),
+			),
+		);
 };
 
 type IntentionOutput = {

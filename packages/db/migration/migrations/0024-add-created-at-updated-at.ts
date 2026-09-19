@@ -70,11 +70,17 @@ const addAccountConnectionsIntentionsUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
+	// oxlint-disable-next-line typescript/no-unsafe-call
 	await db
+		// @ts-expect-error These types don't exist anymore
 		.updateTable("accountConnectionsIntentions")
+		// @ts-expect-error These types don't exist anymore
 		.set({
+			// @ts-expect-error These types don't exist anymore
+			// oxlint-disable-next-line typescript/no-unsafe-return typescript/no-unsafe-call typescript/no-unsafe-member-access
 			updatedAt: (eb) => eb.ref("accountConnectionsIntentions.createdAt"),
 		})
+		// oxlint-disable-next-line typescript/no-unsafe-member-access
 		.execute();
 	await sql`
 	CREATE TRIGGER ${sql.id(

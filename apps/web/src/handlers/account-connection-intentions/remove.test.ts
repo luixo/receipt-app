@@ -4,7 +4,6 @@ import { describe, expect } from "vitest";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -46,56 +45,23 @@ describe("accountConnectionIntentions.remove", () => {
 		test("target intention is not found", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
-			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
-
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignToSelfUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-			const { id: foreignToOuterUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: outerToSelfUserId } = await insertUser(ctx, outerAccountId);
-			const { id: outerToForeignUserId } = await insertUser(
-				ctx,
-				outerAccountId,
-			);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				accountId,
-				foreignToSelfUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				outerAccountId,
-				selfToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				accountId,
-				outerToSelfUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				outerAccountId,
-				foreignToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				foreignAccountId,
-				outerToForeignUserId,
-			);
+			await insertUser(ctx, accountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: foreignAccountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -112,54 +78,23 @@ describe("accountConnectionIntentions.remove", () => {
 	describe("functionality", () => {
 		test("account connection intention is removed", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignToOuterUserId } = await insertUser(
-				ctx,
-				foreignAccountId,
-			);
-
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: outerToSelfUserId } = await insertUser(ctx, outerAccountId);
-			const { id: outerToForeignUserId } = await insertUser(
-				ctx,
-				outerAccountId,
-			);
-
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				foreignAccountId,
-				selfToForeignUserId,
-			);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				outerAccountId,
-				selfToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				accountId,
-				outerToSelfUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				foreignAccountId,
-				outerAccountId,
-				foreignToOuterUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				outerAccountId,
-				foreignAccountId,
-				outerToForeignUserId,
-			);
+			await insertUser(ctx, accountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, accountId, {
+				connectedAccountId: foreignAccountId,
+			});
+			await insertUser(ctx, foreignAccountId, {
+				connectedAccountId: outerAccountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, outerAccountId, {
+				connectedAccountId: foreignAccountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>

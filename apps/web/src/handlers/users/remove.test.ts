@@ -4,7 +4,6 @@ import { describe } from "vitest";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertDebt,
 	insertReceipt,
@@ -89,17 +88,11 @@ describe("users.remove", () => {
 		test("user is removed", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: anotherAccountId } = await insertAccount(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: userId } = await insertUser(ctx, accountId, {
+				connectedAccountId: anotherAccountId,
+			});
 			// Verify other users are not affected
 			const { id: otherUserId } = await insertUser(ctx, accountId);
-			// Verify account connection intention is removed on user removal
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				anotherAccountId,
-				userId,
-			);
-
 			// Verify receipt is not affected
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptParticipant(ctx, receiptId, userId);

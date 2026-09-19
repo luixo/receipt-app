@@ -33,7 +33,6 @@ const TYPES: Record<
 		expression: "AccountId",
 		importSource: "~db/ids",
 		tables: {
-			accountConnectionsIntentions: ["accountId", "targetAccountId"],
 			accountSettings: ["accountId"],
 			accounts: ["id"],
 			debts: ["ownerAccountId"],
@@ -92,7 +91,6 @@ const TYPES: Record<
 		expression: "UserId",
 		importSource: "~db/ids",
 		tables: {
-			accountConnectionsIntentions: ["userId"],
 			debts: ["userId"],
 			receiptItemConsumers: ["userId"],
 			receiptParticipants: ["userId"],

@@ -3,7 +3,6 @@ import { describe, expect } from "vitest";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -25,17 +24,10 @@ describe("accountConnectionIntentions.getAll", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 
 			const { id: firstAccountId } = await insertAccount(ctx);
-			const { id: firstToSecondUserId } = await insertUser(ctx, firstAccountId);
-
 			const { id: secondAccountId } = await insertAccount(ctx);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				firstAccountId,
-				secondAccountId,
-				firstToSecondUserId,
-			);
+			await insertUser(ctx, firstAccountId, {
+				connectedAccountId: secondAccountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
@@ -47,69 +39,44 @@ describe("accountConnectionIntentions.getAll", () => {
 
 		test("returns account connection intentions", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: outboundUserId, name: outboundUserName } = await insertUser(
-				ctx,
-				accountId,
-			);
-			const { id: secondOutboundUserId, name: secondOutboundUserName } =
-				await insertUser(ctx, accountId);
-
 			const { id: inboundAccountId, email: inboundEmail } =
 				await insertAccount(ctx);
-			const { id: inboundUserId } = await insertUser(ctx, inboundAccountId);
-			const { id: inboundToOutboundUserId } = await insertUser(
-				ctx,
-				inboundAccountId,
-			);
-
 			const { id: secondInboundAccountId, email: secondInboundEmail } =
 				await insertAccount(ctx);
-			const { id: secondInboundUserId } = await insertUser(
-				ctx,
-				secondInboundAccountId,
-			);
-
 			const { id: outboundAccountId, email: outboundEmail } =
 				await insertAccount(ctx);
 			const { id: secondOutboundAccountId, email: secondOutboundEmail } =
 				await insertAccount(ctx);
 
-			await insertAccountConnectionIntention(
+			const { id: outboundUserId, name: outboundUserName } = await insertUser(
 				ctx,
 				accountId,
-				outboundAccountId,
-				outboundUserId,
+				{ connectedAccountId: outboundAccountId },
 			);
-			await insertAccountConnectionIntention(
-				ctx,
-				accountId,
-				secondOutboundAccountId,
-				secondOutboundUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				inboundAccountId,
-				accountId,
-				inboundUserId,
-			);
-			await insertAccountConnectionIntention(
-				ctx,
-				secondInboundAccountId,
-				accountId,
-				secondInboundUserId,
-			);
-
-			// Verify other account connection intentions don't affect error
-			await insertAccountConnectionIntention(
-				ctx,
-				inboundAccountId,
-				outboundAccountId,
-				inboundToOutboundUserId,
-			);
+			const { id: secondOutboundUserId, name: secondOutboundUserName } =
+				await insertUser(ctx, accountId, {
+					connectedAccountId: secondOutboundAccountId,
+				});
+			await insertUser(ctx, inboundAccountId, {
+				connectedAccountId: accountId,
+			});
+			await insertUser(ctx, inboundAccountId, {
+				connectedAccountId: outboundAccountId,
+			});
+			await insertUser(ctx, secondInboundAccountId, {
+				connectedAccountId: accountId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toStrictEqual<typeof result>({
+			expect({
+				inbound: result.inbound.toSorted((a, b) =>
+					a.account.id.localeCompare(b.account.id),
+				),
+				outbound: result.outbound.toSorted((a, b) =>
+					a.account.id.localeCompare(b.account.id),
+				),
+			}).toStrictEqual<typeof result>({
 				inbound: [
 					{ account: { id: inboundAccountId, email: inboundEmail } },
 					{

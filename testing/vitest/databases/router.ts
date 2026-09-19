@@ -23,7 +23,6 @@ const POSTGRES_TEMP_DIR = "/temp_pgdata";
 const ORDERS: {
 	[K in keyof DB]: keyof DB[K] | (keyof DB[K])[];
 } = {
-	accountConnectionsIntentions: ["accountId", "targetAccountId"],
 	accounts: "id",
 	accountSettings: "accountId",
 	debts: ["id", "ownerAccountId"],
