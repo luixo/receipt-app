@@ -3,9 +3,6 @@
 exports[`users.remove > functionality > user is removed 1`] = `
 {
   "deleted": {
-    "accountConnectionsIntentions": {
-      "accountId:411b3a7a-a9ca-4e57-b3a2-3e31b87e7935|targetAccountId:214383fc-f26c-4a01-b087-0a9cc15afe1a": undefined,
-    },
     "debts": {
       "id:d740dbc7-5c4c-44f5-afed-dbfe319dbecc|ownerAccountId:411b3a7a-a9ca-4e57-b3a2-3e31b87e7935": undefined,
     },
@@ -19,6 +16,5 @@ exports[`users.remove > functionality > user is removed 1`] = `
       "id:5c2ba556-ad44-4f74-84bc-f4c1e30f794f": undefined,
     },
   },
-  "updated": {},
 }
 `;

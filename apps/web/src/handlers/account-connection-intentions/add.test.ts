@@ -5,7 +5,6 @@ import { describe, expect } from "vitest";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertUser,
@@ -171,13 +170,10 @@ describe("accountConnectionIntentions.add", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { email: targetEmail } = await insertAccount(ctx);
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
-				// Self account's intention to connect to foreign account
-				await insertAccountConnectionIntention(
+				const { id: userId, name: userName } = await insertUser(
 					ctx,
 					accountId,
-					otherAccountId,
-					userId,
+					{ connectedAccountId: otherAccountId },
 				);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -196,17 +192,9 @@ describe("accountConnectionIntentions.add", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId, email: otherEmail } =
 					await insertAccount(ctx);
-				const { id: previousUserId, name: userName } = await insertUser(
-					ctx,
-					accountId,
-				);
-				// Self account's intention to connect to foreign account
-				await insertAccountConnectionIntention(
-					ctx,
-					accountId,
-					otherAccountId,
-					previousUserId,
-				);
+				const { name: userName } = await insertUser(ctx, accountId, {
+					connectedAccountId: otherAccountId,
+				});
 
 				const { id: userId } = await insertUser(ctx, accountId);
 
@@ -317,14 +305,9 @@ describe("accountConnectionIntentions.add", () => {
 					avatarUrl: otherAvatarUrl,
 				} = await insertAccount(ctx);
 
-				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
-				// Foreign account's intention to connect to self account
-				await insertAccountConnectionIntention(
-					ctx,
-					otherAccountId,
-					accountId,
-					otherUserId,
-				);
+				await insertUser(ctx, otherAccountId, {
+					connectedAccountId: accountId,
+				});
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
@@ -350,14 +333,9 @@ describe("accountConnectionIntentions.add", () => {
 					{ avatarUrl: null },
 				);
 
-				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
-				// Foreign account's intention to connect to self account
-				await insertAccountConnectionIntention(
-					ctx,
-					otherAccountId,
-					accountId,
-					otherUserId,
-				);
+				await insertUser(ctx, otherAccountId, {
+					connectedAccountId: accountId,
+				});
 
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
@@ -432,14 +410,7 @@ describe("accountConnectionIntentions.add", () => {
 				{ avatarUrl: null },
 			);
 
-			const { id: otherUserId } = await insertUser(ctx, otherAccountId);
-			// Foreign account's intention to connect to self account
-			await insertAccountConnectionIntention(
-				ctx,
-				otherAccountId,
-				accountId,
-				otherUserId,
-			);
+			await insertUser(ctx, otherAccountId, { connectedAccountId: accountId });
 
 			const { id: userId, name: userName } = await insertUser(ctx, accountId);
 

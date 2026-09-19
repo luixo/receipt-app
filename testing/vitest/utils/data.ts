@@ -40,6 +40,7 @@ export const insertAccountSettings = async (
 };
 
 type UserData = {
+	connectedAccountId?: AccountId;
 	id?: UserId;
 	name?: string;
 	publicName?: string;
@@ -51,7 +52,6 @@ export const insertUser = async (
 	data: UserData = {},
 ) => {
 	const database = assertDatabase(ctx);
-	const extendedData = data as UserData & { connectedAccountId?: AccountId };
 	const { id, name } = await database
 		.insertInto("users")
 		.values({
@@ -59,7 +59,7 @@ export const insertUser = async (
 			ownerAccountId,
 			name: data.name || faker.person.firstName(),
 			publicName: data.publicName,
-			connectedAccountId: extendedData.connectedAccountId,
+			connectedAccountId: data.connectedAccountId,
 		})
 		.returning(["id", "name"])
 		.executeTakeFirstOrThrow();
@@ -626,29 +626,6 @@ export const insertReceiptItemPayer = async (
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
 	return { part, createdAt, userId, itemId };
-};
-
-type AccountConnectionIntentionData = {
-	createdAt?: Temporal.ZonedDateTime;
-};
-
-export const insertAccountConnectionIntention = async (
-	ctx: TestContext,
-	accountId: AccountId,
-	targetAccountId: AccountId,
-	userId: UserId,
-	data: AccountConnectionIntentionData = {},
-) => {
-	const database = assertDatabase(ctx);
-	await database
-		.insertInto("accountConnectionsIntentions")
-		.values({
-			accountId,
-			targetAccountId,
-			userId,
-			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
-		})
-		.executeTakeFirstOrThrow();
 };
 
 type AccountWithSessionData = {

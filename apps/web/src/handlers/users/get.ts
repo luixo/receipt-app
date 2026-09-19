@@ -16,6 +16,19 @@ const fetchUsers = async (
 		.leftJoin("accounts", (qb) =>
 			qb.onRef("connectedAccountId", "=", "accounts.id"),
 		)
+		.leftJoin("users as reciprocalUsers", (qb) =>
+			qb
+				.onRef(
+					"reciprocalUsers.ownerAccountId",
+					"=",
+					"users.connectedAccountId",
+				)
+				.onRef(
+					"reciprocalUsers.connectedAccountId",
+					"=",
+					"users.ownerAccountId",
+				),
+		)
 		.where("users.id", "in", ids)
 		.where("users.ownerAccountId", "=", auth.accountId)
 		.select([
@@ -25,6 +38,7 @@ const fetchUsers = async (
 			"accounts.id as accountId",
 			"accounts.avatarUrl",
 			"accounts.email",
+			"reciprocalUsers.id as reciprocalUserId",
 		])
 		.execute();
 
@@ -33,7 +47,9 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => ({
 	name: user.name,
 	publicName: user.publicName === null ? undefined : user.publicName,
 	connectedAccount:
-		user.email === null || user.accountId === null
+		user.email === null ||
+		user.accountId === null ||
+		user.reciprocalUserId === null
 			? undefined
 			: ({
 					id: user.accountId,
