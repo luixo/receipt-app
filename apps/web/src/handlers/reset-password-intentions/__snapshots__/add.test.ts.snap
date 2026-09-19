@@ -18,7 +18,7 @@ exports[`resetPasswordIntentions.add > functionality > reset password intention 
 
 exports[`resetPasswordIntentions.add > functionality > reset password intention added 2`] = `
 "
-	<!doctype html lang="en">
+	<!doctype html>
 	<html lang="en">
 		<head>
 			<meta name="viewport" content="width=device-width" />
