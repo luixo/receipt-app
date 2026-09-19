@@ -10,7 +10,6 @@ import {
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertUser,
@@ -126,14 +125,9 @@ describe("users.add", () => {
 					await insertAccount(ctx);
 				// Self account
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
-				// Self account's intention to connect to foreign account
-				await insertAccountConnectionIntention(
-					ctx,
-					accountId,
-					otherAccountId,
-					userId,
-				);
+				const { name: userName } = await insertUser(ctx, accountId, {
+					connectedAccountId: otherAccountId,
+				});
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -220,16 +214,12 @@ describe("users.add", () => {
 					email: otherEmail,
 					avatarUrl: otherAvatarUrl,
 				} = await insertAccount(ctx);
-				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
 				// Self account
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				// Foreign account's intention to connect to self account
-				await insertAccountConnectionIntention(
-					ctx,
-					otherAccountId,
-					accountId,
-					otherUserId,
-				);
+				await insertUser(ctx, otherAccountId, {
+					connectedAccountId: accountId,
+				});
 
 				const asName = faker.person.fullName();
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -302,14 +292,10 @@ describe("users.add", () => {
 				ctx,
 				{ avatarUrl: null },
 			);
-			const { id: otherUserId } = await insertUser(ctx, otherAccountId);
 			// Foreign account's intention to connect to self account
-			await insertAccountConnectionIntention(
-				ctx,
-				otherAccountId,
-				accountId,
-				otherUserId,
-			);
+			await insertUser(ctx, otherAccountId, {
+				connectedAccountId: accountId,
+			});
 
 			const asName = faker.person.fullName();
 			const anotherAsName = faker.person.fullName();
