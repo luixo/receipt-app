@@ -1,12 +1,12 @@
 import type React from "react";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { ConnectedAccount } from "~app/trpc-types";
 import { Avatar } from "~components/avatar";
 import type { UserId } from "~db/ids";
 
 type UserAvatarInput = {
 	id: UserId;
-	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
+	connectedAccount?: ConnectedAccount;
 };
 
 type Props = Omit<React.ComponentProps<typeof Avatar>, "hashId" | "image"> &

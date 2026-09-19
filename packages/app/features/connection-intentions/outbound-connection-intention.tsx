@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { AccountConnectionIntentions } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
@@ -33,7 +33,7 @@ export const SkeletonOutboundConnectionIntention: React.FC = () => {
 };
 
 type Props = {
-	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["outbound"][number];
+	intention: AccountConnectionIntentions["outbound"][number];
 };
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {

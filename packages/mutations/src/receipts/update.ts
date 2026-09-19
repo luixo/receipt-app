@@ -1,15 +1,12 @@
-import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCMutationInput } from "~app/trpc";
+import type { Receipt } from "~app/trpc-types";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
-type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
-
 const applyUpdate =
-	(
-		update: TRPCMutationInput<"receipts.update">["update"],
-	): UpdateFn<ReceiptSnapshot> =>
+	(update: TRPCMutationInput<"receipts.update">["update"]): UpdateFn<Receipt> =>
 	(item) => {
 		switch (update.type) {
 			case "name":
@@ -24,7 +21,7 @@ const applyUpdate =
 const getRevert =
 	(
 		update: TRPCMutationInput<"receipts.update">["update"],
-	): SnapshotFn<ReceiptSnapshot> =>
+	): SnapshotFn<Receipt> =>
 	(snapshot) =>
 	(receipt) => {
 		switch (update.type) {
