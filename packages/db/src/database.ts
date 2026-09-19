@@ -96,6 +96,8 @@ const databaseISOToCalendarISO = (input: string, addTimezone?: boolean) => {
 			// Data from DB will have `+00` timezone while expected timestamp will have `UTC` timezone
 			return `${separatedInput}[${isUTC ? "UTC" : match[0]}]`;
 		}
+		return `${separatedInput}[UTC]`;
+
 		/* c8 ignore stop */
 	}
 	return separatedInput;
