@@ -3,13 +3,13 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Receipt } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { DateInput } from "~components/date-input";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receipt: Receipt;
 	isLoading: boolean;
 };
 

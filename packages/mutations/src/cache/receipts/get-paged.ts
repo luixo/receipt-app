@@ -1,4 +1,5 @@
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
+import type { ReceiptPageEntry } from "~app/trpc-types";
 import type { ReceiptId } from "~db/ids";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
@@ -12,8 +13,6 @@ type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
 }>;
 type Input = TRPCQueryInput<"receipts.getPaged">;
-type Output = TRPCQueryOutput<"receipts.getPaged">;
-type OutputItem = Output["items"][number];
 
 const invalidate = ({ queryClient, procedure }: Controller) => {
 	const inputs = getAllInputs<"receipts.getPaged">(
@@ -27,14 +26,14 @@ const invalidate = ({ queryClient, procedure }: Controller) => {
 
 const updatePage =
 	({ queryClient, procedure }: Controller, input: Input) =>
-	(updater: UpdateFn<Output>) =>
+	(updater: UpdateFn<TRPCQueryOutput<"receipts.getPaged">>) =>
 		queryClient.setQueryData(procedure.queryKey(input), (result) =>
 			getUpdatedData(result, updater),
 		);
 
 const updatePages =
 	(controller: Controller) =>
-	(updater: UpdateFn<OutputItem[], OutputItem[], Input>) => {
+	(updater: UpdateFn<ReceiptPageEntry[], ReceiptPageEntry[], Input>) => {
 		const inputs = getAllInputs<"receipts.getPaged">(
 			controller.queryClient,
 			controller.procedure.queryKey(),

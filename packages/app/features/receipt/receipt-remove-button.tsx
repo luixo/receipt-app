@@ -6,12 +6,12 @@ import { useTranslation } from "react-i18next";
 import { RemoveButton } from "~app/components/remove-button";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { Receipt } from "~app/trpc-types";
 import { useTRPC } from "~app/utils/trpc";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receipt: Receipt;
 	setLoading: (nextLoading: boolean) => void;
 } & Omit<React.ComponentProps<typeof RemoveButton>, "mutation" | "onRemove">;
 

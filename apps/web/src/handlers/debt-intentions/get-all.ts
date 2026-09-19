@@ -1,26 +1,8 @@
 import type { Selectable } from "kysely";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
-
-type InboundIntention = {
-	id: DebtId;
-	userId: UserId;
-	currencyCode: CurrencyCode;
-	amount: number;
-	timestamp: Temporal.PlainDate;
-	updatedAt: Temporal.ZonedDateTime;
-	note: string;
-	receiptId?: ReceiptId;
-	current?: {
-		amount: number;
-		currencyCode: CurrencyCode;
-		timestamp: Temporal.PlainDate;
-	};
-};
 
 export const procedure = authProcedure
 	.meta({
@@ -102,7 +84,7 @@ export const procedure = authProcedure
 			>()
 			.execute();
 		return {
-			items: debts.map<InboundIntention>((debt) => ({
+			items: debts.map((debt) => ({
 				id: debt.id,
 				userId: debt.userId,
 				amount: -Number(debt.amount),
@@ -110,14 +92,16 @@ export const procedure = authProcedure
 				updatedAt: debt.updatedAt,
 				timestamp: debt.timestamp,
 				note: debt.note,
-				receiptId: debt.receiptId || undefined,
-				current: debt.selfAmount
+				...(debt.receiptId ? { receiptId: debt.receiptId } : {}),
+				...(debt.selfAmount
 					? {
-							amount: Number(debt.selfAmount),
-							timestamp: debt.selfTimestamp,
-							currencyCode: debt.selfCurrencyCode,
+							current: {
+								amount: Number(debt.selfAmount),
+								timestamp: debt.selfTimestamp,
+								currencyCode: debt.selfCurrencyCode,
+							},
 						}
-					: undefined,
+					: {}),
 			})),
 		};
 	});

@@ -21,7 +21,8 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useSubscribeToQueryUpdate } from "~app/hooks/use-subscribe-to-query";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryInput } from "~app/trpc";
+import type { Debt, DebtsByUserPage } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type {
 	SearchParamState,
@@ -57,7 +58,7 @@ const useDebtsByIds = (debtIds: DebtId[]) => {
 			});
 		const getMatchedDebt = (id: DebtId) =>
 			cachedQueries.find((cachedQuery) => cachedQuery.id === id);
-		const consecutiveDebts: TRPCQueryOutput<"debts.get">[] = [];
+		const consecutiveDebts: Debt[] = [];
 		for (const debtId of debtIds) {
 			const matchedDebt = getMatchedDebt(debtId);
 			if (!matchedDebt?.data) {
@@ -88,7 +89,7 @@ const useDebtsByIds = (debtIds: DebtId[]) => {
 	return debts;
 };
 
-const useDividers = (debts: TRPCQueryOutput<"debts.get">[], userId: UserId) => {
+const useDividers = (debts: Debt[], userId: UserId) => {
 	const trpc = useTRPC();
 	const { data: aggregatedDebts = { items: [] } } = useQuery(
 		trpc.debts.getAllUser.queryOptions({ userId }),
@@ -163,7 +164,7 @@ const useConsecutiveDebtIds = ({
 			});
 		const getMatchedElement = (cursor: number) =>
 			cachedQueries.find((cachedQuery) => cachedQuery.input.cursor === cursor);
-		const consecutivePages: TRPCQueryOutput<"debts.getByUserPaged">[] = [];
+		const consecutivePages: DebtsByUserPage[] = [];
 		for (
 			let lookupCursor = 0;
 			lookupCursor <= currentCursor;
@@ -212,7 +213,7 @@ const UserDebtsListWrapper: React.FC<{ children: ViewReactNode }> = ({
 
 const UserDebtsPreviews: React.FC<{
 	userId: UserId;
-	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
+	debtIds: DebtsByUserPage["items"];
 	consecutiveDebtIds: DebtId[];
 	selectedDebtIds: DebtId[];
 	setSelectedDebtIds: React.Dispatch<React.SetStateAction<DebtId[]>>;

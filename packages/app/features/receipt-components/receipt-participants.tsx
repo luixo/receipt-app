@@ -6,7 +6,7 @@ import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { ReceiptDebts } from "~app/trpc-types";
 import { AvatarGroup } from "~components/avatar";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -139,7 +139,7 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 };
 
 export const ReceiptParticipants: React.FC<{
-	debts?: TRPCQueryOutput<"receipts.get">["debts"];
+	debts?: ReceiptDebts;
 }> = ({ debts }) => {
 	const { t } = useTranslation("receipts");
 	const { receiptDisabled, participants, selfUserId, getUsersSuggestOptions } =
