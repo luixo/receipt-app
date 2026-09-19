@@ -10,10 +10,10 @@ import type {
 	SessionId,
 	UserId,
 } from "~db/ids";
+import type { ReceiptRole } from "~db/types.gen";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import { generatePasswordData } from "~utils/server/crypto";
-import type { Role } from "~web/handlers/receipts/utils";
 
 export const assertDatabase = (ctx: TestContext) => {
 	assert(ctx.database, "This test required DB to exist");
@@ -468,7 +468,7 @@ export const insertReceipt = async (
 };
 
 type ReceiptParticipantData = {
-	role?: Exclude<Role, "owner">;
+	role?: Exclude<ReceiptRole, "owner">;
 	createdAt?: Temporal.ZonedDateTime;
 };
 
@@ -496,7 +496,7 @@ export const insertReceiptParticipant = async (
 		})
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
-	return { createdAt, userId, role: role as Role };
+	return { createdAt, userId, role };
 };
 
 type ReceiptPayerData = {
