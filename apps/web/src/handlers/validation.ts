@@ -5,9 +5,12 @@ import { flavored } from "~app/utils/validation";
 import type { DebtId, ReceiptId, ReceiptItemId, SessionId } from "~db/ids";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
-export const assignableRoleSchema = z.literal(["viewer", "editor"]);
+export const assignableRoleSchema = z.union([
+	z.literal("viewer"),
+	z.literal("editor"),
+]);
 
-export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
+export const roleSchema = z.union([assignableRoleSchema, z.literal("owner")]);
 
 export const currencyCodeSchema = flavored<CurrencyCode>(
 	z.string().toUpperCase(),

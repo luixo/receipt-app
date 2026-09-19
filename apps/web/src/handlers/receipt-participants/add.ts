@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import type { ReceiptRole } from "~db/types.gen";
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -97,11 +98,12 @@ const getParticipants = (
 			});
 		}
 
+		const role: ReceiptRole =
+			matchedReceipt.ownerAccountId === input.userId ? "owner" : input.role;
 		return {
 			receiptId: input.receiptId,
 			userId: input.userId,
-			role:
-				matchedReceipt.ownerAccountId === input.userId ? "owner" : input.role,
+			role,
 		};
 	});
 
