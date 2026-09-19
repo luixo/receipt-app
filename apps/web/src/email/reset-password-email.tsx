@@ -1,33 +1,36 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { Email } from "./email";
 
 type Props = {
 	token: string;
 };
 
-export const ResetPasswordEmail: React.FC<Props> = ({ token }) => (
-	<Email
-		title="Receipt App reset password"
-		footerChildren={[
-			{ type: "text", text: "This link will expire in the next 24 hours." },
-		]}
-	>
-		{[
-			{ type: "text", text: "Forgot your password?", size: "h3" },
-			{
-				type: "text",
-				text: "We received a request to reset your password.",
-			},
-			{
-				type: "action",
-				text: "Reset my password",
-				href: `reset-password?token=${token}`,
-			},
-			{
-				type: "text",
-				text: "Didn’t request a password reset? You can ignore this message.",
-			},
-		]}
-	</Email>
-);
+export const ResetPasswordEmail: React.FC<Props> = ({ token }) => {
+	const { t } = useTranslation("email");
+	return (
+		<Email
+			title={t("resetPassword.title")}
+			footerChildren={[{ type: "text", text: t("resetPassword.expiration") }]}
+		>
+			{[
+				{ type: "text", text: t("resetPassword.forgot"), size: "h3" },
+				{
+					type: "text",
+					text: t("resetPassword.requestReceived"),
+				},
+				{
+					type: "action",
+					text: t("resetPassword.reset"),
+					href: `reset-password?token=${token}`,
+				},
+				{
+					type: "text",
+					text: t("resetPassword.notRequested"),
+				},
+			]}
+		</Email>
+	);
+};
