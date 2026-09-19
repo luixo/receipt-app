@@ -9,6 +9,9 @@ const localDir = import.meta.dirname;
 const rootDir = path.join(localDir, "../../../");
 const coverageDir = path.join(rootDir, "testing/playwright/coverage");
 
+const getCoverageData = (coverage: CoverageMap | CoverageMapData) =>
+	"data" in coverage ? coverage.data : coverage;
+
 export const prepareCoverageEnv = async () => {
 	if (
 		await fs.access(coverageDir).then(
@@ -26,14 +29,17 @@ export const generateCoverageReport = async (
 ) => {
 	baseLogger.info(
 		`Writing coverage chunks: ${entries(data)
-			.map(([name, coverage]) => `${name}=${keys(coverage.data).length}`)
+			.map(
+				([name, coverage]) =>
+					`${name}=${keys(getCoverageData(coverage)).length}`,
+			)
 			.join(", ")}`,
 	);
 	await fs.mkdir(path.join(coverageDir, "data"), { recursive: true });
 	for (const [name, coverage] of entries(data)) {
 		await fs.writeFile(
 			path.join(coverageDir, `data/${name}-coverage.json`),
-			JSON.stringify(coverage.data),
+			JSON.stringify(getCoverageData(coverage)),
 		);
 	}
 };
