@@ -63,7 +63,7 @@ const readBackend = createIsomorphicFn()
 		const fs = await import("node:fs/promises");
 		const url = await import("node:url");
 		/* oxlint-enable import/no-nodejs-modules */
-		const publicPath = import.meta.env.DEV ? `../../public` : "../../public";
+		const publicPath = "../../public";
 		const jsonUrl = new url.URL(
 			`${publicPath}/locales/${language}/${namespace}.json`,
 			import.meta.url,
