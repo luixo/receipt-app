@@ -220,6 +220,7 @@
       "dependencies": {
         "@ampproject/remapping": "^2.2.1",
         "@js-temporal/polyfill": "0.5.1",
+        "@tanstack/router-core": "catalog:",
         "ast-v8-to-istanbul": "^1.0.5",
         "find-free-ports": "^3.1.1",
         "istanbul-lib-coverage": "^3.2.2",
@@ -241,7 +242,6 @@
         "@ra/utils": "workspace:*",
         "@ra/web": "workspace:*",
         "@tanstack/react-query": "catalog:",
-        "@tanstack/router-core": "catalog:",
         "@trpc/client": "catalog:",
         "@trpc/server": "catalog:",
         "@types/uuid": "catalog:",

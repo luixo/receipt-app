@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
 import type { Page as OriginalPage, Page } from "@playwright/test";
-import { defaultStringifySearch, interpolatePath } from "@tanstack/router-core";
 
 import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
 import type { ExtractFixture } from "~tests/frontend/types";
 import { apiCookieNames } from "~utils/mocks";
+import { buildUrl } from "~utils/server/url";
 
 import { apiFixtures as test } from "./api";
 
@@ -19,23 +19,6 @@ type RoutedPage = OriginalPage & {
 			ReturnType<typeof expect<OriginalPage>>["toHaveURL"]
 		>[1],
 	) => Promise<void>;
-};
-
-const buildUrl = <K extends RouteTo>({
-	to,
-	params = {},
-	search,
-}: NavigationOptions<K>) => {
-	const { interpolatedPath, isMissingParams } = interpolatePath({
-		path: to,
-		params: params === true ? {} : params,
-	});
-
-	if (isMissingParams) {
-		throw new Error(`Missing path params for ${to}`);
-	}
-
-	return `${interpolatedPath}${defaultStringifySearch(search ?? {})}`;
 };
 
 const setProxyHeaders = async (
