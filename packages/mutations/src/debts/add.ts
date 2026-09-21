@@ -1,5 +1,6 @@
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
 import type { Debt } from "~app/trpc-types";
+import { round } from "~utils/math";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -60,16 +61,15 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 		}
 		updateDebts(controllerContext, {
 			getAll: (controller) => {
-				controller.update(
-					updateObject.currencyCode,
-					(sum) => sum + updateObject.amount,
+				controller.update(updateObject.currencyCode, (sum) =>
+					round(sum + updateObject.amount),
 				);
 			},
 			getAllUser: (controller) => {
 				controller.update(
 					updateObject.userId,
 					updateObject.currencyCode,
-					(sum) => sum + updateObject.amount,
+					(sum) => round(sum + updateObject.amount),
 				);
 			},
 			getUsersPaged: (controller) => {

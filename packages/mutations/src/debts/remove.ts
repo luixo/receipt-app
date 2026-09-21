@@ -1,4 +1,5 @@
 import type { Debt } from "~app/trpc-types";
+import { round } from "~utils/math";
 
 import {
 	update as updateDebts,
@@ -19,15 +20,15 @@ export const options: UseContextedMutationOptions<
 				getAll: (controller) =>
 					controller.update(
 						currDebt.currencyCode,
-						(sum) => sum - currDebt.amount,
-						() => (sum) => sum + currDebt.amount,
+						(sum) => round(sum - currDebt.amount),
+						() => (sum) => round(sum + currDebt.amount),
 					),
 				getAllUser: (controller) =>
 					controller.update(
 						currDebt.userId,
 						currDebt.currencyCode,
-						(sum) => sum - currDebt.amount,
-						() => (sum) => sum + currDebt.amount,
+						(sum) => round(sum - currDebt.amount),
+						() => (sum) => round(sum + currDebt.amount),
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
 				getByUserPaged: undefined,
