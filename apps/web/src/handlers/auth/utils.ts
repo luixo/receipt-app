@@ -47,7 +47,7 @@ export const sendVerificationEmail = async (
 		});
 	}
 	try {
-		const data = await generateConfirmEmailEmail(ctx, token);
+		const data = await generateConfirmEmailEmail(token, ctx);
 		await getEmailClient(ctx).send({ address: email, ...data });
 	} catch (error) {
 		throw new TRPCError({

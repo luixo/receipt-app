@@ -1,7 +1,7 @@
 import type { TestInfo } from "@playwright/test";
 import { test } from "@playwright/test";
 
-type Criteria = "only-smallest" | "only-biggest";
+type Criteria = "only-smallest" | "only-biggest" | "middle";
 
 type SkipFixtures = {
 	getSkippedExplanation: (
@@ -21,6 +21,11 @@ const getSkippedExplanation = (testInfo: TestInfo, criteria: Criteria) => {
 		case "only-biggest":
 			if (testInfo.project.name !== "1440-chrome") {
 				return "We need to run this test only once (on biggest screen)";
+			}
+			break;
+		case "middle":
+			if (testInfo.project.name !== "600-chrome") {
+				return "We need to run this test only once (on middle screen)";
 			}
 			break;
 	}

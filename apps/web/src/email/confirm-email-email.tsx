@@ -1,8 +1,10 @@
 import React from "react";
 
+import { Text } from "@react-email/components";
 import { useTranslation } from "react-i18next";
 
-import { Email } from "./email";
+import { Button } from "./components";
+import { EmailLayout } from "./email";
 
 type Props = {
 	token: string;
@@ -11,28 +13,21 @@ type Props = {
 export const ConfirmEmailEmail: React.FC<Props> = ({ token }) => {
 	const { t } = useTranslation("email");
 	return (
-		<Email title={t("confirmEmail.title")}>
-			{[
-				{ type: "text", text: t("confirmEmail.welcome"), size: "h3" },
-				{
-					type: "text",
-					text: t("confirmEmail.greeting"),
-				},
-				{
-					type: "action",
-					text: t("confirmEmail.confirm"),
-					href: `confirm-email?token=${token}`,
-				},
-				{
-					type: "text",
-					text: t("confirmEmail.notRegistered"),
-				},
-				{
-					type: "action",
-					text: t("confirmEmail.voidAccount"),
-					href: `void-account?token=${token}`,
-				},
-			]}
-		</Email>
+		<EmailLayout
+			title={t("confirmEmail.title")}
+			subtitle={t("confirmEmail.welcome")}
+		>
+			<Text>{t("confirmEmail.greeting")}</Text>
+			<Button
+				navigate={{ to: "/confirm-email", search: { token } }}
+				className="mb-4"
+			>
+				{t("confirmEmail.confirm")}
+			</Button>
+			<Text>{t("confirmEmail.notRegistered")}</Text>
+			<Button navigate={{ to: "/void-account", search: { token } }}>
+				{t("confirmEmail.voidAccount")}
+			</Button>
+		</EmailLayout>
 	);
 };

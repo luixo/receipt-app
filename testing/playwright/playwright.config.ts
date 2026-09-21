@@ -102,6 +102,9 @@ export default defineConfig({
 		timezoneId: localSettings.timezone,
 		locale: localSettings.locale,
 	},
+	build: {
+		jsxImportSource: "react",
+	},
 	projects: [...visualProjects, functionalProject],
 	snapshotPathTemplate:
 		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",

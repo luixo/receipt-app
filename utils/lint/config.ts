@@ -244,6 +244,7 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 			"apps/web/src/handlers/**/*",
 			"apps/web/src/pages/api/**/*",
 			"apps/web/src/entry/server.tsx",
+			"apps/web/src/email/**/*",
 			"testing/**",
 			"utils/**",
 		],
@@ -637,6 +638,7 @@ export default defineConfig({
 					{
 						assertFunctionNames: [
 							"expectScreenshotWithSchemes",
+							"expectBodyScreenshot",
 							"snapshotQueries",
 							"expectUrl",
 							"page.expectUrl",
