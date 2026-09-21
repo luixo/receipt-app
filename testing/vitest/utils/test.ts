@@ -47,6 +47,7 @@ type MockContext = {
 	cacheDbOptions: CacheDbOptionsMock;
 	exchangeRateOptions: ExchangeRateOptionsMock;
 	s3Options: S3OptionsMock;
+	baseUrl: string;
 };
 
 type MetaContext = {
@@ -96,6 +97,7 @@ export const test = originalTest.extend<TestFixture>({
 					prefix: "",
 				}),
 			task,
+			baseUrl: "http://receipt-app.test/",
 			...fileContext,
 		});
 	},

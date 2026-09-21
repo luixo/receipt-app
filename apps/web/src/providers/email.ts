@@ -12,7 +12,6 @@ export type Email = {
 export type EmailOptions = {
 	getActive: () => boolean;
 	setActive: (next: boolean) => void;
-	baseUrl: string;
 	mock?: EmailClient;
 };
 

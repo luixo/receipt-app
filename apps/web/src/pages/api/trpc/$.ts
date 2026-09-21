@@ -37,7 +37,6 @@ const defaultGetEmailOptions = () => {
 	return {
 		getActive: () => active,
 		setActive: doNothing,
-		baseUrl: env.BASE_URL || "http://example.com/",
 	};
 };
 const createContextRest = (
@@ -46,6 +45,7 @@ const createContextRest = (
 	logger: baseLogger,
 	database: defaultGetDatabase(req),
 	emailOptions: defaultGetEmailOptions(),
+	baseUrl: env.BASE_URL || "http://example.com/",
 	cacheDbOptions: {},
 	exchangeRateOptions: {},
 	s3Options: {},

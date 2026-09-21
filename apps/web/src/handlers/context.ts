@@ -16,6 +16,7 @@ type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
 	cacheDbOptions: CacheDbOptions;
 	exchangeRateOptions: ExchangeRateOptions;
 	s3Options: S3Options;
+	baseUrl: string;
 };
 
 export type NetContext = {
