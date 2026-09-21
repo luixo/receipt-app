@@ -1,7 +1,6 @@
 {
 	"debts.getByUserPaged": {
-		"serverCalls": 1,
-		"clientCalls": 1
+		"serverCalls": 1
 	},
 	"users.get": {
 		"serverCalls": 1
