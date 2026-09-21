@@ -16,10 +16,9 @@
 				},
 				"dataUpdateCount": 1,
 				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
+				"errorUpdateCount": -1,
+				"fetchFailureCount": -1,
+				"status": "success"
 			}
 		}
 	},

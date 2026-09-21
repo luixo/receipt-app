@@ -102,8 +102,14 @@ test.describe("'auth.confirmEmail' mutation", () => {
 	});
 });
 
-test("Navigating back to the home page", async ({ page, api, faker }) => {
-	const { unmockAccount } = api.mockUtils.noAuthPage();
+test("Navigating back to the home page", async ({
+	page,
+	api,
+	faker,
+	consoleManager,
+}) => {
+	const { unmockAccount, errorMessage } = api.mockUtils.noAuthPage();
+	consoleManager.ignore(errorMessage);
 	const confirmEmailPause = api.createPause();
 	api.mockFirst("auth.confirmEmail", async ({ headers }) => {
 		await confirmEmailPause.promise;

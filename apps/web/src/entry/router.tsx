@@ -1,7 +1,6 @@
 import React from "react";
 
-import type { QueryClient } from "@tanstack/react-query";
-import { dehydrate, hydrate, isServer } from "@tanstack/react-query";
+import { isServer } from "@tanstack/react-query";
 import type {
 	ErrorRouteComponent,
 	NotFoundRouteComponent,
@@ -58,22 +57,6 @@ const RootErrorComponent: ErrorRouteComponent = ({ error, reset }) => {
 		void router.invalidate();
 	}, [reset, router]);
 	return <ErrorComponent error={error} reset={resetInvalidate} />;
-};
-
-const getLocalQueryClient = (queryClient: QueryClient) => {
-	if (isServer) {
-		return queryClient;
-	}
-	const dehydratedState = dehydrate(queryClient, {
-		serializeData: transformer.serialize,
-	});
-	const hydratedClient = getQueryClient();
-	hydrate(hydratedClient, dehydratedState, {
-		defaultOptions: {
-			deserializeData: transformer.deserialize,
-		},
-	});
-	return hydratedClient;
 };
 
 const getUniversalRequest = createIsomorphicFn()
@@ -145,17 +128,18 @@ export const getRouter = () => {
 				externalContext.initialValues[PRETEND_USER_STORE_NAME].email;
 			return (
 				<OuterProvider
-					getQueryClientsRecord={React.useCallback(() => {
-						const localQueryClient = getLocalQueryClient(queryClient);
-						return pretendEmail
-							? {
-									[pretendEmail]: localQueryClient,
-									[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
-								}
-							: {
-									[SELF_QUERY_CLIENT_KEY]: localQueryClient,
-								};
-					}, [pretendEmail])}
+					getQueryClientsRecord={React.useCallback(
+						() =>
+							pretendEmail
+								? {
+										[pretendEmail]: queryClient,
+										[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+									}
+								: {
+										[SELF_QUERY_CLIENT_KEY]: queryClient,
+									},
+						[pretendEmail],
+					)}
 					initialQueryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
 					i18nContext={i18nContext}
 				>
@@ -172,6 +156,7 @@ export const getRouter = () => {
 		queryClient,
 		dehydrateOptions: {
 			serializeData: transformer.serialize,
+			shouldRedactErrors: () => import.meta.env.MODE !== "test",
 		},
 		hydrateOptions: {
 			defaultOptions: {

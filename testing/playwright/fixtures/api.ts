@@ -441,13 +441,14 @@ const getMockUtils = ({
 	context: BrowserContext;
 }) => ({
 	noAuthPage: () => {
+		const errorMessage = "No token provided - mocked";
 		const unmockCurrency = api.mockLast("currency.getList", {
 			items: CURRENCY_CODES,
 		});
 		const unmockAccount = api.mockLast("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: "No token provided - mocked",
+				message: errorMessage,
 			});
 		});
 		const unmockReceipts = api.mockLast("receipts.getPaged", {
@@ -459,6 +460,7 @@ const getMockUtils = ({
 			unmockCurrency,
 			unmockAccount,
 			unmockReceipts,
+			errorMessage,
 		};
 	},
 	authPage: async () => {
