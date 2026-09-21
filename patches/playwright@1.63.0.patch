@@ -1,0 +1,33 @@
+# See https://github.com/microsoft/playwright/issues/35640
+diff --git a/node_modules/playwright/.bun-tag-51a05aa080223a75 b/.bun-tag-51a05aa080223a75
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/lib/common/index.js b/lib/common/index.js
+index bc658c6faa0996ee784a85b16234ddfd980535e8..60cd9323d548cdda8a4b827b0d38f07075f2687c 100644
+--- a/lib/common/index.js
++++ b/lib/common/index.js
+@@ -1283,7 +1283,8 @@ async function loadConfig(location, overrides, ignoreProjectDependencies = false
+     }
+   }
+   const external = userConfig.build?.external || [];
+-  const jsxImportSource = import_path7.default.dirname(require.resolve("playwright"));
++  const jsxImportSource = userConfig.build?.jsxImportSource ||
++    import_path7.default.dirname(require.resolve("playwright"));
+   await setTransformConfig({ external, jsxImportSource });
+   if (!overrides?.tsconfig)
+     await setSingleTSConfig(fullConfig?.singleTSConfigPath);
+diff --git a/types/test.d.ts b/types/test.d.ts
+index 907a6dae7d1709a8110072cd1e665475813344b2..788d185510cf27e2d2b25d313813c97a7e97445d 100644
+--- a/types/test.d.ts
++++ b/types/test.d.ts
+@@ -1070,6 +1070,10 @@ interface TestConfig<TestArgs = {}, WorkerArgs = {}> {
+      * test uses are listed here.
+      */
+     external?: Array<string>;
++    /**
++     * Import source to use for JSX
++     */
++    jsxImportSource?: string;
+   };
+ 
+   /**

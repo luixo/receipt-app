@@ -259,7 +259,9 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 					);
 				}
 				const stickyMenu = page.getByTestId("sticky-menu");
-				const stickyMenuBoundingBox = await stickyMenu.boundingBox();
+				const stickyMenuBoundingBox = noStickyMenuMask
+					? null
+					: await stickyMenu.boundingBox();
 				const getImage = async (colorMode: ColorMode) => {
 					await page.emulateMedia({ colorScheme: colorMode });
 					const rawExpectedPixels = [

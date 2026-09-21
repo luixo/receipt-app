@@ -1,8 +1,10 @@
 import React from "react";
 
+import { Text } from "@react-email/components";
 import { useTranslation } from "react-i18next";
 
-import { Email } from "./email";
+import { Button } from "./components";
+import { EmailLayout } from "./email";
 
 type Props = {
 	token: string;
@@ -11,26 +13,19 @@ type Props = {
 export const ResetPasswordEmail: React.FC<Props> = ({ token }) => {
 	const { t } = useTranslation("email");
 	return (
-		<Email
+		<EmailLayout
 			title={t("resetPassword.title")}
-			footerChildren={[{ type: "text", text: t("resetPassword.expiration") }]}
+			subtitle={t("resetPassword.forgot")}
+			footerNote={<Text>{t("resetPassword.expiration")}</Text>}
 		>
-			{[
-				{ type: "text", text: t("resetPassword.forgot"), size: "h3" },
-				{
-					type: "text",
-					text: t("resetPassword.requestReceived"),
-				},
-				{
-					type: "action",
-					text: t("resetPassword.reset"),
-					href: `reset-password?token=${token}`,
-				},
-				{
-					type: "text",
-					text: t("resetPassword.notRequested"),
-				},
-			]}
-		</Email>
+			<Text>{t("resetPassword.requestReceived")}</Text>
+			<Button
+				navigate={{ to: "/reset-password", search: { token } }}
+				className="mb-4"
+			>
+				{t("resetPassword.reset")}
+			</Button>
+			<Text>{t("resetPassword.notRequested")}</Text>
+		</EmailLayout>
 	);
 };
