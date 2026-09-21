@@ -1,0 +1,48 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"f9ef90f7-36c9-4313-b508-96981f372ae8\"}]": {
+			"state": {
+				"data": {
+					"id": "f9ef90f7-36c9-4313-b508-96981f372ae8",
+					"amount": 10,
+					"currencyCode": "LSL",
+					"userId": "94e6552e-5d5d-4352-9982-a8a5f1a2b20f",
+					"timestamp": "2019-12-31",
+					"note": "Test debt note",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"data": {
+						"id": "f9ef90f7-36c9-4313-b508-96981f372ae8",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Test debt note",
+						"currencyCode": "LSL",
+						"userId": "94e6552e-5d5d-4352-9982-a8a5f1a2b20f",
+						"amount": 10,
+						"timestamp": "2019-12-31"
+					}
+				}
+			}
+		]
+	}
+}
