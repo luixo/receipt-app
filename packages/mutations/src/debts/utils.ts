@@ -5,6 +5,7 @@ import type { DebtId, ReceiptId, UserId } from "~db/ids";
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../types";
+import { round } from "~utils/math";
 
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
@@ -18,7 +19,7 @@ export const applySumUpdate =
 	(sum) => {
 		if (update.amount !== undefined) {
 			const delta = update.amount - prevAmount;
-			return sum + delta;
+			return round(sum + delta);
 		}
 		return sum;
 	};
@@ -52,7 +53,7 @@ export const getSumRevert =
 	(currentSum) => {
 		if (update.amount !== undefined) {
 			const delta = updatedSum - prevAmount;
-			return currentSum - delta;
+			return round(currentSum - delta);
 		}
 		return currentSum;
 	};
