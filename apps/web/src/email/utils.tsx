@@ -63,7 +63,7 @@ const generateEmail = async (
 		</head>
 		<body>${ReactDOMServer.renderToStaticMarkup(
 			<StylingContext value={stylesMapping}>
-				<BaseUrlContext value={ctx.emailOptions.baseUrl}>
+				<BaseUrlContext value={ctx.baseUrl}>
 					<i18nContext.Provider>{element}</i18nContext.Provider>
 				</BaseUrlContext>
 			</StylingContext>,
