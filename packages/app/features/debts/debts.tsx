@@ -3,6 +3,9 @@ import type React from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
+import { DebtsGroupSkeleton } from "~app/components/app/debts-group";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import {
 	PaginationBlock,
@@ -10,6 +13,7 @@ import {
 } from "~app/components/pagination-block";
 import { SuspendedOverlay } from "~app/components/pagination-overlay";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { UserDebtsGroup } from "~app/components/user-debts-group";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type {
@@ -17,16 +21,15 @@ import type {
 	SearchParamStateDefaulted,
 } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
+import { Card } from "~components/card";
 import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
+import { ButtonLink, CardLink } from "~components/link";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
 
-import {
-	UserDebtsPreview,
-	UserDebtsPreviewSkeleton,
-} from "./user-debts-preview";
+const cardClassName =
+	"flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center";
 
 const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 	<View className="gap-2">{children}</View>
@@ -99,7 +102,18 @@ export const Debts = suspendedFallback<Props>(
 				<SuspendedOverlay isPending={isPending}>
 					<DebtsWrapper>
 						{data.items.map((userId) => (
-							<UserDebtsPreview key={userId} userId={userId} />
+							<CardLink
+								key={userId}
+								to="/debts/user/$id"
+								params={{ id: userId }}
+								bodyClassName={cardClassName}
+								testID="user-debts-preview"
+							>
+								<LoadableUser id={userId} />
+								<View className="flex flex-row items-center justify-center gap-2">
+									<UserDebtsGroup userId={userId} className="shrink-0" />
+								</View>
+							</CardLink>
 						))}
 					</DebtsWrapper>
 				</SuspendedOverlay>
@@ -112,8 +126,16 @@ export const Debts = suspendedFallback<Props>(
 			<SuspendedOverlay isPending>
 				<DebtsWrapper>
 					{Array.from({ length: limitState[0] }).map((_, index) => (
-						// oxlint-disable-next-line react/no-array-index-key
-						<UserDebtsPreviewSkeleton key={index} />
+						<Card
+							// oxlint-disable-next-line react/no-array-index-key
+							key={index}
+							bodyClassName={cardClassName}
+						>
+							<SkeletonUser />
+							<View className="flex flex-row items-center justify-center gap-2">
+								<DebtsGroupSkeleton className="shrink-0" amount={3} />
+							</View>
+						</Card>
 					))}
 				</DebtsWrapper>
 			</SuspendedOverlay>

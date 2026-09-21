@@ -3,19 +3,16 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import {
-	DebtsGroup,
-	DebtsGroupSkeleton,
-} from "~app/components/app/debts-group";
+import { DebtsGroupSkeleton } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { UserDebtsGroup } from "~app/components/user-debts-group";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
@@ -95,22 +92,19 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 	);
 };
 
-const UserDebtsGroup = suspendedFallback<{
+const UserDebtsGroupWithButtons = suspendedFallback<{
 	userId: UserId;
 }>(
 	({ userId }) => {
 		const trpc = useTRPC();
-		const [showResolvedDebts] = useShowResolvedDebts();
 		const { data: debts } = useSuspenseQuery(
 			trpc.debts.getAllUser.queryOptions({ userId }),
 		);
 		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		return (
 			<View className="flex-row items-center justify-center gap-4 px-16">
-				<DebtsGroup
-					debts={showResolvedDebts ? debts.items : nonResolvedDebts}
-				/>
-				{nonResolvedDebts.length > 1 ? (
+				<UserDebtsGroup userId={userId} />
+				{nonResolvedDebts.length === 0 ? null : (
 					<ButtonLink
 						color="primary"
 						to="/debts/user/$id/exchange"
@@ -120,8 +114,8 @@ const UserDebtsGroup = suspendedFallback<{
 					>
 						<Icon name="exchange" />
 					</ButtonLink>
-				) : null}
-				{debts.items.length === nonResolvedDebts.length ? null : (
+				)}
+				{nonResolvedDebts.length === debts.items.length ? null : (
 					<ShowResolvedDebtsOption className="absolute right-0" />
 				)}
 			</View>
@@ -142,7 +136,7 @@ export const UserDebtsScreen = () => {
 	return (
 		<>
 			<Header userId={userId} />
-			<UserDebtsGroup userId={userId} />
+			<UserDebtsGroupWithButtons userId={userId} />
 			<UserDebtsList
 				userId={userId}
 				limitState={limitState}

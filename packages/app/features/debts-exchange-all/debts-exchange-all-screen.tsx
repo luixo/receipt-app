@@ -1,46 +1,20 @@
 import React from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { doNothing } from "remeda";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import {
-	DebtsGroup,
-	DebtsGroupSkeleton,
-} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { UserDebtsGroup } from "~app/components/user-debts-group";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { CurrencyCode } from "~app/utils/currency";
 import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { Divider } from "~components/divider";
-import type { UserId } from "~db/ids";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";
-
-const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
-	({ userId }) => {
-		const [showResolvedDebts] = useShowResolvedDebts();
-		const trpc = useTRPC();
-		const { data: debts } = useSuspenseQuery(
-			trpc.debts.getAllUser.queryOptions({ userId }),
-		);
-		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
-		return (
-			<DebtsGroup
-				className="self-center"
-				debts={showResolvedDebts ? debts.items : nonResolvedDebts}
-			/>
-		);
-	},
-	<DebtsGroupSkeleton amount={3} />,
-);
 
 export const DebtsExchangeAllScreen = () => {
 	const { useParams, useQueryState } = getPathHooks(
@@ -77,7 +51,7 @@ export const DebtsExchangeAllScreen = () => {
 				}
 				endContent={<LoadableUser id={userId} />}
 			/>
-			<ExchangeDebtsGroup userId={userId} />
+			<UserDebtsGroup className="self-center" userId={userId} />
 			<CurrenciesGroup
 				userId={userId}
 				selectedCurrencyCode={selectedCurrencyCode}
