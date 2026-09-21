@@ -66,6 +66,6 @@ export const procedure = unauthProcedure
 				token: uuid,
 			})
 			.executeTakeFirst();
-		const data = await generateResetPasswordEmail(ctx, uuid);
+		const data = await generateResetPasswordEmail(uuid, ctx);
 		await getEmailClient(ctx).send({ address: input.email.lowercase, ...data });
 	});

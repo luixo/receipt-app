@@ -17,6 +17,7 @@
 		"@ra/db": "workspace:*",
 		"@ra/mobile": "workspace:*",
 		"@ra/utils": "workspace:*",
+		"@react-email/components": "^1.0.12",
 		"@sentry/tanstackstart-react": "^10.62.0",
 		"@t3-oss/env-core": "^0.13.11",
 		"@tanstack/devtools-vite": "^0.8.5",
