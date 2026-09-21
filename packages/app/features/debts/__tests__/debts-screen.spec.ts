@@ -3,6 +3,7 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { test as debtsGroupTest } from "~app/components/app/__tests__/debts-group.utils";
+import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateDebtIntentions,
@@ -108,6 +109,33 @@ test("Pagination is visible when there are many users", async ({
 	await awaitCacheKey("debts.getUsersPaged");
 
 	await expect(paginationBlock).toBeVisible();
+});
+
+test("User with all zero debt sums is hidden", async ({
+	page,
+	mockDebts,
+	awaitCacheKey,
+	userDebtsPreview,
+	faker,
+}) => {
+	const usersAmount = faker.number.int({ min: 4, max: DEFAULT_LIMIT });
+	const emptyUsersAmount = faker.number.int({ min: 2, max: usersAmount });
+	const { users } = await mockDebts({
+		generateUsers: (opts) =>
+			defaultGenerateUsers({ ...opts, amount: usersAmount }),
+		generateDebts: (opts) => {
+			const userIndex = opts.users.findIndex((user) => user.id === opts.userId);
+			if (userIndex < emptyUsersAmount) {
+				const [debt] = defaultGenerateDebts({ ...opts, amount: 1 });
+				assert.ok(debt);
+				return [debt, { ...debt, amount: -debt.amount }];
+			}
+			return defaultGenerateDebts(opts);
+		},
+	});
+	await page.navigate({ to: "/debts" });
+	await awaitCacheKey("debts.getAllUser", { success: users.length });
+	await expect(userDebtsPreview).toHaveCount(usersAmount - emptyUsersAmount);
 });
 
 test("Loading state shows spinner on page change", async ({
