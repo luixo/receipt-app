@@ -1,39 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import {
-	DebtsGroup,
-	DebtsGroupSkeleton,
-} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+import { UserDebtsGroup } from "~app/components/user-debts-group";
 import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
 import { ButtonLink } from "~components/link";
-import type { UserId } from "~db/ids";
-
-const ExchangeDebtsGroup = suspendedFallback<{ userId: UserId }>(
-	({ userId }) => {
-		const trpc = useTRPC();
-		const [showResolvedDebts] = useShowResolvedDebts();
-		const { data: debts } = useSuspenseQuery(
-			trpc.debts.getAllUser.queryOptions({ userId }),
-		);
-		return (
-			<DebtsGroup
-				debts={
-					showResolvedDebts
-						? debts.items
-						: debts.items.filter((element) => element.sum !== 0)
-				}
-			/>
-		);
-	},
-	<DebtsGroupSkeleton amount={3} />,
-);
 
 export const DebtsExchangeScreen = () => {
 	const { useParams } = getPathHooks("/_protected/debts/user/$id/exchange/");
@@ -45,7 +17,7 @@ export const DebtsExchangeScreen = () => {
 				startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
 				endContent={<LoadableUser id={userId} />}
 			/>
-			<ExchangeDebtsGroup userId={userId} />
+			<UserDebtsGroup userId={userId} />
 			<ButtonLink
 				color="primary"
 				to="/debts/user/$id/exchange/all"

@@ -100,7 +100,8 @@
 			"pickButton": "Pick currency"
 		},
 		"debtsGroup": {
-			"noDebtsYet": "No debts yet"
+			"noDebtsYet": "No debts yet",
+			"allResolved": "All debts are resolved!"
 		},
 		"emailVerification": {
 			"header": "Your email is not verified!",

@@ -1,18 +1,18 @@
-import type React from "react";
-
 import { useTranslation } from "react-i18next";
 
+import { AllDebtsGroup } from "~app/components/all-debts-group";
 import { AmountBadge } from "~app/components/amount-badge";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import { useDefaultLimit } from "~app/hooks/use-default-limit";
 import { getPathHooks } from "~app/utils/navigation";
 import { Icon } from "~components/icons";
 import { ButtonLink } from "~components/link";
+import { View } from "~components/view";
 
 import { Debts } from "./debts";
-import { DebtsAggregated } from "./debts-aggregated";
 
 export const DebtsScreen = () => {
 	const { t } = useTranslation("debts");
@@ -65,7 +65,12 @@ export const DebtsScreen = () => {
 				{t("list.title")}
 			</PageHeader>
 			<EmailVerificationCard />
-			<DebtsAggregated />
+			<View className="items-center">
+				<AllDebtsGroup className="px-12" />
+				<View className="absolute right-0">
+					<ShowResolvedDebtsOption />
+				</View>
+			</View>
 			<Debts limitState={limitState} offsetState={offsetState} />
 		</>
 	);

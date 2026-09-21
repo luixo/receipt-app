@@ -8,6 +8,7 @@ import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { generateCurrencyCode } from "~tests/frontend/generators/utils";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 
@@ -85,6 +86,31 @@ test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
 	assert.ok(firstUser);
 	await openUserDebtsScreen(firstUser.id);
 	await expect(debtsGroup).toHaveText("No debts yet");
+});
+
+test("All resolved debts shows the resolved message", async ({
+	mockDebts,
+	openUserDebtsScreen,
+	debtsGroup,
+	faker,
+}) => {
+	const currencyCode = generateCurrencyCode(faker);
+	const {
+		users: [firstUser],
+	} = await mockDebts({
+		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+		generateDebts: ({ userId, ...opts }) =>
+			defaultGenerateDebts({ ...opts, amount: 2, userId }).map(
+				(debt, index) => ({
+					...debt,
+					amount: index === 0 ? 100 : -100,
+					currencyCode,
+				}),
+			),
+	});
+	assert.ok(firstUser);
+	await openUserDebtsScreen(firstUser.id);
+	await expect(debtsGroup).toHaveText("All debts are resolved!");
 });
 
 test("Rounding", async ({

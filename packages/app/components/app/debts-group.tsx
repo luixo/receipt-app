@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { useLocale } from "~app/hooks/use-locale";
+import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { formatCurrency } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
@@ -77,6 +78,10 @@ type Props = {
 
 export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
 	const { t } = useTranslation("default");
+	const [showResolvedDebts] = useShowResolvedDebts();
+	const filteredDebts = showResolvedDebts
+		? debts
+		: debts.filter((element) => element.sum !== 0);
 	return (
 		<View
 			className={cn(
@@ -87,7 +92,7 @@ export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
 			{...props}
 		>
 			<SeparatedDebts>
-				{debts.map(({ currencyCode, sum }) => (
+				{filteredDebts.map(({ currencyCode, sum }) => (
 					<DebtGroupElement
 						key={currencyCode}
 						currencyCode={currencyCode}
@@ -95,8 +100,12 @@ export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
 					/>
 				))}
 			</SeparatedDebts>
-			{debts.length === 0 ? (
-				<Text>{t("components.debtsGroup.noDebtsYet")}</Text>
+			{filteredDebts.length === 0 ? (
+				<Text>
+					{!showResolvedDebts && debts.length !== 0
+						? t("components.debtsGroup.allResolved")
+						: t("components.debtsGroup.noDebtsYet")}
+				</Text>
 			) : null}
 		</View>
 	);
