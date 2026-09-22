@@ -30,7 +30,7 @@ describe("API calls", () => {
 			);
 			const defaultHeaders = [
 				["x-source", "api"],
-				["host", url.replace("http://", "")],
+				["host", url.host],
 			] as const;
 			const resultHeaders = pick(
 				await client.getHeaders.query(),
@@ -46,13 +46,12 @@ describe("API calls", () => {
 describe("loader call", () => {
 	test("debug is passed through", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
-			vi.stubEnv("BASE_URL", url);
+			vi.stubEnv("BASE_URL", url.toString());
 			const queryClient = new QueryClient();
-			const urlObject = new URL(url);
-			urlObject.searchParams.set("debug", "true");
+			url.searchParams.set("debug", "true");
 			const client = getLoaderTrpcClient<typeof router>({
 				queryClient,
-				request: new Request(urlObject),
+				request: new Request(url),
 			});
 			const resultHeaders = await queryClient.fetchQuery(
 				client.getHeaders.queryOptions(),
@@ -60,7 +59,7 @@ describe("loader call", () => {
 			const expectedHeaders = [
 				["x-debug", "true"],
 				["x-source", "ssr-loader"],
-				["host", url.replace("http://", "")],
+				["host", url.host],
 			] as const;
 			expect(
 				pick(

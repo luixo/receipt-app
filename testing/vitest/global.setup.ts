@@ -3,7 +3,6 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import type { TestProject } from "vitest/node";
 
 import { promisifyServer } from "~utils/promise";
-import { getFreePort } from "~utils/server/port";
 
 import { appRouter, createCaller } from "./databases/router";
 
@@ -19,11 +18,9 @@ declare module "vitest" {
 
 const setup = async (context: TestProject) => {
 	process.env.TZ = "GMT";
-	const port = await getFreePort();
-	const routerConfig = { port };
-	context.provide("routerConfig", routerConfig);
 	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
-	await httpServer.listen(routerConfig.port);
+	const url = await httpServer.listen(0);
+	context.provide("routerConfig", { port: Number(url.port) });
 	const caller = createCaller({});
 	await caller.setup({ maxDatabases: context.config.maxConcurrency });
 	return async () => {

@@ -65,8 +65,7 @@ type QueryOrMutationHandler<K extends TRPCKey> =
 	| MaybePromise<QueryOrMutationOutput<K>>;
 
 type WorkerManager = {
-	getPort: () => number;
-	start: () => Promise<CleanupFn>;
+	url: URL;
 	createController: (id: string) => {
 		controller: Controller;
 		cleanup: CleanupFn;
@@ -74,7 +73,7 @@ type WorkerManager = {
 };
 
 export type ApiManager = {
-	getConnection: () => { port: number; controllerId: string };
+	getConnection: () => { url: URL; controllerId: string };
 	mockFirst: <K extends TRPCKey>(
 		key: K,
 		handler: NonNullable<Handlers[K]>[number],
@@ -249,7 +248,7 @@ const handleRequest = async (
 	return handleCall(controller, headers, type, name, input);
 };
 
-const createWorkerManager = (port: number): WorkerManager => {
+const startManagerServer = () => {
 	const controllers: Record<string, Controller> = {};
 	const server = promisifyServer(
 		// oxlint-disable-next-line typescript/strict-void-return
@@ -320,11 +319,10 @@ const createWorkerManager = (port: number): WorkerManager => {
 	);
 
 	return {
-		getPort: () => port,
-		start: async () => {
-			await server.listen(port);
-			return () => server.close();
-		},
+		start: async () => ({
+			cleanup: () => server.close(),
+			url: await server.listen(0),
+		}),
 		createController: (id: string) => {
 			const abortController = new AbortController();
 			const controller: Controller = {
@@ -350,11 +348,11 @@ const createWorkerManager = (port: number): WorkerManager => {
 };
 
 const createApiManager = async (
-	globalManager: WorkerManager,
+	{ createController, url: managerUrl }: WorkerManager,
 	context: BrowserContext,
 ): Promise<ApiManager & { cleanup: CleanupFn }> => {
 	const controllerId = v4();
-	const { controller, cleanup } = globalManager.createController(controllerId);
+	const { controller, cleanup } = createController(controllerId);
 	await context.route(`${API_PREFIX}**/*`, async (route) => {
 		const request = route.request();
 		const headers = new Headers();
@@ -423,10 +421,7 @@ const createApiManager = async (
 		clearActions: () => {
 			controller.actions = [];
 		},
-		getConnection: () => ({
-			port: globalManager.getPort(),
-			controllerId,
-		}),
+		getConnection: () => ({ url: managerUrl, controllerId }),
 		cleanup,
 	};
 };
@@ -551,12 +546,10 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 		{ auto: true },
 	],
 	globalApiManager: [
-		async ({ serverClient }, use) => {
-			const { port, hash } = await serverClient.lockPort.mutate();
-			const workerManager = createWorkerManager(port);
-			const cleanup = await workerManager.start();
-			await serverClient.release.mutate({ hash });
-			await use(workerManager);
+		async ({}, use) => {
+			const { start, createController } = startManagerServer();
+			const { cleanup, url } = await start();
+			await use({ createController, url });
 			await cleanup();
 		},
 		{ auto: true, scope: "worker" },
