@@ -16,7 +16,6 @@
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
 		"@types/uuid": "catalog:",
-		"async-await-queue": "^2.1.4",
 		"colors": "^1.4.0",
 		"deep-object-diff": "catalog:",
 		"jimp": "catalog:",

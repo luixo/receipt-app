@@ -11,7 +11,6 @@ import {
 } from "~tests/frontend/global/coverage";
 import { promisifyServer } from "~utils/promise";
 import { mapJsCoverage } from "~utils/server/coverage";
-import { getFreePort } from "~utils/server/port";
 import { baseLogger } from "~web/providers/logger";
 
 import {
@@ -83,11 +82,10 @@ const handleCoverage = async () => {
 
 const globalSetup = async () => {
 	await prepareCoverageEnv();
-	const portManagerPort = await getFreePort();
-	process.env.MANAGER_PORT = portManagerPort.toString();
-	process.env.PLAYWRIGHT = "true";
 	const httpServer = promisifyServer(createHTTPServer({ router: appRouter }));
-	await httpServer.listen(portManagerPort);
+	const url = await httpServer.listen(0);
+	process.env.MANAGER_PORT = url.port;
+	process.env.PLAYWRIGHT = "true";
 	return async () => {
 		handleErrors();
 		await handleCoverage();

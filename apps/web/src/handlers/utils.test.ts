@@ -10,14 +10,13 @@ import { getLinks } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { promisifyServer, wait } from "~utils/promise";
-import { getFreePort } from "~utils/server/port";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
 
 export const getTestClient = <R extends AnyTRPCRouter>(
 	ctx: TestContext,
-	url: string,
+	url: URL,
 	{
 		captureError,
 		headers,
@@ -31,7 +30,7 @@ export const getTestClient = <R extends AnyTRPCRouter>(
 	createTRPCClient<R>({
 		links: getLinks({
 			debug: false,
-			url,
+			url: url.toString(),
 			source: "test",
 			keepError: !captureError,
 			useBatch,
@@ -46,7 +45,7 @@ export const getTestClient = <R extends AnyTRPCRouter>(
 export const withTestServer = async <R extends AnyTRPCRouter>(
 	{ database, ...ctx }: TestContext,
 	router: R,
-	fn: (opts: { url: string }) => Promise<void>,
+	fn: (opts: { url: URL }) => Promise<void>,
 ) => {
 	const httpServer = promisifyServer(
 		createHTTPServer({
@@ -65,10 +64,8 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 			}),
 		}),
 	);
-	const port = await getFreePort();
-	await httpServer.listen(port);
 	try {
-		await fn({ url: `http://localhost:${port}` });
+		await fn({ url: await httpServer.listen(0) });
 	} finally {
 		await httpServer.close();
 	}
