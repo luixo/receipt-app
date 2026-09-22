@@ -40,7 +40,7 @@ const updateSum =
 					prevDebts,
 					(entry) => entry.currencyCode === currencyCode,
 					(entry) => ({ ...entry, sum: updater(entry.sum) }),
-					{ currencyCode, sum: updater(0) },
+					{ currencyCode, sum: 0 },
 					ref,
 				),
 			);

@@ -1,0 +1,70 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"fbe168ab-1e73-4d4d-ae79-46324dc0edc1\"}]": {
+			"state": {
+				"data": {
+					"currencyCode": "EUR"
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.getAll:[[]]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"sum": 0
+						},
+						"1": {
+							"currencyCode": "EUR",
+							"sum": 7483.95
+						}
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.getAllUser:[{\"userId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"sum": 0
+						},
+						"1": {
+							"currencyCode": "EUR",
+							"sum": 7483.95
+						}
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
+			"state": {
+				"isInvalidated": true
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseUpdated": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "fbe168ab-1e73-4d4d-ae79-46324dc0edc1",
+						"update": {
+							"currencyCode": "EUR"
+						}
+					}
+				}
+			}
+		]
+	}
+}

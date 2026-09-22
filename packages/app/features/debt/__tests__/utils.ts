@@ -33,11 +33,11 @@ export const test = originalTest.extend<Fixtures>({
 
 	mockDebt: ({ api, faker, mockBase }, use) =>
 		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
-			const baseMock = await mockBase();
+			const { debtUser } = await mockBase();
 			const [debt] = generateDebts({
 				faker,
 				amount: 1,
-				userId: baseMock.debtUser.id,
+				userId: debtUser.id,
 			});
 			assert.ok(debt);
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
@@ -46,21 +46,30 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return debt;
 			});
+			const aggregatedDebts = [
+				{
+					currencyCode: debt.currencyCode,
+					sum: debt.amount,
+				},
+			];
+			api.mockFirst("debts.getAll", {
+				items: aggregatedDebts,
+			});
+			api.mockFirst("debts.getUsersPaged", ({ input: { cursor } }) => ({
+				count: 1,
+				cursor,
+				items: [debtUser.id],
+			}));
 			api.mockFirst(
 				"debts.getAllUser",
 				({ input: { userId: lookupUserId } }) => {
-					if (lookupUserId !== baseMock.debtUser.id) {
+					if (lookupUserId !== debtUser.id) {
 						throw new Error(
 							`Unexpected debt id in "debts.getAllUser": ${lookupUserId}`,
 						);
 					}
 					return {
-						items: [
-							{
-								currencyCode: debt.currencyCode,
-								sum: debt.amount,
-							},
-						],
+						items: aggregatedDebts,
 					};
 				},
 			);
@@ -73,7 +82,7 @@ export const test = originalTest.extend<Fixtures>({
 				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseUpdated: false,
 			}));
-			return { debt, ...baseMock };
+			return { debt, debtUser };
 		}),
 
 	openDebtScreen: ({ page, awaitCacheKey }, use) =>
