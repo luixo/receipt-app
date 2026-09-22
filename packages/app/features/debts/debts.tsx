@@ -1,5 +1,6 @@
 import type React from "react";
 
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
@@ -27,6 +28,7 @@ import { ButtonLink, CardLink } from "~components/link";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
+import type { UserId } from "~db/ids";
 
 const cardClassName =
 	"flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center";
@@ -34,6 +36,33 @@ const cardClassName =
 const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 	<View className="gap-2">{children}</View>
 );
+
+const UserDebtsCard: React.FC<{ userId: UserId }> = ({ userId }) => {
+	const trpc = useTRPC();
+	const { data: debts } = useSuspenseQuery(
+		trpc.debts.getAllUser.queryOptions({ userId }),
+	);
+	const [showResolvedDebts] = useShowResolvedDebts();
+	if (
+		debts.items.filter((item) => item.sum !== 0).length === 0 &&
+		!showResolvedDebts
+	) {
+		return null;
+	}
+	return (
+		<CardLink
+			to="/debts/user/$id"
+			params={{ id: userId }}
+			bodyClassName={cardClassName}
+			testID="user-debts-preview"
+		>
+			<LoadableUser id={userId} />
+			<View className="flex flex-row items-center justify-center gap-2">
+				<UserDebtsGroup userId={userId} className="shrink-0" />
+			</View>
+		</CardLink>
+	);
+};
 
 type Props = {
 	limitState: SearchParamStateDefaulted<"/_protected/debts/", "limit">;
@@ -102,18 +131,7 @@ export const Debts = suspendedFallback<Props>(
 				<SuspendedOverlay isPending={isPending}>
 					<DebtsWrapper>
 						{data.items.map((userId) => (
-							<CardLink
-								key={userId}
-								to="/debts/user/$id"
-								params={{ id: userId }}
-								bodyClassName={cardClassName}
-								testID="user-debts-preview"
-							>
-								<LoadableUser id={userId} />
-								<View className="flex flex-row items-center justify-center gap-2">
-									<UserDebtsGroup userId={userId} className="shrink-0" />
-								</View>
-							</CardLink>
+							<UserDebtsCard key={userId} userId={userId} />
 						))}
 					</DebtsWrapper>
 				</SuspendedOverlay>

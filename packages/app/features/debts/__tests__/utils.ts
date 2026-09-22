@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { entries, flat, fromEntries, mapValues, values } from "remeda";
 
+import type { Debt } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UserId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
@@ -8,6 +9,12 @@ import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { GeneratorFnWithAmount } from "~tests/frontend/generators/utils";
+
+type LocalGenerateDebts = GeneratorFnWithAmount<
+	Debt,
+	{ userId: UserId; users: ReturnType<GenerateUsers> }
+>;
 
 type Fixtures = {
 	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<{
@@ -15,9 +22,9 @@ type Fixtures = {
 	}>;
 	mockDebts: (options?: {
 		generateUsers?: GenerateUsers;
-		generateDebts?: GenerateDebts;
+		generateDebts?: LocalGenerateDebts;
 	}) => Promise<{
-		debts: ReturnType<GenerateDebts>;
+		debts: ReturnType<LocalGenerateDebts>;
 		users: ReturnType<GenerateUsers>;
 	}>;
 	openUserDebtsScreen: (
@@ -54,7 +61,10 @@ export const test = originalTest.extend<Fixtures>({
 				const debtsByUsers = fromEntries(
 					users.map(
 						(user) =>
-							[user.id, generateDebts({ faker, userId: user.id })] as const,
+							[
+								user.id,
+								generateDebts({ faker, userId: user.id, users }),
+							] as const,
 					),
 				);
 				const aggregatedDebtsByUsers = mapValues(debtsByUsers, (debts) =>
