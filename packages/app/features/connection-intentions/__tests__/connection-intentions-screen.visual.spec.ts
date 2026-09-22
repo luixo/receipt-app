@@ -7,7 +7,7 @@ test("Empty state", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	await mockConnectionIntentions();
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await awaitCacheKey("accountConnectionIntentions.getAll");
 	await expectScreenshotWithSchemes("empty.png");
 });
@@ -21,7 +21,7 @@ test("Mixed connections", async ({
 	awaitCacheKey,
 }) => {
 	await mockConnectionIntentions({ inboundAmount: 2, outboundAmount: 2 });
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await awaitCacheKey("accountConnectionIntentions.getAll");
 	await expectScreenshotWithSchemes("mixed.png", {
 		mask: [inboundRows, outboundRows],

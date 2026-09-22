@@ -36,12 +36,12 @@ const getData = async (
 		.leftJoin("receiptParticipants", (jb) =>
 			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 		)
-		.leftJoin("users", (jb) =>
-			jb.onRef("users.id", "=", "receiptParticipants.userId"),
+		.leftJoin("peers", (jb) =>
+			jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 		)
 		.leftJoin("accounts", (jb) =>
 			jb
-				.onRef("accounts.id", "=", "users.connectedAccountId")
+				.onRef("accounts.id", "=", "peers.connectedAccountId")
 				.on("accounts.id", "=", ctx.auth.accountId),
 		)
 		.select([

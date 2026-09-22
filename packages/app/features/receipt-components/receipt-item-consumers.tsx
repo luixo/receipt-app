@@ -4,15 +4,15 @@ import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
+import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
 import { Select } from "~components/select";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
@@ -32,8 +32,8 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 	const canEdit = useCanEdit();
 	const trpc = useTRPC();
 
-	const allParticipantsIds = participants.map(({ userId }) => userId);
-	const addedParticipantsIds = item.consumers.map(({ userId }) => userId);
+	const allParticipantsIds = participants.map(({ peerId }) => peerId);
+	const addedParticipantsIds = item.consumers.map(({ peerId }) => peerId);
 	const notAddedParticipantsIds = new Set(
 		allParticipantsIds.filter(
 			(participantId) => !addedParticipantsIds.includes(participantId),
@@ -51,14 +51,14 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 			({ itemId }) => itemId === item.id,
 		);
 
-	const userNames = useQueries({
-		queries: participants.map(({ userId }) =>
+	const peerNames = useQueries({
+		queries: participants.map(({ peerId }) =>
 			isOwner
-				? trpc.users.get.queryOptions({ id: userId })
-				: trpc.users.getForeign.queryOptions({ id: userId }),
+				? trpc.peers.get.queryOptions({ id: peerId })
+				: trpc.peers.getForeign.queryOptions({ id: peerId }),
 		),
 		combine: (queries) =>
-			queries.reduce<Record<UserId, string>>(
+			queries.reduce<Record<PeerId, string>>(
 				(acc, { data }) =>
 					data
 						? {
@@ -80,14 +80,14 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 			disabledKeys={[
 				...addConsumerMutationStates
 					.filter((state) => state.status === "pending")
-					.map((variables) => variables.variables?.userId),
+					.map((variables) => variables.variables?.peerId),
 				...removeConsumerMutationStates
 					.filter((state) => state.status === "pending")
-					.map((variables) => variables.variables?.userId),
+					.map((variables) => variables.variables?.peerId),
 			].filter(isNonNullish)}
 			renderValue={(selectedParticipants) => {
-				const userIds = selectedParticipants
-					.map((participant) => participant.userId)
+				const peerIds = selectedParticipants
+					.map((participant) => participant.peerId)
 					.filter(isNonNullish);
 				return (
 					<View className="flex-row items-center gap-2">
@@ -96,18 +96,18 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 							size="sm"
 							max={3}
 						>
-							{userIds.map((userId) => (
-								<LoadableUserAvatar
-									key={userId}
-									id={userId}
+							{peerIds.map((peerId) => (
+								<LoadablePeerAvatar
+									key={peerId}
+									id={peerId}
 									foreign={!isOwner}
 								/>
 							))}
 						</AvatarGroup>
 						<Text className="text-nowrap">
 							{t("item.consumer.group", {
-								consumers: userIds
-									.map((userId) => userNames[userId])
+								consumers: peerIds
+									.map((peerId) => peerNames[peerId])
 									.filter(isNonNullish),
 							})}
 						</Text>
@@ -127,9 +127,9 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 				}
 			}}
 			items={participants.toSorted(SORT_USERS)}
-			getKey={({ userId }) => userId}
+			getKey={({ peerId }) => peerId}
 		>
-			{({ userId }) => <LoadableUser id={userId} foreign={!isOwner} />}
+			{({ peerId }) => <LoadablePeer id={peerId} foreign={!isOwner} />}
 		</Select>
 	);
 };

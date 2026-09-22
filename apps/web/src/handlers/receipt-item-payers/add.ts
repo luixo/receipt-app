@@ -8,9 +8,9 @@ import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import {
+	peerIdSchema,
 	receiptItemIdSchema,
 	roleSchema,
-	userIdSchema,
 } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
@@ -18,7 +18,7 @@ export type PayerOutput = { createdAt: Temporal.ZonedDateTime };
 
 export const addItemPayerSchema = z.strictObject({
 	itemId: receiptItemIdSchema,
-	userId: userIdSchema,
+	peerId: peerIdSchema,
 	part: partSchema,
 });
 
@@ -31,14 +31,14 @@ const getData = async (
 			ctx.database
 				.selectFrom("receiptParticipants")
 				.where(
-					"receiptParticipants.userId",
+					"receiptParticipants.peerId",
 					"in",
-					unique(inputs.map((input) => input.userId)),
+					unique(inputs.map((input) => input.peerId)),
 				)
 				.innerJoin("receipts", (qb) =>
 					qb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 				)
-				.select(["receiptParticipants.userId"])
+				.select(["receiptParticipants.peerId"])
 				.execute(),
 			ctx.database
 				.selectFrom("receiptItems")
@@ -53,12 +53,12 @@ const getData = async (
 				.leftJoin("receiptParticipants", (jb) =>
 					jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 				)
-				.leftJoin("users", (jb) =>
-					jb.onRef("users.id", "=", "receiptParticipants.userId"),
+				.leftJoin("peers", (jb) =>
+					jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 				)
 				.leftJoin("accounts", (jb) =>
 					jb
-						.onRef("accounts.id", "=", "users.connectedAccountId")
+						.onRef("accounts.id", "=", "peers.connectedAccountId")
 						.on("accounts.id", "=", ctx.auth.accountId),
 				)
 				.groupBy([
@@ -80,17 +80,17 @@ const getData = async (
 				.selectFrom("receiptItemPayers")
 				.where((eb) =>
 					eb.or(
-						inputs.map(({ itemId, userId }) =>
+						inputs.map(({ itemId, peerId }) =>
 							eb.and({
 								"receiptItemPayers.itemId": itemId,
-								"receiptItemPayers.userId": userId,
+								"receiptItemPayers.peerId": peerId,
 							}),
 						),
 					),
 				)
 				.select([
 					"receiptItemPayers.part",
-					"receiptItemPayers.userId",
+					"receiptItemPayers.peerId",
 					"receiptItemPayers.itemId",
 				])
 				.execute(),
@@ -127,7 +127,7 @@ const getPayersOrErrors = (
 			if (!parsed.success) {
 				return new TRPCError({
 					code: "PRECONDITION_FAILED",
-					message: `User "${input.userId}" doesn't participate in receipt "${receiptId}".`,
+					message: `Peer "${input.peerId}" doesn't participate in receipt "${receiptId}".`,
 				});
 			}
 			const accessRole = parsed.data;
@@ -139,26 +139,26 @@ const getPayersOrErrors = (
 			}
 		}
 		const matchedReceiptItemPayer = receiptItemPayers.find(
-			({ userId, itemId }) =>
-				userId === input.userId && itemId === input.itemId,
+			({ peerId, itemId }) =>
+				peerId === input.peerId && itemId === input.itemId,
 		);
 		if (matchedReceiptItemPayer) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" already pays for item "${input.itemId}".`,
+				message: `Peer "${input.peerId}" already pays for item "${input.itemId}".`,
 			});
 		}
-		const matchedUser = receiptParticipants.find(
-			(receiptParticipant) => receiptParticipant.userId === input.userId,
+		const matchedPeer = receiptParticipants.find(
+			(receiptParticipant) => receiptParticipant.peerId === input.peerId,
 		);
-		if (!matchedUser) {
+		if (!matchedPeer) {
 			return new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `User "${input.userId}" doesn't participate in receipt "${receiptId}".`,
+				message: `Peer "${input.peerId}" doesn't participate in receipt "${receiptId}".`,
 			});
 		}
 		return {
-			userId: input.userId,
+			peerId: input.peerId,
 			itemId: input.itemId,
 			part: input.part.toString(),
 		};
@@ -177,7 +177,7 @@ const insertPayers = async (
 		.returning([
 			"receiptItemPayers.createdAt",
 			"receiptItemPayers.itemId",
-			"receiptItemPayers.userId",
+			"receiptItemPayers.peerId",
 		])
 		.execute();
 };
@@ -190,15 +190,15 @@ export const batchFn: BatchLoadContextFn<
 > = (ctx) => async (inputs) => {
 	const duplicatedTuples = getDuplicates(
 		inputs,
-		({ itemId, userId }) => [itemId, userId] as const,
+		({ itemId, peerId }) => [itemId, peerId] as const,
 	);
 	if (duplicatedTuples.length !== 0) {
 		throw new TRPCError({
 			code: "CONFLICT",
-			message: `Expected to have unique pair of item id and user id, got repeating pairs: ${duplicatedTuples
+			message: `Expected to have unique pair of item id and peer id, got repeating pairs: ${duplicatedTuples
 				.map(
-					([[itemId, userId], count]) =>
-						`item "${itemId}" / user "${userId}" (${count} times)`,
+					([[itemId, peerId], count]) =>
+						`item "${itemId}" / peer "${peerId}" (${count} times)`,
 				)
 				.join(", ")}.`,
 		});
@@ -219,13 +219,13 @@ export const batchFn: BatchLoadContextFn<
 		const matchedPayer = insertedPayer.find(
 			(payer) =>
 				payer.itemId === itemOrError.itemId &&
-				payer.userId === itemOrError.userId,
+				payer.peerId === itemOrError.peerId,
 		);
 		/* c8 ignore start */
 		if (!matchedPayer) {
 			return new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Expected to have a matched item payer in list of inserted rows for item id "${itemOrError.itemId}" and user id "${itemOrError.userId}".`,
+				message: `Expected to have a matched item payer in list of inserted rows for item id "${itemOrError.itemId}" and peer id "${itemOrError.peerId}".`,
 			});
 		}
 		/* c8 ignore stop */
@@ -237,7 +237,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add receipt item payer",
 		description:
-			"Assigns a participating userId as a payer of a given receipt item with a given part share.",
+			"Assigns a participating peerId as a payer of a given receipt item with a given part share.",
 	})
 	.input(addItemPayerSchema)
 	.mutation(queueCallFactory(batchFn));

@@ -11,8 +11,8 @@
 					"participants": [],
 					"items": [],
 					"payers": [],
-					"ownerUserId": "8afe767f-5e74-41b7-bfa4-22872f477793",
-					"selfUserId": "8afe767f-5e74-41b7-bfa4-22872f477793",
+					"ownerPeerId": "8afe767f-5e74-41b7-bfa4-22872f477793",
+					"selfPeerId": "8afe767f-5e74-41b7-bfa4-22872f477793",
 					"debts": {
 						"direction": "outcoming",
 						"debts": []

@@ -10,8 +10,8 @@
 						"role": "<undefined>",
 						"email": "Damaris.Kris@yahoo.com"
 					},
-					"user": {
-						"name": "Test user"
+					"peer": {
+						"name": "Test peer"
 					}
 				},
 				"dataUpdateCount": 1,
@@ -33,8 +33,8 @@
 							"avatarUrl": "<undefined>",
 							"role": "<undefined>"
 						},
-						"user": {
-							"name": "Test user"
+						"peer": {
+							"name": "Test peer"
 						}
 					},
 					"status": "success"

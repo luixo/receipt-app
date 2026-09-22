@@ -18,7 +18,7 @@ import type { EmptyMutateOptions } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view.web";
-import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-consumers/add";
 import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-consumers/remove";
 import { options as receiptItemConsumersUpdateOptions } from "~mutations/receipt-item-consumers/update";
@@ -41,8 +41,8 @@ const useAddParticipant = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(userId: UserId, role: AssignableRole, options: EmptyMutateOptions = {}) =>
-			addParticipantMutation.mutate({ receiptId, userId, role }, options),
+		(peerId: PeerId, role: AssignableRole, options: EmptyMutateOptions = {}) =>
+			addParticipantMutation.mutate({ receiptId, peerId, role }, options),
 		[addParticipantMutation, receiptId],
 	);
 };
@@ -55,8 +55,8 @@ const useRemoveParticipant = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(userId: UserId, options: EmptyMutateOptions = {}) =>
-			removeReceiptParticipantMutation.mutate({ receiptId, userId }, options),
+		(peerId: PeerId, options: EmptyMutateOptions = {}) =>
+			removeReceiptParticipantMutation.mutate({ receiptId, peerId }, options),
 		[removeReceiptParticipantMutation, receiptId],
 	);
 };
@@ -70,12 +70,12 @@ const useUpdateParticipantRole = (receiptId: ReceiptId) => {
 	);
 	return React.useCallback(
 		(
-			userId: UserId,
+			peerId: PeerId,
 			nextRole: Exclude<Role, "owner">,
 			options: EmptyMutateOptions = {},
 		) =>
 			updateParticipantMutation.mutate(
-				{ receiptId, userId, update: { type: "role", role: nextRole } },
+				{ receiptId, peerId, update: { type: "role", role: nextRole } },
 				options,
 			),
 		[updateParticipantMutation, receiptId],
@@ -92,8 +92,8 @@ const useAddPayer = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(userId: UserId, part: number, options: EmptyMutateOptions = {}) =>
-			addPayerMutation.mutate({ itemId: receiptId, userId, part }, options),
+		(peerId: PeerId, part: number, options: EmptyMutateOptions = {}) =>
+			addPayerMutation.mutate({ itemId: receiptId, peerId, part }, options),
 		[addPayerMutation, receiptId],
 	);
 };
@@ -108,8 +108,8 @@ const useRemovePayer = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(userId: UserId, options: EmptyMutateOptions = {}) =>
-			removePayerMutation.mutate({ itemId: receiptId, userId }, options),
+		(peerId: PeerId, options: EmptyMutateOptions = {}) =>
+			removePayerMutation.mutate({ itemId: receiptId, peerId }, options),
 		[removePayerMutation, receiptId],
 	);
 };
@@ -124,9 +124,9 @@ const useUpdatePayerPart = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(userId: UserId, nextPart: number, options: EmptyMutateOptions = {}) =>
+		(peerId: PeerId, nextPart: number, options: EmptyMutateOptions = {}) =>
 			updateParticipantMutation.mutate(
-				{ itemId: receiptId, userId, update: { type: "part", part: nextPart } },
+				{ itemId: receiptId, peerId, update: { type: "part", part: nextPart } },
 				options,
 			),
 		[updateParticipantMutation, receiptId],
@@ -240,10 +240,10 @@ const useAddItemConsumer = (receiptId: ReceiptId) => {
 	return React.useCallback(
 		(
 			itemId: ReceiptItemId,
-			userId: UserId,
+			peerId: PeerId,
 			part: number,
 			options: EmptyMutateOptions = {},
-		) => addItemConsumerMutation.mutate({ itemId, userId, part }, options),
+		) => addItemConsumerMutation.mutate({ itemId, peerId, part }, options),
 		[addItemConsumerMutation],
 	);
 };
@@ -258,8 +258,8 @@ const useRemoveItemConsumer = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(itemId: ReceiptItemId, userId: UserId, options: EmptyMutateOptions = {}) =>
-			removeItemConsumerMutation.mutate({ itemId, userId }, options),
+		(itemId: ReceiptItemId, peerId: PeerId, options: EmptyMutateOptions = {}) =>
+			removeItemConsumerMutation.mutate({ itemId, peerId }, options),
 		[removeItemConsumerMutation],
 	);
 };
@@ -276,12 +276,12 @@ const useUpdateItemConsumerPart = (receiptId: ReceiptId) => {
 	return React.useCallback(
 		(
 			itemId: ReceiptItemId,
-			userId: UserId,
+			peerId: PeerId,
 			part: number,
 			options: EmptyMutateOptions = {},
 		) =>
 			updateItemConsumerMutation.mutate(
-				{ itemId, userId, update: { type: "part", part } },
+				{ itemId, peerId, update: { type: "part", part } },
 				options,
 			),
 		[updateItemConsumerMutation],
@@ -300,10 +300,10 @@ const useAddItemPayer = (receiptId: ReceiptId) => {
 	return React.useCallback(
 		(
 			itemId: ReceiptItemId,
-			userId: UserId,
+			peerId: PeerId,
 			part: number,
 			options: EmptyMutateOptions = {},
-		) => addItemPayerMutation.mutate({ itemId, userId, part }, options),
+		) => addItemPayerMutation.mutate({ itemId, peerId, part }, options),
 		[addItemPayerMutation],
 	);
 };
@@ -318,8 +318,8 @@ const useRemoveItemPayer = (receiptId: ReceiptId) => {
 		),
 	);
 	return React.useCallback(
-		(itemId: ReceiptItemId, userId: UserId, options: EmptyMutateOptions = {}) =>
-			removeItemPayerMutation.mutate({ itemId, userId }, options),
+		(itemId: ReceiptItemId, peerId: PeerId, options: EmptyMutateOptions = {}) =>
+			removeItemPayerMutation.mutate({ itemId, peerId }, options),
 		[removeItemPayerMutation],
 	);
 };
@@ -336,12 +336,12 @@ const useUpdateItemPayerPart = (receiptId: ReceiptId) => {
 	return React.useCallback(
 		(
 			itemId: ReceiptItemId,
-			userId: UserId,
+			peerId: PeerId,
 			part: number,
 			options: EmptyMutateOptions = {},
 		) =>
 			updateItemPayerMutation.mutate(
-				{ itemId, userId, update: { type: "part", part } },
+				{ itemId, peerId, update: { type: "part", part } },
 				options,
 			),
 		[updateItemPayerMutation],
@@ -371,8 +371,8 @@ export const useActionHooks = (receipt: Receipt) => ({
 export type ReceiptContext = {
 	receiptId: ReceiptId;
 	currencyCode: CurrencyCode;
-	selfUserId: UserId;
-	ownerUserId: UserId;
+	selfPeerId: PeerId;
+	ownerPeerId: PeerId;
 
 	receiptDisabled: boolean;
 
@@ -383,7 +383,7 @@ export type ReceiptContext = {
 	renderParticipantActions: (
 		participant: ReturnType<typeof useParticipants>[number],
 	) => ViewReactNode;
-	getUsersSuggestOptions: () => TRPCQueryInput<"users.suggest">["options"];
+	getPeersSuggestOptions: () => TRPCQueryInput<"peers.suggest">["options"];
 	emptyReceiptElement: React.ReactNode;
 };
 
@@ -396,15 +396,15 @@ export const useGetReceiptContext = (
 	const participants = useParticipants(receipt);
 	return {
 		receiptId: receipt.id,
-		selfUserId: receipt.selfUserId,
+		selfPeerId: receipt.selfPeerId,
 		payers: receipt.payers,
-		ownerUserId: receipt.ownerUserId,
+		ownerPeerId: receipt.ownerPeerId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,
 		items: receipt.items,
 		participants,
 		renderParticipantActions,
-		getUsersSuggestOptions: () => ({
+		getPeersSuggestOptions: () => ({
 			type: "not-connected-receipt",
 			receiptId: receipt.id,
 		}),

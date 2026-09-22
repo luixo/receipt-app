@@ -1,12 +1,12 @@
 import { useReceiptContext } from "./context";
 
 const useSelfRole = () => {
-	const { participants, selfUserId, ownerUserId } = useReceiptContext();
-	if (selfUserId === ownerUserId) {
+	const { participants, selfPeerId, ownerPeerId } = useReceiptContext();
+	if (selfPeerId === ownerPeerId) {
 		return "owner";
 	}
 	return (
-		participants.find((participant) => participant.userId === selfUserId)
+		participants.find((participant) => participant.peerId === selfPeerId)
 			?.role ?? "owner"
 	);
 };

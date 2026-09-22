@@ -18,9 +18,9 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "~app/trpc";
-import type { User } from "~app/trpc-types";
+import type { Peer } from "~app/trpc-types";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
@@ -473,19 +473,19 @@ const getMockUtils = ({
 			outbound: [],
 		});
 		api.mockLast("debts.getAll", { items: [] });
-		api.mockLast("debts.getUsersPaged", {
+		api.mockLast("debts.getPeersPaged", {
 			count: 0,
 			cursor: 0,
 			items: [],
 		});
-		api.mockLast("users.getPaged", {
+		api.mockLast("peers.getPaged", {
 			count: 0,
 			cursor: 0,
 			items: [],
 		});
 		const selfId = faker.string.uuid();
-		const selfUser = {
-			id: selfId as UserId,
+		const selfPeer = {
+			id: selfId as PeerId,
 			name: faker.person.firstName(),
 			publicName: undefined,
 			connectedAccount: {
@@ -495,29 +495,29 @@ const getMockUtils = ({
 			},
 		};
 		const selfAccount = {
-			id: selfUser.connectedAccount.id,
-			email: selfUser.connectedAccount.email,
+			id: selfPeer.connectedAccount.id,
+			email: selfPeer.connectedAccount.email,
 			verified: true,
-			avatarUrl: selfUser.connectedAccount.avatarUrl,
+			avatarUrl: selfPeer.connectedAccount.avatarUrl,
 			role: undefined,
 		};
 		api.mockLast("account.get", {
 			account: selfAccount,
-			user: { name: selfUser.name },
+			peer: { name: selfPeer.name },
 		});
 		api.mockLast("accountSettings.get", { manualAcceptDebts: false });
-		api.mockLast("users.get", ({ input, next }) => {
-			if (selfUser.id === input.id) {
-				return selfUser;
+		api.mockLast("peers.get", ({ input, next }) => {
+			if (selfPeer.id === input.id) {
+				return selfPeer;
 			}
 			return next();
 		});
-		return { user: selfUser, account: selfAccount };
+		return { peer: selfPeer, account: selfAccount };
 	},
-	mockUsers: (...users: User[]) => {
+	mockPeers: (...peers: Peer[]) => {
 		api.mockFirst(
-			"users.get",
-			({ input, next }) => users.find((user) => user.id === input.id) || next(),
+			"peers.get",
+			({ input, next }) => peers.find((peer) => peer.id === input.id) || next(),
 		);
 	},
 });

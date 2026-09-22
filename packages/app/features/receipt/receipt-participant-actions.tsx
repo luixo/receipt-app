@@ -35,7 +35,7 @@ export const ReceiptParticipantNoDebtAction: React.FC<
 	const addDebt = React.useCallback(() => {
 		addMutation.mutate({
 			currencyCode: receipt.currencyCode,
-			userId: participant.userId,
+			peerId: participant.peerId,
 			amount: participant.balance,
 			timestamp: receipt.issued,
 			note: getReceiptDebtName(receipt.name),
@@ -47,7 +47,7 @@ export const ReceiptParticipantNoDebtAction: React.FC<
 		receipt.currencyCode,
 		receipt.issued,
 		receipt.name,
-		participant.userId,
+		participant.peerId,
 		receipt.id,
 	]);
 

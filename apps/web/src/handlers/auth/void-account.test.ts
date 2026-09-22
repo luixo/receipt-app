@@ -68,7 +68,7 @@ describe("auth.voidAccount", () => {
 			expect(result).toStrictEqual<typeof result>({ email });
 		});
 
-		test.todo("verify account users are removed");
+		test.todo("verify account peers are removed");
 		test.todo("verify account debts are removed");
 		test.todo("verify account receipts are removed");
 		test.todo("verify account connection intentions are removed");

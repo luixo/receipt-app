@@ -73,7 +73,7 @@ test("'receipts.add' mutation", async ({
 	faker,
 	fillCurrency,
 }) => {
-	const { user: selfUser } = await mockBase();
+	const { peer: selfPeer } = await mockBase();
 	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
@@ -138,8 +138,8 @@ test("'receipts.add' mutation", async ({
 		participants: [],
 		items: [],
 		payers: [],
-		ownerUserId: selfUser.id,
-		selfUserId: selfUser.id,
+		ownerPeerId: selfPeer.id,
+		selfPeerId: selfPeer.id,
 	}));
 	await snapshotQueries(
 		async () => {
@@ -147,7 +147,7 @@ test("'receipts.add' mutation", async ({
 			await awaitCacheKey("receipts.add");
 			await verifyToastTexts(`Receipt "${receiptName}" added`);
 		},
-		{ name: "success", blacklistKeys: "users.get" },
+		{ name: "success", blacklistKeys: "peers.get" },
 	);
 	await page.expectUrl({ to: "/receipts/$id", params: { id: receiptId } });
 });

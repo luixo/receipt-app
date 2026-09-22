@@ -26,17 +26,17 @@ export const procedure = unauthProcedure
 		const result = await database
 			.selectFrom("accounts")
 			.where("email", "=", input.email.lowercase)
-			.innerJoin("users", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "accounts.id"),
+			.innerJoin("peers", (qb) =>
+				qb.onRef("peers.connectedAccountId", "=", "accounts.id"),
 			)
-			.whereRef("users.id", "=", "users.connectedAccountId")
+			.whereRef("peers.id", "=", "peers.connectedAccountId")
 			.select([
 				"accounts.id as accountId",
 				"accounts.email",
 				"accounts.passwordSalt",
 				"accounts.passwordHash",
 				"accounts.role",
-				"users.name",
+				"peers.name",
 				"accounts.confirmationToken",
 				"accounts.avatarUrl",
 			])
@@ -77,7 +77,7 @@ export const procedure = unauthProcedure
 				avatarUrl: result.avatarUrl || undefined,
 				role: result.role ?? undefined,
 			},
-			user: {
+			peer: {
 				name: result.name,
 			},
 		};

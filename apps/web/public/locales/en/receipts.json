@@ -74,12 +74,12 @@
 			"confirmSubtitle": "This will remove participant with all his consumer parts"
 		},
 		"actions": {
-			"updateButton": "Update debt for a user",
-			"sendButton": "Send debt to a user"
+			"updateButton": "Update debt for a peer",
+			"sendButton": "Send debt to a peer"
 		}
 	},
 	"participant": {
-		"title": "Participant {{userId}}",
+		"title": "Participant {{peerId}}",
 		"payedInfix": "Payed",
 		"payerPart": "Payed {{amount}} in total",
 		"payedShort": "Payed {{amount}}",
@@ -140,7 +140,7 @@
 		},
 		"participants": {
 			"everyone": "Consumed by everyone",
-			"orphanedError": "Consumer part for user id {{userId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id"
+			"orphanedError": "Consumer part for peer id {{peerId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned peer id"
 		},
 		"payer": {
 			"placeholder": "Payer",

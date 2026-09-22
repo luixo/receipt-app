@@ -2,12 +2,12 @@ import { mergeTests } from "@playwright/test";
 
 import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
 import type {
 	GenerateReceiptItems,
 	GenerateReceiptItemsWithConsumers,
 } from "~tests/frontend/generators/receipts";
 import { defaultGenerateReceiptItems } from "~tests/frontend/generators/receipts";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
 
 import { test as partButtonsFixture } from "./part-buttons.utils";
 
@@ -15,10 +15,10 @@ const test = mergeTests(receiptTest, partButtonsFixture);
 
 // A receipt with a single item and a single non-self consumer: their
 // PartButtons row is rendered first, above the self consumer row.
-const generateUsers: GenerateUsers = ({ faker }) => [
+const generatePeers: GeneratePeers = ({ faker }) => [
 	{
 		id: faker.string.uuid(),
-		name: "Other user",
+		name: "Other peer",
 		publicName: undefined,
 		connectedAccount: undefined,
 	},
@@ -38,7 +38,7 @@ const generateReceiptItemsWithConsumers =
 			createdAt: item.createdAt,
 			consumers: participants.map((participant, index) => ({
 				createdAt: item.createdAt.add({ seconds: index + 1 }),
-				userId: participant.userId,
+				peerId: participant.peerId,
 				part,
 			})),
 			payers: [],
@@ -54,7 +54,7 @@ test("Clicking up increases the consumer's part", async ({
 }) => {
 	api.mockFirst("receiptItemConsumers.update", undefined);
 	const { receipt } = await mockReceipt({
-		generateUsers,
+		generatePeers,
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(2),
 	});
@@ -73,7 +73,7 @@ test("Down button is disabled when the part is at the minimum", async ({
 	partButtonsUp,
 }) => {
 	const { receipt } = await mockReceipt({
-		generateUsers,
+		generatePeers,
 		generateReceiptItems,
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
 	});

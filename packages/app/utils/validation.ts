@@ -3,7 +3,7 @@ import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import { VALID_LOCALES, getValidLocale } from "~app/utils/locale";
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 
 const getLengthMessage = (
 	amount: number,
@@ -65,10 +65,10 @@ export const receiptItemNameSchema = constrainLength(z.string(), {
 export const MIN_USERNAME_LENGTH = 1;
 export const MAX_USERNAME_LENGTH = 255;
 
-export const userNameSchema = constrainLength(z.string(), {
+export const peerNameSchema = constrainLength(z.string(), {
 	min: MIN_USERNAME_LENGTH,
 	max: MAX_USERNAME_LENGTH,
-	target: "user name",
+	target: "peer name",
 });
 
 export const MIN_QUERY_LENGTH = 3;
@@ -172,7 +172,7 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 	decimals: currencyRateSchemaDecimal,
 });
 
-export const userIdSchema = flavored<UserId>(z.uuid(), "user id");
+export const peerIdSchema = flavored<PeerId>(z.uuid(), "peer id");
 export const accountIdSchema = flavored<AccountId>(z.uuid(), "account id");
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
@@ -212,7 +212,7 @@ export const receiptsOrderBySchema = z.enum(["date-asc", "date-desc"]);
 export const debtsFiltersSchema = z.strictObject({
 	showResolved: z.boolean().optional(),
 });
-export const debtsByUserFiltersSchema = z.strictObject({
+export const debtsByPeerFiltersSchema = z.strictObject({
 	showResolved: z.boolean().optional(),
 });
 

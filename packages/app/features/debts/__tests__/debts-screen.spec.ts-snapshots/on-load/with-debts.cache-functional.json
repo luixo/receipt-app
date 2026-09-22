@@ -70,7 +70,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"54904b27-421d-4dab-b7c9-672756214de4\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"54904b27-421d-4dab-b7c9-672756214de4\"}]": {
 			"state": {
 				"data": {
 					"items": [
@@ -104,7 +104,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"7c83335d-e4a7-4ea4-8777-d5e9723b5dd5\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"7c83335d-e4a7-4ea4-8777-d5e9723b5dd5\"}]": {
 			"state": {
 				"data": {
 					"items": [
@@ -142,7 +142,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"818bb356-a9db-4444-b440-cc7f4401ce6d\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"818bb356-a9db-4444-b440-cc7f4401ce6d\"}]": {
 			"state": {
 				"data": {
 					"items": [
@@ -168,7 +168,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+		"debts.getPeersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
 			"state": {
 				"data": {
 					"count": 3,

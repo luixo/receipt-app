@@ -4,7 +4,7 @@ import {
 	ourNonExistent,
 	remapDebts,
 } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 import { test } from "./debts.utils";
 
@@ -17,7 +17,7 @@ test("Propagate state", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceipt({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 	});
@@ -36,7 +36,7 @@ test("Sync state", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceipt({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourDesynced)(defaultGenerateDebtsFromReceipt(opts)),
 	});
@@ -55,7 +55,7 @@ test("Synced state", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	const { receipt } = await mockReceipt({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 1 }),
 	});
 	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("synced.png", {

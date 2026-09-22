@@ -10,8 +10,8 @@ exports[`receipts.remove > functionality > receipt is removed 1`] = `
       "id:e34c6fe4-298c-4c79-b6b3-db6957894c45": undefined,
     },
     "receiptParticipants": {
-      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|userId:3998d006-ed7f-4530-be0f-40767224451a": undefined,
-      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|userId:8f1fd9aa-e20d-442b-a00f-691852274028": undefined,
+      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|peerId:3998d006-ed7f-4530-be0f-40767224451a": undefined,
+      "receiptId:46205292-5141-4639-9b3b-8417dced9e92|peerId:8f1fd9aa-e20d-442b-a00f-691852274028": undefined,
     },
     "receipts": {
       "id:46205292-5141-4639-9b3b-8417dced9e92": undefined,

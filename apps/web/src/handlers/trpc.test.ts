@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { PRETEND_ACCOUNT_STORE_NAME } from "~app/utils/store/pretend-account";
 import { createAuthContext, createContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -155,7 +155,7 @@ describe("procedures", () => {
 			]);
 		});
 
-		describe("pretend user", () => {
+		describe("pretend peer", () => {
 			describe("context is regular", () => {
 				test("with non-admin role", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
@@ -171,7 +171,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							reqHeaders: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_ACCOUNT_STORE_NAME}=${JSON.stringify({
 									email: "not@found.com",
 								})}`,
 							},
@@ -189,7 +189,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							reqHeaders: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_ACCOUNT_STORE_NAME}=${JSON.stringify({
 									email: foreignAccount.email,
 								})}`,
 								"x-keep-real-auth": "true",
@@ -208,7 +208,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							reqHeaders: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_ACCOUNT_STORE_NAME}=${JSON.stringify({
 									email2: foreignAccount.email,
 								})}`,
 							},
@@ -227,7 +227,7 @@ describe("procedures", () => {
 				const caller = createCaller(
 					createAuthContext(ctx, sessionId, {
 						reqHeaders: {
-							cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+							cookie: `${PRETEND_ACCOUNT_STORE_NAME}=${JSON.stringify({
 								email: foreignAccount.email,
 							})}`,
 						},
@@ -240,7 +240,7 @@ describe("procedures", () => {
 	});
 
 	describe("admin procedure", () => {
-		test("user is not admin", async ({ ctx }) => {
+		test("peer is not admin", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { role: "foo" },
 			});
@@ -252,7 +252,7 @@ describe("procedures", () => {
 			);
 		});
 
-		test("user is admin", async ({ ctx }) => {
+		test("peer is admin", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { role: "admin" },
 			});

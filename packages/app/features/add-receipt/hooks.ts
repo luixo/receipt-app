@@ -5,7 +5,7 @@ import type {
 	useGetReceiptContext,
 } from "~app/features/receipt/hooks";
 import type { EmptyMutateOptions } from "~app/utils/queries";
-import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 
 import type { Form, Item, Participant, Payer } from "./state";
 
@@ -111,16 +111,16 @@ const useUpdateItemQuantity = (setItems: SetItems) => {
 const useAddItemConsumer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["addItemConsumer"]>(
-		(itemId, userId, part, options) =>
+		(itemId, peerId, part, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => ({
 					// Remove accidentally added double participants
 					consumers: [
 						...(prevItem.consumers || []).filter(
-							({ userId: lookupUserId }) => lookupUserId !== userId,
+							({ peerId: lookupPeerId }) => lookupPeerId !== peerId,
 						),
-						{ userId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
+						{ peerId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
 					],
 				}),
 				options,
@@ -132,12 +132,12 @@ const useAddItemConsumer = (setItems: SetItems) => {
 const useRemoveItemConsumer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["removeItemConsumer"]>(
-		(itemId, userId, options) =>
+		(itemId, peerId, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => ({
 					consumers: (prevItem.consumers || []).filter(
-						({ userId: lookupUserId }) => lookupUserId !== userId,
+						({ peerId: lookupPeerId }) => lookupPeerId !== peerId,
 					),
 				}),
 				options,
@@ -149,13 +149,13 @@ const useRemoveItemConsumer = (setItems: SetItems) => {
 const useUpdateItemConsumerPart = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["updateItemConsumerPart"]>(
-		(itemId, userId, part, options) =>
+		(itemId, peerId, part, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => {
 					const prevConsumers = prevItem.consumers || [];
 					const matchedPartIndex = prevConsumers.findIndex(
-						({ userId: lookupUserId }) => userId === lookupUserId,
+						({ peerId: lookupPeerId }) => peerId === lookupPeerId,
 					);
 					if (matchedPartIndex === -1) {
 						return {};
@@ -178,16 +178,16 @@ const useUpdateItemConsumerPart = (setItems: SetItems) => {
 const useAddItemPayer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["addItemPayer"]>(
-		(itemId, userId, part, options) =>
+		(itemId, peerId, part, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => ({
 					// Remove accidentally added double participants
 					payers: [
 						...(prevItem.payers || []).filter(
-							({ userId: lookupUserId }) => lookupUserId !== userId,
+							({ peerId: lookupPeerId }) => lookupPeerId !== peerId,
 						),
-						{ userId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
+						{ peerId, part, createdAt: Temporal.Now.zonedDateTimeISO() },
 					],
 				}),
 				options,
@@ -199,12 +199,12 @@ const useAddItemPayer = (setItems: SetItems) => {
 const useRemoveItemPayer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["removeItemPayer"]>(
-		(itemId, userId, options) =>
+		(itemId, peerId, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => ({
 					payers: (prevItem.payers || []).filter(
-						({ userId: lookupUserId }) => lookupUserId !== userId,
+						({ peerId: lookupPeerId }) => lookupPeerId !== peerId,
 					),
 				}),
 				options,
@@ -216,13 +216,13 @@ const useRemoveItemPayer = (setItems: SetItems) => {
 const useUpdateItemPayerPart = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["updateItemPayerPart"]>(
-		(itemId, userId, part, options) =>
+		(itemId, peerId, part, options) =>
 			updateItem(
 				itemId,
 				(prevItem) => {
 					const prevPayers = prevItem.payers || [];
 					const matchedPartIndex = prevPayers.findIndex(
-						({ userId: lookupUserId }) => userId === lookupUserId,
+						({ peerId: lookupPeerId }) => peerId === lookupPeerId,
 					);
 					if (matchedPartIndex === -1) {
 						return {};
@@ -244,12 +244,12 @@ const useUpdateItemPayerPart = (setItems: SetItems) => {
 
 const useAddPayer = (setPayers: SetPayers) =>
 	React.useCallback<ActionsHooks["addPayer"]>(
-		(userId, part, options) =>
+		(peerId, part, options) =>
 			setPayers(
 				(prevPayers) => [
 					// Remove accidentally added double participants
-					...prevPayers.filter((payer) => payer.userId !== userId),
-					{ createdAt: Temporal.Now.zonedDateTimeISO(), userId, part },
+					...prevPayers.filter((payer) => payer.peerId !== peerId),
+					{ createdAt: Temporal.Now.zonedDateTimeISO(), peerId, part },
 				],
 				options,
 			),
@@ -258,9 +258,9 @@ const useAddPayer = (setPayers: SetPayers) =>
 
 const useRemovePayer = (setPayers: SetPayers) =>
 	React.useCallback<ActionsHooks["removePayer"]>(
-		(userId, options) =>
+		(peerId, options) =>
 			setPayers(
-				(prevPayers) => prevPayers.filter((payer) => payer.userId !== userId),
+				(prevPayers) => prevPayers.filter((payer) => payer.peerId !== peerId),
 				options,
 			),
 		[setPayers],
@@ -270,11 +270,11 @@ const useUpdatePayers = (setPayers: SetPayers) =>
 	React.useCallback(
 		(
 			options: EmptyMutateOptions | undefined,
-			userId: UserId,
+			peerId: PeerId,
 			setStateAction: React.SetStateAction<Partial<Payer>>,
 		) => {
 			setPayers((prevPayers) => {
-				const index = prevPayers.findIndex((payer) => payer.userId === userId);
+				const index = prevPayers.findIndex((payer) => payer.peerId === peerId);
 				if (index === -1) {
 					return prevPayers;
 				}
@@ -297,21 +297,21 @@ const useUpdatePayers = (setPayers: SetPayers) =>
 const useUpdatePayerPart = (setPayers: SetPayers) => {
 	const updatePayer = useUpdatePayers(setPayers);
 	return React.useCallback<ActionsHooks["updatePayerPart"]>(
-		(userId, part, options) => updatePayer(options, userId, { part }),
+		(peerId, part, options) => updatePayer(options, peerId, { part }),
 		[updatePayer],
 	);
 };
 
 const useAddParticipant = (setParticipants: SetParticipants) =>
 	React.useCallback<ActionsHooks["addParticipant"]>(
-		(userId, role, options) =>
+		(peerId, role, options) =>
 			setParticipants(
 				(prevParticipants) => [
 					// Remove accidentally added double participants
 					...prevParticipants.filter(
-						(participant) => participant.userId !== userId,
+						(participant) => participant.peerId !== peerId,
 					),
-					{ createdAt: Temporal.Now.zonedDateTimeISO(), role, userId },
+					{ createdAt: Temporal.Now.zonedDateTimeISO(), role, peerId },
 				],
 				options,
 			),
@@ -320,11 +320,11 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 
 const useRemoveParticipant = (setParticipants: SetParticipants) =>
 	React.useCallback<ActionsHooks["removeParticipant"]>(
-		(userId, options) =>
+		(peerId, options) =>
 			setParticipants(
 				(prevParticipants) =>
 					prevParticipants.filter(
-						(participant) => participant.userId !== userId,
+						(participant) => participant.peerId !== peerId,
 					),
 				options,
 			),
@@ -335,12 +335,12 @@ const useUpdateParticipant = (setParticipants: SetParticipants) =>
 	React.useCallback(
 		(
 			options: EmptyMutateOptions | undefined,
-			userId: UserId,
+			peerId: PeerId,
 			setStateAction: React.SetStateAction<Partial<Participant>>,
 		) => {
 			setParticipants((prevParticipants) => {
 				const index = prevParticipants.findIndex(
-					(participant) => participant.userId === userId,
+					(participant) => participant.peerId === peerId,
 				);
 				if (index === -1) {
 					return prevParticipants;
@@ -364,7 +364,7 @@ const useUpdateParticipant = (setParticipants: SetParticipants) =>
 const useUpdateParticipantRole = (setParticipants: SetParticipants) => {
 	const updateParticipant = useUpdateParticipant(setParticipants);
 	return React.useCallback<ActionsHooks["updateParticipantRole"]>(
-		(userId, role, options) => updateParticipant(options, userId, { role }),
+		(peerId, role, options) => updateParticipant(options, peerId, { role }),
 		[updateParticipant],
 	);
 };
@@ -434,20 +434,20 @@ export const useActionsHooks = (
 export const useAddReceiptContext = (
 	form: Partial<Form>,
 	receiptId: ReceiptId,
-	selfUserId: UserId,
+	selfPeerId: PeerId,
 	payers: ReceiptContext["payers"],
 	items: ReceiptContext["items"],
 	participants: ReceiptContext["participants"],
 ): ReceiptContext => ({
 	receiptId,
-	selfUserId,
-	ownerUserId: selfUserId,
+	selfPeerId,
+	ownerPeerId: selfPeerId,
 	payers,
 	currencyCode: form.currencyCode ?? "???",
 	receiptDisabled: false,
 	items,
 	participants,
 	renderParticipantActions: () => null,
-	getUsersSuggestOptions: () => undefined,
+	getPeersSuggestOptions: () => undefined,
 	emptyReceiptElement: null,
 });

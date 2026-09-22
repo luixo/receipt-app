@@ -208,12 +208,12 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	},
 	{
 		selector: "MemberExpression[object.name='page'][property.name='goto']",
-		message: "User page.navigate instead of page.goto",
+		message: "Use page.navigate instead of page.goto",
 	},
 	{
 		selector:
 			"MemberExpression[object.callee.name='expect'][object.arguments.0.name='page'][property.name='toHaveURL']",
-		message: "User page.navigate instead of page.goto",
+		message: "Use page.navigate instead of page.goto",
 	},
 ] as const;
 

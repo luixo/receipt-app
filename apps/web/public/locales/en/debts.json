@@ -59,8 +59,8 @@
 				"label": "To"
 			}
 		},
-		"defaultNoteFrom": "Transferred from {{user}}",
-		"defaultNoteTo": "Transferred to {{user}}"
+		"defaultNoteFrom": "Transferred from {{peer}}",
+		"defaultNoteTo": "Transferred to {{peer}}"
 	},
 	"intentions": {
 		"acceptAllButton": "Accept all intentions",
@@ -90,15 +90,15 @@
 		"defaultNoteFrom": "Converted from {{debts}}",
 		"defaultNoteTo": "Converted to {{debt}}"
 	},
-	"user": {
+	"peer": {
 		"even": "Even on {{currency}}",
 		"buttons": {
 			"transfer": "Transfer debts",
 			"add": "Add debt",
-			"edit": "Edit user"
+			"edit": "Edit peer"
 		},
 		"modal": {
-			"editTitle": "Edit user"
+			"editTitle": "Edit peer"
 		},
 		"showResolved": "Show resolved debts",
 		"filters": {

@@ -13,7 +13,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.r
 			({ t }) =>
 			(errors) => ({
 				text: t("toasts.removeInvite.error", {
-					ns: "users",
+					ns: "peers",
 					invitesAmount: errors.length,
 					errors,
 				}),

@@ -4,16 +4,16 @@ import type { DebtId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 type Fixtures = {
 	mockBase: () => Promise<{
-		debtUser: ReturnType<GenerateUsers>[number];
+		debtPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	mockDebt: (options?: { generateDebts?: GenerateDebts }) => Promise<{
 		debt: ReturnType<GenerateDebts>[number];
-		debtUser: ReturnType<GenerateUsers>[number];
+		debtPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	openDebtScreen: (
 		debtId: DebtId,
@@ -25,19 +25,19 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(async () => {
 			const auth = await api.mockUtils.authPage();
-			const [user] = defaultGenerateUsers({ faker, amount: 1 });
-			assert.ok(user);
-			api.mockUtils.mockUsers(user);
-			return { ...auth, debtUser: user };
+			const [peer] = defaultGeneratePeers({ faker, amount: 1 });
+			assert.ok(peer);
+			api.mockUtils.mockPeers(peer);
+			return { ...auth, debtPeer: peer };
 		}),
 
 	mockDebt: ({ api, faker, mockBase }, use) =>
 		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { debtUser } = await mockBase();
+			const { debtPeer } = await mockBase();
 			const [debt] = generateDebts({
 				faker,
 				amount: 1,
-				userId: debtUser.id,
+				peerId: debtPeer.id,
 			});
 			assert.ok(debt);
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
@@ -55,17 +55,17 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("debts.getAll", {
 				items: aggregatedDebts,
 			});
-			api.mockFirst("debts.getUsersPaged", ({ input: { cursor } }) => ({
+			api.mockFirst("debts.getPeersPaged", ({ input: { cursor } }) => ({
 				count: 1,
 				cursor,
-				items: [debtUser.id],
+				items: [debtPeer.id],
 			}));
 			api.mockFirst(
-				"debts.getAllUser",
-				({ input: { userId: lookupUserId } }) => {
-					if (lookupUserId !== debtUser.id) {
+				"debts.getAllPeer",
+				({ input: { peerId: lookupPeerId } }) => {
+					if (lookupPeerId !== debtPeer.id) {
 						throw new Error(
-							`Unexpected debt id in "debts.getAllUser": ${lookupUserId}`,
+							`Unexpected debt id in "debts.getAllPeer": ${lookupPeerId}`,
 						);
 					}
 					return {
@@ -73,7 +73,7 @@ export const test = originalTest.extend<Fixtures>({
 					};
 				},
 			);
-			api.mockFirst("debts.getByUserPaged", () => ({
+			api.mockFirst("debts.getByPeerPaged", () => ({
 				cursor: 0,
 				count: 1,
 				items: [debt.id],
@@ -82,7 +82,7 @@ export const test = originalTest.extend<Fixtures>({
 				updatedAt: Temporal.Now.zonedDateTimeISO(),
 				reverseUpdated: false,
 			}));
-			return { debt, debtUser };
+			return { debt, debtPeer };
 		}),
 
 	openDebtScreen: ({ page, awaitCacheKey }, use) =>
@@ -90,7 +90,7 @@ export const test = originalTest.extend<Fixtures>({
 			await page.navigate({ to: "/debts/$id", params: { id: debtId } });
 			if (awaitCache) {
 				await awaitCacheKey("debts.get");
-				await awaitCacheKey("users.get");
+				await awaitCacheKey("peers.get");
 			}
 		}),
 });

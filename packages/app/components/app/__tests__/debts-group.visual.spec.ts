@@ -10,43 +10,43 @@ import { test as debtsGroupFixture } from "./debts-group.utils";
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
 test("No debts", async ({
-	openUserDebtsScreen,
+	openPeerDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
 }) => {
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
 		generateDebts: () => [],
 	});
-	assert.ok(firstUser);
-	await openUserDebtsScreen(firstUser.id);
+	assert.ok(firstPeer);
+	await openPeerDebtsScreen(firstPeer.id);
 	await expectScreenshotWithSchemes("empty.png", {
 		locator: debtsGroup,
 	});
 });
 
 test("Single group", async ({
-	openUserDebtsScreen,
+	openPeerDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
 }) => {
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	assert.ok(firstUser);
-	await openUserDebtsScreen(firstUser.id, { awaitDebts: 1 });
+	assert.ok(firstPeer);
+	await openPeerDebtsScreen(firstPeer.id, { awaitDebts: 1 });
 	await expectScreenshotWithSchemes("single.png", {
 		locator: debtsGroup,
 	});
 });
 
 test("Multiple groups with different directions", async ({
-	openUserDebtsScreen,
+	openPeerDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
@@ -55,17 +55,17 @@ test("Multiple groups with different directions", async ({
 }) => {
 	const AMOUNT = 20;
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: AMOUNT }),
 	});
 	await cookieManager.addCookie(LIMIT_STORE_NAME, AMOUNT + 1);
-	assert.ok(firstUser);
+	assert.ok(firstPeer);
 	// TODO: fix this ignored message
 	consoleManager.ignore(
 		'Select: Keys "21" passed to "selectedKeys" are not present in the collection.',
 	);
-	await openUserDebtsScreen(firstUser.id, { awaitDebts: AMOUNT });
+	await openPeerDebtsScreen(firstPeer.id, { awaitDebts: AMOUNT });
 	await expectScreenshotWithSchemes("multiple.png", {
 		locator: debtsGroup,
 	});

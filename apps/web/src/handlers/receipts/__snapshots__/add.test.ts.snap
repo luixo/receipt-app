@@ -33,35 +33,35 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|peerId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "2.00",
+        "peerId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
       },
-      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|peerId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "1.00",
+        "peerId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receiptItemPayers": {
-      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|peerId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "3.00",
+        "peerId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
       },
-      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+      "itemId:2d659cae-9a91-4188-b5ac-4de41909364a|peerId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "part": "2.00",
+        "peerId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receiptItems": {
@@ -94,19 +94,19 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
       },
     },
     "receiptParticipants": {
-      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|userId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
+      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|peerId:505df457-b0e0-4b8f-8089-4bfc2fe05ed9": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
         "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "505df457-b0e0-4b8f-8089-4bfc2fe05ed9",
       },
-      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|userId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
+      "receiptId:80c204c8-f18a-4fe6-a069-f950e73f6752|peerId:6799e4f0-3836-4c37-9d29-6e77c519f401": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
         "receiptId": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "role": "editor",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "6799e4f0-3836-4c37-9d29-6e77c519f401",
       },
     },
     "receipts": {
@@ -186,19 +186,19 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
       },
     },
     "receiptParticipants": {
-      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|userId:380d581a-3a71-432d-96ed-290d284bbffa": {
+      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|peerId:380d581a-3a71-432d-96ed-290d284bbffa": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "380d581a-3a71-432d-96ed-290d284bbffa",
         "receiptId": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "380d581a-3a71-432d-96ed-290d284bbffa",
       },
-      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|userId:93b6e565-0c29-47c3-aa85-6b7836da664e": {
+      "receiptId:8dd65dc8-e9fe-400a-8f49-d80a41448177|peerId:93b6e565-0c29-47c3-aa85-6b7836da664e": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "93b6e565-0c29-47c3-aa85-6b7836da664e",
         "receiptId": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "role": "editor",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "93b6e565-0c29-47c3-aa85-6b7836da664e",
       },
     },
     "receipts": {
@@ -220,19 +220,19 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
+      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|peerId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "part": "1.00",
+        "peerId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
       },
-      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:dbad4f55-f087-4591-9264-fbc355413624": {
+      "itemId:226d5e72-176f-4b9f-b93f-282e7bb931e2|peerId:dbad4f55-f087-4591-9264-fbc355413624": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "part": "22.00",
+        "peerId": "dbad4f55-f087-4591-9264-fbc355413624",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "dbad4f55-f087-4591-9264-fbc355413624",
       },
     },
     "receiptItems": {
@@ -247,19 +247,19 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
       },
     },
     "receiptParticipants": {
-      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
+      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|peerId:75f6916a-9c3e-428b-9af0-e8d28c9894dd": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
         "receiptId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "role": "editor",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "75f6916a-9c3e-428b-9af0-e8d28c9894dd",
       },
-      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|userId:dbad4f55-f087-4591-9264-fbc355413624": {
+      "receiptId:226d5e72-176f-4b9f-b93f-282e7bb931e2|peerId:dbad4f55-f087-4591-9264-fbc355413624": {
         "createdAt": "2020-01-01 00:00:00+00",
+        "peerId": "dbad4f55-f087-4591-9264-fbc355413624",
         "receiptId": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "role": "owner",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "dbad4f55-f087-4591-9264-fbc355413624",
       },
     },
     "receipts": {

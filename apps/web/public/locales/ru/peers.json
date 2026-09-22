@@ -1,0 +1,118 @@
+{
+	"list": {
+		"header": "Пользователи",
+		"addPeer": {
+			"button": "Добавить пользователя"
+		},
+		"connections": {
+			"title": "Запросы на подключение"
+		},
+		"empty": {
+			"title": "У вас нет пользователей",
+			"message": "<text>Нажмите </text><icon/><text> чтобы добавить пользователя</text>"
+		}
+	},
+	"add": {
+		"header": "Добавить пользователя",
+		"form": {
+			"name": {
+				"label": "Имя пользователя"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"submit": "Добавить пользователя"
+		}
+	},
+	"peer": {
+		"name": {
+			"label": "Имя пользователя",
+			"save": {
+				"title": "Сохранить имя пользователя"
+			}
+		},
+		"publicName": {
+			"label": "Публичное имя пользователя",
+			"add": "Добавить публичное имя",
+			"save": {
+				"title": "Сохранить публичное имя пользователя"
+			},
+			"remove": {
+				"title": "Удалить публичное имя пользователя"
+			}
+		},
+		"connection": {
+			"connect": "Подключить к аккаунту",
+			"outbound": {
+				"label": "Исходящий запрос"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"link": {
+				"title": "Привязать пользователя к email"
+			},
+			"unlink": {
+				"title": "Отвязать пользователя от email"
+			},
+			"cancel": {
+				"title": "Отменить запрос"
+			}
+		},
+		"remove": {
+			"button": "Удалить пользователя",
+			"subtitle": "Это удалит пользователя и все его участия"
+		}
+	},
+	"intentions": {
+		"header": "Приглашения",
+		"emptyTitle": "Все приглашения приняты 👍",
+		"inboundTitle": "Входящие приглашения",
+		"outboundTitle": "Исходящие приглашения",
+		"unlinkPeerButton": "Отвязать пользователя от почты",
+		"form": {
+			"email": {
+				"label": "Email"
+			},
+			"rejectButton": "Отказать"
+		},
+		"modal": {
+			"title": "Привязать к почту",
+			"description": "Это действие привяжет аккаунт \"{{email}}\" к пользователю \"{{peerName}}\"",
+			"confirmText": "Вы уверены?"
+		},
+		"peerSuggestLabel": "Пожалуйста, выберите пользователя для привязки к почте"
+	},
+	"toasts": {
+		"acceptInvite": {
+			"error": "Ошибка принятия {{invitesAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}"
+		},
+		"addIntention": {
+			"error": "Ошибка отправки {{intentionsAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}",
+			"success": "{{intentionsAmount, plural(one:приглашение; other:{count} приглашения)}} {{emails, list}} {{intentionsAmount, plural(one:отправлено; other:{count} отправлены)}}",
+			"mutate": "Отправляем {{intentionsAmount, plural(one:приглашение; other:{count} приглашений)}} {{emails, list}}.."
+		},
+		"rejectInvite": {
+			"error": "Ошибка отказа {{invitesAmount, plural(one:приглашению; other:{count} приглашениям)}}: {{errors, uniqueErrors}}"
+		},
+		"removeInvite": {
+			"error": "Ошибка удаления {{invitesAmount, plural(one:приглашения; other:{count} приглашений)}}: {{errors, uniqueErrors}}"
+		},
+		"addPeer": {
+			"error": "Ошибка добавления {{peersAmount, plural(one:пользователя; other:пользователей)}} {{peers, and}}: {{errors, uniqueErrors}}",
+			"success": "{{peersAmount, plural(one:пользователь; other:{count} пользователи)}} {{peers, and}} {{peersAmount, plural(one:добавлен; other:добавлены)}}",
+			"mutate": "Добавляем {{peersAmount, plural(one:пользователя; other:пользователей)}} {{peers, and}}"
+		},
+		"removePeer": {
+			"error": "Ошибка удаления {{peersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}",
+			"success": "{{peersAmount, plural(one:пользователь; few:{count} пользователя; other:{count} пользователей)}} {{peersAmount, plural(one:удалён; other:удалено)}}",
+			"mutate": "Удаляем {{peersAmount, plural(one:пользователя; other:{count} пользователей)}}.."
+		},
+		"unlinkPeer": {
+			"error": "Ошибка отвязки {{peersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}"
+		},
+		"updatePeer": {
+			"error": "Ошибка обновления {{peersAmount, plural(one:пользователя; other:{count} пользователей)}}: {{errors, uniqueErrors}}"
+		}
+	}
+}

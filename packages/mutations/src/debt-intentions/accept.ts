@@ -21,15 +21,15 @@ export const options: UseContextedMutationOptions<
 						(sum) => sum - (intention.current?.amount ?? 0) + intention.amount,
 						(snapshot) => () => snapshot,
 					),
-				getAllUser: (controller) =>
+				getAllPeer: (controller) =>
 					controller.update(
-						intention.userId,
+						intention.peerId,
 						intention.currencyCode,
 						(sum) => sum - (intention.current?.amount ?? 0) + intention.amount,
 						(snapshot) => () => snapshot,
 					),
-				getUsersPaged: (controller) => controller.update(intention.userId),
-				getByUserPaged: undefined,
+				getPeersPaged: (controller) => controller.update(intention.peerId),
+				getByPeerPaged: undefined,
 				get: (controller) => {
 					const updatedAt = Temporal.Now.zonedDateTimeISO();
 					if (intention.current) {
@@ -53,7 +53,7 @@ export const options: UseContextedMutationOptions<
 					}
 					return controller.add({
 						id: intention.id,
-						userId: intention.userId,
+						peerId: intention.peerId,
 						currencyCode: intention.currencyCode,
 						amount: intention.amount,
 						timestamp: intention.timestamp,
@@ -75,9 +75,9 @@ export const options: UseContextedMutationOptions<
 		(data) =>
 			updateDebts(controllerContext, {
 				getAll: undefined,
-				getAllUser: undefined,
-				getUsersPaged: undefined,
-				getByUserPaged: (controller) => controller.invalidate(intention.userId),
+				getAllPeer: undefined,
+				getPeersPaged: undefined,
+				getByPeerPaged: (controller) => controller.invalidate(intention.peerId),
 				get: (controller) => {
 					controller.update(intention.id, (debt) => ({
 						...debt,

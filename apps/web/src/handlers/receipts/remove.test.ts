@@ -5,10 +5,10 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -80,28 +80,28 @@ describe("receipts.remove", () => {
 			const {
 				sessionId,
 				accountId,
-				userId: selfUserId,
+				peerId: selfPeerId,
 			} = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			await insertReceiptParticipant(ctx, receiptId, userId);
-			await insertReceiptParticipant(ctx, receiptId, selfUserId);
+			await insertReceiptParticipant(ctx, receiptId, peerId);
+			await insertReceiptParticipant(ctx, receiptId, selfPeerId);
 			await insertReceiptItem(ctx, receiptId);
 			await insertReceiptItem(ctx, receiptId);
 			await insertReceiptItem(ctx, receiptId);
 
 			// Verify unrelated data doesn't affect the result
 			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
-			await insertReceiptParticipant(ctx, anotherReceiptId, userId);
+			await insertReceiptParticipant(ctx, anotherReceiptId, peerId);
 			await insertReceiptItem(ctx, anotherReceiptId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUser } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeer } = await insertPeer(ctx, foreignAccountId);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
 			);
-			await insertReceiptParticipant(ctx, foreignReceiptId, foreignUser);
+			await insertReceiptParticipant(ctx, foreignReceiptId, foreignPeer);
 			await insertReceiptItem(ctx, foreignReceiptId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));

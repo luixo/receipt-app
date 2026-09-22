@@ -42,7 +42,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	const updateMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
 			trpc.receiptItemConsumers.update.mutationKey(),
-			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
+			(vars) => vars.peerId === consumer.peerId && vars.itemId === item.id,
 		);
 	const isDisabled = isExternalDisabled || receiptDisabled;
 	const {
@@ -61,7 +61,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 			if (isDisabled || value.value === consumer.part) {
 				return;
 			}
-			updateItemConsumerPart(item.id, consumer.userId, value.value, {
+			updateItemConsumerPart(item.id, consumer.peerId, value.value, {
 				onSuccess,
 			});
 		},

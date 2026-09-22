@@ -4,17 +4,17 @@ import { pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	assertDatabase,
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertReceipt,
 	insertSyncedDebts,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -46,8 +46,8 @@ type GetData = (opts: {
 	selfAccountId: AccountId;
 	target: {
 		accountId: AccountId;
-		userId: UserId;
-		meUserId: UserId;
+		peerId: PeerId;
+		mePeerId: PeerId;
 	};
 }) => Promise<{
 	updates: TRPCMutationInput<"debts.update">[];
@@ -62,12 +62,12 @@ const insertDefaultDebt = async ({
 	if (counterParty !== "auto-accept-no-exist") {
 		const syncedDebts = await insertSyncedDebts(
 			ctx,
-			[selfAccountId, target.userId],
-			[target.accountId, target.meUserId],
+			[selfAccountId, target.peerId],
+			[target.accountId, target.mePeerId],
 		);
 		return syncedDebts[0];
 	}
-	return insertDebt(ctx, selfAccountId, target.userId);
+	return insertDebt(ctx, selfAccountId, target.peerId);
 };
 
 type GetResult = (opts: {
@@ -96,15 +96,15 @@ const updateDescribes = (getData: GetData) => {
 				? undefined
 				: { settings: { manualAcceptDebts: true } },
 		);
-		const [{ id: userId }, { id: foreignToSelfUserId }] =
-			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+		const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+			await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 
 		// Verify unrelated data doesn't affect the result
-		await insertUser(ctx, accountId);
-		await insertUser(ctx, foreignAccountId);
-		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-		await insertDebt(ctx, accountId, userId);
-		await insertDebt(ctx, foreignAccountId, foreignUserId);
+		await insertPeer(ctx, accountId);
+		await insertPeer(ctx, foreignAccountId);
+		const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+		await insertDebt(ctx, accountId, peerId);
+		await insertDebt(ctx, foreignAccountId, foreignPeerId);
 
 		const { updates, results: expectedResults } = await getData({
 			ctx,
@@ -112,8 +112,8 @@ const updateDescribes = (getData: GetData) => {
 			selfAccountId: accountId,
 			target: {
 				accountId: foreignAccountId,
-				userId,
-				meUserId: foreignToSelfUserId,
+				peerId,
+				mePeerId: foreignToSelfPeerId,
 			},
 		});
 
@@ -269,10 +269,10 @@ describe("debts.update", () => {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			// Verify that other debts don't affect the result
-			await insertDebt(ctx, accountId, userId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const fakeDebtId = faker.string.uuid();
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -295,16 +295,16 @@ describe("debts.update", () => {
 			} = await insertAccountWithSession(ctx);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 			const { id: debtId } = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignUserId,
+				foreignPeerId,
 			);
 
 			// Verify that other debts don't affect the result
-			const { id: userId } = await insertUser(ctx, accountId);
-			await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -320,8 +320,8 @@ describe("debts.update", () => {
 
 		test("mixed success and fail", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
-			const debt = await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			const debt = await insertDebt(ctx, accountId, peerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -495,7 +495,7 @@ describe("debts.update", () => {
 					const anotherDebt = await insertDebt(
 						opts.ctx,
 						opts.selfAccountId,
-						opts.target.userId,
+						opts.target.peerId,
 					);
 					return {
 						updates: [
@@ -526,7 +526,7 @@ describe("debts.update", () => {
 					const anotherDebt = await insertDebt(
 						opts.ctx,
 						opts.selfAccountId,
-						opts.target.userId,
+						opts.target.peerId,
 					);
 					return {
 						updates: [
@@ -555,7 +555,7 @@ describe("debts.update", () => {
 					const anotherDebt = await insertDebt(
 						opts.ctx,
 						opts.selfAccountId,
-						opts.target.userId,
+						opts.target.peerId,
 					);
 					return {
 						updates: [
@@ -586,12 +586,12 @@ describe("debts.update", () => {
 					account: { email },
 				} = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
+				const [{ id: acceptingPeerId }] = await insertConnectedPeers(ctx, [
 					accountId,
 					foreignAccountId,
 				]);
 
-				const debt = await insertDebt(ctx, accountId, acceptingUserId);
+				const debt = await insertDebt(ctx, accountId, acceptingPeerId);
 				const fakeDebtId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -622,10 +622,10 @@ describe("debts.update", () => {
 			});
 		});
 
-		test("local user returns reverseUpdated as undefined", async ({ ctx }) => {
+		test("local peer returns reverseUpdated as undefined", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
-			const debt = await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			const debt = await insertDebt(ctx, accountId, peerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({

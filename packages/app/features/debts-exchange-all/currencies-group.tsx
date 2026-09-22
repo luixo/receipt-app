@@ -10,12 +10,12 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { Skeleton } from "~components/skeleton";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 type Props = {
 	selectedCurrencyCode?: CurrencyCode;
 	onSelectOther: () => void;
-	userId: UserId;
+	peerId: PeerId;
 	setSelectedCurrencyCode: (currencyCode: CurrencyCode) => void;
 };
 
@@ -24,12 +24,12 @@ export const CurrenciesGroup = suspendedFallback<Props>(
 		selectedCurrencyCode,
 		setSelectedCurrencyCode,
 		onSelectOther,
-		userId,
+		peerId,
 	}) => {
 		const { t } = useTranslation("debts");
 		const trpc = useTRPC();
 		const { data: debts } = useSuspenseQuery(
-			trpc.debts.getAllUser.queryOptions({ userId }),
+			trpc.debts.getAllPeer.queryOptions({ peerId }),
 		);
 		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		const isSelectedOther =

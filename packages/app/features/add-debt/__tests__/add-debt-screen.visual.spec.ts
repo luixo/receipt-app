@@ -11,15 +11,15 @@ test("Form", async ({
 	fillValidForm,
 	expectScreenshotWithSchemes,
 }) => {
-	const { users } = await mockBase();
-	const [user] = users;
-	assert.ok(user);
+	const { peers } = await mockBase();
+	const [peer] = peers;
+	assert.ok(peer);
 
 	await page.navigate({ to: "/debts/add" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Add debt");
 	await expectScreenshotWithSchemes("empty.png");
 
-	await fillValidForm(user);
+	await fillValidForm(peer);
 	await expect(addButton).toBeEnabled();
 	await expectScreenshotWithSchemes("filled.png");
 });
@@ -65,9 +65,9 @@ test.describe("'debts.add' mutation", () => {
 		faker,
 		expectScreenshotWithSchemes,
 	}) => {
-		const { users } = await mockBase();
-		const [user] = users;
-		assert.ok(user);
+		const { peers } = await mockBase();
+		const [peer] = peers;
+		assert.ok(peer);
 
 		const createPause = api.createPause();
 		api.mockFirst("debts.add", async () => {
@@ -83,7 +83,7 @@ test.describe("'debts.add' mutation", () => {
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 			"Add debt",
 		);
-		await fillValidForm(user);
+		await fillValidForm(peer);
 		await expect(addButton).toBeEnabled();
 
 		await addButton.click();

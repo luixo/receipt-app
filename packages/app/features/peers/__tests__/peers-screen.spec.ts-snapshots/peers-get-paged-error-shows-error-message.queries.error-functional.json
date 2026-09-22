@@ -1,0 +1,5 @@
+{
+	"peers.getPaged": {
+		"serverCalls": 1
+	}
+}

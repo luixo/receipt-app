@@ -25,10 +25,10 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	updateDebtButton: ({ page }, use) =>
-		use(page.locator("button[title='Update debt for a user']")),
+		use(page.locator("button[title='Update debt for a peer']")),
 
 	sendDebtButton: ({ page }, use) =>
-		use(page.locator("button[title='Send debt to a user']")),
+		use(page.locator("button[title='Send debt to a peer']")),
 
 	propagateDebtsButton: ({ page }, use) =>
 		use(page.locator("button[title='Propagate debts']")),

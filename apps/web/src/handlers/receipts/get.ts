@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-import type { AccountId, DebtId, ReceiptId, UserId } from "~db/ids";
+import type { AccountId, DebtId, PeerId, ReceiptId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -15,7 +15,7 @@ const fetchReceipts = async (
 	database
 		.selectFrom("receipts")
 		.where("receipts.id", "in", ids)
-		.innerJoin("users as meFromReceiptOwnerView", (jb) =>
+		.innerJoin("peers as meFromReceiptOwnerView", (jb) =>
 			jb
 				.on("meFromReceiptOwnerView.connectedAccountId", "=", auth.accountId)
 				.onRef(
@@ -24,7 +24,7 @@ const fetchReceipts = async (
 					"receipts.ownerAccountId",
 				),
 		)
-		.innerJoin("users as receiptOwnerFromMyView", (jb) =>
+		.innerJoin("peers as receiptOwnerFromMyView", (jb) =>
 			jb
 				.onRef(
 					"receiptOwnerFromMyView.ownerAccountId",
@@ -44,8 +44,8 @@ const fetchReceipts = async (
 			"receipts.currencyCode",
 			"receipts.ownerAccountId",
 			"receipts.issued",
-			"receiptOwnerFromMyView.id as ownerUserId",
-			"meFromReceiptOwnerView.id as selfUserId",
+			"receiptOwnerFromMyView.id as ownerPeerId",
+			"meFromReceiptOwnerView.id as selfPeerId",
 			jsonArrayFrom(
 				eb
 					.selectFrom("receiptItems")
@@ -60,24 +60,24 @@ const fetchReceipts = async (
 								.selectFrom("receiptItemConsumers")
 								.select([
 									"receiptItemConsumers.part",
-									"receiptItemConsumers.userId",
+									"receiptItemConsumers.peerId",
 									"receiptItemConsumers.createdAt",
 								])
 								.whereRef("receiptItemConsumers.itemId", "=", "receiptItems.id")
 								.orderBy("receiptItemConsumers.createdAt", "desc")
-								.orderBy("receiptItemConsumers.userId"),
+								.orderBy("receiptItemConsumers.peerId"),
 						).as("consumers"),
 						jsonArrayFrom(
 							ebb
 								.selectFrom("receiptItemPayers")
 								.select([
 									"receiptItemPayers.part",
-									"receiptItemPayers.userId",
+									"receiptItemPayers.peerId",
 									"receiptItemPayers.createdAt",
 								])
 								.whereRef("receiptItemPayers.itemId", "=", "receiptItems.id")
 								.orderBy("receiptItemPayers.createdAt", "desc")
-								.orderBy("receiptItemPayers.userId"),
+								.orderBy("receiptItemPayers.peerId"),
 						).as("payers"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")
@@ -88,25 +88,25 @@ const fetchReceipts = async (
 				eb
 					.selectFrom("receiptParticipants")
 					.whereRef("receiptParticipants.receiptId", "=", "receipts.id")
-					.innerJoin("users as usersTheir", (jb) =>
-						jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
+					.innerJoin("peers as peersTheir", (jb) =>
+						jb.onRef("peersTheir.id", "=", "receiptParticipants.peerId"),
 					)
-					.leftJoin("users as usersMine", (jb) =>
+					.leftJoin("peers as peersMine", (jb) =>
 						jb
 							.onRef(
-								"usersMine.connectedAccountId",
+								"peersMine.connectedAccountId",
 								"=",
-								"usersTheir.connectedAccountId",
+								"peersTheir.connectedAccountId",
 							)
-							.on("usersMine.ownerAccountId", "=", auth.accountId),
+							.on("peersMine.ownerAccountId", "=", auth.accountId),
 					)
 					.select([
-						"receiptParticipants.userId",
+						"receiptParticipants.peerId",
 						"receiptParticipants.createdAt",
 						"receiptParticipants.role",
 					])
 					.orderBy("receiptParticipants.createdAt", "desc")
-					.orderBy("receiptParticipants.userId"),
+					.orderBy("receiptParticipants.peerId"),
 			).as("participants"),
 		])
 		.execute();
@@ -117,13 +117,13 @@ const fetchDebts = async (
 ) =>
 	database
 		.selectFrom("debts")
-		.innerJoin("users", (qb) => qb.onRef("users.id", "=", "debts.userId"))
+		.innerJoin("peers", (qb) => qb.onRef("peers.id", "=", "debts.peerId"))
 		.where("debts.receiptId", "in", receiptIds)
 		.select([
 			"debts.id as debtId",
 			"debts.receiptId",
 			"debts.ownerAccountId",
-			"users.id as userId",
+			"peers.id as peerId",
 		])
 		.execute();
 
@@ -131,7 +131,7 @@ const getReceiptDebts = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
 	receiptOwnerAccountId: AccountId,
 	selfAccountId: AccountId,
-	receiptSelfUserId: UserId,
+	receiptSelfPeerId: PeerId,
 ):
 	| ({
 			direction: "incoming";
@@ -142,13 +142,13 @@ const getReceiptDebts = (
 	  ))
 	| {
 			direction: "outcoming";
-			debts: { id: DebtId; userId: UserId }[];
+			debts: { id: DebtId; peerId: PeerId }[];
 	  } => {
 	if (receiptOwnerAccountId === selfAccountId) {
 		const outcomingDebt = debts
 			.filter((debt) => debt.ownerAccountId === selfAccountId)
 			.toSorted((a, b) => a.debtId.localeCompare(b.debtId))
-			.map((debt) => ({ id: debt.debtId, userId: debt.userId }));
+			.map((debt) => ({ id: debt.debtId, peerId: debt.peerId }));
 		return {
 			direction: "outcoming",
 			debts: outcomingDebt,
@@ -160,7 +160,7 @@ const getReceiptDebts = (
 	const foreignDebtId = debts.find(
 		(debt) =>
 			debt.ownerAccountId !== selfAccountId &&
-			debt.userId === receiptSelfUserId,
+			debt.peerId === receiptSelfPeerId,
 	)?.debtId;
 	if (mineDebtId) {
 		return {
@@ -214,7 +214,7 @@ const mapReceipt = (
 			debts,
 			ownerAccountId,
 			auth.accountId,
-			receipt.selfUserId,
+			receipt.selfPeerId,
 		),
 		// This can't happen as payers item always exists
 		payers:
@@ -247,9 +247,9 @@ const queueReceipt = queueCallFactory<
 			});
 		}
 		if (
-			receipt.ownerUserId !== ctx.auth.accountId &&
+			receipt.ownerPeerId !== ctx.auth.accountId &&
 			!receipt.participants.some(
-				(participant) => participant.userId === receipt.selfUserId,
+				(participant) => participant.peerId === receipt.selfPeerId,
 			)
 		) {
 			return new TRPCError({

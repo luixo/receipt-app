@@ -6,7 +6,7 @@ import { useDecimals } from "~app/hooks/use-decimals";
 import type { Receipt, ReceiptParticipant } from "~app/trpc-types";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 const getDebtIds = (receipt: Pick<Receipt, "debts">) =>
 	receipt.debts.direction === "outcoming"
@@ -32,7 +32,7 @@ export const useParticipants = (receipt: Omit<Receipt, "name">) => {
 	return React.useMemo(() => {
 		const participantsSums = getParticipantSums(
 			receipt.id,
-			receipt.ownerUserId,
+			receipt.ownerPeerId,
 			receipt.items,
 			receipt.participants,
 			receipt.payers,
@@ -43,7 +43,7 @@ export const useParticipants = (receipt: Omit<Receipt, "name">) => {
 			.toSorted(SORT_PARTICIPANTS)
 			.map((participant) => {
 				const matchedParticipant = participantsSums.find(
-					({ userId }) => userId === participant.userId,
+					({ peerId }) => peerId === participant.peerId,
 				);
 				if (!matchedParticipant) {
 					throw new Error(
@@ -75,24 +75,24 @@ export const useParticipantsWithDebts = (receipt: Omit<Receipt, "name">) => {
 			)
 			.map((debtId) => trpc.debts.get.queryOptions({ id: debtId })),
 	});
-	const isOwner = receipt.ownerUserId === receipt.selfUserId;
+	const isOwner = receipt.ownerPeerId === receipt.selfPeerId;
 	const getDebt = React.useCallback(
-		(participantUserId: UserId) => {
+		(participantPeerId: PeerId) => {
 			const ownDebt = debts.find((debt) =>
 				isOwner
-					? debt.data.userId === participantUserId
-					: debt.data.userId === receipt.ownerUserId &&
-						participantUserId === receipt.selfUserId,
+					? debt.data.peerId === participantPeerId
+					: debt.data.peerId === receipt.ownerPeerId &&
+						participantPeerId === receipt.selfPeerId,
 			)?.data;
 			const incomingIntention = intentions.items.find(
 				(intention) =>
-					intention.userId === participantUserId &&
+					intention.peerId === participantPeerId &&
 					intention.receiptId === receipt.id,
 			);
 			if (ownDebt) {
 				return {
 					id: ownDebt.id,
-					userId: ownDebt.userId,
+					peerId: ownDebt.peerId,
 					receiptId: ownDebt.receiptId,
 					our: {
 						amount: ownDebt.amount,
@@ -113,7 +113,7 @@ export const useParticipantsWithDebts = (receipt: Omit<Receipt, "name">) => {
 			if (incomingIntention) {
 				return {
 					id: incomingIntention.id,
-					userId: incomingIntention.userId,
+					peerId: incomingIntention.peerId,
 					receiptId: incomingIntention.receiptId,
 					their: {
 						amount: incomingIntention.amount,
@@ -129,15 +129,15 @@ export const useParticipantsWithDebts = (receipt: Omit<Receipt, "name">) => {
 			intentions,
 			isOwner,
 			receipt.id,
-			receipt.ownerUserId,
-			receipt.selfUserId,
+			receipt.ownerPeerId,
+			receipt.selfPeerId,
 		],
 	);
 	const participantsWithDebts = React.useMemo(
 		() =>
 			participants.map((participant) => ({
 				...participant,
-				currentDebt: getDebt(participant.userId),
+				currentDebt: getDebt(participant.peerId),
 			})),
 		[getDebt, participants],
 	);
@@ -146,9 +146,9 @@ export const useParticipantsWithDebts = (receipt: Omit<Receipt, "name">) => {
 	const syncableParticipants = React.useMemo(
 		() =>
 			participantsWithDebts
-				.filter((participant) => participant.userId !== receipt.ownerUserId)
+				.filter((participant) => participant.peerId !== receipt.ownerPeerId)
 				.filter((participant) => participant.balance !== 0),
-		[participantsWithDebts, receipt.ownerUserId],
+		[participantsWithDebts, receipt.ownerPeerId],
 	);
 	return {
 		participantsWithDebts,

@@ -2,26 +2,26 @@ import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
 import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { test as userFixture } from "~app/components/app/__tests__/user.utils";
+import { test as peerFixture } from "~app/components/app/__tests__/peer.utils";
 
 import { test as localTest } from "./utils";
 
-const test = mergeTests(localTest, debtsGroupFixture, userFixture);
+const test = mergeTests(localTest, debtsGroupFixture, peerFixture);
 
 test("Initial state", async ({
 	openDebtsTransferScreen,
 	expectScreenshotWithSchemes,
 	mockDebtsTransfer,
 	debtsGroup,
-	user: userSelector,
+	peer: peerSelector,
 }) => {
-	const { fromUser, toUser } = await mockDebtsTransfer();
+	const { fromPeer, toPeer } = await mockDebtsTransfer();
 	await openDebtsTransferScreen({
-		fromUserId: fromUser.id,
-		toUserId: toUser.id,
+		fromPeerId: fromPeer.id,
+		toPeerId: toPeer.id,
 	});
 	await expectScreenshotWithSchemes("initial.png", {
-		mask: [debtsGroup, userSelector],
+		mask: [debtsGroup, peerSelector],
 	});
 });
 
@@ -30,15 +30,15 @@ test("Form with amounts", async ({
 	expectScreenshotWithSchemes,
 	mockDebtsTransfer,
 	debtsGroup,
-	user: userSelector,
+	peer: peerSelector,
 	amountInput,
 }) => {
-	const { fromUser, toUser, debts } = await mockDebtsTransfer();
+	const { fromPeer, toPeer, debts } = await mockDebtsTransfer();
 	assert.ok(debts[0]);
 	assert.ok(debts[1]);
 	await openDebtsTransferScreen({
-		fromUserId: fromUser.id,
-		toUserId: toUser.id,
+		fromPeerId: fromPeer.id,
+		toPeerId: toPeer.id,
 	});
 	const firstDebtAmountInput = amountInput(debts[0].currencyCode);
 	const secondDebtAmountInput = amountInput(debts[1].currencyCode);
@@ -47,6 +47,6 @@ test("Form with amounts", async ({
 	await secondDebtAmountInput.fill("-10");
 	await secondDebtAmountInput.press("Tab");
 	await expectScreenshotWithSchemes("with-amounts.png", {
-		mask: [debtsGroup, userSelector],
+		mask: [debtsGroup, peerSelector],
 	});
 });

@@ -6,7 +6,7 @@ import {
 	MAX_DEBT_NOTE_LENGTH,
 	MIN_DEBT_NOTE_LENGTH,
 } from "~app/utils/validation";
-import type { ReceiptId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
@@ -17,10 +17,10 @@ import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 export const getRandomAmount = () =>
 	(faker.datatype.boolean() ? 1 : -1) * Number(faker.finance.amount());
 
-export const getValidDebt = (userId: UserId = faker.string.uuid()) => ({
+export const getValidDebt = (peerId: PeerId = faker.string.uuid()) => ({
 	note: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
-	userId,
+	peerId,
 	amount: Number(faker.finance.amount()) * (faker.datatype.boolean() ? 1 : -1),
 });
 
@@ -158,18 +158,18 @@ export const verifyReceiptId = <T>(
 	});
 };
 
-export const verifyUserId = <T>(
-	runProcedure: (context: UnauthorizedContext, userId: UserId) => Promise<T>,
+export const verifyPeerId = <T>(
+	runProcedure: (context: UnauthorizedContext, peerId: PeerId) => Promise<T>,
 	prefix: string,
 ) => {
-	describe("userId", () => {
+	describe("peerId", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}userId": Invalid UUID`,
+				`Zod error\n\nAt "${prefix}peerId": Invalid UUID`,
 			);
 		});
 	});

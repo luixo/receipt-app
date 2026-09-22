@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
-import { passwordSchema, userNameSchema } from "~app/utils/validation";
-import type { AccountId, UserId } from "~db/ids";
+import { passwordSchema, peerNameSchema } from "~app/utils/validation";
+import type { AccountId, PeerId } from "~db/ids";
 import { generatePasswordData } from "~utils/server/crypto";
 import {
 	createAuthorizationSession,
@@ -17,13 +17,13 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Register account",
 		description:
-			"Creates a new account and its self-user, sends a verification email if enabled, and starts a new session.",
+			"Creates a new account and its self-peer, sends a verification email if enabled, and starts a new session.",
 	})
 	.input(
 		z.strictObject({
 			email: emailSchema,
 			password: passwordSchema,
-			name: userNameSchema,
+			name: peerNameSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -68,10 +68,10 @@ export const procedure = unauthProcedure
 			})
 			.execute();
 		await database
-			.insertInto("users")
+			.insertInto("peers")
 			.values({
-				// Typesystem doesn't know that we use account id as self user id
-				id: id as UserId,
+				// Typesystem doesn't know that we use account id as self peer id
+				id: id as PeerId,
 				name: input.name,
 				ownerAccountId: id,
 				connectedAccountId: id,

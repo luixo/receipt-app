@@ -5,11 +5,11 @@ import type debtsEn from "@ra/web/public/locales/en/debts.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
 import type emailEn from "@ra/web/public/locales/en/email.json";
 import type loginEn from "@ra/web/public/locales/en/login.json";
+import type peersEn from "@ra/web/public/locales/en/peers.json";
 import type receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import type registerEn from "@ra/web/public/locales/en/register.json";
 import type resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import type settingsEn from "@ra/web/public/locales/en/settings.json";
-import type usersEn from "@ra/web/public/locales/en/users.json";
 import type voidAccountEn from "@ra/web/public/locales/en/void-account.json";
 import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
@@ -17,11 +17,11 @@ import type debtsRu from "@ra/web/public/locales/ru/debts.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
 import type emailRu from "@ra/web/public/locales/ru/email.json";
 import type loginRu from "@ra/web/public/locales/ru/login.json";
+import type peersRu from "@ra/web/public/locales/ru/peers.json";
 import type receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import type registerRu from "@ra/web/public/locales/ru/register.json";
 import type resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import type settingsRu from "@ra/web/public/locales/ru/settings.json";
-import type usersRu from "@ra/web/public/locales/ru/users.json";
 import type voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
 import { keys } from "remeda";
 
@@ -51,7 +51,7 @@ export const namespaces: Record<Namespace, true> = {
 	register: true,
 	"reset-password": true,
 	"void-account": true,
-	users: true,
+	peers: true,
 	debts: true,
 	email: true,
 };
@@ -66,7 +66,7 @@ export type Resources = {
 	register: typeof registerEn;
 	"reset-password": typeof resetPasswordEn;
 	"void-account": typeof voidAccountEn;
-	users: typeof usersEn;
+	peers: typeof peersEn;
 	debts: typeof debtsEn;
 	email: typeof emailEn;
 };
@@ -85,7 +85,7 @@ type ValidatedResources = AssertAllEqual<
 			register: typeof registerRu;
 			"reset-password": typeof resetPasswordRu;
 			"void-account": typeof voidAccountRu;
-			users: typeof usersRu;
+			peers: typeof peersRu;
 			debts: typeof debtsRu;
 			email: typeof emailRu;
 		},

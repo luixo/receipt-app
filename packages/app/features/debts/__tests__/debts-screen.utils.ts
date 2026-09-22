@@ -3,40 +3,40 @@ import type { Locator } from "@playwright/test";
 import { test as debtsTest } from "./utils";
 
 type Fixtures = {
-	mockPagedUsers: () => Promise<void>;
+	mockPagedPeers: () => Promise<void>;
 	showResolvedDebtsSwitch: Locator;
-	userDebtsPreview: Locator;
+	peerDebtsPreview: Locator;
 	debtIntentionsButton: Locator;
 };
 
 export const test = debtsTest.extend<Fixtures>({
-	mockPagedUsers: ({ api, faker, mockBase }, use) =>
+	mockPagedPeers: ({ api, faker, mockBase }, use) =>
 		use(async () => {
-			const userIds = Array.from({ length: 25 }, () => faker.string.uuid());
-			const users = userIds.map((id) => ({
+			const peerIds = Array.from({ length: 25 }, () => faker.string.uuid());
+			const peers = peerIds.map((id) => ({
 				id,
 				name: faker.person.fullName(),
 			}));
 			await mockBase();
-			api.mockFirst("debts.getAllUser", { items: [] });
-			api.mockFirst("debts.getUsersPaged", ({ input: { limit, cursor } }) => ({
-				count: userIds.length,
+			api.mockFirst("debts.getAllPeer", { items: [] });
+			api.mockFirst("debts.getPeersPaged", ({ input: { limit, cursor } }) => ({
+				count: peerIds.length,
 				cursor,
-				items: userIds.slice(cursor, cursor + limit),
+				items: peerIds.slice(cursor, cursor + limit),
 			}));
-			api.mockFirst("debts.getByUserPaged", {
+			api.mockFirst("debts.getByPeerPaged", {
 				cursor: 0,
 				count: 0,
 				items: [],
 			});
-			api.mockFirst("users.get", ({ input, next }) => {
-				const user = users.find((u) => u.id === input.id);
-				if (!user) {
+			api.mockFirst("peers.get", ({ input, next }) => {
+				const peer = peers.find((u) => u.id === input.id);
+				if (!peer) {
 					return next();
 				}
 				return {
-					id: user.id,
-					name: user.name,
+					id: peer.id,
+					name: peer.name,
 					publicName: undefined,
 					connectedAccount: undefined,
 				};
@@ -46,8 +46,8 @@ export const test = debtsTest.extend<Fixtures>({
 	showResolvedDebtsSwitch: ({ page }, use) =>
 		use(page.getByTestId("show-resolved-debts-switch")),
 
-	userDebtsPreview: ({ page }, use) =>
-		use(page.getByTestId("user-debts-preview")),
+	peerDebtsPreview: ({ page }, use) =>
+		use(page.getByTestId("peer-debts-preview")),
 
 	debtIntentionsButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Intentions" })),

@@ -34,7 +34,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			trpc.receiptParticipants.update.mutationKey(),
 			(vars) =>
 				vars.receiptId === receiptId &&
-				vars.userId === participant.userId &&
+				vars.peerId === participant.peerId &&
 				// oxlint-disable-next-line typescript/no-unnecessary-condition
 				vars.update.type === "role",
 		);
@@ -43,9 +43,9 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			if (nextRole === participant.role) {
 				return;
 			}
-			updateParticipantRole(participant.userId, nextRole);
+			updateParticipantRole(participant.peerId, nextRole);
 		},
-		[participant.role, participant.userId, updateParticipantRole],
+		[participant.role, participant.peerId, updateParticipantRole],
 	);
 	const roleTexts = React.useMemo<Record<Role, string>>(
 		() => ({

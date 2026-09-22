@@ -1,0 +1,8 @@
+{
+	"peers.get": {
+		"clientCalls": 1
+	},
+	"peers.remove": {
+		"clientCalls": 1
+	}
+}

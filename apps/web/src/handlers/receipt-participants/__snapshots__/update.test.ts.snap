@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptParticipants.update > functionality > update role > for another user 1`] = `
+exports[`receiptParticipants.update > functionality > update role > for another peer 1`] = `
 {
   "updated": {
     "receiptParticipants": {
-      "receiptId:e612691a-267e-4426-8aba-fa578d947c4d|userId:9a0f03b6-1495-4e4a-a66e-4bf7193a5a15": {
+      "receiptId:8dfeda1b-8481-4662-a090-5c9187cea53e|peerId:30569ad0-aa4f-4ab4-b73c-6c609ac0d6ce": {
         "role": "viewer",
         "updatedAt": "2020-01-01 00:01:00+00",
       },

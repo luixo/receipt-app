@@ -6,7 +6,7 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertReceipt,
 	insertReceiptParticipant,
 } from "~tests/backend/utils/data";
@@ -91,7 +91,7 @@ describe("receiptItems.add", () => {
 			await insertReceipt(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 				foreignAccountId,
 				accountId,
 			]);
@@ -102,7 +102,7 @@ describe("receiptItems.add", () => {
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{ role: "viewer" },
 			);
 
@@ -143,7 +143,7 @@ describe("receiptItems.add", () => {
 		test("items are added", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 				foreignAccountId,
 				accountId,
 			]);
@@ -156,7 +156,7 @@ describe("receiptItems.add", () => {
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{ role: "editor" },
 			);
 

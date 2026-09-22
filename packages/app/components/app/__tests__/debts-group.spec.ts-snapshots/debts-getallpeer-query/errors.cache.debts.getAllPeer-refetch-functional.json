@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"debts.getAllPeer:[{\"peerId\":\"37aac640-c23d-46bf-8ee1-b3462e212e4b\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "SVC",
+							"sum": 1581.38
+						},
+						{
+							"currencyCode": "XCG",
+							"sum": 6523.22
+						},
+						{
+							"currencyCode": "NGN",
+							"sum": 7241.37
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchFailureCount": -1,
+				"status": "success"
+			}
+		}
+	}
+}

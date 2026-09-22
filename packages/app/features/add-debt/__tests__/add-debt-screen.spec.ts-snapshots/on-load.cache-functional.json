@@ -34,7 +34,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"29c74c54-0905-43a9-b156-4f467228ef2c\"}]": {
+		"peers.get:[{\"id\":\"29c74c54-0905-43a9-b156-4f467228ef2c\"}]": {
 			"state": {
 				"data": {
 					"id": "29c74c54-0905-43a9-b156-4f467228ef2c",
@@ -50,7 +50,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"5c0dccea-bbda-4f42-9828-7d4ba7d3247d\"}]": {
+		"peers.get:[{\"id\":\"5c0dccea-bbda-4f42-9828-7d4ba7d3247d\"}]": {
 			"state": {
 				"data": {
 					"id": "5c0dccea-bbda-4f42-9828-7d4ba7d3247d",
@@ -66,7 +66,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"87013df6-4d3d-40ab-bc97-f42c07d7fa32\"}]": {
+		"peers.get:[{\"id\":\"87013df6-4d3d-40ab-bc97-f42c07d7fa32\"}]": {
 			"state": {
 				"data": {
 					"id": "87013df6-4d3d-40ab-bc97-f42c07d7fa32",
@@ -82,7 +82,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"b55fc4cb-c67d-4485-b29e-b465d9fbff94\"}]": {
+		"peers.get:[{\"id\":\"b55fc4cb-c67d-4485-b29e-b465d9fbff94\"}]": {
 			"state": {
 				"data": {
 					"id": "b55fc4cb-c67d-4485-b29e-b465d9fbff94",
@@ -98,7 +98,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.get:[{\"id\":\"d040861d-5e22-48db-8020-b2001ba7e01d\"}]": {
+		"peers.get:[{\"id\":\"d040861d-5e22-48db-8020-b2001ba7e01d\"}]": {
 			"state": {
 				"data": {
 					"id": "d040861d-5e22-48db-8020-b2001ba7e01d",
@@ -114,7 +114,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"users.suggest:[{\"filterIds\":[],\"input\":\"\",\"limit\":5}]": {
+		"peers.suggest:[{\"filterIds\":[],\"input\":\"\",\"limit\":5}]": {
 			"state": {
 				"error": null,
 				"fetchMeta": null,
@@ -124,7 +124,7 @@
 			},
 			"promise": "<undefined>"
 		},
-		"users.suggestTop:[{\"filterIds\":[],\"limit\":5}]": {
+		"peers.suggestTop:[{\"filterIds\":[],\"limit\":5}]": {
 			"state": {
 				"data": {
 					"items": [

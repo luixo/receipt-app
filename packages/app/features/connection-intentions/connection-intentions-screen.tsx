@@ -26,7 +26,7 @@ const ConnectionsWrapper: React.FC<{
 	type: "inbound" | "outbound";
 	children: ViewReactNode;
 }> = ({ type, children }) => {
-	const { t } = useTranslation("users");
+	const { t } = useTranslation("peers");
 	return (
 		<View className="flex flex-col gap-4">
 			<Text variant="h3">
@@ -43,7 +43,7 @@ const ConnectionsWrapper: React.FC<{
 
 const ConnectionIntentions: React.FC = suspendedFallback(
 	() => {
-		const { t } = useTranslation("users");
+		const { t } = useTranslation("peers");
 		const trpc = useTRPC();
 		const { data } = useSuspenseQuery(
 			trpc.accountConnectionIntentions.getAll.queryOptions(),
@@ -87,11 +87,11 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 );
 
 export const ConnectionIntentionsScreen = () => {
-	const { t } = useTranslation("users");
+	const { t } = useTranslation("peers");
 	return (
 		<>
 			<EmailVerificationCard />
-			<PageHeader startContent={<BackLink to="/users" />}>
+			<PageHeader startContent={<BackLink to="/peers" />}>
 				{t("intentions.header")}
 			</PageHeader>
 			<ConnectionIntentions />

@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"peers.get:[{\"id\":\"e1818466-fb51-4787-ba95-f06444e01027\"}]": {
+			"state": {
+				"data": {
+					"name": "Updated name"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"peers.update": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "e1818466-fb51-4787-ba95-f06444e01027",
+						"update": {
+							"type": "name",
+							"name": "Updated name"
+						}
+					}
+				}
+			}
+		}
+	}
+}

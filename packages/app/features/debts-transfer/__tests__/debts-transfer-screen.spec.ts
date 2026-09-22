@@ -16,15 +16,15 @@ test.describe("Header", () => {
 		openDebtsTransferScreen,
 		page,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
 		await expect(page).toHaveTitle("RA - Transfer debts");
 	});
 
-	test("Back button goes to debts list when no from user", async ({
+	test("Back button goes to debts list when no from peer", async ({
 		mockBase,
 		openDebtsTransferScreen,
 		page,
@@ -36,78 +36,78 @@ test.describe("Header", () => {
 		await page.expectUrl({ to: "/debts" });
 	});
 
-	test("Back button goes to user debts when from user selected", async ({
+	test("Back button goes to peer debts when from peer selected", async ({
 		api,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		backLink,
 		page,
 	}) => {
-		const { fromUser, debts } = await mockDebtsTransfer();
-		api.mockFirst("debts.getByUserPaged", {
+		const { fromPeer, debts } = await mockDebtsTransfer();
+		api.mockFirst("debts.getByPeerPaged", {
 			items: debts.map((debt) => debt.id),
 			count: 0,
 			cursor: 0,
 		});
-		await openDebtsTransferScreen({ fromUserId: fromUser.id });
+		await openDebtsTransferScreen({ fromPeerId: fromPeer.id });
 		await backLink.click();
 		await page.expectUrl({
-			to: "/debts/user/$id",
-			params: { id: fromUser.id },
+			to: "/debts/peer/$id",
+			params: { id: fromPeer.id },
 		});
 	});
 });
 
-test.describe("User selection", () => {
-	test("Pre-selected users via URL params shows form", async ({
+test.describe("Peer selection", () => {
+	test("Pre-selected peers via URL params shows form", async ({
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		awaitCacheKey,
 		transferForm,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(transferForm).toBeVisible();
 	});
 
-	test("Same user selected for from and to disables submit", async ({
+	test("Same peer selected for from and to disables submit", async ({
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		submitButton,
 		awaitCacheKey,
 	}) => {
-		const { fromUser } = await mockDebtsTransfer();
+		const { fromPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: fromUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: fromPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(submitButton).toBeDisabled();
 	});
 
-	test("Only from user selected shows form", async ({
+	test("Only from peer selected shows form", async ({
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		awaitCacheKey,
 		transferForm,
 	}) => {
-		const { fromUser } = await mockDebtsTransfer();
-		await openDebtsTransferScreen({ fromUserId: fromUser.id });
-		await awaitCacheKey("debts.getAllUser");
+		const { fromPeer } = await mockDebtsTransfer();
+		await openDebtsTransferScreen({ fromPeerId: fromPeer.id });
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(transferForm).toBeVisible();
 	});
 
-	test("Only to user selected without from shows no form", async ({
+	test("Only to peer selected without from shows no form", async ({
 		mockBase,
 		openDebtsTransferScreen,
 		transferForm,
 	}) => {
-		const { toUser } = await mockBase();
-		await openDebtsTransferScreen({ toUserId: toUser.id });
+		const { toPeer } = await mockBase();
+		await openDebtsTransferScreen({ toPeerId: toPeer.id });
 		await expect(transferForm).not.toBeAttached();
 	});
 });
@@ -119,12 +119,12 @@ test.describe("Form validation", () => {
 		submitButton,
 		awaitCacheKey,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(submitButton).toBeDisabled();
 	});
 
@@ -136,13 +136,13 @@ test.describe("Form validation", () => {
 		amountInput,
 		transferForm,
 	}) => {
-		const { fromUser, toUser, debts } = await mockDebtsTransfer();
+		const { fromPeer, toPeer, debts } = await mockDebtsTransfer();
 		assert.ok(debts[0]);
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(transferForm).toBeVisible();
 		const firstDebtAmountInput = amountInput(debts[0].currencyCode);
 		await firstDebtAmountInput.fill("10");
@@ -160,12 +160,12 @@ test.describe("Currency management", () => {
 		awaitCacheKey,
 		currenciesPicker,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		api.mockFirst("currency.top", { items: [] });
 		await addCurrencyButton.click();
 		await expect(currenciesPicker).toBeVisible();
@@ -178,12 +178,12 @@ test.describe("Currency management", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await allMaxButton.click();
 		const inputs = await page.getByRole("textbox").all();
 		await Promise.all(
@@ -199,7 +199,7 @@ test.describe("Show resolved debts option", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer({
+		const { fromPeer, toPeer } = await mockDebtsTransfer({
 			generateDebts: (opts) => {
 				const [firstDebt, secondDebt, thirdDebt] = defaultGenerateDebts({
 					...opts,
@@ -224,10 +224,10 @@ test.describe("Show resolved debts option", () => {
 			},
 		});
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(page.getByTestId("show-resolved-debts-switch")).toBeVisible();
 	});
 
@@ -237,12 +237,12 @@ test.describe("Show resolved debts option", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expect(page.getByTestId("show-resolved-debts-switch")).toBeHidden();
 	});
 });
@@ -258,13 +258,13 @@ test.describe("'debts.add' mutation", () => {
 		amountInput,
 		snapshotQueries,
 	}) => {
-		const { fromUser, toUser, debts } = await mockDebtsTransfer();
+		const { fromPeer, toPeer, debts } = await mockDebtsTransfer();
 		assert.ok(debts[0]);
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		const firstDebtAmountInput = amountInput(debts[0].currencyCode);
 		await firstDebtAmountInput.fill("10");
 		await firstDebtAmountInput.press("Tab");
@@ -285,7 +285,7 @@ test.describe("'debts.add' mutation", () => {
 			},
 			{
 				name: "error",
-				blacklistKeys: ["users.suggest"],
+				blacklistKeys: ["peers.suggest"],
 			},
 		);
 	});
@@ -301,13 +301,13 @@ test.describe("'debts.add' mutation", () => {
 		amountInput,
 		snapshotQueries,
 	}) => {
-		const { fromUser, toUser, debts } = await mockDebtsTransfer();
+		const { fromPeer, toPeer, debts } = await mockDebtsTransfer();
 		assert.ok(debts[0]);
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		const firstDebtAmountInput = amountInput(debts[0].currencyCode);
 		await firstDebtAmountInput.fill("10");
 		await firstDebtAmountInput.press("Tab");
@@ -333,7 +333,7 @@ test.describe("'debts.add' mutation", () => {
 			},
 			{
 				name: "pending",
-				blacklistKeys: ["debts.getAllUser", "users.suggest"],
+				blacklistKeys: ["debts.getAllPeer", "peers.suggest"],
 			},
 		);
 		await snapshotQueries(
@@ -344,14 +344,14 @@ test.describe("'debts.add' mutation", () => {
 			},
 			{
 				name: "success",
-				blacklistKeys: ["users.suggest"],
+				blacklistKeys: ["peers.suggest"],
 			},
 		);
 	});
 });
 
 test.describe("Error handling", () => {
-	test("Handles debts.getAllUser error gracefully", async ({
+	test("Handles debts.getAllPeer error gracefully", async ({
 		api,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
@@ -359,9 +359,9 @@ test.describe("Error handling", () => {
 		consoleManager,
 		errorMessage,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
-		const mockErrorMessage = `Mock "debts.getAllUser" error`;
-		api.mockFirst("debts.getAllUser", () => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
+		const mockErrorMessage = `Mock "debts.getAllPeer" error`;
+		api.mockFirst("debts.getAllPeer", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: mockErrorMessage,
@@ -369,24 +369,24 @@ test.describe("Error handling", () => {
 		});
 		consoleManager.ignore(mockErrorMessage);
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 			awaitCache: false,
 		});
-		await awaitCacheKey("users.get", { success: 2 });
+		await awaitCacheKey("peers.get", { success: 2 });
 		await expect(errorMessage(mockErrorMessage)).toBeVisible();
 	});
 
-	test("Handles users.get error gracefully", async ({
+	test("Handles peers.get error gracefully", async ({
 		api,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		consoleManager,
 		errorMessage,
 	}) => {
-		const { fromUser, toUser } = await mockDebtsTransfer();
-		const mockErrorMessage = `Mock "users.get" error`;
-		api.mockFirst("users.get", () => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
+		const mockErrorMessage = `Mock "peers.get" error`;
+		api.mockFirst("peers.get", () => {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: mockErrorMessage,
@@ -397,8 +397,8 @@ test.describe("Error handling", () => {
 			/Failed to load resource: the server responded with a status of 500/,
 		);
 		await openDebtsTransferScreen({
-			fromUserId: fromUser.id,
-			toUserId: toUser.id,
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
 			awaitCache: false,
 		});
 		await expect(errorMessage(mockErrorMessage)).toBeVisible();

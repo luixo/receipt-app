@@ -33,7 +33,10 @@ const createItemPayersTable = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.addPrimaryKeyConstraint(
-			RECEIPT_ITEM_PAYERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR,
+			RECEIPT_ITEM_PAYERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace(
+				"peer",
+				"user",
+			),
 			["itemId", "userId"],
 		)
 		.execute();

@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_protected/debts/")({
 			ctx,
 			() =>
 				ctx.context.queryClient.fetchQuery(
-					trpc.debts.getUsersPaged.queryOptions({
+					trpc.debts.getPeersPaged.queryOptions({
 						limit: withDefaultLimit(ctx.deps.limit, ctx.context),
 						cursor: ctx.deps.offset,
 						filters: {
@@ -33,7 +33,7 @@ export const Route = createFileRoute("/_protected/debts/")({
 					}),
 				),
 			({ items }) =>
-				items.map((userId) => trpc.debts.getAllUser.queryOptions({ userId })),
+				items.map((peerId) => trpc.debts.getAllPeer.queryOptions({ peerId })),
 		);
 		return { prefetched };
 	},

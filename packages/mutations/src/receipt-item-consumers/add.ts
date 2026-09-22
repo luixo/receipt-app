@@ -20,7 +20,7 @@ export const options: UseContextedMutationOptions<
 				return updateRevertReceipts(controllerContext, {
 					get: (controller) =>
 						controller.addPayer(receiptId, {
-							userId: variables.userId,
+							peerId: variables.peerId,
 							part: variables.part,
 							createdAt: Temporal.Now.zonedDateTimeISO(),
 						}),
@@ -32,7 +32,7 @@ export const options: UseContextedMutationOptions<
 					controller.addItemConsumer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 						variables.part,
 						Temporal.Now.zonedDateTimeISO(),
 					),
@@ -45,7 +45,7 @@ export const options: UseContextedMutationOptions<
 			if (variables.itemId === receiptId) {
 				return updateReceipts(controllerContext, {
 					get: (controller) => {
-						controller.updatePayer(receiptId, variables.userId, (payer) => ({
+						controller.updatePayer(receiptId, variables.peerId, (payer) => ({
 							...payer,
 							createdAt: result.createdAt,
 						}));
@@ -58,7 +58,7 @@ export const options: UseContextedMutationOptions<
 					controller.updateItemConsumer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 						(consumer) => ({ ...consumer, createdAt: result.createdAt }),
 					);
 				},

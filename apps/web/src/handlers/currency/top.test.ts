@@ -4,11 +4,11 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -27,16 +27,16 @@ describe("currency.top", () => {
 
 	describe("functionality", () => {
 		test("other account do not affect", async ({ ctx }) => {
-			const { sessionId, userId } = await insertAccountWithSession(ctx);
+			const { sessionId, peerId } = await insertAccountWithSession(ctx);
 			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
-			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "USD" });
-			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "USD" });
-			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "EUR" });
+			await insertDebt(ctx, otherAccountId, peerId, { currencyCode: "USD" });
+			await insertDebt(ctx, otherAccountId, peerId, { currencyCode: "USD" });
+			await insertDebt(ctx, otherAccountId, peerId, { currencyCode: "EUR" });
 			const { id: receiptId } = await insertReceipt(ctx, otherAccountId, {
 				currencyCode: "USD",
 			});
-			const { id: anotherUserId } = await insertUser(ctx, otherAccountId);
-			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
+			const { id: anotherPeerId } = await insertPeer(ctx, otherAccountId);
+			await insertReceiptParticipant(ctx, receiptId, anotherPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const debtsResult = await caller.procedure({
@@ -53,18 +53,18 @@ describe("currency.top", () => {
 
 		test("top debts currencies returned", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { userId: otherUserId } = await insertAccountWithSession(ctx);
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "GEL" });
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "EUR" });
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "USD" });
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "EUR" });
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "USD" });
-			await insertDebt(ctx, accountId, otherUserId, { currencyCode: "USD" });
+			const { peerId: otherPeerId } = await insertAccountWithSession(ctx);
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "GEL" });
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "EUR" });
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "USD" });
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "EUR" });
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "USD" });
+			await insertDebt(ctx, accountId, otherPeerId, { currencyCode: "USD" });
 			// Outdated debts
 			const currencyCodes: CurrencyCode[] = ["GEL", "USD", "EUR"];
 			await Promise.all(
 				currencyCodes.map((currencyCode) =>
-					insertDebt(ctx, accountId, otherUserId, {
+					insertDebt(ctx, accountId, otherPeerId, {
 						currencyCode,
 						timestamp: Temporal.Now.plainDateISO().subtract({ months: 1 }),
 					}),
@@ -91,17 +91,17 @@ describe("currency.top", () => {
 		});
 
 		test("top receipt currencies returned", async ({ ctx }) => {
-			const { sessionId, accountId, userId } =
+			const { sessionId, accountId, peerId } =
 				await insertAccountWithSession(ctx);
 			// Self receipts
 			const { id: selfReceiptId } = await insertReceipt(ctx, accountId, {
 				currencyCode: "USD",
 			});
-			await insertReceiptParticipant(ctx, selfReceiptId, userId);
+			await insertReceiptParticipant(ctx, selfReceiptId, peerId);
 			const { id: selfReceiptId2 } = await insertReceipt(ctx, accountId, {
 				currencyCode: "GEL",
 			});
-			await insertReceiptParticipant(ctx, selfReceiptId2, userId);
+			await insertReceiptParticipant(ctx, selfReceiptId2, peerId);
 			const { id: selfOutdatedReceiptId } = await insertReceipt(
 				ctx,
 				accountId,
@@ -110,21 +110,21 @@ describe("currency.top", () => {
 					issued: Temporal.Now.plainDateISO().subtract({ months: 1 }),
 				},
 			);
-			await insertReceiptParticipant(ctx, selfOutdatedReceiptId, userId);
+			await insertReceiptParticipant(ctx, selfOutdatedReceiptId, peerId);
 			// Foreign receipts
 			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
-			const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
+			const [{ id: foreignPeerId }] = await insertConnectedPeers(ctx, [
 				otherAccountId,
 				accountId,
 			]);
 			const { id: otherReceiptId } = await insertReceipt(ctx, otherAccountId, {
 				currencyCode: "GEL",
 			});
-			await insertReceiptParticipant(ctx, otherReceiptId, foreignUserId);
+			await insertReceiptParticipant(ctx, otherReceiptId, foreignPeerId);
 			const { id: otherReceiptId2 } = await insertReceipt(ctx, otherAccountId, {
 				currencyCode: "AMD",
 			});
-			await insertReceiptParticipant(ctx, otherReceiptId2, foreignUserId);
+			await insertReceiptParticipant(ctx, otherReceiptId2, foreignPeerId);
 			const { id: otherOutdatedReceiptId } = await insertReceipt(
 				ctx,
 				otherAccountId,
@@ -136,7 +136,7 @@ describe("currency.top", () => {
 			await insertReceiptParticipant(
 				ctx,
 				otherOutdatedReceiptId,
-				foreignUserId,
+				foreignPeerId,
 			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));

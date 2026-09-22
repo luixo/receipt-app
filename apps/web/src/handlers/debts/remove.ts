@@ -25,13 +25,13 @@ export const procedure = authProcedure
 					"debts.ownerAccountId": ctx.auth.accountId,
 				}),
 			)
-			.innerJoin("users", (qb) =>
+			.innerJoin("peers", (qb) =>
 				qb
-					.onRef("users.id", "=", "debts.userId")
-					.onRef("users.ownerAccountId", "=", "debts.ownerAccountId"),
+					.onRef("peers.id", "=", "debts.peerId")
+					.onRef("peers.ownerAccountId", "=", "debts.ownerAccountId"),
 			)
 			.leftJoin("accountSettings", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
+				qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
 			)
 			.select(["accountSettings.manualAcceptDebts"])
 			.limit(1)

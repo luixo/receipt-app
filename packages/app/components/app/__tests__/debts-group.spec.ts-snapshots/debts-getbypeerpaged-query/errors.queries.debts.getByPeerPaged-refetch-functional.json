@@ -1,0 +1,5 @@
+{
+	"debts.getByPeerPaged": {
+		"clientCalls": 1
+	}
+}

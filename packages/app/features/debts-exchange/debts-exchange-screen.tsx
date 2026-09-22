@@ -1,35 +1,35 @@
 import { useTranslation } from "react-i18next";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
 import { PageHeader } from "~app/components/page-header";
-import { UserDebtsGroup } from "~app/components/user-debts-group";
+import { PeerDebtsGroup } from "~app/components/peer-debts-group";
 import { getPathHooks } from "~app/utils/navigation";
 import { BackLink } from "~components/back-link";
 import { ButtonLink } from "~components/link";
 
 export const DebtsExchangeScreen = () => {
-	const { useParams } = getPathHooks("/_protected/debts/user/$id/exchange/");
-	const { id: userId } = useParams();
+	const { useParams } = getPathHooks("/_protected/debts/peer/$id/exchange/");
+	const { id: peerId } = useParams();
 	const { t } = useTranslation("debts");
 	return (
 		<>
 			<PageHeader
-				startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
-				endContent={<LoadableUser id={userId} />}
+				startContent={<BackLink to="/debts/peer/$id" params={{ id: peerId }} />}
+				endContent={<LoadablePeer id={peerId} />}
 			/>
-			<UserDebtsGroup userId={userId} />
+			<PeerDebtsGroup peerId={peerId} />
 			<ButtonLink
 				color="primary"
-				to="/debts/user/$id/exchange/all"
-				params={{ id: userId }}
+				to="/debts/peer/$id/exchange/all"
+				params={{ id: peerId }}
 				title={t("exchange.buttons.exchangeAll")}
 			>
 				{t("exchange.buttons.exchangeAll")}
 			</ButtonLink>
 			<ButtonLink
 				color="primary"
-				to="/debts/user/$id/exchange/specific"
-				params={{ id: userId }}
+				to="/debts/peer/$id/exchange/specific"
+				params={{ id: peerId }}
 				isDisabled
 				title={t("exchange.buttons.exchangeSpecific")}
 			>

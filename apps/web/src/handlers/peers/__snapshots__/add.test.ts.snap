@@ -1,0 +1,108 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`peers.add > functionality > peer is added - no public name, no email 1`] = `
+{
+  "added": {
+    "peers": {
+      "id:a63b03b8-32a9-4650-be8a-13599ccff4c7": {
+        "acceptReceipts": false,
+        "connectedAccountId": null,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": false,
+        "id": "a63b03b8-32a9-4650-be8a-13599ccff4c7",
+        "name": "Karolann VonRueden",
+        "ownerAccountId": "02275975-0bd0-4fc7-8b45-c1d1c779323d",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`peers.add > functionality > peer is added - public name, no email 1`] = `
+{
+  "added": {
+    "peers": {
+      "id:fc9306d9-caaf-4d01-a5e6-b7862013879f": {
+        "acceptReceipts": false,
+        "connectedAccountId": null,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": false,
+        "id": "fc9306d9-caaf-4d01-a5e6-b7862013879f",
+        "name": "Judd Maggio II",
+        "ownerAccountId": "10d2c4f5-248d-4b2d-b85b-910cb839f842",
+        "publicName": "Murl Luettgen",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`peers.add > functionality > peer is added - with email > doesn't have a vice versa intention 1`] = `
+{
+  "added": {
+    "peers": {
+      "id:0b8cc418-b968-4ecb-986b-e04199fcc0ac": {
+        "acceptReceipts": false,
+        "connectedAccountId": "b676dec2-bbf7-4d78-8799-281f6327c0d2",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": false,
+        "id": "0b8cc418-b968-4ecb-986b-e04199fcc0ac",
+        "name": "Brendon Wisozk",
+        "ownerAccountId": "4c1b6fc3-9c77-4c44-8645-3e92b1097dd7",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`peers.add > functionality > peer is added - with email > has a vice versa intention 1`] = `
+{
+  "added": {
+    "peers": {
+      "id:a17a079f-815e-469e-a0da-a3e32f7a3ceb": {
+        "acceptReceipts": false,
+        "connectedAccountId": "b11c5d75-cf7f-4dea-8daa-7a20978f3160",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": false,
+        "id": "a17a079f-815e-469e-a0da-a3e32f7a3ceb",
+        "name": "Candido Strosin",
+        "ownerAccountId": "50206148-f4f3-4dae-8b8e-dbebbf897ca5",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+  "updated": {
+    "peers": {
+      "id:e9df41c5-3a67-4759-a1c4-35140ed7cb20": {
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`peers.add > input verification > mixed success and fail 1`] = `
+{
+  "added": {
+    "peers": {
+      "id:bb9c6125-1c9a-40c3-bb1f-7e6c4e870372": {
+        "acceptReceipts": false,
+        "connectedAccountId": null,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": false,
+        "id": "bb9c6125-1c9a-40c3-bb1f-7e6c4e870372",
+        "name": "Miss Alia Schiller",
+        "ownerAccountId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+}
+`;

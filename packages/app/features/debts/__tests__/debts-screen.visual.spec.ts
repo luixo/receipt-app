@@ -5,7 +5,7 @@ import assert from "node:assert";
 import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 import { test as localTest } from "./debts-screen.utils";
 
@@ -18,22 +18,22 @@ test("Full screen with debts", async ({
 	expectScreenshotWithSchemes,
 	faker,
 }) => {
-	const firstUserId = faker.string.uuid();
-	const { users } = await mockDebts({
-		generateUsers: (opts) => {
-			const [firstUser, ...generatedUsers] = defaultGenerateUsers(opts);
-			assert.ok(firstUser);
-			return [{ ...firstUser, id: firstUserId }, ...generatedUsers.slice(1)];
+	const firstPeerId = faker.string.uuid();
+	const { peers } = await mockDebts({
+		generatePeers: (opts) => {
+			const [firstPeer, ...generatedPeers] = defaultGeneratePeers(opts);
+			assert.ok(firstPeer);
+			return [{ ...firstPeer, id: firstPeerId }, ...generatedPeers.slice(1)];
 		},
 		generateDebts: (opts) =>
 			defaultGenerateDebts(
-				opts.userId === firstUserId ? { ...opts, amount: 0 } : opts,
+				opts.peerId === firstPeerId ? { ...opts, amount: 0 } : opts,
 			),
 	});
 	await page.navigate({ to: "/debts" });
 	await awaitCacheKey("debts.getAll");
-	await awaitCacheKey("debts.getUsersPaged");
-	await awaitCacheKey("debts.getAllUser", { success: users.length });
+	await awaitCacheKey("debts.getPeersPaged");
+	await awaitCacheKey("debts.getAllPeer", { success: peers.length });
 	await expectScreenshotWithSchemes("full-screen.png");
 });
 
@@ -43,14 +43,14 @@ test("Full screen with no debts", async ({
 	awaitCacheKey,
 	expectScreenshotWithSchemes,
 }) => {
-	const { users } = await mockDebts({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 0 }),
+	const { peers } = await mockDebts({
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 0 }),
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
 	});
 	await page.navigate({ to: "/debts" });
 	await awaitCacheKey("debts.getAll");
-	await awaitCacheKey("debts.getUsersPaged");
-	await awaitCacheKey("debts.getAllUser", { success: users.length });
+	await awaitCacheKey("debts.getPeersPaged");
+	await awaitCacheKey("debts.getAllPeer", { success: peers.length });
 	await expectScreenshotWithSchemes("empty.png");
 });
 
@@ -100,7 +100,7 @@ test("Loading state", async ({
 	await mockBase();
 
 	const pause = api.createPause();
-	api.mockFirst("debts.getUsersPaged", async () => {
+	api.mockFirst("debts.getPeersPaged", async () => {
 		await pause.promise;
 		return { count: 1, cursor: 0, items: [faker.string.uuid()] };
 	});
@@ -121,20 +121,20 @@ test("Error state", async ({
 	consoleManager,
 }) => {
 	await mockBase();
-	api.mockFirst("debts.getAllUser", { items: [] });
-	const mockErrorMessage = `Mock "debts.getUsersPaged" error`;
+	api.mockFirst("debts.getAllPeer", { items: [] });
+	const mockErrorMessage = `Mock "debts.getPeersPaged" error`;
 	consoleManager.ignore(mockErrorMessage);
-	api.mockFirst("debts.getUsersPaged", () => {
+	api.mockFirst("debts.getPeersPaged", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: mockErrorMessage,
 		});
 	});
-	api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
+	api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
 	api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
 
 	await page.navigate({ to: "/debts" });
-	await awaitCacheKey("debts.getUsersPaged", { error: 1 });
+	await awaitCacheKey("debts.getPeersPaged", { error: 1 });
 
 	await expect(errorMessage(mockErrorMessage)).toBeVisible();
 	await expectScreenshotWithSchemes("error.png");

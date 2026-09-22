@@ -20,23 +20,23 @@ export const getAccessRole = async (
 	}
 	const participant = await database
 		.selectFrom("receiptParticipants")
-		.innerJoin("users", (jb) =>
-			jb.onRef("users.id", "=", "receiptParticipants.userId"),
+		.innerJoin("peers", (jb) =>
+			jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 		)
 		.innerJoin("accounts", (jb) =>
-			jb.onRef("accounts.id", "=", "users.connectedAccountId"),
+			jb.onRef("accounts.id", "=", "peers.connectedAccountId"),
 		)
-		.innerJoin("users as reciprocalUsers", (jb) =>
+		.innerJoin("peers as reciprocalPeers", (jb) =>
 			jb
 				.onRef(
-					"reciprocalUsers.ownerAccountId",
+					"reciprocalPeers.ownerAccountId",
 					"=",
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 				)
 				.onRef(
-					"reciprocalUsers.connectedAccountId",
+					"reciprocalPeers.connectedAccountId",
 					"=",
-					"users.ownerAccountId",
+					"peers.ownerAccountId",
 				),
 		)
 		.where((eb) =>
@@ -72,28 +72,28 @@ export const getParticipantsReceipts = (
 	ownerAccountId: AccountId,
 ) =>
 	database
-		.selectFrom("users")
+		.selectFrom("peers")
 		.where((eb) =>
-			eb("users.connectedAccountId", "=", ownerAccountId).and(
-				"users.ownerAccountId",
+			eb("peers.connectedAccountId", "=", ownerAccountId).and(
+				"peers.ownerAccountId",
 				"<>",
 				ownerAccountId,
 			),
 		)
 		.innerJoin("receiptParticipants", (jb) =>
-			jb.onRef("receiptParticipants.userId", "=", "users.id"),
+			jb.onRef("receiptParticipants.peerId", "=", "peers.id"),
 		)
-		.innerJoin("users as reciprocalUsers", (jb) =>
+		.innerJoin("peers as reciprocalPeers", (jb) =>
 			jb
 				.onRef(
-					"reciprocalUsers.ownerAccountId",
+					"reciprocalPeers.ownerAccountId",
 					"=",
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 				)
 				.onRef(
-					"reciprocalUsers.connectedAccountId",
+					"reciprocalPeers.connectedAccountId",
 					"=",
-					"users.ownerAccountId",
+					"peers.ownerAccountId",
 				),
 		)
 		.innerJoin("receipts", (jb) =>

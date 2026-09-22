@@ -11,11 +11,11 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -45,11 +45,11 @@ const mockData = async (ctx: TestContext) => {
 	const {
 		sessionId,
 		accountId,
-		userId: selfUserId,
+		peerId: selfPeerId,
 	} = await insertAccountWithSession(ctx);
 	const foreignAccount = await insertAccount(ctx);
 
-	// Verify other users do not interfere
+	// Verify other peers do not interfere
 	await insertReceipt(ctx, foreignAccount.id);
 
 	// Self receipt
@@ -57,7 +57,7 @@ const mockData = async (ctx: TestContext) => {
 		issued: Temporal.PlainDate.from("2020-01-06"),
 	});
 	// Self receipt: participants
-	await insertReceiptParticipant(ctx, selfReceipt.id, selfUserId);
+	await insertReceiptParticipant(ctx, selfReceipt.id, selfPeerId);
 	// Self receipt: items
 	const selfReceiptItems = await Promise.all([
 		insertReceiptItem(ctx, selfReceipt.id),
@@ -77,15 +77,15 @@ const mockData = async (ctx: TestContext) => {
 		...otherSelfReceipt,
 		items: [],
 	};
-	const user = await insertUser(ctx, accountId);
+	const peer = await insertPeer(ctx, accountId);
 	// Other self receipt: participants
 	await Promise.all([
-		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfUserId),
-		insertReceiptParticipant(ctx, otherSelfReceipt.id, user.id),
+		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfPeerId),
+		insertReceiptParticipant(ctx, otherSelfReceipt.id, peer.id),
 	]);
 
 	// Foreign receipt
-	const [foreignToSelfUser] = await insertConnectedUsers(ctx, [
+	const [foreignToSelfPeer] = await insertConnectedPeers(ctx, [
 		foreignAccount.id,
 		accountId,
 	]);
@@ -94,8 +94,8 @@ const mockData = async (ctx: TestContext) => {
 	});
 	// Foreign receipt: participants
 	await Promise.all([
-		insertReceiptParticipant(ctx, foreignReceipt.id, foreignAccount.userId),
-		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfUser.id),
+		insertReceiptParticipant(ctx, foreignReceipt.id, foreignAccount.peerId),
+		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfPeer.id),
 	]);
 	// Foreign receipt: items
 	const foreignReceiptItems = await Promise.all([
@@ -117,7 +117,7 @@ const mockData = async (ctx: TestContext) => {
 	await insertReceiptParticipant(
 		ctx,
 		otherForeignReceipt.id,
-		foreignToSelfUser.id,
+		foreignToSelfPeer.id,
 	);
 	// Other foreign receipt: items
 	const otherForeignReceiptItems = await Promise.all([

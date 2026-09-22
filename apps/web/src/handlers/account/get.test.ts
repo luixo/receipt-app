@@ -35,7 +35,7 @@ describe("account.get", () => {
 					avatarUrl,
 					role: undefined,
 				},
-				user: { name },
+				peer: { name },
 			});
 		});
 
@@ -60,7 +60,7 @@ describe("account.get", () => {
 					avatarUrl: undefined,
 					role: undefined,
 				},
-				user: { name },
+				peer: { name },
 			});
 		});
 
@@ -83,7 +83,7 @@ describe("account.get", () => {
 					avatarUrl,
 					role: "role",
 				},
-				user: { name },
+				peer: { name },
 			});
 		});
 	});

@@ -3,9 +3,9 @@ import React from "react";
 import { doNothing } from "remeda";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
 import { PageHeader } from "~app/components/page-header";
-import { UserDebtsGroup } from "~app/components/user-debts-group";
+import { PeerDebtsGroup } from "~app/components/peer-debts-group";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { CurrencyCode } from "~app/utils/currency";
@@ -18,9 +18,9 @@ import { PlannedDebts } from "./planned-debts";
 
 export const DebtsExchangeAllScreen = () => {
 	const { useParams, useQueryState } = getPathHooks(
-		"/_protected/debts/user/$id/exchange/all",
+		"/_protected/debts/peer/$id/exchange/all",
 	);
-	const { id: userId } = useParams();
+	const { id: peerId } = useParams();
 	const fromState = useQueryState("from");
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = fromState;
 	const [
@@ -38,22 +38,22 @@ export const DebtsExchangeAllScreen = () => {
 	const navigate = useNavigate();
 	const back = React.useCallback(() => {
 		navigate({
-			to: "/debts/user/$id",
-			params: { id: userId },
+			to: "/debts/peer/$id",
+			params: { id: peerId },
 			replace: true,
 		});
-	}, [navigate, userId]);
+	}, [navigate, peerId]);
 	return (
 		<>
 			<PageHeader
 				startContent={
-					<BackLink to="/debts/user/$id/exchange" params={{ id: userId }} />
+					<BackLink to="/debts/peer/$id/exchange" params={{ id: peerId }} />
 				}
-				endContent={<LoadableUser id={userId} />}
+				endContent={<LoadablePeer id={peerId} />}
 			/>
-			<UserDebtsGroup className="self-center" userId={userId} />
+			<PeerDebtsGroup className="self-center" peerId={peerId} />
 			<CurrenciesGroup
-				userId={userId}
+				peerId={peerId}
 				selectedCurrencyCode={selectedCurrencyCode}
 				setSelectedCurrencyCode={setSelectedCurrencyCode}
 				onSelectOther={openModal}
@@ -71,7 +71,7 @@ export const DebtsExchangeAllScreen = () => {
 				<>
 					<Divider />
 					<PlannedDebts
-						userId={userId}
+						peerId={peerId}
 						selectedCurrencyCode={selectedCurrencyCode}
 						onDone={back}
 					/>

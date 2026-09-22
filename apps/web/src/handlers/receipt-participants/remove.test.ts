@@ -5,11 +5,11 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -28,7 +28,7 @@ describe("receiptParticipants.remove", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
 				receiptId: faker.string.uuid(),
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 			}),
 		);
 
@@ -40,7 +40,7 @@ describe("receiptParticipants.remove", () => {
 					() =>
 						caller.procedure({
 							receiptId: "not-a-uuid",
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "receiptId": Invalid UUID`,
@@ -48,7 +48,7 @@ describe("receiptParticipants.remove", () => {
 			});
 		});
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -56,10 +56,10 @@ describe("receiptParticipants.remove", () => {
 					() =>
 						caller.procedure({
 							receiptId: faker.string.uuid(),
-							userId: "not-a-uuid",
+							peerId: "not-a-uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -73,7 +73,7 @@ describe("receiptParticipants.remove", () => {
 				() =>
 					caller.procedure({
 						receiptId: fakeReceiptId,
-						userId: faker.string.uuid(),
+						peerId: faker.string.uuid(),
 					}),
 				"NOT_FOUND",
 				`Receipt "${fakeReceiptId}" does not exist.`,
@@ -95,24 +95,24 @@ describe("receiptParticipants.remove", () => {
 				() =>
 					caller.procedure({
 						receiptId: foreignReceiptId,
-						userId: faker.string.uuid(),
+						peerId: faker.string.uuid(),
 					}),
 				"FORBIDDEN",
 				`Not enough rights to remove participant from receipt "${foreignReceiptId}".`,
 			);
 		});
 
-		describe("user", () => {
+		describe("peer", () => {
 			test("does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const fakeUserId = faker.string.uuid();
+				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
-					() => caller.procedure({ receiptId, userId: fakeUserId }),
+					() => caller.procedure({ receiptId, peerId: fakePeerId }),
 					"NOT_FOUND",
-					`User "${fakeUserId}" does not exist.`,
+					`Peer "${fakePeerId}" does not exist.`,
 				);
 			});
 
@@ -124,13 +124,13 @@ describe("receiptParticipants.remove", () => {
 				} = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+				const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
-					() => caller.procedure({ receiptId, userId: foreignUserId }),
+					() => caller.procedure({ receiptId, peerId: foreignPeerId }),
 					"FORBIDDEN",
-					`User "${foreignUserId}" is not owned by "${email}".`,
+					`Peer "${foreignPeerId}" is not owned by "${email}".`,
 				);
 			});
 
@@ -138,7 +138,7 @@ describe("receiptParticipants.remove", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertReceipt(ctx, accountId);
 
-				const { id: notParticipantUserId } = await insertUser(ctx, accountId);
+				const { id: notParticipantPeerId } = await insertPeer(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -146,28 +146,28 @@ describe("receiptParticipants.remove", () => {
 					() =>
 						caller.procedure({
 							receiptId,
-							userId: notParticipantUserId,
+							peerId: notParticipantPeerId,
 						}),
 					"CONFLICT",
-					`User "${notParticipantUserId}" does not participate in receipt "${receiptId}".`,
+					`Peer "${notParticipantPeerId}" does not participate in receipt "${receiptId}".`,
 				);
 			});
 		});
 	});
 
 	describe("functionality", () => {
-		test("user is removed", async ({ ctx }) => {
+		test("peer is removed", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			const { id: userId } = await insertUser(ctx, accountId);
-			const { id: anotherUserId } = await insertUser(ctx, accountId);
-			await insertReceiptParticipant(ctx, receiptId, userId, {
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
+			await insertReceiptParticipant(ctx, receiptId, peerId, {
 				role: "editor",
 			});
-			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
+			await insertReceiptParticipant(ctx, receiptId, anotherPeerId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertReceiptItemConsumer(ctx, receiptItemId, userId);
-			await insertReceiptItemConsumer(ctx, receiptItemId, anotherUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, peerId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, anotherPeerId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceiptItem(ctx, receiptId);
@@ -176,7 +176,7 @@ describe("receiptParticipants.remove", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure({ receiptId, userId }),
+				caller.procedure({ receiptId, peerId }),
 			);
 		});
 	});

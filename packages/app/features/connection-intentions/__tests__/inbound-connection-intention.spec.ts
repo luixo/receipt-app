@@ -2,12 +2,12 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as usersSuggestFixture } from "~app/components/app/__tests__/users-suggest.utils";
+import { test as peersSuggestFixture } from "~app/components/app/__tests__/peers-suggest.utils";
 import { expect } from "~tests/frontend/fixtures";
 
 import { test as localTest } from "./inbound-connection-intention.utils";
 
-const test = mergeTests(localTest, usersSuggestFixture);
+const test = mergeTests(localTest, peersSuggestFixture);
 
 test("'accountConnectionIntentions.reject' mutation", async ({
 	page,
@@ -21,7 +21,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	const { inbound } = await mockConnectionIntentions({ inboundAmount: 1 });
 	const [intention] = inbound;
 	assert.ok(intention);
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 
 	api.mockFirst("accountConnectionIntentions.reject", () => {
 		throw new TRPCError({
@@ -37,7 +37,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 				`Error rejecting invite: Mock "accountConnectionIntentions.reject" error`,
 			);
 		},
-		{ blacklistKeys: ["users.suggestTop"] },
+		{ blacklistKeys: ["peers.suggestTop"] },
 	);
 	await expect(page.getByLabel("Email to connect")).toHaveValue(
 		intention.account.email,
@@ -51,7 +51,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 				success: 1,
 			});
 		},
-		{ name: "success", blacklistKeys: ["users.suggestTop"] },
+		{ name: "success", blacklistKeys: ["peers.suggestTop"] },
 	);
 	await expect(page.getByLabel("Email to connect")).not.toBeAttached();
 });
@@ -60,7 +60,7 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
-	mockSuggestedUsers,
+	mockSuggestedPeers,
 	confirmDialog,
 	confirmYesButton,
 	confirmNoButton,
@@ -73,21 +73,21 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	const { inbound } = await mockConnectionIntentions({ inboundAmount: 1 });
 	const [intention] = inbound;
 	assert.ok(intention);
-	// Two users: the first is used for the cancel + error rounds, the
-	// second for the final retry, since `users.suggestTop` is only fetched
+	// Two peers: the first is used for the cancel + error rounds, the
+	// second for the final retry, since `peers.suggestTop` is only fetched
 	// once and re-mocking it mid-test wouldn't be picked up by the cache.
-	const [firstUser, secondUser] = mockSuggestedUsers(2);
-	assert.ok(firstUser);
-	assert.ok(secondUser);
-	await page.navigate({ to: "/users/connections" });
+	const [firstPeer, secondPeer] = mockSuggestedPeers(2);
+	assert.ok(firstPeer);
+	assert.ok(secondPeer);
+	await page.navigate({ to: "/peers/connections" });
 
-	const input = suggestInput("Please choose a user below to accept intention");
-	const firstOption = suggestOption(firstUser.name);
+	const input = suggestInput("Please choose a peer below to accept intention");
+	const firstOption = suggestOption(firstPeer.name);
 
 	await input.click();
 	await firstOption.click();
 	await expect(confirmDialog).toContainText(
-		`This will connect account "${intention.account.email}" with a user "${firstUser.name}"`,
+		`This will connect account "${intention.account.email}" with a peer "${firstPeer.name}"`,
 	);
 
 	await confirmNoButton.click();
@@ -111,11 +111,11 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	await expect(page.getByLabel("Email to connect")).toBeAttached();
 
 	// Retry with the second candidate
-	const retryOption = suggestOption(secondUser.name);
+	const retryOption = suggestOption(secondPeer.name);
 	await input.click();
 	await retryOption.click();
 	await expect(confirmDialog).toContainText(
-		`This will connect account "${intention.account.email}" with a user "${secondUser.name}"`,
+		`This will connect account "${intention.account.email}" with a peer "${secondPeer.name}"`,
 	);
 	api.mockFirst("accountConnectionIntentions.accept", {
 		id: intention.account.id,

@@ -1,11 +1,11 @@
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
-import type { insertUser } from "~tests/backend/utils/data";
+import type { insertPeer } from "~tests/backend/utils/data";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -17,14 +17,14 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const getAccountShape = (
 	account: Awaited<ReturnType<typeof insertAccount>>,
-	user?: Awaited<ReturnType<typeof insertUser>>,
+	peer?: Awaited<ReturnType<typeof insertPeer>>,
 ) => ({
 	account: {
 		id: account.id,
 		email: account.email,
 		avatarUrl: account.avatarUrl,
 	},
-	user: user ? { id: user.id, name: user.name } : undefined,
+	peer: peer ? { id: peer.id, name: peer.name } : undefined,
 });
 
 describe("admin.accounts", () => {
@@ -42,12 +42,12 @@ describe("admin.accounts", () => {
 				avatarUrl: null,
 			});
 			const connectedAccount = await insertAccount(ctx);
-			const [foreignUser] = await insertConnectedUsers(ctx, [
+			const [foreignPeer] = await insertConnectedPeers(ctx, [
 				accountId,
 				connectedAccount.id,
 			]);
 			const anotherConnectedAccount = await insertAccount(ctx);
-			const [anotherForeignUser] = await insertConnectedUsers(ctx, [
+			const [anotherForeignPeer] = await insertConnectedPeers(ctx, [
 				accountId,
 				anotherConnectedAccount.id,
 			]);
@@ -59,20 +59,20 @@ describe("admin.accounts", () => {
 				items: [
 					getAccountShape(foreignAccount),
 					getAccountShape(anotherForeignAccount),
-					getAccountShape(connectedAccount, foreignUser),
-					getAccountShape(anotherConnectedAccount, anotherForeignUser),
+					getAccountShape(connectedAccount, foreignPeer),
+					getAccountShape(anotherConnectedAccount, anotherForeignPeer),
 				].toSorted((a, b) => {
 					const emailComparison = a.account.email.localeCompare(
 						b.account.email,
 					);
-					if (a.user && b.user) {
-						const nameComparison = a.user.name.localeCompare(b.user.name);
+					if (a.peer && b.peer) {
+						const nameComparison = a.peer.name.localeCompare(b.peer.name);
 						return nameComparison === 0 ? emailComparison : nameComparison;
 					}
-					if (a.user) {
+					if (a.peer) {
 						return -1;
 					}
-					if (b.user) {
+					if (b.peer) {
 						return 1;
 					}
 					return emailComparison;

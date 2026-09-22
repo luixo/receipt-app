@@ -2,31 +2,31 @@ import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
 import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { test as userFixture } from "~app/components/app/__tests__/user.utils";
+import { test as peerFixture } from "~app/components/app/__tests__/peer.utils";
 
 import { test as localTest } from "./utils";
 
-const test = mergeTests(localTest, debtsGroupFixture, userFixture);
+const test = mergeTests(localTest, debtsGroupFixture, peerFixture);
 
 test.describe("Screen", () => {
 	test("Default", async ({
 		mockDebts,
 		page,
 		expectScreenshotWithSchemes,
-		user: userSelector,
+		peer: peerSelector,
 		debtsGroup,
 		currenciesGroup,
 		awaitCacheKey,
 		plannedDebtsForm,
 	}) => {
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expectScreenshotWithSchemes("screen/default.png", {
-			mask: [debtsGroup, userSelector, currenciesGroup, plannedDebtsForm],
+			mask: [debtsGroup, peerSelector, currenciesGroup, plannedDebtsForm],
 		});
 	});
 
@@ -34,22 +34,22 @@ test.describe("Screen", () => {
 		mockDebts,
 		page,
 		expectScreenshotWithSchemes,
-		user: userSelector,
+		peer: peerSelector,
 		debtsGroup,
 		currenciesGroup,
 		awaitCacheKey,
 		plannedDebtsForm,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: debts[0].currencyCode },
 		});
 		await awaitCacheKey("currency.rates");
 		await expectScreenshotWithSchemes("screen/with-selected-code.png", {
-			mask: [debtsGroup, userSelector, currenciesGroup, plannedDebtsForm],
+			mask: [debtsGroup, peerSelector, currenciesGroup, plannedDebtsForm],
 		});
 	});
 });
@@ -62,12 +62,12 @@ test.describe("Currencies group", () => {
 		currenciesGroup,
 		awaitCacheKey,
 	}) => {
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
-		await awaitCacheKey("debts.getAllUser");
+		await awaitCacheKey("debts.getAllPeer");
 		await expectScreenshotWithSchemes("currencies-group/default.png", {
 			locator: currenciesGroup,
 		});
@@ -80,11 +80,11 @@ test.describe("Currencies group", () => {
 		currenciesGroup,
 		awaitCacheKey,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: debts[0].currencyCode },
 		});
 		await awaitCacheKey("currency.rates");
@@ -105,15 +105,15 @@ test.describe("Currencies group", () => {
 			true,
 			"We prefetch this query completely so loading state will hang it forever",
 		);
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		const debtsPause = api.createPause();
-		api.mockFirst("debts.getAllUser", async ({ next }) => {
+		api.mockFirst("debts.getAllPeer", async ({ next }) => {
 			await debtsPause.promise;
 			return next();
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 		await expectScreenshotWithSchemes("currencies-group/loading.png", {
 			locator: currenciesGroupSkeleton,

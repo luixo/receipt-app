@@ -46,7 +46,7 @@ test("'auth.login' mutation", async ({
 				avatarUrl: undefined,
 				role: undefined,
 			},
-			user: { name: "Test user" },
+			peer: { name: "Test peer" },
 		};
 	});
 

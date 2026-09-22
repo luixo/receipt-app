@@ -10,8 +10,8 @@ import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import {
 	currencyCodeSchema,
+	peerIdSchema,
 	receiptIdSchema,
-	userIdSchema,
 } from "~web/handlers/validation";
 
 import { upsertAutoAcceptedDebts } from "./utils";
@@ -19,7 +19,7 @@ import { upsertAutoAcceptedDebts } from "./utils";
 const addDebtSchema = z.strictObject({
 	note: debtNoteSchema,
 	currencyCode: currencyCodeSchema,
-	userId: userIdSchema,
+	peerId: peerIdSchema,
 	amount: debtAmountSchema,
 	timestamp: temporalSchemas.plainDate.optional(),
 	receiptId: receiptIdSchema.optional(),
@@ -29,88 +29,88 @@ const getData = async (
 	ctx: AuthorizedContext,
 	debts: readonly z.infer<typeof addDebtSchema>[],
 ) => {
-	const userIds = unique(debts.map(({ userId }) => userId));
-	const receiptUserTuples = unique(
+	const peerIds = unique(debts.map(({ peerId }) => peerId));
+	const receiptPeerTuples = unique(
 		debts
-			.map(({ receiptId, userId }) =>
-				receiptId ? { receiptId, userId } : undefined,
+			.map(({ receiptId, peerId }) =>
+				receiptId ? { receiptId, peerId } : undefined,
 			)
 			.filter(isNonNullish),
 	);
-	const [users, debtReceiptTuples] = await Promise.all([
+	const [peers, debtReceiptTuples] = await Promise.all([
 		ctx.database
-			.selectFrom("users")
+			.selectFrom("peers")
 			.leftJoin("accountSettings", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
+				qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
 			)
-			.leftJoin("users as usersTheir", (qb) =>
+			.leftJoin("peers as peersTheir", (qb) =>
 				qb
-					.onRef("usersTheir.ownerAccountId", "=", "users.connectedAccountId")
-					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
+					.onRef("peersTheir.ownerAccountId", "=", "peers.connectedAccountId")
+					.on("peersTheir.connectedAccountId", "=", ctx.auth.accountId),
 			)
 			.select([
-				"users.id as userId",
-				"users.ownerAccountId as selfAccountId",
-				"users.connectedAccountId as foreignAccountId",
-				"usersTheir.id as theirUserId",
+				"peers.id as peerId",
+				"peers.ownerAccountId as selfAccountId",
+				"peers.connectedAccountId as foreignAccountId",
+				"peersTheir.id as theirPeerId",
 				"accountSettings.manualAcceptDebts",
 			])
-			.where("users.id", "in", userIds)
+			.where("peers.id", "in", peerIds)
 			.execute(),
-		receiptUserTuples.length === 0
+		receiptPeerTuples.length === 0
 			? []
 			: ctx.database
 					.selectFrom("debts")
 					.where((eb) =>
 						eb.or(
-							receiptUserTuples.map(({ receiptId, userId }) =>
+							receiptPeerTuples.map(({ receiptId, peerId }) =>
 								eb.and({
 									"debts.receiptId": receiptId,
-									"debts.userId": userId,
+									"debts.peerId": peerId,
 								}),
 							),
 						),
 					)
 					.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-					.select(["debts.userId", "debts.receiptId"])
+					.select(["debts.peerId", "debts.receiptId"])
 					.execute(),
 	]);
-	return { users, debtReceiptTuples };
+	return { peers, debtReceiptTuples };
 };
 
-const getDebtUserReceiptTupleId = (debt: z.infer<typeof addDebtSchema>) =>
-	`${debt.userId}/${debt.receiptId}`;
+const getDebtPeerReceiptTupleId = (debt: z.infer<typeof addDebtSchema>) =>
+	`${debt.peerId}/${debt.receiptId}`;
 
-const getMatchedUser = (
+const getMatchedPeer = (
 	debt: z.infer<typeof addDebtSchema>,
-	users: Awaited<ReturnType<typeof getData>>["users"],
+	peers: Awaited<ReturnType<typeof getData>>["peers"],
 ) => {
-	const matchedUser = users.find((user) => user.userId === debt.userId);
+	const matchedPeer = peers.find((peer) => peer.peerId === debt.peerId);
 	/* c8 ignore start */
-	if (!matchedUser) {
+	if (!matchedPeer) {
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
-			message: `Expected to have a matched user id "${debt.userId}".`,
+			message: `Expected to have a matched peer id "${debt.peerId}".`,
 		});
 	}
 	/* c8 ignore stop */
-	return matchedUser;
+	return matchedPeer;
 };
 
 const addAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
-	users: Awaited<ReturnType<typeof getData>>["users"],
+	peers: Awaited<ReturnType<typeof getData>>["peers"],
 	debts: (z.infer<typeof addDebtSchema> & { generatedId: DebtId })[],
 ) => {
 	const { updatedDebts, newDebts } = await upsertAutoAcceptedDebts(
 		ctx.database,
 		debts
 			.map(({ generatedId, ...debt }) => {
-				const user = getMatchedUser(debt, users);
+				const peer = getMatchedPeer(debt, peers);
 				if (
-					!user.foreignAccountId ||
-					!user.theirUserId ||
-					user.manualAcceptDebts
+					!peer.foreignAccountId ||
+					!peer.theirPeerId ||
+					peer.manualAcceptDebts
 				) {
 					return null;
 				}
@@ -120,52 +120,52 @@ const addAutoAcceptingDebts = async (
 					currencyCode: debt.currencyCode,
 					timestamp: debt.timestamp || Temporal.Now.plainDateISO(),
 					receiptId: debt.receiptId,
-					ownerAccountId: user.foreignAccountId,
-					userId: user.theirUserId,
+					ownerAccountId: peer.foreignAccountId,
+					peerId: peer.theirPeerId,
 					amount: (-debt.amount).toString(),
 					isNew: true,
 				};
 			})
 			.filter(isNonNullish),
 	);
-	const acceptingReverseUserIds = unique([
-		...newDebts.map((debt) => debt.userId),
-		...updatedDebts.map((debt) => debt.userId),
+	const acceptingReversePeerIds = unique([
+		...newDebts.map((debt) => debt.peerId),
+		...updatedDebts.map((debt) => debt.peerId),
 	]);
-	const acceptedUserIds = acceptingReverseUserIds.map((reverseUserId) => {
-		const matchedUser = users.find(
-			(user) => user.theirUserId === reverseUserId,
+	const acceptedPeerIds = acceptingReversePeerIds.map((reversePeerId) => {
+		const matchedPeer = peers.find(
+			(peer) => peer.theirPeerId === reversePeerId,
 		);
 		/* c8 ignore start */
-		if (!matchedUser) {
+		if (!matchedPeer) {
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Expected to have a user for reverse user id "${reverseUserId}".`,
+				message: `Expected to have a peer for reverse peer id "${reversePeerId}".`,
 			});
 		}
 		/* c8 ignore stop */
-		return matchedUser.userId;
+		return matchedPeer.peerId;
 	});
 	return {
 		reverseIdMap: debts.reduce<Partial<Record<string, DebtId>>>((acc, debt) => {
 			if (!debt.receiptId) {
 				return acc;
 			}
-			const matchedUser = getMatchedUser(debt, users);
+			const matchedPeer = getMatchedPeer(debt, peers);
 			const matchedUpdatedDebt = updatedDebts.find(
 				(lookupDebt) =>
 					lookupDebt.receiptId === debt.receiptId &&
-					lookupDebt.userId === matchedUser.theirUserId,
+					lookupDebt.peerId === matchedPeer.theirPeerId,
 			);
 			if (!matchedUpdatedDebt) {
 				return acc;
 			}
 			return {
 				...acc,
-				[getDebtUserReceiptTupleId(debt)]: matchedUpdatedDebt.id,
+				[getDebtPeerReceiptTupleId(debt)]: matchedUpdatedDebt.id,
 			};
 		}, {}),
-		acceptedUserIds,
+		acceptedPeerIds,
 	};
 };
 
@@ -184,13 +184,13 @@ const addDebts = async (
 		.values(
 			debts
 				.map(({ generatedId, ...debt }) => ({
-					id: reverseIdMap[getDebtUserReceiptTupleId(debt)] || generatedId,
+					id: reverseIdMap[getDebtPeerReceiptTupleId(debt)] || generatedId,
 					note: debt.note,
 					currencyCode: debt.currencyCode,
 					timestamp: debt.timestamp || Temporal.Now.plainDateISO(),
 					receiptId: debt.receiptId,
 					ownerAccountId: ctx.auth.accountId,
-					userId: debt.userId,
+					peerId: debt.peerId,
 					amount: debt.amount.toString(),
 				}))
 				.filter(isNonNullish),
@@ -198,7 +198,7 @@ const addDebts = async (
 		.returning(["debts.id", "debts.updatedAt"])
 		.execute();
 	return debts.map(({ generatedId, ...debt }) => {
-		const id = reverseIdMap[getDebtUserReceiptTupleId(debt)] || generatedId;
+		const id = reverseIdMap[getDebtPeerReceiptTupleId(debt)] || generatedId;
 		// We just added these value, should be returned in `values` variable
 		// oxlint-disable-next-line typescript/no-non-null-assertion
 		const { updatedAt } = values.find(({ id: lookupId }) => lookupId === id)!;
@@ -212,39 +212,39 @@ const queueAddDebt = queueCallFactory<
 	{
 		id: DebtId;
 		updatedAt: Temporal.ZonedDateTime;
-		// `undefined` signifies that user is local
+		// `undefined` signifies that peer is local
 		reverseAccepted: boolean | undefined;
 	}
 >((ctx) => async (inputs) => {
-	const { users, debtReceiptTuples } = await getData(ctx, inputs);
+	const { peers, debtReceiptTuples } = await getData(ctx, inputs);
 	const debtsOrErrors = inputs.map((debt) => {
-		const matchedUser = users.find((result) => result.userId === debt.userId);
-		if (!matchedUser) {
+		const matchedPeer = peers.find((result) => result.peerId === debt.peerId);
+		if (!matchedPeer) {
 			return new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${debt.userId}" does not exist.`,
+				message: `Peer "${debt.peerId}" does not exist.`,
 			});
 		}
-		if (matchedUser.selfAccountId !== ctx.auth.accountId) {
+		if (matchedPeer.selfAccountId !== ctx.auth.accountId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
-				message: `User "${debt.userId}" is not owned by "${ctx.auth.email}".`,
+				message: `Peer "${debt.peerId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (debt.userId === matchedUser.selfAccountId) {
+		if (debt.peerId === matchedPeer.selfAccountId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Cannot add a debt for yourself.`,
 			});
 		}
 		const matchedDebtReceipt = debtReceiptTuples.find(
-			({ userId, receiptId }) =>
-				userId === debt.userId && receiptId === debt.receiptId,
+			({ peerId, receiptId }) =>
+				peerId === debt.peerId && receiptId === debt.receiptId,
 		);
 		if (matchedDebtReceipt) {
 			return new TRPCError({
 				code: "FORBIDDEN",
-				message: `There is already a debt for user "${matchedDebtReceipt.userId}" in receipt "${matchedDebtReceipt.receiptId}".`,
+				message: `There is already a debt for peer "${matchedDebtReceipt.peerId}" in receipt "${matchedDebtReceipt.receiptId}".`,
 			});
 		}
 		return { ...debt, generatedId: ctx.getUuid() };
@@ -253,15 +253,15 @@ const queueAddDebt = queueCallFactory<
 		(debtOrError): debtOrError is Exclude<typeof debtOrError, TRPCError> =>
 			!(debtOrError instanceof TRPCError),
 	);
-	const { reverseIdMap, acceptedUserIds } = await addAutoAcceptingDebts(
+	const { reverseIdMap, acceptedPeerIds } = await addAutoAcceptingDebts(
 		ctx,
-		users,
+		peers,
 		debts,
 	);
-	const localUserIds = new Set(
-		users
-			.filter((user) => user.foreignAccountId === null)
-			.map((user) => user.userId),
+	const localPeerIds = new Set(
+		peers
+			.filter((peer) => peer.foreignAccountId === null)
+			.map((peer) => peer.peerId),
 	);
 	const addedDebts = await addDebts(ctx, debts, reverseIdMap);
 	return debtsOrErrors.map((debtOrError) => {
@@ -269,7 +269,7 @@ const queueAddDebt = queueCallFactory<
 			return debtOrError;
 		}
 		const id =
-			reverseIdMap[getDebtUserReceiptTupleId(debtOrError)] ||
+			reverseIdMap[getDebtPeerReceiptTupleId(debtOrError)] ||
 			debtOrError.generatedId;
 		const matchedAddedDebt = addedDebts.find(
 			(addedDebt) => addedDebt.id === id,
@@ -285,9 +285,9 @@ const queueAddDebt = queueCallFactory<
 		return {
 			id,
 			updatedAt: matchedAddedDebt.updatedAt,
-			reverseAccepted: localUserIds.has(debtOrError.userId)
+			reverseAccepted: localPeerIds.has(debtOrError.peerId)
 				? undefined
-				: acceptedUserIds.includes(debtOrError.userId),
+				: acceptedPeerIds.includes(debtOrError.peerId),
 		};
 	});
 });
@@ -296,7 +296,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add debt",
 		description:
-			"Adds a debt for a given userId, auto-accepting the mirrored debt on the counterparty's account unless they require manual acceptance.",
+			"Adds a debt for a given peerId, auto-accepting the mirrored debt on the counterparty's account unless they require manual acceptance.",
 	})
 	.input(addDebtSchema)
 	.mutation(queueAddDebt);
