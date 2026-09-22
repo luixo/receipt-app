@@ -316,6 +316,40 @@ test.describe("Currency", () => {
 			getCurrencySymbol(localSettings.locale, "EUR"),
 		);
 	});
+
+	test("Changing a debt currency moves its sum between aggregated groups", async ({
+		api,
+		page,
+		mockDebt,
+		awaitCacheKey,
+		currencyButton,
+		currenciesPicker,
+		snapshotQueries,
+	}) => {
+		const { debt } = await mockDebt();
+		api.mockFirst("currency.top", { items: [] });
+		api.mockFirst("debts.update", () => ({
+			updatedAt: Temporal.Now.zonedDateTimeISO(),
+			reverseUpdated: false,
+		}));
+
+		const debtsPreview = page.getByTestId("user-debts-preview");
+		const debtPreview = page.getByTestId("user-debt-preview");
+
+		await page.navigate({ to: "/debts" });
+		await debtsPreview.click();
+		await awaitCacheKey("debts.getByUserPaged");
+		await expect(debtPreview).toHaveCount(1);
+		await debtPreview.click();
+		await page.expectUrl({ to: "/debts/$id", params: { id: debt.id } });
+
+		await page.getByTestId("currency-trigger-button").click();
+		await expect(currenciesPicker).toBeVisible();
+		await snapshotQueries(async () => {
+			await currencyButton(debt.currencyCode === "EUR" ? "USD" : "EUR").click();
+			await awaitCacheKey("debts.update");
+		});
+	});
 });
 
 test.describe("Remove", () => {

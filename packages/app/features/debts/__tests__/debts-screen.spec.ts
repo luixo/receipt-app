@@ -249,8 +249,7 @@ test.describe("Header aside", () => {
 	});
 });
 
-// CI fails on clicking preview, verify in CI it works
-test.fixme("User debts preview navigates to user debts screen", async ({
+test("User debts preview navigates to user debts screen", async ({
 	page,
 	mockDebts,
 	userDebtsPreview,
