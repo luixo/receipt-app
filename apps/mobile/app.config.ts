@@ -55,6 +55,7 @@ const config: AppJSONConfig = {
 					imageWidth: 200,
 				},
 			],
+			"@react-native-vector-icons/lucide",
 		],
 		userInterfaceStyle: "automatic",
 		experiments: {
