@@ -8,8 +8,8 @@ import { localSettings } from "~tests/frontend/consts";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
 
 type AggregatedDebt = { currencyCode: CurrencyCode; sum: number };
 
@@ -24,11 +24,11 @@ export const getPlannedDebtsAmount = (
 
 type Fixtures = {
 	mockBase: () => Promise<{
-		debtUser: ReturnType<GenerateUsers>[number];
+		debtPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	mockDebts: (options?: { generateDebts?: GenerateDebts }) => Promise<{
 		debts: AggregatedDebt[];
-		debtUser: ReturnType<GenerateUsers>[number];
+		debtPeer: ReturnType<GeneratePeers>[number];
 		rates: Record<CurrencyCode, number>;
 	}>;
 	currencyGroupButton: Locator;
@@ -46,19 +46,19 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(async () => {
 			await api.mockUtils.authPage();
-			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
-			assert.ok(debtUser);
-			api.mockUtils.mockUsers(debtUser);
-			return { debtUser };
+			const [debtPeer] = defaultGeneratePeers({ faker, amount: 1 });
+			assert.ok(debtPeer);
+			api.mockUtils.mockPeers(debtPeer);
+			return { debtPeer };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
 		use(async ({ generateDebts } = {}) => {
-			const { debtUser } = await mockBase();
+			const { debtPeer } = await mockBase();
 			const debts = entries(
 				(generateDebts ?? defaultGenerateDebts)({
 					faker,
 					amount: { min: 3, max: 6 },
-					userId: debtUser.id,
+					peerId: debtPeer.id,
 				}).reduce<Record<CurrencyCode, number>>(
 					(acc, { currencyCode, amount }) => ({
 						...acc,
@@ -67,7 +67,7 @@ export const test = originalTest.extend<Fixtures>({
 					{},
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", { items: debts });
+			api.mockFirst("debts.getAllPeer", { items: debts });
 			const rates = fromEntries(
 				debts.map(
 					({ currencyCode }) =>
@@ -91,7 +91,7 @@ export const test = originalTest.extend<Fixtures>({
 					}),
 				),
 			);
-			return { debts, debtUser, rates };
+			return { debts, debtPeer, rates };
 		}),
 
 	currencyGroupButton: ({ currenciesGroup }, use) =>

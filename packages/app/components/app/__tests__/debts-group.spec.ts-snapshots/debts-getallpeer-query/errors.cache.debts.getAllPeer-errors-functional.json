@@ -1,0 +1,100 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"167287b6-daee-4786-8f8f-3eeb4eaddeb2\"}]": {
+			"state": {
+				"data": {
+					"id": "167287b6-daee-4786-8f8f-3eeb4eaddeb2",
+					"currencyCode": "NGN",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-31",
+					"note": "atrocitas viridis aveho in",
+					"receiptId": "<undefined>",
+					"amount": 7241.37,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "37aac640-c23d-46bf-8ee1-b3462e212e4b"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"a20ab4bc-1dca-43b2-8ea9-8210825f7460\"}]": {
+			"state": {
+				"data": {
+					"id": "a20ab4bc-1dca-43b2-8ea9-8210825f7460",
+					"currencyCode": "SVC",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-30",
+					"note": "aro cur usque articulus",
+					"receiptId": "<undefined>",
+					"amount": 1581.38,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "37aac640-c23d-46bf-8ee1-b3462e212e4b"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"fc562804-9bac-4f6f-a72c-0175c0ee5952\"}]": {
+			"state": {
+				"data": {
+					"id": "fc562804-9bac-4f6f-a72c-0175c0ee5952",
+					"currencyCode": "XCG",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-04",
+					"note": "bene cernuus pecus curso",
+					"receiptId": "<undefined>",
+					"amount": 6523.22,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "37aac640-c23d-46bf-8ee1-b3462e212e4b"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllPeer:[{\"peerId\":\"37aac640-c23d-46bf-8ee1-b3462e212e4b\"}]": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock \"debts.getAllPeer\" error"
+				},
+				"errorUpdateCount": 2,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.get:[{\"id\":\"37aac640-c23d-46bf-8ee1-b3462e212e4b\"}]": {
+			"state": {
+				"data": {
+					"id": "37aac640-c23d-46bf-8ee1-b3462e212e4b",
+					"name": "Kariane Rosenbaum",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

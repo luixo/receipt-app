@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptItemConsumers.remove > functionality > user does not consume item anymore 1`] = `
+exports[`receiptItemConsumers.remove > functionality > peer does not consume item anymore 1`] = `
 {
   "deleted": {
     "receiptItemConsumers": {
-      "itemId:70fdd3c3-d115-44f8-a137-2d36203ae6ba|userId:9c75af77-802a-4fc6-becf-f9a347d963d9": undefined,
+      "itemId:149a13e7-72e0-4904-9820-1361722ca05e|peerId:0ef069cb-d021-486e-9fc7-9ced5f5c6730": undefined,
     },
   },
 }

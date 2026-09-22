@@ -3,7 +3,7 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
+import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import {
@@ -64,21 +64,21 @@ export const ReceiptScreen = suspendedFallback(
 		const [deleteLoading, setDeleteLoading] = React.useState(false);
 		const [isEditing, { setFalse: unsetEditing, setTrue: setEditing }] =
 			useBooleanState();
-		const isOwner = receipt.selfUserId === receipt.ownerUserId;
+		const isOwner = receipt.selfPeerId === receipt.ownerPeerId;
 		const disabled = !isOwner || deleteLoading;
 		const actionsHooks = useActionHooks(receipt);
 		const getReceiptContext = useGetReceiptContext(
 			receipt,
 			deleteLoading,
 			(participant) =>
-				isOwner && receipt.selfUserId !== participant.userId ? (
+				isOwner && receipt.selfPeerId !== participant.peerId ? (
 					<ReceiptParticipantActions
 						participant={participant}
 						receipt={receipt}
 						outcomingDebtId={
 							receipt.debts.direction === "outcoming"
 								? receipt.debts.debts.find(
-										({ userId }) => userId === participant.userId,
+										({ peerId }) => peerId === participant.peerId,
 									)?.id
 								: undefined
 						}
@@ -119,7 +119,7 @@ export const ReceiptScreen = suspendedFallback(
 							<View className="flex w-full flex-row items-start justify-between gap-2">
 								<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 								<View className="flex flex-row gap-2">
-									<LoadableUserAvatar id={receipt.ownerUserId} />
+									<LoadablePeerAvatar id={receipt.ownerPeerId} />
 									{isOwner ? (
 										<ReceiptSyncButton
 											key={

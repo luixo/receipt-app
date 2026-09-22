@@ -3,7 +3,7 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
 import { AvatarGroup } from "~components/avatar";
@@ -27,13 +27,13 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 	const canEdit = useCanEdit();
 	const trpc = useTRPC();
 
-	const ownerUserIds = participants
+	const ownerPeerIds = participants
 		.filter((participant) => participant.role === "owner")
-		.map(({ userId }) => userId);
+		.map(({ peerId }) => peerId);
 	const possibleParticipantIds = participants
-		.map(({ userId }) => userId)
-		.filter((participantId) => !ownerUserIds.includes(participantId));
-	const addedParticipantsIds = item.payers.map(({ userId }) => userId);
+		.map(({ peerId }) => peerId)
+		.filter((participantId) => !ownerPeerIds.includes(participantId));
+	const addedParticipantsIds = item.payers.map(({ peerId }) => peerId);
 	const notAddedParticipantsIds = new Set(
 		possibleParticipantIds.filter(
 			(participantId) => !addedParticipantsIds.includes(participantId),
@@ -59,8 +59,8 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 			placeholder={t("item.payer.placeholder")}
 			selectedKeys={
 				defaultOwnerOnly
-					? ownerUserIds
-					: item.payers.map(({ userId }) => userId)
+					? ownerPeerIds
+					: item.payers.map(({ peerId }) => peerId)
 			}
 			disabledKeys={
 				addConsumerMutationStates.some(({ status }) => status === "pending") ||
@@ -83,13 +83,13 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 			renderValue={(selectedParticipants) => {
 				if (selectedParticipants.length === 1) {
 					// oxlint-disable-next-line typescript/no-non-null-assertion
-					const { userId } = selectedParticipants[0]!;
+					const { peerId } = selectedParticipants[0]!;
 					return (
-						<LoadableUser
-							key={userId}
+						<LoadablePeer
+							key={peerId}
 							className={canEdit ? "cursor-pointer" : undefined}
 							avatarProps={{ size: "sm", dimmed: defaultOwnerOnly }}
-							id={userId}
+							id={peerId}
 							foreign={!isOwner}
 						/>
 					);
@@ -100,18 +100,18 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 						size="sm"
 					>
 						{selectedParticipants
-							.map((participant) => participant.userId)
+							.map((participant) => participant.peerId)
 							.filter(isNonNullish)
-							.map((userId) => (
-								<LoadableUser key={userId} id={userId} foreign={!isOwner} />
+							.map((peerId) => (
+								<LoadablePeer key={peerId} id={peerId} foreign={!isOwner} />
 							))}
 					</AvatarGroup>
 				);
 			}}
 			items={participants.toSorted(SORT_USERS)}
-			getKey={({ userId }) => userId}
+			getKey={({ peerId }) => peerId}
 		>
-			{({ userId }) => <LoadableUser id={userId} foreign={!isOwner} />}
+			{({ peerId }) => <LoadablePeer id={peerId} foreign={!isOwner} />}
 		</Select>
 	);
 };

@@ -1,0 +1,8 @@
+{
+	"peers.get": {
+		"clientCalls": 10
+	},
+	"peers.getPaged": {
+		"clientCalls": 1
+	}
+}

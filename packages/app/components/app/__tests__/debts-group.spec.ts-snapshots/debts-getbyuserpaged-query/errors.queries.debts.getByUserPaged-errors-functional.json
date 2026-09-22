@@ -1,8 +1,0 @@
-{
-	"debts.getByUserPaged": {
-		"serverCalls": 1
-	},
-	"users.get": {
-		"serverCalls": 1
-	}
-}

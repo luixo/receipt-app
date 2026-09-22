@@ -1,0 +1,250 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"14a9eb9c-f01e-4d96-9c43-341c7bddc665\"}]": {
+			"state": {
+				"data": {
+					"id": "14a9eb9c-f01e-4d96-9c43-341c7bddc665",
+					"currencyCode": "CVE",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-06",
+					"note": "addo tabgo colo admoneo",
+					"receiptId": "<undefined>",
+					"amount": 9896.86,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"2a75e763-8b2c-4c5e-89d0-72e4a7a2d0da\"}]": {
+			"state": {
+				"data": {
+					"id": "2a75e763-8b2c-4c5e-89d0-72e4a7a2d0da",
+					"currencyCode": "LAK",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-31",
+					"note": "ademptio nesciunt varietas doloribus",
+					"receiptId": "<undefined>",
+					"amount": -1208.61,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"3825e2a2-724a-462a-adf2-dc4bb4d1daba\"}]": {
+			"state": {
+				"data": {
+					"id": "3825e2a2-724a-462a-adf2-dc4bb4d1daba",
+					"currencyCode": "MRU",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-09",
+					"note": "aliqua blanditiis tibi tristis",
+					"receiptId": "<undefined>",
+					"amount": 4675.28,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"4c66d748-50b7-42e8-8512-a5438d6d7c4e\"}]": {
+			"state": {
+				"data": {
+					"id": "4c66d748-50b7-42e8-8512-a5438d6d7c4e",
+					"currencyCode": "XOF",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-05",
+					"note": "caelestis vomito campana uberrime",
+					"receiptId": "<undefined>",
+					"amount": -6492.44,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"6586362a-b83a-45ce-90f4-1a42c153a64d\"}]": {
+			"state": {
+				"data": {
+					"id": "6586362a-b83a-45ce-90f4-1a42c153a64d",
+					"currencyCode": "ANG",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-29",
+					"note": "adinventitias ciminatio cunctatio cito",
+					"receiptId": "<undefined>",
+					"amount": 6504.97,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"7ce8f759-e7db-40dc-ae9e-d8647aa6170a\"}]": {
+			"state": {
+				"data": {
+					"id": "7ce8f759-e7db-40dc-ae9e-d8647aa6170a",
+					"currencyCode": "MNT",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-29",
+					"note": "tollo suasoria vox viridis",
+					"receiptId": "<undefined>",
+					"amount": 7701.25,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"7f6ebf90-5123-45d6-ace5-484d1bf3bc41\"}]": {
+			"state": {
+				"data": {
+					"id": "7f6ebf90-5123-45d6-ace5-484d1bf3bc41",
+					"currencyCode": "SVC",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-04",
+					"note": "benevolentia tametsi velum corroboro",
+					"receiptId": "<undefined>",
+					"amount": 2004.81,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"be27ff4f-2617-499b-81fe-3af3124504f0\"}]": {
+			"state": {
+				"data": {
+					"id": "be27ff4f-2617-499b-81fe-3af3124504f0",
+					"currencyCode": "IRR",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-24",
+					"note": "bos verumtamen urbanus sulum",
+					"receiptId": "<undefined>",
+					"amount": 347.46,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"dc5c3ae1-0545-42a8-9c0d-b77b949c96a4\"}]": {
+			"state": {
+				"data": {
+					"id": "dc5c3ae1-0545-42a8-9c0d-b77b949c96a4",
+					"currencyCode": "BIF",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-25",
+					"note": "acerbitas vere tremo deficio",
+					"receiptId": "<undefined>",
+					"amount": 6412.51,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"f8c0f34b-d0d2-4c8f-be44-61415b4038b8\"}]": {
+			"state": {
+				"data": {
+					"id": "f8c0f34b-d0d2-4c8f-be44-61415b4038b8",
+					"currencyCode": "BZD",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-23",
+					"note": "abduco venustas quo expedita",
+					"receiptId": "<undefined>",
+					"amount": -3229,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "a68580ca-9639-4432-9032-bc683acbdc98"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getByUserPaged:[{\"cursor\":10,\"filters\":{\"showResolved\":false},\"limit\":10,\"peerId\":\"a68580ca-9639-4432-9032-bc683acbdc98\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						"f8c0f34b-d0d2-4c8f-be44-61415b4038b8",
+						"2a75e763-8b2c-4c5e-89d0-72e4a7a2d0da",
+						"6586362a-b83a-45ce-90f4-1a42c153a64d",
+						"4c66d748-50b7-42e8-8512-a5438d6d7c4e",
+						"7f6ebf90-5123-45d6-ace5-484d1bf3bc41",
+						"3825e2a2-724a-462a-adf2-dc4bb4d1daba",
+						"7ce8f759-e7db-40dc-ae9e-d8647aa6170a",
+						"14a9eb9c-f01e-4d96-9c43-341c7bddc665",
+						"dc5c3ae1-0545-42a8-9c0d-b77b949c96a4",
+						"be27ff4f-2617-499b-81fe-3af3124504f0"
+					],
+					"count": 25,
+					"cursor": 10
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

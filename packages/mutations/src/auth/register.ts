@@ -12,7 +12,7 @@ export const options: UseContextedMutationOptions<"auth.register"> = {
 				{
 					get: (controller) => {
 						controller.upsert({
-							user: { name: variables.name },
+							peer: { name: variables.name },
 							account: {
 								id,
 								email: variables.email,

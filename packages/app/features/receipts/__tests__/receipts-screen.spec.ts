@@ -3,7 +3,7 @@ import assert from "node:assert";
 
 import { formatCurrency } from "~app/utils/currency";
 import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateReceipt,
@@ -38,7 +38,7 @@ test.describe("On load", () => {
 					await expect(receiptPreviewNamed(receipt.name)).toBeVisible();
 				}
 			},
-			{ blacklistKeys: ["users.get", "users.getForeign"] },
+			{ blacklistKeys: ["peers.get", "peers.getForeign"] },
 		);
 	});
 
@@ -151,7 +151,7 @@ test.describe("Sorting and filters", () => {
 		faker,
 		receiptPreviewNamed,
 	}) => {
-		const foreignOwnerId = faker.string.uuid() as UserId;
+		const foreignOwnerId = faker.string.uuid() as PeerId;
 		const { receipts } = await mockReceipts({
 			amount: 3,
 			generateReceipt: (opts) => {
@@ -159,7 +159,7 @@ test.describe("Sorting and filters", () => {
 				if (opts.index === 0) {
 					return {
 						...defaultReceipt,
-						ownerUserId: foreignOwnerId,
+						ownerPeerId: foreignOwnerId,
 					};
 				}
 				return defaultReceipt;
@@ -258,7 +258,7 @@ test.describe("Sorting and filters", () => {
 					},
 				});
 			},
-			{ blacklistKeys: ["users.get", "users.getForeign"] },
+			{ blacklistKeys: ["peers.get", "peers.getForeign"] },
 		);
 		const visibleNames = names.filter((name) =>
 			name.toLowerCase().includes(query),
@@ -356,7 +356,7 @@ test.describe("Pagination", () => {
 				});
 				await expect(loader).toBeHidden();
 			},
-			{ name: "page-2", blacklistKeys: ["users.get", "users.getForeign"] },
+			{ name: "page-2", blacklistKeys: ["peers.get", "peers.getForeign"] },
 		);
 	});
 
@@ -399,7 +399,7 @@ test.describe("Pagination", () => {
 					},
 				});
 			},
-			{ blacklistKeys: ["users.get", "users.getForeign", "receipts.get"] },
+			{ blacklistKeys: ["peers.get", "peers.getForeign", "receipts.get"] },
 		);
 		await expect(lastReceiptPreview).toBeVisible();
 	});
@@ -476,7 +476,7 @@ test.describe("Selection and removal", () => {
 				await awaitCacheKey("receipts.remove", { success: 1 });
 				await verifyToastTexts("Receipt removed");
 			},
-			{ blacklistKeys: ["users.get", "users.getForeign"] },
+			{ blacklistKeys: ["peers.get", "peers.getForeign"] },
 		);
 		await expect(receiptPreviewNamed(firstReceipt.name)).toBeHidden();
 		for (const receipt of restReceipts) {
@@ -532,7 +532,7 @@ test.describe("Selection and removal", () => {
 				await awaitCacheKey("receipts.remove", { success: 2 });
 				await verifyToastTexts("2 receipts removed");
 			},
-			{ blacklistKeys: ["users.get", "users.getForeign"] },
+			{ blacklistKeys: ["peers.get", "peers.getForeign"] },
 		);
 		await expect(receiptPreviewNamed(firstReceipt.name)).toBeHidden();
 		await expect(receiptPreviewNamed(secondReceipt.name)).toBeHidden();
@@ -587,12 +587,12 @@ test.describe("Receipt preview", () => {
 			amount: 3,
 			generateReceipt: (opts) => {
 				const defaultReceipt = defaultGenerateReceipt(opts);
-				const [firstUser] = opts.users;
-				assert.ok(firstUser);
+				const [firstPeer] = opts.peers;
+				assert.ok(firstPeer);
 				return opts.index === 0
 					? {
 							...defaultReceipt,
-							ownerUserId: firstUser.id,
+							ownerPeerId: firstPeer.id,
 							debts: {
 								direction: "incoming",
 								id: undefined,

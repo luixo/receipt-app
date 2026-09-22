@@ -4,15 +4,15 @@ import assert from "node:assert";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebtIntentions } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebtIntentions } from "~tests/frontend/generators/debts";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 type Fixtures = {
 	mockDebts: (options: {
 		generateDebtIntentions?: GenerateDebtIntentions;
 	}) => Promise<{
 		debtIntenions: ReturnType<GenerateDebtIntentions>;
-		debtUser: ReturnType<GenerateUsers>[number];
+		debtPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	acceptButton: Locator;
 	acceptAndEditButton: Locator;
@@ -25,19 +25,19 @@ export const test = originalTest.extend<Fixtures>({
 	mockDebts: ({ api, faker }, use) =>
 		use(async ({ generateDebtIntentions = defaultGenerateDebtIntentions }) => {
 			await api.mockUtils.authPage();
-			const [debtUser] = defaultGenerateUsers({ faker, amount: 1 });
-			assert.ok(debtUser);
-			api.mockUtils.mockUsers(debtUser);
+			const [debtPeer] = defaultGeneratePeers({ faker, amount: 1 });
+			assert.ok(debtPeer);
+			api.mockUtils.mockPeers(debtPeer);
 			const debtIntenions = generateDebtIntentions({
 				faker,
 				amount: { min: 3, max: 6 },
-				userId: debtUser.id,
+				peerId: debtPeer.id,
 			});
 			api.mockFirst("debtIntentions.getAll", {
 				items: debtIntenions,
 			});
-			api.mockFirst("debts.getAllUser", { items: [] });
-			return { debtIntenions, debtUser };
+			api.mockFirst("debts.getAllPeer", { items: [] });
+			return { debtIntenions, debtPeer };
 		}),
 
 	acceptButton: ({ page }, use) =>

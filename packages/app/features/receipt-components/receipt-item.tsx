@@ -52,11 +52,11 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const isRemovalPending = removeItemMutationState?.status === "pending";
 
 	const participantsIds = React.useMemo(
-		() => participants.map(({ userId }) => userId),
+		() => participants.map(({ peerId }) => peerId),
 		[participants],
 	);
 	const addedParticipantsIds = React.useMemo(
-		() => item.consumers.map((consumer) => consumer.userId),
+		() => item.consumers.map((consumer) => consumer.peerId),
 		[item.consumers],
 	);
 	const notAddedParticipantsIds = React.useMemo(
@@ -145,21 +145,21 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						<Divider />
 						{sortedConsumers.map((consumer) => {
 							const matchedParticipant = participants.find(
-								(participant) => participant.userId === consumer.userId,
+								(participant) => participant.peerId === consumer.peerId,
 							);
 							if (!matchedParticipant) {
 								return (
 									<ErrorMessage
-										key={consumer.userId}
+										key={consumer.peerId}
 										message={t("item.participants.orphanedError", {
-											userId: consumer.userId,
+											peerId: consumer.peerId,
 										})}
 									/>
 								);
 							}
 							return (
 								<ReceiptItemConsumer
-									key={consumer.userId}
+									key={consumer.peerId}
 									consumer={consumer}
 									item={item}
 									participant={matchedParticipant}

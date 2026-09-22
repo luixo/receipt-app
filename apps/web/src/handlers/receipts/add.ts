@@ -3,7 +3,7 @@ import { omit, values } from "remeda";
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
-import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 import { temporalSchemas } from "~utils/temporal";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
@@ -134,7 +134,7 @@ type InsertedConsumers = Record<
 	ReceiptItemId,
 	{
 		errors: TRPCError[];
-		consumers: (ConsumerOutput & { userId: UserId })[];
+		consumers: (ConsumerOutput & { peerId: PeerId })[];
 	}
 >;
 const insertConsumers = async (
@@ -152,7 +152,7 @@ const insertConsumers = async (
 				if (!insertedItem) {
 					throw new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
-						message: `Expected to have an inserted item for user "${consumer.userId}" with part ${consumer.part}.`,
+						message: `Expected to have an inserted item for peer "${consumer.peerId}" with part ${consumer.part}.`,
 					});
 				}
 				/* c8 ignore stop */
@@ -179,13 +179,13 @@ const insertConsumers = async (
 				});
 			}
 			/* c8 ignore stop */
-			const { itemId, userId } = consumer;
+			const { itemId, peerId } = consumer;
 			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
 			if (insertedConsumer instanceof TRPCError) {
 				itemAcc.errors.push(insertedConsumer);
 			} else {
 				itemAcc.consumers.push({
-					userId,
+					peerId,
 					createdAt: insertedConsumer.createdAt,
 				});
 			}
@@ -199,7 +199,7 @@ type InsertedPayers = Record<
 	ReceiptItemId,
 	{
 		errors: TRPCError[];
-		payers: (PayerOutput & { userId: UserId })[];
+		payers: (PayerOutput & { peerId: PeerId })[];
 	}
 >;
 const insertPayers = async (
@@ -215,7 +215,7 @@ const insertPayers = async (
 				if (!insertedItem) {
 					throw new TRPCError({
 						code: "INTERNAL_SERVER_ERROR",
-						message: `Expected to have an inserted item for user "${payer.userId}" with part ${payer.part}.`,
+						message: `Expected to have an inserted item for peer "${payer.peerId}" with part ${payer.part}.`,
 					});
 				}
 				/* c8 ignore stop */
@@ -236,14 +236,14 @@ const insertPayers = async (
 			});
 		}
 		/* c8 ignore stop */
-		const { itemId, userId } = payer;
+		const { itemId, peerId } = payer;
 		const itemAcc = acc[itemId] || { errors: [], payers: [] };
 		/* c8 ignore next 2 */
 		if (insertedPayer instanceof TRPCError) {
 			itemAcc.errors.push(insertedPayer);
 		} else {
 			itemAcc.payers.push({
-				userId,
+				peerId,
 				createdAt: insertedPayer.createdAt,
 			});
 		}

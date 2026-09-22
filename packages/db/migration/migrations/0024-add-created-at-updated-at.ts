@@ -9,11 +9,11 @@ import {
 	DEBTS,
 	FUNCTIONS,
 	ITEM_PARTICIPANTS_DEPRECATED,
+	PEERS,
 	RECEIPTS,
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
 	RESET_PASSWORD_INTENTIONS,
-	USERS,
 } from "~db/migration/consts";
 import { isTestEnv } from "~db/migration/utils";
 
@@ -263,13 +263,17 @@ const addUsersCreatedAtUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
+	// oxlint-disable-next-line typescript/no-unsafe-call
 	await db
+		// @ts-expect-error This is an outdated schema
 		.updateTable("users")
+		// @ts-expect-error This is an outdated schema
 		.set({ createdAt: defaultCreatedDate, updatedAt: defaultCreatedDate })
+		// oxlint-disable-next-line typescript/no-unsafe-member-access
 		.execute();
 	await sql`
-	CREATE TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP)}
-    BEFORE UPDATE ON ${sql.table("users")}
+	CREATE TRIGGER ${sql.id(PEERS.TRIGGERS.UPDATE_TIMESTAMP.replace("peer", "user"))}
+		BEFORE UPDATE ON ${sql.table("users")}
     FOR EACH ROW
     EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
 	`.execute(db);
@@ -391,7 +395,7 @@ const removeUsersCreatedAtUpdatedAt = async (db: Database) => {
 		.execute();
 
 	await sql`
-	DROP TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP)} ON ${sql.table(
+	DROP TRIGGER ${sql.id(PEERS.TRIGGERS.UPDATE_TIMESTAMP.replace("peer", "user"))} ON ${sql.table(
 		"users",
 	)};`.execute(db);
 };

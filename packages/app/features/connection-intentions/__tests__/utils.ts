@@ -24,15 +24,15 @@ export const test = originalTest.extend<Fixtures>({
 						id: faker.string.uuid(),
 						email: faker.internet.email(),
 					},
-					user: {
+					peer: {
 						id: faker.string.uuid(),
 						name: faker.person.fullName(),
 					},
 				})),
 			};
 			api.mockFirst("accountConnectionIntentions.getAll", intentions);
-			api.mockFirst("users.suggestTop", { items: [] });
-			api.mockFirst("users.getPaged", { cursor: 0, count: 0, items: [] });
+			api.mockFirst("peers.suggestTop", { items: [] });
+			api.mockFirst("peers.getPaged", { cursor: 0, count: 0, items: [] });
 			return intentions;
 		}),
 });

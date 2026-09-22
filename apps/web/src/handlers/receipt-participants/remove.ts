@@ -3,18 +3,18 @@ import { z } from "zod";
 
 import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
+import { peerIdSchema, receiptIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Remove receipt participant",
 		description:
-			"Removes a userId as a participant of a given receipt, along with their item consumptions.",
+			"Removes a peerId as a participant of a given receipt, along with their item consumptions.",
 	})
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-			userId: userIdSchema,
+			peerId: peerIdSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -37,41 +37,41 @@ export const procedure = authProcedure
 				message: `Not enough rights to remove participant from receipt "${input.receiptId}".`,
 			});
 		}
-		const user = await database
-			.selectFrom("users")
+		const peer = await database
+			.selectFrom("peers")
 			.select("ownerAccountId")
-			.where("id", "=", input.userId)
+			.where("id", "=", input.peerId)
 			.limit(1)
 			.executeTakeFirst();
-		if (!user) {
+		if (!peer) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not exist.`,
+				message: `Peer "${input.peerId}" does not exist.`,
 			});
 		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
+				message: `Peer "${input.peerId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const receiptParticipant = await getReceiptParticipant(
 			database,
-			input.userId,
+			input.peerId,
 			input.receiptId,
-			["userId"],
+			["peerId"],
 		);
 		if (!receiptParticipant) {
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
+				message: `Peer "${input.peerId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.deleteFrom("receiptItemConsumers")
 				.where((eb) =>
-					eb("userId", "=", input.userId).and("itemId", "in", (ebb) =>
+					eb("peerId", "=", input.peerId).and("itemId", "in", (ebb) =>
 						ebb
 							.selectFrom("receiptItems")
 							.where("receiptId", "=", input.receiptId)
@@ -85,7 +85,7 @@ export const procedure = authProcedure
 				.where((eb) =>
 					eb.and({
 						receiptId: input.receiptId,
-						userId: input.userId,
+						peerId: input.peerId,
 					}),
 				)
 				.executeTakeFirst();

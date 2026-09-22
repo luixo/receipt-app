@@ -9,7 +9,7 @@
 					"variables": {
 						"note": "Test debt note",
 						"currencyCode": "ARS",
-						"userId": "d6ca5433-3c49-49cf-9fa2-1fceffedfbd2",
+						"peerId": "d6ca5433-3c49-49cf-9fa2-1fceffedfbd2",
 						"amount": 10,
 						"timestamp": "2019-12-31"
 					}

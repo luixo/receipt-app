@@ -2,7 +2,7 @@ import { isNonNullish } from "remeda";
 
 import type { Debt, DebtIntention } from "~app/trpc-types";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 import type {
 	GenerateReceiptBase,
@@ -13,12 +13,12 @@ import type {
 import { generateAmount, generateCurrencyCode } from "./utils";
 import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
 
-export type GenerateDebts = GeneratorFnWithAmount<Debt, { userId: UserId }>;
+export type GenerateDebts = GeneratorFnWithAmount<Debt, { peerId: PeerId }>;
 
 export const defaultGenerateDebts = ({
 	faker,
 	amount = { min: 3, max: 6 },
-	userId,
+	peerId,
 }: Parameters<GenerateDebts>[0]): ReturnType<GenerateDebts> =>
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
@@ -34,22 +34,22 @@ export const defaultGenerateDebts = ({
 		amount: faker.number.float({ min: -10_000, max: 10_000, multipleOf: 0.01 }),
 		updatedAt: Temporal.Now.zonedDateTimeISO(),
 		their: undefined,
-		userId,
+		peerId,
 	}));
 
 export type GenerateDebtIntentions = GeneratorFnWithAmount<
 	DebtIntention,
-	{ userId: UserId }
+	{ peerId: PeerId }
 >;
 
 export const defaultGenerateDebtIntentions = ({
 	faker,
 	amount = { min: 3, max: 6 },
-	userId,
+	peerId,
 }: Parameters<GenerateDebtIntentions>[0]): ReturnType<GenerateDebtIntentions> =>
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
-		userId,
+		peerId,
 		amount: faker.number.float({ min: -10_000, max: 10_000, multipleOf: 0.01 }),
 		currencyCode: generateCurrencyCode(faker),
 		timestamp: Temporal.Instant.from(
@@ -64,7 +64,7 @@ export const defaultGenerateDebtIntentions = ({
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 	Debt[],
 	{
-		selfUserId: UserId;
+		selfPeerId: PeerId;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
@@ -76,7 +76,7 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 
 export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 	faker,
-	selfUserId,
+	selfPeerId,
 	receiptItemsWithConsumers,
 	participants,
 	receiptPayers,
@@ -86,7 +86,7 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 }) =>
 	getParticipantSums(
 		receiptBase.id,
-		selfUserId,
+		selfPeerId,
 		receiptItemsWithConsumers,
 		participants,
 		receiptPayers,
@@ -94,7 +94,7 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 		fromSubunitToUnit,
 	)
 		.map((participantSum) => {
-			if (participantSum.userId === selfUserId) {
+			if (participantSum.peerId === selfPeerId) {
 				return null;
 			}
 			if (participantSum.balance === 0) {
@@ -104,7 +104,7 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				id: faker.string.uuid(),
 				currencyCode: receiptBase.currencyCode,
 				receiptId: receiptBase.id,
-				userId: participantSum.userId,
+				peerId: participantSum.peerId,
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
 				amount: participantSum.balance,

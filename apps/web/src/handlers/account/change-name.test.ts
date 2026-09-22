@@ -25,7 +25,7 @@ describe("account.changeName", () => {
 			createCaller(context).procedure({ name: "" }),
 		);
 
-		describe("user name", () => {
+		describe("peer name", () => {
 			test("minimal length", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -35,7 +35,7 @@ describe("account.changeName", () => {
 							name: "a".repeat(MIN_USERNAME_LENGTH - 1),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "name": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
+					`Zod error\n\nAt "name": Minimal length for peer name is ${MIN_USERNAME_LENGTH}`,
 				);
 			});
 
@@ -48,7 +48,7 @@ describe("account.changeName", () => {
 							name: "a".repeat(MAX_USERNAME_LENGTH + 1),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "name": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,
+					`Zod error\n\nAt "name": Maximum length for peer name is ${MAX_USERNAME_LENGTH}`,
 				);
 			});
 		});
@@ -56,7 +56,7 @@ describe("account.changeName", () => {
 
 	describe("functionality", () => {
 		test("name changes", async ({ ctx }) => {
-			// Verifying other users are not affected
+			// Verifying other peers are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));

@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"debts.getByPeerPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"peerId\":\"cd6dd463-990c-44d1-a37e-2bbda66658bf\"}]": {
+			"state": {
+				"error": {
+					"type": "TRPCClientError",
+					"message": "Mock \"debts.getByPeerPaged\" error"
+				},
+				"errorUpdateCount": 1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.get:[{\"id\":\"cd6dd463-990c-44d1-a37e-2bbda66658bf\"}]": {
+			"state": {
+				"data": {
+					"id": "cd6dd463-990c-44d1-a37e-2bbda66658bf",
+					"name": "Bertram Sanford",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

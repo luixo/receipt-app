@@ -63,9 +63,9 @@ export const ReceiptNameInput: React.FC<Props> = ({
 					labelPlacement="outside-left"
 					className="basis-36"
 					isDisabled={isLoading}
-					isReadOnly={receipt.ownerUserId !== receipt.selfUserId}
+					isReadOnly={receipt.ownerPeerId !== receipt.selfPeerId}
 					endContent={
-						receipt.ownerUserId === receipt.selfUserId ? (
+						receipt.ownerPeerId === receipt.selfPeerId ? (
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) => (
 									<SaveButton

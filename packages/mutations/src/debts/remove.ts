@@ -23,15 +23,15 @@ export const options: UseContextedMutationOptions<
 						(sum) => round(sum - currDebt.amount),
 						() => (sum) => round(sum + currDebt.amount),
 					),
-				getAllUser: (controller) =>
+				getAllPeer: (controller) =>
 					controller.update(
-						currDebt.userId,
+						currDebt.peerId,
 						currDebt.currencyCode,
 						(sum) => round(sum - currDebt.amount),
 						() => (sum) => round(sum + currDebt.amount),
 					),
-				getUsersPaged: (controller) => controller.update(currDebt.userId),
-				getByUserPaged: undefined,
+				getPeersPaged: (controller) => controller.update(currDebt.peerId),
+				getByPeerPaged: undefined,
 				// We remove the debt from everywhere else
 				// but it's own page
 				// otherwise the page will try to refetch the data immediately
@@ -80,9 +80,9 @@ export const options: UseContextedMutationOptions<
 			});
 			updateDebts(controllerContext, {
 				getAll: undefined,
-				getAllUser: undefined,
-				getUsersPaged: undefined,
-				getByUserPaged: (controller) => controller.invalidate(currDebt.userId),
+				getAllPeer: undefined,
+				getPeersPaged: undefined,
+				getByPeerPaged: (controller) => controller.invalidate(currDebt.peerId),
 				get: (controller) => controller.remove(updateObject.id),
 				getIntentions: (controller) => {
 					if (result.reverseRemoved) {

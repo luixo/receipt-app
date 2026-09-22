@@ -5,16 +5,16 @@ import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { DebtsGroupSkeleton } from "~app/components/app/debts-group";
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { SkeletonUser } from "~app/components/app/user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
+import { SkeletonPeer } from "~app/components/app/peer";
 import { EmptyCard } from "~app/components/empty-card";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
 } from "~app/components/pagination-block";
 import { SuspendedOverlay } from "~app/components/pagination-overlay";
+import { PeerDebtsGroup } from "~app/components/peer-debts-group";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { UserDebtsGroup } from "~app/components/user-debts-group";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type {
@@ -28,7 +28,7 @@ import { ButtonLink, CardLink } from "~components/link";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 const cardClassName =
 	"flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center";
@@ -37,10 +37,10 @@ const DebtsWrapper: React.FC<{ children: ViewReactNode }> = ({ children }) => (
 	<View className="gap-2">{children}</View>
 );
 
-const UserDebtsCard: React.FC<{ userId: UserId }> = ({ userId }) => {
+const PeerDebtsCard: React.FC<{ peerId: PeerId }> = ({ peerId }) => {
 	const trpc = useTRPC();
 	const { data: debts } = useSuspenseQuery(
-		trpc.debts.getAllUser.queryOptions({ userId }),
+		trpc.debts.getAllPeer.queryOptions({ peerId }),
 	);
 	const [showResolvedDebts] = useShowResolvedDebts();
 	if (
@@ -51,14 +51,14 @@ const UserDebtsCard: React.FC<{ userId: UserId }> = ({ userId }) => {
 	}
 	return (
 		<CardLink
-			to="/debts/user/$id"
-			params={{ id: userId }}
+			to="/debts/peer/$id"
+			params={{ id: peerId }}
 			bodyClassName={cardClassName}
-			testID="user-debts-preview"
+			testID="peer-debts-preview"
 		>
-			<LoadableUser id={userId} />
+			<LoadablePeer id={peerId} />
 			<View className="flex flex-row items-center justify-center gap-2">
-				<UserDebtsGroup userId={userId} className="shrink-0" />
+				<PeerDebtsGroup peerId={peerId} className="shrink-0" />
 			</View>
 		</CardLink>
 	);
@@ -77,7 +77,7 @@ export const Debts = suspendedFallback<Props>(
 		const filters = {};
 		const trpc = useTRPC();
 		const { data, onPageChange, isPending } = useCursorPaging(
-			trpc.debts.getUsersPaged,
+			trpc.debts.getPeersPaged,
 			{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
 			offsetState,
 		);
@@ -130,8 +130,8 @@ export const Debts = suspendedFallback<Props>(
 				/>
 				<SuspendedOverlay isPending={isPending}>
 					<DebtsWrapper>
-						{data.items.map((userId) => (
-							<UserDebtsCard key={userId} userId={userId} />
+						{data.items.map((peerId) => (
+							<PeerDebtsCard key={peerId} peerId={peerId} />
 						))}
 					</DebtsWrapper>
 				</SuspendedOverlay>
@@ -149,7 +149,7 @@ export const Debts = suspendedFallback<Props>(
 							key={index}
 							bodyClassName={cardClassName}
 						>
-							<SkeletonUser />
+							<SkeletonPeer />
 							<View className="flex flex-row items-center justify-center gap-2">
 								<DebtsGroupSkeleton className="shrink-0" amount={3} />
 							</View>

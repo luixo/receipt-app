@@ -2,10 +2,10 @@
 	"currency.top": {
 		"clientCalls": 1
 	},
-	"users.get": {
+	"peers.get": {
 		"clientCalls": 5
 	},
-	"users.suggestTop": {
+	"peers.suggestTop": {
 		"clientCalls": 1
 	}
 }

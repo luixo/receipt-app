@@ -23,10 +23,10 @@ const fetchIntentions = (ctx: AuthorizedContext, inputs: readonly Input[]) =>
 				inputs.map((input) => input.id),
 			).and("theirDebts.ownerAccountId", "<>", ctx.auth.accountId),
 		)
-		.innerJoin("users", (qb) =>
+		.innerJoin("peers", (qb) =>
 			qb
-				.onRef("users.connectedAccountId", "=", "theirDebts.ownerAccountId")
-				.on("users.ownerAccountId", "=", ctx.auth.accountId),
+				.onRef("peers.connectedAccountId", "=", "theirDebts.ownerAccountId")
+				.on("peers.ownerAccountId", "=", ctx.auth.accountId),
 		)
 		.leftJoin("debts as selfDebts", (qb) =>
 			qb
@@ -43,7 +43,7 @@ const fetchIntentions = (ctx: AuthorizedContext, inputs: readonly Input[]) =>
 			"theirDebts.currencyCode",
 			"theirDebts.receiptId",
 			"selfDebts.id as selfId",
-			"users.id as foreignUserId",
+			"peers.id as foreignPeerId",
 		])
 		.execute();
 
@@ -95,7 +95,7 @@ export const acceptNewIntentions = async (
 		FetchedIntention,
 		| "id"
 		| "selfId"
-		| "foreignUserId"
+		| "foreignPeerId"
 		| "currencyCode"
 		| "amount"
 		| "timestamp"
@@ -113,7 +113,7 @@ export const acceptNewIntentions = async (
 			createdIntentions.map((intention) => ({
 				id: intention.id,
 				ownerAccountId,
-				userId: intention.foreignUserId,
+				peerId: intention.foreignPeerId,
 				currencyCode: intention.currencyCode,
 				amount: (Number(intention.amount) * -1).toString(),
 				timestamp: intention.timestamp,

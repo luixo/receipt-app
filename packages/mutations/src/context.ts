@@ -31,7 +31,7 @@ There is `lifecycleContext` which represents data passed as the result of mutati
 E.g.: while adding a debt, we created a random id for it, on success we need to find that debt and replace the id to a proper one.
 
 There is `controllerContext` which is the object with `queryClient` and `trpcUtils` included.
-E.g.: while updating a user, we need `trpcUtils` to optimistically update that user's data in the query cache.
+E.g.: while updating a peer, we need `trpcUtils` to optimistically update that peer's data in the query cache.
 
 There is `internalContext` which is the actual lifecycle context object that is passed around.
 It includes `controllerContext`, `outerContext`, `lifecycleContext`

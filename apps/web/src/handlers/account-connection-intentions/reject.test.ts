@@ -5,7 +5,7 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertUser,
+	insertPeer,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -65,19 +65,19 @@ describe("accountConnectionIntentions.reject", () => {
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: outerAccountId } = await insertAccount(ctx);
-			await insertUser(ctx, accountId, {
+			await insertPeer(ctx, accountId, {
 				connectedAccountId: foreignAccountId,
 			});
-			await insertUser(ctx, accountId, {
+			await insertPeer(ctx, accountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: foreignAccountId,
 			});
 
@@ -98,19 +98,19 @@ describe("accountConnectionIntentions.reject", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: outerAccountId } = await insertAccount(ctx);
-			await insertUser(ctx, accountId, {
+			await insertPeer(ctx, accountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: foreignAccountId,
 			});
 

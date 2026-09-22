@@ -4,15 +4,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { entries, mapValues } from "remeda";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { SkeletonUser } from "~app/components/app/user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
+import { SkeletonPeer } from "~app/components/app/peer";
 import { EmptyCard } from "~app/components/empty-card";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import {
@@ -24,7 +24,7 @@ type IntentionsQuery = TRPCQuerySuccessResult<"debtIntentions.getAll">;
 
 const AggregatedIntentionGroup: React.FC<{ amount: number }> = ({ amount }) => (
 	<View className="gap-4">
-		<SkeletonUser className="self-start" />
+		<SkeletonPeer className="self-start" />
 		{Array.from({ length: amount }).map((_, index) => (
 			// oxlint-disable-next-line react/no-array-index-key
 			<SkeletonInboundDebtIntention key={index} />
@@ -45,16 +45,16 @@ export const DebtIntentions: React.FC = suspendedFallback(
 			trpc.debtIntentions.getAll.queryOptions(),
 		);
 		const aggregatedIntentions = React.useMemo(() => {
-			const intentionsByUser = intentions.items.reduce<
-				Record<UserId, IntentionsQuery["data"]["items"]>
+			const intentionsByPeer = intentions.items.reduce<
+				Record<PeerId, IntentionsQuery["data"]["items"]>
 			>((acc, intention) => {
-				const userIntentions = acc[intention.userId] || [];
-				userIntentions.push(intention);
-				return { ...acc, [intention.userId]: userIntentions };
+				const peerIntentions = acc[intention.peerId] || [];
+				peerIntentions.push(intention);
+				return { ...acc, [intention.peerId]: peerIntentions };
 			}, {});
 			return entries(
-				mapValues(intentionsByUser, (userIntentions) =>
-					userIntentions.toSorted((intentionA, intentionB) =>
+				mapValues(intentionsByPeer, (peerIntentions) =>
+					peerIntentions.toSorted((intentionA, intentionB) =>
 						Temporal.PlainDate.compare(
 							intentionA.timestamp,
 							intentionB.timestamp,
@@ -84,10 +84,10 @@ export const DebtIntentions: React.FC = suspendedFallback(
 						intentions={intentions.items}
 					/>
 				)}
-				{aggregatedIntentions.map(([userId, userIntentions]) => (
-					<View className="gap-4" key={userId}>
-						<LoadableUser className="self-start" id={userId} />
-						{userIntentions.map((intention) => (
+				{aggregatedIntentions.map(([peerId, peerIntentions]) => (
+					<View className="gap-4" key={peerId}>
+						<LoadablePeer className="self-start" id={peerId} />
+						{peerIntentions.map((intention) => (
 							<InboundDebtIntention key={intention.id} intention={intention} />
 						))}
 					</View>

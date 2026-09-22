@@ -40,7 +40,7 @@ export const test = originalTest.extend<Fixtures>({
 			if (avatarUrl !== undefined) {
 				api.mockFirst("account.get", {
 					account: { ...auth.account, avatarUrl },
-					user: { name: auth.user.name },
+					peer: { name: auth.peer.name },
 				});
 			}
 			return auth;

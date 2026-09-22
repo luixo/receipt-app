@@ -78,7 +78,7 @@ test.describe("Form", () => {
 					avatarUrl: undefined,
 					role: undefined,
 				},
-				user: { name: "Test user" },
+				peer: { name: "Test peer" },
 			};
 		});
 		const buttonWithLoader = withLoader(loginButton);

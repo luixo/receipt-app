@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"currency.rates:[{\"from\":\"AZN\",\"to\":[]}]": {
+			"state": {
+				"data": {},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllPeer:[{\"peerId\":\"774330e0-34f5-45b7-8767-5f622ae4d104\"}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

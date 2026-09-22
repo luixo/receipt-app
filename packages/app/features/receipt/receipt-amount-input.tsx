@@ -49,7 +49,7 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	const disabled =
 		updateReceiptMutation.isPending ||
 		isLoading ||
-		receipt.ownerUserId !== receipt.selfUserId;
+		receipt.ownerPeerId !== receipt.selfPeerId;
 	const sum = round(
 		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
 	);

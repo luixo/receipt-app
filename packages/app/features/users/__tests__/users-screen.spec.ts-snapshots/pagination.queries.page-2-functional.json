@@ -1,8 +1,0 @@
-{
-	"users.get": {
-		"clientCalls": 10
-	},
-	"users.getPaged": {
-		"clientCalls": 1
-	}
-}

@@ -3,7 +3,7 @@
 exports[`accountConnectionIntentions.accept > functionality > account connection intention is accepted 1`] = `
 {
   "updated": {
-    "users": {
+    "peers": {
       "id:847d8b4f-021f-4b1f-be54-add428d31bb0": {
         "connectedAccountId": "10e66818-f859-4541-9d12-04a16d2e0db3",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -24,10 +24,10 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
         "id": "7d12f3b3-df37-437f-b3c7-ea2b605dc97f",
         "note": "Capillus voluptate caelum adamo vorax cibus callide amplexus celer conventus.",
         "ownerAccountId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
+        "peerId": "9de5bd27-b8d8-46a6-a55c-a05f98926c07",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "9de5bd27-b8d8-46a6-a55c-a05f98926c07",
       },
       "id:ff41c2ae-f6cd-42ef-a4b6-84eb43292461|ownerAccountId:6cd26971-98bb-4120-808c-36555ab43ede": {
         "amount": "-334.6900",
@@ -36,15 +36,15 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
         "id": "ff41c2ae-f6cd-42ef-a4b6-84eb43292461",
         "note": "Sint speculum tepesco vomica soleo adflicto colligo.",
         "ownerAccountId": "6cd26971-98bb-4120-808c-36555ab43ede",
+        "peerId": "5bfaa329-134b-441e-a055-d9918cb8660f",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "5bfaa329-134b-441e-a055-d9918cb8660f",
       },
     },
   },
   "updated": {
-    "users": {
+    "peers": {
       "id:5bfaa329-134b-441e-a055-d9918cb8660f": {
         "connectedAccountId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -65,15 +65,15 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
         "id": "4484ba58-db99-4527-92ef-bedee4d832a0",
         "note": "Tres cohors calcar vapulus tero vado.",
         "ownerAccountId": "0de22606-b399-45ec-bd99-c0c252ecee5e",
+        "peerId": "909c1133-7d2e-4492-820b-a496bf97c1eb",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "909c1133-7d2e-4492-820b-a496bf97c1eb",
       },
     },
   },
   "updated": {
-    "users": {
+    "peers": {
       "id:e6bb471f-5154-45c7-bca0-b02d3fd14f02": {
         "connectedAccountId": "0de22606-b399-45ec-bd99-c0c252ecee5e",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -86,7 +86,7 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
 exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > none are auto-accepted 1`] = `
 {
   "updated": {
-    "users": {
+    "peers": {
       "id:20546404-a1a4-4d97-b382-7de80b3d9d10": {
         "connectedAccountId": "11294055-863e-4d7b-93b0-42aabfa4d3d5",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -107,15 +107,15 @@ exports[`accountConnectionIntentions.accept > functionality > auto-accepted debt
         "id": "0648e870-ee31-4fca-a11a-d532de55326b",
         "note": "Absque est ciminatio textus.",
         "ownerAccountId": "965c9aa3-5fc1-489f-b80d-e64d92dc5e0b",
+        "peerId": "bf380b97-a198-4307-9d88-639db6c2c666",
         "receiptId": null,
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "bf380b97-a198-4307-9d88-639db6c2c666",
       },
     },
   },
   "updated": {
-    "users": {
+    "peers": {
       "id:bf380b97-a198-4307-9d88-639db6c2c666": {
         "connectedAccountId": "351a0390-a676-4b8c-a007-7baf42b48921",
         "updatedAt": "2020-01-01 00:01:00+00",

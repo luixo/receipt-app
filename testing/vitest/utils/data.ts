@@ -5,10 +5,10 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type {
 	AccountId,
 	DebtId,
+	PeerId,
 	ReceiptId,
 	ReceiptItemId,
 	SessionId,
-	UserId,
 } from "~db/ids";
 import type { ReceiptRole } from "~db/types.gen";
 import type { TestContext } from "~tests/backend/utils/test";
@@ -39,21 +39,21 @@ export const insertAccountSettings = async (
 		.executeTakeFirstOrThrow();
 };
 
-type UserData = {
+type PeerData = {
 	connectedAccountId?: AccountId;
-	id?: UserId;
+	id?: PeerId;
 	name?: string;
 	publicName?: string;
 };
 
-export const insertUser = async (
+export const insertPeer = async (
 	ctx: TestContext,
 	ownerAccountId: AccountId,
-	data: UserData = {},
+	data: PeerData = {},
 ) => {
 	const database = assertDatabase(ctx);
 	const { id, name } = await database
-		.insertInto("users")
+		.insertInto("peers")
 		.values({
 			id: data.id || ctx.getTestUuid(),
 			ownerAccountId,
@@ -76,7 +76,7 @@ type AccountData = {
 		timestamp?: Temporal.ZonedDateTime;
 	};
 	settings?: AccountSettingsData;
-	user?: Pick<UserData, "name">;
+	peer?: Pick<PeerData, "name">;
 	role?: string;
 };
 
@@ -126,12 +126,12 @@ export const insertAccount = async (
 	if (data.settings) {
 		await insertAccountSettings(ctx, id, data.settings);
 	}
-	const { id: userId, name } = await database
-		.insertInto("users")
+	const { id: peerId, name } = await database
+		.insertInto("peers")
 		.values({
-			id: id as UserId,
+			id: id as PeerId,
 			ownerAccountId: id,
-			name: data.user?.name || faker.person.firstName(),
+			name: data.peer?.name || faker.person.firstName(),
 			connectedAccountId: id,
 		})
 		.returning(["id", "name"])
@@ -144,22 +144,22 @@ export const insertAccount = async (
 		passwordHash,
 		confirmationToken,
 		confirmationTokenTimestamp,
-		userId,
+		peerId,
 		name,
 		avatarUrl: avatarUrl || undefined,
 	};
 };
 
-type ConnectedUserData = { accountId: AccountId } & Omit<
-	UserData,
+type ConnectedPeerData = { accountId: AccountId } & Omit<
+	PeerData,
 	"connectedAccountId"
 >;
 
-export const insertConnectedUsers = async (
+export const insertConnectedPeers = async (
 	ctx: TestContext,
 	accountsOrData: [
-		AccountId | ConnectedUserData,
-		AccountId | ConnectedUserData,
+		AccountId | ConnectedPeerData,
+		AccountId | ConnectedPeerData,
 	],
 ) => {
 	const database = assertDatabase(ctx);
@@ -167,7 +167,7 @@ export const insertConnectedUsers = async (
 	const dataWithIds = asTwoElementsTuple(
 		accountsOrData.map((accountOrDatum, index) => {
 			const connectedData = accountsOrData[index === 0 ? 1 : 0];
-			const sureData: Omit<ConnectedUserData, "accountId"> =
+			const sureData: Omit<ConnectedPeerData, "accountId"> =
 				typeof accountOrDatum === "string" ? {} : accountOrDatum;
 			return {
 				accountId:
@@ -186,7 +186,7 @@ export const insertConnectedUsers = async (
 		await Promise.all(
 			dataWithIds.map(({ accountId, connectedAccountId, data }) =>
 				database
-					.insertInto("users")
+					.insertInto("peers")
 					.values({
 						id: data.id || ctx.getTestUuid(),
 						ownerAccountId: accountId,
@@ -280,7 +280,7 @@ type DebtData = {
 export const insertDebt = async (
 	ctx: TestContext,
 	ownerAccountId: AccountId,
-	userId: UserId,
+	peerId: PeerId,
 	data: DebtData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -298,7 +298,7 @@ export const insertDebt = async (
 		.values({
 			id: data.id || ctx.getTestUuid(),
 			ownerAccountId,
-			userId,
+			peerId,
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
 			amount:
 				data.amount?.toString() ??
@@ -373,19 +373,19 @@ type ReturnDebtData = Awaited<ReturnType<typeof insertDebt>>;
 
 export const insertSyncedDebts = async (
 	ctx: TestContext,
-	[ownerAccountId, userId, data = {}]: [AccountId, UserId, DebtData?],
-	[foreignOwnerAccountId, foreignUserId]: [AccountId, UserId],
+	[ownerAccountId, peerId, data = {}]: [AccountId, PeerId, DebtData?],
+	[foreignOwnerAccountId, foreignPeerId]: [AccountId, PeerId],
 	desync?: {
 		fn?: (input: ReturnDebtData) => ReturnDebtData;
 		ahead?: "our" | "their";
 	},
 ) => {
-	const originalDebt = await insertDebt(ctx, ownerAccountId, userId, data);
+	const originalDebt = await insertDebt(ctx, ownerAccountId, peerId, data);
 	const reverseDebtObject = desync?.fn ? desync.fn(originalDebt) : originalDebt;
 	const reverseDebt = await insertDebt(
 		ctx,
 		foreignOwnerAccountId,
-		foreignUserId,
+		foreignPeerId,
 		{
 			id: reverseDebtObject.id,
 			currencyCode: reverseDebtObject.currencyCode,
@@ -475,7 +475,7 @@ type ReceiptParticipantData = {
 export const insertReceiptParticipant = async (
 	ctx: TestContext,
 	receiptId: ReceiptId,
-	userId: UserId,
+	peerId: PeerId,
 	data: ReceiptParticipantData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -490,13 +490,13 @@ export const insertReceiptParticipant = async (
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
-			userId,
-			role: userId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
+			peerId,
+			role: peerId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
-	return { createdAt, userId, role };
+	return { createdAt, peerId, role };
 };
 
 type ReceiptPayerData = {
@@ -507,7 +507,7 @@ type ReceiptPayerData = {
 export const insertReceiptPayer = async (
 	ctx: TestContext,
 	receiptId: ReceiptId,
-	userId: UserId,
+	peerId: PeerId,
 	data: ReceiptPayerData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -515,13 +515,13 @@ export const insertReceiptPayer = async (
 		.insertInto("receiptItemConsumers")
 		.values({
 			itemId: receiptId as ReceiptItemId,
-			userId,
+			peerId,
 			part: (data.part ?? 1).toString(),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["createdAt", "part"])
 		.executeTakeFirstOrThrow();
-	return { createdAt, userId, part };
+	return { createdAt, peerId, part };
 };
 
 type ReceiptItemData = {
@@ -574,7 +574,7 @@ type ReceiptItemConsumerData = {
 export const insertReceiptItemConsumer = async (
 	ctx: TestContext,
 	itemId: ReceiptItemId,
-	userId: UserId,
+	peerId: PeerId,
 	data: ReceiptItemConsumerData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -587,14 +587,14 @@ export const insertReceiptItemConsumer = async (
 	const { part, createdAt } = await database
 		.insertInto("receiptItemConsumers")
 		.values({
-			userId,
+			peerId,
 			itemId,
 			part: (data.part ?? 1).toString(),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
-	return { part, createdAt, userId, itemId };
+	return { part, createdAt, peerId, itemId };
 };
 
 type ReceiptItemPayerData = {
@@ -605,7 +605,7 @@ type ReceiptItemPayerData = {
 export const insertReceiptItemPayer = async (
 	ctx: TestContext,
 	itemId: ReceiptItemId,
-	userId: UserId,
+	peerId: PeerId,
 	data: ReceiptItemPayerData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -618,20 +618,20 @@ export const insertReceiptItemPayer = async (
 	const { part, createdAt } = await database
 		.insertInto("receiptItemPayers")
 		.values({
-			userId,
+			peerId,
 			itemId,
 			part: (data.part ?? 1).toString(),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
-	return { part, createdAt, userId, itemId };
+	return { part, createdAt, peerId, itemId };
 };
 
 type AccountWithSessionData = {
 	account?: AccountData;
 	session?: SessionData;
-	user?: Pick<UserData, "name">;
+	peer?: Pick<PeerData, "name">;
 };
 
 export const insertAccountWithSession = async (
@@ -640,7 +640,7 @@ export const insertAccountWithSession = async (
 ) => {
 	const {
 		id: accountId,
-		userId,
+		peerId,
 		name,
 		...account
 	} = await insertAccount(ctx, data.account);
@@ -649,5 +649,5 @@ export const insertAccountWithSession = async (
 		accountId,
 		data.session,
 	);
-	return { accountId, account, sessionId, session, userId, name };
+	return { accountId, account, sessionId, session, peerId, name };
 };

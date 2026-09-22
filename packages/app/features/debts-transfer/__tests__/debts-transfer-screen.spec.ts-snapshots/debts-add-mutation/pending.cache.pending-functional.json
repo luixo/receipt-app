@@ -9,7 +9,7 @@
 					"variables": {
 						"note": "Transferred to Jerod Morissette",
 						"currencyCode": "KRW",
-						"userId": "d3197bf0-cc48-47c2-800f-088a51190a41",
+						"peerId": "d3197bf0-cc48-47c2-800f-088a51190a41",
 						"amount": -10,
 						"timestamp": "2019-12-31"
 					}
@@ -23,7 +23,7 @@
 					"variables": {
 						"note": "Transferred from Javonte Rowe",
 						"currencyCode": "KRW",
-						"userId": "a02d8e10-6b12-42ad-b00b-1807b2931f87",
+						"peerId": "a02d8e10-6b12-42ad-b00b-1807b2931f87",
 						"amount": 10,
 						"timestamp": "2019-12-31"
 					}

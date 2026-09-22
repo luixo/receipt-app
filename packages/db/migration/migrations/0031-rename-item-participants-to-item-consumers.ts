@@ -27,7 +27,7 @@ const renameItemParticipantsToItemConsumers = async (db: Database) => {
 const renameConstraintUp = async (db: Database) => {
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "${RECEIPT_ITEM_CONSUMERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace("peer", "user")}" TO "${RECEIPT_ITEM_CONSUMERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace("peer", "user")}"`,
 		)
 		.execute(db);
 };
@@ -64,7 +64,7 @@ const renameItemConsumersToItemParticipants = async (db: Database) => {
 const renameConstraintDown = async (db: Database) => {
 	await sql
 		.raw(
-			`ALTER TABLE "receiptItemConsumers" RENAME CONSTRAINT "${RECEIPT_ITEM_CONSUMERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
+			`ALTER TABLE "receiptItemConsumers" RENAME CONSTRAINT "${RECEIPT_ITEM_CONSUMERS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace("peer", "user")}" TO "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace("peer", "user")}"`,
 		)
 		.execute(db);
 };

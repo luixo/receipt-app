@@ -12,7 +12,7 @@ const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtId[]) =>
 	database
 		.selectFrom("debts")
 		.where("debts.id", "in", ids)
-		.leftJoin("users", (qb) => qb.onRef("debts.userId", "=", "users.id"))
+		.leftJoin("peers", (qb) => qb.onRef("debts.peerId", "=", "peers.id"))
 		.select([
 			"debts.id",
 			"debts.ownerAccountId",
@@ -20,16 +20,16 @@ const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtId[]) =>
 			"debts.currencyCode",
 			"debts.note",
 			"debts.timestamp",
-			"debts.userId",
+			"debts.peerId",
 			"debts.updatedAt",
 			"debts.receiptId",
-			"users.connectedAccountId",
+			"peers.connectedAccountId",
 		])
 		.execute();
 
 const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => ({
 	id: debt.id,
-	userId: debt.userId,
+	peerId: debt.peerId,
 	receiptId: debt.receiptId || undefined,
 	note: debt.note,
 	amount: Number(debt.amount),

@@ -3,7 +3,7 @@
 exports[`accountConnectionIntentions.add > functionality > account connection intention added > avatar url exists 1`] = `
 {
   "updated": {
-    "users": {
+    "peers": {
       "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
         "connectedAccountId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
         "updatedAt": "2020-01-01 00:01:00+00",
@@ -16,7 +16,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 exports[`accountConnectionIntentions.add > functionality > account connection intention collapse - has a vice versa intention > avatar url exists 1`] = `
 {
   "updated": {
-    "users": {
+    "peers": {
       "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -32,7 +32,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 exports[`accountConnectionIntentions.add > input verification > multiple intentions > mixed success and fail 1`] = `
 {
   "updated": {
-    "users": {
+    "peers": {
       "id:c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3": {
         "connectedAccountId": "fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc",
         "updatedAt": "2020-01-01 00:01:00+00",

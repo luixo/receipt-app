@@ -17,7 +17,7 @@ const createDebt = (
 		id,
 		amount: updateObject.amount,
 		currencyCode: updateObject.currencyCode,
-		userId: updateObject.userId,
+		peerId: updateObject.peerId,
 		timestamp,
 		note: updateObject.note,
 		updatedAt,
@@ -50,9 +50,9 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 										? receipt.debts.debts
 										: [
 												...receipt.debts.debts,
-												{ id: result.id, userId: updateObject.userId },
+												{ id: result.id, peerId: updateObject.peerId },
 											]
-									: [{ id: result.id, userId: updateObject.userId }],
+									: [{ id: result.id, peerId: updateObject.peerId }],
 						},
 					}));
 				},
@@ -65,18 +65,18 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 					round(sum + updateObject.amount),
 				);
 			},
-			getAllUser: (controller) => {
+			getAllPeer: (controller) => {
 				controller.update(
-					updateObject.userId,
+					updateObject.peerId,
 					updateObject.currencyCode,
 					(sum) => round(sum + updateObject.amount),
 				);
 			},
-			getUsersPaged: (controller) => {
-				controller.update(updateObject.userId);
+			getPeersPaged: (controller) => {
+				controller.update(updateObject.peerId);
 			},
-			getByUserPaged: (controller) =>
-				controller.invalidate(updateObject.userId),
+			getByPeerPaged: (controller) =>
+				controller.invalidate(updateObject.peerId),
 			get: (controller) => {
 				controller.add(createDebt(result, updateObject));
 			},

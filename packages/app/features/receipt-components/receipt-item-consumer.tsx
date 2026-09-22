@@ -2,8 +2,8 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { SkeletonUser } from "~app/components/app/user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
+import { SkeletonPeer } from "~app/components/app/peer";
 import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
@@ -35,18 +35,18 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	const removeMutationState =
 		useTrpcMutationState<"receiptItemConsumers.remove">(
 			trpc.receiptItemConsumers.remove.mutationKey(),
-			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
+			(vars) => vars.peerId === consumer.peerId && vars.itemId === item.id,
 		);
 	const isPending = removeMutationState?.status === "pending";
 	const removeConsumer = React.useCallback(
-		() => removeItemConsumer(item.id, consumer.userId),
-		[removeItemConsumer, item.id, consumer.userId],
+		() => removeItemConsumer(item.id, consumer.peerId),
+		[removeItemConsumer, item.id, consumer.peerId],
 	);
 	const isDisabled = isExternalDisabled || isPending;
 
 	return (
 		<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
-			<LoadableUser id={participant.userId} foreign={!isOwner} />
+			<LoadablePeer id={participant.peerId} foreign={!isOwner} />
 			<View className="flex-row gap-2 self-end">
 				<ReceiptItemConsumerInput
 					consumer={consumer}
@@ -71,7 +71,7 @@ export const ReceiptItemConsumerSkeleton: React.FC = () => {
 	const { t } = useTranslation("receipts");
 	return (
 		<View className="items-start justify-between gap-2 sm:gap-4 min-[500px]:flex-row">
-			<SkeletonUser />
+			<SkeletonPeer />
 			<View className="flex-row gap-2 self-end">
 				<Trans
 					t={t}

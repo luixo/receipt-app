@@ -22,9 +22,9 @@ export const test = originalTest.extend<Fixtures>({
 			const unverifiedAccount = { ...auth.account, verified: false };
 			api.mockFirst("account.get", {
 				account: unverifiedAccount,
-				user: { name: auth.user.name },
+				peer: { name: auth.peer.name },
 			});
-			return { user: auth.user, account: unverifiedAccount };
+			return { peer: auth.peer, account: unverifiedAccount };
 		}),
 
 	emailVerificationCard: ({ page }, use) =>

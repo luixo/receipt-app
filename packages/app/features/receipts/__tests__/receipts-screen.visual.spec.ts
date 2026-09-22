@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { DEFAULT_LIMIT } from "~app/utils/validation";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateDebtsFromReceipt,
@@ -27,7 +27,7 @@ test("Full screen", async ({
 	expectScreenshotWithSchemes,
 	faker,
 }) => {
-	const foreignOwnerId = faker.string.uuid() as UserId;
+	const foreignOwnerId = faker.string.uuid() as PeerId;
 	const names = [
 		"Synced receipt",
 		"Unsynced receipt",
@@ -64,7 +64,7 @@ test("Full screen", async ({
 			if (opts.index === 2) {
 				return {
 					...defaultReceipt,
-					ownerUserId: foreignOwnerId,
+					ownerPeerId: foreignOwnerId,
 				};
 			}
 			return defaultReceipt;
@@ -73,7 +73,7 @@ test("Full screen", async ({
 			if (opts.index === 2) {
 				return [
 					{
-						userId: opts.selfUserId,
+						peerId: opts.selfPeerId,
 						role: "editor" as const,
 						createdAt: Temporal.Now.zonedDateTimeISO(),
 					},

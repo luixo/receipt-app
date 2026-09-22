@@ -16,7 +16,7 @@ export const options: UseContextedMutationOptions<
 			if (variables.itemId === receiptId) {
 				return updateRevertReceipts(controllerContext, {
 					get: (controller) =>
-						controller.removePayer(receiptId, variables.userId),
+						controller.removePayer(receiptId, variables.peerId),
 					getPaged: undefined,
 				});
 			}
@@ -25,7 +25,7 @@ export const options: UseContextedMutationOptions<
 					controller.removeItemPayer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 					),
 				getPaged: undefined,
 			});

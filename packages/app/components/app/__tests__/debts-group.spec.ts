@@ -7,14 +7,14 @@ import { formatCurrency } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 import { generateCurrencyCode } from "~tests/frontend/generators/utils";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
-const criticalPaths = ["debts.getByUserPaged", "debts.getAllUser"] as const;
+const criticalPaths = ["debts.getByPeerPaged", "debts.getAllPeer"] as const;
 for (const path of criticalPaths) {
 	const otherPaths = criticalPaths.filter((lookupPath) => lookupPath !== path);
 
@@ -22,19 +22,19 @@ for (const path of criticalPaths) {
 		test("errors", async ({
 			api,
 			mockDebts,
-			openUserDebtsScreen,
+			openPeerDebtsScreen,
 			snapshotQueries,
 			errorMessage,
 			awaitCacheKey,
 			consoleManager,
 		}) => {
 			const {
-				users: [firstUser],
+				peers: [firstPeer],
 			} = await mockDebts({
-				generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+				generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 1 }),
 				generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 			});
-			assert.ok(firstUser);
+			assert.ok(firstPeer);
 			const pathErrorMessage = `Mock "${path}" error`;
 			const unmockError = api.mockFirst(path, () => {
 				throw new TRPCError({
@@ -43,12 +43,12 @@ for (const path of criticalPaths) {
 				});
 			});
 			consoleManager.ignore(pathErrorMessage);
-			const getAllUserErrorLocator = errorMessage(pathErrorMessage).first();
+			const getAllPeerErrorLocator = errorMessage(pathErrorMessage).first();
 			await snapshotQueries(
 				async () => {
-					await openUserDebtsScreen(firstUser.id, { awaitCache: false });
+					await openPeerDebtsScreen(firstPeer.id, { awaitCache: false });
 					await awaitCacheKey(path, { error: 1 });
-					await expect(getAllUserErrorLocator).toBeVisible();
+					await expect(getAllPeerErrorLocator).toBeVisible();
 				},
 				{
 					name: `${path}-errors`,
@@ -58,7 +58,7 @@ for (const path of criticalPaths) {
 			unmockError();
 			await snapshotQueries(
 				async () => {
-					await getAllUserErrorLocator
+					await getAllPeerErrorLocator
 						.locator("button", { hasText: "Refetch" })
 						.click();
 					await awaitCacheKey(path, { success: 1 });
@@ -70,37 +70,37 @@ for (const path of criticalPaths) {
 				},
 				{
 					name: `${path}-refetch`,
-					blacklistKeys: ["debts.get", "users.get", ...otherPaths],
+					blacklistKeys: ["debts.get", "peers.get", ...otherPaths],
 				},
 			);
 		});
 	});
 }
 
-test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
+test("Empty state", async ({ mockDebts, openPeerDebtsScreen, debtsGroup }) => {
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
 		generateDebts: () => [],
 	});
-	assert.ok(firstUser);
-	await openUserDebtsScreen(firstUser.id);
+	assert.ok(firstPeer);
+	await openPeerDebtsScreen(firstPeer.id);
 	await expect(debtsGroup).toHaveText("No debts yet");
 });
 
 test("All resolved debts shows the resolved message", async ({
 	mockDebts,
-	openUserDebtsScreen,
+	openPeerDebtsScreen,
 	debtsGroup,
 	faker,
 }) => {
 	const currencyCode = generateCurrencyCode(faker);
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-		generateDebts: ({ userId, ...opts }) =>
-			defaultGenerateDebts({ ...opts, amount: 2, userId }).map(
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 1 }),
+		generateDebts: ({ peerId, ...opts }) =>
+			defaultGenerateDebts({ ...opts, amount: 2, peerId }).map(
 				(debt, index) => ({
 					...debt,
 					amount: index === 0 ? 100 : -100,
@@ -108,20 +108,20 @@ test("All resolved debts shows the resolved message", async ({
 				}),
 			),
 	});
-	assert.ok(firstUser);
-	await openUserDebtsScreen(firstUser.id);
+	assert.ok(firstPeer);
+	await openPeerDebtsScreen(firstPeer.id);
 	await expect(debtsGroup).toHaveText("All debts are resolved!");
 });
 
 test("Rounding", async ({
 	mockDebts,
-	openUserDebtsScreen,
+	openPeerDebtsScreen,
 	debtsGroupElement,
 }) => {
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts({
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
+		generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 1 }),
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
 			assert.ok(debt);
@@ -141,8 +141,8 @@ test("Rounding", async ({
 			];
 		},
 	});
-	assert.ok(firstUser);
-	await openUserDebtsScreen(firstUser.id, { awaitDebts: 2 });
+	assert.ok(firstPeer);
+	await openPeerDebtsScreen(firstPeer.id, { awaitDebts: 2 });
 
 	await expect(debtsGroupElement.first()).toHaveText(
 		formatCurrency(localSettings.locale, "USD", 1.23),

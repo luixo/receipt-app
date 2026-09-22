@@ -6,8 +6,8 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
-	insertUser,
+	insertConnectedPeers,
+	insertPeer,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -26,23 +26,23 @@ describe("accountConnectionIntentions.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 				email: faker.internet.email(),
 			}),
 		);
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId: "not a valid uuid",
+							peerId: "not a valid uuid",
 							email: faker.internet.email(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -54,7 +54,7 @@ describe("accountConnectionIntentions.add", () => {
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							email: "invalid@@mail.org",
 						}),
 					"BAD_REQUEST",
@@ -63,44 +63,44 @@ describe("accountConnectionIntentions.add", () => {
 			});
 		});
 
-		test("user does not exist", async ({ ctx }) => {
+		test("peer does not exist", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const fakeUserId = faker.string.uuid();
+			const fakePeerId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId: fakeUserId,
+						peerId: fakePeerId,
 						email: faker.internet.email(),
 					}),
 				"NOT_FOUND",
-				`User "${fakeUserId}" does not exist.`,
+				`Peer "${fakePeerId}" does not exist.`,
 			);
 		});
 
-		test("user is not owned by an account", async ({ ctx }) => {
+		test("peer is not owned by an account", async ({ ctx }) => {
 			const { sessionId, accountId, account } =
 				await insertAccountWithSession(ctx);
-			await insertUser(ctx, accountId);
+			await insertPeer(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId: foreignUserId,
+						peerId: foreignPeerId,
 						email: faker.internet.email(),
 					}),
 				"FORBIDDEN",
-				`User "${foreignUserId}" is not owned by "${account.email}".`,
+				`Peer "${foreignPeerId}" is not owned by "${account.email}".`,
 			);
 		});
 
 		test("target account is not registered", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			// Verify that other accounts don't affect error
 			await insertAccount(ctx);
@@ -110,7 +110,7 @@ describe("accountConnectionIntentions.add", () => {
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId,
+						peerId,
 						email: fakeEmail,
 					}),
 				"NOT_FOUND",
@@ -119,58 +119,58 @@ describe("accountConnectionIntentions.add", () => {
 		});
 
 		describe("email connection intention exceptions", () => {
-			test("target user already has a connected account", async ({ ctx }) => {
+			test("target peer already has a connected account", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId, email: otherEmail } =
 					await insertAccount(ctx);
-				const [{ id: userId }] = await insertConnectedUsers(ctx, [
+				const [{ id: peerId }] = await insertConnectedPeers(ctx, [
 					accountId,
 					otherAccountId,
 				]);
-				// Verify that other users don't affect error
-				await insertUser(ctx, accountId);
+				// Verify that other peers don't affect error
+				await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId,
+							peerId,
 							email: faker.internet.email(),
 						}),
 					"CONFLICT",
-					`User "${userId}" is already connected to account "${otherEmail}".`,
+					`Peer "${peerId}" is already connected to account "${otherEmail}".`,
 				);
 			});
 
-			test("target email is already connected as another user", async ({
+			test("target email is already connected as another peer", async ({
 				ctx,
 			}) => {
 				const { accountId, sessionId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId, email: otherEmail } =
 					await insertAccount(ctx);
-				const [{ name: userName }] = await insertConnectedUsers(ctx, [
+				const [{ name: peerName }] = await insertConnectedPeers(ctx, [
 					accountId,
 					otherAccountId,
 				]);
 
-				const { id: userId } = await insertUser(ctx, accountId);
+				const { id: peerId } = await insertPeer(ctx, accountId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId,
+							peerId,
 							email: otherEmail,
 						}),
 					"CONFLICT",
-					`Account with email "${otherEmail}" is already connected to user "${userName}".`,
+					`Account with email "${otherEmail}" is already connected to peer "${peerName}".`,
 				);
 			});
 
-			test("target user already has an intention", async ({ ctx }) => {
+			test("target peer already has an intention", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { email: targetEmail } = await insertAccount(ctx);
-				const { id: userId, name: userName } = await insertUser(
+				const { id: peerId, name: peerName } = await insertPeer(
 					ctx,
 					accountId,
 					{ connectedAccountId: otherAccountId },
@@ -180,11 +180,11 @@ describe("accountConnectionIntentions.add", () => {
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId,
+							peerId,
 							email: targetEmail,
 						}),
 					"CONFLICT",
-					`You already has intention to connect to user "${userName}".`,
+					`You already has intention to connect to peer "${peerName}".`,
 				);
 			});
 
@@ -192,21 +192,21 @@ describe("accountConnectionIntentions.add", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: otherAccountId, email: otherEmail } =
 					await insertAccount(ctx);
-				const { name: userName } = await insertUser(ctx, accountId, {
+				const { name: peerName } = await insertPeer(ctx, accountId, {
 					connectedAccountId: otherAccountId,
 				});
 
-				const { id: userId } = await insertUser(ctx, accountId);
+				const { id: peerId } = await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId,
+							peerId,
 							email: otherEmail,
 						}),
 					"CONFLICT",
-					`You already has intention to connect to "${otherEmail}" as user "${userName}".`,
+					`You already has intention to connect to "${otherEmail}" as peer "${peerName}".`,
 				);
 			});
 		});
@@ -218,16 +218,16 @@ describe("accountConnectionIntentions.add", () => {
 
 				const { email: otherEmail } = await insertAccount(ctx);
 
-				const { id: userId } = await insertUser(ctx, accountId);
-				const { id: anotherUserId } = await insertUser(ctx, accountId);
+				const { id: peerId } = await insertPeer(ctx, accountId);
+				const { id: anotherPeerId } = await insertPeer(ctx, accountId);
 
 				await expectTRPCError(
 					() =>
 						runInBand([
-							() => caller.procedure({ userId, email: otherEmail }),
+							() => caller.procedure({ peerId, email: otherEmail }),
 							() =>
 								caller.procedure({
-									userId: anotherUserId,
+									peerId: anotherPeerId,
 									email: otherEmail,
 								}),
 						]),
@@ -236,23 +236,23 @@ describe("accountConnectionIntentions.add", () => {
 				);
 			});
 
-			test("duplicate user ids", async ({ ctx }) => {
+			test("duplicate peer ids", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				const { email: otherEmail } = await insertAccount(ctx);
 				const { email: anotherEmail } = await insertAccount(ctx);
 
-				const { id: userId } = await insertUser(ctx, accountId);
+				const { id: peerId } = await insertPeer(ctx, accountId);
 
 				await expectTRPCError(
 					() =>
 						runInBand([
-							() => caller.procedure({ userId, email: otherEmail }),
-							() => caller.procedure({ userId, email: anotherEmail }),
+							() => caller.procedure({ peerId, email: otherEmail }),
+							() => caller.procedure({ peerId, email: anotherEmail }),
 						]),
 					"CONFLICT",
-					`Expected to have unique user ids, got repeating: "${userId}" (2 times).`,
+					`Expected to have unique peer ids, got repeating: "${peerId}" (2 times).`,
 				);
 			});
 
@@ -266,15 +266,15 @@ describe("accountConnectionIntentions.add", () => {
 					avatarUrl: otherAvatarUrl,
 				} = await insertAccount(ctx);
 
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+				const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
 					runInBand([
-						() => caller.procedure({ userId, email: otherEmail }),
+						() => caller.procedure({ peerId, email: otherEmail }),
 						() =>
 							caller
 								.procedure({
-									userId: "not a valid uuid",
+									peerId: "not a valid uuid",
 									email: faker.internet.email(),
 								})
 								.catch((error) => error),
@@ -288,7 +288,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: otherAvatarUrl,
 					},
 					connected: false,
-					user: { name: userName },
+					peer: { name: peerName },
 				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
@@ -305,15 +305,15 @@ describe("accountConnectionIntentions.add", () => {
 					avatarUrl: otherAvatarUrl,
 				} = await insertAccount(ctx);
 
-				await insertUser(ctx, otherAccountId, {
+				await insertPeer(ctx, otherAccountId, {
 					connectedAccountId: accountId,
 				});
 
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+				const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({ userId, email: otherEmail }),
+					caller.procedure({ peerId, email: otherEmail }),
 				);
 				expect(result).toStrictEqual<typeof result>({
 					account: {
@@ -322,7 +322,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: otherAvatarUrl,
 					},
 					connected: true,
-					user: { name: userName },
+					peer: { name: peerName },
 				});
 			});
 
@@ -333,14 +333,14 @@ describe("accountConnectionIntentions.add", () => {
 					{ avatarUrl: null },
 				);
 
-				await insertUser(ctx, otherAccountId, {
+				await insertPeer(ctx, otherAccountId, {
 					connectedAccountId: accountId,
 				});
 
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+				const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ userId, email: otherEmail });
+				const result = await caller.procedure({ peerId, email: otherEmail });
 				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
@@ -348,7 +348,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: undefined,
 					},
 					connected: true,
-					user: { name: userName },
+					peer: { name: peerName },
 				});
 			});
 		});
@@ -362,11 +362,11 @@ describe("accountConnectionIntentions.add", () => {
 					avatarUrl: otherAvatarUrl,
 				} = await insertAccount(ctx);
 
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+				const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({ userId, email: otherEmail }),
+					caller.procedure({ peerId, email: otherEmail }),
 				);
 				expect(result).toStrictEqual<typeof result>({
 					account: {
@@ -375,7 +375,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: otherAvatarUrl,
 					},
 					connected: false,
-					user: { name: userName },
+					peer: { name: peerName },
 				});
 			});
 
@@ -386,10 +386,10 @@ describe("accountConnectionIntentions.add", () => {
 					{ avatarUrl: null },
 				);
 
-				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+				const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ userId, email: otherEmail });
+				const result = await caller.procedure({ peerId, email: otherEmail });
 				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
@@ -397,7 +397,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: undefined,
 					},
 					connected: false,
-					user: { name: userName },
+					peer: { name: peerName },
 				});
 			});
 		});
@@ -410,24 +410,24 @@ describe("accountConnectionIntentions.add", () => {
 				{ avatarUrl: null },
 			);
 
-			await insertUser(ctx, otherAccountId, { connectedAccountId: accountId });
+			await insertPeer(ctx, otherAccountId, { connectedAccountId: accountId });
 
-			const { id: userId, name: userName } = await insertUser(ctx, accountId);
+			const { id: peerId, name: peerName } = await insertPeer(ctx, accountId);
 
 			const { email: anotherEmail, id: anotherAccountId } = await insertAccount(
 				ctx,
 				{ avatarUrl: null },
 			);
 
-			const { id: anotherUserId, name: anotherUserName } = await insertUser(
+			const { id: anotherPeerId, name: anotherPeerName } = await insertPeer(
 				ctx,
 				accountId,
 			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await runInBand([
-				() => caller.procedure({ userId, email: otherEmail }),
-				() => caller.procedure({ userId: anotherUserId, email: anotherEmail }),
+				() => caller.procedure({ peerId, email: otherEmail }),
+				() => caller.procedure({ peerId: anotherPeerId, email: anotherEmail }),
 			]);
 			expect(results).toStrictEqual<typeof results>([
 				{
@@ -437,7 +437,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: undefined,
 					},
 					connected: true,
-					user: { name: userName },
+					peer: { name: peerName },
 				},
 				{
 					account: {
@@ -446,7 +446,7 @@ describe("accountConnectionIntentions.add", () => {
 						avatarUrl: undefined,
 					},
 					connected: false,
-					user: { name: anotherUserName },
+					peer: { name: anotherPeerName },
 				},
 			]);
 		});

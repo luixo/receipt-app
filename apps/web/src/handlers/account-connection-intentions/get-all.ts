@@ -1,4 +1,4 @@
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure
@@ -10,43 +10,43 @@ export const procedure = authProcedure
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const relatedIntentions = await database
-			.selectFrom("users")
+			.selectFrom("peers")
 			.innerJoin("accounts as sourceAccounts", (qb) =>
-				qb.onRef("users.ownerAccountId", "=", "sourceAccounts.id"),
+				qb.onRef("peers.ownerAccountId", "=", "sourceAccounts.id"),
 			)
 			.innerJoin("accounts as targetAccounts", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "targetAccounts.id"),
+				qb.onRef("peers.connectedAccountId", "=", "targetAccounts.id"),
 			)
-			.leftJoin("users as reciprocalUsers", (qb) =>
+			.leftJoin("peers as reciprocalPeers", (qb) =>
 				qb
 					.onRef(
-						"reciprocalUsers.ownerAccountId",
+						"reciprocalPeers.ownerAccountId",
 						"=",
-						"users.connectedAccountId",
+						"peers.connectedAccountId",
 					)
 					.onRef(
-						"reciprocalUsers.connectedAccountId",
+						"reciprocalPeers.connectedAccountId",
 						"=",
-						"users.ownerAccountId",
+						"peers.ownerAccountId",
 					),
 			)
-			.where("reciprocalUsers.id", "is", null)
+			.where("reciprocalPeers.id", "is", null)
 			.where((eb) =>
 				eb.or([
-					eb("users.ownerAccountId", "=", ctx.auth.accountId),
-					eb("users.connectedAccountId", "=", ctx.auth.accountId),
+					eb("peers.ownerAccountId", "=", ctx.auth.accountId),
+					eb("peers.connectedAccountId", "=", ctx.auth.accountId),
 				]),
 			)
 			.select([
-				"users.ownerAccountId as accountId",
+				"peers.ownerAccountId as accountId",
 				"targetAccounts.id as targetAccountId",
-				"users.id as userId",
-				"users.name",
+				"peers.id as peerId",
+				"peers.name",
 				"sourceAccounts.email as sourceAccountEmail",
 				"targetAccounts.email as targetAccountEmail",
 			])
-			.orderBy("users.updatedAt", "desc")
-			.orderBy("users.id")
+			.orderBy("peers.updatedAt", "desc")
+			.orderBy("peers.id")
 			.execute();
 		return relatedIntentions.reduce<{
 			inbound: {
@@ -54,7 +54,7 @@ export const procedure = authProcedure
 			}[];
 			outbound: {
 				account: { id: AccountId; email: string };
-				user: { id: UserId; name: string };
+				peer: { id: PeerId; name: string };
 			}[];
 		}>(
 			(acc, intention) => {
@@ -64,8 +64,8 @@ export const procedure = authProcedure
 							id: intention.targetAccountId,
 							email: intention.targetAccountEmail,
 						},
-						user: {
-							id: intention.userId,
+						peer: {
+							id: intention.peerId,
 							name: intention.name,
 						},
 					});

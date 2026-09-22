@@ -12,12 +12,12 @@ test.describe("Form", () => {
 		expectScreenshotWithSchemes,
 		plannedDebtsForm,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 		await expectScreenshotWithSchemes("planned-debts.png", {
@@ -34,15 +34,15 @@ test.describe("Form", () => {
 		skeleton,
 		plannedDebtsFormSkeleton,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		const createPause = api.createPause();
 		api.mockFirst("currency.rates", async ({ next }) => {
 			await createPause.promise;
 			return next();
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		const fromDebt = debts.find((debt) => debt.sum !== 0);
@@ -63,12 +63,12 @@ test.describe("Form", () => {
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-smallest");
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -98,7 +98,7 @@ test.describe("Mutation", () => {
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-biggest");
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		const createPause = api.createPause();
@@ -111,8 +111,8 @@ test.describe("Mutation", () => {
 			};
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -139,7 +139,7 @@ test.describe("Mutation", () => {
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-biggest");
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		const mockErrorMessage = `Mock "debts.add" error`;
@@ -150,8 +150,8 @@ test.describe("Mutation", () => {
 			});
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 

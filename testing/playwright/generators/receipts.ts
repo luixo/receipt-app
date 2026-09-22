@@ -7,10 +7,10 @@ import type {
 	ReceiptPayer,
 } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 
-import type { GenerateUsers } from "./users";
+import type { GeneratePeers } from "./peers";
 import type { GeneratorFnWithFaker } from "./utils";
 import { generateCurrencyCode } from "./utils";
 
@@ -61,17 +61,17 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 export type GenerateReceiptParticipants = GeneratorFnWithFaker<
 	ReceiptParticipant[],
 	{
-		selfUserId: UserId;
-		users: ReturnType<GenerateUsers>;
+		selfPeerId: PeerId;
+		peers: ReturnType<GeneratePeers>;
 		addSelf?: boolean;
 	}
 >;
 
 export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
-	({ faker, users, selfUserId, addSelf = true }) =>
+	({ faker, peers, selfPeerId, addSelf = true }) =>
 		[
-			...users.map((user) => ({
-				userId: user.id,
+			...peers.map((peer) => ({
+				peerId: peer.id,
 				role: "editor" as const,
 				createdAt: Temporal.Instant.from(
 					faker.date.recent({ days: 5 }).toISOString(),
@@ -79,7 +79,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			})),
 			addSelf
 				? {
-						userId: selfUserId,
+						peerId: selfPeerId,
 						role: "owner" as const,
 						createdAt: Temporal.Instant.from(
 							faker.date.recent({ days: 5 }).toISOString(),
@@ -91,21 +91,21 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 export type GenerateReceiptPayers = GeneratorFnWithFaker<
 	ReceiptPayer[],
 	{
-		selfUserId: UserId;
-		users: ReturnType<GenerateUsers>;
+		selfPeerId: PeerId;
+		peers: ReturnType<GeneratePeers>;
 		addSelf?: boolean;
 	}
 >;
 
 export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 	faker,
-	users,
-	selfUserId,
+	peers,
+	selfPeerId,
 	addSelf = false,
 }) =>
 	[
-		...users.map((user) => ({
-			userId: user.id,
+		...peers.map((peer) => ({
+			peerId: peer.id,
 			part: 1,
 			createdAt: Temporal.Instant.from(
 				faker.date.recent({ days: 5 }).toISOString(),
@@ -113,7 +113,7 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 		})),
 		addSelf
 			? {
-					userId: selfUserId,
+					peerId: selfPeerId,
 					part: 1,
 					createdAt: Temporal.Instant.from(
 						faker.date.recent({ days: 5 }).toISOString(),
@@ -147,7 +147,7 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 						})
 						.toISOString(),
 				).toZonedDateTimeISO(Temporal.Now.timeZoneId()),
-				userId: participant.userId,
+				peerId: participant.peerId,
 				part: faker.number.int({ min: 1, max: 3 }),
 			})),
 			payers: [],
@@ -156,18 +156,18 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 export type GenerateReceipt = GeneratorFnWithFaker<
 	Receipt,
 	{
-		selfUserId: UserId;
+		selfPeerId: PeerId;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptParticipants: ReturnType<GenerateReceiptParticipants>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		receiptDebts: ReturnType<GenerateDebts>;
-		users: ReturnType<GenerateUsers>;
+		peers: ReturnType<GeneratePeers>;
 	}
 >;
 
 export const defaultGenerateReceipt: GenerateReceipt = ({
-	selfUserId,
+	selfPeerId,
 	receiptBase,
 	receiptItemsWithConsumers: receiptItemsConsumers,
 	receiptParticipants,
@@ -179,13 +179,13 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,
-	ownerUserId: selfUserId,
-	selfUserId,
+	ownerPeerId: selfPeerId,
+	selfPeerId,
 	debts: {
 		direction: "outcoming",
 		debts: receiptDebts.map((debt) => ({
 			id: debt.id,
-			userId: debt.userId,
+			peerId: debt.peerId,
 		})),
 	},
 	items: receiptItemsConsumers,

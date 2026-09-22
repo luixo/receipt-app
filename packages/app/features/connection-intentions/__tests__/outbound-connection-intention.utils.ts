@@ -8,5 +8,5 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	unlinkButton: ({ page }, use) =>
-		use(page.getByRole("button", { name: "Unlink user from email" })),
+		use(page.getByRole("button", { name: "Unlink peer from email" })),
 });

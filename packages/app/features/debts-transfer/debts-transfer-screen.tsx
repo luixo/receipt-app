@@ -13,7 +13,7 @@ import { entries, isNonNullish, pullObject } from "remeda";
 import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { UsersSuggest } from "~app/components/app/users-suggest";
+import { PeersSuggest } from "~app/components/app/peers-suggest";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
@@ -40,7 +40,7 @@ import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 
 const formSchema = z
@@ -61,10 +61,10 @@ const transformCurrencyCode = (currencyCode: CurrencyCode): `${CurrencyCode}` =>
 /* oxlint-enable typescript/no-unnecessary-template-expression */
 
 const DebtsListForm = suspendedFallback<{
-	fromUserId: UserId;
-	toUserId?: UserId;
+	fromPeerId: PeerId;
+	toPeerId?: PeerId;
 }>(
-	({ fromUserId, toUserId }) => {
+	({ fromPeerId, toPeerId }) => {
 		const { t } = useTranslation("debts");
 		const trpc = useTRPC();
 		const [extraCurrencyCodes, setExtraCurrencyCodes] = React.useState<
@@ -72,21 +72,21 @@ const DebtsListForm = suspendedFallback<{
 		>([]);
 
 		const queryClient = useQueryClient();
-		const { data: fromUserData } = useSuspenseQuery(
-			trpc.debts.getAllUser.queryOptions({ userId: fromUserId }),
+		const { data: fromPeerData } = useSuspenseQuery(
+			trpc.debts.getAllPeer.queryOptions({ peerId: fromPeerId }),
 		);
-		const { data: fromUser } = useSuspenseQuery(
-			trpc.users.get.queryOptions({ id: fromUserId }),
+		const { data: fromPeer } = useSuspenseQuery(
+			trpc.peers.get.queryOptions({ id: fromPeerId }),
 		);
 		usePrefetchQuery(
-			trpc.users.get.queryOptions(toUserId ? { id: toUserId } : skipToken),
+			trpc.peers.get.queryOptions(toPeerId ? { id: toPeerId } : skipToken),
 		);
 		const [showResolvedDebts] = useShowResolvedDebts();
-		const nonResolvedDebts = fromUserData.items.filter(
+		const nonResolvedDebts = fromPeerData.items.filter(
 			(element) => element.sum !== 0,
 		);
 		const aggregatedDebts = showResolvedDebts
-			? fromUserData.items
+			? fromPeerData.items
 			: nonResolvedDebts;
 
 		const allCurrenciesWithSums = React.useMemo(
@@ -118,14 +118,14 @@ const DebtsListForm = suspendedFallback<{
 				onSubmit: formSchema,
 			},
 			onSubmit: ({ value }) => {
-				if (!toUserId) {
-					throw new Error(`Expected to have target user id`);
+				if (!toPeerId) {
+					throw new Error(`Expected to have target peer id`);
 				}
-				const toUser = queryClient.getQueryData(
-					trpc.users.get.queryOptions({ id: toUserId }).queryKey,
+				const toPeer = queryClient.getQueryData(
+					trpc.peers.get.queryOptions({ id: toPeerId }).queryKey,
 				);
-				if (!toUser) {
-					throw new Error(`Expected to have target user`);
+				if (!toPeer) {
+					throw new Error(`Expected to have target peer`);
 				}
 				setLastMutationTimestamps(
 					allCurrenciesWithSums.reduce<string[]>((acc, { currencyCode }) => {
@@ -135,20 +135,20 @@ const DebtsListForm = suspendedFallback<{
 						}
 						const fromMutationVars = {
 							note: t("transfer.defaultNoteTo", {
-								user: toUser.publicName || toUser.name,
+								peer: toPeer.publicName || toPeer.name,
 							}),
 							currencyCode,
-							userId: fromUserId,
+							peerId: fromPeerId,
 							amount: -amount,
 							timestamp: Temporal.Now.plainDateISO(),
 						};
 						addMutation.mutate(fromMutationVars);
 						const toMutationVars = {
 							note: t("transfer.defaultNoteFrom", {
-								user: fromUser.publicName || fromUser.name,
+								peer: fromPeer.publicName || fromPeer.name,
 							}),
 							currencyCode,
-							userId: toUser.id,
+							peerId: toPeer.id,
 							amount,
 							timestamp: Temporal.Now.plainDateISO(),
 						};
@@ -223,7 +223,7 @@ const DebtsListForm = suspendedFallback<{
 							) : (
 								<>
 									<View className="flex-row gap-4 self-end">
-										{fromUserData.items.length ===
+										{fromPeerData.items.length ===
 										nonResolvedDebts.length ? null : (
 											<ShowResolvedDebtsOption />
 										)}
@@ -323,7 +323,7 @@ const DebtsListForm = suspendedFallback<{
 								<Button
 									color={mutationError ? "danger" : "primary"}
 									isDisabled={
-										!canSubmit || mutationPending || fromUserId === toUserId
+										!canSubmit || mutationPending || fromPeerId === toPeerId
 									}
 									isLoading={mutationPending}
 									type="submit"
@@ -385,11 +385,11 @@ export const DebtsTransferScreen = () => {
 	const [toId, setToId] = useQueryState("to");
 	const { t } = useTranslation("debts");
 	const onFromClick = React.useCallback(
-		(userId: UserId) => setFromId(fromId === userId ? undefined : userId),
+		(peerId: PeerId) => setFromId(fromId === peerId ? undefined : peerId),
 		[fromId, setFromId],
 	);
 	const onToClick = React.useCallback(
-		(userId: UserId) => setToId(toId === userId ? undefined : userId),
+		(peerId: PeerId) => setToId(toId === peerId ? undefined : peerId),
 		[setToId, toId],
 	);
 
@@ -398,7 +398,7 @@ export const DebtsTransferScreen = () => {
 			<PageHeader
 				startContent={
 					fromId ? (
-						<BackLink to="/debts/user/$id" params={{ id: fromId }} />
+						<BackLink to="/debts/peer/$id" params={{ id: fromId }} />
 					) : (
 						<BackLink to="/debts" />
 					)
@@ -407,26 +407,26 @@ export const DebtsTransferScreen = () => {
 				{t("transfer.title")}
 			</PageHeader>
 			<View className="flex-row gap-2 self-center">
-				<UsersSuggest
+				<PeersSuggest
 					label={t("transfer.form.from.label")}
 					selected={fromId}
-					onUserClick={onFromClick}
+					onPeerClick={onFromClick}
 					closeOnSelect
-					setUserNameToInput
+					setPeerNameToInput
 					selectedProps={{ className: "flex flex-row gap-2 items-center" }}
 				/>
 				<Icon className="size-10" name="arrow-right" />
-				<UsersSuggest
+				<PeersSuggest
 					label={t("transfer.form.to.label")}
 					selected={toId}
-					onUserClick={onToClick}
+					onPeerClick={onToClick}
 					closeOnSelect
-					setUserNameToInput
+					setPeerNameToInput
 					selectedProps={{ className: "flex flex-row gap-2 items-center" }}
 				/>
 			</View>
 			{fromId ? (
-				<DebtsListForm key={fromId} fromUserId={fromId} toUserId={toId} />
+				<DebtsListForm key={fromId} fromPeerId={fromId} toPeerId={toId} />
 			) : null}
 		</>
 	);

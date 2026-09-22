@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptParticipants.remove > functionality > user is removed 1`] = `
+exports[`receiptParticipants.remove > functionality > peer is removed 1`] = `
 {
   "deleted": {
     "receiptItemConsumers": {
-      "itemId:8e1c4a3c-aad4-49a8-b1c5-8db2c0baf5d7|userId:1fbeb525-646d-40b0-8d75-1b0c06b406b6": undefined,
+      "itemId:58246411-1bfd-4075-a4f1-4a721d944c34|peerId:7f5d0ce6-1128-4468-ad73-b960fffba8f1": undefined,
     },
     "receiptParticipants": {
-      "receiptId:f45f1a12-c893-4f77-be13-bedb806088ae|userId:1fbeb525-646d-40b0-8d75-1b0c06b406b6": undefined,
+      "receiptId:1a4bafb0-6f11-43e5-9558-8be00dc9b190|peerId:7f5d0ce6-1128-4468-ad73-b960fffba8f1": undefined,
     },
   },
 }

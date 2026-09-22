@@ -14,7 +14,7 @@ Each test file gets one isolated Postgres database. The database is **truncated*
 
 Seed all test data via `insert*` helpers from `~tests/backend/utils/data` (e.g. `insertAccount`, `insertAccountWithSession`, `insertReceipt`). Never write raw DB queries in tests.
 
-- `insertAccountWithSession` is the standard starting point for any authenticated test — it returns `{ accountId, sessionId, userId, name, … }`.
+- `insertAccountWithSession` is the standard starting point for any authenticated test — it returns `{ accountId, sessionId, peerId, name, … }`.
 - Helpers accept optional `data` overrides; unspecified fields default to `faker`-generated values.
 - Always insert "unrelated data" alongside actual test data to verify queries don't bleed across accounts. Comment it `// Verify unrelated data doesn't affect the result`.
 

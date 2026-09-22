@@ -14,13 +14,13 @@ import { View } from "~components/view";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {
-	const { t } = useTranslation("users");
+	const { t } = useTranslation("peers");
 	return (
 		<SkeletonInput
 			skeletonClassName="w-48"
 			endContent={
 				<Button
-					title={t("intentions.unlinkUserButton")}
+					title={t("intentions.unlinkPeerButton")}
 					variant="light"
 					isIconOnly
 					isDisabled
@@ -38,7 +38,7 @@ type Props = {
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
-	const { t } = useTranslation("users");
+	const { t } = useTranslation("peers");
 	const removeConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.remove.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsRemoveOptions),
@@ -54,12 +54,12 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		<View testID="outbound-connection-intention">
 			<Input
 				value={intention.account.email}
-				label={intention.user.name}
+				label={intention.peer.name}
 				isReadOnly
 				mutation={removeConnectionMutation}
 				endContent={
 					<Button
-						title={t("intentions.unlinkUserButton")}
+						title={t("intentions.unlinkPeerButton")}
 						variant="light"
 						isLoading={removeConnectionMutation.isPending}
 						isIconOnly

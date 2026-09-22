@@ -83,11 +83,11 @@ test("'debtIntentions.accept' pending / error", async ({
 	api.mockFirst("debtIntentions.accept", {
 		updatedAt: Temporal.Now.zonedDateTimeISO(),
 	});
-	api.mockFirst("debts.getAllUser", { items: [] });
-	api.mockFirst("debts.getUsersPaged", {
+	api.mockFirst("debts.getAllPeer", { items: [] });
+	api.mockFirst("debts.getPeersPaged", {
 		count: 1,
 		cursor: 0,
-		items: [debtIntenion.userId],
+		items: [debtIntenion.peerId],
 	});
 
 	await snapshotQueries(
@@ -100,8 +100,8 @@ test("'debtIntentions.accept' pending / error", async ({
 			name: "success",
 			blacklistKeys: [
 				"debts.getAll",
-				"debts.getAllUser",
-				"debts.getUsersPaged",
+				"debts.getAllPeer",
+				"debts.getPeersPaged",
 				"accountSettings.get",
 			],
 		},
@@ -127,15 +127,15 @@ test("Accept and edit button navigates to debt page on success", async ({
 	api.mockFirst("debtIntentions.accept", {
 		updatedAt: Temporal.Now.zonedDateTimeISO(),
 	});
-	api.mockFirst("debts.getAllUser", { items: [] });
-	api.mockFirst("debts.getUsersPaged", {
+	api.mockFirst("debts.getAllPeer", { items: [] });
+	api.mockFirst("debts.getPeersPaged", {
 		count: 1,
 		cursor: 0,
-		items: [debtIntention.userId],
+		items: [debtIntention.peerId],
 	});
 	api.mockFirst("debts.get", {
 		id: debtIntention.id,
-		userId: debtIntention.userId,
+		peerId: debtIntention.peerId,
 		receiptId: debtIntention.receiptId,
 		note: debtIntention.note,
 		amount: debtIntention.amount,
@@ -157,8 +157,8 @@ test("Accept and edit button navigates to debt page on success", async ({
 			name: "accept-and-edit-success",
 			blacklistKeys: [
 				"debts.getAll",
-				"debts.getAllUser",
-				"debts.getUsersPaged",
+				"debts.getAllPeer",
+				"debts.getPeersPaged",
 				"debts.get",
 				"accountSettings.get",
 			],

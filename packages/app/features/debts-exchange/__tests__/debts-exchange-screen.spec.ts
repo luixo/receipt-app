@@ -36,7 +36,7 @@ const generateDebtsWithEmpty: GenerateDebts = (opts) => {
 };
 
 test.describe("Wrapper component", () => {
-	test("'debts.getByUserPaged' error", async ({
+	test("'debts.getByPeerPaged' error", async ({
 		api,
 		errorMessage,
 		mockBase,
@@ -45,27 +45,27 @@ test.describe("Wrapper component", () => {
 		awaitCacheKey,
 		consoleManager,
 	}) => {
-		const { debtUser } = await mockBase();
-		api.mockFirst("debts.getAllUser", () => {
+		const { debtPeer } = await mockBase();
+		api.mockFirst("debts.getAllPeer", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "debts.getAllUser" error`,
+				message: `Mock "debts.getAllPeer" error`,
 			});
 		});
-		consoleManager.ignore(/Mock "debts.getAllUser" error/);
-		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
-		await awaitCacheKey("users.get");
+		consoleManager.ignore(/Mock "debts.getAllPeer" error/);
+		await openDebtsExchangeScreen(debtPeer.id, { awaitCache: false });
+		await awaitCacheKey("peers.get");
 
-		await expect(errorMessage(`Mock "debts.getAllUser" error`)).toBeVisible();
+		await expect(errorMessage(`Mock "debts.getAllPeer" error`)).toBeVisible();
 		await expect(debtsGroup).not.toBeAttached();
 	});
 });
 
 test.describe("Header", () => {
 	test("Title", async ({ mockDebts, openDebtsExchangeScreen, page }) => {
-		const { debtUser } = await mockDebts();
-		await openDebtsExchangeScreen(debtUser.id);
-		await expect(page).toHaveTitle("RA - Exchange user debts");
+		const { debtPeer } = await mockDebts();
+		await openDebtsExchangeScreen(debtPeer.id);
+		await expect(page).toHaveTitle("RA - Exchange peer debts");
 	});
 
 	test("Back button", async ({
@@ -75,13 +75,13 @@ test.describe("Header", () => {
 		page,
 		api,
 	}) => {
-		const { debtUser } = await mockDebts();
-		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
-		await openDebtsExchangeScreen(debtUser.id);
+		const { debtPeer } = await mockDebts();
+		api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
+		await openDebtsExchangeScreen(debtPeer.id);
 		await backLink.click();
 		await page.expectUrl({
-			to: "/debts/user/$id",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id",
+			params: { id: debtPeer.id },
 		});
 	});
 });
@@ -93,13 +93,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser } = await mockDebts({
+		const { debtPeer } = await mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: true,
 		});
-		await openDebtsExchangeScreen(debtUser.id);
+		await openDebtsExchangeScreen(debtPeer.id);
 		await expect(debtsGroupElement).toHaveCount(2);
 	});
 
@@ -109,13 +109,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser } = await mockDebts({
+		const { debtPeer } = await mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: false,
 		});
-		await openDebtsExchangeScreen(debtUser.id);
+		await openDebtsExchangeScreen(debtPeer.id);
 		await expect(debtsGroupElement).toHaveCount(1);
 	});
 });
@@ -127,13 +127,13 @@ test("Exchange all to one button", async ({
 	exchangeAllToOneButton,
 	page,
 }) => {
-	const { debtUser } = await mockDebts();
-	await openDebtsExchangeScreen(debtUser.id);
+	const { debtPeer } = await mockDebts();
+	await openDebtsExchangeScreen(debtPeer.id);
 	api.mockFirst("currency.top", { items: [] });
 	await exchangeAllToOneButton.click();
 	await page.expectUrl({
-		to: "/debts/user/$id/exchange/all",
-		params: { id: debtUser.id },
+		to: "/debts/peer/$id/exchange/all",
+		params: { id: debtPeer.id },
 	});
 });
 
@@ -142,13 +142,13 @@ test("Exchange to specific currency button", async ({
 	openDebtsExchangeScreen,
 	exchangeSpecificButton,
 }) => {
-	const { debtUser } = await mockDebts();
-	await openDebtsExchangeScreen(debtUser.id);
+	const { debtPeer } = await mockDebts();
+	await openDebtsExchangeScreen(debtPeer.id);
 	await expect(exchangeSpecificButton).toBeDisabled();
 	// The specific page is not yet implemented
 	// await exchangeSpecificButton.click();
 	// await page.expectUrl({
-	// 	to: "/debts/user/$id/exchange/specific",
-	// 	params: { id: debtUser.id },
+	// 	to: "/debts/peer/$id/exchange/specific",
+	// 	params: { id: debtPeer.id },
 	// });
 });

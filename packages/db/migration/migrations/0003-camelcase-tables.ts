@@ -101,7 +101,7 @@ const camelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR.replace("peer", "user")}"`,
 		)
 		.execute(db);
 	await db.schema
@@ -144,7 +144,7 @@ const camelcaseReceiptParticipantsTable = async (db: Database) => {
 		.column("receiptId")
 		.execute();
 	await db.schema
-		.createIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID)
+		.createIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID.replace("peer", "user"))
 		.on("receiptParticipants")
 		.column("userId")
 		.execute();
@@ -152,7 +152,9 @@ const camelcaseReceiptParticipantsTable = async (db: Database) => {
 
 const uncamelcaseReceiptParticipantsTable = async (db: Database) => {
 	await db.schema.dropIndex(RECEIPT_PARTICIPANTS.INDEXES.RECEIPT_ID).execute();
-	await db.schema.dropIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID).execute();
+	await db.schema
+		.dropIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID.replace("peer", "user"))
+		.execute();
 	await db.schema
 		.alterTable("receiptParticipants")
 		.renameTo("receipt_participants")

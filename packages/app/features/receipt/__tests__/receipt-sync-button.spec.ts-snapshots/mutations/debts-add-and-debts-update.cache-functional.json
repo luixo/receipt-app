@@ -6,7 +6,7 @@
 					"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
 					"amount": 26839.85,
 					"currencyCode": "THB",
-					"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
+					"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
 					"timestamp": "2020-01-01",
 					"note": "Receipt \"alienus vesica aqua\"",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
@@ -48,7 +48,7 @@
 					"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
 					"amount": 21938.87,
 					"currencyCode": "THB",
-					"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
+					"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
 					"timestamp": "2020-01-01",
 					"note": "Receipt \"alienus vesica aqua\"",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
@@ -75,11 +75,11 @@
 						"debts": {
 							"2": {
 								"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
-								"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5"
+								"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5"
 							},
 							"3": {
 								"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
-								"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe"
+								"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe"
 							}
 						}
 					}
@@ -103,7 +103,7 @@
 					"variables": {
 						"note": "Receipt \"alienus vesica aqua\"",
 						"currencyCode": "THB",
-						"userId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
+						"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
 						"amount": 26839.85,
 						"timestamp": "2020-01-01",
 						"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
@@ -123,7 +123,7 @@
 					"variables": {
 						"note": "Receipt \"alienus vesica aqua\"",
 						"currencyCode": "THB",
-						"userId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
+						"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
 						"amount": 21938.87,
 						"timestamp": "2020-01-01",
 						"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"

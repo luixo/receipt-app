@@ -29,15 +29,15 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			useParticipantsWithDebts(receipt);
 		const ourDebtsParticipants = React.useMemo(
 			() =>
-				syncableParticipants.map(({ balance, currentDebt, userId }) => {
+				syncableParticipants.map(({ balance, currentDebt, peerId }) => {
 					const ourDebt = currentDebt?.our;
 					if (!ourDebt) {
-						return { sum: balance, userId };
+						return { sum: balance, peerId };
 					}
 					return {
 						sum: balance,
 						debt: { ...ourDebt, id: currentDebt.id },
-						userId,
+						peerId,
 					};
 				}),
 			[syncableParticipants],
@@ -81,15 +81,15 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 				trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
 			),
 		);
-		const updateMutations = participantsWithDebts.map(({ userId }) => {
+		const updateMutations = participantsWithDebts.map(({ peerId }) => {
 			const matchedDesyncedParticipant = desyncedParticipants.find(
-				(participant) => participant.userId === userId,
+				(participant) => participant.peerId === peerId,
 			);
 			return useMutation(
 				trpc.debts.update.mutationOptions(
 					useTrpcMutationOptions(debtsUpdateOptions, {
 						context: matchedDesyncedParticipant?.debt
-							? { currDebt: { ...matchedDesyncedParticipant.debt, userId } }
+							? { currDebt: { ...matchedDesyncedParticipant.debt, peerId } }
 							: skipToken,
 					}),
 				),
@@ -99,14 +99,14 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 		const propagateDebts = React.useCallback(() => {
 			for (const participant of nonCreatedParticipants) {
 				const participantIndex = participantsWithDebts.findIndex(
-					({ userId }) => userId === participant.userId,
+					({ peerId }) => peerId === participant.peerId,
 				);
 				const matchedMutation = addMutations[participantIndex];
 				if (matchedMutation) {
 					matchedMutation.mutate({
 						note: getReceiptDebtName(receipt.name),
 						currencyCode: receipt.currencyCode,
-						userId: participant.userId,
+						peerId: participant.peerId,
 						amount: participant.sum,
 						timestamp: receipt.issued,
 						receiptId: receipt.id,
@@ -115,7 +115,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			}
 			for (const participant of desyncedParticipants) {
 				const participantIndex = participantsWithDebts.findIndex(
-					({ userId }) => userId === participant.userId,
+					({ peerId }) => peerId === participant.peerId,
 				);
 				const matchedMutation = updateMutations[participantIndex];
 				if (matchedMutation) {

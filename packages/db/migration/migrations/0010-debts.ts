@@ -35,7 +35,7 @@ const createDebtsTable = async (db: Database) => {
 		.column("ownerAccountId")
 		.execute();
 	await db.schema
-		.createIndex(DEBTS.INDEXES.USER_ID)
+		.createIndex(DEBTS.INDEXES.USER_ID.replace("peer", "user"))
 		.on("debts")
 		.column("userId")
 		.execute();
@@ -43,7 +43,9 @@ const createDebtsTable = async (db: Database) => {
 
 const removeDebtsTable = async (db: Database) => {
 	await db.schema.dropIndex(DEBTS.INDEXES.OWNER_ACCOUNT_ID).execute();
-	await db.schema.dropIndex(DEBTS.INDEXES.USER_ID).execute();
+	await db.schema
+		.dropIndex(DEBTS.INDEXES.USER_ID.replace("peer", "user"))
+		.execute();
 	await db.schema.dropTable("debts").execute();
 };
 

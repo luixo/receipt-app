@@ -7,11 +7,11 @@ import {
 	insertAccount,
 	insertAccountSettings,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertReceipt,
 	insertSyncedDebts,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -46,10 +46,10 @@ describe("debtIntentions.accept", () => {
 
 		test("debt does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			// Verify that other debts don't affect the result
-			await insertDebt(ctx, accountId, userId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const fakeDebtId = faker.string.uuid();
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -63,7 +63,7 @@ describe("debtIntentions.accept", () => {
 		test("mixed success and fail", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [, { id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+			const [, { id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 				accountId,
 				foreignAccountId,
 			]);
@@ -74,7 +74,7 @@ describe("debtIntentions.accept", () => {
 			const { id: foreignDebtId } = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{
 					createdAt: Temporal.ZonedDateTime.from(
 						"2020-05-01T00:00:00.000[GMT]",
@@ -104,8 +104,8 @@ describe("debtIntentions.accept", () => {
 		test("debt did not exist on our account beforehand", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
@@ -113,7 +113,7 @@ describe("debtIntentions.accept", () => {
 			const { id: foreignDebtId } = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{
 					createdAt: Temporal.ZonedDateTime.from(
 						"2020-05-01T00:00:00.000[GMT]",
@@ -123,14 +123,14 @@ describe("debtIntentions.accept", () => {
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertUser(ctx, accountId);
+			await insertPeer(ctx, accountId);
 			await insertAccountSettings(ctx, accountId, { manualAcceptDebts: true });
-			const { id: anotherForeignUserId } = await insertUser(
+			const { id: anotherForeignPeerId } = await insertPeer(
 				ctx,
 				foreignAccountId,
 			);
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
+			await insertDebt(ctx, accountId, peerId);
+			await insertDebt(ctx, foreignAccountId, anotherForeignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -146,16 +146,16 @@ describe("debtIntentions.accept", () => {
 		}) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
 			);
 			const [debt] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					fn: (originalDebt) => ({
 						...originalDebt,
@@ -173,13 +173,13 @@ describe("debtIntentions.accept", () => {
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertUser(ctx, accountId);
-			const { id: anotherForeignUserId } = await insertUser(
+			await insertPeer(ctx, accountId);
+			const { id: anotherForeignPeerId } = await insertPeer(
 				ctx,
 				foreignAccountId,
 			);
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
+			await insertDebt(ctx, accountId, peerId);
+			await insertDebt(ctx, foreignAccountId, anotherForeignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -195,16 +195,16 @@ describe("debtIntentions.accept", () => {
 		}) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
 			);
 			const [debt] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					ahead: "our",
 					fn: (originalDebt) => ({
@@ -222,13 +222,13 @@ describe("debtIntentions.accept", () => {
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertUser(ctx, accountId);
-			const { id: anotherForeignUserId } = await insertUser(
+			await insertPeer(ctx, accountId);
+			const { id: anotherForeignPeerId } = await insertPeer(
 				ctx,
 				foreignAccountId,
 			);
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
+			await insertDebt(ctx, accountId, peerId);
+			await insertDebt(ctx, foreignAccountId, anotherForeignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -239,14 +239,14 @@ describe("debtIntentions.accept", () => {
 			});
 		});
 
-		test("multiple different debts with multiple users", async ({ ctx }) => {
+		test("multiple different debts with multiple peers", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: selfUserId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: selfPeerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const { id: anotherForeignAccountId } = await insertAccount(ctx);
-			const [{ id: anotherSelfUserId }, { id: anotherForeignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, anotherForeignAccountId]);
+			const [{ id: anotherSelfPeerId }, { id: anotherForeignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, anotherForeignAccountId]);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
@@ -255,7 +255,7 @@ describe("debtIntentions.accept", () => {
 			const newDebt = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{
 					createdAt: Temporal.ZonedDateTime.from(
 						"2020-05-01T00:00:00.000[GMT]",
@@ -265,8 +265,8 @@ describe("debtIntentions.accept", () => {
 			// A connected with our updatedAt ahead
 			const [updatedDebtAhead] = await insertSyncedDebts(
 				ctx,
-				[accountId, selfUserId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, selfPeerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					ahead: "our",
 					fn: (originalDebt) => ({
@@ -285,8 +285,8 @@ describe("debtIntentions.accept", () => {
 			// A connected with their updatedAt ahead
 			const [updatedDebtBehind] = await insertSyncedDebts(
 				ctx,
-				[accountId, anotherSelfUserId],
-				[anotherForeignAccountId, anotherForeignToSelfUserId],
+				[accountId, anotherSelfPeerId],
+				[anotherForeignAccountId, anotherForeignToSelfPeerId],
 				{
 					fn: (originalDebt) => ({
 						...originalDebt,
@@ -303,13 +303,13 @@ describe("debtIntentions.accept", () => {
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertUser(ctx, accountId);
-			const { id: anotherForeignUserId } = await insertUser(
+			await insertPeer(ctx, accountId);
+			const { id: anotherForeignPeerId } = await insertPeer(
 				ctx,
 				foreignAccountId,
 			);
-			await insertDebt(ctx, accountId, selfUserId);
-			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
+			await insertDebt(ctx, accountId, selfPeerId);
+			await insertDebt(ctx, foreignAccountId, anotherForeignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>

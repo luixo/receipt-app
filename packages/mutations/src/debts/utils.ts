@@ -1,6 +1,6 @@
 import type { TRPCMutationInput } from "~app/trpc";
 import type { Debt } from "~app/trpc-types";
-import type { DebtId, ReceiptId, UserId } from "~db/ids";
+import type { DebtId, PeerId, ReceiptId } from "~db/ids";
 import { round } from "~utils/math";
 
 import { update as updateDebts } from "../cache/debts";
@@ -85,7 +85,7 @@ export const getRevert =
 export const updateReceiptWithOutcomingDebtId = (
 	controllerContext: ControllerContext,
 	receiptId: ReceiptId,
-	userId: UserId,
+	peerId: PeerId,
 	debtId: DebtId,
 ) => {
 	updateReceipts(controllerContext, {
@@ -98,8 +98,8 @@ export const updateReceiptWithOutcomingDebtId = (
 						receipt.debts.direction === "outcoming"
 							? receipt.debts.debts.some((debt) => debt.id === debtId)
 								? receipt.debts.debts
-								: [...receipt.debts.debts, { id: debtId, userId }]
-							: [{ id: debtId, userId }],
+								: [...receipt.debts.debts, { id: debtId, peerId }]
+							: [{ id: debtId, peerId }],
 				},
 			}));
 		},
@@ -115,9 +115,9 @@ export const updateUpdatedAt = (
 ) => {
 	updateDebts(controllerContext, {
 		getAll: undefined,
-		getAllUser: undefined,
-		getUsersPaged: undefined,
-		getByUserPaged: undefined,
+		getAllPeer: undefined,
+		getPeersPaged: undefined,
+		getByPeerPaged: undefined,
 		get: (controller) => {
 			controller.update(debtId, (debt) => ({
 				...debt,

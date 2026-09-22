@@ -40,7 +40,7 @@ export const options: UseContextedMutationOptions<"receiptParticipants.update"> 
 				get: (controller) =>
 					controller.updateParticipant(
 						variables.receiptId,
-						variables.userId,
+						variables.peerId,
 						applyUpdate(variables.update),
 						getRevert(variables.update),
 					),

@@ -2,7 +2,7 @@ import type { Locator } from "@playwright/test";
 import { test } from "@playwright/test";
 
 type FormFixtures = {
-	fillUser: (user: { name: string }) => Promise<void>;
+	fillPeer: (peer: { name: string }) => Promise<void>;
 	changeSlider: (
 		locator: Locator,
 		percent: number,
@@ -11,12 +11,12 @@ type FormFixtures = {
 };
 
 export const formFixtures = test.extend<FormFixtures>({
-	fillUser: ({ page }, use) =>
-		use(async (user) => {
-			await page.getByRole("combobox", { name: "Select a user" }).click();
+	fillPeer: ({ page }, use) =>
+		use(async (peer) => {
+			await page.getByRole("combobox", { name: "Select a peer" }).click();
 			await page
 				.getByRole("option")
-				.filter({ has: page.getByText(user.name, { exact: true }) })
+				.filter({ has: page.getByText(peer.name, { exact: true }) })
 				.click();
 		}),
 

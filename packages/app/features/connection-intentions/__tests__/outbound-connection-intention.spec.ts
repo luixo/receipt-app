@@ -17,7 +17,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	const { outbound } = await mockConnectionIntentions({ outboundAmount: 1 });
 	const [intention] = outbound;
 	assert.ok(intention);
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 
 	api.mockFirst("accountConnectionIntentions.remove", () => {
 		throw new TRPCError({
@@ -32,7 +32,7 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 			`Error removing invite: Mock "accountConnectionIntentions.remove" error`,
 		);
 	});
-	await expect(page.getByLabel(intention.user.name)).toHaveValue(
+	await expect(page.getByLabel(intention.peer.name)).toHaveValue(
 		intention.account.email,
 	);
 
@@ -46,5 +46,5 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 		},
 		{ name: "success" },
 	);
-	await expect(page.getByLabel(intention.user.name)).not.toBeAttached();
+	await expect(page.getByLabel(intention.peer.name)).not.toBeAttached();
 });

@@ -169,11 +169,11 @@ test.describe("Mutations", () => {
 		});
 		api.mockFirst("debts.add", ({ input: addedDebt }) => ({
 			id:
-				receiptDebts.find((debt) => debt.userId === addedDebt.userId)?.id ||
+				receiptDebts.find((debt) => debt.peerId === addedDebt.peerId)?.id ||
 				faker.string.uuid(),
 			updatedAt: Temporal.Now.zonedDateTimeISO(),
 			reverseAccepted:
-				addedDebt.userId
+				addedDebt.peerId
 					.split("")
 					.reduce((acc, c) => acc + (c.codePointAt(0) || 0), 0) %
 					2 ===
@@ -210,7 +210,7 @@ test.describe("Mutations", () => {
 		);
 		const participantSums = getParticipantSums(
 			receipt.id,
-			receipt.ownerUserId,
+			receipt.ownerPeerId,
 			receiptItemsWithConsumers,
 			participants,
 			receiptPayers,
@@ -218,18 +218,18 @@ test.describe("Mutations", () => {
 			fromSubunitToUnit,
 		);
 		const participantTuples = participantSums.map(
-			(participant) => [participant.userId, participant.balance] as const,
+			(participant) => [participant.peerId, participant.balance] as const,
 		);
 		const addedDebts = addMutationsVariables.map(
-			(debt) => [debt.userId, debt.amount] as const,
+			(debt) => [debt.peerId, debt.amount] as const,
 		);
 		// Validate sums of added debts match expected
 		expect(addedDebts.map(([, amount]) => amount)).toStrictEqual(
 			addedDebts
 				.map(
-					([userId]) =>
+					([peerId]) =>
 						participantTuples.find(
-							([participantId]) => userId === participantId,
+							([participantId]) => peerId === participantId,
 						)?.[1],
 				)
 				.filter(isNonNullish),
@@ -242,7 +242,7 @@ test.describe("Mutations", () => {
 			updatedDebts.map(([debtId]) => {
 				const matchedDebt = receiptDebts.find((debt) => debt.id === debtId);
 				return participantTuples.find(
-					([participantId]) => participantId === matchedDebt?.userId,
+					([participantId]) => participantId === matchedDebt?.peerId,
 				)?.[1];
 			}),
 		);

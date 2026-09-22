@@ -18,28 +18,28 @@ export const procedure = authProcedure
 	.mutation(async ({ ctx, input }) => {
 		const { database } = ctx;
 		const intention = await database
-			.selectFrom("users")
-			.leftJoin("users as reciprocalUsers", (qb) =>
+			.selectFrom("peers")
+			.leftJoin("peers as reciprocalPeers", (qb) =>
 				qb
 					.onRef(
-						"reciprocalUsers.ownerAccountId",
+						"reciprocalPeers.ownerAccountId",
 						"=",
-						"users.connectedAccountId",
+						"peers.connectedAccountId",
 					)
 					.onRef(
-						"reciprocalUsers.connectedAccountId",
+						"reciprocalPeers.connectedAccountId",
 						"=",
-						"users.ownerAccountId",
+						"peers.ownerAccountId",
 					),
 			)
-			.select(["users.id"])
+			.select(["peers.id"])
 			.where((eb) =>
 				eb.and({
-					"users.ownerAccountId": input.sourceAccountId,
-					"users.connectedAccountId": ctx.auth.accountId,
+					"peers.ownerAccountId": input.sourceAccountId,
+					"peers.connectedAccountId": ctx.auth.accountId,
 				}),
 			)
-			.where("reciprocalUsers.id", "is", null)
+			.where("reciprocalPeers.id", "is", null)
 			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
@@ -49,7 +49,7 @@ export const procedure = authProcedure
 			});
 		}
 		await database
-			.updateTable("users")
+			.updateTable("peers")
 			.set({ connectedAccountId: null })
 			.where("id", "=", intention.id)
 			.executeTakeFirst();

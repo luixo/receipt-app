@@ -11,7 +11,7 @@ type Fixtures = {
 	noteInput: Locator;
 	saveNoteButton: Locator;
 	removeDebtButton: Locator;
-	userPreview: Locator;
+	peerPreview: Locator;
 	receiptLinkButton: (receiptId: ReceiptId) => Locator;
 	removeDebtDialog: Locator;
 	currencyTriggerButton: Locator;
@@ -36,7 +36,7 @@ export const test = originalTest.extend<Fixtures>({
 	removeDebtButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Remove debt" })),
 
-	userPreview: ({ page }, use) => use(page.getByTestId("user")),
+	peerPreview: ({ page }, use) => use(page.getByTestId("peer")),
 
 	receiptLinkButton: ({ page }, use) =>
 		use((receiptId) => page.locator(`a[href="/receipts/${receiptId}"]`)),
