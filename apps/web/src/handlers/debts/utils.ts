@@ -2,7 +2,7 @@ import type { Insertable } from "kysely";
 import { isNonNullish, omit } from "remeda";
 
 import type { Database } from "~db/database";
-import type { DebtId, UserId } from "~db/ids";
+import type { DebtId, PeerId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { MakeUndefinedOptional } from "~utils/types";
 
@@ -24,7 +24,7 @@ export const upsertAutoAcceptedDebts = async (
 						? debt.receiptId
 							? eb.and({
 									ownerAccountId: debt.ownerAccountId,
-									userId: debt.userId,
+									peerId: debt.peerId,
 									receiptId: debt.receiptId,
 								})
 							: eb("debts.ownerAccountId", "is", null)
@@ -38,7 +38,7 @@ export const upsertAutoAcceptedDebts = async (
 		.select([
 			"debts.id",
 			"debts.ownerAccountId",
-			"debts.userId",
+			"debts.peerId",
 			"debts.receiptId",
 		])
 		.execute();
@@ -50,7 +50,7 @@ export const upsertAutoAcceptedDebts = async (
 				}
 				return (
 					fetchedDebt.ownerAccountId === debt.ownerAccountId &&
-					fetchedDebt.userId === debt.userId &&
+					fetchedDebt.peerId === debt.peerId &&
 					fetchedDebt.receiptId === debt.receiptId
 				);
 			}
@@ -71,11 +71,11 @@ export const upsertAutoAcceptedDebts = async (
 		.filter(isNonNullish);
 	const [newDebts, ...updatedDebts] = await Promise.all([
 		nonExistentDebts.length === 0
-			? ([] as { id: DebtId; userId: UserId }[])
+			? ([] as { id: DebtId; peerId: PeerId }[])
 			: database
 					.insertInto("debts")
 					.values(nonExistentDebts.map((debt) => omit(debt, ["isNew"])))
-					.returning(["debts.id", "debts.userId"])
+					.returning(["debts.id", "debts.peerId"])
 					.execute(),
 		...existentDebts.map(([nextDebt, currentDebt]) =>
 			database
@@ -90,10 +90,10 @@ export const upsertAutoAcceptedDebts = async (
 					eb.and({
 						id: currentDebt.id,
 						ownerAccountId: currentDebt.ownerAccountId,
-						userId: currentDebt.userId,
+						peerId: currentDebt.peerId,
 					}),
 				)
-				.returning(["debts.id", "debts.receiptId", "debts.userId"])
+				.returning(["debts.id", "debts.receiptId", "debts.peerId"])
 				.executeTakeFirstOrThrow(),
 		),
 	]);

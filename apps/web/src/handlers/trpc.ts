@@ -4,9 +4,9 @@ import { isNonNullish, unique } from "remeda";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import {
-	PRETEND_USER_STORE_NAME,
-	pretendUserSchema,
-} from "~app/utils/store/pretend-user";
+	PRETEND_ACCOUNT_STORE_NAME,
+	pretendAccountSchema,
+} from "~app/utils/store/pretend-account";
 import type { AccountId } from "~db/ids";
 import { transformer } from "~utils/transformer";
 import {
@@ -68,15 +68,15 @@ const getAuthToken = (ctx: UnauthorizedContext) =>
 	getCookie(ctx.reqHeaders.get("cookie"), AUTH_COOKIE);
 
 const getPretendAccountEmail = (ctx: NetContext): string | undefined => {
-	const pretendUserString = getCookie(
+	const pretendAccountString = getCookie(
 		ctx.reqHeaders.get("cookie"),
-		PRETEND_USER_STORE_NAME,
+		PRETEND_ACCOUNT_STORE_NAME,
 	);
-	if (!pretendUserString) {
+	if (!pretendAccountString) {
 		return;
 	}
-	const user = pretendUserSchema.parse(JSON.parse(pretendUserString));
-	return user.email;
+	const peer = pretendAccountSchema.parse(JSON.parse(pretendAccountString));
+	return peer.email;
 };
 
 const queueSession = queueCallFactory<

@@ -8,7 +8,7 @@ import {
 	values,
 } from "remeda";
 
-import type { ReceiptId, ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 import { rotate } from "~utils/array";
 import { getIndexByString } from "~utils/hash";
 
@@ -17,20 +17,20 @@ type ReceiptItem = {
 	quantity: number;
 	price: number;
 	consumers: {
-		userId: UserId;
+		peerId: PeerId;
 		part: number;
 	}[];
 	payers: {
-		userId: UserId;
+		peerId: PeerId;
 		part: number;
 	}[];
 };
 type ReceiptParticipant = {
 	createdAt: Temporal.ZonedDateTime;
-	userId: UserId;
+	peerId: PeerId;
 };
 
-const getSortUsersByReceipt = (
+const getSortPeersByReceipt = (
 	receiptId: ReceiptId,
 	participants: ReceiptParticipant[],
 ) => {
@@ -40,19 +40,19 @@ const getSortUsersByReceipt = (
 				participantA.createdAt,
 				participantB.createdAt,
 			);
-			const userIdComparison = participantA.userId.localeCompare(
-				participantB.userId,
+			const peerIdComparison = participantA.peerId.localeCompare(
+				participantB.peerId,
 			);
-			return createdDelta || userIdComparison;
+			return createdDelta || peerIdComparison;
 		}),
 		getIndexByString(receiptId),
 	);
-	return (userA: UserId, userB: UserId) => {
+	return (peerA: PeerId, peerB: PeerId) => {
 		const participantAIndex = mappedParticipants.findIndex(
-			(participant) => participant.userId === userA,
+			(participant) => participant.peerId === peerA,
 		);
 		const participantBIndex = mappedParticipants.findIndex(
-			(participant) => participant.userId === userB,
+			(participant) => participant.peerId === peerB,
 		);
 		if (participantAIndex === -1 || participantBIndex === -1) {
 			throw new Error(
@@ -65,95 +65,95 @@ const getSortUsersByReceipt = (
 
 export const getItemCalculations = (
 	sum: number,
-	parts: Record<UserId, number>,
+	parts: Record<PeerId, number>,
 ) => {
 	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
-	const sumsByUser = mapValues(parts, (part) => (part / partsAmount) * sum);
-	const flooredByUsers = mapValues(sumsByUser, (sumByUser) =>
-		Math.floor(sumByUser),
+	const sumsByPeer = mapValues(parts, (part) => (part / partsAmount) * sum);
+	const flooredByPeers = mapValues(sumsByPeer, (sumByPeer) =>
+		Math.floor(sumByPeer),
 	);
-	const shortagesByUsers = mapValues(
-		sumsByUser,
-		(sumByUser) => sumByUser - Math.floor(sumByUser),
+	const shortagesByPeers = mapValues(
+		sumsByPeer,
+		(sumByPeer) => sumByPeer - Math.floor(sumByPeer),
 	);
-	const flooredSum = values(flooredByUsers).reduce(
-		(acc, flooredByUser) => acc + flooredByUser,
+	const flooredSum = values(flooredByPeers).reduce(
+		(acc, flooredByPeer) => acc + flooredByPeer,
 		0,
 	);
 	return {
-		flooredByUsers,
-		shortagesByUsers,
+		flooredByPeers,
+		shortagesByPeers,
 		leftover: sum - flooredSum,
 	};
 };
 
 const distributeLeftovers = (
-	shortagesByUsers: Record<UserId, number>,
+	shortagesByPeers: Record<PeerId, number>,
 	initialLeftover: number,
-	sortUsers: (userA: UserId, userB: UserId) => number,
+	sortPeers: (peerA: PeerId, peerB: PeerId) => number,
 ) => {
-	const reimbursedByUsers = mapValues(shortagesByUsers, (shortage) =>
+	const reimbursedByPeers = mapValues(shortagesByPeers, (shortage) =>
 		Math.trunc(shortage),
 	);
-	const totalReimbursed = values(reimbursedByUsers).reduce(
+	const totalReimbursed = values(reimbursedByPeers).reduce(
 		(acc, reimbursed) => acc + reimbursed,
 		0,
 	);
-	const notReimbursedByUsers = mapValues(
-		shortagesByUsers,
-		(shortage, userId) => shortage - (reimbursedByUsers[userId] ?? 0),
+	const notReimbursedByPeers = mapValues(
+		shortagesByPeers,
+		(shortage, peerId) => shortage - (reimbursedByPeers[peerId] ?? 0),
 	);
 	const luckyLeftover = initialLeftover - totalReimbursed;
 	if (luckyLeftover < 0) {
 		throw new Error("Unexpected negative lucky leftover");
 	}
-	if (luckyLeftover > keys(shortagesByUsers).length) {
-		throw new Error("Unexpected lucky leftover bigger than users left");
+	if (luckyLeftover > keys(shortagesByPeers).length) {
+		throw new Error("Unexpected lucky leftover bigger than peers left");
 	}
 
-	const notReimbursedOrder = entries(notReimbursedByUsers).toSorted(
-		([userA, userANotReimbursed], [userB, userBNotReimbursed]) => {
-			const notReimbursedDelta = userBNotReimbursed - userANotReimbursed;
-			return notReimbursedDelta || sortUsers(userA, userB);
+	const notReimbursedOrder = entries(notReimbursedByPeers).toSorted(
+		([peerA, peerANotReimbursed], [peerB, peerBNotReimbursed]) => {
+			const notReimbursedDelta = peerBNotReimbursed - peerANotReimbursed;
+			return notReimbursedDelta || sortPeers(peerA, peerB);
 		},
 	);
 	const luckyLeftovers = fromEntries(
-		notReimbursedOrder.map(([userId], index) => [
-			userId,
+		notReimbursedOrder.map(([peerId], index) => [
+			peerId,
 			index + 1 <= luckyLeftover ? 1 : 0,
 		]),
 	);
-	const totalByUsers = mapValues(
-		reimbursedByUsers,
-		(reimbursed, userId) => reimbursed + (luckyLeftovers[userId] ?? 0),
+	const totalByPeers = mapValues(
+		reimbursedByPeers,
+		(reimbursed, peerId) => reimbursed + (luckyLeftovers[peerId] ?? 0),
 	);
 	if (
-		initialLeftover !== values(totalByUsers).reduce((acc, sum) => acc + sum, 0)
+		initialLeftover !== values(totalByPeers).reduce((acc, sum) => acc + sum, 0)
 	) {
 		throw new Error(
 			"Unexpected total after reimbursement differs from initial leftover",
 		);
 	}
-	return totalByUsers;
+	return totalByPeers;
 };
 
-const getUserSums = (
+const getPeerSums = (
 	sum: number,
-	parts: Record<UserId, number>,
-	sortUsers: (userA: UserId, userB: UserId) => number,
+	parts: Record<PeerId, number>,
+	sortPeers: (peerA: PeerId, peerB: PeerId) => number,
 ) => {
-	const { flooredByUsers, shortagesByUsers, leftover } = getItemCalculations(
+	const { flooredByPeers, shortagesByPeers, leftover } = getItemCalculations(
 		sum,
 		parts,
 	);
 	const distributedLeftovers = distributeLeftovers(
-		shortagesByUsers,
+		shortagesByPeers,
 		leftover,
-		sortUsers,
+		sortPeers,
 	);
 	return mapValues(
-		flooredByUsers,
-		(value, userId) => value + (distributedLeftovers[userId] ?? 0),
+		flooredByPeers,
+		(value, peerId) => value + (distributedLeftovers[peerId] ?? 0),
 	);
 };
 
@@ -161,7 +161,7 @@ const getPayersSums = (
 	commonPayers: ReceiptItem["consumers"],
 	items: ReceiptItem[],
 	fromUnitToSubunit: (input: number) => number,
-	sortUsers: (userA: UserId, userB: UserId) => number,
+	sortPeers: (peerA: PeerId, peerB: PeerId) => number,
 ) => {
 	const separatelyPayedItems = items.filter((item) => item.payers.length !== 0);
 	const separatelyPayedSum = separatelyPayedItems.reduce(
@@ -176,27 +176,27 @@ const getPayersSums = (
 
 	const separatelyPayedSumsByItem = separatelyPayedItems.map((item) => ({
 		itemId: item.id,
-		sums: getUserSums(
+		sums: getPeerSums(
 			fromUnitToSubunit(item.price * item.quantity),
-			fromEntries(item.payers.map(({ userId, part }) => [userId, part])),
-			sortUsers,
+			fromEntries(item.payers.map(({ peerId, part }) => [peerId, part])),
+			sortPeers,
 		),
 	}));
-	const commonlyPayedSums = getUserSums(
+	const commonlyPayedSums = getPeerSums(
 		commonlyPayedSum,
-		fromEntries(commonPayers.map(({ userId, part }) => [userId, part])),
-		sortUsers,
+		fromEntries(commonPayers.map(({ peerId, part }) => [peerId, part])),
+		sortPeers,
 	);
-	const allPayers = unique<UserId[]>([
+	const allPayers = unique<PeerId[]>([
 		...separatelyPayedSumsByItem.flatMap((item) => keys(item.sums)),
 		...keys(commonlyPayedSums),
 	]);
 	const payersSums = fromEntries(
 		allPayers.map((payerId) => {
 			const commonPayedSum = commonlyPayedSums[payerId] ?? 0;
-			const itemPayedSums = separatelyPayedSumsByItem.map((sumsByUsers) => ({
-				itemId: sumsByUsers.itemId,
-				sum: sumsByUsers.sums[payerId] ?? 0,
+			const itemPayedSums = separatelyPayedSumsByItem.map((sumsByPeers) => ({
+				itemId: sumsByPeers.itemId,
+				sum: sumsByPeers.sums[payerId] ?? 0,
 			}));
 			return [
 				payerId,
@@ -270,7 +270,7 @@ const getPayersSums = (
 	(2nd) P3
 	(3rd) P1
 
-	* Die orders participants by creation date, if equal - by user id,
+	* Die orders participants by creation date, if equal - by peer id,
 	then rotate the array of participants based on receipt id (statistically random)
 
 	Finally, we give one cent to each participant with index less than amount of leftover (which is 1)
@@ -291,7 +291,7 @@ const getPayersSums = (
 */
 export const getParticipantSums = (
 	receiptId: ReceiptId,
-	ownerUserId: UserId,
+	ownerPeerId: PeerId,
 	items: ReceiptItem[],
 	participants: ReceiptParticipant[],
 	payers: ReceiptItem["consumers"],
@@ -305,32 +305,32 @@ export const getParticipantSums = (
 		(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
 		0,
 	);
-	const sortUsersByReceipt = getSortUsersByReceipt(receiptId, participants);
+	const sortPeersByReceipt = getSortPeersByReceipt(receiptId, participants);
 	const allParticipantsIds = fromEntries(
-		participants.map((participant) => [participant.userId, 0]),
+		participants.map((participant) => [participant.peerId, 0]),
 	);
 	const itemCalculations = itemsWithConsumers.map((item) => ({
 		id: item.id,
 		...getItemCalculations(
 			fromUnitToSubunit(item.price * item.quantity),
-			fromEntries(item.consumers.map(({ userId, part }) => [userId, part])),
+			fromEntries(item.consumers.map(({ peerId, part }) => [peerId, part])),
 		),
 	}));
-	const flooredByUsers = itemCalculations.reduce<Record<UserId, number>>(
+	const flooredByPeers = itemCalculations.reduce<Record<PeerId, number>>(
 		(acc, itemCalculation) =>
 			mapValues(
 				allParticipantsIds,
-				(_, userId) =>
-					(acc[userId] ?? 0) + (itemCalculation.flooredByUsers[userId] ?? 0),
+				(_, peerId) =>
+					(acc[peerId] ?? 0) + (itemCalculation.flooredByPeers[peerId] ?? 0),
 			),
 		{},
 	);
-	const shortagesByUsers = itemCalculations.reduce<Record<UserId, number>>(
+	const shortagesByPeers = itemCalculations.reduce<Record<PeerId, number>>(
 		(acc, itemCalculation) =>
 			mapValues(
 				allParticipantsIds,
-				(_, userId) =>
-					(acc[userId] ?? 0) + (itemCalculation.shortagesByUsers[userId] ?? 0),
+				(_, peerId) =>
+					(acc[peerId] ?? 0) + (itemCalculation.shortagesByPeers[peerId] ?? 0),
 			),
 		{},
 	);
@@ -340,13 +340,13 @@ export const getParticipantSums = (
 	);
 	const distributedLeftovers = distributeLeftovers(
 		// Not distributing leftovers amongst those who don't participate
-		omitBy(shortagesByUsers, (value) => value === 0) as Record<UserId, number>,
+		omitBy(shortagesByPeers, (value) => value === 0) as Record<PeerId, number>,
 		totalLeftover,
-		sortUsersByReceipt,
+		sortPeersByReceipt,
 	);
 	const debtSums = mapValues(
-		flooredByUsers,
-		(value, userId) => value + (distributedLeftovers[userId] ?? 0),
+		flooredByPeers,
+		(value, peerId) => value + (distributedLeftovers[peerId] ?? 0),
 	);
 
 	if (totalSum !== values(debtSums).reduce((acc, sum) => acc + sum, 0)) {
@@ -357,7 +357,7 @@ export const getParticipantSums = (
 		payers.length === 0
 			? [
 					{
-						userId: ownerUserId,
+						peerId: ownerPeerId,
 						part: 1,
 					},
 				]
@@ -366,11 +366,11 @@ export const getParticipantSums = (
 		surePayers,
 		items,
 		fromUnitToSubunit,
-		sortUsersByReceipt,
+		sortPeersByReceipt,
 	);
 
-	return participants.map(({ userId }) => {
-		const payerObject = payersSums[userId] ?? {
+	return participants.map(({ peerId }) => {
+		const payerObject = payersSums[peerId] ?? {
 			common: 0,
 			items: [],
 			total: 0,
@@ -378,16 +378,16 @@ export const getParticipantSums = (
 		const flooredDebts = itemCalculations
 			.map((item) => ({
 				itemId: item.id,
-				sum: item.flooredByUsers[userId] ?? 0,
-				shortage: item.shortagesByUsers[userId] ?? 0,
+				sum: item.flooredByPeers[peerId] ?? 0,
+				shortage: item.shortagesByPeers[peerId] ?? 0,
 			}))
 			.filter(({ sum, shortage }) => sum !== 0 || shortage !== 0);
 		// Sometimes there's a rounding error around here
 		const totalPayment = Math.round(payerObject.total);
 		// Sometimes there's a rounding error around here
-		const totalDebt = Math.round(debtSums[userId] ?? 0);
+		const totalDebt = Math.round(debtSums[peerId] ?? 0);
 		return {
-			userId,
+			peerId,
 			payment: {
 				// Sometimes there's a rounding error around here
 				total: fromSubunitToUnit(totalPayment),
@@ -403,7 +403,7 @@ export const getParticipantSums = (
 					...item,
 					sum: fromSubunitToUnit(item.sum),
 				})),
-				leftover: fromSubunitToUnit(distributedLeftovers[userId] ?? 0),
+				leftover: fromSubunitToUnit(distributedLeftovers[peerId] ?? 0),
 			},
 			balance: fromSubunitToUnit(totalDebt - totalPayment),
 		};

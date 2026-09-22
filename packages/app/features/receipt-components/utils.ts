@@ -8,7 +8,7 @@ export const SORT_USERS = (
 ) => {
 	const delta = Temporal.ZonedDateTime.compare(a.createdAt, b.createdAt);
 	if (delta === 0) {
-		return a.userId.localeCompare(b.userId);
+		return a.peerId.localeCompare(b.peerId);
 	}
 	return delta;
 };

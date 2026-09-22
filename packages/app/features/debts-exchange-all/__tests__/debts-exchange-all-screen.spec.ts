@@ -38,24 +38,24 @@ const generateDebtsWithResolvedPair: GenerateDebts = (opts) => {
 
 test.describe("Header", () => {
 	test("Title", async ({ mockDebts, page }) => {
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
-		await expect(page).toHaveTitle("RA - Exchange all user debts");
+		await expect(page).toHaveTitle("RA - Exchange all peer debts");
 	});
 
 	test("Back button", async ({ mockDebts, backLink, page }) => {
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 		await backLink.click();
 		await page.expectUrl({
-			to: "/debts/user/$id/exchange",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange",
+			params: { id: debtPeer.id },
 		});
 	});
 });
@@ -68,12 +68,12 @@ test.describe("Currencies group", () => {
 		currencyGroupButtonByCode,
 		plannedDebtsForm,
 	}) => {
-		const { debtUser, debts } = await mockDebts({
+		const { debtPeer, debts } = await mockDebts({
 			generateDebts: generateDebtsWithResolvedPair,
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		assert.ok(debts[0]);
@@ -99,18 +99,18 @@ test.describe("Currencies group", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		const [fromDebt] = debts;
 		assert.ok(fromDebt);
 		await currencyGroupButtonByCode(fromDebt.currencyCode).click();
 		await page.expectUrl({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromDebt.currencyCode },
 		});
 		await awaitCacheKey("currency.rates", {
@@ -131,11 +131,11 @@ test.describe("Currencies group", () => {
 		currencyGroupButton,
 		page,
 	}) => {
-		const { debtUser } = await mockDebts();
+		const { debtPeer } = await mockDebts();
 		api.mockFirst("currency.top", { items: [] });
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		await currencyGroupButton.filter({ hasText: "Other" }).click();
@@ -144,8 +144,8 @@ test.describe("Currencies group", () => {
 		await page.keyboard.press("Escape");
 		await expect(currenciesPicker).toBeHidden();
 		await page.expectUrl({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 		await expect(currencyGroupButton.last()).toHaveText("Other");
 	});
@@ -160,11 +160,11 @@ test.describe("Currencies group", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		api.mockFirst("currency.top", { items: [] });
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		await currencyGroupButton.filter({ hasText: "Other" }).click();
@@ -177,8 +177,8 @@ test.describe("Currencies group", () => {
 		await currencyButton(foreignCurrencyCode).click();
 		await expect(currenciesPicker).toBeHidden();
 		await page.expectUrl({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: foreignCurrencyCode },
 		});
 		await awaitCacheKey("currency.rates", {
@@ -203,15 +203,15 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser, debts } = await mockDebts({
+		const { debtPeer, debts } = await mockDebts({
 			generateDebts: generateDebtsWithResolvedPair,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: true,
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 		await expect(debtsGroupElement).toHaveCount(
 			new Set(debts.map((debt) => debt.currencyCode)).size,
@@ -224,15 +224,15 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser, debts } = await mockDebts({
+		const { debtPeer, debts } = await mockDebts({
 			generateDebts: generateDebtsWithResolvedPair,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: false,
 		});
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 		await expect(debtsGroupElement).toHaveCount(
 			debts.filter((debt) => debt.sum !== 0).length,

@@ -21,18 +21,18 @@ test.describe("Form", () => {
 		plannedDebtsForm,
 		snapshotQueries,
 	}) => {
-		const { debtUser, debts, rates } = await mockDebts();
+		const { debtPeer, debts, rates } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await snapshotQueries(
 			() =>
 				page.navigate({
-					to: "/debts/user/$id/exchange/all",
-					params: { id: debtUser.id },
+					to: "/debts/peer/$id/exchange/all",
+					params: { id: debtPeer.id },
 					search: { from: fromCurrencyCode },
 				}),
 			{
-				blacklistKeys: ["users.get"],
+				blacklistKeys: ["peers.get"],
 			},
 		);
 
@@ -102,12 +102,12 @@ test.describe("Form", () => {
 		sendButton,
 		page,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -134,7 +134,7 @@ test.describe("Form", () => {
 			min: 3,
 			max: 6,
 		}).toSorted();
-		const { debtUser, debts, rates } = await mockDebts({
+		const { debtPeer, debts, rates } = await mockDebts({
 			generateDebts: (opts) =>
 				defaultGenerateDebts({ ...opts, amount: currencyCodes.length }).map(
 					(debt, index) => {
@@ -155,8 +155,8 @@ test.describe("Form", () => {
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -201,7 +201,7 @@ test.describe("Form", () => {
 		rateInput,
 		plannedDebtsForm,
 	}) => {
-		const { debtUser, debts } = await mockDebts({
+		const { debtPeer, debts } = await mockDebts({
 			generateDebts: (opts) =>
 				defaultGenerateDebts({ ...opts, amount: 4 }).map((debt, index) =>
 					index < 2
@@ -216,8 +216,8 @@ test.describe("Form", () => {
 		assert.ok(debts[2]);
 		const fromCurrencyCode = debts[2].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -231,7 +231,7 @@ test.describe("Form", () => {
 		);
 	});
 
-	test("Shows only the selected currency when the user has no debts", async ({
+	test("Shows only the selected currency when the peer has no debts", async ({
 		page,
 		mockDebts,
 		plannedDebtsForm,
@@ -239,15 +239,15 @@ test.describe("Form", () => {
 		snapshotQueries,
 		faker,
 	}) => {
-		const { debtUser } = await mockDebts({ generateDebts: () => [] });
+		const { debtPeer } = await mockDebts({ generateDebts: () => [] });
 		await snapshotQueries(
 			() =>
 				page.navigate({
-					to: "/debts/user/$id/exchange/all",
-					params: { id: debtUser.id },
+					to: "/debts/peer/$id/exchange/all",
+					params: { id: debtPeer.id },
 					search: { from: generateCurrencyCode(faker) },
 				}),
-			{ blacklistKeys: "users.get" },
+			{ blacklistKeys: "peers.get" },
 		);
 
 		await expect(plannedDebtsForm.getByRole("textbox")).toHaveCount(0);
@@ -264,7 +264,7 @@ test.describe("Mutations", () => {
 		withLoader,
 		verifyToastTexts,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		const createPause = api.createPause();
 		api.mockFirst("debts.add", async () => {
 			await createPause.promise;
@@ -277,8 +277,8 @@ test.describe("Mutations", () => {
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -293,7 +293,7 @@ test.describe("Mutations", () => {
 		await expect(sendButton).toBeDisabled();
 	});
 
-	test("Submits all debts and navigates to the user page", async ({
+	test("Submits all debts and navigates to the peer page", async ({
 		api,
 		mockDebts,
 		sendButton,
@@ -302,7 +302,7 @@ test.describe("Mutations", () => {
 		snapshotQueries,
 		page,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		api.mockFirst("debts.add", () => ({
 			id: "test-debt-id",
 			updatedAt: Temporal.Now.zonedDateTimeISO(),
@@ -311,13 +311,13 @@ test.describe("Mutations", () => {
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
-		api.mockFirst("debts.getAllUser", { items: [] });
-		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
+		api.mockFirst("debts.getAllPeer", { items: [] });
+		api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
 
 		const plannedDebtsAmount = getPlannedDebtsAmount(debts, fromCurrencyCode);
 		await snapshotQueries(
@@ -332,15 +332,15 @@ test.describe("Mutations", () => {
 			},
 			{
 				blacklistKeys: [
-					"debts.getAllUser",
-					"debts.getByUserPaged",
+					"debts.getAllPeer",
+					"debts.getByPeerPaged",
 					"currency.rates",
 				],
 			},
 		);
 		await page.expectUrl({
-			to: "/debts/user/$id",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id",
+			params: { id: debtPeer.id },
 		});
 	});
 
@@ -353,7 +353,7 @@ test.describe("Mutations", () => {
 		verifyToastTexts,
 		snapshotQueries,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		const mockErrorMessage = `Mock "debts.add" error`;
 		api.mockFirst("debts.add", () => {
 			throw new TRPCError({
@@ -364,8 +364,8 @@ test.describe("Mutations", () => {
 		assert.ok(debts[0]);
 		const fromCurrencyCode = debts[0].currencyCode;
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 			search: { from: fromCurrencyCode },
 		});
 
@@ -391,7 +391,7 @@ test.describe("Other", () => {
 		errorMessage,
 		consoleManager,
 	}) => {
-		const { debtUser, debts } = await mockDebts();
+		const { debtPeer, debts } = await mockDebts();
 		const mockErrorMessage = `Mock "currency.rates" error`;
 		api.mockFirst("currency.rates", () => {
 			throw new TRPCError({
@@ -401,8 +401,8 @@ test.describe("Other", () => {
 		});
 		consoleManager.ignore(mockErrorMessage);
 		await page.navigate({
-			to: "/debts/user/$id/exchange/all",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id/exchange/all",
+			params: { id: debtPeer.id },
 		});
 
 		const fromDebt = debts.find((debt) => debt.sum !== 0);

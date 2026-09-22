@@ -1,7 +1,7 @@
 import { updateRevert as updateRevertAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
-import { updateUserConnected } from "./utils";
+import { updatePeerConnected } from "./utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.accept"> =
 	{
@@ -11,13 +11,13 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				getAll: (controller) => controller.inbound.remove(variables.accountId),
 			}),
 		onSuccess: (controllerContext) => (account, variables) => {
-			updateUserConnected(controllerContext, variables.userId, account);
+			updatePeerConnected(controllerContext, variables.peerId, account);
 		},
 		errorToastOptions:
 			({ t }) =>
 			(errors) => ({
 				text: t("toasts.acceptInvite.error", {
-					ns: "users",
+					ns: "peers",
 					invitesAmount: errors.length,
 					errors,
 				}),

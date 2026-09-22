@@ -6,18 +6,18 @@ import { partSchema } from "~app/utils/validation";
 import type { DB } from "~db/types.gen";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
+import { peerIdSchema, receiptItemIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Update receipt item consumer",
 		description:
-			"Updates the consumed part share of a userId for a given receipt item.",
+			"Updates the consumed part share of a peerId for a given receipt item.",
 	})
 	.input(
 		z.strictObject({
 			itemId: receiptItemIdSchema,
-			userId: userIdSchema,
+			peerId: peerIdSchema,
 			update: z.strictObject({
 				type: z.literal("part"),
 				part: partSchema,
@@ -60,7 +60,7 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({
 					itemId: input.itemId,
-					userId: input.userId,
+					peerId: input.peerId,
 				}),
 			)
 			.select([])
@@ -69,7 +69,7 @@ export const procedure = authProcedure
 		if (!receiptItemConsumer) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not consume item "${input.itemId}" of the receipt "${receipt.id}".`,
+				message: `Peer "${input.peerId}" does not consume item "${input.itemId}" of the receipt "${receipt.id}".`,
 			});
 		}
 		let setObject: Updateable<DB["receiptItemConsumers"]> = {};
@@ -86,7 +86,7 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({
 					itemId: input.itemId,
-					userId: input.userId,
+					peerId: input.peerId,
 				}),
 			)
 			.executeTakeFirst();

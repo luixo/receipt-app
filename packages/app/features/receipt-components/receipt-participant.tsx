@@ -5,7 +5,7 @@ import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
@@ -110,20 +110,20 @@ const RenderParticipantError = suspendedFallback<{
 			),
 		);
 		const isOwner = useIsOwner();
-		const { data: user } = isOwner
+		const { data: peer } = isOwner
 			? useSuspenseQuery(
-					trpc.users.get.queryOptions({ id: participant.userId }),
+					trpc.peers.get.queryOptions({ id: participant.peerId }),
 				)
 			: { data: null };
 		const { t } = useTranslation("receipts");
-		const { selfUserId } = useReceiptContext();
+		const { selfPeerId } = useReceiptContext();
 		const error = getParticipantError(
 			t,
 			participant,
 			debt,
-			Boolean(user?.connectedAccount),
+			Boolean(peer?.connectedAccount),
 			isOwner,
-			participant.userId === selfUserId,
+			participant.peerId === selfPeerId,
 		);
 		return children(error);
 	},
@@ -148,21 +148,21 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const isOwner = useIsOwner();
 
 	const currentPart =
-		payers.find((payer) => payer.userId === participant.userId)?.part ?? 0;
+		payers.find((payer) => payer.peerId === participant.peerId)?.part ?? 0;
 	const addPayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.add">(
 			trpc.receiptItemConsumers.add.mutationKey(),
-			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
+			(vars) => vars.itemId === receiptId && vars.peerId === participant.peerId,
 		);
 	const removePayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.remove">(
 			trpc.receiptItemConsumers.remove.mutationKey(),
-			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
+			(vars) => vars.itemId === receiptId && vars.peerId === participant.peerId,
 		);
 	const updatePayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
 			trpc.receiptItemConsumers.update.mutationKey(),
-			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
+			(vars) => vars.itemId === receiptId && vars.peerId === participant.peerId,
 		);
 	const isPayerPending = getMutationLoading([
 		addPayerMutationState,
@@ -184,11 +184,11 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				return;
 			}
 			if (value.value === 0) {
-				removePayer(participant.userId, { onSuccess });
+				removePayer(participant.peerId, { onSuccess });
 			} else if (currentPart === 0 && value.value === 1) {
-				addPayer(participant.userId, value.value, { onSuccess });
+				addPayer(participant.peerId, value.value, { onSuccess });
 			} else {
-				updatePayerPart(participant.userId, value.value, { onSuccess });
+				updatePayerPart(participant.peerId, value.value, { onSuccess });
 			}
 		},
 		listeners: {
@@ -204,13 +204,13 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		useTrpcMutationState<"receiptParticipants.remove">(
 			trpc.receiptParticipants.remove.mutationKey(),
 			(vars) =>
-				vars.receiptId === receiptId && vars.userId === participant.userId,
+				vars.receiptId === receiptId && vars.peerId === participant.peerId,
 		);
 	const isPending = removeParticipantMutationState?.status === "pending";
 	const removeReceiptParticipant = React.useCallback(() => {
-		removeParticipant(participant.userId);
+		removeParticipant(participant.peerId);
 		form.setFieldValue("value", 0);
-	}, [form, participant.userId, removeParticipant]);
+	}, [form, participant.peerId, removeParticipant]);
 	const onAddPayer = React.useCallback(() => {
 		form.setFieldValue("value", 1);
 		onSubmitImmediate();
@@ -239,18 +239,18 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		<Accordion>
 			<AccordionItem
 				key="parts"
-				textValue={t("participant.title", { userId: participant.userId })}
+				textValue={t("participant.title", { peerId: participant.peerId })}
 				title={
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
 						<View className="flex flex-row items-center gap-1">
 							{currentPart ? (
 								<Icon name="money" className="text-secondary size-6" />
 							) : null}
-							<LoadableUser
+							<LoadablePeer
 								className={
 									disabled && !currentPart ? "opacity-disabled" : undefined
 								}
-								id={participant.userId}
+								id={participant.peerId}
 								foreign={!isOwner}
 							/>
 						</View>

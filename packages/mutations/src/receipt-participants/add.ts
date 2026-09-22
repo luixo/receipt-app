@@ -6,10 +6,10 @@ export const options: UseContextedMutationOptions<"receiptParticipants.add"> = {
 	onSuccess: (controllerContext) => (result, variables) => {
 		updateReceipts(controllerContext, {
 			get: (controller) => {
-				const selfUserId = controller.getData(variables.receiptId)?.selfUserId;
+				const selfPeerId = controller.getData(variables.receiptId)?.selfPeerId;
 				controller.addParticipant(variables.receiptId, {
-					userId: variables.userId,
-					role: variables.userId === selfUserId ? "owner" : variables.role,
+					peerId: variables.peerId,
+					role: variables.peerId === selfPeerId ? "owner" : variables.role,
 					createdAt: result.createdAt,
 				});
 			},

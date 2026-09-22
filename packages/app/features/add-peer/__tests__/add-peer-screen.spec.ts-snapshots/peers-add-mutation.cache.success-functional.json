@@ -1,0 +1,15 @@
+{
+	"mutations": {
+		"peers.add": {
+			"1": {
+				"state": {
+					"data": {
+						"id": "38519591-4bd1-4e5c-b91e-f156effbf753",
+						"connection": "<undefined>"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

@@ -6,12 +6,12 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -31,7 +31,7 @@ describe("receiptItemConsumers.add", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
 				itemId: faker.string.uuid(),
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 				part: 1,
 			}),
 		);
@@ -44,7 +44,7 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: "not-a-uuid",
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							part: 1,
 						}),
 					"BAD_REQUEST",
@@ -53,7 +53,7 @@ describe("receiptItemConsumers.add", () => {
 			});
 		});
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -61,11 +61,11 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: "not-a-uuid",
+							peerId: "not-a-uuid",
 							part: 1,
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -78,7 +78,7 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							part: -1,
 						}),
 					"BAD_REQUEST",
@@ -93,7 +93,7 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							part: 0,
 						}),
 					"BAD_REQUEST",
@@ -108,7 +108,7 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							part: 1.000001,
 						}),
 					"BAD_REQUEST",
@@ -123,7 +123,7 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							part: 10 ** 9 + 1,
 						}),
 					"BAD_REQUEST",
@@ -142,7 +142,7 @@ describe("receiptItemConsumers.add", () => {
 				() =>
 					caller.procedure({
 						itemId: fakeReceiptItemId,
-						userId: faker.string.uuid(),
+						peerId: faker.string.uuid(),
 						part: 1,
 					}),
 				"NOT_FOUND",
@@ -159,14 +159,14 @@ describe("receiptItemConsumers.add", () => {
 				ctx,
 				foreignAccountId,
 			);
-			const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 				foreignAccountId,
 				accountId,
 			]);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{ role: "viewer" },
 			);
 			const { id: receiptItemId } = await insertReceiptItem(
@@ -179,7 +179,7 @@ describe("receiptItemConsumers.add", () => {
 				() =>
 					caller.procedure({
 						itemId: receiptItemId,
-						userId: foreignToSelfUserId,
+						peerId: foreignToSelfPeerId,
 						part: 1,
 					}),
 				"FORBIDDEN",
@@ -187,23 +187,23 @@ describe("receiptItemConsumers.add", () => {
 			);
 		});
 
-		describe("user", () => {
+		describe("peer", () => {
 			test("does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-				const fakeUserId = faker.string.uuid();
+				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId: fakeUserId,
+							peerId: fakePeerId,
 							part: 1,
 						}),
 					"PRECONDITION_FAILED",
-					`User "${fakeUserId}" doesn't participate in receipt "${receiptId}".`,
+					`Peer "${fakePeerId}" doesn't participate in receipt "${receiptId}".`,
 				);
 			});
 
@@ -212,18 +212,18 @@ describe("receiptItemConsumers.add", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-				const { id: userId } = await insertUser(ctx, foreignAccountId);
+				const { id: peerId } = await insertPeer(ctx, foreignAccountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId,
+							peerId,
 							part: 1,
 						}),
 					"PRECONDITION_FAILED",
-					`User "${userId}" doesn't participate in receipt "${receiptId}".`,
+					`Peer "${peerId}" doesn't participate in receipt "${receiptId}".`,
 				);
 			});
 
@@ -234,22 +234,22 @@ describe("receiptItemConsumers.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 
-				const { id: participantUserId } = await insertUser(ctx, accountId);
-				await insertReceiptParticipant(ctx, receiptId, participantUserId);
-				await insertReceiptItemConsumer(ctx, receiptItemId, participantUserId);
-				const { id: anotherParticipantUserId } = await insertUser(
+				const { id: participantPeerId } = await insertPeer(ctx, accountId);
+				await insertReceiptParticipant(ctx, receiptId, participantPeerId);
+				await insertReceiptItemConsumer(ctx, receiptItemId, participantPeerId);
+				const { id: anotherParticipantPeerId } = await insertPeer(
 					ctx,
 					accountId,
 				);
 				await insertReceiptParticipant(
 					ctx,
 					receiptId,
-					anotherParticipantUserId,
+					anotherParticipantPeerId,
 				);
 				await insertReceiptItemConsumer(
 					ctx,
 					receiptItemId,
-					anotherParticipantUserId,
+					anotherParticipantPeerId,
 				);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -257,22 +257,22 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId: participantUserId,
+							peerId: participantPeerId,
 							part: 1,
 						}),
 					"CONFLICT",
-					`User "${participantUserId}" already consumes item "${receiptItemId}".`,
+					`Peer "${participantPeerId}" already consumes item "${receiptItemId}".`,
 				);
 			});
 		});
 
 		describe("multiple participants", () => {
-			test("duplicate tuples of user id and item id", async ({ ctx }) => {
+			test("duplicate tuples of peer id and item id", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-				const user = await insertUser(ctx, accountId);
-				await insertReceiptParticipant(ctx, receiptId, user.id);
+				const peer = await insertPeer(ctx, accountId);
+				await insertReceiptParticipant(ctx, receiptId, peer.id);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -281,18 +281,18 @@ describe("receiptItemConsumers.add", () => {
 							() =>
 								caller.procedure({
 									itemId: receiptItemId,
-									userId: user.id,
+									peerId: peer.id,
 									part: 1,
 								}),
 							() =>
 								caller.procedure({
 									itemId: receiptItemId,
-									userId: user.id,
+									peerId: peer.id,
 									part: 2,
 								}),
 						]),
 					"CONFLICT",
-					`Expected to have unique pair of item id and user id, got repeating pairs: item "${receiptItemId}" / user "${user.id}" (2 times).`,
+					`Expected to have unique pair of item id and peer id, got repeating pairs: item "${receiptItemId}" / peer "${peer.id}" (2 times).`,
 				);
 			});
 
@@ -301,8 +301,8 @@ describe("receiptItemConsumers.add", () => {
 
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-				const user = await insertUser(ctx, accountId);
-				await insertReceiptParticipant(ctx, receiptId, user.id);
+				const peer = await insertPeer(ctx, accountId);
+				await insertReceiptParticipant(ctx, receiptId, peer.id);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -310,14 +310,14 @@ describe("receiptItemConsumers.add", () => {
 						() =>
 							caller.procedure({
 								itemId: receiptItemId,
-								userId: user.id,
+								peerId: peer.id,
 								part: 1,
 							}),
 						() =>
 							caller
 								.procedure({
 									itemId: receiptItemId,
-									userId: "not a valid uuid",
+									peerId: "not a valid uuid",
 									part: 1,
 								})
 								.catch((error) => error),
@@ -339,7 +339,7 @@ describe("receiptItemConsumers.add", () => {
 			const {
 				sessionId,
 				accountId,
-				userId: selfUserId,
+				peerId: selfPeerId,
 			} = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
@@ -347,16 +347,16 @@ describe("receiptItemConsumers.add", () => {
 				ctx,
 				receiptId,
 			);
-			const user = await insertUser(ctx, accountId);
+			const peer = await insertPeer(ctx, accountId);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [foreignUser, foreignToSelfUser] = await insertConnectedUsers(ctx, [
+			const [foreignPeer, foreignToSelfPeer] = await insertConnectedPeers(ctx, [
 				accountId,
 				foreignAccountId,
 			]);
 
-			await insertReceiptParticipant(ctx, receiptId, selfUserId);
-			await insertReceiptParticipant(ctx, receiptId, user.id);
-			await insertReceiptParticipant(ctx, receiptId, foreignUser.id);
+			await insertReceiptParticipant(ctx, receiptId, selfPeerId);
+			await insertReceiptParticipant(ctx, receiptId, peer.id);
+			await insertReceiptParticipant(ctx, receiptId, foreignPeer.id);
 
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
@@ -365,7 +365,7 @@ describe("receiptItemConsumers.add", () => {
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
-				foreignToSelfUser.id,
+				foreignToSelfPeer.id,
 				{ role: "editor" },
 			);
 			const { id: foreignReceiptItemId } = await insertReceiptItem(
@@ -375,8 +375,8 @@ describe("receiptItemConsumers.add", () => {
 
 			// Verify unrelated data doesn't affect the result
 			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
-			const { id: anotherUserId } = await insertUser(ctx, accountId);
-			await insertReceiptParticipant(ctx, anotherReceiptId, anotherUserId);
+			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
+			await insertReceiptParticipant(ctx, anotherReceiptId, anotherPeerId);
 			await insertReceiptItem(ctx, anotherReceiptId);
 			const { id: anotherForeignReceiptId } = await insertReceipt(
 				ctx,
@@ -385,10 +385,10 @@ describe("receiptItemConsumers.add", () => {
 			await insertReceiptParticipant(
 				ctx,
 				anotherForeignReceiptId,
-				foreignToSelfUser.id,
+				foreignToSelfPeer.id,
 			);
 			await insertReceiptItem(ctx, anotherForeignReceiptId);
-			await insertReceiptItemConsumer(ctx, anotherReceiptItemId, user.id);
+			await insertReceiptItemConsumer(ctx, anotherReceiptItemId, peer.id);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -396,37 +396,37 @@ describe("receiptItemConsumers.add", () => {
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId: selfUserId,
+							peerId: selfPeerId,
 							part: 1,
 						}),
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId: user.id,
+							peerId: peer.id,
 							part: 0.1,
 						}),
 					() =>
 						caller.procedure({
 							itemId: receiptItemId,
-							userId: foreignUser.id,
+							peerId: foreignPeer.id,
 							part: 3,
 						}),
 					() =>
 						caller.procedure({
 							itemId: anotherReceiptItemId,
-							userId: selfUserId,
+							peerId: selfPeerId,
 							part: 1,
 						}),
 					() =>
 						caller.procedure({
 							itemId: anotherReceiptItemId,
-							userId: foreignUser.id,
+							peerId: foreignPeer.id,
 							part: 2,
 						}),
 					() =>
 						caller.procedure({
 							itemId: foreignReceiptItemId,
-							userId: foreignToSelfUser.id,
+							peerId: foreignToSelfPeer.id,
 							part: 1,
 						}),
 				]),

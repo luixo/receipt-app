@@ -1,0 +1,105 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"test-debt-id\"}]": {
+			"state": {
+				"data": {
+					"id": "test-debt-id",
+					"amount": -88.43,
+					"currencyCode": "LYD",
+					"peerId": "ea940992-6757-4760-a4bf-90f927a5dbab",
+					"timestamp": "2019-12-31",
+					"note": "Converted from -$9,840.95, -SGD 1,791.05, -BGN 1,033.10",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 4,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to LYD 84.000",
+						"currencyCode": "USD",
+						"peerId": "ea940992-6757-4760-a4bf-90f927a5dbab",
+						"amount": 9840.95,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to LYD 2.960",
+						"currencyCode": "SGD",
+						"peerId": "ea940992-6757-4760-a4bf-90f927a5dbab",
+						"amount": 1791.05,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted to LYD 1.470",
+						"currencyCode": "BGN",
+						"peerId": "ea940992-6757-4760-a4bf-90f927a5dbab",
+						"amount": 1033.1,
+						"timestamp": "2019-12-31"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "test-debt-id",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Converted from -$9,840.95, -SGD 1,791.05, -BGN 1,033.10",
+						"currencyCode": "LYD",
+						"peerId": "ea940992-6757-4760-a4bf-90f927a5dbab",
+						"amount": -88.43,
+						"timestamp": "2019-12-31"
+					}
+				}
+			}
+		]
+	}
+}

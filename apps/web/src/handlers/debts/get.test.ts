@@ -5,10 +5,10 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertSyncedDebts,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -48,8 +48,8 @@ describe("debts.get", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
 			// Verifying adding other debts doesn't affect the error
-			const { id: userId } = await insertUser(ctx, accountId);
-			await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakeDebtId = faker.string.uuid();
@@ -65,11 +65,11 @@ describe("debts.get", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			// Foreign account
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 			const { id: foreignDebtId } = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignUserId,
+				foreignPeerId,
 			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -84,18 +84,18 @@ describe("debts.get", () => {
 	describe("functionality", () => {
 		test("debt is fetched", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
-			const debt = await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			const debt = await insertDebt(ctx, accountId, peerId);
 
-			// Verify other users do not interfere
-			const { id: otherUserId } = await insertUser(ctx, accountId);
-			await insertDebt(ctx, accountId, otherUserId);
+			// Verify other peers do not interfere
+			const { id: otherPeerId } = await insertPeer(ctx, accountId);
+			await insertDebt(ctx, accountId, otherPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: debt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: debt.id,
-				userId,
+				peerId,
 				currencyCode: debt.currencyCode,
 				timestamp: debt.timestamp,
 				note: debt.note,
@@ -110,12 +110,12 @@ describe("debts.get", () => {
 			test("foreign sync intended", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: userId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 				const [debt, foreignDebt] = await insertSyncedDebts(
 					ctx,
-					[accountId, userId],
-					[foreignAccountId, foreignToSelfUserId],
+					[accountId, peerId],
+					[foreignAccountId, foreignToSelfPeerId],
 					{
 						ahead: "their",
 						fn: (originalDebt) => ({
@@ -125,15 +125,15 @@ describe("debts.get", () => {
 					},
 				);
 
-				// Verify other users do not interfere
-				const { id: otherUserId } = await insertUser(ctx, accountId);
-				await insertDebt(ctx, accountId, otherUserId);
+				// Verify other peers do not interfere
+				const { id: otherPeerId } = await insertPeer(ctx, accountId);
+				await insertDebt(ctx, accountId, otherPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: debt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: debt.id,
-					userId,
+					peerId,
 					currencyCode: debt.currencyCode,
 					timestamp: debt.timestamp,
 					note: debt.note,

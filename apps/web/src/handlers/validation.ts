@@ -38,4 +38,4 @@ export const UUID_REGEX =
 
 export const MAX_INTENTIONS_AMOUNT = 3;
 
-export { accountIdSchema, userIdSchema } from "~app/utils/validation";
+export { accountIdSchema, peerIdSchema } from "~app/utils/validation";

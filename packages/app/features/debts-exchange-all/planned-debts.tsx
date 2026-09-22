@@ -26,7 +26,7 @@ import { Skeleton } from "~components/skeleton";
 import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { round } from "~utils/math";
 
@@ -105,16 +105,16 @@ const getDebt = (
 
 type Props = {
 	selectedCurrencyCode: CurrencyCode;
-	userId: UserId;
+	peerId: PeerId;
 	onDone: () => void;
 };
 
 export const PlannedDebts: React.FC<Props> = suspendedFallback(
-	({ selectedCurrencyCode, userId, onDone }) => {
+	({ selectedCurrencyCode, peerId, onDone }) => {
 		const { t } = useTranslation("debts");
 		const trpc = useTRPC();
 		const { data: debts } = useSuspenseQuery(
-			trpc.debts.getAllUser.queryOptions({ userId }),
+			trpc.debts.getAllPeer.queryOptions({ peerId }),
 		);
 		const nonResolvedDebts = debts.items.filter((element) => element.sum !== 0);
 		const allCurrencyCodes = unique([
@@ -178,7 +178,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 						const mutationVars = {
 							note: debt.note,
 							currencyCode,
-							userId,
+							peerId,
 							amount: debt.amount,
 							timestamp: Temporal.Now.plainDateISO(),
 						};

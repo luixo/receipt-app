@@ -5,11 +5,11 @@ import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
 import emailEn from "@ra/web/public/locales/en/email.json";
 import loginEn from "@ra/web/public/locales/en/login.json";
+import peersEn from "@ra/web/public/locales/en/peers.json";
 import receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import registerEn from "@ra/web/public/locales/en/register.json";
 import resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import settingsEn from "@ra/web/public/locales/en/settings.json";
-import usersEn from "@ra/web/public/locales/en/users.json";
 import voidAccountEn from "@ra/web/public/locales/en/void-account.json";
 import accountRu from "@ra/web/public/locales/ru/account.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
@@ -17,11 +17,11 @@ import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
 import emailRu from "@ra/web/public/locales/ru/email.json";
 import loginRu from "@ra/web/public/locales/ru/login.json";
+import peersRu from "@ra/web/public/locales/ru/peers.json";
 import receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import registerRu from "@ra/web/public/locales/ru/register.json";
 import resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import settingsRu from "@ra/web/public/locales/ru/settings.json";
-import usersRu from "@ra/web/public/locales/ru/users.json";
 import voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
 /* oxlint-enable import-js/no-extraneous-dependencies */
 
@@ -38,7 +38,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		register: registerEn,
 		"reset-password": resetPasswordEn,
 		"void-account": voidAccountEn,
-		users: usersEn,
+		peers: peersEn,
 		debts: debtsEn,
 		email: emailEn,
 	},
@@ -52,7 +52,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		register: registerRu,
 		"reset-password": resetPasswordRu,
 		"void-account": voidAccountRu,
-		users: usersRu,
+		peers: peersRu,
 		debts: debtsRu,
 		email: emailRu,
 	},

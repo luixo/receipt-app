@@ -2,8 +2,8 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { LoadableUserAvatar } from "~app/components/app/loadable-user-avatar";
-import { UsersSuggest } from "~app/components/app/users-suggest";
+import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
+import { PeersSuggest } from "~app/components/app/peers-suggest";
 import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { ReceiptDebts } from "~app/trpc-types";
@@ -15,7 +15,7 @@ import { Modal } from "~components/modal";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
@@ -25,17 +25,17 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	switchModal,
 }) => {
 	const { t } = useTranslation("receipts");
-	const { participants, ownerUserId, payers } = useReceiptContext();
+	const { participants, ownerPeerId, payers } = useReceiptContext();
 	const isOwner = useIsOwner();
 	if (participants.length === 0) {
 		return <Button onPress={switchModal}>{t("participants.addButton")}</Button>;
 	}
-	const payerParticipants = participants.filter(({ userId }) =>
-		payers.some((payer) => payer.userId === userId),
+	const payerParticipants = participants.filter(({ peerId }) =>
+		payers.some((payer) => payer.peerId === peerId),
 	);
 	const surePayerParticipants =
 		payerParticipants.length === 0
-			? [{ userId: ownerUserId, part: 1 }]
+			? [{ peerId: ownerPeerId, part: 1 }]
 			: payerParticipants;
 	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
@@ -49,9 +49,9 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						by: (
 							<AvatarGroup>
 								{surePayerParticipants.map((participant) => (
-									<LoadableUserAvatar
-										key={participant.userId}
-										id={participant.userId}
+									<LoadablePeerAvatar
+										key={participant.peerId}
+										id={participant.peerId}
 										foreign={!isOwner && payerParticipants.length !== 0}
 										dimmed={payerParticipants.length === 0}
 									/>
@@ -71,9 +71,9 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 							for: (
 								<AvatarGroup>
 									{debtParticipants.map((participant) => (
-										<LoadableUserAvatar
-											key={participant.userId}
-											id={participant.userId}
+										<LoadablePeerAvatar
+											key={participant.peerId}
+											id={participant.peerId}
 											foreign={!isOwner}
 										/>
 									))}
@@ -142,29 +142,29 @@ export const ReceiptParticipants: React.FC<{
 	debts?: ReceiptDebts;
 }> = ({ debts }) => {
 	const { t } = useTranslation("receipts");
-	const { receiptDisabled, participants, selfUserId, getUsersSuggestOptions } =
+	const { receiptDisabled, participants, selfPeerId, getPeersSuggestOptions } =
 		useReceiptContext();
 	const isOwner = useIsOwner();
 	const [isModalOpen, { switchValue: switchModalOpen }] = useBooleanState();
 	const isSelfAdded = participants.some(
-		(participant) => participant.userId === selfUserId,
+		(participant) => participant.peerId === selfPeerId,
 	);
-	const [localFilterIds, setLocalFilterIds] = React.useState<UserId[]>([]);
+	const [localFilterIds, setLocalFilterIds] = React.useState<PeerId[]>([]);
 	const { addParticipant } = useActionsHooksContext();
 
-	const onUserClick = React.useCallback(
-		(userId: UserId) => {
-			setLocalFilterIds((prevIds) => [...prevIds, userId]);
-			addParticipant(userId, "editor", {
+	const onPeerClick = React.useCallback(
+		(peerId: PeerId) => {
+			setLocalFilterIds((prevIds) => [...prevIds, peerId]);
+			addParticipant(peerId, "editor", {
 				onSettled: () =>
-					setLocalFilterIds((prevIds) => prevIds.filter((id) => id !== userId)),
+					setLocalFilterIds((prevIds) => prevIds.filter((id) => id !== peerId)),
 			});
 		},
 		[addParticipant],
 	);
 	const suggestOptions = React.useMemo(
-		() => getUsersSuggestOptions(),
-		[getUsersSuggestOptions],
+		() => getPeersSuggestOptions(),
+		[getPeersSuggestOptions],
 	);
 	return (
 		<>
@@ -188,12 +188,12 @@ export const ReceiptParticipants: React.FC<{
 						<View className="flex flex-col gap-4 sm:gap-2">
 							{participants.map((participant) => (
 								<ReceiptParticipant
-									key={participant.userId}
+									key={participant.peerId}
 									participant={participant}
 									outcomingDebtId={
 										debts?.direction === "outcoming"
 											? debts.debts.find(
-													({ userId }) => participant.userId === userId,
+													({ peerId }) => participant.peerId === peerId,
 												)?.id
 											: undefined
 									}
@@ -204,12 +204,12 @@ export const ReceiptParticipants: React.FC<{
 					</>
 				)}
 				{isOwner ? (
-					<UsersSuggest
-						filterIds={participants.map((participant) => participant.userId)}
+					<PeersSuggest
+						filterIds={participants.map((participant) => participant.peerId)}
 						selected={localFilterIds}
 						multiselect
-						additionalIds={isSelfAdded ? [] : [selfUserId]}
-						onUserClick={onUserClick}
+						additionalIds={isSelfAdded ? [] : [selfPeerId]}
+						onPeerClick={onPeerClick}
 						isDisabled={receiptDisabled}
 						options={suggestOptions}
 						label={t("participants.picker.addLabel")}

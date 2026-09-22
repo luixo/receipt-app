@@ -9,7 +9,7 @@ import {
 	defaultGenerateDebtIntentions,
 	defaultGenerateDebts,
 } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 import { test as debtsScreenTest } from "./debts-screen.utils";
 
@@ -33,9 +33,9 @@ test.describe("On load", () => {
 					"Debts",
 				);
 				await expect(debtsGroup.first()).toBeVisible();
-				await awaitCacheKey("debts.getUsersPaged");
+				await awaitCacheKey("debts.getPeersPaged");
 			},
-			{ blacklistKeys: ["users.get"] },
+			{ blacklistKeys: ["peers.get"] },
 		);
 	});
 
@@ -46,12 +46,12 @@ test.describe("On load", () => {
 		snapshotQueries,
 	}) => {
 		await mockDebts({
-			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 0 }),
+			generatePeers: (opts) => defaultGeneratePeers({ ...opts, amount: 0 }),
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
 		});
 		await snapshotQueries(async () => {
 			await page.navigate({ to: "/debts" });
-			await awaitCacheKey("debts.getUsersPaged");
+			await awaitCacheKey("debts.getPeersPaged");
 		});
 		await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 			"No debts under given filters",
@@ -97,35 +97,35 @@ test("Show resolved debts toggle filters debts", async ({
 	);
 });
 
-test("Pagination is visible when there are many users", async ({
+test("Pagination is visible when there are many peers", async ({
 	page,
-	mockPagedUsers,
+	mockPagedPeers,
 	paginationBlock,
 	awaitCacheKey,
 }) => {
-	await mockPagedUsers();
+	await mockPagedPeers();
 
 	await page.navigate({ to: "/debts" });
-	await awaitCacheKey("debts.getUsersPaged");
+	await awaitCacheKey("debts.getPeersPaged");
 
 	await expect(paginationBlock).toBeVisible();
 });
 
-test("User with all zero debt sums is hidden", async ({
+test("Peer with all zero debt sums is hidden", async ({
 	page,
 	mockDebts,
 	awaitCacheKey,
-	userDebtsPreview,
+	peerDebtsPreview,
 	faker,
 }) => {
-	const usersAmount = faker.number.int({ min: 4, max: DEFAULT_LIMIT });
-	const emptyUsersAmount = faker.number.int({ min: 2, max: usersAmount });
-	const { users } = await mockDebts({
-		generateUsers: (opts) =>
-			defaultGenerateUsers({ ...opts, amount: usersAmount }),
+	const peersAmount = faker.number.int({ min: 4, max: DEFAULT_LIMIT });
+	const emptyPeersAmount = faker.number.int({ min: 2, max: peersAmount });
+	const { peers } = await mockDebts({
+		generatePeers: (opts) =>
+			defaultGeneratePeers({ ...opts, amount: peersAmount }),
 		generateDebts: (opts) => {
-			const userIndex = opts.users.findIndex((user) => user.id === opts.userId);
-			if (userIndex < emptyUsersAmount) {
+			const peerIndex = opts.peers.findIndex((peer) => peer.id === opts.peerId);
+			if (peerIndex < emptyPeersAmount) {
 				const [debt] = defaultGenerateDebts({ ...opts, amount: 1 });
 				assert.ok(debt);
 				return [debt, { ...debt, amount: -debt.amount }];
@@ -134,20 +134,20 @@ test("User with all zero debt sums is hidden", async ({
 		},
 	});
 	await page.navigate({ to: "/debts" });
-	await awaitCacheKey("debts.getAllUser", { success: users.length });
-	await expect(userDebtsPreview).toHaveCount(usersAmount - emptyUsersAmount);
+	await awaitCacheKey("debts.getAllPeer", { success: peers.length });
+	await expect(peerDebtsPreview).toHaveCount(peersAmount - emptyPeersAmount);
 });
 
 test("Loading state shows spinner on page change", async ({
 	page,
 	api,
-	mockPagedUsers,
+	mockPagedPeers,
 	paginationBlock,
 	loader,
 	awaitCacheKey,
 	snapshotQueries,
 }) => {
-	await mockPagedUsers();
+	await mockPagedPeers();
 	const secondPageInput = {
 		limit: 10,
 		filters: { showResolved: false },
@@ -155,11 +155,11 @@ test("Loading state shows spinner on page change", async ({
 	};
 
 	await page.navigate({ to: "/debts" });
-	await awaitCacheKey("debts.getUsersPaged");
+	await awaitCacheKey("debts.getPeersPaged");
 	await expect(paginationBlock).toBeVisible();
 
 	const pause = api.createPause();
-	api.mockFirst("debts.getUsersPaged", async ({ next }) => {
+	api.mockFirst("debts.getPeersPaged", async ({ next }) => {
 		await pause.promise;
 		return next();
 	});
@@ -169,19 +169,19 @@ test("Loading state shows spinner on page change", async ({
 			await paginationBlock
 				.getByRole("button", { name: "pagination item 2" })
 				.click();
-			await awaitCacheKey("debts.getUsersPaged", {
+			await awaitCacheKey("debts.getPeersPaged", {
 				input: secondPageInput,
 				pending: 1,
 			});
 			await expect(loader).toBeVisible();
 			pause.resolve();
-			await awaitCacheKey("debts.getUsersPaged", {
+			await awaitCacheKey("debts.getPeersPaged", {
 				input: secondPageInput,
 				success: 1,
 			});
 			await expect(loader).toBeHidden();
 		},
-		{ name: "page-2", blacklistKeys: ["users.get"] },
+		{ name: "page-2", blacklistKeys: ["peers.get"] },
 	);
 });
 
@@ -191,7 +191,7 @@ test.describe("Header aside", () => {
 		await page.navigate({ to: "/debts" });
 
 		api.mockFirst("currency.top", () => ({ items: [] }));
-		api.mockFirst("users.suggestTop", () => ({ items: [] }));
+		api.mockFirst("peers.suggestTop", () => ({ items: [] }));
 		await page.getByRole("button", { name: "Add debt" }).click();
 		await page.expectUrl({ to: "/debts/add" });
 	});
@@ -200,7 +200,7 @@ test.describe("Header aside", () => {
 		await mockDebts();
 		await page.navigate({ to: "/debts" });
 
-		api.mockFirst("users.suggestTop", () => ({ items: [] }));
+		api.mockFirst("peers.suggestTop", () => ({ items: [] }));
 		await page.getByRole("button", { name: "Transfer" }).click();
 		await page.expectUrl({ to: "/debts/transfer" });
 	});
@@ -215,14 +215,14 @@ test.describe("Header aside", () => {
 			debtIntentionsButton,
 		}) => {
 			const {
-				users: [firstUser],
+				peers: [firstPeer],
 			} = await mockDebts();
-			assert.ok(firstUser);
+			assert.ok(firstPeer);
 			api.mockFirst("debtIntentions.getAll", {
 				items: defaultGenerateDebtIntentions({
 					faker,
 					amount: 6,
-					userId: firstUser.id,
+					peerId: firstPeer.id,
 				}),
 			});
 			await page.navigate({ to: "/debts" });
@@ -249,27 +249,27 @@ test.describe("Header aside", () => {
 	});
 });
 
-test("User debts preview navigates to user debts screen", async ({
+test("Peer debts preview navigates to peer debts screen", async ({
 	page,
 	mockDebts,
-	userDebtsPreview,
+	peerDebtsPreview,
 }) => {
 	const {
-		users: [firstUser],
+		peers: [firstPeer],
 	} = await mockDebts();
-	assert.ok(firstUser);
+	assert.ok(firstPeer);
 	await page.navigate({ to: "/debts" });
 
-	await expect(userDebtsPreview.first()).toBeVisible();
-	await userDebtsPreview.first().click();
+	await expect(peerDebtsPreview.first()).toBeVisible();
+	await peerDebtsPreview.first().click();
 
 	await page.expectUrl({
-		to: "/debts/user/$id",
-		params: { id: firstUser.id },
+		to: "/debts/peer/$id",
+		params: { id: firstPeer.id },
 	});
 });
 
-test("'debts.getUsersPaged' error shows error message", async ({
+test("'debts.getPeersPaged' error shows error message", async ({
 	page,
 	api,
 	mockBase,
@@ -279,9 +279,9 @@ test("'debts.getUsersPaged' error shows error message", async ({
 	snapshotQueries,
 }) => {
 	await mockBase();
-	api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
-	const mockErrorMessage = `Mock "getUsersPaged" error`;
-	api.mockFirst("debts.getUsersPaged", () => {
+	api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
+	const mockErrorMessage = `Mock "getPeersPaged" error`;
+	api.mockFirst("debts.getPeersPaged", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: mockErrorMessage,
@@ -293,7 +293,7 @@ test("'debts.getUsersPaged' error shows error message", async ({
 	await snapshotQueries(
 		async () => {
 			await page.navigate({ to: "/debts" });
-			await awaitCacheKey("debts.getUsersPaged", { error: 1 });
+			await awaitCacheKey("debts.getPeersPaged", { error: 1 });
 			await expect(errorMessage(mockErrorMessage)).toBeVisible();
 		},
 		{ name: "error" },

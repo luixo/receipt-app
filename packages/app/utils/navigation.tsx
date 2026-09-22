@@ -14,10 +14,10 @@ import {
 	currencyCodeSchema,
 	limitSchema,
 	offsetSchema,
+	peerIdSchema,
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
 	resetPasswordTokenSchema,
-	userIdSchema,
 	voidAccountTokenSchema,
 } from "~app/utils/validation";
 import type { TreeRouter } from "~web/entry/router";
@@ -123,7 +123,7 @@ export const searchParamsMapping = {
 	"/_public/confirm-email": z.object({
 		token: confirmEmailTokenSchema.optional().catch(undefined),
 	}),
-	"/_protected/users/": z.object({
+	"/_protected/peers/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.default(0).catch(0),
 	}),
@@ -134,21 +134,21 @@ export const searchParamsMapping = {
 		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/debts/transfer": z.object({
-		to: userIdSchema.optional().catch(undefined),
-		from: userIdSchema.optional().catch(undefined),
+		to: peerIdSchema.optional().catch(undefined),
+		from: peerIdSchema.optional().catch(undefined),
 	}),
 	"/_protected/debts/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.default(0).catch(0),
 	}),
-	"/_protected/debts/user/$id/": z.object({
+	"/_protected/debts/peer/$id/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.default(0).catch(0),
 	}),
 	"/_protected/debts/add": z.object({
-		userId: userIdSchema.optional().catch(undefined),
+		peerId: peerIdSchema.optional().catch(undefined),
 	}),
-	"/_protected/debts/user/$id/exchange/all": z.object({
+	"/_protected/debts/peer/$id/exchange/all": z.object({
 		from: currencyCodeSchema.optional().catch(undefined),
 	}),
 } satisfies Partial<Record<RouteId, z.ZodType>>;

@@ -13,11 +13,13 @@ const addReceiptIdColumn = async (db: Database) => {
 const addReceiptIdConstraint = async (db: Database) => {
 	await db.schema
 		.alterTable("debts")
-		.addUniqueConstraint(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE, [
-			"ownerAccountId",
-			"receiptId",
-			"userId",
-		])
+		.addUniqueConstraint(
+			DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE.replace(
+				"peer",
+				"user",
+			),
+			["ownerAccountId", "receiptId", "userId"],
+		)
 		.execute();
 };
 
@@ -28,7 +30,12 @@ const removeReceiptIdColumn = async (db: Database) => {
 const removeReceiptIdConstraint = async (db: Database) => {
 	await db.schema
 		.alterTable("debts")
-		.dropConstraint(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
+		.dropConstraint(
+			DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE.replace(
+				"peer",
+				"user",
+			),
+		)
 		.execute();
 };
 

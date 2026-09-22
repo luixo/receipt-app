@@ -1,0 +1,71 @@
+{
+	"queries": {
+		"peers.get:[{\"id\":\"12d2d97e-f5c9-4c77-8c13-64c783742405\"}]": {
+			"state": {
+				"data": {
+					"id": "12d2d97e-f5c9-4c77-8c13-64c783742405",
+					"name": "Mr. Chadd Wolf",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.get:[{\"id\":\"a7818253-9a19-4879-a5e5-f6fc11d8ab97\"}]": {
+			"state": {
+				"data": {
+					"id": "a7818253-9a19-4879-a5e5-f6fc11d8ab97",
+					"name": "Eda O'Hara",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.get:[{\"id\":\"f9fe697b-364c-42ad-a749-fa9f8157924b\"}]": {
+			"state": {
+				"data": {
+					"id": "f9fe697b-364c-42ad-a749-fa9f8157924b",
+					"name": "Scot Nader",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.getPaged:[{\"cursor\":0,\"limit\":10}]": {
+			"state": {
+				"data": {
+					"cursor": 0,
+					"count": 3,
+					"items": [
+						"f9fe697b-364c-42ad-a749-fa9f8157924b",
+						"a7818253-9a19-4879-a5e5-f6fc11d8ab97",
+						"12d2d97e-f5c9-4c77-8c13-64c783742405"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

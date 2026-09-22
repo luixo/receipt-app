@@ -38,8 +38,8 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
 					},
 					{
 						iconName: "users",
-						text: t("navigation.users"),
-						pathname: "/users",
+						text: t("navigation.peers"),
+						pathname: "/peers",
 						useBadgeAmount: useConnectionIntentions,
 					},
 					{

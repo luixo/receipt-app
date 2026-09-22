@@ -5,7 +5,7 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
 	insertReceipt,
 	insertSyncedDebts,
@@ -28,14 +28,14 @@ describe("debt-intenions.getAll", () => {
 		test("empty list", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 
 			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					ahead: "our",
 					fn: (originalDebt) => ({
@@ -45,7 +45,7 @@ describe("debt-intenions.getAll", () => {
 				},
 			);
 			// Our debt
-			await insertDebt(ctx, accountId, userId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
@@ -55,14 +55,14 @@ describe("debt-intenions.getAll", () => {
 		test("debt intentions are fetched", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 
 			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					ahead: "our",
 					fn: (originalDebt) => ({
@@ -72,7 +72,7 @@ describe("debt-intenions.getAll", () => {
 				},
 			);
 			// Our debt
-			await insertDebt(ctx, accountId, userId);
+			await insertDebt(ctx, accountId, peerId);
 			// An unsynced debt waiting for us to accept
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
@@ -80,8 +80,8 @@ describe("debt-intenions.getAll", () => {
 			);
 			const [debtToUpdate, foreignDebtToUpdate] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 				{
 					ahead: "their",
 					fn: (originalDebt) => ({
@@ -101,7 +101,7 @@ describe("debt-intenions.getAll", () => {
 			const debtToCreate = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{
 					createdAt: Temporal.ZonedDateTime.from(
 						"2020-05-01T00:00:00.000[GMT]",
@@ -115,7 +115,7 @@ describe("debt-intenions.getAll", () => {
 				items: [
 					{
 						id: debtToUpdate.id,
-						userId,
+						peerId,
 						amount: -foreignDebtToUpdate.amount,
 						currencyCode: foreignDebtToUpdate.currencyCode,
 						updatedAt: foreignDebtToUpdate.updatedAt,
@@ -130,7 +130,7 @@ describe("debt-intenions.getAll", () => {
 					},
 					{
 						id: debtToCreate.id,
-						userId,
+						peerId,
 						amount: -debtToCreate.amount,
 						currencyCode: debtToCreate.currencyCode,
 						updatedAt: debtToCreate.updatedAt,

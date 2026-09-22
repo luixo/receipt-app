@@ -24,7 +24,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			debt.their
 				? {
 						id: debt.id,
-						userId: debt.userId,
+						peerId: debt.peerId,
 						amount: debt.their.amount,
 						currencyCode: debt.their.currencyCode,
 						updatedAt: debt.their.updatedAt,
@@ -46,7 +46,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			debt.receiptId,
 			debt.their,
 			debt.timestamp,
-			debt.userId,
+			debt.peerId,
 		],
 	);
 	const acceptMutation = useMutation(

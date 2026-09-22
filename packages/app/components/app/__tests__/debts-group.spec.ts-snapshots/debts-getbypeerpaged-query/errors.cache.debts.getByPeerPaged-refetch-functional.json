@@ -1,0 +1,21 @@
+{
+	"queries": {
+		"debts.getByPeerPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"peerId\":\"cd6dd463-990c-44d1-a37e-2bbda66658bf\"}]": {
+			"state": {
+				"data": {
+					"count": 3,
+					"cursor": 0,
+					"items": [
+						"101b91a5-1831-44f6-8e9b-2c0ca70f7e2f",
+						"20c2326e-cb8e-4cfd-98ea-d67025959eff",
+						"bababa14-d1a6-4d42-bc9b-eae63cab73b6"
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchFailureCount": -1,
+				"status": "success"
+			}
+		}
+	}
+}

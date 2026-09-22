@@ -4,7 +4,7 @@
 			"state": {
 				"data": {
 					"id": "33d24ca1-6b39-42f7-8eeb-f4f3f1911e03",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "TMT",
 					"amount": 5730.5,
 					"timestamp": "2019-12-20",
@@ -30,7 +30,7 @@
 			"state": {
 				"data": {
 					"id": "529cc769-7e27-440a-80eb-41389c3be516",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "SYP",
 					"amount": 5559.82,
 					"timestamp": "2019-12-09",
@@ -56,7 +56,7 @@
 			"state": {
 				"data": {
 					"id": "6cb4e654-6a42-4013-82ca-0fb28cadf665",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "MDL",
 					"amount": 4506.8,
 					"timestamp": "2019-12-18",
@@ -82,7 +82,7 @@
 			"state": {
 				"data": {
 					"id": "b88d1c6f-e5c8-4517-b7be-c81fe78bbf20",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "NGN",
 					"amount": 723.07,
 					"timestamp": "2019-12-06",
@@ -108,7 +108,7 @@
 			"state": {
 				"data": {
 					"id": "cecc00d3-bca1-4b77-8ed4-7d5e1c1e2c0d",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "COP",
 					"amount": 6513.87,
 					"timestamp": "2019-12-22",
@@ -134,7 +134,7 @@
 			"state": {
 				"data": {
 					"id": "fb6bc500-ea15-498f-81ee-104a76f7ac78",
-					"userId": "ee4c2e3b-db9f-455f-8720-da3377010067",
+					"peerId": "ee4c2e3b-db9f-455f-8720-da3377010067",
 					"currencyCode": "MRU",
 					"amount": 5824.74,
 					"timestamp": "2019-12-27",

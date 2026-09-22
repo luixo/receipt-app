@@ -9,10 +9,10 @@ export const options: UseContextedMutationOptions<"receiptParticipants.remove"> 
 			updateRevertReceipts(controllerContext, {
 				get: (controller) =>
 					mergeUpdaterResults(
-						controller.removeParticipant(variables.receiptId, variables.userId),
-						controller.removeItemConsumersByUser(
+						controller.removeParticipant(variables.receiptId, variables.peerId),
+						controller.removeItemConsumersByPeer(
 							variables.receiptId,
-							variables.userId,
+							variables.peerId,
 						),
 					),
 				getPaged: undefined,

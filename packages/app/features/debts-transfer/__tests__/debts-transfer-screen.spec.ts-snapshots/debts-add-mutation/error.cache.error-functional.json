@@ -13,7 +13,7 @@
 					"variables": {
 						"note": "Transferred to Roland Renner DVM",
 						"currencyCode": "MUR",
-						"userId": "0719fb29-1de7-4b57-b688-a71b623c75f9",
+						"peerId": "0719fb29-1de7-4b57-b688-a71b623c75f9",
 						"amount": -10,
 						"timestamp": "2019-12-31"
 					}
@@ -31,7 +31,7 @@
 					"variables": {
 						"note": "Transferred from Jayson Rogahn",
 						"currencyCode": "MUR",
-						"userId": "9de6af24-a7f1-423c-9d45-29d127384942",
+						"peerId": "9de6af24-a7f1-423c-9d45-29d127384942",
 						"amount": 10,
 						"timestamp": "2019-12-31"
 					}

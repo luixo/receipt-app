@@ -3,6 +3,8 @@ import { TRPCError } from "@trpc/server";
 import type { Receipt } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -19,8 +21,6 @@ import {
 	defaultGenerateReceiptParticipants,
 	defaultGenerateReceiptPayers,
 } from "~tests/frontend/generators/receipts";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 import type { ExtractFixture } from "~tests/frontend/types";
 
 export type { ReceiptId } from "~db/ids";
@@ -35,7 +35,7 @@ type Fixtures = {
 	>;
 	mockReceipts: (options?: {
 		amount?: number;
-		generateUsers?: GenerateUsers;
+		generatePeers?: GeneratePeers;
 		generateReceiptBase?: GenerateReceiptBase;
 		generateReceiptItems?: GenerateReceiptItems;
 		generateReceiptParticipants?: GenerateReceiptParticipants;
@@ -45,8 +45,8 @@ type Fixtures = {
 		generateDebts?: GenerateDebtsFromReceipt;
 	}) => Promise<{
 		receipts: Receipt[];
-		users: ReturnType<GenerateUsers>;
-		selfUserId: Receipt["selfUserId"];
+		peers: ReturnType<GeneratePeers>;
+		selfPeerId: Receipt["selfPeerId"];
 		debts: ReturnType<GenerateDebtsFromReceipt>;
 	}>;
 	openReceiptsScreen: (options?: {
@@ -70,7 +70,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(
 			async ({
 				amount = 3,
-				generateUsers = defaultGenerateUsers,
+				generatePeers = defaultGeneratePeers,
 				generateReceiptBase = defaultGenerateReceiptBase,
 				generateReceiptItems = defaultGenerateReceiptItems,
 				generateReceiptParticipants = defaultGenerateReceiptParticipants,
@@ -79,9 +79,9 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceipt = defaultGenerateReceipt,
 				generateDebts,
 			} = {}) => {
-				const { user: selfUser } = await mockBase();
-				const users = generateUsers({ faker, index: 0 });
-				api.mockUtils.mockUsers(...users);
+				const { peer: selfPeer } = await mockBase();
+				const peers = generatePeers({ faker, index: 0 });
+				api.mockUtils.mockPeers(...peers);
 				const receipts: Receipt[] = [];
 				const allDebts: ReturnType<GenerateDebtsFromReceipt> = [];
 				for (let index = 0; index < amount; index += 1) {
@@ -92,14 +92,14 @@ export const test = originalTest.extend<Fixtures>({
 					});
 					const participants = generateReceiptParticipants({
 						faker,
-						selfUserId: selfUser.id,
-						users,
+						selfPeerId: selfPeer.id,
+						peers,
 						index,
 					});
 					const receiptPayers = generateReceiptPayers({
 						faker,
-						selfUserId: selfUser.id,
-						users: [],
+						selfPeerId: selfPeer.id,
+						peers: [],
 						index,
 					});
 					const receiptItemsWithConsumers = generateReceiptItemsWithConsumers({
@@ -111,7 +111,7 @@ export const test = originalTest.extend<Fixtures>({
 					const debts = generateDebts
 						? generateDebts({
 								faker,
-								selfUserId: selfUser.id,
+								selfPeerId: selfPeer.id,
 								receiptBase,
 								receiptItemsWithConsumers,
 								participants,
@@ -123,13 +123,13 @@ export const test = originalTest.extend<Fixtures>({
 						: [];
 					const receipt: ReturnType<typeof generateReceipt> = generateReceipt({
 						faker,
-						selfUserId: selfUser.id,
+						selfPeerId: selfPeer.id,
 						receiptBase,
 						receiptParticipants: participants,
 						receiptItemsWithConsumers,
 						receiptPayers,
 						receiptDebts: debts,
-						users,
+						peers,
 						index,
 					});
 					allDebts.push(...debts);
@@ -141,12 +141,12 @@ export const test = originalTest.extend<Fixtures>({
 						let filtered = receipts;
 						if (filters.ownedByMe === true) {
 							filtered = filtered.filter(
-								(receipt) => receipt.ownerUserId === selfUser.id,
+								(receipt) => receipt.ownerPeerId === selfPeer.id,
 							);
 						}
 						if (filters.ownedByMe === false) {
 							filtered = filtered.filter(
-								(receipt) => receipt.ownerUserId !== selfUser.id,
+								(receipt) => receipt.ownerPeerId !== selfPeer.id,
 							);
 						}
 						if (filters.query) {
@@ -179,14 +179,14 @@ export const test = originalTest.extend<Fixtures>({
 					return receipt;
 				});
 				api.mockFirst(
-					"users.get",
+					"peers.get",
 					({ input, next }) =>
-						users.find((user) => user.id === input.id) || next(),
+						peers.find((peer) => peer.id === input.id) || next(),
 				);
 				api.mockFirst(
-					"users.getForeign",
+					"peers.getForeign",
 					({ input, next }) =>
-						users.find((user) => user.id === input.id) || next(),
+						peers.find((peer) => peer.id === input.id) || next(),
 				);
 				if (allDebts.length !== 0) {
 					api.mockFirst("debts.get", ({ input }) => {
@@ -204,8 +204,8 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return {
 					receipts,
-					users,
-					selfUserId: selfUser.id,
+					peers,
+					selfPeerId: selfPeer.id,
 					debts: allDebts,
 				};
 			},

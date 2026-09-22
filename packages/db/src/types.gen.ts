@@ -4,7 +4,7 @@
  */
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { AccountId, DebtId, ReceiptId, ReceiptItemId, SessionId, UserId } from "~db/ids";
+import type { AccountId, DebtId, ReceiptId, ReceiptItemId, SessionId, PeerId } from "~db/ids";
 import type { ColumnType } from "kysely";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
@@ -44,7 +44,7 @@ export interface Debt {
   receiptId: ReceiptId | null;
   timestamp: Temporal.PlainDate;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
+  peerId: PeerId;
 }
 
 export interface ReceiptItemConsumer {
@@ -52,7 +52,7 @@ export interface ReceiptItemConsumer {
   itemId: ReceiptItemId;
   part: Numeric;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
+  peerId: PeerId;
 }
 
 export interface ReceiptItemPayer {
@@ -60,7 +60,7 @@ export interface ReceiptItemPayer {
   itemId: ReceiptItemId;
   part: Numeric;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
+  peerId: PeerId;
 }
 
 export interface ReceiptItem {
@@ -78,7 +78,7 @@ export interface ReceiptParticipant {
   receiptId: ReceiptId;
   role: Generated<ReceiptRole>;
   updatedAt: Generated<Temporal.ZonedDateTime>;
-  userId: UserId;
+  peerId: PeerId;
 }
 
 export interface Receipt {
@@ -106,12 +106,12 @@ export interface Session {
   sessionId: SessionId;
 }
 
-export interface User {
+export interface Peer {
   acceptReceipts: Generated<boolean>;
   connectedAccountId: AccountId | null;
   createdAt: Generated<Temporal.ZonedDateTime>;
   exposeReceipts: Generated<boolean>;
-  id: UserId;
+  id: PeerId;
   name: string;
   ownerAccountId: AccountId;
   publicName: string | null;
@@ -129,5 +129,5 @@ export interface DB {
   receipts: Receipt;
   resetPasswordIntentions: ResetPasswordIntention;
   sessions: Session;
-  users: User;
+  peers: Peer;
 }

@@ -7,10 +7,10 @@
 		"receiptUnknown": "Receipt",
 		"addReceipt": "Add receipt",
 		"settings": "Settings",
-		"users": "Users",
-		"user": "User",
-		"addUser": "Add user",
-		"usersConnections": "Users' connections",
+		"peers": "Peers",
+		"peer": "Peer",
+		"addPeer": "Add peer",
+		"peersConnections": "Peers' connections",
 		"account": "My account",
 		"admin": "Admin panel",
 		"debts": "Debts",
@@ -18,10 +18,10 @@
 		"addDebt": "Add debt",
 		"debtsIntentions": "Debts intentions",
 		"transferDebts": "Transfer debts",
-		"userDebts": "User's debts",
-		"exchangeDebts": "Exchange user debts",
-		"exchangeSpecificDebts": "Exchange specific user debts",
-		"exchangeAllDebts": "Exchange all user debts",
+		"peerDebts": "Peer's debts",
+		"exchangeDebts": "Exchange peer debts",
+		"exchangeSpecificDebts": "Exchange specific peer debts",
+		"exchangeAllDebts": "Exchange all peer debts",
 		"confirmEmail": "Confirm email",
 		"register": "Register",
 		"login": "Login",
@@ -34,7 +34,7 @@
 	"navigation": {
 		"receipts": "Receipts",
 		"debts": "Debts",
-		"users": "Users",
+		"peers": "Peers",
 		"account": "Account",
 		"settings": "Settings",
 		"admin": "Admin",
@@ -55,24 +55,24 @@
 			"title": "Remove modal",
 			"confirmText": "Are you sure?"
 		},
-		"addUserModal": {
-			"title": "Add user",
-			"label": "Add a user"
+		"addPeerModal": {
+			"title": "Add peer",
+			"label": "Add a peer"
 		},
 		"currenciesPicker": {
 			"title": "Please choose currency",
 			"label": "Currencies picker"
 		},
-		"usersSuggest": {
+		"peersSuggest": {
 			"recentlyUsed": "Recently used",
 			"lookup": "Lookup",
-			"label": "Select a user",
+			"label": "Select a peer",
 			"placeholder": "Start typing",
 			"noResults": "No results found.",
-			"addUser": {
-				"title": "Add new user",
-				"withName": "Add user \"{{name}}\"",
-				"empty": "Add a user"
+			"addPeer": {
+				"title": "Add new peer",
+				"withName": "Add peer \"{{name}}\"",
+				"empty": "Add a peer"
 			}
 		},
 		"debtSyncStatus": {

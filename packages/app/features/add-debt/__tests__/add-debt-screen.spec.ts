@@ -17,26 +17,26 @@ test("On load", async ({
 	await snapshotQueries(async () => {
 		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
-		await awaitCacheKey("users.suggestTop");
+		await awaitCacheKey("peers.suggestTop");
 	});
 	await expect(page).toHaveTitle("RA - Add debt");
 	await expect(addButton).toBeDisabled();
 });
 
-test("userId query param pre-selects user", async ({
+test("peerId query param pre-selects peer", async ({
 	page,
 	mockBase,
 	awaitCacheKey,
 }) => {
-	const { users } = await mockBase();
-	const [user] = users;
-	assert.ok(user);
+	const { peers } = await mockBase();
+	const [peer] = peers;
+	assert.ok(peer);
 
-	await page.navigate({ to: "/debts/add", search: { userId: user.id } });
-	await awaitCacheKey("users.get", { input: { id: user.id } });
+	await page.navigate({ to: "/debts/add", search: { peerId: peer.id } });
+	await awaitCacheKey("peers.get", { input: { id: peer.id } });
 
 	await expect(
-		page.getByTestId("user").filter({ hasText: user.name }),
+		page.getByTestId("peer").filter({ hasText: peer.name }),
 	).toBeVisible();
 });
 
@@ -49,14 +49,14 @@ test.describe("Invalid form disables submit button", () => {
 		awaitCacheKey,
 		fillValidForm,
 	}) => {
-		const { users } = await mockBase();
-		const [user] = users;
-		assert.ok(user);
+		const { peers } = await mockBase();
+		const [peer] = peers;
+		assert.ok(peer);
 
 		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
-		await awaitCacheKey("users.suggestTop");
-		await fillValidForm(user);
+		await awaitCacheKey("peers.suggestTop");
+		await fillValidForm(peer);
 
 		await amountInput.fill("0");
 		await amountInput.press("Tab");
@@ -71,20 +71,20 @@ test.describe("Invalid form disables submit button", () => {
 		awaitCacheKey,
 		fillValidForm,
 	}) => {
-		const { users } = await mockBase();
-		const [user] = users;
-		assert.ok(user);
+		const { peers } = await mockBase();
+		const [peer] = peers;
+		assert.ok(peer);
 
 		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
-		await awaitCacheKey("users.suggestTop");
-		await fillValidForm(user);
+		await awaitCacheKey("peers.suggestTop");
+		await fillValidForm(peer);
 
 		await noteInput.fill("");
 		await expect(addButton).toBeDisabled();
 	});
 
-	test("on missing user", async ({
+	test("on missing peer", async ({
 		page,
 		addButton,
 		amountInput,
@@ -96,9 +96,9 @@ test.describe("Invalid form disables submit button", () => {
 
 		await page.navigate({ to: "/debts/add" });
 		await awaitCacheKey("currency.top");
-		await awaitCacheKey("users.suggestTop");
+		await awaitCacheKey("peers.suggestTop");
 
-		// Fill amount and note but leave user empty — form stays invalid
+		// Fill amount and note but leave peer empty — form stays invalid
 		await amountInput.fill("10");
 		await amountInput.press("Tab");
 		await noteInput.fill("Test debt note");
@@ -113,9 +113,9 @@ test.describe("Invalid form disables submit button", () => {
 		awaitCacheKey,
 		fillValidForm,
 	}) => {
-		const { users, topCurrencies } = await mockBase();
-		const [user] = users;
-		assert.ok(user);
+		const { peers, topCurrencies } = await mockBase();
+		const [peer] = peers;
+		assert.ok(peer);
 
 		const createPause = api.createPause();
 		api.mockFirst("currency.top", async () => {
@@ -124,9 +124,9 @@ test.describe("Invalid form disables submit button", () => {
 		});
 
 		await page.navigate({ to: "/debts/add" });
-		await awaitCacheKey("users.suggestTop");
+		await awaitCacheKey("peers.suggestTop");
 
-		await fillValidForm(user);
+		await fillValidForm(peer);
 		await expect(addButton).toBeDisabled();
 
 		createPause.resolve();
@@ -151,9 +151,9 @@ test("'debts.add' mutation", async ({
 	fillValidForm,
 	faker,
 }) => {
-	const { users, topCurrencies } = await mockBase();
-	const [user] = users;
-	assert.ok(user);
+	const { peers, topCurrencies } = await mockBase();
+	const [peer] = peers;
+	assert.ok(peer);
 	const [topCurrency] = topCurrencies.toSorted((a, b) => b.count - a.count);
 	assert.ok(topCurrency);
 	const debtId = faker.string.uuid();
@@ -167,9 +167,9 @@ test("'debts.add' mutation", async ({
 
 	await page.navigate({ to: "/debts/add" });
 	await awaitCacheKey("currency.top");
-	await awaitCacheKey("users.suggestTop");
+	await awaitCacheKey("peers.suggestTop");
 
-	await fillValidForm(user);
+	await fillValidForm(peer);
 
 	await snapshotQueries(
 		async () => {
@@ -179,7 +179,7 @@ test("'debts.add' mutation", async ({
 		},
 		{ name: "error" },
 	);
-	await page.expectUrl({ to: "/debts/add", search: { userId: user.id } });
+	await page.expectUrl({ to: "/debts/add", search: { peerId: peer.id } });
 
 	const createPause = api.createPause();
 	api.mockFirst("debts.add", async () => {
@@ -205,7 +205,7 @@ test("'debts.add' mutation", async ({
 		await expect(input).toBeDisabled();
 	}
 
-	const [debt] = defaultGenerateDebts({ faker, userId: user.id, amount: 1 });
+	const [debt] = defaultGenerateDebts({ faker, peerId: peer.id, amount: 1 });
 	assert.ok(debt);
 	api.mockFirst("debts.get", ({ input: { id } }) => {
 		if (id === debtId) {
@@ -223,7 +223,7 @@ test("'debts.add' mutation", async ({
 			await awaitCacheKey("debts.add");
 			await verifyToastTexts("Debt added");
 		},
-		{ name: "success", blacklistKeys: "users.get", skipQueries: true },
+		{ name: "success", blacklistKeys: "peers.get", skipQueries: true },
 	);
 	await page.expectUrl({ to: "/debts/$id", params: { id: debtId } });
 });
@@ -238,9 +238,9 @@ test("navigating to a newly added debt doesn't refetch it", async ({
 	faker,
 	snapshotQueries,
 }) => {
-	const { users, topCurrencies } = await mockBase();
-	const [user] = users;
-	assert.ok(user);
+	const { peers, topCurrencies } = await mockBase();
+	const [peer] = peers;
+	assert.ok(peer);
 	const [topCurrency] = topCurrencies.toSorted((a, b) => b.count - a.count);
 	assert.ok(topCurrency);
 	const debtId = faker.string.uuid();
@@ -250,7 +250,7 @@ test("navigating to a newly added debt doesn't refetch it", async ({
 		updatedAt: Temporal.Now.zonedDateTimeISO(),
 		reverseAccepted: false,
 	}));
-	const [debt] = defaultGenerateDebts({ faker, userId: user.id, amount: 1 });
+	const [debt] = defaultGenerateDebts({ faker, peerId: peer.id, amount: 1 });
 	assert.ok(debt);
 	api.mockFirst("debts.get", ({ input: { id } }) => {
 		if (id !== debtId) {
@@ -264,8 +264,8 @@ test("navigating to a newly added debt doesn't refetch it", async ({
 
 	await page.navigate({ to: "/debts/add" });
 	await awaitCacheKey("currency.top");
-	await awaitCacheKey("users.suggestTop");
-	await fillValidForm(user);
+	await awaitCacheKey("peers.suggestTop");
+	await fillValidForm(peer);
 
 	await snapshotQueries(async () => {
 		await addButton.click();

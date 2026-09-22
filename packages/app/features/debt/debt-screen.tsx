@@ -7,12 +7,12 @@ import z from "zod";
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { SkeletonCurrencyInput } from "~app/components/app/currency-input";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
-import { LoadableUser } from "~app/components/app/loadable-user";
+import { LoadablePeer } from "~app/components/app/loadable-peer";
+import { SkeletonPeer } from "~app/components/app/peer";
 import {
 	SignButtonGroup,
 	SkeletonSignButtonGroup,
 } from "~app/components/app/sign-button-group";
-import { SkeletonUser } from "~app/components/app/user";
 import { PageHeader } from "~app/components/page-header";
 import {
 	RemoveButton,
@@ -43,21 +43,21 @@ import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { SkeletonInput } from "~components/skeleton-input";
 import { SkeletonNumberInput } from "~components/skeleton-number-input";
 import { View } from "~components/view";
-import type { DebtId, UserId } from "~db/ids";
+import type { DebtId, PeerId } from "~db/ids";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 import { DebtControlButtons } from "./debt-control-buttons";
 
 type HeaderProps = {
-	userId?: UserId;
+	peerId?: PeerId;
 } & Omit<React.ComponentProps<typeof PageHeader>, "startContent">;
 
-const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
+const Header: React.FC<HeaderProps> = ({ peerId, ...rest }) => (
 	<PageHeader
 		startContent={
-			userId ? (
-				<BackLink to="/debts/user/$id" params={{ id: userId }} />
+			peerId ? (
+				<BackLink to="/debts/peer/$id" params={{ id: peerId }} />
 			) : undefined
 		}
 		{...rest}
@@ -345,8 +345,8 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = suspendedFallback(
 					context: { debt },
 					onSuccess: () =>
 						navigate({
-							to: "/debts/user/$id",
-							params: { id: debt.userId },
+							to: "/debts/peer/$id",
+							params: { id: debt.peerId },
 							replace: true,
 						}),
 				}),
@@ -434,16 +434,16 @@ const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 		const { data: debt } = useSuspenseQuery(
 			trpc.debts.get.queryOptions({ id: debtId }),
 		);
-		const { data: user } = useSuspenseQuery(
-			trpc.users.get.queryOptions({ id: debt.userId }),
+		const { data: peer } = useSuspenseQuery(
+			trpc.peers.get.queryOptions({ id: debt.peerId }),
 		);
 		return (
 			<Header
-				userId={debt.userId}
+				peerId={debt.peerId}
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
 					<>
-						{user.connectedAccount ? (
+						{peer.connectedAccount ? (
 							<DebtSyncStatus debt={debt} theirDebt={debt.their} size="lg" />
 						) : null}
 						{debt.receiptId ? (
@@ -472,15 +472,15 @@ const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 	},
 );
 
-const DebtUser = suspendedFallback<{ debtId: DebtId }>(
+const DebtPeer = suspendedFallback<{ debtId: DebtId }>(
 	({ debtId }) => {
 		const trpc = useTRPC();
 		const { data: debt } = useSuspenseQuery(
 			trpc.debts.get.queryOptions({ id: debtId }),
 		);
-		return <LoadableUser className="self-start" id={debt.userId} />;
+		return <LoadablePeer className="self-start" id={debt.peerId} />;
 	},
-	<SkeletonUser className="self-start" />,
+	<SkeletonPeer className="self-start" />,
 );
 
 export const DebtScreen = () => {
@@ -491,7 +491,7 @@ export const DebtScreen = () => {
 	return (
 		<>
 			<DebtHeader debtId={id} />
-			<DebtUser debtId={id} />
+			<DebtPeer debtId={id} />
 			<DebtSignButtonGroup debtId={id} disabled={removing} />
 			<DebtAmountInput debtId={id} isLoading={removing} />
 			<DebtDateInput debtId={id} isLoading={removing} />

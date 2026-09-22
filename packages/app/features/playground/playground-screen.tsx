@@ -3,7 +3,7 @@ import React from "react";
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { SkeletonUser } from "~app/components/app/user";
+import { SkeletonPeer } from "~app/components/app/peer";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useColorModes } from "~app/hooks/use-color-modes";
 import { useFormat } from "~app/hooks/use-format";
@@ -36,7 +36,7 @@ import { Switch } from "~components/switch";
 import { Text } from "~components/text";
 import { addToast, closeToastById } from "~components/toast";
 import { Tooltip } from "~components/tooltip";
-import { User } from "~components/user";
+import { User as Peer } from "~components/user";
 import { cn } from "~components/utils";
 import { View } from "~components/view";
 
@@ -112,9 +112,9 @@ export const PlaygroundScreen = () => {
 			<Autocomplete
 				inputValue={value}
 				onInputChange={setValue}
-				label={t("components.usersSuggest.label")}
-				emptyContent={t("components.usersSuggest.noResults")}
-				placeholder={t("components.usersSuggest.placeholder")}
+				label={t("components.peersSuggest.label")}
+				emptyContent={t("components.peersSuggest.noResults")}
+				placeholder={t("components.peersSuggest.placeholder")}
 				selectedKey={selectedKeys[0] ?? null}
 				onSelectionChange={(nextValue) =>
 					setSelectedKeys(nextValue ? [nextValue] : [])
@@ -135,28 +135,28 @@ export const PlaygroundScreen = () => {
 				{[
 					{
 						key: "old",
-						title: "Old users",
+						title: "Old peers",
 						items: SELECT_ITEMS.map((item) => ({
 							key: item,
 							textValue: item,
-							children: <User name={item} avatarProps={{ hashId: item }} />,
+							children: <Peer name={item} avatarProps={{ hashId: item }} />,
 						})),
 					},
 					{
 						key: "new",
-						title: "New user",
+						title: "New peer",
 						items: [
 							{
 								key: "new-key",
-								textValue: "New user",
+								textValue: "New peer",
 								children: (
-									<User
+									<Peer
 										name={
 											value.length > 2
-												? t("components.usersSuggest.addUser.withName", {
+												? t("components.peersSuggest.addPeer.withName", {
 														name: value,
 													})
-												: t("components.usersSuggest.addUser.empty")
+												: t("components.peersSuggest.addPeer.empty")
 										}
 										avatarProps={{
 											size: "sm",
@@ -351,8 +351,8 @@ export const PlaygroundScreen = () => {
 				)}
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
-				<User name="Ivan" description="Serious man" />
-				<SkeletonUser />
+				<Peer name="Ivan" description="Serious man" />
+				<SkeletonPeer />
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
 				<AvatarGroup size="sm">

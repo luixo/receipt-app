@@ -4,47 +4,47 @@ exports[`receiptItemConsumers.add > functionality > multiple participants are ad
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:241a931a-cfbd-4ab1-9743-75cd366df793|userId:31c93f2f-b1ce-46e8-a927-aea767bfaa57": {
+      "itemId:241a931a-cfbd-4ab1-9743-75cd366df793|peerId:31c93f2f-b1ce-46e8-a927-aea767bfaa57": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "241a931a-cfbd-4ab1-9743-75cd366df793",
         "part": "1.00",
+        "peerId": "31c93f2f-b1ce-46e8-a927-aea767bfaa57",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "31c93f2f-b1ce-46e8-a927-aea767bfaa57",
       },
-      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|userId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
+      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|peerId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "33c41f8d-d142-40c3-96ed-f7cecfed3673",
         "part": "1.00",
+        "peerId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
       },
-      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|userId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
+      "itemId:33c41f8d-d142-40c3-96ed-f7cecfed3673|peerId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "33c41f8d-d142-40c3-96ed-f7cecfed3673",
         "part": "2.00",
+        "peerId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
       },
-      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|peerId:99b53718-c5a8-4988-8c87-9a84e34254aa": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
         "part": "1.00",
+        "peerId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "99b53718-c5a8-4988-8c87-9a84e34254aa",
       },
-      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:cdb9198e-716d-4b44-b988-5f3bcb7d3c61": {
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|peerId:cdb9198e-716d-4b44-b988-5f3bcb7d3c61": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
         "part": "0.10",
+        "peerId": "cdb9198e-716d-4b44-b988-5f3bcb7d3c61",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "cdb9198e-716d-4b44-b988-5f3bcb7d3c61",
       },
-      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|userId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
+      "itemId:b9bc0380-9e02-4a7c-980d-f3897b0b9a91|peerId:df273c37-d9c0-445a-977d-6c9c891e26b2": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "b9bc0380-9e02-4a7c-980d-f3897b0b9a91",
         "part": "3.00",
+        "peerId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "df273c37-d9c0-445a-977d-6c9c891e26b2",
       },
     },
   },
@@ -55,12 +55,12 @@ exports[`receiptItemConsumers.add > input verification > multiple participants >
 {
   "added": {
     "receiptItemConsumers": {
-      "itemId:8360fffd-df63-44fc-843f-a9c4554dcee6|userId:e3f4144e-ec74-4433-9296-e0f0407e39ad": {
+      "itemId:8360fffd-df63-44fc-843f-a9c4554dcee6|peerId:e3f4144e-ec74-4433-9296-e0f0407e39ad": {
         "createdAt": "2020-01-01 00:00:00+00",
         "itemId": "8360fffd-df63-44fc-843f-a9c4554dcee6",
         "part": "1.00",
+        "peerId": "e3f4144e-ec74-4433-9296-e0f0407e39ad",
         "updatedAt": "2020-01-01 00:00:00+00",
-        "userId": "e3f4144e-ec74-4433-9296-e0f0407e39ad",
       },
     },
   },

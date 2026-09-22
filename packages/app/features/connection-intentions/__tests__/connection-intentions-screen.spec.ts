@@ -9,12 +9,12 @@ test("Page header", async ({
 	backLink,
 }) => {
 	await mockConnectionIntentions();
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Connection intentions",
 	);
 	await backLink.click();
-	await page.expectUrl({ to: "/users" });
+	await page.expectUrl({ to: "/peers" });
 });
 
 test("Empty state", async ({
@@ -25,7 +25,7 @@ test("Empty state", async ({
 	outboundHeading,
 }) => {
 	await mockConnectionIntentions();
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await expect(emptyCard("All done 👍")).toBeVisible();
 	await expect(inboundHeading).not.toBeAttached();
 	await expect(outboundHeading).not.toBeAttached();
@@ -42,7 +42,7 @@ test("Inbound only", async ({
 }) => {
 	const inboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ inboundAmount });
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await expect(inboundHeading).toBeVisible();
 	await expect(inboundRows).toHaveCount(inboundAmount);
 	await expect(outboundHeading).not.toBeAttached();
@@ -60,7 +60,7 @@ test("Outbound only", async ({
 }) => {
 	const outboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ outboundAmount });
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await expect(outboundHeading).toBeVisible();
 	await expect(outboundRows).toHaveCount(outboundAmount);
 	await expect(inboundHeading).not.toBeAttached();
@@ -80,7 +80,7 @@ test("Mixed inbound and outbound", async ({
 	const inboundAmount = faker.number.int({ min: 2, max: 4 });
 	const outboundAmount = faker.number.int({ min: 2, max: 4 });
 	await mockConnectionIntentions({ inboundAmount, outboundAmount });
-	await page.navigate({ to: "/users/connections" });
+	await page.navigate({ to: "/peers/connections" });
 	await expect(inboundHeading).toBeVisible();
 	await expect(outboundHeading).toBeVisible();
 	await expect(inboundRows).toHaveCount(inboundAmount);

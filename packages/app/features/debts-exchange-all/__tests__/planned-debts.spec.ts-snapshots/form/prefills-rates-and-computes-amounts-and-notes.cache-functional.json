@@ -14,7 +14,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"1ba4759b-640b-4bc9-abdd-d08e540770c2\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"1ba4759b-640b-4bc9-abdd-d08e540770c2\"}]": {
 			"state": {
 				"data": {
 					"items": [

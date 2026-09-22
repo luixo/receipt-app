@@ -178,7 +178,7 @@ describe("account.changeAvatar", () => {
 
 	describe("functionality", () => {
 		test("avatar changes to null", async ({ ctx }) => {
-			// Verifying other users are not affected
+			// Verifying other peers are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -191,7 +191,7 @@ describe("account.changeAvatar", () => {
 		});
 
 		test("avatar changes to a given image", async ({ ctx }) => {
-			// Verifying other users are not affected
+			// Verifying other peers are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));

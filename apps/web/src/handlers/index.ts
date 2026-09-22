@@ -8,6 +8,7 @@ import { router as authRouter } from "./auth/index";
 import { router as currencyRouter } from "./currency/index";
 import { router as debtIntentionsRouter } from "./debt-intentions/index";
 import { router as debtsRouter } from "./debts/index";
+import { router as peersRouter } from "./peers/index";
 import { router as receiptItemConsumersRouter } from "./receipt-item-consumers/index";
 import { router as receiptItemPayersRouter } from "./receipt-item-payers/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
@@ -15,7 +16,6 @@ import { router as receiptParticipantsRouter } from "./receipt-participants/inde
 import { router as receiptsRouter } from "./receipts/index";
 import { router as resetPasswordIntentionsRouter } from "./reset-password-intentions/index";
 import { router as sessionsRouter } from "./sessions/index";
-import { router as usersRouter } from "./users/index";
 import { router as utilsRouter } from "./utils/index";
 
 export const router = t.router({
@@ -29,7 +29,7 @@ export const router = t.router({
 	accountSettings: accountSettingsRouter,
 	receipts: receiptsRouter,
 	receiptItems: receiptItemsRouter,
-	users: usersRouter,
+	peers: peersRouter,
 	receiptParticipants: receiptParticipantsRouter,
 	currency: currencyRouter,
 	receiptItemConsumers: receiptItemConsumersRouter,

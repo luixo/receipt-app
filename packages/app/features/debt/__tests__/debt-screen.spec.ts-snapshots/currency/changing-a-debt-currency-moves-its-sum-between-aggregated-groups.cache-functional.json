@@ -24,7 +24,7 @@
 				"dataUpdateCount": 2
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
 			"state": {
 				"data": {
 					"items": {
@@ -40,7 +40,7 @@
 				"dataUpdateCount": 2
 			}
 		},
-		"debts.getByUserPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"userId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
+		"debts.getByPeerPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"peerId\":\"9a9a414e-7472-4682-8d7e-6c535418bbf9\"}]": {
 			"state": {
 				"isInvalidated": true
 			}

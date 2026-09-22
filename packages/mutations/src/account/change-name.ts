@@ -1,10 +1,10 @@
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 
 import { update as updateAccount } from "../cache/account";
 import {
-	invalidateSuggest as invalidateSuggestUsers,
-	updateRevert as updateRevertUsers,
-} from "../cache/users";
+	invalidateSuggest as invalidateSuggestPeers,
+	updateRevert as updateRevertPeers,
+} from "../cache/peers";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -15,20 +15,20 @@ export const options: UseContextedMutationOptions<
 	onMutate:
 		(controllerContext, { id }) =>
 		(updateObject) =>
-			updateRevertUsers(controllerContext, {
+			updateRevertPeers(controllerContext, {
 				get: (controller) =>
 					controller.update(
-						// Typesystem doesn't know that we use account id as self user id
-						id as UserId,
-						(user) => ({ ...user, name: updateObject.name }),
-						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
+						// Typesystem doesn't know that we use account id as self peer id
+						id as PeerId,
+						(peer) => ({ ...peer, name: updateObject.name }),
+						(prevPeer) => (peer) => ({ ...peer, name: prevPeer.name }),
 					),
 				getForeign: (controller) =>
 					controller.updateOwn(
-						// Typesystem doesn't know that we use account id as self user id
-						id as UserId,
-						(user) => ({ ...user, name: updateObject.name }),
-						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
+						// Typesystem doesn't know that we use account id as self peer id
+						id as PeerId,
+						(peer) => ({ ...peer, name: updateObject.name }),
+						(prevPeer) => (peer) => ({ ...peer, name: prevPeer.name }),
 					),
 				getPaged: undefined,
 			}),
@@ -37,14 +37,14 @@ export const options: UseContextedMutationOptions<
 			get: (controller) => {
 				controller.update((account) => ({
 					...account,
-					user: {
-						...account.user,
+					peer: {
+						...account.peer,
 						name: updateObject.name,
 					},
 				}));
 			},
 		});
-		void invalidateSuggestUsers(controllerContext);
+		void invalidateSuggestPeers(controllerContext);
 	},
 	errorToastOptions:
 		({ t }) =>

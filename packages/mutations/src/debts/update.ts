@@ -1,5 +1,5 @@
 import type { CurrencyCode } from "~app/utils/currency";
-import type { ReceiptId, UserId } from "~db/ids";
+import type { PeerId, ReceiptId } from "~db/ids";
 
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
@@ -16,7 +16,7 @@ export const options: UseContextedMutationOptions<
 	"debts.update",
 	{
 		currDebt: {
-			userId: UserId;
+			peerId: PeerId;
 			amount: number;
 			currencyCode: CurrencyCode;
 			receiptId?: ReceiptId;
@@ -44,32 +44,32 @@ export const options: UseContextedMutationOptions<
 							(updatedSum) => () => updatedSum - newAmount,
 						),
 					),
-				getAllUser: (controller) =>
+				getAllPeer: (controller) =>
 					mergeUpdaterResults(
 						controller.update(
-							currDebt.userId,
+							currDebt.peerId,
 							currDebt.currencyCode,
 							(sum) => sum - currDebt.amount,
 							(updatedSum) => () => updatedSum + currDebt.amount,
 						),
 						controller.update(
-							currDebt.userId,
+							currDebt.peerId,
 							newCurrencyCode,
 							(sum) => sum + newAmount,
 							(updatedSum) => () => updatedSum - newAmount,
 						),
 					),
-				getUsersPaged: (controller) => controller.update(currDebt.userId),
-				getByUserPaged: (controller) => {
+				getPeersPaged: (controller) => controller.update(currDebt.peerId),
+				getByPeerPaged: (controller) => {
 					// Updating currency code or amount might change resolved list status
 					if (update.currencyCode || update.amount) {
-						controller.invalidate(currDebt.userId, {
+						controller.invalidate(currDebt.peerId, {
 							filters: { showResolved: false },
 						});
 					}
 					// Updating timestamp might change position in a list
 					if (update.timestamp) {
-						controller.invalidate(currDebt.userId);
+						controller.invalidate(currDebt.peerId);
 					}
 					return undefined;
 				},
@@ -89,7 +89,7 @@ export const options: UseContextedMutationOptions<
 				updateReceiptWithOutcomingDebtId(
 					controllerContext,
 					currDebt.receiptId,
-					currDebt.userId,
+					currDebt.peerId,
 					updateObject.id,
 				);
 			}

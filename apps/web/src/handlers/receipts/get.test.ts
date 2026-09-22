@@ -5,8 +5,9 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
@@ -14,7 +15,6 @@ import {
 	insertReceiptParticipant,
 	insertReceiptPayer,
 	insertSyncedDebts,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -40,7 +40,7 @@ const getItems = (
 			consumers: consumers
 				.filter((consumer) => consumer.itemId === item.id)
 				.map((consumer) => ({
-					userId: consumer.userId,
+					peerId: consumer.peerId,
 					part: Number(consumer.part),
 					createdAt: consumer.createdAt,
 				}))
@@ -49,12 +49,12 @@ const getItems = (
 						b.createdAt,
 						a.createdAt,
 					);
-					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
+					return delta === 0 ? a.peerId.localeCompare(b.peerId) : delta;
 				}),
 			payers: payers
 				.filter((payer) => payer.itemId === item.id)
 				.map((payer) => ({
-					userId: payer.userId,
+					peerId: payer.peerId,
 					part: Number(payer.part),
 					createdAt: payer.createdAt,
 				}))
@@ -63,7 +63,7 @@ const getItems = (
 						b.createdAt,
 						a.createdAt,
 					);
-					return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
+					return delta === 0 ? a.peerId.localeCompare(b.peerId) : delta;
 				}),
 		}))
 		.toSorted((a, b) => {
@@ -76,25 +76,25 @@ const getParticipants = (
 ) =>
 	participants
 		.map((participant) => ({
-			userId: participant.userId,
+			peerId: participant.peerId,
 			role: participant.role,
 			createdAt: participant.createdAt,
 		}))
 		.toSorted((a, b) => {
 			const delta = Temporal.ZonedDateTime.compare(b.createdAt, a.createdAt);
-			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
+			return delta === 0 ? a.peerId.localeCompare(b.peerId) : delta;
 		});
 
 const getPayers = (payers: Awaited<ReturnType<typeof insertReceiptPayer>>[]) =>
 	payers
 		.map((payer) => ({
-			userId: payer.userId,
+			peerId: payer.peerId,
 			part: Number(payer.part),
 			createdAt: payer.createdAt,
 		}))
 		.toSorted((a, b) => {
 			const delta = Temporal.ZonedDateTime.compare(b.createdAt, a.createdAt);
-			return delta === 0 ? a.userId.localeCompare(b.userId) : delta;
+			return delta === 0 ? a.peerId.localeCompare(b.peerId) : delta;
 		});
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
@@ -139,7 +139,7 @@ describe("receipts.get", () => {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
@@ -160,11 +160,11 @@ describe("receipts.get", () => {
 				const {
 					sessionId,
 					accountId,
-					userId: selfUserId,
+					peerId: selfPeerId,
 				} = await insertAccountWithSession(ctx);
 				const receipt = await insertReceipt(ctx, accountId);
 
-				// Verify other users do not interfere
+				// Verify other peers do not interfere
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				await insertReceipt(ctx, foreignAccountId);
 
@@ -176,8 +176,8 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					ownerUserId: selfUserId,
-					selfUserId,
+					ownerPeerId: selfPeerId,
+					selfPeerId,
 					items: [],
 					participants: [],
 					payers: [],
@@ -189,13 +189,13 @@ describe("receipts.get", () => {
 		test("account is a participant", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const receipt = await insertReceipt(ctx, foreignAccountId);
 			const participant = await insertReceiptParticipant(
 				ctx,
 				receipt.id,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -206,8 +206,8 @@ describe("receipts.get", () => {
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
-				ownerUserId: foreignUserId,
-				selfUserId: foreignToSelfUserId,
+				ownerPeerId: foreignPeerId,
+				selfPeerId: foreignToSelfPeerId,
 				items: [],
 				participants: getParticipants([participant]),
 				payers: [],
@@ -224,18 +224,18 @@ describe("receipts.get", () => {
 			test("incoming - has only theirs", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 				const receipt = await insertReceipt(ctx, foreignAccountId);
 				const participant = await insertReceiptParticipant(
 					ctx,
 					receipt.id,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 				);
 				const { id: foreignDebtId } = await insertDebt(
 					ctx,
 					foreignAccountId,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 					{ receiptId: receipt.id },
 				);
 
@@ -247,8 +247,8 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					ownerUserId: foreignUserId,
-					selfUserId: foreignToSelfUserId,
+					ownerPeerId: foreignPeerId,
+					selfPeerId: foreignToSelfPeerId,
 					debts: {
 						direction: "incoming",
 						hasMine: false,
@@ -264,15 +264,15 @@ describe("receipts.get", () => {
 			test("incoming - has only ours", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 				const receipt = await insertReceipt(ctx, foreignAccountId);
 				const participant = await insertReceiptParticipant(
 					ctx,
 					receipt.id,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 				);
-				const { id: debtId } = await insertDebt(ctx, accountId, foreignUserId, {
+				const { id: debtId } = await insertDebt(ctx, accountId, foreignPeerId, {
 					receiptId: receipt.id,
 				});
 
@@ -284,8 +284,8 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					ownerUserId: foreignUserId,
-					selfUserId: foreignToSelfUserId,
+					ownerPeerId: foreignPeerId,
+					selfPeerId: foreignToSelfPeerId,
 					debts: {
 						direction: "incoming",
 						hasMine: true,
@@ -301,18 +301,18 @@ describe("receipts.get", () => {
 			test("incoming - has both", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 				const receipt = await insertReceipt(ctx, foreignAccountId);
 				const participant = await insertReceiptParticipant(
 					ctx,
 					receipt.id,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 				);
 				const [{ id: debtId }] = await insertSyncedDebts(
 					ctx,
-					[foreignAccountId, foreignToSelfUserId, { receiptId: receipt.id }],
-					[accountId, foreignUserId],
+					[foreignAccountId, foreignToSelfPeerId, { receiptId: receipt.id }],
+					[accountId, foreignPeerId],
 				);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -323,8 +323,8 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					ownerUserId: foreignUserId,
-					selfUserId: foreignToSelfUserId,
+					ownerPeerId: foreignPeerId,
+					selfPeerId: foreignToSelfPeerId,
 					debts: {
 						direction: "incoming",
 						hasMine: true,
@@ -341,32 +341,32 @@ describe("receipts.get", () => {
 				const {
 					sessionId,
 					accountId,
-					userId: selfUserId,
+					peerId: selfPeerId,
 				} = await insertAccountWithSession(ctx);
 				const receipt = await insertReceipt(ctx, accountId);
-				const { id: userId } = await insertUser(ctx, accountId);
-				const { id: anotherUserId } = await insertUser(ctx, accountId);
+				const { id: peerId } = await insertPeer(ctx, accountId);
+				const { id: anotherPeerId } = await insertPeer(ctx, accountId);
 				const debts = await Promise.all(
 					[
 						{
-							promise: insertDebt(ctx, accountId, userId, {
+							promise: insertDebt(ctx, accountId, peerId, {
 								receiptId: receipt.id,
 							}),
-							userId,
+							peerId,
 						},
 						{
-							promise: insertDebt(ctx, accountId, anotherUserId, {
+							promise: insertDebt(ctx, accountId, anotherPeerId, {
 								receiptId: receipt.id,
 							}),
-							userId: anotherUserId,
+							peerId: anotherPeerId,
 						},
-					].map(async ({ promise, userId: localUserId }) => ({
+					].map(async ({ promise, peerId: localPeerId }) => ({
 						...(await promise),
-						userId: localUserId,
+						peerId: localPeerId,
 					})),
 				);
 
-				// Verify other users do not interfere
+				// Verify other peers do not interfere
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				await insertReceipt(ctx, foreignAccountId);
 
@@ -378,14 +378,14 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					ownerUserId: selfUserId,
-					selfUserId,
+					ownerPeerId: selfPeerId,
+					selfPeerId,
 					debts: {
 						direction: "outcoming",
 						debts: debts
 							.map((debt) => ({
 								id: debt.id,
-								userId: debt.userId,
+								peerId: debt.peerId,
 							}))
 							.toSorted((a, b) => a.id.localeCompare(b.id)),
 					},
@@ -402,20 +402,20 @@ describe("receipts.get", () => {
 			const {
 				sessionId,
 				accountId,
-				userId: selfUserId,
+				peerId: selfPeerId,
 			} = await insertAccountWithSession(ctx);
-			const notConnectedUser = await insertUser(ctx, accountId);
+			const notConnectedPeer = await insertPeer(ctx, accountId);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [foreignUser] = await insertConnectedUsers(ctx, [
+			const [foreignPeer] = await insertConnectedPeers(ctx, [
 				accountId,
 				foreignAccountId,
 			]);
 			const receipt = await insertReceipt(ctx, accountId);
 			const [selfParticipant, foreignParticipant, notConnectedParticipant] =
 				await Promise.all([
-					insertReceiptParticipant(ctx, receipt.id, selfUserId),
-					insertReceiptParticipant(ctx, receipt.id, foreignUser.id),
-					insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id),
+					insertReceiptParticipant(ctx, receipt.id, selfPeerId),
+					insertReceiptParticipant(ctx, receipt.id, foreignPeer.id),
+					insertReceiptParticipant(ctx, receipt.id, notConnectedPeer.id),
 				]);
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
@@ -429,41 +429,41 @@ describe("receipts.get", () => {
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
-					selfParticipant.userId,
+					selfParticipant.peerId,
 					{ part: 2 },
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
-					foreignParticipant.userId,
+					foreignParticipant.peerId,
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[1].id,
-					selfParticipant.userId,
+					selfParticipant.peerId,
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[2].id,
-					notConnectedParticipant.userId,
+					notConnectedParticipant.peerId,
 				),
 			]);
 			const payers = await Promise.all([
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[1].id,
-					notConnectedParticipant.userId,
+					notConnectedParticipant.peerId,
 					{ part: 2 },
 				),
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[1].id,
-					foreignParticipant.userId,
+					foreignParticipant.peerId,
 				),
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[2].id,
-					foreignParticipant.userId,
+					foreignParticipant.peerId,
 				),
 			]);
 
@@ -475,8 +475,8 @@ describe("receipts.get", () => {
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
-				ownerUserId: selfUserId,
-				selfUserId,
+				ownerPeerId: selfPeerId,
+				selfPeerId,
 				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,
@@ -492,7 +492,7 @@ describe("receipts.get", () => {
 			const {
 				sessionId,
 				accountId,
-				userId: selfUserId,
+				peerId: selfPeerId,
 			} = await insertAccountWithSession(ctx);
 			const receipt = await insertReceipt(ctx, accountId);
 
@@ -504,8 +504,8 @@ describe("receipts.get", () => {
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
-				ownerUserId: selfUserId,
-				selfUserId,
+				ownerPeerId: selfPeerId,
+				selfPeerId,
 				items: [],
 				participants: [],
 				payers: [],
@@ -518,19 +518,19 @@ describe("receipts.get", () => {
 			const { id: connectedAccountId } = await insertAccount(ctx, {
 				avatarUrl: null,
 			});
-			const { id: foreignAccountId, userId: foreignSelfUserId } =
+			const { id: foreignAccountId, peerId: foreignSelfPeerId } =
 				await insertAccount(ctx);
-			const notConnectedUser = await insertUser(ctx, foreignAccountId);
-			const [foreignUser, foreignToSelfUser] = await insertConnectedUsers(ctx, [
+			const notConnectedPeer = await insertPeer(ctx, foreignAccountId);
+			const [foreignPeer, foreignToSelfPeer] = await insertConnectedPeers(ctx, [
 				accountId,
 				foreignAccountId,
 			]);
-			await insertConnectedUsers(ctx, [accountId, connectedAccountId]);
-			const [foreignConnectedUser] = await insertConnectedUsers(ctx, [
+			await insertConnectedPeers(ctx, [accountId, connectedAccountId]);
+			const [foreignConnectedPeer] = await insertConnectedPeers(ctx, [
 				foreignAccountId,
 				connectedAccountId,
 			]);
-			const foreignPayerUser = await insertUser(ctx, foreignAccountId);
+			const foreignPayerPeer = await insertPeer(ctx, foreignAccountId);
 			const receipt = await insertReceipt(ctx, foreignAccountId);
 			const [
 				selfParticipant,
@@ -538,29 +538,29 @@ describe("receipts.get", () => {
 				notConnectedParticipant,
 				connectedParticipant,
 			] = await Promise.all([
-				insertReceiptParticipant(ctx, receipt.id, foreignToSelfUser.id, {
+				insertReceiptParticipant(ctx, receipt.id, foreignToSelfPeer.id, {
 					role: "viewer",
 				}),
-				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId, {
+				insertReceiptParticipant(ctx, receipt.id, foreignSelfPeerId, {
 					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 10,
 					}),
 				}),
-				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id, {
+				insertReceiptParticipant(ctx, receipt.id, notConnectedPeer.id, {
 					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 20,
 					}),
 				}),
-				insertReceiptParticipant(ctx, receipt.id, foreignConnectedUser.id),
+				insertReceiptParticipant(ctx, receipt.id, foreignConnectedPeer.id),
 			]);
 			const [foreignPayer, connectedPayer, ownerPayer] = await Promise.all([
-				insertReceiptPayer(ctx, receipt.id, foreignPayerUser.id),
-				insertReceiptPayer(ctx, receipt.id, foreignConnectedUser.id, {
+				insertReceiptPayer(ctx, receipt.id, foreignPayerPeer.id),
+				insertReceiptPayer(ctx, receipt.id, foreignConnectedPeer.id, {
 					createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 						milliseconds: 20,
 					}),
 				}),
-				insertReceiptPayer(ctx, receipt.id, foreignSelfUserId),
+				insertReceiptPayer(ctx, receipt.id, foreignSelfPeerId),
 			]);
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
@@ -582,18 +582,18 @@ describe("receipts.get", () => {
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
-					selfParticipant.userId,
+					selfParticipant.peerId,
 					{ part: 2 },
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
-					foreignParticipant.userId,
+					foreignParticipant.peerId,
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
-					connectedParticipant.userId,
+					connectedParticipant.peerId,
 					{
 						createdAt: Temporal.Now.zonedDateTimeISO().subtract({
 							milliseconds: 20,
@@ -603,29 +603,29 @@ describe("receipts.get", () => {
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[1].id,
-					selfParticipant.userId,
+					selfParticipant.peerId,
 				),
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[2].id,
-					notConnectedParticipant.userId,
+					notConnectedParticipant.peerId,
 				),
 			]);
 			const payers = await Promise.all([
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[1].id,
-					notConnectedParticipant.userId,
+					notConnectedParticipant.peerId,
 				),
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[2].id,
-					foreignParticipant.userId,
+					foreignParticipant.peerId,
 				),
 				insertReceiptItemPayer(
 					ctx,
 					receiptItems[2].id,
-					notConnectedParticipant.userId,
+					notConnectedParticipant.peerId,
 					{ part: 3 },
 				),
 			]);
@@ -638,8 +638,8 @@ describe("receipts.get", () => {
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
-				ownerUserId: foreignUser.id,
-				selfUserId: foreignToSelfUser.id,
+				ownerPeerId: foreignPeer.id,
+				selfPeerId: foreignToSelfPeer.id,
 				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,

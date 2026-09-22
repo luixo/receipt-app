@@ -75,7 +75,7 @@ export const options: UseContextedMutationOptions<
 					get: (controller) =>
 						controller.updatePayer(
 							receiptId,
-							variables.userId,
+							variables.peerId,
 							applyUpdatePayer(variables.update),
 							getRevertPayer(variables.update),
 						),
@@ -87,7 +87,7 @@ export const options: UseContextedMutationOptions<
 					controller.updateItemConsumer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 						applyUpdate(variables.update),
 						getRevert(variables.update),
 					),

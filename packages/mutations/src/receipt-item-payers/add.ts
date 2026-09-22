@@ -21,7 +21,7 @@ export const options: UseContextedMutationOptions<
 					controller.addItemPayer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 						variables.part,
 						Temporal.Now.zonedDateTimeISO(),
 					),
@@ -35,7 +35,7 @@ export const options: UseContextedMutationOptions<
 					controller.updateItemPayer(
 						receiptId,
 						variables.itemId,
-						variables.userId,
+						variables.peerId,
 						(payer) => ({ ...payer, createdAt: result.createdAt }),
 					);
 				},

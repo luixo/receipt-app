@@ -1,16 +1,18 @@
 import type { Database } from "~db/database";
-import { USERS } from "~db/migration/consts";
+import { PEERS } from "~db/migration/consts";
 
 const addUsersOwnerAccountIdIndex = async (db: Database) => {
 	await db.schema
-		.createIndex(USERS.INDEXES.OWNER_ACCOUNT_ID)
+		.createIndex(PEERS.INDEXES.OWNER_ACCOUNT_ID.replace("peer", "user"))
 		.on("users")
 		.column("ownerAccountId")
 		.execute();
 };
 
 const removeUsersOwnerAccountIdIndex = async (db: Database) => {
-	await db.schema.dropIndex(USERS.INDEXES.OWNER_ACCOUNT_ID).execute();
+	await db.schema
+		.dropIndex(PEERS.INDEXES.OWNER_ACCOUNT_ID.replace("peer", "user"))
+		.execute();
 };
 
 export const up = async (db: Database) => {

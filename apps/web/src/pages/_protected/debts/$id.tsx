@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_protected/debts/$id")({
 			trpc.debts.get.queryOptions({ id: ctx.params.id }),
 		);
 		await ctx.context.queryClient.prefetchQuery(
-			trpc.users.get.queryOptions({ id: debt.userId }),
+			trpc.peers.get.queryOptions({ id: debt.peerId }),
 		);
 	},
 	head: ({ match }) => ({

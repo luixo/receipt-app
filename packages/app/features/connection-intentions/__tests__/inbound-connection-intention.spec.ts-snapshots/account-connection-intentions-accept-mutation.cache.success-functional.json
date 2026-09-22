@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"users.get:[{\"id\":\"b1206789-4871-4839-ab1a-bd063583c1de\"}]": {
+		"peers.get:[{\"id\":\"b1206789-4871-4839-ab1a-bd063583c1de\"}]": {
 			"state": {
 				"data": {
 					"connectedAccount": {
@@ -27,7 +27,7 @@
 					"status": "success",
 					"variables": {
 						"accountId": "47dc3799-7267-4e21-b36f-d12b2e73a0c9",
-						"userId": "b1206789-4871-4839-ab1a-bd063583c1de"
+						"peerId": "b1206789-4871-4839-ab1a-bd063583c1de"
 					}
 				}
 			}

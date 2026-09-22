@@ -47,7 +47,7 @@ test.describe("Accept all intentions button", () => {
 	}) => {
 		const debtsAmount = 6;
 		const rejectedDebtsAmount = 2;
-		const { debtIntenions, debtUser } = await mockDebts({
+		const { debtIntenions, debtPeer } = await mockDebts({
 			generateDebtIntentions: (opts) =>
 				defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 		});
@@ -81,7 +81,7 @@ test.describe("Accept all intentions button", () => {
 					`${debtsAmount - rejectedDebtsAmount} debts accepted successfully`,
 				]);
 			},
-			{ name: "loading", blacklistKeys: "users.get" },
+			{ name: "loading", blacklistKeys: "peers.get" },
 		);
 
 		await snapshotQueries(
@@ -101,11 +101,11 @@ test.describe("Accept all intentions button", () => {
 		api.mockFirst("debtIntentions.accept", {
 			updatedAt: Temporal.Now.zonedDateTimeISO(),
 		});
-		api.mockFirst("debts.getAllUser", { items: [] });
-		api.mockFirst("debts.getUsersPaged", {
+		api.mockFirst("debts.getAllPeer", { items: [] });
+		api.mockFirst("debts.getPeersPaged", {
 			count: 1,
 			cursor: 0,
-			items: [debtUser.id],
+			items: [debtPeer.id],
 		});
 
 		await snapshotQueries(
@@ -121,8 +121,8 @@ test.describe("Accept all intentions button", () => {
 				name: "success",
 				blacklistKeys: [
 					"debts.getAll",
-					"debts.getAllUser",
-					"debts.getUsersPaged",
+					"debts.getAllPeer",
+					"debts.getPeersPaged",
 					"accountSettings.get",
 				],
 			},

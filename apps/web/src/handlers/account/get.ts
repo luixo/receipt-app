@@ -6,17 +6,17 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get account",
 		description:
-			"Returns the current account's profile and its self-user's name.",
+			"Returns the current account's profile and its self-peer's name.",
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const { confirmationToken, id, name, avatarUrl, email, role } =
 			await database
 				.selectFrom("accounts")
-				.innerJoin("users", (jb) => jb.onRef("users.id", "=", "accounts.id"))
+				.innerJoin("peers", (jb) => jb.onRef("peers.id", "=", "accounts.id"))
 				.select([
 					"accounts.id",
-					"users.name",
+					"peers.name",
 					"accounts.confirmationToken",
 					"accounts.avatarUrl",
 					"accounts.email",
@@ -28,7 +28,7 @@ export const procedure = authProcedure
 						/* c8 ignore start */
 						new TRPCError({
 							code: "INTERNAL_SERVER_ERROR",
-							message: `No result for "${ctx.auth.email}" account found, self-user may be non-existent.`,
+							message: `No result for "${ctx.auth.email}" account found, self-peer may be non-existent.`,
 						}),
 					/* c8 ignore stop */
 				);
@@ -40,6 +40,6 @@ export const procedure = authProcedure
 				avatarUrl: avatarUrl || undefined,
 				role: role ?? undefined,
 			},
-			user: { name },
+			peer: { name },
 		};
 	});

@@ -3,34 +3,34 @@ import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 import { entries } from "remeda";
 
-import { test as usersSuggestFixture } from "~app/components/app/__tests__/users-suggest.utils";
+import { test as peersSuggestFixture } from "~app/components/app/__tests__/peers-suggest.utils";
 import { getCurrencySymbol } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { localSettings } from "~tests/frontend/consts";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
 
 type Fixtures = {
 	mockBase: () => Promise<{
-		fromUser: ReturnType<GenerateUsers>[number];
-		toUser: ReturnType<GenerateUsers>[number];
+		fromPeer: ReturnType<GeneratePeers>[number];
+		toPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	mockDebtsTransfer: (options?: { generateDebts?: GenerateDebts }) => Promise<{
 		debts: ReturnType<GenerateDebts>;
-		fromUser: ReturnType<GenerateUsers>[number];
-		toUser: ReturnType<GenerateUsers>[number];
+		fromPeer: ReturnType<GeneratePeers>[number];
+		toPeer: ReturnType<GeneratePeers>[number];
 	}>;
 	openDebtsTransferScreen: (options?: {
-		fromUserId?: UserId;
-		toUserId?: UserId;
+		fromPeerId?: PeerId;
+		toPeerId?: PeerId;
 		awaitCache?: boolean;
 	}) => Promise<void>;
-	fromUserSuggestInput: Locator;
-	toUserSuggestInput: Locator;
+	fromPeerSuggestInput: Locator;
+	toPeerSuggestInput: Locator;
 	submitButton: Locator;
 	addCurrencyButton: Locator;
 	currencyPickerDialog: Locator;
@@ -39,28 +39,28 @@ type Fixtures = {
 	transferForm: Locator;
 };
 
-const mergedTest = mergeTests(originalTest, usersSuggestFixture);
+const mergedTest = mergeTests(originalTest, peersSuggestFixture);
 
 export const test = mergedTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(async () => {
 			await api.mockUtils.authPage();
-			const [fromUser, toUser] = defaultGenerateUsers({ faker, amount: 2 });
-			assert.ok(fromUser);
-			assert.ok(toUser);
-			api.mockFirst("users.suggestTop", { items: [fromUser.id, toUser.id] });
-			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
-			api.mockUtils.mockUsers(fromUser, toUser);
-			return { fromUser, toUser };
+			const [fromPeer, toPeer] = defaultGeneratePeers({ faker, amount: 2 });
+			assert.ok(fromPeer);
+			assert.ok(toPeer);
+			api.mockFirst("peers.suggestTop", { items: [fromPeer.id, toPeer.id] });
+			api.mockFirst("peers.suggest", { cursor: 0, count: 0, items: [] });
+			api.mockUtils.mockPeers(fromPeer, toPeer);
+			return { fromPeer, toPeer };
 		}),
 
 	mockDebtsTransfer: ({ api, faker, mockBase }, use) =>
 		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { fromUser, toUser } = await mockBase();
+			const { fromPeer, toPeer } = await mockBase();
 			const debts = generateDebts({
 				faker,
 				amount: { min: 3, max: 6 },
-				userId: fromUser.id,
+				peerId: fromPeer.id,
 			});
 			const aggregatedDebts = entries(
 				debts.reduce<Record<CurrencyCode, number>>(
@@ -71,30 +71,30 @@ export const test = mergedTest.extend<Fixtures>({
 					{},
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAllUser", { items: aggregatedDebts });
-			api.mockUtils.mockUsers(fromUser, toUser);
-			return { debts, fromUser, toUser };
+			api.mockFirst("debts.getAllPeer", { items: aggregatedDebts });
+			api.mockUtils.mockPeers(fromPeer, toPeer);
+			return { debts, fromPeer, toPeer };
 		}),
 
 	openDebtsTransferScreen: ({ page, awaitCacheKey }, use) =>
-		use(async ({ fromUserId, toUserId, awaitCache = true } = {}) => {
+		use(async ({ fromPeerId, toPeerId, awaitCache = true } = {}) => {
 			await page.navigate({
 				to: "/debts/transfer",
-				search: { to: toUserId, from: fromUserId },
+				search: { to: toPeerId, from: fromPeerId },
 			});
 			if (awaitCache) {
-				if (fromUserId || toUserId) {
-					await awaitCacheKey("users.get", { success: 2 });
+				if (fromPeerId || toPeerId) {
+					await awaitCacheKey("peers.get", { success: 2 });
 				}
-				if (fromUserId) {
-					await awaitCacheKey("debts.getAllUser");
+				if (fromPeerId) {
+					await awaitCacheKey("debts.getAllPeer");
 				}
 			}
 		}),
 
-	fromUserSuggestInput: ({ page }, use) => use(page.getByLabel("From")),
+	fromPeerSuggestInput: ({ page }, use) => use(page.getByLabel("From")),
 
-	toUserSuggestInput: ({ page }, use) => use(page.getByLabel("To")),
+	toPeerSuggestInput: ({ page }, use) => use(page.getByLabel("To")),
 
 	submitButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Transfer debt(s)" })),

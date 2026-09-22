@@ -1,9 +1,9 @@
 import type { Locator } from "@playwright/test";
 
-import type { Currencies, User } from "~app/trpc-types";
+import type { Currencies, Peer } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 import {
 	generateAmount,
 	generateCurrencyCode,
@@ -14,7 +14,7 @@ type Fixtures = {
 	mockBase: () => Promise<
 		{
 			topCurrencies: Currencies;
-			users: ReturnType<GenerateUsers>;
+			peers: ReturnType<GeneratePeers>;
 		} & Awaited<
 			ReturnType<
 				ExtractFixture<typeof originalTest>["api"]["mockUtils"]["authPage"]
@@ -26,7 +26,7 @@ type Fixtures = {
 	currencyInput: Locator;
 	dateInput: Locator;
 	noteInput: Locator;
-	fillValidForm: (user: User) => Promise<void>;
+	fillValidForm: (peer: Peer) => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -40,11 +40,11 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("currency.top", {
 				items: topCurrencies.toSorted((a, b) => b.count - a.count),
 			});
-			const users = defaultGenerateUsers({ faker });
-			api.mockFirst("users.suggestTop", { items: users.map((u) => u.id) });
-			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
-			api.mockUtils.mockUsers(...users);
-			return { topCurrencies, users, ...auth };
+			const peers = defaultGeneratePeers({ faker });
+			api.mockFirst("peers.suggestTop", { items: peers.map((u) => u.id) });
+			api.mockFirst("peers.suggest", { cursor: 0, count: 0, items: [] });
+			api.mockUtils.mockPeers(...peers);
+			return { topCurrencies, peers, ...auth };
 		}),
 
 	addButton: ({ page }, use) =>
@@ -61,9 +61,9 @@ export const test = originalTest.extend<Fixtures>({
 	noteInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Debt note" })),
 
-	fillValidForm: ({ amountInput, noteInput, fillUser }, use) =>
-		use(async (user: User) => {
-			await fillUser(user);
+	fillValidForm: ({ amountInput, noteInput, fillPeer }, use) =>
+		use(async (peer: Peer) => {
+			await fillPeer(peer);
 			await amountInput.fill("10");
 			// Tab out to trigger react-aria NumberField's blur/commit
 			await amountInput.press("Tab");

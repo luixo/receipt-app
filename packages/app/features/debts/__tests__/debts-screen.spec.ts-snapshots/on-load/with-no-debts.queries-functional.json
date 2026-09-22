@@ -2,7 +2,7 @@
 	"debts.getAll": {
 		"serverCalls": 1
 	},
-	"debts.getUsersPaged": {
+	"debts.getPeersPaged": {
 		"serverCalls": 1
 	}
 }

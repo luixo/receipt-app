@@ -109,7 +109,7 @@ describe("auth.resetPassword", () => {
 			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
 			// Verifying other intentions are not affected
 			await insertResetPasswordIntention(ctx, otherAccountId);
-			// Verifying other intentions of the same user are removed
+			// Verifying other intentions of the same peer are removed
 			await insertResetPasswordIntention(ctx, accountId);
 			await insertResetPasswordIntention(ctx, accountId, {
 				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({

@@ -6,7 +6,7 @@
 					"id": "test-id",
 					"amount": 10,
 					"currencyCode": "KRW",
-					"userId": "a02d8e10-6b12-42ad-b00b-1807b2931f87",
+					"peerId": "a02d8e10-6b12-42ad-b00b-1807b2931f87",
 					"timestamp": "2019-12-31",
 					"note": "Transferred from Javonte Rowe",
 					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
@@ -21,7 +21,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getAllUser:[{\"userId\":\"d3197bf0-cc48-47c2-800f-088a51190a41\"}]": {
+		"debts.getAllPeer:[{\"peerId\":\"d3197bf0-cc48-47c2-800f-088a51190a41\"}]": {
 			"state": {
 				"data": {
 					"items": {

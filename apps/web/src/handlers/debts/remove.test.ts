@@ -6,10 +6,10 @@ import {
 	insertAccount,
 	insertAccountSettings,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
+	insertPeer,
 	insertSyncedDebts,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -47,9 +47,9 @@ describe("debts.remove", () => {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 			// Verify that other debts don't affect the result
-			await insertDebt(ctx, accountId, userId);
+			await insertDebt(ctx, accountId, peerId);
 			const fakeDebtId = faker.string.uuid();
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -66,15 +66,15 @@ describe("debts.remove", () => {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
 			// Verify that other debts don't affect the result
-			const { id: userId } = await insertUser(ctx, accountId);
-			await insertDebt(ctx, accountId, userId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			await insertDebt(ctx, accountId, peerId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 			const { id: debtId } = await insertDebt(
 				ctx,
 				foreignAccountId,
-				foreignUserId,
+				foreignPeerId,
 			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -92,20 +92,20 @@ describe("debts.remove", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx, {
 				settings: { manualAcceptDebts: true },
 			});
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
+				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 			const [{ id: debtId }] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId],
-				[foreignAccountId, foreignToSelfUserId],
+				[accountId, peerId],
+				[foreignAccountId, foreignToSelfPeerId],
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertUser(ctx, accountId);
+			await insertPeer(ctx, accountId);
 			await insertAccountSettings(ctx, accountId, { manualAcceptDebts: true });
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, foreignAccountId, foreignUserId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+			await insertDebt(ctx, accountId, peerId);
+			await insertDebt(ctx, foreignAccountId, foreignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -118,22 +118,22 @@ describe("debts.remove", () => {
 			test("debt exists", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
 				const [{ id: debtId }] = await insertSyncedDebts(
 					ctx,
-					[accountId, foreignUserId],
-					[foreignAccountId, foreignToSelfUserId],
+					[accountId, foreignPeerId],
+					[foreignAccountId, foreignToSelfPeerId],
 				);
 
 				// Verify unrelated data doesn't affect the result
-				await insertUser(ctx, accountId);
+				await insertPeer(ctx, accountId);
 				await insertAccountSettings(ctx, accountId, {
 					manualAcceptDebts: true,
 				});
-				await insertUser(ctx, foreignAccountId);
-				await insertDebt(ctx, accountId, foreignUserId);
-				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
+				await insertPeer(ctx, foreignAccountId);
+				await insertDebt(ctx, accountId, foreignPeerId);
+				await insertDebt(ctx, foreignAccountId, foreignToSelfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -145,18 +145,18 @@ describe("debts.remove", () => {
 			test("debt does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const debt = await insertDebt(ctx, accountId, foreignUserId);
+				const [{ id: foreignPeerId }, { id: foreignToSelfPeerId }] =
+					await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
+				const debt = await insertDebt(ctx, accountId, foreignPeerId);
 
 				// Verify unrelated data doesn't affect the result
-				await insertUser(ctx, accountId);
+				await insertPeer(ctx, accountId);
 				await insertAccountSettings(ctx, accountId, {
 					manualAcceptDebts: true,
 				});
-				await insertUser(ctx, foreignAccountId);
-				await insertDebt(ctx, accountId, foreignUserId);
-				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
+				await insertPeer(ctx, foreignAccountId);
+				await insertDebt(ctx, accountId, foreignPeerId);
+				await insertDebt(ctx, foreignAccountId, foreignToSelfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>

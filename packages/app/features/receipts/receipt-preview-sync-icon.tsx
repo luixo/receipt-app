@@ -54,7 +54,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 		if (hasNonDistributedItems) {
 			return <StatusButton type="unsynced" />;
 		}
-		if (receipt.selfUserId === receipt.ownerUserId) {
+		if (receipt.selfPeerId === receipt.ownerPeerId) {
 			const syncedParticipants = syncableParticipants.filter((participant) =>
 				participant.currentDebt?.our
 					? isDebtInSyncWithReceipt(
@@ -69,7 +69,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 			return <StatusButton type="unsynced" />;
 		}
 		const selfParticipant = participantsWithDebts.find(
-			(participant) => participant.userId === receipt.selfUserId,
+			(participant) => participant.peerId === receipt.selfPeerId,
 		);
 		if (!selfParticipant) {
 			throw new Error(

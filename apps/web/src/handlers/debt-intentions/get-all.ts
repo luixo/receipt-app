@@ -8,48 +8,48 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get all debt intentions",
 		description:
-			"Returns inbound debts from connected users that are new or differ from the current account's mirrored debt.",
+			"Returns inbound debts from connected peers that are new or differ from the current account's mirrored debt.",
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const debts = await database
-			.selectFrom("users")
+			.selectFrom("peers")
 			.where((eb) =>
-				eb("users.connectedAccountId", "=", ctx.auth.accountId).and(
-					"users.ownerAccountId",
+				eb("peers.connectedAccountId", "=", ctx.auth.accountId).and(
+					"peers.ownerAccountId",
 					"<>",
 					ctx.auth.accountId,
 				),
 			)
-			.innerJoin("users as reciprocalUsers", (qb) =>
+			.innerJoin("peers as reciprocalPeers", (qb) =>
 				qb
 					.onRef(
-						"reciprocalUsers.ownerAccountId",
+						"reciprocalPeers.ownerAccountId",
 						"=",
-						"users.connectedAccountId",
+						"peers.connectedAccountId",
 					)
 					.onRef(
-						"reciprocalUsers.connectedAccountId",
+						"reciprocalPeers.connectedAccountId",
 						"=",
-						"users.ownerAccountId",
+						"peers.ownerAccountId",
 					),
 			)
 			.innerJoin("debts as theirDebts", (qb) =>
-				qb.onRef("theirDebts.userId", "=", "users.id"),
+				qb.onRef("theirDebts.peerId", "=", "peers.id"),
 			)
 			.leftJoin("debts as selfDebts", (qb) =>
 				qb
 					.onRef("theirDebts.id", "=", "selfDebts.id")
-					.onRef("selfDebts.ownerAccountId", "=", "users.connectedAccountId"),
+					.onRef("selfDebts.ownerAccountId", "=", "peers.connectedAccountId"),
 			)
-			.innerJoin("users as usersMine", (qb) =>
+			.innerJoin("peers as peersMine", (qb) =>
 				qb
 					.onRef(
-						"usersMine.connectedAccountId",
+						"peersMine.connectedAccountId",
 						"=",
 						"theirDebts.ownerAccountId",
 					)
-					.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId"),
+					.onRef("peersMine.ownerAccountId", "=", "peers.connectedAccountId"),
 			)
 			.where((eb) =>
 				eb.or([
@@ -77,7 +77,7 @@ export const procedure = authProcedure
 				"theirDebts.amount",
 				"theirDebts.currencyCode",
 				"theirDebts.receiptId",
-				"usersMine.id as userId",
+				"peersMine.id as peerId",
 				(eb) => eb.fn.coalesce("selfDebts.note", "theirDebts.note").as("note"),
 				"selfDebts.amount as selfAmount",
 				"selfDebts.timestamp as selfTimestamp",
@@ -99,7 +99,7 @@ export const procedure = authProcedure
 		return {
 			items: debts.map((debt) => ({
 				id: debt.id,
-				userId: debt.userId,
+				peerId: debt.peerId,
 				amount: -Number(debt.amount),
 				currencyCode: debt.currencyCode,
 				updatedAt: debt.updatedAt,

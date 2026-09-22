@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 
 import { test as originalTest } from "./utils";
 
@@ -9,9 +9,9 @@ type Fixtures = {
 	confirmDialog: Locator;
 	confirmYesButton: Locator;
 	confirmNoButton: Locator;
-	mockSuggestedUsers: (
+	mockSuggestedPeers: (
 		amount?: number,
-	) => ReturnType<typeof defaultGenerateUsers>;
+	) => ReturnType<typeof defaultGeneratePeers>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -22,13 +22,13 @@ export const test = originalTest.extend<Fixtures>({
 		use(confirmDialog.getByRole("button", { name: "Yes" })),
 	confirmNoButton: ({ confirmDialog }, use) =>
 		use(confirmDialog.getByRole("button", { name: "No" })),
-	mockSuggestedUsers: ({ api, faker }, use) =>
+	mockSuggestedPeers: ({ api, faker }, use) =>
 		use((amount = 1) => {
-			const users = defaultGenerateUsers({ faker, amount });
-			api.mockUtils.mockUsers(...users);
-			api.mockFirst("users.suggestTop", {
-				items: users.map((user) => user.id),
+			const peers = defaultGeneratePeers({ faker, amount });
+			api.mockUtils.mockPeers(...peers);
+			api.mockFirst("peers.suggestTop", {
+				items: peers.map((peer) => peer.id),
 			});
-			return users;
+			return peers;
 		}),
 });

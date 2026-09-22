@@ -1,20 +1,20 @@
 import { z } from "zod";
 
-import { userNameSchema } from "~app/utils/validation";
-import type { UserId } from "~db/ids";
+import { peerNameSchema } from "~app/utils/validation";
+import type { PeerId } from "~db/ids";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Change account name",
-		description: "Updates the display name of the current account's self-user.",
+		description: "Updates the display name of the current account's self-peer.",
 	})
-	.input(z.strictObject({ name: userNameSchema }))
+	.input(z.strictObject({ name: peerNameSchema }))
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
 		await database
-			.updateTable("users")
+			.updateTable("peers")
 			.set({ name: input.name })
-			.where("id", "=", ctx.auth.accountId as UserId)
+			.where("id", "=", ctx.auth.accountId as PeerId)
 			.executeTakeFirst();
 	});

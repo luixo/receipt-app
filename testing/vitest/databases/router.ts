@@ -26,14 +26,14 @@ const ORDERS: {
 	accounts: "id",
 	accountSettings: "accountId",
 	debts: ["id", "ownerAccountId"],
-	receiptItemConsumers: ["itemId", "userId"],
-	receiptItemPayers: ["itemId", "userId"],
+	receiptItemConsumers: ["itemId", "peerId"],
+	receiptItemPayers: ["itemId", "peerId"],
 	receiptItems: "id",
-	receiptParticipants: ["receiptId", "userId"],
+	receiptParticipants: ["receiptId", "peerId"],
 	receipts: "id",
 	resetPasswordIntentions: ["accountId", "token"],
 	sessions: "sessionId",
-	users: "id",
+	peers: "id",
 };
 
 const { router, procedure, middleware, createCallerFactory } = initTRPC.create({

@@ -5,10 +5,10 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
+	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -27,7 +27,7 @@ describe("receiptParticipants.update", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
 				receiptId: faker.string.uuid(),
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 				update: { type: "role", role: "viewer" },
 			}),
 		);
@@ -40,7 +40,7 @@ describe("receiptParticipants.update", () => {
 					() =>
 						caller.procedure({
 							receiptId: "not-a-uuid",
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							update: { type: "role", role: "viewer" },
 						}),
 					"BAD_REQUEST",
@@ -49,7 +49,7 @@ describe("receiptParticipants.update", () => {
 			});
 		});
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -57,11 +57,11 @@ describe("receiptParticipants.update", () => {
 					() =>
 						caller.procedure({
 							receiptId: faker.string.uuid(),
-							userId: "not-a-uuid",
+							peerId: "not-a-uuid",
 							update: { type: "role", role: "viewer" },
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -75,7 +75,7 @@ describe("receiptParticipants.update", () => {
 				() =>
 					caller.procedure({
 						receiptId: fakeReceiptId,
-						userId: faker.string.uuid(),
+						peerId: faker.string.uuid(),
 						update: { type: "role", role: "viewer" },
 					}),
 				"NOT_FOUND",
@@ -83,22 +83,22 @@ describe("receiptParticipants.update", () => {
 			);
 		});
 
-		describe("user", () => {
+		describe("peer", () => {
 			test("does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const fakeUserId = faker.string.uuid();
+				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
 							receiptId,
-							userId: fakeUserId,
+							peerId: fakePeerId,
 							update: { type: "role", role: "viewer" },
 						}),
 					"NOT_FOUND",
-					`User "${fakeUserId}" does not exist.`,
+					`Peer "${fakePeerId}" does not exist.`,
 				);
 			});
 
@@ -106,7 +106,7 @@ describe("receiptParticipants.update", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertReceipt(ctx, accountId);
 
-				const { id: notParticipantUserId } = await insertUser(ctx, accountId);
+				const { id: notParticipantPeerId } = await insertPeer(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -114,11 +114,11 @@ describe("receiptParticipants.update", () => {
 					() =>
 						caller.procedure({
 							receiptId,
-							userId: notParticipantUserId,
+							peerId: notParticipantPeerId,
 							update: { type: "role", role: "viewer" },
 						}),
 					"CONFLICT",
-					`User "${notParticipantUserId}" does not participate in receipt "${receiptId}".`,
+					`Peer "${notParticipantPeerId}" does not participate in receipt "${receiptId}".`,
 				);
 			});
 		});
@@ -128,17 +128,17 @@ describe("receiptParticipants.update", () => {
 				const {
 					sessionId,
 					accountId,
-					userId: selfUserId,
+					peerId: selfPeerId,
 				} = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				await insertReceiptParticipant(ctx, receiptId, selfUserId);
+				await insertReceiptParticipant(ctx, receiptId, selfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
 							receiptId,
-							userId: selfUserId,
+							peerId: selfPeerId,
 							update: { type: "role", role: "viewer" },
 						}),
 					"BAD_REQUEST",
@@ -155,14 +155,14 @@ describe("receiptParticipants.update", () => {
 					ctx,
 					foreignAccountId,
 				);
-				const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+				const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 					foreignAccountId,
 					accountId,
 				]);
 				await insertReceiptParticipant(
 					ctx,
 					foreignReceiptId,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 					{ role: "editor" },
 				);
 
@@ -171,11 +171,11 @@ describe("receiptParticipants.update", () => {
 					() =>
 						caller.procedure({
 							receiptId: foreignReceiptId,
-							userId: foreignToSelfUserId,
+							peerId: foreignToSelfPeerId,
 							update: { type: "role", role: "viewer" },
 						}),
 					"FORBIDDEN",
-					`Only receipt owner can modify user receipt role.`,
+					`Only receipt owner can modify peer receipt role.`,
 				);
 			});
 		});
@@ -183,30 +183,30 @@ describe("receiptParticipants.update", () => {
 
 	describe("functionality", () => {
 		describe("update role", () => {
-			test("for another user", async ({ ctx }) => {
+			test("for another peer", async ({ ctx }) => {
 				const {
 					sessionId,
 					accountId,
-					userId: selfUserId,
+					peerId: selfPeerId,
 				} = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
+				const [{ id: foreignPeerId }] = await insertConnectedPeers(ctx, [
 					accountId,
 					foreignAccountId,
 				]);
-				await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
+				await insertReceiptParticipant(ctx, receiptId, foreignPeerId, {
 					role: "editor",
 				});
 
 				// Verify unrelated data doesn't affect the result
-				await insertReceiptParticipant(ctx, receiptId, selfUserId);
+				await insertReceiptParticipant(ctx, receiptId, selfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						receiptId,
-						userId: foreignUserId,
+						peerId: foreignPeerId,
 						update: { type: "role", role: "viewer" },
 					}),
 				);

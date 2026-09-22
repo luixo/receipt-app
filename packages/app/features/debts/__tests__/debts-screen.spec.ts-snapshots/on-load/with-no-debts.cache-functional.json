@@ -13,7 +13,7 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
+		"debts.getPeersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10}]": {
 			"state": {
 				"data": {
 					"count": 0,

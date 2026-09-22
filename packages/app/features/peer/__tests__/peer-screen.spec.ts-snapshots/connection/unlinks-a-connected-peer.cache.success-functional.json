@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"peers.get:[{\"id\":\"13075b4a-21fb-4bbc-a410-eb7c7e134aeb\"}]": {
+			"state": {
+				"data": {
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"peers.unlink": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "13075b4a-21fb-4bbc-a410-eb7c7e134aeb"
+					}
+				}
+			}
+		}
+	}
+}

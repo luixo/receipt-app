@@ -5,12 +5,12 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
+	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemPayer,
 	insertReceiptParticipant,
-	insertUser,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -29,7 +29,7 @@ describe("receiptItemPayers.remove", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
 				itemId: faker.string.uuid(),
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 			}),
 		);
 
@@ -41,7 +41,7 @@ describe("receiptItemPayers.remove", () => {
 					() =>
 						caller.procedure({
 							itemId: "not-a-uuid",
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "itemId": Invalid UUID`,
@@ -49,7 +49,7 @@ describe("receiptItemPayers.remove", () => {
 			});
 		});
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -57,10 +57,10 @@ describe("receiptItemPayers.remove", () => {
 					() =>
 						caller.procedure({
 							itemId: faker.string.uuid(),
-							userId: "not-a-uuid",
+							peerId: "not-a-uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -75,7 +75,7 @@ describe("receiptItemPayers.remove", () => {
 				() =>
 					caller.procedure({
 						itemId: fakeItemId,
-						userId: faker.string.uuid(),
+						peerId: faker.string.uuid(),
 					}),
 				"NOT_FOUND",
 				`Receipt item "${fakeItemId}" does not exist.`,
@@ -91,70 +91,70 @@ describe("receiptItemPayers.remove", () => {
 				ctx,
 				foreignAccountId,
 			);
-			const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
+			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
 				foreignAccountId,
 				accountId,
 			]);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
-				foreignToSelfUserId,
+				foreignToSelfPeerId,
 				{ role: "viewer" },
 			);
 			const { id: receiptItemId } = await insertReceiptItem(
 				ctx,
 				foreignReceiptId,
 			);
-			await insertReceiptItemPayer(ctx, receiptItemId, foreignToSelfUserId);
+			await insertReceiptItemPayer(ctx, receiptItemId, foreignToSelfPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
 						itemId: receiptItemId,
-						userId: foreignToSelfUserId,
+						peerId: foreignToSelfPeerId,
 					}),
 				"FORBIDDEN",
 				`Not enough rights to remove payer from item from receipt "${foreignReceiptId}".`,
 			);
 		});
 
-		test("user doesn't pay for this item", async ({ ctx }) => {
+		test("peer doesn't pay for this item", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
-				userId: selfUserId,
+				peerId: selfPeerId,
 			} = await insertAccountWithSession(ctx);
 			await insertReceipt(ctx, accountId);
 
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			await insertReceiptParticipant(ctx, receiptId, userId);
+			await insertReceiptParticipant(ctx, receiptId, peerId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertReceiptItemPayer(ctx, receiptItemId, selfUserId);
+			await insertReceiptItemPayer(ctx, receiptItemId, selfPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
-				() => caller.procedure({ itemId: receiptItemId, userId }),
+				() => caller.procedure({ itemId: receiptItemId, peerId }),
 				"NOT_FOUND",
-				`User "${userId}" does not pay for item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
+				`Peer "${peerId}" does not pay for item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
 			);
 		});
 	});
 
 	describe("functionality", () => {
-		test("user does not pay for item anymore", async ({ ctx }) => {
+		test("peer does not pay for item anymore", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			const { id: userId } = await insertUser(ctx, accountId);
-			const { id: anotherUserId } = await insertUser(ctx, accountId);
-			await insertReceiptParticipant(ctx, receiptId, userId, {
+			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
+			await insertReceiptParticipant(ctx, receiptId, peerId, {
 				role: "editor",
 			});
-			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
+			await insertReceiptParticipant(ctx, receiptId, anotherPeerId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertReceiptItemPayer(ctx, receiptItemId, userId);
-			await insertReceiptItemPayer(ctx, receiptItemId, anotherUserId);
+			await insertReceiptItemPayer(ctx, receiptItemId, peerId);
+			await insertReceiptItemPayer(ctx, receiptItemId, anotherPeerId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceiptItem(ctx, receiptId);
@@ -163,7 +163,7 @@ describe("receiptItemPayers.remove", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure({ itemId: receiptItemId, userId }),
+				caller.procedure({ itemId: receiptItemId, peerId }),
 			);
 		});
 	});

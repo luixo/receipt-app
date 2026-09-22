@@ -13,14 +13,14 @@ import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import {
 	emailSchema,
 	passwordSchema,
-	userNameSchema,
+	peerNameSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { options as authRegisterOptions } from "~mutations/auth/register";
 
 const formSchema = z.object({
 	email: emailSchema,
-	name: userNameSchema,
+	name: peerNameSchema,
 	password: passwordSchema,
 	passwordRetype: passwordSchema,
 });

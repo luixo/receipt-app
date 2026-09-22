@@ -6,48 +6,48 @@ import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
-import { emailSchema, userIdSchema } from "~web/handlers/validation";
+import { emailSchema, peerIdSchema } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
 const addConnectionIntentionSchema = z.strictObject({
-	userId: userIdSchema,
+	peerId: peerIdSchema,
 	email: emailSchema,
 });
 type ConnectionIntention = z.infer<typeof addConnectionIntentionSchema>;
 
-const getTargetUsers = async (
+const getTargetPeers = async (
 	ctx: AuthorizedContext,
 	intentions: readonly ConnectionIntention[],
 ) =>
 	ctx.database
-		.selectFrom("users")
+		.selectFrom("peers")
 		.where(
-			"users.id",
+			"peers.id",
 			"in",
-			intentions.map((intention) => intention.userId),
+			intentions.map((intention) => intention.peerId),
 		)
-		.leftJoin("users as reciprocalUsers", (qb) =>
+		.leftJoin("peers as reciprocalPeers", (qb) =>
 			qb
 				.onRef(
-					"reciprocalUsers.ownerAccountId",
+					"reciprocalPeers.ownerAccountId",
 					"=",
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 				)
 				.onRef(
-					"reciprocalUsers.connectedAccountId",
+					"reciprocalPeers.connectedAccountId",
 					"=",
-					"users.ownerAccountId",
+					"peers.ownerAccountId",
 				),
 		)
 		.leftJoin("accounts", (qb) =>
-			qb.onRef("accounts.id", "=", "users.connectedAccountId"),
+			qb.onRef("accounts.id", "=", "peers.connectedAccountId"),
 		)
 		.select([
-			"users.id",
-			"users.name",
+			"peers.id",
+			"peers.name",
 			"accounts.email",
-			"users.ownerAccountId",
-			"reciprocalUsers.id as reciprocalUserId",
+			"peers.ownerAccountId",
+			"reciprocalPeers.id as reciprocalPeerId",
 		])
 		.execute();
 
@@ -62,71 +62,71 @@ const getTargetAccounts = async (
 			"in",
 			intentions.map((intention) => intention.email.lowercase),
 		)
-		.leftJoin("users", (qb) =>
+		.leftJoin("peers", (qb) =>
 			qb
-				.onRef("users.connectedAccountId", "=", "accounts.id")
-				.on("users.ownerAccountId", "=", ctx.auth.accountId),
+				.onRef("peers.connectedAccountId", "=", "accounts.id")
+				.on("peers.ownerAccountId", "=", ctx.auth.accountId),
 		)
-		.leftJoin("users as reciprocalUsers", (qb) =>
+		.leftJoin("peers as reciprocalPeers", (qb) =>
 			qb
-				.onRef("reciprocalUsers.ownerAccountId", "=", "accounts.id")
-				.on("reciprocalUsers.connectedAccountId", "=", ctx.auth.accountId),
+				.onRef("reciprocalPeers.ownerAccountId", "=", "accounts.id")
+				.on("reciprocalPeers.connectedAccountId", "=", ctx.auth.accountId),
 		)
 		.select([
 			"accounts.id",
 			"accounts.avatarUrl",
 			"accounts.email",
-			"users.name as userName",
-			"reciprocalUsers.id as reciprocalUserId",
+			"peers.name as peerName",
+			"reciprocalPeers.id as reciprocalPeerId",
 		])
 		.execute();
 
 const getDirectIntentions = async (
 	ctx: AuthorizedContext,
 	targetAccountsPromise: ReturnType<typeof getTargetAccounts>,
-	targetUsersPromise: ReturnType<typeof getTargetUsers>,
+	targetPeersPromise: ReturnType<typeof getTargetPeers>,
 ) => {
 	const targetAccounts = await targetAccountsPromise;
-	const targetUsers = await targetUsersPromise;
-	if (targetAccounts.length === 0 || targetUsers.length === 0) {
+	const targetPeers = await targetPeersPromise;
+	if (targetAccounts.length === 0 || targetPeers.length === 0) {
 		return [];
 	}
 	return ctx.database
-		.selectFrom("users")
-		.leftJoin("users as reciprocalUsers", (qb) =>
+		.selectFrom("peers")
+		.leftJoin("peers as reciprocalPeers", (qb) =>
 			qb
 				.onRef(
-					"reciprocalUsers.ownerAccountId",
+					"reciprocalPeers.ownerAccountId",
 					"=",
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 				)
 				.onRef(
-					"reciprocalUsers.connectedAccountId",
+					"reciprocalPeers.connectedAccountId",
 					"=",
-					"users.ownerAccountId",
+					"peers.ownerAccountId",
 				),
 		)
-		.where("users.ownerAccountId", "=", ctx.auth.accountId)
-		.where("users.connectedAccountId", "is not", null)
-		.where("reciprocalUsers.id", "is", null)
+		.where("peers.ownerAccountId", "=", ctx.auth.accountId)
+		.where("peers.connectedAccountId", "is not", null)
+		.where("reciprocalPeers.id", "is", null)
 		.where((qb) =>
 			qb.or([
 				qb(
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 					"in",
 					targetAccounts.map(({ id }) => id),
 				),
 				qb(
-					"users.id",
+					"peers.id",
 					"in",
-					targetUsers.map(({ id }) => id),
+					targetPeers.map(({ id }) => id),
 				),
 			]),
 		)
 		.select([
-			"users.id as userId",
-			"users.connectedAccountId as targetAccountId",
-			"users.name",
+			"peers.id as peerId",
+			"peers.connectedAccountId as targetAccountId",
+			"peers.name",
 		])
 		.execute();
 };
@@ -140,28 +140,28 @@ const getViceVersaIntentions = async (
 		return [];
 	}
 	return ctx.database
-		.selectFrom("users")
-		.leftJoin("users as reciprocalUsers", (qb) =>
+		.selectFrom("peers")
+		.leftJoin("peers as reciprocalPeers", (qb) =>
 			qb
 				.onRef(
-					"reciprocalUsers.ownerAccountId",
+					"reciprocalPeers.ownerAccountId",
 					"=",
-					"users.connectedAccountId",
+					"peers.connectedAccountId",
 				)
 				.onRef(
-					"reciprocalUsers.connectedAccountId",
+					"reciprocalPeers.connectedAccountId",
 					"=",
-					"users.ownerAccountId",
+					"peers.ownerAccountId",
 				),
 		)
 		.where(
-			"users.ownerAccountId",
+			"peers.ownerAccountId",
 			"in",
 			targetAccounts.map(({ id }) => id),
 		)
-		.where("users.connectedAccountId", "=", ctx.auth.accountId)
-		.where("reciprocalUsers.id", "is", null)
-		.select(["users.id as userId", "users.ownerAccountId as accountId"])
+		.where("peers.connectedAccountId", "=", ctx.auth.accountId)
+		.where("reciprocalPeers.id", "is", null)
+		.select(["peers.id as peerId", "peers.ownerAccountId as accountId"])
 		.execute();
 };
 
@@ -170,15 +170,15 @@ const getData = async (
 	intentions: readonly ConnectionIntention[],
 ) => {
 	const targetAccountsPromise = getTargetAccounts(ctx, intentions);
-	const targetUsersPromise = getTargetUsers(ctx, intentions);
+	const targetPeersPromise = getTargetPeers(ctx, intentions);
 
 	return {
 		targetAccounts: await targetAccountsPromise,
-		targetUsers: await targetUsersPromise,
+		targetPeers: await targetPeersPromise,
 		directIntentions: await getDirectIntentions(
 			ctx,
 			targetAccountsPromise,
-			targetUsersPromise,
+			targetPeersPromise,
 		),
 		viceVersaIntentions: await getViceVersaIntentions(
 			ctx,
@@ -192,29 +192,29 @@ const getIntentionsOrErrors = (
 	intentions: readonly ConnectionIntention[],
 	{
 		targetAccounts,
-		targetUsers,
+		targetPeers,
 		viceVersaIntentions,
 		directIntentions,
 	}: Awaited<ReturnType<typeof getData>>,
 ) =>
 	intentions.map((intention) => {
-		const targetUser = targetUsers.find((user) => user.id === intention.userId);
-		if (!targetUser) {
+		const targetPeer = targetPeers.find((peer) => peer.id === intention.peerId);
+		if (!targetPeer) {
 			return new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${intention.userId}" does not exist.`,
+				message: `Peer "${intention.peerId}" does not exist.`,
 			});
 		}
-		if (targetUser.ownerAccountId !== ctx.auth.accountId) {
+		if (targetPeer.ownerAccountId !== ctx.auth.accountId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
-				message: `User "${intention.userId}" is not owned by "${ctx.auth.email}".`,
+				message: `Peer "${intention.peerId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (targetUser.email && targetUser.reciprocalUserId) {
+		if (targetPeer.email && targetPeer.reciprocalPeerId) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `User "${intention.userId}" is already connected to account "${targetUser.email}".`,
+				message: `Peer "${intention.peerId}" is already connected to account "${targetPeer.email}".`,
 			});
 		}
 		const targetAccount = targetAccounts.find(
@@ -226,10 +226,10 @@ const getIntentionsOrErrors = (
 				message: `Account with email "${intention.email.original}" does not exist.`,
 			});
 		}
-		if (targetAccount.userName && targetAccount.reciprocalUserId) {
+		if (targetAccount.peerName && targetAccount.reciprocalPeerId) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `Account with email "${intention.email.original}" is already connected to user "${targetAccount.userName}".`,
+				message: `Account with email "${intention.email.original}" is already connected to peer "${targetAccount.peerName}".`,
 			});
 		}
 		const directIntentionByAccount = directIntentions.find(
@@ -238,16 +238,16 @@ const getIntentionsOrErrors = (
 		if (directIntentionByAccount) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to "${intention.email.original}" as user "${directIntentionByAccount.name}".`,
+				message: `You already has intention to connect to "${intention.email.original}" as peer "${directIntentionByAccount.name}".`,
 			});
 		}
-		const directIntentionByUser = directIntentions.find(
-			({ userId }) => userId === intention.userId,
+		const directIntentionByPeer = directIntentions.find(
+			({ peerId }) => peerId === intention.peerId,
 		);
-		if (directIntentionByUser) {
+		if (directIntentionByPeer) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to user "${directIntentionByUser.name}".`,
+				message: `You already has intention to connect to peer "${directIntentionByPeer.name}".`,
 			});
 		}
 		const viceVersaIntention = viceVersaIntentions.find(
@@ -261,12 +261,12 @@ const getIntentionsOrErrors = (
 					email: targetAccount.email,
 					avatarUrl: targetAccount.avatarUrl,
 				},
-				asUser: {
-					id: intention.userId,
-					name: targetUser.name,
+				asPeer: {
+					id: intention.peerId,
+					name: targetPeer.name,
 				},
-				viceVersaUser: {
-					id: viceVersaIntention.userId,
+				viceVersaPeer: {
+					id: viceVersaIntention.peerId,
 				},
 			};
 		}
@@ -277,9 +277,9 @@ const getIntentionsOrErrors = (
 				email: targetAccount.email,
 				avatarUrl: targetAccount.avatarUrl,
 			},
-			asUser: {
-				id: intention.userId,
-				name: targetUser.name,
+			asPeer: {
+				id: intention.peerId,
+				name: targetPeer.name,
 			},
 		};
 	});
@@ -300,24 +300,24 @@ const insertViceVersaIntentions = async (
 		Promise.all([
 			...intentions.map((intention) =>
 				tx
-					.updateTable("users")
+					.updateTable("peers")
 					.set({ connectedAccountId: ctx.auth.accountId })
 					.where((eb) =>
 						eb.and({
 							ownerAccountId: intention.targetAccount.id,
-							id: intention.viceVersaUser.id,
+							id: intention.viceVersaPeer.id,
 						}),
 					)
 					.executeTakeFirst(),
 			),
 			...intentions.map((intention) =>
 				tx
-					.updateTable("users")
+					.updateTable("peers")
 					.set({ connectedAccountId: intention.targetAccount.id })
 					.where((eb) =>
 						eb.and({
 							ownerAccountId: ctx.auth.accountId,
-							id: intention.asUser.id,
+							id: intention.asPeer.id,
 						}),
 					)
 					.executeTakeFirst(),
@@ -339,10 +339,10 @@ const insertDirectIntentions = async (
 			Promise.all(
 				intentions.map((intention) =>
 					tx
-						.updateTable("users")
+						.updateTable("peers")
 						.set({ connectedAccountId: intention.targetAccount.id })
 						.where("ownerAccountId", "=", ctx.auth.accountId)
-						.where("id", "=", intention.asUser.id)
+						.where("id", "=", intention.asPeer.id)
 						.executeTakeFirst(),
 				),
 			),
@@ -356,7 +356,7 @@ type IntentionOutput = {
 		avatarUrl?: string;
 	};
 	connected: boolean;
-	user: {
+	peer: {
 		name: string;
 	};
 };
@@ -379,15 +379,15 @@ export const batchFn: BatchLoadContextFn<
 				.join(", ")}.`,
 		});
 	}
-	const duplicatedUserIds = getDuplicates(
+	const duplicatedPeerIds = getDuplicates(
 		inputs,
-		(intention) => intention.userId,
+		(intention) => intention.peerId,
 	);
-	if (duplicatedUserIds.length !== 0) {
+	if (duplicatedPeerIds.length !== 0) {
 		throw new TRPCError({
 			code: "CONFLICT",
-			message: `Expected to have unique user ids, got repeating: ${duplicatedUserIds
-				.map(([userId, count]) => `"${userId}" (${count} times)`)
+			message: `Expected to have unique peer ids, got repeating: ${duplicatedPeerIds
+				.map(([peerId, count]) => `"${peerId}" (${count} times)`)
 				.join(", ")}.`,
 		});
 	}
@@ -440,8 +440,8 @@ export const batchFn: BatchLoadContextFn<
 				avatarUrl: intentionOrError.targetAccount.avatarUrl || undefined,
 			},
 			connected: Boolean(matchedViceVersaIntention),
-			user: {
-				name: intentionOrError.asUser.name,
+			peer: {
+				name: intentionOrError.asPeer.name,
 			},
 		};
 	});
@@ -451,7 +451,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add account connection intention",
 		description:
-			"Sends an account connection intention for a given userId to a given email, or accepts a matching vice-versa intention immediately.",
+			"Sends an account connection intention for a given peerId to a given email, or accepts a matching vice-versa intention immediately.",
 	})
 	.input(addConnectionIntentionSchema)
 	.mutation(queueCallFactory(batchFn));

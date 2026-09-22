@@ -59,8 +59,8 @@
 				"label": "От"
 			}
 		},
-		"defaultNoteFrom": "Перевод от {{user}}",
-		"defaultNoteTo": "Перевод к {{user}}"
+		"defaultNoteFrom": "Перевод от {{peer}}",
+		"defaultNoteTo": "Перевод к {{peer}}"
 	},
 	"intentions": {
 		"acceptAllButton": "Принять все долги",
@@ -90,7 +90,7 @@
 		"defaultNoteFrom": "Сконвертировано из {{debts}}",
 		"defaultNoteTo": "Сконвертировано в {{debt}}"
 	},
-	"user": {
+	"peer": {
 		"even": "Рассчитались по {{currency}}",
 		"buttons": {
 			"transfer": "Перевести долги",

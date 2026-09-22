@@ -1,4 +1,4 @@
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -16,7 +16,7 @@ export const options: UseContextedMutationOptions<
 					void controller.invalidate();
 				},
 				get: (controller) => {
-					const selfUserId = selfAccountId as UserId;
+					const selfPeerId = selfAccountId as PeerId;
 					controller.add({
 						id: result.id,
 						createdAt: result.createdAt,
@@ -24,7 +24,7 @@ export const options: UseContextedMutationOptions<
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,
 						participants:
-							variables.participants?.map(({ userId, role }, index) => {
+							variables.participants?.map(({ peerId, role }, index) => {
 								const matchedResult = result.participants[index];
 								if (!matchedResult) {
 									throw new Error(
@@ -32,9 +32,9 @@ export const options: UseContextedMutationOptions<
 									);
 								}
 								return {
-									role: userId === selfUserId ? "owner" : role,
+									role: peerId === selfPeerId ? "owner" : role,
 									createdAt: matchedResult.createdAt,
-									userId,
+									peerId,
 								};
 							}) ?? [],
 						items:
@@ -55,15 +55,15 @@ export const options: UseContextedMutationOptions<
 										item.consumers?.map((consumer) => {
 											const matchedConsumer = matchedItem.consumers?.find(
 												(lookupConsumer) =>
-													lookupConsumer.userId === consumer.userId,
+													lookupConsumer.peerId === consumer.peerId,
 											);
 											if (!matchedConsumer) {
 												throw new Error(
-													`Expected to have consumer with user id "${consumer.userId}" returned from receipt creation.`,
+													`Expected to have consumer with peer id "${consumer.peerId}" returned from receipt creation.`,
 												);
 											}
 											return {
-												userId: consumer.userId,
+												peerId: consumer.peerId,
 												part: consumer.part,
 												createdAt: matchedConsumer.createdAt,
 											};
@@ -71,15 +71,15 @@ export const options: UseContextedMutationOptions<
 									payers:
 										item.payers?.map((payer) => {
 											const matchedPayer = matchedItem.payers?.find(
-												(lookupPayer) => lookupPayer.userId === payer.userId,
+												(lookupPayer) => lookupPayer.peerId === payer.peerId,
 											);
 											if (!matchedPayer) {
 												throw new Error(
-													`Expected to have payer with user id "${payer.userId}" returned from receipt creation.`,
+													`Expected to have payer with peer id "${payer.peerId}" returned from receipt creation.`,
 												);
 											}
 											return {
-												userId: payer.userId,
+												peerId: payer.peerId,
 												part: payer.part,
 												createdAt: matchedPayer.createdAt,
 											};
@@ -96,12 +96,12 @@ export const options: UseContextedMutationOptions<
 								}
 								return {
 									createdAt: matchedResult.createdAt,
-									userId: payer.userId,
+									peerId: payer.peerId,
 									part: payer.part,
 								};
 							}) ?? [],
-						ownerUserId: selfUserId,
-						selfUserId,
+						ownerPeerId: selfPeerId,
+						selfPeerId,
 						debts: { direction: "outcoming", debts: [] },
 					});
 				},

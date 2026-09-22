@@ -1,4 +1,4 @@
-import type { ReceiptItemId, UserId } from "~db/ids";
+import type { PeerId, ReceiptItemId } from "~db/ids";
 
 export type { Participant } from "~app/hooks/use-participants";
 
@@ -9,12 +9,12 @@ export type Item = {
 	quantity: number;
 	consumers: {
 		part: number;
-		userId: UserId;
+		peerId: PeerId;
 		createdAt: Temporal.ZonedDateTime;
 	}[];
 	payers: {
 		part: number;
-		userId: UserId;
+		peerId: PeerId;
 		createdAt: Temporal.ZonedDateTime;
 	}[];
 	createdAt: Temporal.ZonedDateTime;

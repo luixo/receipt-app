@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import type { Selectable } from "kysely";
 import { describe, expect } from "vitest";
 
-import type { AccountId, UserId } from "~db/ids";
+import type { AccountId, PeerId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import { createAuthContext } from "~tests/backend/utils/context";
 import type {
@@ -13,9 +13,9 @@ import {
 	assertDatabase,
 	insertAccount,
 	insertAccountWithSession,
-	insertConnectedUsers,
+	insertConnectedPeers,
 	insertDebt,
-	insertUser,
+	insertPeer,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -28,12 +28,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept";
 
-type AccountWithUser = { id: AccountId; foreignUserId: UserId };
+type AccountWithPeer = { id: AccountId; foreignPeerId: PeerId };
 
-const revertDebt = (debt: InsertedDebt, otherAccount: AccountWithUser) => ({
+const revertDebt = (debt: InsertedDebt, otherAccount: AccountWithPeer) => ({
 	...debt,
 	ownerAccountId: otherAccount.id,
-	userId: otherAccount.foreignUserId,
+	peerId: otherAccount.foreignPeerId,
 	amount: (-debt.amount).toFixed(4),
 });
 
@@ -43,23 +43,23 @@ describe("accountConnectionIntentions.accept", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
-				userId: faker.string.uuid(),
+				peerId: faker.string.uuid(),
 				accountId: faker.string.uuid(),
 			}),
 		);
 
-		describe("userId", () => {
+		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId: "not a valid uuid",
+							peerId: "not a valid uuid",
 							accountId: faker.string.uuid(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid UUID`,
+					`Zod error\n\nAt "peerId": Invalid UUID`,
 				);
 			});
 		});
@@ -71,7 +71,7 @@ describe("accountConnectionIntentions.accept", () => {
 				await expectTRPCError(
 					() =>
 						caller.procedure({
-							userId: faker.string.uuid(),
+							peerId: faker.string.uuid(),
 							accountId: "not a valid uuid",
 						}),
 					"BAD_REQUEST",
@@ -80,46 +80,46 @@ describe("accountConnectionIntentions.accept", () => {
 			});
 		});
 
-		test("user does not exist", async ({ ctx }) => {
+		test("peer does not exist", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const fakeUserId = faker.string.uuid();
+			const fakePeerId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId: fakeUserId,
+						peerId: fakePeerId,
 						accountId: faker.string.uuid(),
 					}),
 				"NOT_FOUND",
-				`User "${fakeUserId}" does not exist.`,
+				`Peer "${fakePeerId}" does not exist.`,
 			);
 		});
 
-		test("user is not owned by an account", async ({ ctx }) => {
+		test("peer is not owned by an account", async ({ ctx }) => {
 			const { sessionId, accountId, account } =
 				await insertAccountWithSession(ctx);
-			await insertUser(ctx, accountId);
+			await insertPeer(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId: foreignUserId,
+						peerId: foreignPeerId,
 						accountId: faker.string.uuid(),
 					}),
 				"FORBIDDEN",
-				`User "${foreignUserId}" is not owned by "${account.email}".`,
+				`Peer "${foreignPeerId}" is not owned by "${account.email}".`,
 			);
 		});
 
-		test("user is already connected to an account", async ({ ctx }) => {
+		test("peer is already connected to an account", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId, email: foreignEmail } =
 				await insertAccount(ctx);
-			const [{ id: userId }] = await insertConnectedUsers(ctx, [
+			const [{ id: peerId }] = await insertConnectedPeers(ctx, [
 				accountId,
 				foreignAccountId,
 			]);
@@ -128,17 +128,17 @@ describe("accountConnectionIntentions.accept", () => {
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId,
+						peerId,
 						accountId: faker.string.uuid(),
 					}),
 				"CONFLICT",
-				`User "${userId}" is already connected to an account with email "${foreignEmail}".`,
+				`Peer "${peerId}" is already connected to an account with email "${foreignEmail}".`,
 			);
 		});
 
 		test("target account is not registered", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			// Verify that other accounts don't affect error
 			await insertAccount(ctx);
@@ -148,7 +148,7 @@ describe("accountConnectionIntentions.accept", () => {
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId,
+						peerId,
 						accountId: fakeAccountId,
 					}),
 				"NOT_FOUND",
@@ -161,19 +161,19 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: foreignAccountId, email: foreignEmail } =
 				await insertAccount(ctx);
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId, {
+			const { id: selfToForeignPeerId } = await insertPeer(ctx, accountId, {
 				connectedAccountId: foreignAccountId,
 			});
-			await insertUser(ctx, accountId, {
+			await insertPeer(ctx, accountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: foreignAccountId,
 			});
 
@@ -181,7 +181,7 @@ describe("accountConnectionIntentions.accept", () => {
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						userId: selfToForeignUserId,
+						peerId: selfToForeignPeerId,
 						accountId: foreignAccountId,
 					}),
 				"NOT_FOUND",
@@ -199,27 +199,27 @@ describe("accountConnectionIntentions.accept", () => {
 				avatarUrl: foreignAvatarUrl,
 			} = await insertAccount(ctx);
 			const { id: outerAccountId } = await insertAccount(ctx);
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-			await insertUser(ctx, accountId, {
+			const { id: selfToForeignPeerId } = await insertPeer(ctx, accountId);
+			await insertPeer(ctx, accountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, foreignAccountId, {
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: outerAccountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, outerAccountId, {
+			await insertPeer(ctx, outerAccountId, {
 				connectedAccountId: foreignAccountId,
 			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
-					userId: selfToForeignUserId,
+					peerId: selfToForeignPeerId,
 					accountId: foreignAccountId,
 				}),
 			);
@@ -237,14 +237,14 @@ describe("accountConnectionIntentions.accept", () => {
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,
 			} = await insertAccount(ctx, { avatarUrl: null });
-			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
-			await insertUser(ctx, foreignAccountId, {
+			const { id: selfToForeignPeerId } = await insertPeer(ctx, accountId);
+			await insertPeer(ctx, foreignAccountId, {
 				connectedAccountId: accountId,
 			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
-				userId: selfToForeignUserId,
+				peerId: selfToForeignPeerId,
 				accountId: foreignAccountId,
 			});
 			expect(result).toStrictEqual<typeof result>({
@@ -264,8 +264,8 @@ describe("accountConnectionIntentions.accept", () => {
 				afterTest?: (data: {
 					selfDebt: InsertedDebt;
 					foreignDebt: InsertedDebt;
-					selfAccount: AccountWithUser;
-					foreignAccount: AccountWithUser;
+					selfAccount: AccountWithPeer;
+					foreignAccount: AccountWithPeer;
 					debts: Selectable<DB["debts"]>[];
 				}) => void,
 			) => {
@@ -273,11 +273,11 @@ describe("accountConnectionIntentions.accept", () => {
 					await insertAccountWithSession(ctx, {
 						account: { settings: settings.self },
 					});
-				const { id: selfToForeignUserId } = await insertUser(
+				const { id: selfToForeignPeerId } = await insertPeer(
 					ctx,
 					selfAccountId,
 				);
-				const { id: extraSelfForeignUserId } = await insertUser(
+				const { id: extraSelfForeignPeerId } = await insertPeer(
 					ctx,
 					selfAccountId,
 				);
@@ -285,12 +285,12 @@ describe("accountConnectionIntentions.accept", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx, {
 					settings: settings.foreign,
 				});
-				const { id: foreignToSelfUserId } = await insertUser(
+				const { id: foreignToSelfPeerId } = await insertPeer(
 					ctx,
 					foreignAccountId,
 					{ connectedAccountId: selfAccountId },
 				);
-				const { id: extraForeignForeignUserId } = await insertUser(
+				const { id: extraForeignForeignPeerId } = await insertPeer(
 					ctx,
 					foreignAccountId,
 				);
@@ -298,22 +298,22 @@ describe("accountConnectionIntentions.accept", () => {
 				const selfDebt = await insertDebt(
 					ctx,
 					selfAccountId,
-					selfToForeignUserId,
+					selfToForeignPeerId,
 				);
 				const foreignDebt = await insertDebt(
 					ctx,
 					foreignAccountId,
-					foreignToSelfUserId,
+					foreignToSelfPeerId,
 				);
 
 				// Verify non-related debts don't get accepted
-				await insertDebt(ctx, selfAccountId, extraSelfForeignUserId);
-				await insertDebt(ctx, foreignAccountId, extraForeignForeignUserId);
+				await insertDebt(ctx, selfAccountId, extraSelfForeignPeerId);
+				await insertDebt(ctx, foreignAccountId, extraForeignForeignPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
-						userId: selfToForeignUserId,
+						peerId: selfToForeignPeerId,
 						accountId: foreignAccountId,
 					}),
 				);
@@ -325,11 +325,11 @@ describe("accountConnectionIntentions.accept", () => {
 					foreignDebt,
 					selfAccount: {
 						id: selfAccountId,
-						foreignUserId: selfToForeignUserId,
+						foreignPeerId: selfToForeignPeerId,
 					},
 					foreignAccount: {
 						id: foreignAccountId,
-						foreignUserId: foreignToSelfUserId,
+						foreignPeerId: foreignToSelfPeerId,
 					},
 					debts,
 				});

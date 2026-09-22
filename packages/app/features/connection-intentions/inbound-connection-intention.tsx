@@ -4,9 +4,9 @@ import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import {
-	SkeletonUsersSuggest,
-	UsersSuggest,
-} from "~app/components/app/users-suggest";
+	PeersSuggest,
+	SkeletonPeersSuggest,
+} from "~app/components/app/peers-suggest";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { InboundIntention } from "~app/trpc-types";
@@ -15,12 +15,12 @@ import { Button } from "~components/button";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
 import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
 
 export const SkeletonInboundConnectionIntention = () => {
-	const { t } = useTranslation("users");
+	const { t } = useTranslation("peers");
 	return (
 		<View className="gap-2">
 			<View className="flex flex-row justify-between">
@@ -34,7 +34,7 @@ export const SkeletonInboundConnectionIntention = () => {
 					{t("intentions.form.rejectButton")}
 				</Button>
 			</View>
-			<SkeletonUsersSuggest label={t("intentions.userSuggestLabel")} />
+			<SkeletonPeersSuggest label={t("intentions.peerSuggestLabel")} />
 		</View>
 	);
 };
@@ -45,8 +45,8 @@ type Props = {
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
-	const [userId, setUserId] = React.useState<UserId>();
-	const { t } = useTranslation("users");
+	const [peerId, setPeerId] = React.useState<PeerId>();
+	const { t } = useTranslation("peers");
 
 	const acceptConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.accept.mutationOptions(
@@ -54,14 +54,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		),
 	);
 	const acceptConnection = React.useCallback(() => {
-		if (!userId) {
+		if (!peerId) {
 			return;
 		}
 		acceptConnectionMutation.mutate({
 			accountId: intention.account.id,
-			userId,
+			peerId,
 		});
-	}, [acceptConnectionMutation, intention.account.id, userId]);
+	}, [acceptConnectionMutation, intention.account.id, peerId]);
 
 	const rejectConnectionMutation = useMutation(
 		trpc.accountConnectionIntentions.reject.mutationOptions(
@@ -74,23 +74,23 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		});
 	}, [rejectConnectionMutation, intention.account.id]);
 
-	const usersSuggestOptions = React.useMemo(
+	const peersSuggestOptions = React.useMemo(
 		() => ({ type: "not-connected" as const }),
 		[],
 	);
-	const onUserClick = React.useCallback(
-		(openModal: () => void) => (nextUserId: UserId) => {
-			if (nextUserId === userId) {
-				setUserId(undefined);
+	const onPeerClick = React.useCallback(
+		(openModal: () => void) => (nextPeerId: PeerId) => {
+			if (nextPeerId === peerId) {
+				setPeerId(undefined);
 				return;
 			}
-			setUserId(nextUserId);
+			setPeerId(nextPeerId);
 			openModal();
 		},
-		[userId],
+		[peerId],
 	);
-	const userQuery = useQuery(
-		trpc.users.get.queryOptions(userId ? { id: userId } : skipToken),
+	const peerQuery = useQuery(
+		trpc.peers.get.queryOptions(peerId ? { id: peerId } : skipToken),
 	);
 
 	const isLoading =
@@ -117,24 +117,24 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			</View>
 			<ConfirmModal
 				onConfirm={acceptConnection}
-				onCancel={() => setUserId(undefined)}
+				onCancel={() => setPeerId(undefined)}
 				isLoading={acceptConnectionMutation.isPending}
 				title={t("intentions.modal.title")}
 				subtitle={
-					userQuery.data
+					peerQuery.data
 						? t("intentions.modal.description", {
 								email: intention.account.email,
-								userName: userQuery.data.name,
+								peerName: peerQuery.data.name,
 							})
 						: undefined
 				}
 				confirmText={t("intentions.modal.confirmText")}
 			>
 				{({ openModal }) => (
-					<UsersSuggest
-						label={t("intentions.userSuggestLabel")}
-						onUserClick={onUserClick(openModal)}
-						options={usersSuggestOptions}
+					<PeersSuggest
+						label={t("intentions.peerSuggestLabel")}
+						onPeerClick={onPeerClick(openModal)}
+						options={peersSuggestOptions}
 						closeOnSelect
 					/>
 				)}

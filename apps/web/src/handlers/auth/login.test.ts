@@ -108,7 +108,7 @@ describe("auth.login", () => {
 			);
 			expect(result).toStrictEqual<typeof result>({
 				account: { id: accountId, verified: true, avatarUrl, role: undefined },
-				user: { name },
+				peer: { name },
 			});
 			const responseHeaders = [...context.resHeaders.entries()];
 			const setCookieTuple = responseHeaders.find(
@@ -129,7 +129,7 @@ describe("auth.login", () => {
 			]);
 		});
 
-		test("login successful - unverified user", async ({ ctx }) => {
+		test("login successful - unverified peer", async ({ ctx }) => {
 			const {
 				accountId,
 				account: { email, password },
@@ -147,7 +147,7 @@ describe("auth.login", () => {
 					avatarUrl: undefined,
 					role: undefined,
 				},
-				user: { name },
+				peer: { name },
 			});
 		});
 

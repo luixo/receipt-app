@@ -58,7 +58,7 @@ Use `trpc.some.procedure.infiniteQueryOptions({ …, cursor: 0, direction: "forw
 When rendering N items that each need their own query, use `useQueries` rather than mapping hook calls inside a render:
 
 ```ts
-useQueries({ queries: ids.map((id) => trpc.users.get.queryOptions({ id })) });
+useQueries({ queries: ids.map((id) => trpc.peers.get.queryOptions({ id })) });
 ```
 
 ## Skeleton components

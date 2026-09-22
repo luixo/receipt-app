@@ -8,7 +8,7 @@ import {
 	insertAccount,
 	insertAccountWithSession,
 	insertDebt,
-	insertUser,
+	insertPeer,
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -33,47 +33,47 @@ describe("debts.getAll", () => {
 
 			// Verify other accounts' debts don't affect the result
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-			await insertDebt(ctx, foreignAccountId, foreignUserId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+			await insertDebt(ctx, foreignAccountId, foreignPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>({ items: [] });
 		});
 
-		test("multiple currency & users debts", async ({ ctx }) => {
+		test("multiple currency & peers debts", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: firstUserId } = await insertUser(ctx, accountId);
-			const { id: secondUserId } = await insertUser(ctx, accountId);
+			const { id: firstPeerId } = await insertPeer(ctx, accountId);
+			const { id: secondPeerId } = await insertPeer(ctx, accountId);
 
-			const firstUserDebts = [
+			const firstPeerDebts = [
 				{ currencyCode: "USD", amount: getAmount() },
 				{ currencyCode: "USD", amount: getAmount() },
 				{ currencyCode: "EUR", amount: getAmount() },
 				{ currencyCode: "GBP", amount: getAmount() },
 			];
-			const secondUserDebts = [
+			const secondPeerDebts = [
 				{ currencyCode: "USD", amount: getAmount() },
 				{ currencyCode: "EUR", amount: getAmount() },
 				{ currencyCode: "EUR", amount: getAmount() },
 			];
 			await Promise.all([
 				Promise.all(
-					firstUserDebts.map((debt) =>
-						insertDebt(ctx, accountId, firstUserId, debt),
+					firstPeerDebts.map((debt) =>
+						insertDebt(ctx, accountId, firstPeerId, debt),
 					),
 				),
 				Promise.all(
-					secondUserDebts.map((debt) =>
-						insertDebt(ctx, accountId, secondUserId, debt),
+					secondPeerDebts.map((debt) =>
+						insertDebt(ctx, accountId, secondPeerId, debt),
 					),
 				),
 			]);
 
 			// Verify other accounts' debts don't affect the result
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-			await insertDebt(ctx, foreignAccountId, foreignUserId, {
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+			await insertDebt(ctx, foreignAccountId, foreignPeerId, {
 				currencyCode: "USD",
 				amount: getAmount(),
 			});
@@ -86,7 +86,7 @@ describe("debts.getAll", () => {
 			);
 
 			const expectedDebts = mapValues(
-				[...firstUserDebts, ...secondUserDebts].reduce<
+				[...firstPeerDebts, ...secondPeerDebts].reduce<
 					Record<CurrencyCode, number>
 				>(
 					(acc, { currencyCode, amount }) => ({
@@ -103,14 +103,14 @@ describe("debts.getAll", () => {
 
 		test("zero sum", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			const amount = getAmount();
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount,
 			});
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount: -amount,
 			});
@@ -129,14 +129,14 @@ describe("debts.getAll", () => {
 
 		test("negative sum", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
 			const amount = getAmount();
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount,
 			});
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount: -2 * amount,
 			});
@@ -155,13 +155,13 @@ describe("debts.getAll", () => {
 
 		test("sums are parsed on DB side", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, accountId);
 
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount: 0.1,
 			});
-			await insertDebt(ctx, accountId, userId, {
+			await insertDebt(ctx, accountId, peerId, {
 				currencyCode: "USD",
 				amount: 0.2,
 			});

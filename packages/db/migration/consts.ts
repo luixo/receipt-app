@@ -18,12 +18,12 @@ export const SESSIONS = {
 	},
 } as const;
 
-export const USERS = {
+export const PEERS = {
 	INDEXES: {
-		OWNER_ACCOUNT_ID: "users:ownerAccountId:index",
+		OWNER_ACCOUNT_ID: "peers:ownerAccountId:index",
 	},
 	TRIGGERS: {
-		UPDATE_TIMESTAMP: "users:updateTimestamp",
+		UPDATE_TIMESTAMP: "peers:updateTimestamp",
 	},
 } as const;
 
@@ -50,7 +50,7 @@ export const ITEM_PARTICIPANTS_DEPRECATED = {
 		ITEM_ID: "itemParticipants:itemId:index",
 	},
 	CONSTRAINTS: {
-		ITEM_ID_USER_ID_PAIR: "itemParticipants:itemId-userId:primaryKey",
+		ITEM_ID_USER_ID_PAIR: "itemParticipants:itemId-peerId:primaryKey",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "itemParticipants:updateTimestamp",
@@ -62,7 +62,7 @@ export const RECEIPT_ITEM_CONSUMERS = {
 		ITEM_ID: "receiptItemConsumers:itemId:index",
 	},
 	CONSTRAINTS: {
-		ITEM_ID_USER_ID_PAIR: "receiptItemConsumers:itemId-userId:primaryKey",
+		ITEM_ID_USER_ID_PAIR: "receiptItemConsumers:itemId-peerId:primaryKey",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "receiptItemConsumers:updateTimestamp",
@@ -75,7 +75,7 @@ export const RECEIPT_ITEM_PAYERS = {
 		ITEM_ID: "receiptItemPayers:itemId:index",
 	},
 	CONSTRAINTS: {
-		ITEM_ID_USER_ID_PAIR: "receiptItemPayers:itemId-userId:primaryKey",
+		ITEM_ID_USER_ID_PAIR: "receiptItemPayers:itemId-peerId:primaryKey",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "receiptItemPayers:updateTimestamp",
@@ -85,7 +85,7 @@ export const RECEIPT_ITEM_PAYERS = {
 export const RECEIPT_PARTICIPANTS = {
 	INDEXES: {
 		RECEIPT_ID: "receiptParticipants:receiptId:index",
-		USER_ID: "receiptParticipants:userId:index",
+		USER_ID: "receiptParticipants:peerId:index",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "receiptParticipants:updateTimestamp",
@@ -99,7 +99,7 @@ export const ACCOUNT_CONNECTIONS_INTENTIONS = {
 	},
 	CONSTRAINTS: {
 		ACCOUNT_PAIR: "accountConnectionsIntentions:accounts:accountPair",
-		USER_PAIR: "accountConnectionsIntentions:accountUser:userPair",
+		USER_PAIR: "accountConnectionsIntentions:accountPeer:peerPair",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "accountConnectionsIntentions:updateTimestamp",
@@ -124,12 +124,12 @@ export const RESET_PASSWORD_INTENTIONS = {
 export const DEBTS = {
 	INDEXES: {
 		OWNER_ACCOUNT_ID: "debts:ownerAccountId:index",
-		USER_ID: "debts:userId:index",
+		USER_ID: "debts:peerId:index",
 	},
 	CONSTRAINTS: {
 		OWNER_ID_DEBT_ID_PAIR: "debts:ownerAccountId:debtId:pair",
 		OWNER_ID_RECEIPT_ID_USER_ID_TUPLE:
-			"debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple",
+			"debtsSyncIntentions:ownerAccountId:receiptId:peerId:tuple",
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "debts:updateTimestamp",

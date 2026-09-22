@@ -36,10 +36,13 @@ const createAccountConnectionsIntentionsTable = async (db: Database) => {
 			ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.ACCOUNT_PAIR,
 			["accountId", "targetAccountId"],
 		)
-		.addUniqueConstraint(ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR, [
-			"accountId",
-			"userId",
-		])
+		.addUniqueConstraint(
+			ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR.replace(
+				"peer",
+				"user",
+			).replace("Peer", "User"),
+			["accountId", "userId"],
+		)
 		.execute();
 	await db.schema
 		.createIndex(ACCOUNT_CONNECTIONS_INTENTIONS.INDEXES.ACCOUNT_ID)

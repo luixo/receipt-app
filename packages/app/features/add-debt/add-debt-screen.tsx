@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
+import { PeersSuggest } from "~app/components/app/peers-suggest";
 import { SignButtonGroup } from "~app/components/app/sign-button-group";
 import type { Direction } from "~app/components/app/sign-button-group";
-import { UsersSuggest } from "~app/components/app/users-suggest";
 import { PageHeader } from "~app/components/page-header";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
@@ -20,7 +20,7 @@ import {
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
 	debtNoteSchema,
-	userIdSchema,
+	peerIdSchema,
 } from "~app/utils/validation";
 import { BackLink } from "~components/back-link";
 import { Button } from "~components/button";
@@ -32,7 +32,7 @@ const formSchema = z.object({
 	amount: debtAmountSchema,
 	direction: z.literal(["-", "+"]),
 	currencyCode: currencyCodeSchema,
-	userId: userIdSchema,
+	peerId: peerIdSchema,
 	note: debtNoteSchema,
 	timestamp: temporalSchemas.plainDate,
 });
@@ -41,7 +41,7 @@ type Form = z.infer<typeof formSchema>;
 
 export const AddDebtScreen = () => {
 	const { useQueryState } = getPathHooks("/_protected/debts/add");
-	const [userId, setUserId] = useQueryState("userId");
+	const [peerId, setPeerId] = useQueryState("peerId");
 	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const { useNavigate } = React.use(NavigationContext);
@@ -60,7 +60,7 @@ export const AddDebtScreen = () => {
 		note: "",
 		direction: "+",
 		timestamp: Temporal.Now.plainDateISO(),
-		userId: undefined,
+		peerId: undefined,
 	};
 
 	const form = useAppForm({
@@ -74,7 +74,7 @@ export const AddDebtScreen = () => {
 			addMutation.mutate({
 				note: value.note,
 				currencyCode: value.currencyCode,
-				userId: value.userId,
+				peerId: value.peerId,
 				amount: value.amount * (value.direction === "+" ? 1 : -1),
 				timestamp: value.timestamp,
 			});
@@ -132,27 +132,27 @@ export const AddDebtScreen = () => {
 						)}
 					</form.AppField>
 					<form.AppField
-						name="userId"
+						name="peerId"
 						listeners={{
 							onMount: ({ fieldApi }) => {
-								if (userId) {
-									fieldApi.setValue(userId);
+								if (peerId) {
+									fieldApi.setValue(peerId);
 								}
 							},
-							onChange: ({ value }) => setUserId(value),
+							onChange: ({ value }) => setPeerId(value),
 						}}
 					>
 						{(field) => (
-							<UsersSuggest
+							<PeersSuggest
 								selected={field.state.value}
 								isDisabled={addMutation.isPending}
-								onUserClick={(nextUserId) => {
-									if (nextUserId === field.state.value) {
-										form.resetField("userId");
+								onPeerClick={(nextPeerId) => {
+									if (nextPeerId === field.state.value) {
+										form.resetField("peerId");
 										// Unfortunately, resetting field doesn't emit a listener event
-										setUserId(undefined);
+										setPeerId(undefined);
 									} else {
-										field.setValue(nextUserId);
+										field.setValue(nextPeerId);
 									}
 								}}
 								closeOnSelect

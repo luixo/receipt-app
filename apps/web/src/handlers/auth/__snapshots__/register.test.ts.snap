@@ -17,15 +17,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
-    "sessions": {
-      "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
-        "accountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
-      },
-    },
-    "users": {
+    "peers": {
       "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
         "acceptReceipts": true,
         "connectedAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
@@ -36,6 +28,14 @@ exports[`auth.register > functionality > email sent if active 1`] = `
         "ownerAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
         "publicName": null,
         "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+    "sessions": {
+      "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
+        "accountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
+        "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
       },
     },
   },
@@ -213,15 +213,7 @@ exports[`auth.register > functionality > register successful 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
-    "sessions": {
-      "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
-        "accountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",
-      },
-    },
-    "users": {
+    "peers": {
       "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
         "acceptReceipts": true,
         "connectedAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
@@ -232,6 +224,14 @@ exports[`auth.register > functionality > register successful 1`] = `
         "ownerAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
         "publicName": null,
         "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+    "sessions": {
+      "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
+        "accountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
+        "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",
       },
     },
   },

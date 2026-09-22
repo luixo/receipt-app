@@ -16,7 +16,7 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
-import { userNameSchema } from "~app/utils/validation";
+import { peerNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SaveButton } from "~components/save-button";
@@ -32,7 +32,7 @@ const AccountNameInput = suspendedFallback(
 		const { t } = useTranslation("account");
 		const trpc = useTRPC();
 		const {
-			data: { account, user },
+			data: { account, peer },
 		} = useSuspenseQuery(trpc.account.get.queryOptions());
 		const updateNameMutation = useMutation(
 			trpc.account.changeName.mutationOptions(
@@ -42,8 +42,8 @@ const AccountNameInput = suspendedFallback(
 			),
 		);
 		const form = useAppForm({
-			defaultValues: { value: user.name },
-			validators: { onChange: z.object({ value: userNameSchema }) },
+			defaultValues: { value: peer.name },
+			validators: { onChange: z.object({ value: peerNameSchema }) },
 			onSubmit: ({ value }) => updateNameMutation.mutate({ name: value.value }),
 		});
 
@@ -61,7 +61,7 @@ const AccountNameInput = suspendedFallback(
 						label={t("form.name.label")}
 						mutation={updateNameMutation}
 						endContent={
-							user.name === field.state.value ? null : (
+							peer.name === field.state.value ? null : (
 								<form.Subscribe selector={(state) => state.canSubmit}>
 									{(canSubmit) => (
 										<SaveButton
@@ -93,7 +93,7 @@ const AccountHeader: React.FC = suspendedFallback(
 		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
 		return (
 			<PageHeader startContent={<Icon name="user" className="size-9" />}>
-				{account.user.name}
+				{account.peer.name}
 			</PageHeader>
 		);
 	},

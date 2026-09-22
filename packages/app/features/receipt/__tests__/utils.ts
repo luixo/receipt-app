@@ -1,8 +1,10 @@
-import type { User } from "~app/trpc-types";
-import type { ReceiptId, UserId } from "~db/ids";
+import type { Peer } from "~app/trpc-types";
+import type { PeerId, ReceiptId } from "~db/ids";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
 import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
+import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -19,17 +21,15 @@ import {
 	defaultGenerateReceiptParticipants,
 	defaultGenerateReceiptPayers,
 } from "~tests/frontend/generators/receipts";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: () => Promise<{
-		selfUser: User;
+		selfPeer: Peer;
 	}>;
 	mockReceipt: (options?: {
 		generateReceiptBase?: GenerateReceiptBase;
 		generateReceiptItems?: GenerateReceiptItems;
-		generateUsers?: GenerateUsers;
+		generatePeers?: GeneratePeers;
 		generateReceiptParticipants?: GenerateReceiptParticipants;
 		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
 		generateReceiptPayers?: GenerateReceiptPayers;
@@ -41,12 +41,12 @@ type Fixtures = {
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
-		users: ReturnType<GenerateUsers>;
+		peers: ReturnType<GeneratePeers>;
 		receiptDebts: ReturnType<GenerateDebtsFromReceipt>;
-		selfUserId: UserId;
+		selfPeerId: PeerId;
 	}>;
 	openReceipt: (
-		receipt: { id: ReceiptId; ownerUserId: UserId },
+		receipt: { id: ReceiptId; ownerPeerId: PeerId },
 		options?: { awaitCache?: boolean },
 	) => Promise<void>;
 };
@@ -54,11 +54,11 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api }, use) =>
 		use(async () => {
-			const { user } = await api.mockUtils.authPage();
+			const { peer } = await api.mockUtils.authPage();
 			api.mockFirst("currency.top", { items: [] });
-			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
-			api.mockFirst("users.suggestTop", { items: [] });
-			return { selfUser: user };
+			api.mockFirst("peers.suggest", { cursor: 0, count: 0, items: [] });
+			api.mockFirst("peers.suggestTop", { items: [] });
+			return { selfPeer: peer };
 		}),
 	mockReceipt: (
 		{ api, faker, mockBase, fromUnitToSubunit, fromSubunitToUnit },
@@ -67,7 +67,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(
 			async ({
 				generateReceiptBase = defaultGenerateReceiptBase,
-				generateUsers = defaultGenerateUsers,
+				generatePeers = defaultGeneratePeers,
 				generateReceiptItems = defaultGenerateReceiptItems,
 				generateReceiptParticipants = defaultGenerateReceiptParticipants,
 				generateReceiptItemsWithConsumers = defaultGenerateReceiptItemsWithConsumers,
@@ -75,19 +75,19 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceipt = defaultGenerateReceipt,
 				generateDebts = defaultGenerateDebtsFromReceipt,
 			} = {}) => {
-				const { selfUser } = await mockBase();
-				const users = generateUsers({ faker });
+				const { selfPeer } = await mockBase();
+				const peers = generatePeers({ faker });
 				const receiptBase = generateReceiptBase({ faker });
 				const receiptItems = generateReceiptItems({ faker });
 				const participants = generateReceiptParticipants({
 					faker,
-					selfUserId: selfUser.id,
-					users,
+					selfPeerId: selfPeer.id,
+					peers,
 				});
 				const receiptPayers = generateReceiptPayers({
 					faker,
-					selfUserId: selfUser.id,
-					users: [],
+					selfPeerId: selfPeer.id,
+					peers: [],
 				});
 				const receiptItemsWithConsumers = generateReceiptItemsWithConsumers({
 					faker,
@@ -96,7 +96,7 @@ export const test = originalTest.extend<Fixtures>({
 				});
 				const debts = generateDebts({
 					faker,
-					selfUserId: selfUser.id,
+					selfPeerId: selfPeer.id,
 					receiptBase,
 					receiptItemsWithConsumers,
 					participants,
@@ -106,12 +106,12 @@ export const test = originalTest.extend<Fixtures>({
 				});
 				const receipt = generateReceipt({
 					faker,
-					selfUserId: selfUser.id,
+					selfPeerId: selfPeer.id,
 					receiptBase,
 					receiptParticipants: participants,
 					receiptItemsWithConsumers,
 					receiptPayers,
-					users,
+					peers,
 					receiptDebts: debts,
 				});
 				api.mockFirst("receipts.get", ({ input }) => {
@@ -123,9 +123,9 @@ export const test = originalTest.extend<Fixtures>({
 					return receipt;
 				});
 				api.mockFirst(
-					"users.get",
+					"peers.get",
 					({ input, next }) =>
-						users.find((user) => user.id === input.id) || next(),
+						peers.find((peer) => peer.id === input.id) || next(),
 				);
 				api.mockFirst(
 					"debts.get",
@@ -133,9 +133,9 @@ export const test = originalTest.extend<Fixtures>({
 						debts.find((debt) => debt.id === input.id) || next(),
 				);
 				api.mockFirst(
-					"users.getForeign",
+					"peers.getForeign",
 					({ input, next }) =>
-						users.find((user) => user.id === input.id) || next(),
+						peers.find((peer) => peer.id === input.id) || next(),
 				);
 
 				return {
@@ -145,8 +145,8 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItemsWithConsumers,
 					receiptPayers,
 					receiptDebts: debts,
-					users,
-					selfUserId: selfUser.id,
+					peers,
+					selfPeerId: selfPeer.id,
 				};
 			},
 		),
@@ -155,8 +155,8 @@ export const test = originalTest.extend<Fixtures>({
 		use(async (receipt, { awaitCache = true } = {}) => {
 			await page.navigate({ to: "/receipts/$id", params: { id: receipt.id } });
 			if (awaitCache) {
-				await awaitCacheKey("users.get", {
-					input: { id: receipt.ownerUserId },
+				await awaitCacheKey("peers.get", {
+					input: { id: receipt.ownerPeerId },
 				});
 			}
 		}),

@@ -3,17 +3,17 @@ import { z } from "zod";
 
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
+import { peerIdSchema, receiptItemIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Remove receipt item payer",
-		description: "Removes a userId as a payer of a given receipt item.",
+		description: "Removes a peerId as a payer of a given receipt item.",
 	})
 	.input(
 		z.strictObject({
 			itemId: receiptItemIdSchema,
-			userId: userIdSchema,
+			peerId: peerIdSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -52,15 +52,15 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({
 					itemId: input.itemId,
-					userId: input.userId,
+					peerId: input.peerId,
 				}),
 			)
-			.returning("receiptItemPayers.userId")
+			.returning("receiptItemPayers.peerId")
 			.executeTakeFirst();
 		if (!deleteResult) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not pay for item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
+				message: `Peer "${input.peerId}" does not pay for item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
 			});
 		}
 	});

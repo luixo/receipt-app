@@ -34,7 +34,7 @@ import { useAppForm, useTypedValues } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { DateInput } from "~components/date-input";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import type { UseStateReturn } from "~utils/react";
 
@@ -72,7 +72,7 @@ const ContextedAddReceipt = suspendedFallback<{
 	}) => {
 		const trpc = useTRPC();
 		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
-		const selfUserId = account.account.id as UserId;
+		const selfPeerId = account.account.id as PeerId;
 		const formValues = useTypedValues(formStore, defaultFormValues);
 		const receiptId = React.useId();
 		const participants = useParticipants({
@@ -82,8 +82,8 @@ const ContextedAddReceipt = suspendedFallback<{
 			currencyCode: formValues.currencyCode ?? "???",
 			participants: rawParticipants,
 			items,
-			ownerUserId: selfUserId,
-			selfUserId,
+			ownerPeerId: selfPeerId,
+			selfPeerId,
 			payers,
 			debts: {
 				direction: "outcoming",
@@ -94,7 +94,7 @@ const ContextedAddReceipt = suspendedFallback<{
 		const addReceiptContext = useAddReceiptContext(
 			formValues,
 			receiptId,
-			selfUserId,
+			selfPeerId,
 			payers,
 			items,
 			participants,
@@ -174,14 +174,14 @@ export const AddReceipt = () => {
 					name,
 					price,
 					quantity,
-					consumers: consumers.map(({ userId, part }) => ({ userId, part })),
+					consumers: consumers.map(({ peerId, part }) => ({ peerId, part })),
 				})),
-				participants: participantsState[0].map(({ userId, role }) => ({
-					userId,
+				participants: participantsState[0].map(({ peerId, role }) => ({
+					peerId,
 					role,
 				})),
-				payers: payersState[0].map(({ userId, part }) => ({
-					userId,
+				payers: payersState[0].map(({ peerId, part }) => ({
+					peerId,
 					part,
 				})),
 			});

@@ -39,7 +39,7 @@ const OnlyAvatarButton = suspendedFallback<React.ComponentProps<typeof Button>>(
 	null,
 );
 
-const UserAvatar = suspendedFallback<{ onClick: () => void }>(
+const PeerAvatar = suspendedFallback<{ onClick: () => void }>(
 	({ onClick }) => {
 		const trpc = useTRPC();
 		const {
@@ -140,7 +140,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ children }) => {
 		removeAvatarMutation.mutate(new FormData());
 	}, [removeAvatarMutation]);
 	const resetEditor = React.useCallback(() => form.reset(), [form]);
-	const avatar = <UserAvatar onClick={enableAvatarEdit} />;
+	const avatar = <PeerAvatar onClick={enableAvatarEdit} />;
 	const onCropChange = React.useCallback<
 		React.ComponentProps<typeof ImageCropper>["onCropChange"]
 	>(

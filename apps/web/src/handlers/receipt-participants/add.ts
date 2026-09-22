@@ -7,14 +7,14 @@ import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import {
 	assignableRoleSchema,
+	peerIdSchema,
 	receiptIdSchema,
-	userIdSchema,
 } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
 export const addParticipantSchema = z.strictObject({
 	receiptId: receiptIdSchema,
-	userId: userIdSchema,
+	peerId: peerIdSchema,
 	role: assignableRoleSchema,
 });
 
@@ -27,38 +27,38 @@ const getData = async (
 	inputs: readonly z.infer<typeof addParticipantSchema>[],
 ) => {
 	const receiptIds = inputs.map((input) => input.receiptId);
-	const [receipts, users] = await Promise.all([
+	const [receipts, peers] = await Promise.all([
 		ctx.database
 			.selectFrom("receipts")
 			.where("id", "in", receiptIds)
 			.select(["receipts.id", "receipts.ownerAccountId"])
 			.execute(),
 		ctx.database
-			.selectFrom("users")
+			.selectFrom("peers")
 			.where(
 				"id",
 				"in",
-				inputs.map((input) => input.userId),
+				inputs.map((input) => input.peerId),
 			)
 			.leftJoin("receiptParticipants", (qb) =>
 				qb
-					.onRef("receiptParticipants.userId", "=", "users.id")
+					.onRef("receiptParticipants.peerId", "=", "peers.id")
 					.on("receiptParticipants.receiptId", "in", receiptIds),
 			)
 			.select([
-				"users.id",
-				"users.ownerAccountId",
+				"peers.id",
+				"peers.ownerAccountId",
 				"receiptParticipants.receiptId",
 			])
 			.execute(),
 	]);
-	return { receipts, users };
+	return { receipts, peers };
 };
 
 const getParticipants = (
 	ctx: AuthorizedContext,
 	inputs: readonly z.infer<typeof addParticipantSchema>[],
-	{ receipts, users }: Awaited<ReturnType<typeof getData>>,
+	{ receipts, peers }: Awaited<ReturnType<typeof getData>>,
 ) =>
 	inputs.map((input) => {
 		const matchedReceipt = receipts.find(
@@ -73,35 +73,35 @@ const getParticipants = (
 		if (matchedReceipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add participant "${input.userId}" to receipt "${input.receiptId}".`,
+				message: `Not enough rights to add participant "${input.peerId}" to receipt "${input.receiptId}".`,
 			});
 		}
-		const matchedUsers = users.filter((user) => user.id === input.userId);
-		const [firstMatchedUser] = matchedUsers;
+		const matchedPeers = peers.filter((peer) => peer.id === input.peerId);
+		const [firstMatchedPeer] = matchedPeers;
 		if (
-			!firstMatchedUser ||
-			firstMatchedUser.ownerAccountId !== ctx.auth.accountId
+			!firstMatchedPeer ||
+			firstMatchedPeer.ownerAccountId !== ctx.auth.accountId
 		) {
 			return new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not exist or is not owned by you.`,
+				message: `Peer "${input.peerId}" does not exist or is not owned by you.`,
 			});
 		}
-		const matchedUserReceipt = matchedUsers.find(
-			(user) => user.receiptId === input.receiptId,
+		const matchedPeerReceipt = matchedPeers.find(
+			(peer) => peer.receiptId === input.receiptId,
 		);
-		if (matchedUserReceipt) {
+		if (matchedPeerReceipt) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" already participates in receipt "${input.receiptId}".`,
+				message: `Peer "${input.peerId}" already participates in receipt "${input.receiptId}".`,
 			});
 		}
 
 		return {
 			receiptId: input.receiptId,
-			userId: input.userId,
+			peerId: input.peerId,
 			role:
-				matchedReceipt.ownerAccountId === input.userId
+				matchedReceipt.ownerAccountId === input.peerId
 					? ("owner" as const)
 					: input.role,
 		};
@@ -122,7 +122,7 @@ const insertParticipants = async (
 		.values(participants)
 		.returning([
 			"receiptParticipants.createdAt",
-			"receiptParticipants.userId",
+			"receiptParticipants.peerId",
 			"receiptParticipants.receiptId",
 		])
 		.execute();
@@ -136,15 +136,15 @@ export const batchFn: BatchLoadContextFn<
 > = (ctx) => async (inputs) => {
 	const duplicatedTuples = getDuplicates(
 		inputs,
-		({ receiptId, userId }) => [receiptId, userId] as const,
+		({ receiptId, peerId }) => [receiptId, peerId] as const,
 	);
 	if (duplicatedTuples.length !== 0) {
 		throw new TRPCError({
 			code: "CONFLICT",
-			message: `Expected to have unique pair of user id and receipt id, got repeating pairs: ${duplicatedTuples
+			message: `Expected to have unique pair of peer id and receipt id, got repeating pairs: ${duplicatedTuples
 				.map(
-					([[itemId, userId], count]) =>
-						`receipt "${itemId}" / user "${userId}" (${count} times)`,
+					([[itemId, peerId], count]) =>
+						`receipt "${itemId}" / peer "${peerId}" (${count} times)`,
 				)
 				.join(", ")}.`,
 		});
@@ -167,13 +167,13 @@ export const batchFn: BatchLoadContextFn<
 		const matchedResult = results.find(
 			(result) =>
 				result.receiptId === participantOrError.receiptId &&
-				result.userId === participantOrError.userId,
+				result.peerId === participantOrError.peerId,
 		);
 		/* c8 ignore start */
 		if (!matchedResult) {
 			return new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Expected to have inserted user "${participantOrError.userId}" in receipt "${participantOrError.receiptId}".`,
+				message: `Expected to have inserted peer "${participantOrError.peerId}" in receipt "${participantOrError.receiptId}".`,
 			});
 		}
 		/* c8 ignore stop */
@@ -187,7 +187,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add receipt participant",
 		description:
-			"Adds a given userId as a participant of a given receipt with an assigned role.",
+			"Adds a given peerId as a participant of a given receipt with an assigned role.",
 	})
 	.input(addParticipantSchema)
 	.mutation(queueCallFactory(batchFn));

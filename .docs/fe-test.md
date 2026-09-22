@@ -39,8 +39,8 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
 ## Auth helpers
 
 - `api.mockUtils.noAuthPage()` — mocks `account.get` to throw UNAUTHORIZED and mocks the currency list. Returns `{ unmockAccount, unmockCurrency }` for cleanup.
-- `api.mockUtils.authPage()` — sets the auth cookie and mocks `account.get`, `accountSettings.get`, `debtIntentions.getAll`, etc. with sensible defaults. Returns `{ user, account }` with faker-generated data.
-- `api.mockUtils.mockUsers(...users)` — registers user fixtures resolvable via `users.get`.
+- `api.mockUtils.authPage()` — sets the auth cookie and mocks `account.get`, `accountSettings.get`, `debtIntentions.getAll`, etc. with sensible defaults. Returns `{ peer, account }` with faker-generated data.
+- `api.mockUtils.mockPeers(...peers)` — registers peer fixtures resolvable via `peers.get`.
 
 ## Cache and query assertions
 

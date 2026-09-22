@@ -4,23 +4,23 @@ export const procedure = adminProcedure
 	.meta({
 		title: "Get all accounts",
 		description:
-			"Returns all accounts other than the caller's, with the caller's matching user for each (admin only).",
+			"Returns all accounts other than the caller's, with the caller's matching peer for each (admin only).",
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const result = await database
 			.selectFrom("accounts")
-			.leftJoin("users", (qb) =>
+			.leftJoin("peers", (qb) =>
 				qb
-					.onRef("accounts.id", "=", "users.connectedAccountId")
-					.on("users.ownerAccountId", "=", ctx.auth.accountId),
+					.onRef("accounts.id", "=", "peers.connectedAccountId")
+					.on("peers.ownerAccountId", "=", ctx.auth.accountId),
 			)
 			.where("accounts.id", "!=", ctx.auth.accountId)
-			.orderBy("users.name")
+			.orderBy("peers.name")
 			.orderBy("accounts.email")
 			.select([
-				"users.id as userId",
-				"users.name",
+				"peers.id as peerId",
+				"peers.name",
 				"accounts.id as accountId",
 				"accounts.avatarUrl",
 				"accounts.email",
@@ -33,10 +33,10 @@ export const procedure = adminProcedure
 					id: element.accountId,
 					avatarUrl: element.avatarUrl ?? undefined,
 				},
-				user:
-					element.userId && element.name
+				peer:
+					element.peerId && element.name
 						? {
-								id: element.userId,
+								id: element.peerId,
 								name: element.name,
 							}
 						: undefined,

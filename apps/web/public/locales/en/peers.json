@@ -1,0 +1,118 @@
+{
+	"list": {
+		"header": "Peers",
+		"addPeer": {
+			"button": "Add peer"
+		},
+		"connections": {
+			"title": "Connection intentions"
+		},
+		"empty": {
+			"title": "You have no peers",
+			"message": "<text>Press </text><icon/><text> to add a peer</text>"
+		}
+	},
+	"add": {
+		"header": "Add peer",
+		"form": {
+			"name": {
+				"label": "Peer name"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"submit": "Add peer"
+		}
+	},
+	"peer": {
+		"name": {
+			"label": "Peer name",
+			"save": {
+				"title": "Save peer name"
+			}
+		},
+		"publicName": {
+			"label": "Public peer name",
+			"add": "Add public name",
+			"save": {
+				"title": "Save peer public name"
+			},
+			"remove": {
+				"title": "Remove peer public name"
+			}
+		},
+		"connection": {
+			"connect": "Connect to an account",
+			"outbound": {
+				"label": "Outbound request"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"link": {
+				"title": "Link peer to email"
+			},
+			"unlink": {
+				"title": "Unlink peer from email"
+			},
+			"cancel": {
+				"title": "Cancel request"
+			}
+		},
+		"remove": {
+			"button": "Remove peer",
+			"subtitle": "This will remove peer and all his participations"
+		}
+	},
+	"intentions": {
+		"header": "Connection intentions",
+		"emptyTitle": "All done 👍",
+		"inboundTitle": "Inbound connections",
+		"outboundTitle": "Outbound connections",
+		"unlinkPeerButton": "Unlink peer from email",
+		"form": {
+			"email": {
+				"label": "Email to connect"
+			},
+			"rejectButton": "Reject"
+		},
+		"modal": {
+			"title": "Connect an account",
+			"description": "This will connect account \"{{email}}\" with a peer \"{{peerName}}\"",
+			"confirmText": "Are you sure?"
+		},
+		"peerSuggestLabel": "Please choose a peer below to accept intention"
+	},
+	"toasts": {
+		"acceptInvite": {
+			"error": "Error accepting {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"addIntention": {
+			"error": "Error sending connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}}: {{errors, uniqueErrors}}",
+			"success": "Connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}} to {{emails, list}} sent",
+			"mutate": "Sending connection {{intentionsAmount, plural(one:intention; other:{count} intentions)}} to {{emails, list}}.."
+		},
+		"rejectInvite": {
+			"error": "Error rejecting {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"removeInvite": {
+			"error": "Error removing {{invitesAmount, plural(one:invite; other:{count} invites)}}: {{errors, uniqueErrors}}"
+		},
+		"addPeer": {
+			"error": "Error adding {{peersAmount, plural(one:peer; other:peers)}} {{peers, and}}: {{errors, uniqueErrors}}",
+			"success": "{{peersAmount, plural(one:peer; other:peers)}} {{peers, and}} added",
+			"mutate": "Adding {{peersAmount, plural(one:peer; other:peers)}} {{peers, and}}"
+		},
+		"removePeer": {
+			"error": "Error removing {{peersAmount, plural(one:peer; other:{count} peers)}}: {{errors, uniqueErrors}}",
+			"success": "{{peersAmount, plural(one:peer; other:{count} peers)}} removed",
+			"mutate": "Removing {{peersAmount, plural(one:peer; other:{count} peers)}}.."
+		},
+		"unlinkPeer": {
+			"error": "Error unlinking {{peersAmount, plural(one:peer; other:{count} peers)}}: {{errors, uniqueErrors}}"
+		},
+		"updatePeer": {
+			"error": "Error updating {{peersAmount, plural(one:peer; other:{count} peers)}}: {{errors, uniqueErrors}}"
+		}
+	}
+}

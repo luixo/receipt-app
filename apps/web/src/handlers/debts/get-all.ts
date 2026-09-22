@@ -4,7 +4,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get all debts",
 		description:
-			"Returns the current account's total debt amounts, summed per currency across all users.",
+			"Returns the current account's total debt amounts, summed per currency across all peers.",
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;

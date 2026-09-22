@@ -17,9 +17,9 @@ import {
 	localeSchema,
 } from "~app/utils/store/locale";
 import {
-	PRETEND_USER_STORE_NAME,
-	pretendUserSchema,
-} from "~app/utils/store/pretend-user";
+	PRETEND_ACCOUNT_STORE_NAME,
+	pretendAccountSchema,
+} from "~app/utils/store/pretend-account";
 import { SETTINGS_STORE_NAME, settingsSchema } from "~app/utils/store/settings";
 import {
 	TIMEZONE_STORE_NAME,
@@ -42,8 +42,8 @@ export const schemas = {
 	[LAST_COLOR_MODE_STORE_NAME]: lastColorModeSchema,
 	// Selected color schema used in this client (if any)
 	[SELECTED_COLOR_MODE_STORE_NAME]: selectedColorModeSchema,
-	// Pretend user
-	[PRETEND_USER_STORE_NAME]: pretendUserSchema,
+	// Pretend account
+	[PRETEND_ACCOUNT_STORE_NAME]: pretendAccountSchema,
 	// Default limit in paged comopnents
 	[LIMIT_STORE_NAME]: limitSchema,
 } satisfies Record<string, z.ZodType>;

@@ -87,31 +87,31 @@ const fetchDebts = async (
 				updates.map((update) => update.id),
 			).and("debts.ownerAccountId", "=", ctx.auth.accountId),
 		)
-		.innerJoin("users", (qb) =>
+		.innerJoin("peers", (qb) =>
 			qb
-				.onRef("users.id", "=", "debts.userId")
-				.onRef("users.ownerAccountId", "=", "debts.ownerAccountId"),
+				.onRef("peers.id", "=", "debts.peerId")
+				.onRef("peers.ownerAccountId", "=", "debts.ownerAccountId"),
 		)
 		.leftJoin("accountSettings", (qb) =>
-			qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
+			qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
 		)
-		.leftJoin("users as usersTheir", (qb) =>
+		.leftJoin("peers as peersTheir", (qb) =>
 			qb
-				.onRef("usersTheir.connectedAccountId", "=", "debts.ownerAccountId")
-				.onRef("usersTheir.ownerAccountId", "=", "users.connectedAccountId"),
+				.onRef("peersTheir.connectedAccountId", "=", "debts.ownerAccountId")
+				.onRef("peersTheir.ownerAccountId", "=", "peers.connectedAccountId"),
 		)
 		.select([
 			"debts.id",
-			"debts.userId",
+			"debts.peerId",
 			"debts.updatedAt",
 			"debts.note",
 			"debts.currencyCode",
 			"debts.amount",
 			"debts.timestamp",
 			"debts.receiptId",
-			"users.connectedAccountId as foreignAccountId",
+			"peers.connectedAccountId as foreignAccountId",
 			"accountSettings.manualAcceptDebts",
-			"usersTheir.id as theirUserId",
+			"peersTheir.id as theirPeerId",
 		])
 		.execute();
 
@@ -159,12 +159,12 @@ const updateAutoAcceptingDebts = async (
 			if (
 				!debt.manualAcceptDebts &&
 				debt.foreignAccountId &&
-				debt.theirUserId
+				debt.theirPeerId
 			) {
 				return {
 					id: debt.id,
 					ownerAccountId: debt.foreignAccountId,
-					userId: debt.theirUserId,
+					peerId: debt.theirPeerId,
 					currencyCode: debt.currencyCode,
 					amount: (-Number(debt.amount)).toString(),
 					timestamp: debt.timestamp,
@@ -234,7 +234,7 @@ const queueUpdateDebt = queueCallFactory<
 	z.infer<typeof updateDebtSchema>,
 	{
 		updatedAt: Temporal.ZonedDateTime;
-		// `undefined` signifies that user is local
+		// `undefined` signifies that peer is local
 		reverseUpdated: boolean | undefined;
 	}
 >((ctx) => async (updates) => {
@@ -260,10 +260,10 @@ const queueUpdateDebt = queueCallFactory<
 		updateAutoAcceptingDebts(ctx, mergedDebts),
 		updateDebts(ctx, mergedDebts),
 	]);
-	const localUserIds = unique(
+	const localPeerIds = unique(
 		debts
 			.filter((debt) => debt.foreignAccountId === null)
-			.map((debt) => debt.userId),
+			.map((debt) => debt.peerId),
 	);
 	return updatesOrErrors.map((updateOrError) => {
 		if (updateOrError instanceof TRPCError) {
@@ -282,7 +282,7 @@ const queueUpdateDebt = queueCallFactory<
 		/* c8 ignore stop */
 		return {
 			updatedAt: matchedDebt.updatedAt,
-			reverseUpdated: localUserIds.includes(updateOrError.debt.userId)
+			reverseUpdated: localPeerIds.includes(updateOrError.debt.peerId)
 				? undefined
 				: reverseUpdatedDebtsIds.includes(updateOrError.debt.id),
 		};

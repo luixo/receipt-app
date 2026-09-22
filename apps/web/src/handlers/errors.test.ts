@@ -48,18 +48,18 @@ describe("errors formatting", () => {
 		const { sessionId } = await insertAccountWithSession(ctx);
 		const caller = createCaller(createAuthContext(ctx, sessionId));
 		await expectTRPCError(
-			() => caller.users.add({ name: "", publicName: "" }),
+			() => caller.peers.add({ name: "", publicName: "" }),
 			"BAD_REQUEST",
-			`Zod errors\n\nAt "name": Minimal length for user name is 1\n\nAt "publicName": Minimal length for user name is 1`,
+			`Zod errors\n\nAt "name": Minimal length for peer name is 1\n\nAt "publicName": Minimal length for peer name is 1`,
 		);
 		await expectTRPCError(
-			() => caller.users.add({ name: "" }),
+			() => caller.peers.add({ name: "" }),
 			"BAD_REQUEST",
-			`Zod error\n\nAt "name": Minimal length for user name is 1`,
+			`Zod error\n\nAt "name": Minimal length for peer name is 1`,
 		);
 		await expectTRPCError(
 			// @ts-expect-error Type misuse for testing purposes
-			() => caller.users.add(12),
+			() => caller.peers.add(12),
 			"BAD_REQUEST",
 			`Zod error\n\nAt "<root>": Invalid input: expected object, received number`,
 		);

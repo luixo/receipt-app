@@ -129,7 +129,7 @@ export const ReceiptPreview = suspendedFallback<{
 		);
 		const isRemoving = lastMutationState?.status === "pending";
 		const locale = useLocale();
-		const isOwner = receipt.selfUserId === receipt.ownerUserId;
+		const isOwner = receipt.selfPeerId === receipt.ownerPeerId;
 		const emptyItems = receipt.items.filter(
 			(item) => item.consumers.length === 0,
 		);

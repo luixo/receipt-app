@@ -13,10 +13,10 @@ export const Route = createFileRoute("/_protected/debts/transfer")({
 		await ctx.context.i18nContext.loadNamespaces("debts");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		await Promise.all(
-			[ctx.deps.to, ctx.deps.from].map(async (userId) => {
-				if (userId) {
+			[ctx.deps.to, ctx.deps.from].map(async (peerId) => {
+				if (peerId) {
 					await ctx.context.queryClient.fetchQuery(
-						trpc.users.get.queryOptions({ id: userId }),
+						trpc.peers.get.queryOptions({ id: peerId }),
 					);
 				}
 			}),

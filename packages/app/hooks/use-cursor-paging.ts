@@ -48,7 +48,7 @@ export const useCursorPaging = <
 	const { data } = useSuspenseQuery(
 		// This is hacky, but I couldn't manage types here
 		(
-			procedure as TRPCDecoratedInfiniteQueryProcedure<"users.getPaged">
+			procedure as TRPCDecoratedInfiniteQueryProcedure<"peers.getPaged">
 		).queryOptions({ ...input, cursor: deferredOffset }),
 	);
 	const { count } = data;

@@ -1,44 +1,44 @@
 import type { TRPCMutationOutput } from "~app/trpc";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 
 import { update as updateDebts } from "../cache/debts";
 import {
-	invalidateSuggest as invalidateSuggestUsers,
-	update as updateUsers,
-} from "../cache/users";
+	invalidateSuggest as invalidateSuggestPeers,
+	update as updatePeers,
+} from "../cache/peers";
 import type { ControllerContext } from "../types";
 
-export const updateUserConnected = (
+export const updatePeerConnected = (
 	controllerContext: ControllerContext,
-	userId: UserId,
+	peerId: PeerId,
 	account: TRPCMutationOutput<"accountConnectionIntentions.add">["account"],
 ) => {
-	updateUsers(controllerContext, {
+	updatePeers(controllerContext, {
 		get: (controller) => {
-			controller.update(userId, (user) => ({
-				...user,
+			controller.update(peerId, (peer) => ({
+				...peer,
 				connectedAccount: account,
 			}));
 		},
 		getForeign: (controller) => {
-			controller.updateOwn(userId, (user) => ({
-				...user,
+			controller.updateOwn(peerId, (peer) => ({
+				...peer,
 				connectedAccount: account,
 			}));
 			controller.invalidateForeign();
 		},
 		getPaged: undefined,
 	});
-	void invalidateSuggestUsers(controllerContext);
+	void invalidateSuggestPeers(controllerContext);
 	updateDebts(controllerContext, {
 		// A newly connected account may have new debts for us
 		getAll: (controller) => {
 			void controller.invalidate();
 		},
-		getAllUser: undefined,
-		getByUserPaged: undefined,
+		getAllPeer: undefined,
+		getByPeerPaged: undefined,
 		// A newly connected account may have new debts for us
-		getUsersPaged: (controller) => {
+		getPeersPaged: (controller) => {
 			controller.invalidate();
 		},
 		get: undefined,

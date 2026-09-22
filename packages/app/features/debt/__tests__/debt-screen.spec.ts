@@ -27,18 +27,18 @@ test("On load", async ({
 	dateInput,
 	noteInput,
 	saveNoteButton,
-	userPreview,
+	peerPreview,
 	removeDebtButton,
 	debtSyncStatus,
 }) => {
-	const { debt, debtUser } = await mockDebt();
+	const { debt, debtPeer } = await mockDebt();
 	await openDebtScreen(debt.id);
 
 	await expect(page).toHaveTitle("RA - Debt");
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		`${formatCurrency(localSettings.locale, debt.currencyCode, debt.amount)} debt`,
 	);
-	await expect(userPreview.filter({ hasText: debtUser.name })).toBeVisible();
+	await expect(peerPreview.filter({ hasText: debtPeer.name })).toBeVisible();
 	expect(Number(await amountInput.inputValue())).toBe(Math.abs(debt.amount));
 	await expect(dateInput).toHaveValue(
 		debt.timestamp.toLocaleString(localSettings.locale, {
@@ -61,19 +61,19 @@ test("Header shows sync status and receipt link when applicable", async ({
 	receiptLinkButton,
 }) => {
 	const receiptId = faker.string.uuid();
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map((generated) => ({
 				...generated,
 				receiptId,
 			})),
 	});
-	api.mockFirst("users.get", ({ input, next }) => {
-		if (input.id !== debtUser.id) {
+	api.mockFirst("peers.get", ({ input, next }) => {
+		if (input.id !== debtPeer.id) {
 			return next();
 		}
 		return {
-			...debtUser,
+			...debtPeer,
 			connectedAccount: {
 				id: faker.string.uuid(),
 				email: faker.internet.email(),
@@ -333,12 +333,12 @@ test.describe("Currency", () => {
 			reverseUpdated: false,
 		}));
 
-		const debtsPreview = page.getByTestId("user-debts-preview");
-		const debtPreview = page.getByTestId("user-debt-preview");
+		const debtsPreview = page.getByTestId("peer-debts-preview");
+		const debtPreview = page.getByTestId("peer-debt-preview");
 
 		await page.navigate({ to: "/debts" });
 		await debtsPreview.click();
-		await awaitCacheKey("debts.getByUserPaged");
+		await awaitCacheKey("debts.getByPeerPaged");
 		await expect(debtPreview).toHaveCount(1);
 		await debtPreview.click();
 		await page.expectUrl({ to: "/debts/$id", params: { id: debt.id } });
@@ -363,7 +363,7 @@ test.describe("Remove", () => {
 		awaitCacheKey,
 		verifyToastTexts,
 	}) => {
-		const { debt, debtUser } = await mockDebt({
+		const { debt, debtPeer } = await mockDebt({
 			generateDebts: (opts) =>
 				defaultGenerateDebts(opts).map((generated) => ({
 					...generated,
@@ -372,9 +372,9 @@ test.describe("Remove", () => {
 		});
 		await openDebtScreen(debt.id);
 		api.mockFirst("debts.remove", { reverseRemoved: false });
-		// Removal navigates to the user's debts page, which fetches these
-		api.mockFirst("debts.getAllUser", { items: [] });
-		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
+		// Removal navigates to the peer's debts page, which fetches these
+		api.mockFirst("debts.getAllPeer", { items: [] });
+		api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
 
 		await snapshotQueries(
 			async () => {
@@ -382,11 +382,11 @@ test.describe("Remove", () => {
 				await awaitCacheKey("debts.remove");
 				await verifyToastTexts("Debt removed");
 			},
-			{ blacklistKeys: ["debts.getAllUser", "debts.getByUserPaged"] },
+			{ blacklistKeys: ["debts.getAllPeer", "debts.getByPeerPaged"] },
 		);
 		await page.expectUrl({
-			to: "/debts/user/$id",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id",
+			params: { id: debtPeer.id },
 		});
 	});
 
@@ -402,7 +402,7 @@ test.describe("Remove", () => {
 		withLoader,
 		removeDebtDialog,
 	}) => {
-		const { debt, debtUser } = await mockDebt({
+		const { debt, debtPeer } = await mockDebt({
 			generateDebts: (opts) =>
 				defaultGenerateDebts(opts).map((generated) => ({
 					...generated,
@@ -443,9 +443,9 @@ test.describe("Remove", () => {
 			await pause.promise;
 			return { reverseRemoved: false };
 		});
-		// Removal navigates to the user's debts page, which fetches these
-		api.mockFirst("debts.getAllUser", { items: [] });
-		api.mockFirst("debts.getByUserPaged", { items: [], count: 0, cursor: 0 });
+		// Removal navigates to the peer's debts page, which fetches these
+		api.mockFirst("debts.getAllPeer", { items: [] });
+		api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
 		await removeDebtButton.click();
 		await removeDebtDialogYesButton.click();
 		await expect(removeDebtButton).toBeDisabled();
@@ -460,12 +460,12 @@ test.describe("Remove", () => {
 			{
 				name: "success",
 				skipQueries: true,
-				blacklistKeys: ["debts.getAllUser", "debts.getByUserPaged"],
+				blacklistKeys: ["debts.getAllPeer", "debts.getByPeerPaged"],
 			},
 		);
 		await page.expectUrl({
-			to: "/debts/user/$id",
-			params: { id: debtUser.id },
+			to: "/debts/peer/$id",
+			params: { id: debtPeer.id },
 		});
 	});
 });

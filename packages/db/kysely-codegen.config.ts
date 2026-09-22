@@ -38,14 +38,14 @@ const TYPES: Record<
 			debts: ["ownerAccountId"],
 			receipts: ["ownerAccountId"],
 			resetPasswordIntentions: ["accountId"],
-			users: ["ownerAccountId"],
+			peers: ["ownerAccountId"],
 		},
 	},
 	// Kysely can't introspect references ids yet
 	accountIdNullable: {
 		expression: "AccountId | null",
 		tables: {
-			users: ["connectedAccountId"],
+			peers: ["connectedAccountId"],
 		},
 	},
 	debtId: {
@@ -87,15 +87,15 @@ const TYPES: Record<
 			sessions: ["sessionId"],
 		},
 	},
-	userId: {
-		expression: "UserId",
+	peerId: {
+		expression: "PeerId",
 		importSource: "~db/ids",
 		tables: {
-			debts: ["userId"],
-			receiptItemConsumers: ["userId"],
-			receiptParticipants: ["userId"],
-			users: ["id"],
-			receiptItemPayers: ["userId"],
+			debts: ["peerId"],
+			receiptItemConsumers: ["peerId"],
+			receiptParticipants: ["peerId"],
+			peers: ["id"],
+			receiptItemPayers: ["peerId"],
 		},
 	},
 };

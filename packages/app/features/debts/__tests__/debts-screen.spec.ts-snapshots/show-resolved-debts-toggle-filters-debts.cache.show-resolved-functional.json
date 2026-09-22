@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.getUsersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":true},\"limit\":10}]": {
+		"debts.getPeersPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":true},\"limit\":10}]": {
 			"state": {
 				"data": {
 					"count": 3,

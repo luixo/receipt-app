@@ -1,0 +1,212 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"69380e1c-200e-47b7-a6cc-b1637df444b6\"}]": {
+			"state": {
+				"data": {
+					"id": "69380e1c-200e-47b7-a6cc-b1637df444b6",
+					"currencyCode": "XCD",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-26",
+					"note": "subseco cohors qui arceo",
+					"receiptId": "<undefined>",
+					"amount": 8742.92,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"94e8142e-2d04-4086-81d5-e228db020b20\"}]": {
+			"state": {
+				"data": {
+					"id": "94e8142e-2d04-4086-81d5-e228db020b20",
+					"currencyCode": "BIF",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-23",
+					"note": "spargo demum vicinus adinventitias",
+					"receiptId": "<undefined>",
+					"amount": -8704.12,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"a32df93b-5c82-49c7-b4c5-409053a91564\"}]": {
+			"state": {
+				"data": {
+					"id": "a32df93b-5c82-49c7-b4c5-409053a91564",
+					"currencyCode": "EUR",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-13",
+					"note": "decerno ascisco asper error",
+					"receiptId": "<undefined>",
+					"amount": 8027.02,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"d0062b17-5c0d-4cce-aabb-daf428287d4b\"}]": {
+			"state": {
+				"data": {
+					"id": "d0062b17-5c0d-4cce-aabb-daf428287d4b",
+					"currencyCode": "KHR",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-26",
+					"note": "bene apud coadunatio depulso",
+					"receiptId": "<undefined>",
+					"amount": 7048.3,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"d778d9d5-cfa5-40e8-9abd-9086d3353f99\"}]": {
+			"state": {
+				"data": {
+					"id": "d778d9d5-cfa5-40e8-9abd-9086d3353f99",
+					"currencyCode": "CHF",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-19",
+					"note": "canonicus appello curto aqua",
+					"receiptId": "<undefined>",
+					"amount": -8434.12,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"f2cce9b8-bab5-45fc-94cb-c67d48529eb4\"}]": {
+			"state": {
+				"data": {
+					"id": "f2cce9b8-bab5-45fc-94cb-c67d48529eb4",
+					"currencyCode": "ILS",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"timestamp": "2019-12-28",
+					"note": "officiis vitium tabella voveo",
+					"receiptId": "<undefined>",
+					"amount": 9062.57,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": "<undefined>",
+					"peerId": "9f5be93e-4c88-4701-93df-64d3d0abc97f"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getAllPeer:[{\"peerId\":\"9f5be93e-4c88-4701-93df-64d3d0abc97f\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"currencyCode": "EUR",
+							"sum": 8027.02
+						},
+						{
+							"currencyCode": "ILS",
+							"sum": 9062.57
+						},
+						{
+							"currencyCode": "BIF",
+							"sum": -8704.12
+						},
+						{
+							"currencyCode": "KHR",
+							"sum": 7048.3
+						},
+						{
+							"currencyCode": "XCD",
+							"sum": 8742.92
+						},
+						{
+							"currencyCode": "CHF",
+							"sum": -8434.12
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.getByPeerPaged:[{\"cursor\":0,\"filters\":{\"showResolved\":false},\"limit\":10,\"peerId\":\"9f5be93e-4c88-4701-93df-64d3d0abc97f\"}]": {
+			"state": {
+				"data": {
+					"items": [
+						"a32df93b-5c82-49c7-b4c5-409053a91564",
+						"f2cce9b8-bab5-45fc-94cb-c67d48529eb4",
+						"94e8142e-2d04-4086-81d5-e228db020b20",
+						"d0062b17-5c0d-4cce-aabb-daf428287d4b",
+						"69380e1c-200e-47b7-a6cc-b1637df444b6",
+						"d778d9d5-cfa5-40e8-9abd-9086d3353f99"
+					],
+					"count": 6,
+					"cursor": 0
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"peers.get:[{\"id\":\"9f5be93e-4c88-4701-93df-64d3d0abc97f\"}]": {
+			"state": {
+				"data": {
+					"id": "9f5be93e-4c88-4701-93df-64d3d0abc97f",
+					"name": "Alessandra Spencer",
+					"publicName": "<undefined>",
+					"connectedAccount": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

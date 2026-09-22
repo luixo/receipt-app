@@ -4,65 +4,65 @@ import { z } from "zod";
 
 import { acceptNewIntentions } from "~web/handlers/debt-intentions/accept";
 import { authProcedure } from "~web/handlers/trpc";
-import { accountIdSchema, userIdSchema } from "~web/handlers/validation";
+import { accountIdSchema, peerIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Accept account connection intention",
 		description:
-			"Accepts an inbound account connection intention from a given accountId, merging the matching users and their debts.",
+			"Accepts an inbound account connection intention from a given accountId, merging the matching peers and their debts.",
 	})
 	.input(
 		z.strictObject({
 			accountId: accountIdSchema,
-			userId: userIdSchema,
+			peerId: peerIdSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const user = await ctx.database
-			.selectFrom("users")
-			.leftJoin("users as reciprocalUsers", (qb) =>
+		const peer = await ctx.database
+			.selectFrom("peers")
+			.leftJoin("peers as reciprocalPeers", (qb) =>
 				qb
 					.onRef(
-						"reciprocalUsers.ownerAccountId",
+						"reciprocalPeers.ownerAccountId",
 						"=",
-						"users.connectedAccountId",
+						"peers.connectedAccountId",
 					)
 					.onRef(
-						"reciprocalUsers.connectedAccountId",
+						"reciprocalPeers.connectedAccountId",
 						"=",
-						"users.ownerAccountId",
+						"peers.ownerAccountId",
 					),
 			)
 			.leftJoin("accounts", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "accounts.id"),
+				qb.onRef("peers.connectedAccountId", "=", "accounts.id"),
 			)
 			.select([
-				"users.id",
+				"peers.id",
 				"accounts.email",
-				"users.ownerAccountId",
-				"reciprocalUsers.id as reciprocalUserId",
+				"peers.ownerAccountId",
+				"reciprocalPeers.id as reciprocalPeerId",
 			])
-			.where("users.id", "=", input.userId)
+			.where("peers.id", "=", input.peerId)
 			.limit(1)
 			.executeTakeFirst();
-		if (!user) {
+		if (!peer) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not exist.`,
+				message: `Peer "${input.peerId}" does not exist.`,
 			});
 		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
+				message: `Peer "${input.peerId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (user.email && user.reciprocalUserId) {
+		if (peer.email && peer.reciprocalPeerId) {
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" is already connected to an account with email "${user.email}".`,
+				message: `Peer "${input.peerId}" is already connected to an account with email "${peer.email}".`,
 			});
 		}
 		const accounts = await database
@@ -89,28 +89,28 @@ export const procedure = authProcedure
 			});
 		}
 		const intention = await database
-			.selectFrom("users")
-			.leftJoin("users as reciprocalUsers", (qb) =>
+			.selectFrom("peers")
+			.leftJoin("peers as reciprocalPeers", (qb) =>
 				qb
 					.onRef(
-						"reciprocalUsers.ownerAccountId",
+						"reciprocalPeers.ownerAccountId",
 						"=",
-						"users.connectedAccountId",
+						"peers.connectedAccountId",
 					)
 					.onRef(
-						"reciprocalUsers.connectedAccountId",
+						"reciprocalPeers.connectedAccountId",
 						"=",
-						"users.ownerAccountId",
+						"peers.ownerAccountId",
 					),
 			)
-			.select("users.id as userId")
+			.select("peers.id as peerId")
 			.where((eb) =>
 				eb.and({
-					"users.ownerAccountId": targetAccount.id,
-					"users.connectedAccountId": ctx.auth.accountId,
+					"peers.ownerAccountId": targetAccount.id,
+					"peers.connectedAccountId": ctx.auth.accountId,
 				}),
 			)
-			.where("reciprocalUsers.id", "is", null)
+			.where("reciprocalPeers.id", "is", null)
 			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
@@ -120,10 +120,10 @@ export const procedure = authProcedure
 			});
 		}
 		await database
-			.updateTable("users")
+			.updateTable("peers")
 			.set({ connectedAccountId: targetAccount.id })
 			.where((eb) =>
-				eb.and({ ownerAccountId: ctx.auth.accountId, id: input.userId }),
+				eb.and({ ownerAccountId: ctx.auth.accountId, id: input.peerId }),
 			)
 			.executeTakeFirst();
 		const selfAccount = accounts.find(
@@ -136,7 +136,7 @@ export const procedure = authProcedure
 				: database
 						.selectFrom("debts")
 						.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-						.where("debts.userId", "=", input.userId)
+						.where("debts.peerId", "=", input.peerId)
 						.select([
 							"debts.id",
 							"debts.amount",
@@ -151,7 +151,7 @@ export const procedure = authProcedure
 				: database
 						.selectFrom("debts")
 						.where("debts.ownerAccountId", "=", targetAccount.id)
-						.where("debts.userId", "=", intention.userId)
+						.where("debts.peerId", "=", intention.peerId)
 						.select([
 							"debts.id",
 							"debts.amount",
@@ -173,7 +173,7 @@ export const procedure = authProcedure
 					timestamp: debt.timestamp,
 					note: debt.note,
 					receiptId: debt.receiptId,
-					foreignUserId: intention.userId,
+					foreignPeerId: intention.peerId,
 					selfId: null,
 				})),
 			),
@@ -187,7 +187,7 @@ export const procedure = authProcedure
 					timestamp: debt.timestamp,
 					note: debt.note,
 					receiptId: debt.receiptId,
-					foreignUserId: input.userId,
+					foreignPeerId: input.peerId,
 					selfId: null,
 				})),
 			),

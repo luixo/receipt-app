@@ -4,7 +4,7 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertUser,
+	insertPeer,
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -25,7 +25,7 @@ describe("accountConnectionIntentions.getAll", () => {
 
 			const { id: firstAccountId } = await insertAccount(ctx);
 			const { id: secondAccountId } = await insertAccount(ctx);
-			await insertUser(ctx, firstAccountId, {
+			await insertPeer(ctx, firstAccountId, {
 				connectedAccountId: secondAccountId,
 			});
 
@@ -48,22 +48,22 @@ describe("accountConnectionIntentions.getAll", () => {
 			const { id: secondOutboundAccountId, email: secondOutboundEmail } =
 				await insertAccount(ctx);
 
-			const { id: outboundUserId, name: outboundUserName } = await insertUser(
+			const { id: outboundPeerId, name: outboundPeerName } = await insertPeer(
 				ctx,
 				accountId,
 				{ connectedAccountId: outboundAccountId },
 			);
-			const { id: secondOutboundUserId, name: secondOutboundUserName } =
-				await insertUser(ctx, accountId, {
+			const { id: secondOutboundPeerId, name: secondOutboundPeerName } =
+				await insertPeer(ctx, accountId, {
 					connectedAccountId: secondOutboundAccountId,
 				});
-			await insertUser(ctx, inboundAccountId, {
+			await insertPeer(ctx, inboundAccountId, {
 				connectedAccountId: accountId,
 			});
-			await insertUser(ctx, inboundAccountId, {
+			await insertPeer(ctx, inboundAccountId, {
 				connectedAccountId: outboundAccountId,
 			});
-			await insertUser(ctx, secondInboundAccountId, {
+			await insertPeer(ctx, secondInboundAccountId, {
 				connectedAccountId: accountId,
 			});
 
@@ -89,14 +89,14 @@ describe("accountConnectionIntentions.getAll", () => {
 				outbound: [
 					{
 						account: { id: outboundAccountId, email: outboundEmail },
-						user: { id: outboundUserId, name: outboundUserName },
+						peer: { id: outboundPeerId, name: outboundPeerName },
 					},
 					{
 						account: {
 							id: secondOutboundAccountId,
 							email: secondOutboundEmail,
 						},
-						user: { id: secondOutboundUserId, name: secondOutboundUserName },
+						peer: { id: secondOutboundPeerId, name: secondOutboundPeerName },
 					},
 				].toSorted((a, b) => a.account.id.localeCompare(b.account.id)),
 			});

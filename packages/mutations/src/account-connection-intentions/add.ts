@@ -1,16 +1,16 @@
 import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
-import { updateUserConnected } from "./utils";
+import { updatePeerConnected } from "./utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.add"> =
 	{
 		mutationKey: "accountConnectionIntentions.add",
 		onSuccess: (controllerContext) => (result, variables) => {
 			if (result.connected) {
-				updateUserConnected(
+				updatePeerConnected(
 					controllerContext,
-					variables.userId,
+					variables.peerId,
 					result.account,
 				);
 			} else {
@@ -21,9 +21,9 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 								id: result.account.id,
 								email: result.account.email,
 							},
-							user: {
-								id: variables.userId,
-								name: result.user.name,
+							peer: {
+								id: variables.peerId,
+								name: result.peer.name,
 							},
 						}),
 				});
@@ -33,7 +33,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 			({ t }) =>
 			(variablesSet) => ({
 				text: t("toasts.addIntention.mutate", {
-					ns: "users",
+					ns: "peers",
 					intentionsAmount: variablesSet.length,
 					emails: variablesSet.map((variables) => `"${variables.email}"`),
 				}),
@@ -42,7 +42,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 			({ t }) =>
 			(_result, variablesSet) => ({
 				text: t("toasts.addIntention.success", {
-					ns: "users",
+					ns: "peers",
 					intentionsAmount: variablesSet.length,
 					emails: variablesSet.map((variables) => `"${variables.email}"`),
 				}),
@@ -51,7 +51,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 			({ t }) =>
 			(errors) => ({
 				text: t("toasts.addIntention.error", {
-					ns: "users",
+					ns: "peers",
 					intentionsAmount: errors.length,
 					errors,
 				}),

@@ -1,0 +1,12 @@
+{
+	"debts.get": {
+		"serverCalls": 3
+	},
+	"debts.getAllPeer": {
+		"serverCalls": 1,
+		"clientCalls": 1
+	},
+	"peers.get": {
+		"serverCalls": 1
+	}
+}

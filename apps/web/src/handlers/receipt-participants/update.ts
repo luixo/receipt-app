@@ -7,20 +7,20 @@ import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils"
 import { authProcedure } from "~web/handlers/trpc";
 import {
 	assignableRoleSchema,
+	peerIdSchema,
 	receiptIdSchema,
-	userIdSchema,
 } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.meta({
 		title: "Update receipt participant",
 		description:
-			"Updates the role of a userId participating in a given receipt.",
+			"Updates the role of a peerId participating in a given receipt.",
 	})
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-			userId: userIdSchema,
+			peerId: peerIdSchema,
 			update: z.discriminatedUnion("type", [
 				z.strictObject({
 					type: z.literal("role"),
@@ -43,16 +43,16 @@ export const procedure = authProcedure
 				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
-		const user = await database
-			.selectFrom("users")
+		const peer = await database
+			.selectFrom("peers")
 			.select(["ownerAccountId", "connectedAccountId"])
-			.where("id", "=", input.userId)
+			.where("id", "=", input.peerId)
 			.limit(1)
 			.executeTakeFirst();
-		if (!user) {
+		if (!peer) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not exist.`,
+				message: `Peer "${input.peerId}" does not exist.`,
 			});
 		}
 		switch (input.update.type) {
@@ -62,10 +62,10 @@ export const procedure = authProcedure
 				if (receipt.ownerAccountId !== ctx.auth.accountId) {
 					throw new TRPCError({
 						code: "FORBIDDEN",
-						message: `Only receipt owner can modify user receipt role.`,
+						message: `Only receipt owner can modify peer receipt role.`,
 					});
 				}
-				if (input.userId === ctx.auth.accountId) {
+				if (input.peerId === ctx.auth.accountId) {
 					throw new TRPCError({
 						code: "BAD_REQUEST",
 						message: `Cannot modify your own receipt role.`,
@@ -75,14 +75,14 @@ export const procedure = authProcedure
 		}
 		const receiptParticipant = await getReceiptParticipant(
 			database,
-			input.userId,
+			input.peerId,
 			input.receiptId,
-			["userId"],
+			["peerId"],
 		);
 		if (!receiptParticipant) {
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
+				message: `Peer "${input.peerId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
 		let setObject: Updateable<DB["receiptParticipants"]> = {};
@@ -99,7 +99,7 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({
 					receiptId: input.receiptId,
-					userId: input.userId,
+					peerId: input.peerId,
 				}),
 			)
 			.executeTakeFirst();
