@@ -26,11 +26,11 @@ const setProxyHeaders = async (
 	api: ExtractFixture<typeof test>["api"],
 	baseUrl = "",
 ) => {
-	const { port, controllerId } = api.getConnection();
+	const { url, controllerId } = api.getConnection();
 	await page.context().addCookies([
 		{
 			name: apiCookieNames.proxyPort,
-			value: port.toString(),
+			value: url.port,
 			url: baseUrl,
 		},
 		{

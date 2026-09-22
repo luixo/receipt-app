@@ -1,6 +1,8 @@
 // It's just types
-// oxlint-disable-next-line import/no-nodejs-modules
+/* oxlint-disable import/no-nodejs-modules */
 import type { IncomingMessage, Server, ServerResponse } from "node:http";
+import { format } from "node:url";
+/* oxlint-enable import/no-nodejs-modules */
 
 export const wait = (ms: number) =>
 	// This is the only place with new Promise
@@ -39,9 +41,24 @@ export const promisifyServer = <
 >(
 	server: Server<Request, Response>,
 ) => ({
-	listen: (port: number) =>
-		promisifyEvent((listener, errorListener) => {
-			server.listen(port, listener);
+	listen: (port = 0) =>
+		promisifyEvent<URL>((listener, errorListener) => {
+			server.listen(port, () => {
+				const address = server.address();
+				if (!address || typeof address === "string") {
+					errorListener(new Error("Expected an internet server address"));
+				} else {
+					listener(
+						new URL(
+							format({
+								protocol: "http:",
+								hostname: address.address,
+								port: address.port,
+							}),
+						),
+					);
+				}
+			});
 			server.on("error", errorListener);
 			return () => {
 				server.off("error", errorListener);

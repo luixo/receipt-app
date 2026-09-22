@@ -142,6 +142,7 @@ const runRoute = async <K extends keyof Procedures>({
 			| { result: { data: SuperJSONResult } };
 		return {
 			...base,
+			url,
 			json:
 				"error" in json
 					? new TRPCClientError(json.error.message, { result: json })
@@ -151,6 +152,7 @@ const runRoute = async <K extends keyof Procedures>({
 	}
 	return {
 		...base,
+		url,
 		json: undefined,
 		text: await response.text(),
 	};
@@ -236,16 +238,17 @@ describe("tRPC endpoint", () => {
 				const name = faker.person.firstName();
 				const controllerId = "random-controller-id";
 				const abortController = new AbortController();
-				await runRoute({
+				const { url: routeUrl } = await runRoute({
 					procedure: "query",
 					input: { name },
 					cookies: {
-						[apiCookieNames.proxyPort]: new URL(url).port,
+						[apiCookieNames.proxyPort]: url.port,
 						[apiCookieNames.controllerId]: controllerId,
 					},
 					signal: abortController.signal,
 				});
 				const expectedUrl = new URL(url);
+				expectedUrl.hostname = routeUrl.hostname;
 				expectedUrl.pathname = "query";
 				expectedUrl.searchParams.set("input", serializeInput({ name }));
 				expect(proxySpy).toHaveBeenCalledTimes(1);
