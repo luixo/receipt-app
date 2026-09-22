@@ -1,10 +1,8 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-import { createIconSet } from "@expo/vector-icons";
-import lucideGlyphMap from "@react-native-vector-icons/lucide/glyphmaps/Lucide.json";
-import * as lucideIcons from "lucide-react-native";
-import type { ResponderProps } from "react-native-svg";
+import type { LucideIconName } from "@react-native-vector-icons/lucide";
+import { Lucide as LucideRaw } from "@react-native-vector-icons/lucide";
 import type { SFSymbol } from "sf-symbols-typescript";
 import { withUniwind } from "uniwind";
 
@@ -14,63 +12,9 @@ import { View } from "~components/view";
 
 import type { IconName, Props } from "./icons";
 
-export const iconFamily = createIconSet(
-	lucideGlyphMap,
-	"lucide",
-	// This seems to be the expected way to import a font
-	// oxlint-disable-next-line node/global-require, typescript/no-require-imports, typescript/no-var-requires, import/no-commonjs unicorn/prefer-module typescript/no-unsafe-argument
-	require("@react-native-vector-icons/lucide/fonts/Lucide.ttf"),
-);
+export { Lucide as IconFamily } from "@react-native-vector-icons/lucide";
 
-const localMapping = {
-	refresh: "RefreshCw",
-	sync: "RefreshCw",
-	unsync: "RefreshCwOff",
-	incoming: "ArrowLeftFromLine",
-	outcoming: "ArrowRightFromLine",
-	debts: "HandCoins",
-	add: "Plus",
-	link: "Link",
-	pencil: "Pencil",
-	unlink: "Unlink",
-	receipt: "ReceiptText",
-	send: "Send",
-	zero: "CircleOff",
-	info: "Info",
-	filter: "ListFilter",
-	admin: "ShieldUser",
-	key: "KeyRound",
-	money: "Coins",
-	transfer: "ArrowLeftRight",
-	search: "Search",
-	editor: "UserPen",
-	owner: "UserStar",
-	viewer: "UserRound",
-	warning: "TriangleAlert",
-	trash: "Trash",
-	check: "Check",
-	close: "X",
-	inbox: "Inbox",
-	minus: "Minus",
-	plus: "Plus",
-	moon: "Moon",
-	sun: "Sun",
-	users: "UsersRound",
-	user: "UserRound",
-	"arrow-left": "ArrowLeft",
-	"arrow-right": "ArrowRight",
-	"arrow-down": "ArrowDown",
-	"chevron-down": "ChevronDown",
-	settings: "Settings",
-	login: "LogIn",
-	register: "UserRoundPlus",
-	"sort-down": "ArrowDown10",
-	"sort-up": "ArrowDown01",
-	exchange: "ChartCandlestick",
-	eye: "Eye",
-	"eye-off": "EyeOff",
-	ellipsis: "Ellipsis",
-} satisfies Record<IconName, keyof typeof lucideIcons>;
+const Lucide = withUniwind(LucideRaw);
 
 export const glyphMapping = {
 	refresh: "refresh-cw",
@@ -120,7 +64,7 @@ export const glyphMapping = {
 	eye: "eye",
 	"eye-off": "eye-off",
 	ellipsis: "ellipsis",
-} satisfies Record<IconName, keyof (typeof iconFamily)["glyphMap"]>;
+} satisfies Record<IconName, LucideIconName>;
 
 export const sfMapping: Partial<
 	Record<IconName, SFSymbol | { default: SFSymbol; selected: SFSymbol }>
@@ -135,29 +79,11 @@ export const sfMapping: Partial<
 	},
 };
 
-const componentsCache: Partial<
-	Record<
-		IconName,
-		React.ComponentType<
-			lucideIcons.LucideProps & {
-				className?: string;
-				pointerEvents?: ResponderProps["pointerEvents"];
-			}
-		>
-	>
-> = {};
-const getComponent = (icon: IconName) => {
-	if (!componentsCache[icon]) {
-		componentsCache[icon] = withUniwind(lucideIcons[localMapping[icon]]);
-	}
-	return componentsCache[icon];
-};
 // @ts-expect-error We need to override size with empty, but `undefined` will be substituted by a default value
 const emptySize: undefined = null;
 
 export const Icon = ({ name, className, testID, onClick }: Props) => {
 	const textClass = React.use(TextClassContext);
-	const Component = getComponent(name);
 	// These are actually created only once
 	const finalClassNames = cn(textClass, className).split(" ");
 	const transformClassNames = finalClassNames.filter(
@@ -169,7 +95,8 @@ export const Icon = ({ name, className, testID, onClick }: Props) => {
 	);
 
 	let element = (
-		<Component
+		<Lucide
+			name={glyphMapping[name]}
 			className={restClassNames.join(" ")}
 			size={emptySize}
 			pointerEvents="none"

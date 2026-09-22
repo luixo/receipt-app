@@ -4,7 +4,7 @@ import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useCSSVariable } from "uniwind";
 
 import type { IconName } from "~components/icons";
-import { glyphMapping, iconFamily } from "~components/icons.native";
+import { IconFamily, glyphMapping } from "~components/icons.native";
 import type { FileRouteTypes } from "~web/entry/routeTree.gen";
 
 type ShowProps = {
@@ -66,7 +66,8 @@ export const Page: React.FC<Props> = ({ elements }) => {
 					<NativeTabs.Trigger.Icon
 						src={
 							<NativeTabs.Trigger.VectorIcon
-								family={iconFamily}
+								// @ts-expect-error null / undefined problem will be resolved in next release
+								family={IconFamily}
 								name={glyphMapping[iconName]}
 							/>
 						}
