@@ -123,6 +123,9 @@ export const searchParamsMapping = {
 	"/_public/confirm-email": z.object({
 		token: confirmEmailTokenSchema.optional().catch(undefined),
 	}),
+	"/_public/login": z.object({
+		bot: z.literal("telegram").optional().catch(undefined),
+	}),
 	"/_protected/peers/": z.object({
 		limit: limitSchema.optional().catch(undefined),
 		offset: offsetSchema.default(0).catch(0),

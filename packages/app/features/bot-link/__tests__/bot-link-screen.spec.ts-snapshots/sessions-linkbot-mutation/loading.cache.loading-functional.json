@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"sessions.linkBot": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"initData": "auth_date=1&user=%7B%7D&hash=test"
+					}
+				}
+			}
+		]
+	}
+}

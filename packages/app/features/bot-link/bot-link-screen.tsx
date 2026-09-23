@@ -1,0 +1,87 @@
+import React from "react";
+
+import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
+
+import { EmptyCard } from "~app/components/empty-card";
+import { ErrorMessage } from "~app/components/error-message";
+import { PageHeader } from "~app/components/page-header";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCMutationResult } from "~app/trpc";
+import { getTelegramInitData } from "~app/utils/telegram";
+import { useTRPC } from "~app/utils/trpc";
+import { ButtonLink } from "~components/link";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
+import { options as sessionsLinkBotOptions } from "~mutations/sessions/link-bot";
+
+export const BotLink: React.FC<{
+	linkBotMutation: TRPCMutationResult<"bot.link">;
+	initData: string;
+}> = ({ linkBotMutation, initData }) => {
+	const { t } = useTranslation("bot");
+	switch (linkBotMutation.status) {
+		case "pending":
+			return <Spinner size="lg" />;
+		case "error":
+			return (
+				<ErrorMessage
+					message={linkBotMutation.error.message}
+					button={{
+						text: t("retryButton"),
+						onPress: () => linkBotMutation.mutate({ initData }),
+					}}
+				/>
+			);
+		case "idle":
+			return null;
+		case "success":
+			return (
+				<>
+					<Text variant="h4">{t("success.header")}</Text>
+					<ButtonLink to="/" color="primary">
+						{t("success.home")}
+					</ButtonLink>
+				</>
+			);
+	}
+};
+
+export const BotLinkScreen = () => {
+	const { t } = useTranslation("bot");
+	const trpc = useTRPC();
+	const linkBotMutation = useMutation(
+		trpc.bot.link.mutationOptions(
+			useTrpcMutationOptions(sessionsLinkBotOptions),
+		),
+	);
+	// `undefined` on both the server and the initial client render (`window`
+	// isn't available during SSR) - populated from the effect below once
+	// mounted, to avoid a hydration mismatch.
+	const [initData, setInitData] = React.useState<string | undefined>();
+	React.useEffect(() => {
+		setInitData(getTelegramInitData());
+	}, []);
+	const linkBot = React.useCallback(() => {
+		if (!initData || linkBotMutation.status !== "idle") {
+			return;
+		}
+		linkBotMutation.mutate({ initData });
+	}, [initData, linkBotMutation]);
+	React.useEffect(linkBot, [linkBot]);
+
+	return (
+		<>
+			<PageHeader>{t("header")}</PageHeader>
+			{initData ? (
+				<BotLink linkBotMutation={linkBotMutation} initData={initData} />
+			) : (
+				<EmptyCard title={t("error.title")}>
+					<Text variant="h3" className="text-center">
+						{t("error.description")}
+					</Text>
+				</EmptyCard>
+			)}
+		</>
+	);
+};

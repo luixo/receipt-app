@@ -1,7 +1,7 @@
 import { mapValues } from "remeda";
 import { z } from "zod";
 
-const temporalClasses = {
+export const temporalClasses = {
 	plainTime: Temporal.PlainTime,
 	plainDate: Temporal.PlainDate,
 	plainDateTime: Temporal.PlainDateTime,

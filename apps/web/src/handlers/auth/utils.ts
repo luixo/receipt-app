@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
 import type { AccountId, SessionId } from "~db/ids";
+import { verifyTelegramInitData } from "~utils/server/crypto";
 import { generateConfirmEmailEmail } from "~web/email/utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getEmailClient } from "~web/providers/email";
+import { env } from "~web/utils/env";
 
 // How long a session should last
 const SESSION_EXPIRATION_DURATION = { days: 30 };
@@ -18,6 +20,7 @@ export const getExpirationDate = () =>
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,
 	accountId: AccountId,
+	botUserId?: string,
 ) => {
 	const uuid: SessionId = ctx.getUuid();
 	const expirationDate = getExpirationDate();
@@ -27,12 +30,34 @@ export const createAuthorizationSession = async (
 			accountId,
 			sessionId: uuid,
 			expirationTimestamp: expirationDate,
+			botUserId,
 		})
 		.executeTakeFirst();
 	return {
 		authToken: uuid,
 		expirationDate,
 	};
+};
+
+// Verifies a Telegram Mini App init data payload and returns the
+// platform-prefixed bot user id to stamp onto a session - shared by
+// auth.login (fresh login from the /login?bot=telegram page) and
+// bot.link (linking from an already-authenticated session).
+export const getBotUserId = (initData: string): string => {
+	if (!env.TELEGRAM_BOT_TOKEN) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "Bot linking is not configured.",
+		});
+	}
+	const verified = verifyTelegramInitData(initData, env.TELEGRAM_BOT_TOKEN);
+	if (!verified) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "Invalid Telegram data.",
+		});
+	}
+	return `tg:${verified.id}`;
 };
 
 export const sendVerificationEmail = async (

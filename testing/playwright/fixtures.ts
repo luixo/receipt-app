@@ -13,6 +13,7 @@ import { queriesFixtures } from "./fixtures/queries";
 import { screenshotsFixtures } from "./fixtures/screenshots";
 import { selectorsFixtures } from "./fixtures/selectors";
 import { skipFixtures } from "./fixtures/skip";
+import { telegramFixtures } from "./fixtures/telegram";
 import { toastsFixtures } from "./fixtures/toasts";
 import { tooltipFixtures } from "./fixtures/tooltip";
 
@@ -33,5 +34,6 @@ export const test = mergeTests(
 	cacheFixtures,
 	formFixtures,
 	coverageFixtures,
+	telegramFixtures,
 );
 export { expect } from "@playwright/test";

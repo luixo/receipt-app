@@ -39,7 +39,7 @@ const defaultGetEmailOptions = () => {
 		setActive: doNothing,
 	};
 };
-const createContextRest = (
+export const createContext = (
 	req: Request,
 ): Omit<UnauthorizedContext, keyof NetContext> => ({
 	logger: baseLogger,
@@ -135,7 +135,7 @@ const callback = async (
 		req: request,
 		router,
 		createContext: (opts) => ({
-			...createContextRest(opts.req),
+			...createContext(opts.req),
 			reqHeaders: opts.req.headers,
 			resHeaders: new Headers(),
 		}),

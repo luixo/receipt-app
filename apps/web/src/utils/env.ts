@@ -18,6 +18,8 @@ export const env = createEnv({
 		S3_ACCESS_KEY_ID: z.string(),
 		S3_SECRET_KEY: z.string(),
 		NODE_V8_COVERAGE: z.string().optional(),
+		// Session used to authenticate MCP tool calls (see ~web/pages/api/mcp/$).
+		TELEGRAM_BOT_TOKEN: z.string().optional(),
 	},
 	clientPrefix: "VITE_",
 	client: {},
