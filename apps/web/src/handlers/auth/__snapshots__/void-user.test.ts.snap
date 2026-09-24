@@ -1,16 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`auth.voidUser > functionality > account voided 1`] = `
+exports[`auth.voidUser > functionality > user voided 1`] = `
 {
   "deleted": {
     "peers": {
-      "id:0c3f8a23-230e-419f-8cbc-37d2812eaa3f": undefined,
+      "id:3a47ec9f-7631-40e6-8a4c-48f3ff560cc8": undefined,
     },
     "sessions": {
-      "sessionId:fecc131b-0d90-48ec-88a0-47bfccd0a97f": undefined,
+      "sessionId:364b6e61-df38-4853-a396-86f0be9803c4": undefined,
     },
     "users": {
-      "id:0c3f8a23-230e-419f-8cbc-37d2812eaa3f": undefined,
+      "id:3a47ec9f-7631-40e6-8a4c-48f3ff560cc8": undefined,
     },
   },
 }
