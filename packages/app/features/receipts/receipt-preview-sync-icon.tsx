@@ -12,9 +12,9 @@ export const skeletonReceiptPreviewSyncIcon = (
 	<Skeleton className="size-6 rounded-sm" />
 );
 
-const StatusButton: React.FC<{ type: "synced" | "desynced" | "unsynced" }> = ({
-	type,
-}) => {
+export const StatusButton: React.FC<{
+	type: "synced" | "desynced" | "unsynced";
+}> = ({ type }) => {
 	switch (type) {
 		case "synced":
 			return (
