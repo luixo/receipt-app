@@ -26,7 +26,6 @@ import { Route as ProtectedAccountRouteImport } from './../pages/_protected/acco
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/peers/index'
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
-import { Route as ApiUtilsPingCacheRouteImport } from './../pages/api/utils/ping-cache'
 import { Route as ApiUtilsCleanupRouteImport } from './../pages/api/utils/cleanup'
 import { Route as ApiTrpcSplatRouteImport } from './../pages/api/trpc/$'
 import { Route as ProtectedReceiptsAddRouteImport } from './../pages/_protected/receipts/add'
@@ -125,11 +124,6 @@ const ProtectedDebtsIndexRoute = ProtectedDebtsIndexRouteImport.update({
   id: '/debts/',
   path: '/debts/',
   getParentRoute: () => ProtectedRoute,
-} as any)
-const ApiUtilsPingCacheRoute = ApiUtilsPingCacheRouteImport.update({
-  id: '/api/utils/ping-cache',
-  path: '/api/utils/ping-cache',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiUtilsCleanupRoute = ApiUtilsCleanupRouteImport.update({
   id: '/api/utils/cleanup',
@@ -237,7 +231,6 @@ export interface FileRoutesByFullPath {
   '/receipts/add': typeof ProtectedReceiptsAddRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
   '/debts/': typeof ProtectedDebtsIndexRoute
   '/peers/': typeof ProtectedPeersIndexRoute
   '/receipts/': typeof ProtectedReceiptsIndexRoute
@@ -270,7 +263,6 @@ export interface FileRoutesByTo {
   '/receipts/add': typeof ProtectedReceiptsAddRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
   '/debts': typeof ProtectedDebtsIndexRoute
   '/peers': typeof ProtectedPeersIndexRoute
   '/receipts': typeof ProtectedReceiptsIndexRoute
@@ -306,7 +298,6 @@ export interface FileRoutesById {
   '/_protected/receipts/add': typeof ProtectedReceiptsAddRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
-  '/api/utils/ping-cache': typeof ApiUtilsPingCacheRoute
   '/_protected/debts/': typeof ProtectedDebtsIndexRoute
   '/_protected/peers/': typeof ProtectedPeersIndexRoute
   '/_protected/receipts/': typeof ProtectedReceiptsIndexRoute
@@ -341,7 +332,6 @@ export interface FileRouteTypes {
     | '/receipts/add'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
     | '/debts/'
     | '/peers/'
     | '/receipts/'
@@ -374,7 +364,6 @@ export interface FileRouteTypes {
     | '/receipts/add'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
     | '/debts'
     | '/peers'
     | '/receipts'
@@ -409,7 +398,6 @@ export interface FileRouteTypes {
     | '/_protected/receipts/add'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
-    | '/api/utils/ping-cache'
     | '/_protected/debts/'
     | '/_protected/peers/'
     | '/_protected/receipts/'
@@ -427,7 +415,6 @@ export interface RootRouteChildren {
   ApiPingRoute: typeof ApiPingRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
-  ApiUtilsPingCacheRoute: typeof ApiUtilsPingCacheRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -550,13 +537,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/debts/'
       preLoaderRoute: typeof ProtectedDebtsIndexRouteImport
       parentRoute: typeof ProtectedRoute
-    }
-    '/api/utils/ping-cache': {
-      id: '/api/utils/ping-cache'
-      path: '/api/utils/ping-cache'
-      fullPath: '/api/utils/ping-cache'
-      preLoaderRoute: typeof ApiUtilsPingCacheRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/api/utils/cleanup': {
       id: '/api/utils/cleanup'
@@ -745,7 +725,6 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPingRoute: ApiPingRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,
-  ApiUtilsPingCacheRoute: ApiUtilsPingCacheRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
