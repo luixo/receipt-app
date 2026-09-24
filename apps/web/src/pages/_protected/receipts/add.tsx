@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/receipts/add")({
 	component: AddReceiptScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("receipts");
-		const trpc = getLoaderTrpcClient(ctx.context);
+		const trpc = await getLoaderTrpcClient(ctx.context);
 		await Promise.all([
 			ctx.context.queryClient.prefetchQuery(trpc.account.get.queryOptions()),
 			ctx.context.queryClient.prefetchQuery(

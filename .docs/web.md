@@ -12,7 +12,7 @@ Run via `bun run web:dev`.
 
 ## SSR and data loading
 
-- Use `getLoaderTrpcClient(ctx.context)` (not the hook-based client) in `loader` and `beforeLoad` — it reads the server request on SSR and falls back to the window on CSR.
+- Use `await getLoaderTrpcClient(ctx.context)` (not the hook-based client) in `loader` and `beforeLoad` — it reads the server request on SSR and falls back to the window on CSR.
 - Prefetch in route loaders via `prefetchQueries(ctx, trpc.xxx.queryOptions(), …)` and return the result as `{ prefetched }`. `HydrationBoundary` picks this up and seeds the client query cache before first paint.
 - Use `prefetchQueriesWith` for dependent queries (fetch an ID, then prefetch by that ID) — the helper handles CSR skipping and error swallowing.
 - Loader stale time is `Infinity`; loaders never re-run on the client after SSR. Refresh via `router.invalidate()` or mutation cache updates.

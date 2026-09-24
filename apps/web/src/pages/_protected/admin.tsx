@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/admin")({
 	component: AdminScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("admin");
-		const trpc = getLoaderTrpcClient(ctx.context);
+		const trpc = await getLoaderTrpcClient(ctx.context);
 		const account = await ctx.context.queryClient.fetchQuery(
 			trpc.account.get.queryOptions(),
 		);

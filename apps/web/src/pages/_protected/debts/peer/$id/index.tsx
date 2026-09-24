@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_protected/debts/peer/$id/")({
 	}),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
-		const trpc = getLoaderTrpcClient(ctx.context);
+		const trpc = await getLoaderTrpcClient(ctx.context);
 		const prefetched = await prefetchQueriesWith(
 			ctx,
 			async () => {

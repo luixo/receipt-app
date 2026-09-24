@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/debts/intentions")({
 	component: DebtsIntentionsScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
-		const trpc = getLoaderTrpcClient(ctx.context);
+		const trpc = await getLoaderTrpcClient(ctx.context);
 		await ctx.context.queryClient.fetchQuery(
 			trpc.debtIntentions.getAll.queryOptions(),
 		);
