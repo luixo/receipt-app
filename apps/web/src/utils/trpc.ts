@@ -22,7 +22,6 @@ const getServerLinksParams = (
 		debug: Boolean(url.searchParams.get("debug")),
 		headers: fromEntries([...request.headers.entries()]),
 		source,
-		keepError: Boolean(import.meta.env.VITEST),
 		captureError: captureSentryError,
 	};
 };
@@ -51,13 +50,6 @@ const getIsomorphicLinkParams = createIsomorphicFn()
 	/* c8 ignore start */
 	.client((): GetLinksOptions => getClientLinksParams("csr-loader"));
 /* c8 ignore stop */
-
-export const getApiTrpcClient = <R extends AnyRouter = AnyRouter>(
-	request: Request,
-) =>
-	createTRPCClient<R>({
-		links: getLinks(getServerLinksParams(request, "api")),
-	});
 
 export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 	context: Pick<RouterContext, "queryClient" | "request">,
