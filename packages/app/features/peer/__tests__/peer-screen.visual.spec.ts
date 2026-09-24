@@ -1,6 +1,7 @@
 import { expect } from "~tests/frontend/fixtures";
+import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
 
-import { test } from "./utils";
+import { mockPeerReceipts, test } from "./utils";
 
 test("Default state", async ({
 	mockBase,
@@ -38,6 +39,35 @@ test("Filled state", async ({
 	await openPeerScreen(targetPeer.id);
 	await expect(connectionEmailInput).toHaveValue("connected@example.com");
 	await expectScreenshotWithSchemes("filled-state.png");
+});
+
+test("With receipts", async ({
+	mockBase,
+	openPeerScreen,
+	expectScreenshotWithSchemes,
+	awaitCacheKey,
+	api,
+	faker,
+	fromUnitToSubunit,
+	fromSubunitToUnit,
+	peerReceiptPreview,
+}) => {
+	const { targetPeer, selfPeer } = await mockBase();
+	mockPeerReceipts({
+		api,
+		faker,
+		fromUnitToSubunit,
+		fromSubunitToUnit,
+		targetPeer,
+		selfPeer,
+		amount: 2,
+		generateDebts: defaultGenerateDebtsFromReceipt,
+	});
+	await openPeerScreen(targetPeer.id);
+	await awaitCacheKey("receipts.getByPeerPaged");
+	await awaitCacheKey("receipts.get", 2);
+	await expect(peerReceiptPreview).toHaveCount(2);
+	await expectScreenshotWithSchemes("with-receipts.png");
 });
 
 test("Connection form open", async ({

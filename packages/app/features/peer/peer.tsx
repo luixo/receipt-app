@@ -27,6 +27,7 @@ import { options as peersRemoveOptions } from "~mutations/peers/remove";
 import { options as peersUpdateOptions } from "~mutations/peers/update";
 
 import { PeerConnectionInput } from "./peer-connection-input";
+import { PeerReceipts } from "./peer-receipts";
 
 type NameProps = {
 	id: PeerId;
@@ -266,6 +267,7 @@ export const Peer: React.FC<{ id: PeerId; onRemove: () => void }> = ({
 			<PeerNameInput id={id} isLoading={deleteLoading} />
 			<PeerPublicNameInput id={id} isLoading={deleteLoading} />
 			<PeerConnectionInput id={id} isLoading={deleteLoading} />
+			<PeerReceipts peerId={id} />
 			<PeerRemoveButton
 				id={id}
 				className="self-end"
