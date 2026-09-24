@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`userSettings.update > functionality > manualAcceptDebts > settings found 1`] = `
+{
+  "updated": {
+    "userSettings": {
+      "userId:dbc40e6d-039d-49da-8ba0-3614ddcd4b12": {
+        "manualAcceptDebts": false,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userSettings.update > functionality > manualAcceptDebts > settings not found - updated with default-like 1`] = `
+{
+  "added": {
+    "userSettings": {
+      "userId:e4860ce7-fc45-482f-ba14-ee2e375b4ae5": {
+        "manualAcceptDebts": false,
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "e4860ce7-fc45-482f-ba14-ee2e375b4ae5",
+      },
+    },
+  },
+}
+`;
+
+exports[`userSettings.update > functionality > manualAcceptDebts > settings not found - updated with non-default value 1`] = `
+{
+  "added": {
+    "userSettings": {
+      "userId:d4b1be34-e269-4c5f-937a-eb17ac6e0ff3": {
+        "manualAcceptDebts": true,
+        "updatedAt": "2020-01-01 00:00:00+00",
+        "userId": "d4b1be34-e269-4c5f-937a-eb17ac6e0ff3",
+      },
+    },
+  },
+}
+`;

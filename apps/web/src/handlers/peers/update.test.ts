@@ -7,9 +7,9 @@ import {
 } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertPeer,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -34,7 +34,7 @@ describe("peers.update", () => {
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -50,8 +50,8 @@ describe("peers.update", () => {
 
 		describe.each(["name", "publicName"] as const)("%s", (field) => {
 			test("minimal length", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: peerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: peerId } = await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -74,8 +74,8 @@ describe("peers.update", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: peerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: peerId } = await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -101,28 +101,28 @@ describe("peers.update", () => {
 		test("changing your own name via 'peers.update' method", async ({
 			ctx,
 		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						id: accountId,
+						id: userId,
 						update: { type: "name", name: "a".repeat(MIN_USERNAME_LENGTH) },
 					}),
 				"BAD_REQUEST",
-				`Please use "account.changeName" handler to update your own name.`,
+				`Please use "user.changeName" handler to update your own name.`,
 			);
 		});
 
 		test("changing your own publicName via 'peers.update' method", async ({
 			ctx,
 		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
-						id: accountId,
+						id: userId,
 						update: {
 							type: "publicName",
 							publicName: "a".repeat(MIN_USERNAME_LENGTH),
@@ -134,9 +134,9 @@ describe("peers.update", () => {
 		});
 
 		test("peer not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other peers doesn't affect the error
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentPeerId = faker.string.uuid();
 			await expectTRPCError(
@@ -153,15 +153,15 @@ describe("peers.update", () => {
 			);
 		});
 
-		test("peer is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("peer is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, otherAccountId);
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -177,12 +177,12 @@ describe("peers.update", () => {
 
 	describe("functionality", () => {
 		test("name is changed", async ({ ctx }) => {
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, otherAccountId);
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			await insertPeer(ctx, otherUserId);
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
@@ -194,14 +194,14 @@ describe("peers.update", () => {
 		});
 
 		test("public name is changed", async ({ ctx }) => {
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, otherAccountId);
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			await insertPeer(ctx, otherUserId);
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 			// Verify other peers are not affected
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
@@ -213,16 +213,16 @@ describe("peers.update", () => {
 		});
 
 		test("public name is changed to undefined", async ({ ctx }) => {
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, otherAccountId);
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId, {
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			await insertPeer(ctx, otherUserId);
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId, {
 				publicName: "foo",
 			});
 			// Verify other peers are not affected
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>

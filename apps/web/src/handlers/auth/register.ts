@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, peerNameSchema } from "~app/utils/validation";
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 import { generatePasswordData } from "~utils/server/crypto";
 import {
 	createAuthorizationSession,
@@ -29,7 +29,7 @@ export const procedure = unauthProcedure
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const account = await database
-			.selectFrom("accounts")
+			.selectFrom("users")
 			.select([])
 			.where("email", "=", input.email.lowercase)
 			.limit(1)
@@ -43,7 +43,7 @@ export const procedure = unauthProcedure
 				message: `Email "${input.email.original}" already exists.`,
 			});
 		}
-		const id: AccountId = ctx.getUuid();
+		const id: UserId = ctx.getUuid();
 		const confirmationToken = ctx.getUuid();
 		const emailServiceActive = ctx.emailOptions.getActive();
 		const passwordData = await generatePasswordData(ctx, input.password);
@@ -55,7 +55,7 @@ export const procedure = unauthProcedure
 			);
 		}
 		await database
-			.insertInto("accounts")
+			.insertInto("users")
 			.values({
 				id,
 				email: input.email.lowercase,
@@ -73,8 +73,8 @@ export const procedure = unauthProcedure
 				// Typesystem doesn't know that we use account id as self peer id
 				id: id as PeerId,
 				name: input.name,
-				ownerAccountId: id,
-				connectedAccountId: id,
+				ownerUserId: id,
+				connectedUserId: id,
 				exposeReceipts: true,
 				acceptReceipts: true,
 			})
@@ -88,6 +88,6 @@ export const procedure = unauthProcedure
 		);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
-			account: { id, verified: !emailServiceActive },
+			user: { id, verified: !emailServiceActive },
 		};
 	});

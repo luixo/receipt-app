@@ -4,130 +4,137 @@
  */
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { AccountId, DebtId, ReceiptId, ReceiptItemId, SessionId, PeerId } from "~db/ids";
+import type {
+	DebtId,
+	PeerId,
+	ReceiptId,
+	ReceiptItemId,
+	SessionId,
+	UserId,
+} from "~db/ids";
 import type { ColumnType } from "kysely";
 
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
-  ? ColumnType<S, I | undefined, U>
-  : ColumnType<T, T | undefined, T>;
+	? ColumnType<S, I | undefined, U>
+	: ColumnType<T, T | undefined, T>;
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
 export type ReceiptRole = "editor" | "owner" | "viewer";
 
-export interface Account {
-  avatarUrl: string | null;
-  confirmationToken: string | null;
-  confirmationTokenTimestamp: Temporal.ZonedDateTime | null;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  email: string;
-  id: AccountId;
-  passwordHash: string;
-  passwordSalt: string;
-  role: string | null;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+export interface User {
+	avatarUrl: string | null;
+	confirmationToken: string | null;
+	confirmationTokenTimestamp: Temporal.ZonedDateTime | null;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	email: string;
+	id: UserId;
+	passwordHash: string;
+	passwordSalt: string;
+	role: string | null;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
-export interface AccountSetting {
-  accountId: AccountId;
-  manualAcceptDebts: boolean;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+export interface UserSetting {
+	userId: UserId;
+	manualAcceptDebts: boolean;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface Debt {
-  amount: Numeric;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  currencyCode: CurrencyCode;
-  id: DebtId;
-  note: string;
-  ownerAccountId: AccountId;
-  receiptId: ReceiptId | null;
-  timestamp: Temporal.PlainDate;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  peerId: PeerId;
+	amount: Numeric;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	currencyCode: CurrencyCode;
+	id: DebtId;
+	note: string;
+	ownerUserId: UserId;
+	receiptId: ReceiptId | null;
+	timestamp: Temporal.PlainDate;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
+	peerId: PeerId;
 }
 
 export interface ReceiptItemConsumer {
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  itemId: ReceiptItemId;
-  part: Numeric;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  peerId: PeerId;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	itemId: ReceiptItemId;
+	part: Numeric;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
+	peerId: PeerId;
 }
 
 export interface ReceiptItemPayer {
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  itemId: ReceiptItemId;
-  part: Numeric;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  peerId: PeerId;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	itemId: ReceiptItemId;
+	part: Numeric;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
+	peerId: PeerId;
 }
 
 export interface ReceiptItem {
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  id: ReceiptItemId;
-  name: string;
-  price: Numeric;
-  quantity: Numeric;
-  receiptId: ReceiptId;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	id: ReceiptItemId;
+	name: string;
+	price: Numeric;
+	quantity: Numeric;
+	receiptId: ReceiptId;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface ReceiptParticipant {
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  receiptId: ReceiptId;
-  role: Generated<ReceiptRole>;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
-  peerId: PeerId;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	receiptId: ReceiptId;
+	role: Generated<ReceiptRole>;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
+	peerId: PeerId;
 }
 
 export interface Receipt {
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  currencyCode: CurrencyCode;
-  id: ReceiptId;
-  issued: Temporal.PlainDate;
-  name: string;
-  ownerAccountId: AccountId;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	currencyCode: CurrencyCode;
+	id: ReceiptId;
+	issued: Temporal.PlainDate;
+	name: string;
+	ownerUserId: UserId;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface ResetPasswordIntention {
-  accountId: AccountId;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  expiresTimestamp: Temporal.ZonedDateTime;
-  token: string;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+	userId: UserId;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	expiresTimestamp: Temporal.ZonedDateTime;
+	token: string;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface Session {
-  accountId: string;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  expirationTimestamp: Temporal.ZonedDateTime;
-  sessionId: SessionId;
+	userId: UserId;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	expirationTimestamp: Temporal.ZonedDateTime;
+	sessionId: SessionId;
 }
 
 export interface Peer {
-  acceptReceipts: Generated<boolean>;
-  connectedAccountId: AccountId | null;
-  createdAt: Generated<Temporal.ZonedDateTime>;
-  exposeReceipts: Generated<boolean>;
-  id: PeerId;
-  name: string;
-  ownerAccountId: AccountId;
-  publicName: string | null;
-  updatedAt: Generated<Temporal.ZonedDateTime>;
+	acceptReceipts: Generated<boolean>;
+	connectedUserId: UserId | null;
+	createdAt: Generated<Temporal.ZonedDateTime>;
+	exposeReceipts: Generated<boolean>;
+	id: PeerId;
+	name: string;
+	ownerUserId: UserId;
+	publicName: string | null;
+	updatedAt: Generated<Temporal.ZonedDateTime>;
 }
 
 export interface DB {
-  accounts: Account;
-  accountSettings: AccountSetting;
-  debts: Debt;
-  receiptItemConsumers: ReceiptItemConsumer;
-  receiptItemPayers: ReceiptItemPayer;
-  receiptItems: ReceiptItem;
-  receiptParticipants: ReceiptParticipant;
-  receipts: Receipt;
-  resetPasswordIntentions: ResetPasswordIntention;
-  sessions: Session;
-  peers: Peer;
+	users: User;
+	userSettings: UserSetting;
+	debts: Debt;
+	receiptItemConsumers: ReceiptItemConsumer;
+	receiptItemPayers: ReceiptItemPayer;
+	receiptItems: ReceiptItem;
+	receiptParticipants: ReceiptParticipant;
+	receipts: Receipt;
+	resetPasswordIntentions: ResetPasswordIntention;
+	sessions: Session;
+	peers: Peer;
 }

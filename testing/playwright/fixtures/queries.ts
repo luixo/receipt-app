@@ -26,10 +26,10 @@ type SnapshotQueryCacheOptions = {
 };
 
 const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
-	"account.get",
+	"user.get",
 	"currency.getList",
 	"debtIntentions.getAll",
-	"accountConnectionIntentions.getAll",
+	"userConnectionIntentions.getAll",
 ];
 
 const emptyKeysLists = { whitelistKeys: [], blacklistKeys: [] };

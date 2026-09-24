@@ -51,10 +51,10 @@ const addAccountCreatedAtUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
-	await db
-		.updateTable("accounts")
-		.set({ createdAt: defaultCreatedDate, updatedAt: defaultCreatedDate })
-		.execute();
+	await sql`
+		UPDATE "accounts"
+		SET "createdAt" = ${defaultCreatedDate}, "updatedAt" = ${defaultCreatedDate}
+	`.execute(db);
 	await sql`
 	CREATE TRIGGER ${sql.id(ACCOUNTS.TRIGGERS.UPDATE_TIMESTAMP)}
     BEFORE UPDATE ON ${sql.table("accounts")}
@@ -70,18 +70,10 @@ const addAccountConnectionsIntentionsUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
-	// oxlint-disable-next-line typescript/no-unsafe-call
-	await db
-		// @ts-expect-error These types don't exist anymore
-		.updateTable("accountConnectionsIntentions")
-		// @ts-expect-error These types don't exist anymore
-		.set({
-			// @ts-expect-error These types don't exist anymore
-			// oxlint-disable-next-line typescript/no-unsafe-return typescript/no-unsafe-call typescript/no-unsafe-member-access
-			updatedAt: (eb) => eb.ref("accountConnectionsIntentions.createdAt"),
-		})
-		// oxlint-disable-next-line typescript/no-unsafe-member-access
-		.execute();
+	await sql`
+		UPDATE "accountConnectionsIntentions"
+		SET "updatedAt" = "createdAt"
+	`.execute(db);
 	await sql`
 	CREATE TRIGGER ${sql.id(
 		ACCOUNT_CONNECTIONS_INTENTIONS.TRIGGERS.UPDATE_TIMESTAMP,
@@ -99,10 +91,10 @@ const addAccountSettingsUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
-	await db
-		.updateTable("accountSettings")
-		.set({ updatedAt: defaultCreatedDate })
-		.execute();
+	await sql`
+		UPDATE "accountSettings"
+		SET "updatedAt" = ${defaultCreatedDate}
+	`.execute(db);
 	await sql`
 	CREATE TRIGGER ${sql.id(ACCOUNT_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP)}
     BEFORE UPDATE ON ${sql.table("accountSettings")}
@@ -263,13 +255,9 @@ const addUsersCreatedAtUpdatedAt = async (db: Database) => {
 			cb.notNull().defaultTo(CURRENT_TIMESTAMP),
 		)
 		.execute();
-	// oxlint-disable-next-line typescript/no-unsafe-call
 	await db
-		// @ts-expect-error This is an outdated schema
 		.updateTable("users")
-		// @ts-expect-error This is an outdated schema
 		.set({ createdAt: defaultCreatedDate, updatedAt: defaultCreatedDate })
-		// oxlint-disable-next-line typescript/no-unsafe-member-access
 		.execute();
 	await sql`
 	CREATE TRIGGER ${sql.id(PEERS.TRIGGERS.UPDATE_TIMESTAMP.replace("peer", "user"))}

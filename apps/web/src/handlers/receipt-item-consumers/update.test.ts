@@ -3,14 +3,14 @@ import { describe } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -36,7 +36,7 @@ describe("receiptItemConsumers.update", () => {
 
 		describe("itemId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -53,7 +53,7 @@ describe("receiptItemConsumers.update", () => {
 
 		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -70,7 +70,7 @@ describe("receiptItemConsumers.update", () => {
 
 		describe("part", () => {
 			test("negative", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -85,7 +85,7 @@ describe("receiptItemConsumers.update", () => {
 			});
 
 			test("zero", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -100,7 +100,7 @@ describe("receiptItemConsumers.update", () => {
 			});
 
 			test("fraction precision", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -115,7 +115,7 @@ describe("receiptItemConsumers.update", () => {
 			});
 
 			test("too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -131,9 +131,9 @@ describe("receiptItemConsumers.update", () => {
 		});
 
 		test("receipt item does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeItemId = faker.string.uuid();
 			await expectTRPCError(
@@ -149,17 +149,14 @@ describe("receiptItemConsumers.update", () => {
 		});
 
 		test("not enough rights to modify an item participant", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-				foreignAccountId,
-				accountId,
+				foreignUserId,
+				userId,
 			]);
 			await insertReceiptParticipant(
 				ctx,
@@ -189,13 +186,13 @@ describe("receiptItemConsumers.update", () => {
 		test("peer does not consume item", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: peerId } = await insertPeer(ctx, accountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: peerId } = await insertPeer(ctx, userId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptParticipant(ctx, receiptId, peerId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 			await insertReceiptItemConsumer(ctx, receiptItemId, selfPeerId);
@@ -218,15 +215,15 @@ describe("receiptItemConsumers.update", () => {
 		test("updates item participant consumption part", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 			const [{ id: foreignPeerId }] = await insertConnectedPeers(ctx, [
-				accountId,
-				foreignAccountId,
+				userId,
+				foreignUserId,
 			]);
 			await insertReceiptParticipant(ctx, receiptId, foreignPeerId, {
 				role: "editor",

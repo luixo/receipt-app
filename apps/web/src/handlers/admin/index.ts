@@ -1,5 +1,5 @@
-import { procedure as accounts } from "./accounts";
+import { procedure as users } from "./users";
 
 export const router = {
-	accounts,
+	users,
 };

@@ -74,7 +74,7 @@ test("Header shows sync status and receipt link when applicable", async ({
 		}
 		return {
 			...debtPeer,
-			connectedAccount: {
+			connectedUser: {
 				id: faker.string.uuid(),
 				email: faker.internet.email(),
 				avatarUrl: undefined,

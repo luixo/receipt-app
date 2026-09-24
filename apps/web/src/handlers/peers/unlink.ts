@@ -8,7 +8,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Unlink peer",
 		description:
-			"Disconnects a peer owned by the current account from its connected account, and vice versa.",
+			"Disconnects a peer owned by the current  user from its connected  user, and vice versa.",
 	})
 	.input(
 		z.strictObject({
@@ -20,17 +20,17 @@ export const procedure = authProcedure
 		const peer = await database
 			.selectFrom("peers as peersMine")
 			.where("peersMine.id", "=", input.id)
-			.leftJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "peersMine.connectedAccountId"),
+			.leftJoin("users", (qb) =>
+				qb.onRef("users.id", "=", "peersMine.connectedUserId"),
 			)
 			.leftJoin("peers as peersTheir", (qb) =>
 				qb
-					.on("peersTheir.connectedAccountId", "=", ctx.auth.accountId)
-					.onRef("peersTheir.ownerAccountId", "=", "accounts.id"),
+					.on("peersTheir.connectedUserId", "=", ctx.auth.userId)
+					.onRef("peersTheir.ownerUserId", "=", "users.id"),
 			)
 			.select([
-				"peersMine.ownerAccountId",
-				"accounts.id as connectedAccountId",
+				"peersMine.ownerUserId",
+				"users.id as connectedUserId",
 				"peersTheir.id as theirPeerId",
 			])
 			.limit(1)
@@ -41,17 +41,17 @@ export const procedure = authProcedure
 				message: `No peer found by id "${input.id}".`,
 			});
 		}
-		if (peer.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		const { connectedAccountId } = peer;
-		if (!connectedAccountId) {
+		const { connectedUserId } = peer;
+		if (!connectedUserId) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Peer "${input.id}" doesn't have account connected to it.`,
+				message: `Peer "${input.id}" doesn't have  user connected to it.`,
 			});
 		}
 		/* c8 ignore start */
@@ -65,12 +65,12 @@ export const procedure = authProcedure
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.updateTable("peers")
-				.set({ connectedAccountId: null })
+				.set({ connectedUserId: null })
 				.where("id", "=", input.id)
 				.executeTakeFirst();
 			await tx
 				.updateTable("peers")
-				.set({ connectedAccountId: null })
+				.set({ connectedUserId: null })
 				.where("id", "=", peer.theirPeerId)
 				.executeTakeFirst();
 		});

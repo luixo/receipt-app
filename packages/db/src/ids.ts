@@ -1,4 +1,4 @@
-export type AccountId = string & { __flavor?: "accounts" };
+export type UserId = string & { __flavor?: "users" };
 export type DebtId = string & { __flavor?: "debts" };
 export type ReceiptItemId = string & { __flavor?: "receiptItems" };
 export type ReceiptId = string & { __flavor?: "receipts" };

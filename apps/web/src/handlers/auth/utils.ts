@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { AccountId, SessionId } from "~db/ids";
+import type { SessionId, UserId } from "~db/ids";
 import { generateConfirmEmailEmail } from "~web/email/utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getEmailClient } from "~web/providers/email";
@@ -17,14 +17,14 @@ export const getExpirationDate = () =>
 
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,
-	accountId: AccountId,
+	userId: UserId,
 ) => {
 	const uuid: SessionId = ctx.getUuid();
 	const expirationDate = getExpirationDate();
 	await ctx.database
 		.insertInto("sessions")
 		.values({
-			accountId,
+			userId,
 			sessionId: uuid,
 			expirationTimestamp: expirationDate,
 		})

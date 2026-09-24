@@ -6,7 +6,7 @@ import {
 	MIN_PASSWORD_LENGTH,
 } from "~app/utils/validation";
 import { createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
@@ -79,8 +79,8 @@ describe("auth.login", () => {
 
 		test("authentication failed", async ({ ctx }) => {
 			const {
-				account: { email, password },
-			} = await insertAccountWithSession(ctx);
+				user: { email, password },
+			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
@@ -97,17 +97,17 @@ describe("auth.login", () => {
 	describe("functionality", () => {
 		test("login successful", async ({ ctx }) => {
 			const {
-				accountId,
-				account: { email, password, avatarUrl },
+				userId,
+				user: { email, password, avatarUrl },
 				name,
-			} = await insertAccountWithSession(ctx);
+			} = await insertUserWithSession(ctx);
 			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ email, password }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				account: { id: accountId, verified: true, avatarUrl, role: undefined },
+				user: { id: userId, verified: true, avatarUrl, role: undefined },
 				peer: { name },
 			});
 			const responseHeaders = [...context.resHeaders.entries()];
@@ -131,18 +131,18 @@ describe("auth.login", () => {
 
 		test("login successful - unverified peer", async ({ ctx }) => {
 			const {
-				accountId,
-				account: { email, password },
+				userId,
+				user: { email, password },
 				name,
-			} = await insertAccountWithSession(ctx, {
-				account: { confirmation: {}, avatarUrl: null },
+			} = await insertUserWithSession(ctx, {
+				user: { confirmation: {}, avatarUrl: null },
 			});
 			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const result = await caller.procedure({ email, password });
 			expect(result).toStrictEqual<typeof result>({
-				account: {
-					id: accountId,
+				user: {
+					id: userId,
 					verified: false,
 					avatarUrl: undefined,
 					role: undefined,
@@ -153,8 +153,8 @@ describe("auth.login", () => {
 
 		test("login successful - with different casing", async ({ ctx }) => {
 			const {
-				account: { email, password },
-			} = await insertAccountWithSession(ctx);
+				user: { email, password },
+			} = await insertUserWithSession(ctx);
 			const context = createContext(ctx);
 			const caller = createCaller(context);
 			await caller.procedure({ email: email.toUpperCase(), password });

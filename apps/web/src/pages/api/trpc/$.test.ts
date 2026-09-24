@@ -66,7 +66,7 @@ const router = t.router({
 			}),
 		)
 		.query(({ ctx }) => handleWithError(ctx, "authQuery", "anyone")),
-	account: t.router({
+	user: t.router({
 		get: t.procedure.query(() => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -204,7 +204,7 @@ describe("tRPC endpoint", () => {
 		test("some errors are not logged", async () => {
 			const spy = vi.spyOn(baseLogger, "error");
 			await runRoute({
-				procedure: "account.get",
+				procedure: "user.get",
 			});
 			expect(spy).toHaveBeenCalledTimes(0);
 		});

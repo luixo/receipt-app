@@ -4,13 +4,13 @@ import { describe, expect } from "vitest";
 import type { TRPCMutationInput } from "~app/trpc";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -36,22 +36,22 @@ const runTest = async (
 	ctx: TestContext,
 	getUpdate: () => TRPCMutationInput<"receipts.update">["update"],
 ) => {
-	const { sessionId, accountId } = await insertAccountWithSession(ctx);
-	const { id: receiptId } = await insertReceipt(ctx, accountId);
-	const { id: peerId } = await insertPeer(ctx, accountId);
+	const { sessionId, userId } = await insertUserWithSession(ctx);
+	const { id: receiptId } = await insertReceipt(ctx, userId);
+	const { id: peerId } = await insertPeer(ctx, userId);
 	const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 	await insertReceiptParticipant(ctx, receiptId, peerId);
 	await insertReceiptItemConsumer(ctx, receiptItemId, peerId);
 
 	// Verify unrelated data doesn't affect the result
-	const { id: anotherPeerId } = await insertPeer(ctx, accountId);
-	const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
+	const { id: anotherPeerId } = await insertPeer(ctx, userId);
+	const { id: anotherReceiptId } = await insertReceipt(ctx, userId);
 	await insertReceiptParticipant(ctx, anotherReceiptId, anotherPeerId);
 	await insertReceiptItem(ctx, anotherReceiptId);
 
-	const { id: foreignAccountId } = await insertAccount(ctx);
-	const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
-	const { id: foreignReceiptId } = await insertReceipt(ctx, foreignAccountId);
+	const { id: foreignUserId } = await insertUser(ctx);
+	const { id: foreignPeerId } = await insertPeer(ctx, foreignUserId);
+	const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 	await insertReceiptParticipant(ctx, foreignReceiptId, foreignPeerId);
 	await insertReceiptItem(ctx, foreignReceiptId);
 
@@ -108,10 +108,10 @@ describe("receipts.update", () => {
 		);
 
 		test("receipt not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verifying adding other receipts doesn't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentReceiptId = faker.string.uuid();
@@ -126,19 +126,19 @@ describe("receipts.update", () => {
 			);
 		});
 
-		test("receipt is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("receipt is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(ctx, otherAccountId);
+				userId,
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, otherUserId);
 
 			// Verifying adding other receipts doesn't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(

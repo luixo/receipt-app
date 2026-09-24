@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_protected/peers/connections")({
 		await ctx.context.i18nContext.loadNamespaces("peers");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		await ctx.context.queryClient.prefetchQuery(
-			trpc.accountConnectionIntentions.getAll.queryOptions(),
+			trpc.userConnectionIntentions.getAll.queryOptions(),
 		);
 	},
 	head: ({ match }) => ({

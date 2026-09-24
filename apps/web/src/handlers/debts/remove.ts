@@ -8,7 +8,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Remove debt",
 		description:
-			"Removes a debt owned by the current account, and the counterparty's mirrored debt unless they require manual acceptance.",
+			"Removes a debt owned by the current  user, and the counterparty's mirrored debt unless they require manual acceptance.",
 	})
 	.input(
 		z.strictObject({
@@ -22,24 +22,24 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({
 					"debts.id": input.id,
-					"debts.ownerAccountId": ctx.auth.accountId,
+					"debts.ownerUserId": ctx.auth.userId,
 				}),
 			)
 			.innerJoin("peers", (qb) =>
 				qb
 					.onRef("peers.id", "=", "debts.peerId")
-					.onRef("peers.ownerAccountId", "=", "debts.ownerAccountId"),
+					.onRef("peers.ownerUserId", "=", "debts.ownerUserId"),
 			)
-			.leftJoin("accountSettings", (qb) =>
-				qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
+			.leftJoin("userSettings", (qb) =>
+				qb.onRef("peers.connectedUserId", "=", "userSettings.userId"),
 			)
-			.select(["accountSettings.manualAcceptDebts"])
+			.select(["userSettings.manualAcceptDebts"])
 			.limit(1)
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `No debt found by id "${input.id}" on account "${ctx.auth.email}"`,
+				message: `No debt found by id "${input.id}" on  user "${ctx.auth.email}"`,
 			});
 		}
 		const reverseRemoved = !debt.manualAcceptDebts;
@@ -47,7 +47,7 @@ export const procedure = authProcedure
 			.deleteFrom("debts")
 			.where("id", "=", input.id)
 			.$if(!reverseRemoved, (qb) =>
-				qb.where("ownerAccountId", "=", ctx.auth.accountId),
+				qb.where("ownerUserId", "=", ctx.auth.userId),
 			)
 			.executeTakeFirst();
 		return { reverseRemoved: Number(deleteResult.numDeletedRows) > 1 };

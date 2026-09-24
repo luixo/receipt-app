@@ -15,7 +15,7 @@ const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtId[]) =>
 		.leftJoin("peers", (qb) => qb.onRef("debts.peerId", "=", "peers.id"))
 		.select([
 			"debts.id",
-			"debts.ownerAccountId",
+			"debts.ownerUserId",
 			"debts.amount",
 			"debts.currencyCode",
 			"debts.note",
@@ -23,7 +23,7 @@ const fetchDebts = async ({ database }: AuthorizedContext, ids: DebtId[]) =>
 			"debts.peerId",
 			"debts.updatedAt",
 			"debts.receiptId",
-			"peers.connectedAccountId",
+			"peers.connectedUserId",
 		])
 		.execute();
 
@@ -55,10 +55,10 @@ const queueDebt = queueCallFactory<
 	return inputs.map((input) => {
 		const localDebts = debts.filter(({ id }) => id === input.id);
 		const ourDebt = localDebts.find(
-			({ ownerAccountId }) => ownerAccountId === ctx.auth.accountId,
+			({ ownerUserId }) => ownerUserId === ctx.auth.userId,
 		);
 		const theirDebt = localDebts.find(
-			({ ownerAccountId }) => ownerAccountId !== ctx.auth.accountId,
+			({ ownerUserId }) => ownerUserId !== ctx.auth.userId,
 		);
 		if (!ourDebt) {
 			if (!theirDebt) {
@@ -73,7 +73,7 @@ const queueDebt = queueCallFactory<
 			});
 		}
 		/* c8 ignore start */
-		if (theirDebt && theirDebt.connectedAccountId !== ctx.auth.accountId) {
+		if (theirDebt && theirDebt.connectedUserId !== ctx.auth.userId) {
 			return new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Foreign debt "${input.id}" is not connected to ours.`,
@@ -101,7 +101,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get debt",
 		description:
-			"Returns a debt by id owned by the current account, including the counterparty's mirrored debt if one exists.",
+			"Returns a debt by id owned by the current  user, including the counterparty's mirrored debt if one exists.",
 	})
 	.input(z.strictObject({ id: debtIdSchema }))
 	.query(queueDebt);

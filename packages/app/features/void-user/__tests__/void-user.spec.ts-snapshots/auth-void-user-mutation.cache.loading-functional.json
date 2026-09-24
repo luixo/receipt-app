@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"auth.voidUser": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"token": "00ff15b7-b030-42b2-9dc3-c28247922444"
+					}
+				}
+			}
+		}
+	}
+}

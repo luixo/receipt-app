@@ -77,7 +77,7 @@ test("Connected peers show debt sync status", async ({
 		generatePeers: (opts) =>
 			defaultGeneratePeers(opts).map((peer) => ({
 				...peer,
-				connectedAccount: {
+				connectedUser: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
 				},

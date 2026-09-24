@@ -7,7 +7,6 @@ import { z } from "zod";
 
 import { getDatabase, temporalParsers } from "~db/database";
 import { migrate } from "~db/migration/index";
-import type { DB } from "~db/types.gen";
 import { transformer } from "~utils/transformer";
 
 import type { ConnectionData } from "./connection";
@@ -20,18 +19,16 @@ const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
 const POSTGRES_TEMP_DIR = "/temp_pgdata";
 
-const ORDERS: {
-	[K in keyof DB]: keyof DB[K] | (keyof DB[K])[];
-} = {
-	accounts: "id",
-	accountSettings: "accountId",
-	debts: ["id", "ownerAccountId"],
+const ORDERS = {
+	users: "id",
+	userSettings: "userId",
+	debts: ["id", "ownerUserId"],
 	receiptItemConsumers: ["itemId", "peerId"],
 	receiptItemPayers: ["itemId", "peerId"],
 	receiptItems: "id",
 	receiptParticipants: ["receiptId", "peerId"],
 	receipts: "id",
-	resetPasswordIntentions: ["accountId", "token"],
+	resetPasswordIntentions: ["userId", "token"],
 	sessions: "sessionId",
 	peers: "id",
 };
@@ -175,7 +172,10 @@ export const appRouter = router({
 						data: fromEntries(
 							data.map((element) => [
 								orders
-									.map((column) => `${column}:${String(element[column])}`)
+									.map(
+										(column) =>
+											`${column}:${String(element[column as keyof typeof element])}`,
+									)
 									.join("|"),
 								element,
 							]),

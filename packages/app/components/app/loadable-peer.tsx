@@ -9,7 +9,7 @@ import type { PeerId } from "~db/ids";
 
 type Props = Omit<
 	React.ComponentProps<typeof Peer>,
-	"id" | "name" | "connectedAccount"
+	"id" | "name" | "connectedUser"
 > & {
 	id: PeerId;
 	foreign?: boolean;
@@ -39,7 +39,7 @@ export const LoadablePeer = suspendedFallback<Props>(
 			<Peer
 				id={data.id}
 				name={data.name}
-				connectedAccount={data.connectedAccount}
+				connectedUser={data.connectedUser}
 				{...props}
 			/>
 		);

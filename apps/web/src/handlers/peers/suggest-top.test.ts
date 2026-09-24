@@ -4,13 +4,13 @@ import { describe, expect } from "vitest";
 import { MAX_LIMIT } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertDebt,
 	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -33,7 +33,7 @@ describe("peers.suggestTop", () => {
 
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -46,7 +46,7 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -59,7 +59,7 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -74,7 +74,7 @@ describe("peers.suggestTop", () => {
 
 		describe("filtered ids", () => {
 			test("has non-uuid values", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -90,7 +90,7 @@ describe("peers.suggestTop", () => {
 
 		describe("non-connected receipt id", () => {
 			test("has non-uuid value", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -108,9 +108,9 @@ describe("peers.suggestTop", () => {
 		});
 
 		test("receipt does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other receipts don't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 			const nonExistentReceiptId = faker.string.uuid();
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -128,9 +128,9 @@ describe("peers.suggestTop", () => {
 		});
 
 		test("has no role in a requested receipt", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, otherAccountId);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -150,25 +150,25 @@ describe("peers.suggestTop", () => {
 	describe("functionality", () => {
 		describe("no restriction (from debts)", () => {
 			test("returns top peers", async ({ ctx }) => {
-				const otherAccount = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const otherUser = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
-				const secondAccount = await insertAccount(ctx);
+				const secondUser = await insertUser(ctx);
 
 				// Verify other peers don't affect our top peers
-				await insertPeer(ctx, otherAccount.id);
+				await insertPeer(ctx, otherUser.id);
 
-				const peer = await insertPeer(ctx, accountId);
+				const peer = await insertPeer(ctx, userId);
 				const [connectedPeer] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccount.id,
+					userId,
+					otherUser.id,
 				]);
-				const publicNamedPeer = await insertPeer(ctx, accountId, {
+				const publicNamedPeer = await insertPeer(ctx, userId, {
 					publicName: faker.person.fullName(),
 				});
 				const [connectedPublicNamedPeer] = await insertConnectedPeers(ctx, [
-					{ accountId, publicName: faker.person.fullName() },
-					secondAccount.id,
+					{ userId, publicName: faker.person.fullName() },
+					secondUser.id,
 				]);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -188,32 +188,32 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("peers are sorted by debts amount and by uuid", async ({ ctx }) => {
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: otherUserId } = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
 				// Verify other peers don't affect our top peers
-				const { id: otherPeerId } = await insertPeer(ctx, otherAccountId);
-				await insertDebt(ctx, accountId, otherPeerId);
-				await insertDebt(ctx, accountId, otherPeerId);
-				await insertDebt(ctx, accountId, otherPeerId);
+				const { id: otherPeerId } = await insertPeer(ctx, otherUserId);
+				await insertDebt(ctx, userId, otherPeerId);
+				await insertDebt(ctx, userId, otherPeerId);
+				await insertDebt(ctx, userId, otherPeerId);
 
-				const { id: oneDebtPeerId } = await insertPeer(ctx, accountId);
+				const { id: oneDebtPeerId } = await insertPeer(ctx, userId);
 				const [{ id: twoDebtsPeerId }] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccountId,
+					userId,
+					otherUserId,
 				]);
-				const { id: threeDebtsPeerId } = await insertPeer(ctx, accountId);
-				const { id: zeroDebtsPeerId } = await insertPeer(ctx, accountId);
-				const { id: lastZeroDebtsPeerId } = await insertPeer(ctx, accountId, {
+				const { id: threeDebtsPeerId } = await insertPeer(ctx, userId);
+				const { id: zeroDebtsPeerId } = await insertPeer(ctx, userId);
+				const { id: lastZeroDebtsPeerId } = await insertPeer(ctx, userId, {
 					id: faker.string.uuid().replaceAll(/^./g, "f"),
 				});
 
-				await insertDebt(ctx, accountId, oneDebtPeerId);
-				await insertDebt(ctx, accountId, twoDebtsPeerId);
-				await insertDebt(ctx, accountId, twoDebtsPeerId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
+				await insertDebt(ctx, userId, oneDebtPeerId);
+				await insertDebt(ctx, userId, twoDebtsPeerId);
+				await insertDebt(ctx, userId, twoDebtsPeerId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -229,8 +229,8 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("returns peers with no debts", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -239,10 +239,10 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("limit is applied", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
 				const limit = 2;
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -252,9 +252,9 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("ignores peers from filterIds", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				const { id: ignoredPeerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				const { id: ignoredPeerId } = await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -264,19 +264,19 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("returns peers based by debts created date", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: oldDebtsPeerId } = await insertPeer(ctx, accountId);
-				const { id: newDebtsPeerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: oldDebtsPeerId } = await insertPeer(ctx, userId);
+				const { id: newDebtsPeerId } = await insertPeer(ctx, userId);
 				const twoMonthAgo = Temporal.Now.plainDateISO().subtract({
 					months: 2,
 				});
-				await insertDebt(ctx, accountId, oldDebtsPeerId, {
+				await insertDebt(ctx, userId, oldDebtsPeerId, {
 					timestamp: twoMonthAgo,
 				});
-				await insertDebt(ctx, accountId, oldDebtsPeerId, {
+				await insertDebt(ctx, userId, oldDebtsPeerId, {
 					timestamp: twoMonthAgo,
 				});
-				await insertDebt(ctx, accountId, newDebtsPeerId);
+				await insertDebt(ctx, userId, newDebtsPeerId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -287,17 +287,17 @@ describe("peers.suggestTop", () => {
 
 		describe("(not) connected peers", () => {
 			test("returns top peers", async ({ ctx }) => {
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: otherUserId } = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
 				// Verify other peers don't affect our top peers
-				await insertPeer(ctx, otherAccountId);
+				await insertPeer(ctx, otherUserId);
 
-				const peer = await insertPeer(ctx, accountId);
-				const publicNamedPeer = await insertPeer(ctx, accountId, {
+				const peer = await insertPeer(ctx, userId);
+				const publicNamedPeer = await insertPeer(ctx, userId, {
 					publicName: faker.person.fullName(),
 				});
-				await insertConnectedPeers(ctx, [accountId, otherAccountId]);
+				await insertConnectedPeers(ctx, [userId, otherUserId]);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -310,32 +310,32 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("peers are sorted by debts amount", async ({ ctx }) => {
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: otherUserId } = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
 				// Verify other peers don't affect our top peers
-				const { id: otherPeerId } = await insertPeer(ctx, otherAccountId);
-				await insertDebt(ctx, otherAccountId, otherPeerId);
-				await insertDebt(ctx, otherAccountId, otherPeerId);
-				await insertDebt(ctx, otherAccountId, otherPeerId);
+				const { id: otherPeerId } = await insertPeer(ctx, otherUserId);
+				await insertDebt(ctx, otherUserId, otherPeerId);
+				await insertDebt(ctx, otherUserId, otherPeerId);
+				await insertDebt(ctx, otherUserId, otherPeerId);
 
-				const { id: oneDebtPeerId } = await insertPeer(ctx, accountId);
-				await insertDebt(ctx, accountId, oneDebtPeerId);
+				const { id: oneDebtPeerId } = await insertPeer(ctx, userId);
+				await insertDebt(ctx, userId, oneDebtPeerId);
 
 				const [{ id: twoDebtsPeerId }] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccountId,
+					userId,
+					otherUserId,
 				]);
-				await insertDebt(ctx, accountId, twoDebtsPeerId);
-				await insertDebt(ctx, accountId, twoDebtsPeerId);
+				await insertDebt(ctx, userId, twoDebtsPeerId);
+				await insertDebt(ctx, userId, twoDebtsPeerId);
 
-				const { id: threeDebtsPeerId } = await insertPeer(ctx, accountId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
-				await insertDebt(ctx, accountId, threeDebtsPeerId);
+				const { id: threeDebtsPeerId } = await insertPeer(ctx, userId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
+				await insertDebt(ctx, userId, threeDebtsPeerId);
 
-				const { id: zeroDebtsPeerId } = await insertPeer(ctx, accountId);
-				const { id: lastZeroDebtsPeerId } = await insertPeer(ctx, accountId, {
+				const { id: zeroDebtsPeerId } = await insertPeer(ctx, userId);
+				const { id: lastZeroDebtsPeerId } = await insertPeer(ctx, userId, {
 					id: faker.string.uuid().replaceAll(/^./g, "f"),
 				});
 
@@ -353,10 +353,10 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("limit is applied", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
 				const limit = 2;
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -367,8 +367,8 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("returns peers with no debts", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -378,9 +378,9 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("ignores peers from filterIds", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				const { id: ignoredPeerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				const { id: ignoredPeerId } = await insertPeer(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -391,25 +391,25 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("returns peers based by debts created date", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { id: oldDebtsPeerId } = await insertPeer(ctx, accountId);
-				const { id: newDebtsPeerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: otherUserId } = await insertUser(ctx);
+				const { id: oldDebtsPeerId } = await insertPeer(ctx, userId);
+				const { id: newDebtsPeerId } = await insertPeer(ctx, userId);
 				const [{ id: connectedPeerId }] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccountId,
+					userId,
+					otherUserId,
 				]);
 				const monthAgo = Temporal.Now.plainDateISO().subtract({ months: 1 });
-				await insertDebt(ctx, accountId, oldDebtsPeerId, {
+				await insertDebt(ctx, userId, oldDebtsPeerId, {
 					timestamp: monthAgo,
 				});
-				await insertDebt(ctx, accountId, oldDebtsPeerId, {
+				await insertDebt(ctx, userId, oldDebtsPeerId, {
 					timestamp: monthAgo,
 				});
-				await insertDebt(ctx, accountId, newDebtsPeerId);
-				await insertDebt(ctx, accountId, connectedPeerId);
-				await insertDebt(ctx, accountId, connectedPeerId);
-				await insertDebt(ctx, accountId, connectedPeerId);
+				await insertDebt(ctx, userId, newDebtsPeerId);
+				await insertDebt(ctx, userId, connectedPeerId);
+				await insertDebt(ctx, userId, connectedPeerId);
+				await insertDebt(ctx, userId, connectedPeerId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -421,31 +421,31 @@ describe("peers.suggestTop", () => {
 
 		describe("not connected to receipt peers", () => {
 			test("returns top peers", async ({ ctx }) => {
-				const firstOtherAccount = await insertAccount(ctx);
-				const secondOtherAccount = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const firstOtherUser = await insertUser(ctx);
+				const secondOtherUser = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 
 				// Verify other receipts and peers don't affect our top peers
-				await insertReceipt(ctx, firstOtherAccount.id);
-				await insertPeer(ctx, firstOtherAccount.id);
+				await insertReceipt(ctx, firstOtherUser.id);
+				await insertPeer(ctx, firstOtherUser.id);
 
-				const { id: participatingPeerId } = await insertPeer(ctx, accountId);
+				const { id: participatingPeerId } = await insertPeer(ctx, userId);
 				const [{ id: participatingConnectedPeerId }] =
-					await insertConnectedPeers(ctx, [accountId, firstOtherAccount.id]);
+					await insertConnectedPeers(ctx, [userId, firstOtherUser.id]);
 				await insertReceiptParticipant(ctx, receiptId, participatingPeerId);
 				await insertReceiptParticipant(
 					ctx,
 					receiptId,
 					participatingConnectedPeerId,
 				);
-				const peer = await insertPeer(ctx, accountId);
-				const publicNamedPeer = await insertPeer(ctx, accountId, {
+				const peer = await insertPeer(ctx, userId);
+				const publicNamedPeer = await insertPeer(ctx, userId, {
 					publicName: faker.person.fullName(),
 				});
 				const [connectedPeer] = await insertConnectedPeers(ctx, [
-					accountId,
-					secondOtherAccount.id,
+					userId,
+					secondOtherUser.id,
 				]);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -461,30 +461,30 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("peers are sorted by receipts amount and uuids", async ({ ctx }) => {
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx, {
-					account: { id: faker.string.uuid().replaceAll(/^./g, "f") },
+				const { id: otherUserId } = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx, {
+					user: { id: faker.string.uuid().replaceAll(/^./g, "f") },
 				});
 
 				// Verify other peers don't affect our top peers
-				await insertPeer(ctx, otherAccountId);
-				await insertReceipt(ctx, otherAccountId);
+				await insertPeer(ctx, otherUserId);
+				await insertReceipt(ctx, otherUserId);
 
-				const { id: firstReceiptId } = await insertReceipt(ctx, accountId);
-				const { id: secondReceiptId } = await insertReceipt(ctx, accountId);
-				const { id: thirdReceiptId } = await insertReceipt(ctx, accountId);
+				const { id: firstReceiptId } = await insertReceipt(ctx, userId);
+				const { id: secondReceiptId } = await insertReceipt(ctx, userId);
+				const { id: thirdReceiptId } = await insertReceipt(ctx, userId);
 
-				const { id: oneReceiptPeerId } = await insertPeer(ctx, accountId);
+				const { id: oneReceiptPeerId } = await insertPeer(ctx, userId);
 				await insertReceiptParticipant(ctx, firstReceiptId, oneReceiptPeerId);
 
 				const [{ id: twoReceiptsPeerId }] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccountId,
+					userId,
+					otherUserId,
 				]);
 				await insertReceiptParticipant(ctx, firstReceiptId, twoReceiptsPeerId);
 				await insertReceiptParticipant(ctx, secondReceiptId, twoReceiptsPeerId);
 
-				const { id: threeReceiptsPeerId } = await insertPeer(ctx, accountId);
+				const { id: threeReceiptsPeerId } = await insertPeer(ctx, userId);
 				await insertReceiptParticipant(
 					ctx,
 					firstReceiptId,
@@ -501,9 +501,9 @@ describe("peers.suggestTop", () => {
 					threeReceiptsPeerId,
 				);
 
-				const { id: noReceiptsPeerId } = await insertPeer(ctx, accountId);
+				const { id: noReceiptsPeerId } = await insertPeer(ctx, userId);
 
-				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
+				const { id: otherReceiptId } = await insertReceipt(ctx, userId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -522,11 +522,11 @@ describe("peers.suggestTop", () => {
 			});
 
 			test("limit is applied", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
-				await insertPeer(ctx, accountId);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
+				await insertPeer(ctx, userId);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				const limit = 2;
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -544,11 +544,11 @@ describe("peers.suggestTop", () => {
 			}) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				await insertPeer(ctx, accountId);
-				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				await insertPeer(ctx, userId);
+				const { id: otherReceiptId } = await insertReceipt(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -564,13 +564,13 @@ describe("peers.suggestTop", () => {
 			test("returns peers based by receipts created date", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
+				} = await insertUserWithSession(ctx);
 
 				const monthAgo = Temporal.Now.plainDateISO().subtract({ months: 1 });
-				const { id: oldReceiptsPeerId } = await insertPeer(ctx, accountId);
-				const { id: firstOldReceiptId } = await insertReceipt(ctx, accountId, {
+				const { id: oldReceiptsPeerId } = await insertPeer(ctx, userId);
+				const { id: firstOldReceiptId } = await insertReceipt(ctx, userId, {
 					issued: monthAgo,
 				});
 				await insertReceiptParticipant(
@@ -578,7 +578,7 @@ describe("peers.suggestTop", () => {
 					firstOldReceiptId,
 					oldReceiptsPeerId,
 				);
-				const { id: secondOldReceiptId } = await insertReceipt(ctx, accountId, {
+				const { id: secondOldReceiptId } = await insertReceipt(ctx, userId, {
 					issued: monthAgo,
 				});
 				await insertReceiptParticipant(
@@ -587,15 +587,15 @@ describe("peers.suggestTop", () => {
 					oldReceiptsPeerId,
 				);
 
-				const { id: newReceiptsPeerId } = await insertPeer(ctx, accountId);
-				const { id: firstNewReceiptId } = await insertReceipt(ctx, accountId);
+				const { id: newReceiptsPeerId } = await insertPeer(ctx, userId);
+				const { id: firstNewReceiptId } = await insertReceipt(ctx, userId);
 				await insertReceiptParticipant(
 					ctx,
 					firstNewReceiptId,
 					newReceiptsPeerId,
 				);
 
-				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
+				const { id: otherReceiptId } = await insertReceipt(ctx, userId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
@@ -613,10 +613,10 @@ describe("peers.suggestTop", () => {
 		});
 
 		test("doesn't return self peer", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+			const { sessionId, userId } = await insertUserWithSession(ctx, {
 				peer: { name: "Self Alice" },
 			});
-			const peer = await insertPeer(ctx, accountId, {
+			const peer = await insertPeer(ctx, userId, {
 				name: "Alice from work",
 			});
 

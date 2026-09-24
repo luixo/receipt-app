@@ -3,14 +3,14 @@ import { describe } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertDebt,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -34,7 +34,7 @@ describe("peers.remove", () => {
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -48,9 +48,9 @@ describe("peers.remove", () => {
 		});
 
 		test("peer not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other peers doesn't affect the error
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentPeerId = faker.string.uuid();
 			await expectTRPCError(
@@ -63,15 +63,15 @@ describe("peers.remove", () => {
 			);
 		});
 
-		test("peer is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("peer is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, otherAccountId);
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -86,15 +86,15 @@ describe("peers.remove", () => {
 
 	describe("functionality", () => {
 		test("peer is removed", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: anotherAccountId } = await insertAccount(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId, {
-				connectedAccountId: anotherAccountId,
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: anotherUserId } = await insertUser(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId, {
+				connectedUserId: anotherUserId,
 			});
 			// Verify other peers are not affected
-			const { id: otherPeerId } = await insertPeer(ctx, accountId);
+			const { id: otherPeerId } = await insertPeer(ctx, userId);
 			// Verify receipt is not affected
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptParticipant(ctx, receiptId, peerId);
 			const { id: itemId } = await insertReceiptItem(ctx, receiptId);
 			// Verify item participant is removed from an item on peer removal
@@ -104,14 +104,14 @@ describe("peers.remove", () => {
 			await insertReceiptItemConsumer(ctx, itemId, otherPeerId);
 
 			// Verify receipt with peer not participating is not affected
-			const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
+			const { id: otherReceiptId } = await insertReceipt(ctx, userId);
 			// Verify other peers in other receipts are not affected
 			await insertReceiptParticipant(ctx, otherReceiptId, otherPeerId);
 
 			// Verify peer debt is removed on peer removal
-			await insertDebt(ctx, accountId, peerId);
+			await insertDebt(ctx, userId, peerId);
 			// Verify other peer debts are not affected
-			await insertDebt(ctx, accountId, otherPeerId);
+			await insertDebt(ctx, userId, otherPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>

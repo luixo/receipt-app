@@ -6,27 +6,24 @@ import type { PeerId } from "~db/ids";
 
 type PeerAvatarInput = {
 	id: PeerId;
-	connectedAccount?: Peer["connectedAccount"];
+	connectedUser?: Peer["connectedUser"];
 };
 
 type Props = Omit<React.ComponentProps<typeof Avatar>, "hashId" | "image"> &
 	PeerAvatarInput;
 
-export const getPeerAvatarProps = ({
-	id,
-	connectedAccount,
-}: PeerAvatarInput) =>
-	connectedAccount
+export const getPeerAvatarProps = ({ id, connectedUser }: PeerAvatarInput) =>
+	connectedUser
 		? {
-				hashId: connectedAccount.id,
-				image: connectedAccount.avatarUrl
-					? { url: connectedAccount.avatarUrl, alt: connectedAccount.email }
+				hashId: connectedUser.id,
+				image: connectedUser.avatarUrl
+					? { url: connectedUser.avatarUrl, alt: connectedUser.email }
 					: undefined,
 			}
 		: { hashId: id };
 
 export const PeerAvatar: React.FC<Props> = ({
 	id,
-	connectedAccount,
+	connectedUser,
 	...props
-}) => <Avatar {...getPeerAvatarProps({ id, connectedAccount })} {...props} />;
+}) => <Avatar {...getPeerAvatarProps({ id, connectedUser })} {...props} />;

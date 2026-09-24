@@ -14,15 +14,15 @@ import { Route as ProtectedRouteImport } from './../pages/_protected'
 import { Route as IndexRouteImport } from './../pages/index'
 import { Route as ApiPingRouteImport } from './../pages/api/ping'
 import { Route as ApiCoverageRouteImport } from './../pages/api/coverage'
-import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
+import { Route as PublicVoidUserRouteImport } from './../pages/_public/void-user'
 import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
 import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
 import { Route as PublicPlaygroundRouteImport } from './../pages/_public/playground'
 import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
+import { Route as ProtectedUserRouteImport } from './../pages/_protected/user'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
 import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
-import { Route as ProtectedAccountRouteImport } from './../pages/_protected/account'
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/peers/index'
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
@@ -65,9 +65,9 @@ const ApiCoverageRoute = ApiCoverageRouteImport.update({
   path: '/api/coverage',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicVoidAccountRoute = PublicVoidAccountRouteImport.update({
-  id: '/void-account',
-  path: '/void-account',
+const PublicVoidUserRoute = PublicVoidUserRouteImport.update({
+  id: '/void-user',
+  path: '/void-user',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicResetPasswordRoute = PublicResetPasswordRouteImport.update({
@@ -95,6 +95,11 @@ const PublicConfirmEmailRoute = PublicConfirmEmailRouteImport.update({
   path: '/confirm-email',
   getParentRoute: () => PublicRoute,
 } as any)
+const ProtectedUserRoute = ProtectedUserRouteImport.update({
+  id: '/user',
+  path: '/user',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -103,11 +108,6 @@ const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
 const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAccountRoute = ProtectedAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedReceiptsIndexRoute = ProtectedReceiptsIndexRouteImport.update({
@@ -209,15 +209,15 @@ const ProtectedDebtsPeerIdExchangeAllRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
   '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
+  '/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
@@ -241,15 +241,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
   '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
+  '/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
@@ -276,15 +276,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
-  '/_protected/account': typeof ProtectedAccountRoute
   '/_protected/admin': typeof ProtectedAdminRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_protected/user': typeof ProtectedUserRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/playground': typeof PublicPlaygroundRoute
   '/_public/register': typeof PublicRegisterRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
-  '/_public/void-account': typeof PublicVoidAccountRoute
+  '/_public/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
@@ -310,15 +310,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/account'
     | '/admin'
     | '/settings'
+    | '/user'
     | '/confirm-email'
     | '/login'
     | '/playground'
     | '/register'
     | '/reset-password'
-    | '/void-account'
+    | '/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
@@ -342,15 +342,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account'
     | '/admin'
     | '/settings'
+    | '/user'
     | '/confirm-email'
     | '/login'
     | '/playground'
     | '/register'
     | '/reset-password'
-    | '/void-account'
+    | '/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
@@ -376,15 +376,15 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_public'
-    | '/_protected/account'
     | '/_protected/admin'
     | '/_protected/settings'
+    | '/_protected/user'
     | '/_public/confirm-email'
     | '/_public/login'
     | '/_public/playground'
     | '/_public/register'
     | '/_public/reset-password'
-    | '/_public/void-account'
+    | '/_public/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/_protected/debts/$id'
@@ -454,11 +454,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCoverageRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/void-account': {
-      id: '/_public/void-account'
-      path: '/void-account'
-      fullPath: '/void-account'
-      preLoaderRoute: typeof PublicVoidAccountRouteImport
+    '/_public/void-user': {
+      id: '/_public/void-user'
+      path: '/void-user'
+      fullPath: '/void-user'
+      preLoaderRoute: typeof PublicVoidUserRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/reset-password': {
@@ -496,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicConfirmEmailRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_protected/user': {
+      id: '/_protected/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof ProtectedUserRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/settings': {
       id: '/_protected/settings'
       path: '/settings'
@@ -508,13 +515,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof ProtectedAdminRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/account': {
-      id: '/_protected/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof ProtectedAccountRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/receipts/': {
@@ -647,9 +647,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteChildren {
-  ProtectedAccountRoute: typeof ProtectedAccountRoute
   ProtectedAdminRoute: typeof ProtectedAdminRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
+  ProtectedUserRoute: typeof ProtectedUserRoute
   ProtectedDebtsIdRoute: typeof ProtectedDebtsIdRoute
   ProtectedDebtsAddRoute: typeof ProtectedDebtsAddRoute
   ProtectedDebtsIntentionsRoute: typeof ProtectedDebtsIntentionsRoute
@@ -669,9 +669,9 @@ interface ProtectedRouteChildren {
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedAccountRoute: ProtectedAccountRoute,
   ProtectedAdminRoute: ProtectedAdminRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedUserRoute: ProtectedUserRoute,
   ProtectedDebtsIdRoute: ProtectedDebtsIdRoute,
   ProtectedDebtsAddRoute: ProtectedDebtsAddRoute,
   ProtectedDebtsIntentionsRoute: ProtectedDebtsIntentionsRoute,
@@ -702,7 +702,7 @@ interface PublicRouteChildren {
   PublicPlaygroundRoute: typeof PublicPlaygroundRoute
   PublicRegisterRoute: typeof PublicRegisterRoute
   PublicResetPasswordRoute: typeof PublicResetPasswordRoute
-  PublicVoidAccountRoute: typeof PublicVoidAccountRoute
+  PublicVoidUserRoute: typeof PublicVoidUserRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -711,7 +711,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicPlaygroundRoute: PublicPlaygroundRoute,
   PublicRegisterRoute: PublicRegisterRoute,
   PublicResetPasswordRoute: PublicResetPasswordRoute,
-  PublicVoidAccountRoute: PublicVoidAccountRoute,
+  PublicVoidUserRoute: PublicVoidUserRoute,
 }
 
 const PublicRouteWithChildren =

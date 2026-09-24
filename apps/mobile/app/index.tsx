@@ -12,7 +12,7 @@ import { Spinner } from "~components/spinner";
 const RedirectPage: React.FC = suspendedFallback(
 	() => {
 		const trpc = useTRPC();
-		useSuspenseQuery(trpc.account.get.queryOptions());
+		useSuspenseQuery(trpc.user.get.queryOptions());
 		return <HomeScreen />;
 	},
 	<Spinner size="lg" />,

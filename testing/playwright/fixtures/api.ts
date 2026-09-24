@@ -20,7 +20,7 @@ import type {
 } from "~app/trpc";
 import type { Peer } from "~app/trpc-types";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { apiCookieNames } from "~utils/mocks";
@@ -440,7 +440,7 @@ const getMockUtils = ({
 		const unmockCurrency = api.mockLast("currency.getList", {
 			items: CURRENCY_CODES,
 		});
-		const unmockAccount = api.mockLast("account.get", () => {
+		const unmockUser = api.mockLast("user.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: errorMessage,
@@ -453,7 +453,7 @@ const getMockUtils = ({
 		});
 		return {
 			unmockCurrency,
-			unmockAccount,
+			unmockUser,
 			unmockReceipts,
 			errorMessage,
 		};
@@ -468,7 +468,7 @@ const getMockUtils = ({
 		]);
 		api.mockLast("currency.getList", { items: CURRENCY_CODES });
 		api.mockLast("debtIntentions.getAll", { items: [] });
-		api.mockLast("accountConnectionIntentions.getAll", {
+		api.mockLast("userConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],
 		});
@@ -488,31 +488,31 @@ const getMockUtils = ({
 			id: selfId as PeerId,
 			name: faker.person.firstName(),
 			publicName: undefined,
-			connectedAccount: {
-				id: selfId as AccountId,
+			connectedUser: {
+				id: selfId as UserId,
 				email: faker.internet.email(),
 				avatarUrl: undefined,
 			},
 		};
-		const selfAccount = {
-			id: selfPeer.connectedAccount.id,
-			email: selfPeer.connectedAccount.email,
+		const selfUser = {
+			id: selfPeer.connectedUser.id,
+			email: selfPeer.connectedUser.email,
 			verified: true,
-			avatarUrl: selfPeer.connectedAccount.avatarUrl,
+			avatarUrl: selfPeer.connectedUser.avatarUrl,
 			role: undefined,
 		};
-		api.mockLast("account.get", {
-			account: selfAccount,
+		api.mockLast("user.get", {
+			user: selfUser,
 			peer: { name: selfPeer.name },
 		});
-		api.mockLast("accountSettings.get", { manualAcceptDebts: false });
+		api.mockLast("userSettings.get", { manualAcceptDebts: false });
 		api.mockLast("peers.get", ({ input, next }) => {
 			if (selfPeer.id === input.id) {
 				return selfPeer;
 			}
 			return next();
 		});
-		return { peer: selfPeer, account: selfAccount };
+		return { peer: selfPeer, user: selfUser };
 	},
 	mockPeers: (...peers: Peer[]) => {
 		api.mockFirst(

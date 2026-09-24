@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"user.get:[[]]": {
+			"state": {
+				"data": {
+					"user": {
+						"id": "4b5a600e-229b-48aa-ae42-d3d568e259af",
+						"email": "Candida82@hotmail.com",
+						"verified": true,
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>"
+					},
+					"peer": {
+						"name": "Candice"
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

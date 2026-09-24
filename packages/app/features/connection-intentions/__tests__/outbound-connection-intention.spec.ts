@@ -5,7 +5,7 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./outbound-connection-intention.utils";
 
-test("'accountConnectionIntentions.remove' mutation", async ({
+test("'userConnectionIntentions.remove' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
@@ -19,28 +19,28 @@ test("'accountConnectionIntentions.remove' mutation", async ({
 	assert.ok(intention);
 	await page.navigate({ to: "/peers/connections" });
 
-	api.mockFirst("accountConnectionIntentions.remove", () => {
+	api.mockFirst("userConnectionIntentions.remove", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Mock "accountConnectionIntentions.remove" error`,
+			message: `Mock "userConnectionIntentions.remove" error`,
 		});
 	});
 	await snapshotQueries(async () => {
 		await unlinkButton.click();
-		await awaitCacheKey("accountConnectionIntentions.remove", { error: 1 });
+		await awaitCacheKey("userConnectionIntentions.remove", { error: 1 });
 		await verifyToastTexts(
-			`Error removing invite: Mock "accountConnectionIntentions.remove" error`,
+			`Error removing invite: Mock "userConnectionIntentions.remove" error`,
 		);
 	});
 	await expect(page.getByLabel(intention.peer.name)).toHaveValue(
-		intention.account.email,
+		intention.user.email,
 	);
 
-	api.mockFirst("accountConnectionIntentions.remove", undefined);
+	api.mockFirst("userConnectionIntentions.remove", undefined);
 	await snapshotQueries(
 		async () => {
 			await unlinkButton.click();
-			await awaitCacheKey("accountConnectionIntentions.remove", {
+			await awaitCacheKey("userConnectionIntentions.remove", {
 				success: 1,
 			});
 		},

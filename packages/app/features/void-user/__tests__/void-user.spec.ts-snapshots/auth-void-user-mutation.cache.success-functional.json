@@ -1,0 +1,14 @@
+{
+	"mutations": {
+		"auth.voidUser": {
+			"1": {
+				"state": {
+					"data": {
+						"email": "foo@gmail.com"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

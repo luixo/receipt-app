@@ -1,22 +1,22 @@
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receipts.add",
-	{ selfAccountId: AccountId }
+	{ selfUserId: UserId }
 > = {
 	mutationKey: "receipts.add",
 	onSuccess:
-		(controllerContext, { selfAccountId }) =>
+		(controllerContext, { selfUserId }) =>
 		(result, variables) => {
 			updateReceipts(controllerContext, {
 				getPaged: (controller) => {
 					void controller.invalidate();
 				},
 				get: (controller) => {
-					const selfPeerId = selfAccountId as PeerId;
+					const selfPeerId = selfUserId as PeerId;
 					controller.add({
 						id: result.id,
 						createdAt: result.createdAt,

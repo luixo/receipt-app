@@ -4,10 +4,10 @@ import { isNonNullish, unique } from "remeda";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import {
-	PRETEND_ACCOUNT_STORE_NAME,
-	pretendAccountSchema,
-} from "~app/utils/store/pretend-account";
-import type { AccountId } from "~db/ids";
+	PRETEND_USER_STORE_NAME,
+	pretendUserSchema,
+} from "~app/utils/store/pretend-user";
+import type { UserId } from "~db/ids";
 import { transformer } from "~utils/transformer";
 import {
 	SESSION_REFRESH_DURATION,
@@ -67,15 +67,15 @@ export const unauthProcedure = t.procedure.use(
 const getAuthToken = (ctx: UnauthorizedContext) =>
 	getCookie(ctx.reqHeaders.get("cookie"), AUTH_COOKIE);
 
-const getPretendAccountEmail = (ctx: NetContext): string | undefined => {
-	const pretendAccountString = getCookie(
+const getPretendUserEmail = (ctx: NetContext): string | undefined => {
+	const pretendUserString = getCookie(
 		ctx.reqHeaders.get("cookie"),
-		PRETEND_ACCOUNT_STORE_NAME,
+		PRETEND_USER_STORE_NAME,
 	);
-	if (!pretendAccountString) {
+	if (!pretendUserString) {
 		return;
 	}
-	const peer = pretendAccountSchema.parse(JSON.parse(pretendAccountString));
+	const peer = pretendUserSchema.parse(JSON.parse(pretendUserString));
 	return peer.email;
 };
 
@@ -84,11 +84,11 @@ const queueSession = queueCallFactory<
 	{ authToken: string },
 	{
 		realAuth: {
-			accountId: AccountId;
+			userId: UserId;
 			email: string;
 		};
 		auth: {
-			accountId: AccountId;
+			userId: UserId;
 			email: string;
 		};
 		role: string | undefined;
@@ -96,17 +96,17 @@ const queueSession = queueCallFactory<
 >(
 	(ctx) => async (inputs) => {
 		const authTokens = unique(inputs.map(({ authToken }) => authToken));
-		const pretendAccountEmail = getPretendAccountEmail(ctx);
-		const [sessions, pretendAccount] = await Promise.all([
+		const pretendUserEmail = getPretendUserEmail(ctx);
+		const [sessions, pretendUser] = await Promise.all([
 			ctx.database
 				.selectFrom("sessions")
-				.innerJoin("accounts", (qb) =>
-					qb.onRef("accounts.id", "=", "sessions.accountId"),
+				.innerJoin("users", (qb) =>
+					qb.onRef("users.id", "=", "sessions.userId"),
 				)
 				.select([
-					"sessions.accountId",
-					"accounts.email",
-					"accounts.role",
+					"sessions.userId",
+					"users.email",
+					"users.role",
 					"sessions.expirationTimestamp",
 					"sessions.sessionId",
 				])
@@ -118,11 +118,11 @@ const queueSession = queueCallFactory<
 					),
 				)
 				.execute(),
-			pretendAccountEmail
+			pretendUserEmail
 				? ctx.database
-						.selectFrom("accounts")
-						.where("accounts.email", "=", pretendAccountEmail)
-						.select(["accounts.id", "accounts.email"])
+						.selectFrom("users")
+						.where("users.email", "=", pretendUserEmail)
+						.select(["users.id", "users.email"])
 						.limit(1)
 						.executeTakeFirst()
 				: undefined,
@@ -138,19 +138,19 @@ const queueSession = queueCallFactory<
 				});
 			}
 			const auth = {
-				accountId: matchedSession.accountId,
+				userId: matchedSession.userId,
 				email: matchedSession.email,
 			};
 			if (
-				pretendAccount &&
+				pretendUser &&
 				matchedSession.role === "admin" &&
 				!ctx.reqHeaders.get("x-keep-real-auth")
 			) {
 				return {
 					realAuth: auth,
 					auth: {
-						accountId: pretendAccount.id,
-						email: pretendAccount.email,
+						userId: pretendUser.id,
+						email: pretendUser.email,
 					},
 					role: matchedSession.role,
 				};
@@ -241,7 +241,7 @@ export const authProcedure = unauthProcedure.use(
 		return next({
 			ctx: {
 				...ctx,
-				logger: ctx.logger.child({ accountId: auth.accountId }),
+				logger: ctx.logger.child({ userId: auth.userId }),
 				realAuth,
 				auth,
 				authToken,

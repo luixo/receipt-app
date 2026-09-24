@@ -21,7 +21,7 @@ export const procedure = unauthProcedure
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const account = await database
-			.selectFrom("accounts")
+			.selectFrom("users")
 			.select(["id", "email"])
 			.where("confirmationToken", "=", input.token)
 			.limit(1)
@@ -33,9 +33,9 @@ export const procedure = unauthProcedure
 			});
 		}
 		await database
-			.updateTable("accounts")
+			.updateTable("users")
 			.set({ confirmationToken: null, confirmationTokenTimestamp: null })
-			.where("accounts.id", "=", account.id)
+			.where("users.id", "=", account.id)
 			.executeTakeFirst();
 		const { authToken, expirationDate } = await createAuthorizationSession(
 			ctx,

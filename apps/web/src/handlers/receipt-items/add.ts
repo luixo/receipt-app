@@ -39,16 +39,12 @@ const getData = async (
 		.leftJoin("peers", (jb) =>
 			jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 		)
-		.leftJoin("accounts", (jb) =>
+		.leftJoin("users", (jb) =>
 			jb
-				.onRef("accounts.id", "=", "peers.connectedAccountId")
-				.on("accounts.id", "=", ctx.auth.accountId),
+				.onRef("users.id", "=", "peers.connectedUserId")
+				.on("users.id", "=", ctx.auth.userId),
 		)
-		.select([
-			"receipts.ownerAccountId",
-			"receipts.id",
-			"receiptParticipants.role",
-		])
+		.select(["receipts.ownerUserId", "receipts.id", "receiptParticipants.role"])
 		.execute();
 
 const getItemsOrErrors = (
@@ -66,7 +62,7 @@ const getItemsOrErrors = (
 				message: `Receipt "${item.receiptId}" does not exist.`,
 			});
 		}
-		if (matchedReceipt.ownerAccountId !== ctx.auth.accountId) {
+		if (matchedReceipt.ownerUserId !== ctx.auth.userId) {
 			const parsed = roleSchema.safeParse(matchedReceipt.role);
 			if (!matchedReceipt.role || !parsed.success) {
 				return new TRPCError({

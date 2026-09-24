@@ -9,10 +9,10 @@ import {
 } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -35,7 +35,7 @@ describe("peers.add", () => {
 
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -51,7 +51,7 @@ describe("peers.add", () => {
 
 		describe.each(["name", "publicName"] as const)("%s", (field) => {
 			test("minimal length", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -65,7 +65,7 @@ describe("peers.add", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -80,7 +80,7 @@ describe("peers.add", () => {
 		});
 
 		test("target email is not registered", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakeEmail = "non-existent@mail.org";
 			await expectTRPCError(
@@ -90,7 +90,7 @@ describe("peers.add", () => {
 						email: fakeEmail,
 					}),
 				"NOT_FOUND",
-				`Account with email "${fakeEmail}" does not exist.`,
+				`User with email "${fakeEmail}" does not exist.`,
 			);
 		});
 
@@ -98,14 +98,13 @@ describe("peers.add", () => {
 			test("target email is already connected as another peer", async ({
 				ctx,
 			}) => {
-				// Foreign account
-				const { id: otherAccountId, email: otherEmail } =
-					await insertAccount(ctx);
-				// Self account
-				const { accountId, sessionId } = await insertAccountWithSession(ctx);
+				// Foreign  user
+				const { id: otherUserId, email: otherEmail } = await insertUser(ctx);
+				// Self  user
+				const { userId, sessionId } = await insertUserWithSession(ctx);
 				const [{ name: peerName }] = await insertConnectedPeers(ctx, [
-					accountId,
-					otherAccountId,
+					userId,
+					otherUserId,
 				]);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -115,18 +114,17 @@ describe("peers.add", () => {
 							email: otherEmail,
 						}),
 					"CONFLICT",
-					`Account with email "${otherEmail}" is already connected to peer "${peerName}".`,
+					`User with email "${otherEmail}" is already connected to peer "${peerName}".`,
 				);
 			});
 
-			test("account intention already exists", async ({ ctx }) => {
-				// Foreign account
-				const { id: otherAccountId, email: otherEmail } =
-					await insertAccount(ctx);
-				// Self account
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { name: peerName } = await insertPeer(ctx, accountId, {
-					connectedAccountId: otherAccountId,
+			test("user intention already exists", async ({ ctx }) => {
+				// Foreign  user
+				const { id: otherUserId, email: otherEmail } = await insertUser(ctx);
+				// Self  user
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { name: peerName } = await insertPeer(ctx, userId, {
+					connectedUserId: otherUserId,
 				});
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -143,7 +141,7 @@ describe("peers.add", () => {
 		});
 
 		test("mixed success and fail", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -170,10 +168,10 @@ describe("peers.add", () => {
 
 	describe("functionality", () => {
 		test("peer is added - no public name, no email", async ({ ctx }) => {
-			// Verifying other accounts are not affected
-			await insertAccount(ctx);
+			// Verifying other users are not affected
+			await insertUser(ctx);
 
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -187,10 +185,10 @@ describe("peers.add", () => {
 		});
 
 		test("peer is added - public name, no email", async ({ ctx }) => {
-			// Verifying other accounts are not affected
-			await insertAccount(ctx);
+			// Verifying other users are not affected
+			await insertUser(ctx);
 
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -208,17 +206,17 @@ describe("peers.add", () => {
 
 		describe("peer is added - with email", () => {
 			test("has a vice versa intention", async ({ ctx }) => {
-				// Foreign account
+				// Foreign  user
 				const {
-					id: otherAccountId,
+					id: otherUserId,
 					email: otherEmail,
 					avatarUrl: otherAvatarUrl,
-				} = await insertAccount(ctx);
-				// Self account
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				// Foreign account's intention to connect to self account
-				await insertPeer(ctx, otherAccountId, {
-					connectedAccountId: accountId,
+				} = await insertUser(ctx);
+				// Self  user
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				// Foreign  user's intention to connect to self  user
+				await insertPeer(ctx, otherUserId, {
+					connectedUserId: userId,
 				});
 
 				const asName = faker.person.fullName();
@@ -233,8 +231,8 @@ describe("peers.add", () => {
 				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: true,
-						account: {
-							id: otherAccountId,
+						user: {
+							id: otherUserId,
 							email: otherEmail,
 							avatarUrl: otherAvatarUrl,
 						},
@@ -245,13 +243,12 @@ describe("peers.add", () => {
 			});
 
 			test("doesn't have a vice versa intention", async ({ ctx }) => {
-				// Foreign account
-				const { email: otherEmail, id: otherAccountId } = await insertAccount(
-					ctx,
-					{ avatarUrl: null },
-				);
-				// Self account
-				const { sessionId } = await insertAccountWithSession(ctx);
+				// Foreign  user
+				const { email: otherEmail, id: otherUserId } = await insertUser(ctx, {
+					avatarUrl: null,
+				});
+				// Self  user
+				const { sessionId } = await insertUserWithSession(ctx);
 
 				const asName = faker.person.fullName();
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -265,8 +262,8 @@ describe("peers.add", () => {
 				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: false,
-						account: {
-							id: otherAccountId,
+						user: {
+							id: otherUserId,
 							email: otherEmail,
 							avatarUrl: undefined,
 						},
@@ -278,23 +275,21 @@ describe("peers.add", () => {
 		});
 
 		test("multiple peers added", async ({ ctx }) => {
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			// Direct intention foreign account
-			const { email: anotherEmail, id: anotherAccountId } = await insertAccount(
-				ctx,
-				{ avatarUrl: null },
-			);
+			// Direct intention foreign  user
+			const { email: anotherEmail, id: anotherUserId } = await insertUser(ctx, {
+				avatarUrl: null,
+			});
 
-			// Vice versa intention foreign account
-			const { id: otherAccountId, email: otherEmail } = await insertAccount(
-				ctx,
-				{ avatarUrl: null },
-			);
-			// Foreign account's intention to connect to self account
-			await insertPeer(ctx, otherAccountId, {
-				connectedAccountId: accountId,
+			// Vice versa intention foreign  user
+			const { id: otherUserId, email: otherEmail } = await insertUser(ctx, {
+				avatarUrl: null,
+			});
+			// Foreign  user's intention to connect to self  user
+			await insertPeer(ctx, otherUserId, {
+				connectedUserId: userId,
 			});
 
 			const asName = faker.person.fullName();
@@ -314,8 +309,8 @@ describe("peers.add", () => {
 				{
 					connection: {
 						connected: true,
-						account: {
-							id: otherAccountId,
+						user: {
+							id: otherUserId,
 							email: otherEmail,
 							avatarUrl: undefined,
 						},
@@ -326,8 +321,8 @@ describe("peers.add", () => {
 				{
 					connection: {
 						connected: false,
-						account: {
-							id: anotherAccountId,
+						user: {
+							id: anotherUserId,
 							email: anotherEmail,
 							avatarUrl: undefined,
 						},
