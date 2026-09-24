@@ -3,8 +3,6 @@ import { sql } from "kysely";
 import type { Database } from "~db/database";
 import {
 	DEBTS,
-	DEBTS_SYNC_INTENTIONS,
-	FUNCTIONS,
 	PEERS,
 	RECEIPTS,
 	RESET_PASSWORD_INTENTIONS,
@@ -13,23 +11,50 @@ import {
 	USER_SETTINGS,
 } from "~db/migration/consts";
 
-const dropOldIndexesTriggers = async (db: Database) => {
-	for (const index of [
-		USERS.INDEXES.EMAIL.replace("users", "accounts"),
-		SESSIONS.INDEXES.USER_ID.replace("user", "account"),
-		RECEIPTS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-		PEERS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-		DEBTS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-		DEBTS_SYNC_INTENTIONS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-		RESET_PASSWORD_INTENTIONS.INDEXES.USER_ID.replace("user", "account"),
-	]) {
-		await db.schema.dropIndex(index).execute();
-	}
+const indexes = [
+	USERS.INDEXES.EMAIL,
+	SESSIONS.INDEXES.USER_ID,
+	RECEIPTS.INDEXES.OWNER_USER_ID,
+	PEERS.INDEXES.OWNER_USER_ID,
+	DEBTS.INDEXES.OWNER_USER_ID,
+	RESET_PASSWORD_INTENTIONS.INDEXES.USER_ID,
+] as const;
 
-	await sql`
-		DROP TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP.replace("users", "accounts"))} ON ${sql.table("accounts")};
-		DROP TRIGGER ${sql.id(USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP.replace("user", "account"))} ON ${sql.table("accountSettings")};
-	`.execute(db);
+const renameIndexes = async (db: Database, reverse = false) => {
+	for (const newName of indexes) {
+		const oldName = newName
+			.replace("users", "accounts")
+			.replace("user", "account")
+			.replace("User", "Account");
+		const [from, to] = reverse ? [newName, oldName] : [oldName, newName];
+		await sql`ALTER INDEX ${sql.id(from)} RENAME TO ${sql.id(to)}`.execute(db);
+	}
+};
+
+const renameTriggers = async (db: Database, reverse = false) => {
+	const triggers = [
+		[
+			USERS.TRIGGERS.UPDATE_TIMESTAMP,
+			USERS.TRIGGERS.UPDATE_TIMESTAMP.replace("users", "accounts"),
+			"accounts",
+			"users",
+		],
+		[
+			USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP,
+			USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP.replace("user", "account"),
+			"accountSettings",
+			"userSettings",
+		],
+	] as const;
+	for (const [newName, oldName, oldTable, newTable] of triggers) {
+		const [from, to, table] = reverse
+			? [newName, oldName, newTable]
+			: [oldName, newName, oldTable];
+		await sql`
+			ALTER TRIGGER ${sql.id(from)} ON ${sql.table(table)}
+			RENAME TO ${sql.id(to)};
+		`.execute(db);
+	}
 };
 
 const renameUserSchema = async (db: Database) => {
@@ -52,58 +77,6 @@ const renameUserSchema = async (db: Database) => {
 	}
 };
 
-const createNewIndexesTriggers = async (db: Database) => {
-	for (const [table, index, column] of [
-		["users", USERS.INDEXES.EMAIL, "email"],
-		["sessions", SESSIONS.INDEXES.USER_ID, "userId"],
-		["receipts", RECEIPTS.INDEXES.OWNER_USER_ID, "ownerUserId"],
-		["peers", PEERS.INDEXES.OWNER_USER_ID, "ownerUserId"],
-		["debts", DEBTS.INDEXES.OWNER_USER_ID, "ownerUserId"],
-		[
-			"debtsSyncIntentions",
-			DEBTS_SYNC_INTENTIONS.INDEXES.OWNER_USER_ID,
-			"ownerUserId",
-		],
-		[
-			"resetPasswordIntentions",
-			RESET_PASSWORD_INTENTIONS.INDEXES.USER_ID,
-			"userId",
-		],
-	] as const) {
-		await db.schema.createIndex(index).on(table).column(column).execute();
-	}
-
-	await sql`
-		CREATE TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP)}
-			BEFORE UPDATE ON ${sql.table("users")}
-			FOR EACH ROW
-			EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
-		CREATE TRIGGER ${sql.id(USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP)}
-			BEFORE UPDATE ON ${sql.table("userSettings")}
-			FOR EACH ROW
-			EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
-	`.execute(db);
-};
-
-const dropNewIndexesTriggers = async (db: Database) => {
-	for (const index of [
-		USERS.INDEXES.EMAIL,
-		SESSIONS.INDEXES.USER_ID,
-		RECEIPTS.INDEXES.OWNER_USER_ID,
-		PEERS.INDEXES.OWNER_USER_ID,
-		DEBTS.INDEXES.OWNER_USER_ID,
-		DEBTS_SYNC_INTENTIONS.INDEXES.OWNER_USER_ID,
-		RESET_PASSWORD_INTENTIONS.INDEXES.USER_ID,
-	]) {
-		await db.schema.dropIndex(index).execute();
-	}
-
-	await sql`
-		DROP TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP)} ON ${sql.table("users")};
-		DROP TRIGGER ${sql.id(USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP)} ON ${sql.table("userSettings")};
-	`.execute(db);
-};
-
 const restoreAccountSchema = async (db: Database) => {
 	await db.schema
 		.alterTable("userSettings")
@@ -124,63 +97,14 @@ const restoreAccountSchema = async (db: Database) => {
 	}
 };
 
-const createOldIndexesTriggers = async (db: Database) => {
-	for (const [table, index, column] of [
-		["accounts", USERS.INDEXES.EMAIL.replace("users", "accounts"), "email"],
-		[
-			"sessions",
-			SESSIONS.INDEXES.USER_ID.replace("user", "account"),
-			"accountId",
-		],
-		[
-			"receipts",
-			RECEIPTS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-			"ownerAccountId",
-		],
-		[
-			"peers",
-			PEERS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-			"ownerAccountId",
-		],
-		[
-			"debts",
-			DEBTS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-			"ownerAccountId",
-		],
-		[
-			"debtsSyncIntentions",
-			DEBTS_SYNC_INTENTIONS.INDEXES.OWNER_USER_ID.replace("User", "Account"),
-			"ownerAccountId",
-		],
-		[
-			"resetPasswordIntentions",
-			RESET_PASSWORD_INTENTIONS.INDEXES.USER_ID.replace("user", "account"),
-			"accountId",
-		],
-	] as const) {
-		await db.schema.createIndex(index).on(table).column(column).execute();
-	}
-
-	await sql`
-		CREATE TRIGGER ${sql.id(USERS.TRIGGERS.UPDATE_TIMESTAMP.replace("users", "accounts"))}
-			BEFORE UPDATE ON ${sql.table("accounts")}
-			FOR EACH ROW
-			EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
-		CREATE TRIGGER ${sql.id(USER_SETTINGS.TRIGGERS.UPDATE_TIMESTAMP.replace("user", "account"))}
-			BEFORE UPDATE ON ${sql.table("accountSettings")}
-			FOR EACH ROW
-			EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
-	`.execute(db);
-};
-
 export const up = async (db: Database) => {
-	await dropOldIndexesTriggers(db);
+	await renameIndexes(db);
+	await renameTriggers(db);
 	await renameUserSchema(db);
-	await createNewIndexesTriggers(db);
 };
 
 export const down = async (db: Database) => {
-	await dropNewIndexesTriggers(db);
+	await renameTriggers(db, true);
 	await restoreAccountSchema(db);
-	await createOldIndexesTriggers(db);
+	await renameIndexes(db, true);
 };
