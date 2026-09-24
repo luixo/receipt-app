@@ -1,0 +1,21 @@
+{
+	"name": "@ra/coverage",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"sideEffects": false,
+	"main": "src/index.ts",
+	"dependencies": {
+		"@ampproject/remapping": "^2.2.1",
+		"@babel/parser": "^7.29.0",
+		"@jridgewell/trace-mapping": "^0.3.18",
+		"istanbul-lib-coverage": "^3.2.2",
+		"istanbul-lib-instrument": "^5.2.1",
+		"istanbul-lib-report": "^3.0.1",
+		"istanbul-reports": "^3.2.0"
+	},
+	"devDependencies": {
+		"@types/istanbul-lib-instrument": "^1.7.8",
+		"rolldown": "^1.2.3"
+	}
+}

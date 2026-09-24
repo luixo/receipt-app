@@ -1,3 +1,5 @@
+import path from "node:path";
+
 export const serverSettings = {
 	// Changing timezone here, change it in `playwright/package.json` as well
 	timezone: "UTC",
@@ -18,3 +20,5 @@ export const urlSettings = {
 };
 
 export const serverName = `PW:Server`;
+
+export const coverageDir = path.join(import.meta.dirname, "coverage");

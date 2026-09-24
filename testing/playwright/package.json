@@ -9,6 +9,7 @@
 		"@faker-js/faker": "catalog:",
 		"@playwright/test": "catalog:",
 		"@ra/app": "workspace:*",
+		"@ra/coverage": "workspace:*",
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@ra/web": "workspace:*",

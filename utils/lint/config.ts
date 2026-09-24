@@ -117,6 +117,11 @@ const restrictedImports: ((
 		omitTags: ["client-only"],
 	},
 	{
+		from: /~coverage.*/,
+		message: "Do not import coverage tools from the client",
+		omitTags: ["client-only"],
+	},
+	{
 		from: /\.web/,
 		message: "Don't import from `./foo.web`, import from `./foo`",
 		omitTags: ["strict-web-only"],
@@ -664,6 +669,7 @@ export default defineConfig({
 				["packages/mutations"],
 				["packages/queries"],
 				["packages/utils"],
+				["packages/coverage", ["vitest.config.ts", "**/*.test.ts"]],
 				["packages/db", ["scripts/**/*", "**/*.test.ts", "vitest.config.ts"]],
 				["packages/app", ["**/*.spec.ts", "**/__tests__/**"]],
 				["utils/scripts", true],
@@ -762,6 +768,7 @@ export default defineConfig({
 				"apps/mobile/generate-colors.ts",
 				"packages/db/migration/**",
 				"packages/utils/src/server/**",
+				"packages/coverage/**",
 				".opencode/**",
 			],
 			rules: {
@@ -837,7 +844,7 @@ export default defineConfig({
 		"**/.tanstack/",
 		"**/.nitro/",
 		"**/.expo/",
-		"**/coverage/",
+		"testing/*/coverage/",
 		"**/playwright-report/",
 		"**/test-results/",
 		"**/*.gen.ts",
