@@ -3,7 +3,7 @@ import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import { VALID_LOCALES, getValidLocale } from "~app/utils/locale";
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 
 const getLengthMessage = (
 	amount: number,
@@ -173,7 +173,7 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 });
 
 export const peerIdSchema = flavored<PeerId>(z.uuid(), "peer id");
-export const accountIdSchema = flavored<AccountId>(z.uuid(), "account id");
+export const userIdSchema = flavored<UserId>(z.uuid(), "user id");
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
@@ -195,6 +195,7 @@ export const localeSchema = z.string().transform((value, ctx) => {
 export const resetPasswordTokenSchema = z.uuid();
 export const confirmEmailTokenSchema = z.uuid();
 export const voidAccountTokenSchema = z.uuid();
+export const voidUserTokenSchema = voidAccountTokenSchema;
 
 export const offsetSchema = z.int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.int().gt(0).max(MAX_LIMIT);

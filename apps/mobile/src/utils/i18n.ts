@@ -1,5 +1,4 @@
 /* oxlint-disable import-js/no-extraneous-dependencies */
-import accountEn from "@ra/web/public/locales/en/account.json";
 import adminEn from "@ra/web/public/locales/en/admin.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
@@ -10,8 +9,8 @@ import receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import registerEn from "@ra/web/public/locales/en/register.json";
 import resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import settingsEn from "@ra/web/public/locales/en/settings.json";
+import userEn from "@ra/web/public/locales/en/user.json";
 import voidAccountEn from "@ra/web/public/locales/en/void-account.json";
-import accountRu from "@ra/web/public/locales/ru/account.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
 import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
@@ -22,6 +21,7 @@ import receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import registerRu from "@ra/web/public/locales/ru/register.json";
 import resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import settingsRu from "@ra/web/public/locales/ru/settings.json";
+import userRu from "@ra/web/public/locales/ru/user.json";
 import voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
 /* oxlint-enable import-js/no-extraneous-dependencies */
 
@@ -31,7 +31,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 	en: {
 		default: defaultEn,
 		settings: settingsEn,
-		account: accountEn,
+		user: userEn,
 		admin: adminEn,
 		login: loginEn,
 		receipts: receiptsEn,
@@ -45,7 +45,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 	ru: {
 		default: defaultRu,
 		settings: settingsRu,
-		account: accountRu,
+		user: userRu,
 		admin: adminRu,
 		login: loginRu,
 		receipts: receiptsRu,

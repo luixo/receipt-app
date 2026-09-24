@@ -123,7 +123,7 @@ test.describe("Accept all intentions button", () => {
 					"debts.getAll",
 					"debts.getAllPeer",
 					"debts.getPeersPaged",
-					"accountSettings.get",
+					"userSettings.get",
 				],
 			},
 		);

@@ -6,10 +6,10 @@ import { z } from "zod";
 import { peerNameSchema } from "~app/utils/validation";
 import type { PeerId } from "~db/ids";
 import type { DB } from "~db/types.gen";
-import { batchFn as addAccountConnectionIntentions } from "~web/handlers/account-connection-intentions/add";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
+import { batchFn as addUserConnectionIntentions } from "~web/handlers/user-connection-intentions/add";
 import { emailSchema } from "~web/handlers/validation";
 
 const addPeerSchema = z.strictObject({
@@ -27,7 +27,7 @@ const getPeers = (
 		return {
 			peer: {
 				id,
-				ownerAccountId: ctx.auth.accountId,
+				ownerUserId: ctx.auth.userId,
 				name: input.name,
 				publicName: input.publicName,
 			},
@@ -49,7 +49,7 @@ const insertConnections = async (
 	if (nonEmptyConnections.length === 0) {
 		return [];
 	}
-	const intentions = await addAccountConnectionIntentions(ctx)(
+	const intentions = await addUserConnectionIntentions(ctx)(
 		nonEmptyConnections.map((input) => ({
 			email: input.email,
 			peerId: input.id,
@@ -83,7 +83,7 @@ const queueAddPeer = queueCallFactory<
 		id: PeerId;
 		connection?: Exclude<
 			Awaited<
-				ReturnType<ReturnType<typeof addAccountConnectionIntentions>>
+				ReturnType<ReturnType<typeof addUserConnectionIntentions>>
 			>[number],
 			TRPCError
 		>;
@@ -108,7 +108,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add peer",
 		description:
-			"Creates a new peer owned by the current account, optionally sending a connection intention to a given email.",
+			"Creates a new peer owned by the current  user, optionally sending a connection intention to a given email.",
 	})
 	.input(addPeerSchema)
 	.mutation(queueAddPeer);

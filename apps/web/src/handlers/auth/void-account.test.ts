@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { describe, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
@@ -32,9 +32,9 @@ describe("auth.voidAccount", () => {
 			const caller = createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			// Verify that not every not verified account counts
-			await insertAccountWithSession(ctx);
-			await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+			await insertUserWithSession(ctx);
+			await insertUserWithSession(ctx, {
+				user: { confirmation: {} },
 			});
 			await expectTRPCError(
 				() => caller.procedure({ token: confirmationToken }),
@@ -47,14 +47,14 @@ describe("auth.voidAccount", () => {
 	describe("functionality", () => {
 		test("account voided", async ({ ctx }) => {
 			const {
-				account: { confirmationToken, email },
-			} = await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+				user: { confirmationToken, email },
+			} = await insertUserWithSession(ctx, {
+				user: { confirmation: {} },
 			});
-			// Verifying other accounts (both confirmed and not) are not affected
-			await insertAccountWithSession(ctx);
-			await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+			// Verifying other users (both confirmed and not) are not affected
+			await insertUserWithSession(ctx);
+			await insertUserWithSession(ctx, {
+				user: { confirmation: {} },
 			});
 			const context = createContext(ctx);
 			const caller = createCaller(context);

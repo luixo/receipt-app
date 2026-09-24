@@ -64,7 +64,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(page.getByRole("button", { name: "Remove peer public name" })),
 
 	connectButton: ({ page }, use) =>
-		use(page.getByRole("button", { name: "Connect to an account" })),
+		use(page.getByRole("button", { name: "Connect to a someone's account" })),
 	connectionEmailInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Email" })),
 	linkButton: ({ page }, use) =>

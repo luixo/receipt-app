@@ -10,7 +10,7 @@
 		"greeting": "Happy counting!",
 		"confirm": "Confirm email",
 		"notRegistered": "Didn’t register in Receipt App? Click below to void your account.",
-		"voidAccount": "Void account"
+		"voidUser": "Void account"
 	},
 	"resetPassword": {
 		"title": "Receipt App reset password",

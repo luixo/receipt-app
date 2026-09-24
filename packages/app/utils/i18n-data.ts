@@ -1,5 +1,3 @@
-// (*)
-import type accountEn from "@ra/web/public/locales/en/account.json";
 import type adminEn from "@ra/web/public/locales/en/admin.json";
 import type debtsEn from "@ra/web/public/locales/en/debts.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
@@ -10,8 +8,9 @@ import type receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import type registerEn from "@ra/web/public/locales/en/register.json";
 import type resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import type settingsEn from "@ra/web/public/locales/en/settings.json";
+// (*)
+import type userEn from "@ra/web/public/locales/en/user.json";
 import type voidAccountEn from "@ra/web/public/locales/en/void-account.json";
-import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
 import type debtsRu from "@ra/web/public/locales/ru/debts.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
@@ -22,6 +21,7 @@ import type receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import type registerRu from "@ra/web/public/locales/ru/register.json";
 import type resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import type settingsRu from "@ra/web/public/locales/ru/settings.json";
+import type userRu from "@ra/web/public/locales/ru/user.json";
 import type voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
 import { keys } from "remeda";
 
@@ -44,7 +44,7 @@ export const defaultNamespace: Namespace = "default";
 export const namespaces: Record<Namespace, true> = {
 	default: true,
 	settings: true,
-	account: true,
+	user: true,
 	admin: true,
 	login: true,
 	receipts: true,
@@ -59,7 +59,7 @@ export const namespaces: Record<Namespace, true> = {
 export type Resources = {
 	default: typeof defaultEn;
 	settings: typeof settingsEn;
-	account: typeof accountEn;
+	user: typeof userEn;
 	admin: typeof adminEn;
 	login: typeof loginEn;
 	receipts: typeof receiptsEn;
@@ -78,7 +78,7 @@ type ValidatedResources = AssertAllEqual<
 		{
 			default: typeof defaultRu;
 			settings: typeof settingsRu;
-			account: typeof accountRu;
+			user: typeof userRu;
 			admin: typeof adminRu;
 			login: typeof loginRu;
 			receipts: typeof receiptsRu;

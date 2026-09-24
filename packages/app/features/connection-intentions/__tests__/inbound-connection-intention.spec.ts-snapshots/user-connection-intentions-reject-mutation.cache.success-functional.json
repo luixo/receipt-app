@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"userConnectionIntentions.reject": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"sourceUserId": "6828d584-e06a-484f-bc11-d047e0f324d2"
+					}
+				}
+			}
+		}
+	}
+}

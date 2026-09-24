@@ -35,7 +35,7 @@ const PeerPreview = suspendedFallback<{
 				<Peer
 					id={peer.id}
 					name={peer.name}
-					connectedAccount={peer.connectedAccount}
+					connectedUser={peer.connectedUser}
 				/>
 			</Link>
 		);

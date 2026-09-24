@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountId } from "~db/ids";
+import type { UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -21,21 +21,21 @@ const fetchIntentions = (ctx: AuthorizedContext, inputs: readonly Input[]) =>
 				"theirDebts.id",
 				"in",
 				inputs.map((input) => input.id),
-			).and("theirDebts.ownerAccountId", "<>", ctx.auth.accountId),
+			).and("theirDebts.ownerUserId", "<>", ctx.auth.userId),
 		)
 		.innerJoin("peers", (qb) =>
 			qb
-				.onRef("peers.connectedAccountId", "=", "theirDebts.ownerAccountId")
-				.on("peers.ownerAccountId", "=", ctx.auth.accountId),
+				.onRef("peers.connectedUserId", "=", "theirDebts.ownerUserId")
+				.on("peers.ownerUserId", "=", ctx.auth.userId),
 		)
 		.leftJoin("debts as selfDebts", (qb) =>
 			qb
 				.onRef("selfDebts.id", "=", "theirDebts.id")
-				.on("selfDebts.ownerAccountId", "=", ctx.auth.accountId),
+				.on("selfDebts.ownerUserId", "=", ctx.auth.userId),
 		)
 		.select([
 			"theirDebts.id",
-			"theirDebts.ownerAccountId",
+			"theirDebts.ownerUserId",
 			"theirDebts.updatedAt",
 			"theirDebts.amount",
 			"theirDebts.note",
@@ -51,7 +51,7 @@ type FetchedIntention = Awaited<ReturnType<typeof fetchIntentions>>[number];
 
 const acceptUpdatedIntentions = async (
 	ctx: AuthorizedContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	intentions: Pick<
 		FetchedIntention,
 		"id" | "amount" | "currencyCode" | "selfId" | "timestamp"
@@ -74,7 +74,7 @@ const acceptUpdatedIntentions = async (
 					.where((eb) =>
 						eb.and({
 							id: intentionToUpdate.id,
-							ownerAccountId,
+							ownerUserId,
 						}),
 					)
 					.returning(["debts.id", "debts.updatedAt"])
@@ -90,7 +90,7 @@ const acceptUpdatedIntentions = async (
 
 export const acceptNewIntentions = async (
 	ctx: AuthorizedContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	intentions: Pick<
 		FetchedIntention,
 		| "id"
@@ -112,7 +112,7 @@ export const acceptNewIntentions = async (
 		.values(
 			createdIntentions.map((intention) => ({
 				id: intention.id,
-				ownerAccountId,
+				ownerUserId,
 				peerId: intention.foreignPeerId,
 				currencyCode: intention.currencyCode,
 				amount: (Number(intention.amount) * -1).toString(),
@@ -150,8 +150,8 @@ const queueAcceptIntention = queueCallFactory<
 			!(intentionOrError instanceof TRPCError),
 	);
 	const [updatedIntentions, newIntentions] = await Promise.all([
-		acceptUpdatedIntentions(ctx, ctx.auth.accountId, intentionsToAccept),
-		acceptNewIntentions(ctx, ctx.auth.accountId, intentionsToAccept),
+		acceptUpdatedIntentions(ctx, ctx.auth.userId, intentionsToAccept),
+		acceptNewIntentions(ctx, ctx.auth.userId, intentionsToAccept),
 	]);
 	return intentionsOrErrors.map((intentionOrError) => {
 		if (intentionOrError instanceof TRPCError) {
@@ -180,7 +180,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Accept debt intention",
 		description:
-			"Accepts a counterparty's pending debt change for a given debt id by creating or updating the mirrored debt on the current account.",
+			"Accepts a counterparty's pending debt change for a given debt id by creating or updating the mirrored debt on the current  user.",
 	})
 	.input(acceptIntentionSchema)
 	.mutation(queueAcceptIntention);

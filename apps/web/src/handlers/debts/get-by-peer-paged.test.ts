@@ -3,15 +3,15 @@ import { TRPCError } from "@trpc/server";
 import { assert, describe, expect } from "vitest";
 
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertDebt,
 	insertPeer,
 	insertSyncedDebts,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -42,27 +42,27 @@ const mapDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 
 const insertDebts = async (
 	ctx: TestContext,
-	accountId: AccountId,
+	userId: UserId,
 	peerId: PeerId,
 ) => {
 	// Create debts with non-zero sum currencies
 	const nonResolvedDebts = await Promise.all([
-		insertDebt(ctx, accountId, peerId, {
+		insertDebt(ctx, userId, peerId, {
 			currencyCode: "USD",
 			amount: 100,
 		}),
-		insertDebt(ctx, accountId, peerId, { currencyCode: "USD", amount: 50 }),
-		insertDebt(ctx, accountId, peerId, { currencyCode: "EUR", amount: 25 }),
+		insertDebt(ctx, userId, peerId, { currencyCode: "USD", amount: 50 }),
+		insertDebt(ctx, userId, peerId, { currencyCode: "EUR", amount: 25 }),
 	]);
 
 	// Create debts that resolve to zero (should be excluded by default)
 	const resolvedAmount = getRandomAmount();
 	const resolvedDebts = await Promise.all([
-		insertDebt(ctx, accountId, peerId, {
+		insertDebt(ctx, userId, peerId, {
 			currencyCode: "GEL",
 			amount: resolvedAmount,
 		}),
-		insertDebt(ctx, accountId, peerId, {
+		insertDebt(ctx, userId, peerId, {
 			currencyCode: "GEL",
 			amount: -resolvedAmount,
 		}),
@@ -84,7 +84,7 @@ describe("debts.getByPeerPaged", () => {
 
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -99,7 +99,7 @@ describe("debts.getByPeerPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -114,7 +114,7 @@ describe("debts.getByPeerPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -131,7 +131,7 @@ describe("debts.getByPeerPaged", () => {
 
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -146,7 +146,7 @@ describe("debts.getByPeerPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -161,7 +161,7 @@ describe("debts.getByPeerPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -178,7 +178,7 @@ describe("debts.getByPeerPaged", () => {
 
 		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -194,10 +194,10 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("peer not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verifying adding other peers doesn't affect the error
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakerPeerId = faker.string.uuid();
@@ -208,15 +208,15 @@ describe("debts.getByPeerPaged", () => {
 			);
 		});
 
-		test("peer is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("peer is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, otherAccountId);
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, otherUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -229,12 +229,12 @@ describe("debts.getByPeerPaged", () => {
 
 	describe("functionality", () => {
 		test("empty list", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
 			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
-				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
+				await insertConnectedPeers(ctx, [userId, foreignUserId]);
 
-			await insertDebt(ctx, foreignAccountId, foreignToSelfPeerId);
+			await insertDebt(ctx, foreignUserId, foreignToSelfPeerId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ peerId, cursor: 0, limit: 1 });
@@ -246,26 +246,26 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("peer debts", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
 			const [{ id: peerId }, { id: foreignToSelfPeerId }] =
-				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
-			await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
+				await insertConnectedPeers(ctx, [userId, foreignUserId]);
+			await insertConnectedPeers(ctx, [userId, foreignUserId]);
 			const syncedDebts = await Promise.all([
 				insertSyncedDebts(
 					ctx,
-					[accountId, peerId],
-					[foreignAccountId, foreignToSelfPeerId],
+					[userId, peerId],
+					[foreignUserId, foreignToSelfPeerId],
 				),
 				insertSyncedDebts(
 					ctx,
-					[accountId, peerId],
-					[foreignAccountId, foreignToSelfPeerId],
+					[userId, peerId],
+					[foreignUserId, foreignToSelfPeerId],
 				),
 				insertSyncedDebts(
 					ctx,
-					[accountId, peerId],
-					[foreignAccountId, foreignToSelfPeerId],
+					[userId, peerId],
+					[foreignUserId, foreignToSelfPeerId],
 					{
 						ahead: "their",
 						fn: (originalDebt) => ({
@@ -276,15 +276,15 @@ describe("debts.getByPeerPaged", () => {
 				),
 			]);
 			const peerDebts = await Promise.all([
-				insertDebt(ctx, accountId, peerId),
-				insertDebt(ctx, accountId, peerId),
+				insertDebt(ctx, userId, peerId),
+				insertDebt(ctx, userId, peerId),
 			]);
 
-			// Verify other peers and accounts don't affect the result
-			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
-			await insertDebt(ctx, accountId, anotherPeerId);
-			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
-			await insertDebt(ctx, foreignAccountId, foreignPeerId);
+			// Verify other peers and users don't affect the result
+			const { id: anotherPeerId } = await insertPeer(ctx, userId);
+			await insertDebt(ctx, userId, anotherPeerId);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignUserId);
+			await insertDebt(ctx, foreignUserId, foreignPeerId);
 
 			const debts = mapDebts([
 				...peerDebts,
@@ -300,13 +300,13 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("without resolved currencies", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
-			const [nonResolvedDebts] = await insertDebts(ctx, accountId, peerId);
+			const [nonResolvedDebts] = await insertDebts(ctx, userId, peerId);
 			// Verify other peers don't affect the result
-			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
-			await insertDebt(ctx, accountId, anotherPeerId, { currencyCode: "GEL" });
+			const { id: anotherPeerId } = await insertPeer(ctx, userId);
+			await insertDebt(ctx, userId, anotherPeerId, { currencyCode: "GEL" });
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ peerId, cursor: 0, limit: 100 });
@@ -318,12 +318,12 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("with resolved currencies", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
 			const [nonResolvedDebts, resolvedDebts] = await insertDebts(
 				ctx,
-				accountId,
+				userId,
 				peerId,
 			);
 
@@ -344,17 +344,17 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("all currencies resolved", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
 			await Array.fromAsync({ length: 5 }, async (_, index) => {
 				const currencyCode = CURRENCY_CODES[index];
 				const amount = getRandomAmount();
-				await insertDebt(ctx, accountId, peerId, {
+				await insertDebt(ctx, userId, peerId, {
 					currencyCode,
 					amount,
 				});
-				await insertDebt(ctx, accountId, peerId, {
+				await insertDebt(ctx, userId, peerId, {
 					currencyCode,
 					amount: -amount,
 				});
@@ -370,10 +370,10 @@ describe("debts.getByPeerPaged", () => {
 		});
 
 		test("paged result", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 			const peerDebts = await Array.fromAsync({ length: 5 }, () =>
-				insertDebt(ctx, accountId, peerId, { currencyCode: "USD" }),
+				insertDebt(ctx, userId, peerId, { currencyCode: "USD" }),
 			);
 
 			const limit = 3;
@@ -393,11 +393,11 @@ describe("debts.getByPeerPaged", () => {
 
 		describe("multiple intentions", () => {
 			test("success", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: peerId } = await insertPeer(ctx, accountId);
-				const { id: anotherPeerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: peerId } = await insertPeer(ctx, userId);
+				const { id: anotherPeerId } = await insertPeer(ctx, userId);
 				const peerDebts = await Array.fromAsync({ length: 12 }, (_, index) =>
-					insertDebt(ctx, accountId, peerId, {
+					insertDebt(ctx, userId, peerId, {
 						currencyCode: index <= 1 ? "EUR" : "USD",
 						amount: index === 0 ? 100 : index === 1 ? -100 : undefined,
 					}),
@@ -408,7 +408,7 @@ describe("debts.getByPeerPaged", () => {
 				);
 				const anotherPeerDebts = mapDebts(
 					await Array.fromAsync({ length: 4 }, () =>
-						insertDebt(ctx, accountId, anotherPeerId, {
+						insertDebt(ctx, userId, anotherPeerId, {
 							currencyCode: "EUR",
 						}),
 					),
@@ -463,11 +463,11 @@ describe("debts.getByPeerPaged", () => {
 			});
 
 			test("mixed success and fail", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: peerId } = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: peerId } = await insertPeer(ctx, userId);
 				const debts = mapDebts(
 					await Array.fromAsync({ length: 4 }, () =>
-						insertDebt(ctx, accountId, peerId, { currencyCode: "USD" }),
+						insertDebt(ctx, userId, peerId, { currencyCode: "USD" }),
 					),
 				);
 

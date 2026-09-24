@@ -11,8 +11,8 @@ import { useTRPC } from "~app/utils/trpc";
 
 const useShowAdmin = () => {
 	const trpc = useTRPC();
-	const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
-	return account.account.role === "admin";
+	const { data: user } = useSuspenseQuery(trpc.user.get.queryOptions());
+	return user.user.role === "admin";
 };
 
 type Props = {
@@ -44,8 +44,8 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
 					},
 					{
 						iconName: "user",
-						text: t("navigation.account"),
-						pathname: "/account",
+						text: t("navigation.user"),
+						pathname: "/user",
 					},
 					{
 						iconName: "settings",

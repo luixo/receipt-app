@@ -438,7 +438,7 @@ export const procedure = authProcedure
 					name: input.name,
 					currencyCode: input.currencyCode,
 					issued: input.issued,
-					ownerAccountId: ctx.auth.accountId,
+					ownerUserId: ctx.auth.userId,
 				})
 				.returning(["receipts.id", "receipts.createdAt"])
 				.executeTakeFirstOrThrow();

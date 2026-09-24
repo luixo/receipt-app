@@ -1,0 +1,17 @@
+{
+	"mutations": {
+		"user.resendEmail": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"user.resendEmail\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error"
+				}
+			}
+		]
+	}
+}

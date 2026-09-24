@@ -1,0 +1,14 @@
+{
+	"mutations": {
+		"user.resendEmail": {
+			"0": {
+				"state": {
+					"data": {
+						"email": "Joanie32@hotmail.com"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@ import { test as peerAvatarFixture } from "./peer-avatar.utils";
 
 const test = mergeTests(receiptTest, peerAvatarFixture);
 
-test("Renders a generated avatar for a peer without a connected account", async ({
+test("Renders a generated avatar for a peer without a connected  user", async ({
 	faker,
 	mockReceipt,
 	openReceipt,
@@ -32,7 +32,7 @@ test("Renders a generated avatar for a peer without a connected account", async 
 	await expect(payerAvatar.locator("img")).not.toBeAttached();
 });
 
-test("Renders the connected account image when an avatar url is set", async ({
+test("Renders the connected  user image when an avatar url is set", async ({
 	faker,
 	mockReceipt,
 	openReceipt,
@@ -43,7 +43,7 @@ test("Renders the connected account image when an avatar url is set", async ({
 		id: faker.string.uuid(),
 		name: faker.person.fullName(),
 		publicName: undefined,
-		connectedAccount: {
+		connectedUser: {
 			id: faker.string.uuid(),
 			email: faker.internet.email(),
 			avatarUrl: mockAvatar,

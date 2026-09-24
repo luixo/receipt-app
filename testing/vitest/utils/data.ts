@@ -3,12 +3,12 @@ import { assert } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type {
-	AccountId,
 	DebtId,
 	PeerId,
 	ReceiptId,
 	ReceiptItemId,
 	SessionId,
+	UserId,
 } from "~db/ids";
 import type { ReceiptRole } from "~db/types.gen";
 import type { TestContext } from "~tests/backend/utils/test";
@@ -20,27 +20,27 @@ export const assertDatabase = (ctx: TestContext) => {
 	return ctx.database.instance;
 };
 
-export type AccountSettingsData = {
+export type UserSettingsData = {
 	manualAcceptDebts: boolean;
 };
 
-export const insertAccountSettings = async (
+export const insertUserSettings = async (
 	ctx: TestContext,
-	accountId: AccountId,
-	data: AccountSettingsData,
+	userId: UserId,
+	data: UserSettingsData,
 ) => {
 	const database = assertDatabase(ctx);
 	await database
-		.insertInto("accountSettings")
+		.insertInto("userSettings")
 		.values({
-			accountId,
+			userId,
 			manualAcceptDebts: data.manualAcceptDebts,
 		})
 		.executeTakeFirstOrThrow();
 };
 
 type PeerData = {
-	connectedAccountId?: AccountId;
+	connectedUserId?: UserId;
 	id?: PeerId;
 	name?: string;
 	publicName?: string;
@@ -48,7 +48,7 @@ type PeerData = {
 
 export const insertPeer = async (
 	ctx: TestContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	data: PeerData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -56,18 +56,18 @@ export const insertPeer = async (
 		.insertInto("peers")
 		.values({
 			id: data.id || ctx.getTestUuid(),
-			ownerAccountId,
+			ownerUserId,
 			name: data.name || faker.person.firstName(),
 			publicName: data.publicName,
-			connectedAccountId: data.connectedAccountId,
+			connectedUserId: data.connectedUserId,
 		})
 		.returning(["id", "name"])
 		.executeTakeFirstOrThrow();
 	return { id, name, publicName: data.publicName };
 };
 
-type AccountData = {
-	id?: AccountId;
+type UserData = {
+	id?: UserId;
 	email?: string;
 	avatarUrl?: string | null;
 	password?: string;
@@ -75,15 +75,12 @@ type AccountData = {
 		token?: string;
 		timestamp?: Temporal.ZonedDateTime;
 	};
-	settings?: AccountSettingsData;
+	settings?: UserSettingsData;
 	peer?: Pick<PeerData, "name">;
 	role?: string;
 };
 
-export const insertAccount = async (
-	ctx: TestContext,
-	data: AccountData = {},
-) => {
+export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 	const database = assertDatabase(ctx);
 	const password = data.password || faker.internet.password();
 	const { salt: passwordSalt, hash: passwordHash } = await generatePasswordData(
@@ -97,7 +94,7 @@ export const insertAccount = async (
 		confirmationTokenTimestamp,
 		avatarUrl,
 	} = await database
-		.insertInto("accounts")
+		.insertInto("users")
 		.values({
 			id: data.id || ctx.getTestUuid(),
 			email: (data.email || faker.internet.email()).toLowerCase(),
@@ -124,15 +121,15 @@ export const insertAccount = async (
 		])
 		.executeTakeFirstOrThrow();
 	if (data.settings) {
-		await insertAccountSettings(ctx, id, data.settings);
+		await insertUserSettings(ctx, id, data.settings);
 	}
 	const { id: peerId, name } = await database
 		.insertInto("peers")
 		.values({
 			id: id as PeerId,
-			ownerAccountId: id,
+			ownerUserId: id,
 			name: data.peer?.name || faker.person.firstName(),
-			connectedAccountId: id,
+			connectedUserId: id,
 		})
 		.returning(["id", "name"])
 		.executeTakeFirstOrThrow();
@@ -150,49 +147,41 @@ export const insertAccount = async (
 	};
 };
 
-type ConnectedPeerData = { accountId: AccountId } & Omit<
-	PeerData,
-	"connectedAccountId"
->;
+type ConnectedPeerData = { userId: UserId } & Omit<PeerData, "connectedUserId">;
 
 export const insertConnectedPeers = async (
 	ctx: TestContext,
-	accountsOrData: [
-		AccountId | ConnectedPeerData,
-		AccountId | ConnectedPeerData,
-	],
+	usersOrData: [UserId | ConnectedPeerData, UserId | ConnectedPeerData],
 ) => {
 	const database = assertDatabase(ctx);
 	const asTwoElementsTuple = asFixedSizeArray<2>();
 	const dataWithIds = asTwoElementsTuple(
-		accountsOrData.map((accountOrDatum, index) => {
-			const connectedData = accountsOrData[index === 0 ? 1 : 0];
-			const sureData: Omit<ConnectedPeerData, "accountId"> =
-				typeof accountOrDatum === "string" ? {} : accountOrDatum;
+		usersOrData.map((userOrDatum, index) => {
+			const connectedData = usersOrData[index === 0 ? 1 : 0];
+			const sureData: Omit<ConnectedPeerData, "userId"> =
+				typeof userOrDatum === "string" ? {} : userOrDatum;
 			return {
-				accountId:
-					typeof accountOrDatum === "string"
-						? accountOrDatum
-						: accountOrDatum.accountId,
-				connectedAccountId:
+				userId:
+					typeof userOrDatum === "string" ? userOrDatum : userOrDatum.userId,
+				connectedUserId:
 					typeof connectedData === "string"
 						? connectedData
-						: connectedData.accountId,
+						: connectedData.userId,
 				data: sureData,
 			};
 		}),
 	);
 	const [firstResult, secondResult] = asTwoElementsTuple(
 		await Promise.all(
-			dataWithIds.map(({ accountId, connectedAccountId, data }) =>
+			dataWithIds.map(({ userId, connectedUserId, data }) =>
 				database
 					.insertInto("peers")
 					.values({
 						id: data.id || ctx.getTestUuid(),
-						ownerAccountId: accountId,
+						ownerUserId: userId,
 						name: data.name || faker.person.firstName(),
 						publicName: data.publicName,
-						connectedAccountId,
+						connectedUserId,
 					})
 					.returning(["id", "name"])
 					.executeTakeFirstOrThrow(),
@@ -205,13 +194,13 @@ export const insertConnectedPeers = async (
 			id: firstResult.id,
 			name: firstResult.name,
 			publicName: firstDatum.data.publicName,
-			connectedAccountId: firstDatum.connectedAccountId,
+			connectedUserId: firstDatum.connectedUserId,
 		},
 		{
 			id: secondResult.id,
 			name: secondResult.name,
 			publicName: secondDatum.data.publicName,
-			connectedAccountId: secondDatum.connectedAccountId,
+			connectedUserId: secondDatum.connectedUserId,
 		},
 	]);
 };
@@ -223,7 +212,7 @@ type SessionData = {
 
 export const insertSession = async (
 	ctx: TestContext,
-	accountId: AccountId,
+	userId: UserId,
 	data: SessionData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -231,7 +220,7 @@ export const insertSession = async (
 		.insertInto("sessions")
 		.values({
 			sessionId: data.id || ctx.getTestUuid(),
-			accountId,
+			userId,
 			expirationTimestamp:
 				data.expirationTimestamp ||
 				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
@@ -249,14 +238,14 @@ type ResetPasswordIntentionData = {
 
 export const insertResetPasswordIntention = async (
 	ctx: TestContext,
-	accountId: AccountId,
+	userId: UserId,
 	data: ResetPasswordIntentionData = {},
 ) => {
 	const database = assertDatabase(ctx);
 	const { token, expiresTimestamp } = await database
 		.insertInto("resetPasswordIntentions")
 		.values({
-			accountId,
+			userId,
 			expiresTimestamp:
 				data.expiresTimestamp ||
 				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
@@ -279,7 +268,7 @@ type DebtData = {
 
 export const insertDebt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	peerId: PeerId,
 	data: DebtData = {},
 ) => {
@@ -297,7 +286,7 @@ export const insertDebt = async (
 		.insertInto("debts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
-			ownerAccountId,
+			ownerUserId,
 			peerId,
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
 			amount:
@@ -335,7 +324,7 @@ export type InsertedDebt = Awaited<ReturnType<typeof insertDebt>>;
 
 const updateDebt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	debtId: DebtId,
 ) => {
 	const database = assertDatabase(ctx);
@@ -343,7 +332,7 @@ const updateDebt = async (
 		.selectFrom("debts")
 		.where((eb) =>
 			eb.and([
-				eb("debts.ownerAccountId", "=", ownerAccountId),
+				eb("debts.ownerUserId", "=", ownerUserId),
 				eb("debts.id", "=", debtId),
 			]),
 		)
@@ -352,14 +341,14 @@ const updateDebt = async (
 		.executeTakeFirst();
 	if (!debt) {
 		throw new Error(
-			`Expected to update debt id "${debtId}" of account id "${ownerAccountId}", but find none.`,
+			`Expected to update debt id "${debtId}" of  user id "${ownerUserId}", but find none.`,
 		);
 	}
 	const { updatedAt } = await database
 		.updateTable("debts")
 		.where((eb) =>
 			eb.and([
-				eb("debts.ownerAccountId", "=", ownerAccountId),
+				eb("debts.ownerUserId", "=", ownerUserId),
 				eb("debts.id", "=", debtId),
 			]),
 		)
@@ -373,34 +362,29 @@ type ReturnDebtData = Awaited<ReturnType<typeof insertDebt>>;
 
 export const insertSyncedDebts = async (
 	ctx: TestContext,
-	[ownerAccountId, peerId, data = {}]: [AccountId, PeerId, DebtData?],
-	[foreignOwnerAccountId, foreignPeerId]: [AccountId, PeerId],
+	[ownerUserId, peerId, data = {}]: [UserId, PeerId, DebtData?],
+	[foreignOwnerUserId, foreignPeerId]: [UserId, PeerId],
 	desync?: {
 		fn?: (input: ReturnDebtData) => ReturnDebtData;
 		ahead?: "our" | "their";
 	},
 ) => {
-	const originalDebt = await insertDebt(ctx, ownerAccountId, peerId, data);
+	const originalDebt = await insertDebt(ctx, ownerUserId, peerId, data);
 	const reverseDebtObject = desync?.fn ? desync.fn(originalDebt) : originalDebt;
-	const reverseDebt = await insertDebt(
-		ctx,
-		foreignOwnerAccountId,
-		foreignPeerId,
-		{
-			id: reverseDebtObject.id,
-			currencyCode: reverseDebtObject.currencyCode,
-			amount: -reverseDebtObject.amount,
-			timestamp: reverseDebtObject.timestamp,
-			createdAt: reverseDebtObject.createdAt,
-			note: reverseDebtObject.note,
-			receiptId: reverseDebtObject.receiptId || undefined,
-		},
-	);
+	const reverseDebt = await insertDebt(ctx, foreignOwnerUserId, foreignPeerId, {
+		id: reverseDebtObject.id,
+		currencyCode: reverseDebtObject.currencyCode,
+		amount: -reverseDebtObject.amount,
+		timestamp: reverseDebtObject.timestamp,
+		createdAt: reverseDebtObject.createdAt,
+		note: reverseDebtObject.note,
+		receiptId: reverseDebtObject.receiptId || undefined,
+	});
 	switch (desync?.ahead) {
 		case "our": {
 			const { updatedAt: selfUpdatedAt } = await updateDebt(
 				ctx,
-				ownerAccountId,
+				ownerUserId,
 				reverseDebt.id,
 			);
 			originalDebt.updatedAt = selfUpdatedAt;
@@ -409,7 +393,7 @@ export const insertSyncedDebts = async (
 		case "their": {
 			const { updatedAt: reverseUpdatedAt } = await updateDebt(
 				ctx,
-				foreignOwnerAccountId,
+				foreignOwnerUserId,
 				reverseDebt.id,
 			);
 			reverseDebt.updatedAt = reverseUpdatedAt;
@@ -431,7 +415,7 @@ type ReceiptData = {
 
 export const insertReceipt = async (
 	ctx: TestContext,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 	data: ReceiptData = {},
 ) => {
 	const database = assertDatabase(ctx);
@@ -439,7 +423,7 @@ export const insertReceipt = async (
 		.insertInto("receipts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
-			ownerAccountId,
+			ownerUserId,
 			name: data.name ?? faker.lorem.words(2),
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
@@ -463,7 +447,7 @@ export const insertReceipt = async (
 		name,
 		createdAt,
 		issued,
-		ownerAccountId,
+		ownerUserId,
 	};
 };
 
@@ -479,9 +463,9 @@ export const insertReceiptParticipant = async (
 	data: ReceiptParticipantData = {},
 ) => {
 	const database = assertDatabase(ctx);
-	const { ownerAccountId } = await database
+	const { ownerUserId } = await database
 		.selectFrom("receipts")
-		.select("ownerAccountId")
+		.select("ownerUserId")
 		.where("receipts.id", "=", receiptId)
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
@@ -491,7 +475,7 @@ export const insertReceiptParticipant = async (
 		.values({
 			receiptId,
 			peerId,
-			role: peerId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
+			role: peerId === ownerUserId ? "owner" : (data.role ?? "viewer"),
 			createdAt: data.createdAt ?? Temporal.Now.zonedDateTimeISO(),
 		})
 		.returning(["createdAt", "role"])
@@ -628,26 +612,26 @@ export const insertReceiptItemPayer = async (
 	return { part, createdAt, peerId, itemId };
 };
 
-type AccountWithSessionData = {
-	account?: AccountData;
+type UserWithSessionData = {
+	user?: UserData;
 	session?: SessionData;
 	peer?: Pick<PeerData, "name">;
 };
 
-export const insertAccountWithSession = async (
+export const insertUserWithSession = async (
 	ctx: TestContext,
-	data: AccountWithSessionData = {},
+	data: UserWithSessionData = {},
 ) => {
 	const {
-		id: accountId,
+		id: userId,
 		peerId,
 		name,
-		...account
-	} = await insertAccount(ctx, data.account);
+		...user
+	} = await insertUser(ctx, data.user);
 	const { id: sessionId, ...session } = await insertSession(
 		ctx,
-		accountId,
+		userId,
 		data.session,
 	);
-	return { accountId, account, sessionId, session, peerId, name };
+	return { userId, user, sessionId, session, peerId, name };
 };

@@ -31,10 +31,10 @@ export const procedure = unauthProcedure
 					Temporal.Now.zonedDateTimeISO(),
 				),
 			)
-			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
+			.innerJoin("users", (qb) =>
+				qb.onRef("users.id", "=", "resetPasswordIntentions.userId"),
 			)
-			.select(["accounts.id as accountId"])
+			.select(["users.id as userId"])
 			.limit(1)
 			.executeTakeFirst();
 		if (!resetPasswordIntention) {
@@ -46,19 +46,19 @@ export const procedure = unauthProcedure
 		const passwordData = await generatePasswordData(ctx, input.password);
 		await database.transaction().execute(async (tx) => {
 			await tx
-				.updateTable("accounts")
+				.updateTable("users")
 				.set({
 					passwordHash: passwordData.hash,
 					passwordSalt: passwordData.salt,
 				})
-				.where("accounts.id", "=", resetPasswordIntention.accountId)
+				.where("users.id", "=", resetPasswordIntention.userId)
 				.executeTakeFirst();
 			await tx
 				.deleteFrom("resetPasswordIntentions")
 				.where(
-					"resetPasswordIntentions.accountId",
+					"resetPasswordIntentions.userId",
 					"=",
-					resetPasswordIntention.accountId,
+					resetPasswordIntention.userId,
 				)
 				.execute();
 		});

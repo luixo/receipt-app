@@ -2,16 +2,16 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test("Card on account page", async ({
+test("Card on  user page", async ({
 	page,
 	mockBase,
 	emailVerificationCard,
 	expectScreenshotWithSchemes,
 }) => {
 	await mockBase();
-	await page.navigate({ to: "/account" });
+	await page.navigate({ to: "/user" });
 	await expect(emailVerificationCard).toBeVisible();
-	await expectScreenshotWithSchemes("account-page.png", {
+	await expectScreenshotWithSchemes("user-page.png", {
 		locator: emailVerificationCard,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
@@ -38,13 +38,13 @@ test("Loading", async ({
 	skip(testInfo, "only-biggest");
 	await mockBase();
 	const resendPause = api.createPause();
-	api.mockFirst("account.resendEmail", async () => {
+	api.mockFirst("user.resendEmail", async () => {
 		await resendPause.promise;
 		return { email: faker.internet.email() };
 	});
-	await page.navigate({ to: "/account" });
+	await page.navigate({ to: "/user" });
 	await resendButton.click();
-	await awaitCacheKey("account.resendEmail", { pending: 1 });
+	await awaitCacheKey("user.resendEmail", { pending: 1 });
 	await expectScreenshotWithSchemes("loading.png", {
 		locator: emailVerificationCard,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
@@ -71,10 +71,10 @@ test("Success", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	await mockBase();
-	api.mockFirst("account.resendEmail", { email: "verification@example.com" });
-	await page.navigate({ to: "/account" });
+	api.mockFirst("user.resendEmail", { email: "verification@example.com" });
+	await page.navigate({ to: "/user" });
 	await resendButton.click();
-	await awaitCacheKey("account.resendEmail");
+	await awaitCacheKey("user.resendEmail");
 	await expectScreenshotWithSchemes("success.png", {
 		locator: emailVerificationCard,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [

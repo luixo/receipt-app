@@ -19,12 +19,12 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api }, use) =>
 		use(async () => {
 			const auth = await api.mockUtils.authPage();
-			const unverifiedAccount = { ...auth.account, verified: false };
-			api.mockFirst("account.get", {
-				account: unverifiedAccount,
+			const unverifiedUser = { ...auth.user, verified: false };
+			api.mockFirst("user.get", {
+				user: unverifiedUser,
 				peer: { name: auth.peer.name },
 			});
-			return { peer: auth.peer, account: unverifiedAccount };
+			return { peer: auth.peer, user: unverifiedUser };
 		}),
 
 	emailVerificationCard: ({ page }, use) =>

@@ -20,9 +20,9 @@ import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
 import { Route as PublicPlaygroundRouteImport } from './../pages/_public/playground'
 import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
+import { Route as ProtectedUserRouteImport } from './../pages/_protected/user'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
 import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
-import { Route as ProtectedAccountRouteImport } from './../pages/_protected/account'
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/peers/index'
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
@@ -95,6 +95,11 @@ const PublicConfirmEmailRoute = PublicConfirmEmailRouteImport.update({
   path: '/confirm-email',
   getParentRoute: () => PublicRoute,
 } as any)
+const ProtectedUserRoute = ProtectedUserRouteImport.update({
+  id: '/user',
+  path: '/user',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -103,11 +108,6 @@ const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
 const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAccountRoute = ProtectedAccountRouteImport.update({
-  id: '/account',
-  path: '/account',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedReceiptsIndexRoute = ProtectedReceiptsIndexRouteImport.update({
@@ -209,9 +209,9 @@ const ProtectedDebtsPeerIdExchangeAllRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
   '/playground': typeof PublicPlaygroundRoute
@@ -241,9 +241,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/account': typeof ProtectedAccountRoute
   '/admin': typeof ProtectedAdminRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
   '/login': typeof PublicLoginRoute
   '/playground': typeof PublicPlaygroundRoute
@@ -276,9 +276,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
-  '/_protected/account': typeof ProtectedAccountRoute
   '/_protected/admin': typeof ProtectedAdminRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_protected/user': typeof ProtectedUserRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/playground': typeof PublicPlaygroundRoute
@@ -310,9 +310,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/account'
     | '/admin'
     | '/settings'
+    | '/user'
     | '/confirm-email'
     | '/login'
     | '/playground'
@@ -342,9 +342,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/account'
     | '/admin'
     | '/settings'
+    | '/user'
     | '/confirm-email'
     | '/login'
     | '/playground'
@@ -376,9 +376,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_protected'
     | '/_public'
-    | '/_protected/account'
     | '/_protected/admin'
     | '/_protected/settings'
+    | '/_protected/user'
     | '/_public/confirm-email'
     | '/_public/login'
     | '/_public/playground'
@@ -496,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicConfirmEmailRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_protected/user': {
+      id: '/_protected/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof ProtectedUserRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/settings': {
       id: '/_protected/settings'
       path: '/settings'
@@ -508,13 +515,6 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof ProtectedAdminRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/account': {
-      id: '/_protected/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof ProtectedAccountRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/receipts/': {
@@ -647,9 +647,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface ProtectedRouteChildren {
-  ProtectedAccountRoute: typeof ProtectedAccountRoute
   ProtectedAdminRoute: typeof ProtectedAdminRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
+  ProtectedUserRoute: typeof ProtectedUserRoute
   ProtectedDebtsIdRoute: typeof ProtectedDebtsIdRoute
   ProtectedDebtsAddRoute: typeof ProtectedDebtsAddRoute
   ProtectedDebtsIntentionsRoute: typeof ProtectedDebtsIntentionsRoute
@@ -669,9 +669,9 @@ interface ProtectedRouteChildren {
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedAccountRoute: ProtectedAccountRoute,
   ProtectedAdminRoute: ProtectedAdminRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedUserRoute: ProtectedUserRoute,
   ProtectedDebtsIdRoute: ProtectedDebtsIdRoute,
   ProtectedDebtsAddRoute: ProtectedDebtsAddRoute,
   ProtectedDebtsIntentionsRoute: ProtectedDebtsIntentionsRoute,

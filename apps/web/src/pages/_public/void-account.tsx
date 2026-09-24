@@ -11,6 +11,6 @@ export const Route = createFileRoute("/_public/void-account")({
 		await ctx.context.i18nContext.loadNamespaces("void-account");
 	},
 	head: ({ match }) => ({
-		meta: [{ title: getTitle(match.context.i18nContext, "voidAccount") }],
+		meta: [{ title: getTitle(match.context.i18nContext, "voidUser") }],
 	}),
 });

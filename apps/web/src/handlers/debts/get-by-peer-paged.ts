@@ -31,7 +31,7 @@ const fetchPage = async (
 	const peer = await database
 		.selectFrom("peers")
 		.where("peers.id", "=", input.peerId)
-		.select("peers.ownerAccountId")
+		.select("peers.ownerUserId")
 		.limit(1)
 		.executeTakeFirst();
 	if (!peer) {
@@ -40,7 +40,7 @@ const fetchPage = async (
 			message: `Peer "${input.peerId}" does not exist.`,
 		});
 	}
-	if (peer.ownerAccountId !== auth.accountId) {
+	if (peer.ownerUserId !== auth.userId) {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Peer "${input.peerId}" is not owned by "${auth.email}".`,
@@ -51,7 +51,7 @@ const fetchPage = async (
 		.where((eb) =>
 			eb.and({
 				"debts.peerId": input.peerId,
-				"debts.ownerAccountId": auth.accountId,
+				"debts.ownerUserId": auth.userId,
 			}),
 		)
 		.select([
@@ -66,7 +66,7 @@ const fetchPage = async (
 		.where((eb) =>
 			eb.and({
 				"debts.peerId": input.peerId,
-				"debts.ownerAccountId": auth.accountId,
+				"debts.ownerUserId": auth.userId,
 			}),
 		)
 		.$if(!input.filters.showResolved, (qb) =>
@@ -110,7 +110,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get debts by peer, paged",
 		description:
-			"Returns a page of debt ids owned by the current account for a given peerId, optionally excluding resolved currencies.",
+			"Returns a page of debt ids owned by the current  user for a given peerId, optionally excluding resolved currencies.",
 	})
 	.input(inputSchema)
 	.query(queueDebtList);

@@ -16,8 +16,8 @@ import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
 import type { PeerId } from "~db/ids";
-import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
-import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
+import { options as userConnectionsAcceptOptions } from "~mutations/user-connection-intentions/accept";
+import { options as userConnectionsRejectOptions } from "~mutations/user-connection-intentions/reject";
 
 export const SkeletonInboundConnectionIntention = () => {
 	const { t } = useTranslation("peers");
@@ -49,8 +49,8 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const { t } = useTranslation("peers");
 
 	const acceptConnectionMutation = useMutation(
-		trpc.accountConnectionIntentions.accept.mutationOptions(
-			useTrpcMutationOptions(accountConnectionsAcceptOptions),
+		trpc.userConnectionIntentions.accept.mutationOptions(
+			useTrpcMutationOptions(userConnectionsAcceptOptions),
 		),
 	);
 	const acceptConnection = React.useCallback(() => {
@@ -58,21 +58,21 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			return;
 		}
 		acceptConnectionMutation.mutate({
-			accountId: intention.account.id,
+			userId: intention.user.id,
 			peerId,
 		});
-	}, [acceptConnectionMutation, intention.account.id, peerId]);
+	}, [acceptConnectionMutation, intention.user.id, peerId]);
 
 	const rejectConnectionMutation = useMutation(
-		trpc.accountConnectionIntentions.reject.mutationOptions(
-			useTrpcMutationOptions(accountConnectionsRejectOptions),
+		trpc.userConnectionIntentions.reject.mutationOptions(
+			useTrpcMutationOptions(userConnectionsRejectOptions),
 		),
 	);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({
-			sourceAccountId: intention.account.id,
+			sourceUserId: intention.user.id,
 		});
-	}, [rejectConnectionMutation, intention.account.id]);
+	}, [rejectConnectionMutation, intention.user.id]);
 
 	const peersSuggestOptions = React.useMemo(
 		() => ({ type: "not-connected" as const }),
@@ -102,7 +102,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					isReadOnly
 					className="max-w-xs"
 					size="sm"
-					defaultValue={intention.account.email}
+					defaultValue={intention.user.email}
 					label={t("intentions.form.email.label")}
 					type="email"
 				/>
@@ -123,7 +123,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				subtitle={
 					peerQuery.data
 						? t("intentions.modal.description", {
-								email: intention.account.email,
+								email: intention.user.email,
 								peerName: peerQuery.data.name,
 							})
 						: undefined

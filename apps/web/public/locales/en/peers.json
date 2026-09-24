@@ -42,7 +42,7 @@
 			}
 		},
 		"connection": {
-			"connect": "Connect to an account",
+			"connect": "Connect to a someone's account",
 			"outbound": {
 				"label": "Outbound request"
 			},

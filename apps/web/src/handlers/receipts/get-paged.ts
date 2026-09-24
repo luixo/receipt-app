@@ -135,8 +135,8 @@ const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
 	input: Input,
 ) => {
-	const foreignReceipts = getParticipantsReceipts(database, auth.accountId);
-	const ownReceipts = getOwnReceipts(database, auth.accountId);
+	const foreignReceipts = getParticipantsReceipts(database, auth.userId);
+	const ownReceipts = getOwnReceipts(database, auth.userId);
 
 	const mergedReceipts = database
 		.with("mergedReceipts", () => {
@@ -240,7 +240,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get receipts, paged",
 		description:
-			"Returns a page of the account's own and participated-in receipts, optionally filtered by a fuzzy name/item search query.",
+			"Returns a page of the  user's own and participated-in receipts, optionally filtered by a fuzzy name/item search query.",
 	})
 	.input(inputSchema)
 	.query(queueReceiptList);

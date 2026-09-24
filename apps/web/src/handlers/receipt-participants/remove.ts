@@ -21,7 +21,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select(["ownerAccountId"])
+			.select(["ownerUserId"])
 			.where("id", "=", input.receiptId)
 			.limit(1)
 			.executeTakeFirst();
@@ -31,7 +31,7 @@ export const procedure = authProcedure
 				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
-		if (receipt.ownerAccountId !== ctx.auth.accountId) {
+		if (receipt.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to remove participant from receipt "${input.receiptId}".`,
@@ -39,7 +39,7 @@ export const procedure = authProcedure
 		}
 		const peer = await database
 			.selectFrom("peers")
-			.select("ownerAccountId")
+			.select("ownerUserId")
 			.where("id", "=", input.peerId)
 			.limit(1)
 			.executeTakeFirst();
@@ -49,7 +49,7 @@ export const procedure = authProcedure
 				message: `Peer "${input.peerId}" does not exist.`,
 			});
 		}
-		if (peer.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${input.peerId}" is not owned by "${ctx.auth.email}".`,

@@ -33,10 +33,10 @@ describe("Server tRPC client", () => {
 			appRouter,
 			new Request("http://example.com/"),
 		);
-		await expect(client.account.get.query()).rejects.toMatchObject({
+		await expect(client.user.get.query()).rejects.toMatchObject({
 			data: { code: "UNAUTHORIZED" },
 		});
-		await expect(client.account.get.query()).rejects.toBeInstanceOf(
+		await expect(client.user.get.query()).rejects.toBeInstanceOf(
 			TRPCClientError,
 		);
 	});

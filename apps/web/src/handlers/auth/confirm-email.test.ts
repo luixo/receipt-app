@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { describe, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
@@ -31,7 +31,7 @@ describe("auth.confirmEmail", () => {
 		test("no confirmation token exists", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
-			await insertAccountWithSession(ctx);
+			await insertUserWithSession(ctx);
 			await expectTRPCError(
 				() => caller.procedure({ token: confirmationToken }),
 				"NOT_FOUND",
@@ -43,14 +43,14 @@ describe("auth.confirmEmail", () => {
 	describe("functionality", () => {
 		test("account confirmed", async ({ ctx }) => {
 			const {
-				account: { confirmationToken, email },
-			} = await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+				user: { confirmationToken, email },
+			} = await insertUserWithSession(ctx, {
+				user: { confirmation: {} },
 			});
-			// Verifying other accounts (both confirmed and not) are not affected
-			await insertAccountWithSession(ctx);
-			await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+			// Verifying other users (both confirmed and not) are not affected
+			await insertUserWithSession(ctx);
+			await insertUserWithSession(ctx, {
+				user: { confirmation: {} },
 			});
 			const context = createContext(ctx);
 			const caller = createCaller(context);

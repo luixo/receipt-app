@@ -5,10 +5,10 @@ import { describe, expect } from "vitest";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -36,7 +36,7 @@ describe("peers.getPaged", () => {
 
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0 }),
@@ -46,7 +46,7 @@ describe("peers.getPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: MAX_LIMIT + 1 }),
@@ -56,7 +56,7 @@ describe("peers.getPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: faker.number.float() }),
@@ -68,7 +68,7 @@ describe("peers.getPaged", () => {
 
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: -1, limit: 1 }),
@@ -78,7 +78,7 @@ describe("peers.getPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: MAX_OFFSET + 1, limit: 1 }),
@@ -88,7 +88,7 @@ describe("peers.getPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: faker.number.float(), limit: 1 }),
@@ -101,11 +101,11 @@ describe("peers.getPaged", () => {
 
 	describe("functionality", () => {
 		test("returns empty results", async ({ ctx }) => {
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 
 			// Verify other peers do not interfere
-			await insertPeer(ctx, otherAccountId);
+			await insertPeer(ctx, otherUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ limit: 3, cursor: 0 });
@@ -117,27 +117,27 @@ describe("peers.getPaged", () => {
 		});
 
 		test("returns results", async ({ ctx }) => {
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verify other peers do not interfere
-			await insertPeer(ctx, otherAccountId);
+			await insertPeer(ctx, otherUserId);
 
-			const peer = await insertPeer(ctx, accountId);
-			const publicNamedPeer = await insertPeer(ctx, accountId, {
+			const peer = await insertPeer(ctx, userId);
+			const publicNamedPeer = await insertPeer(ctx, userId, {
 				publicName: "Alice",
 			});
-			const firstAccount = await insertAccount(ctx);
+			const firstUser = await insertUser(ctx);
 			const [connectedPeer] = await insertConnectedPeers(ctx, [
-				accountId,
-				firstAccount.id,
+				userId,
+				firstUser.id,
 			]);
-			const secondAccount = await insertAccount(ctx, { avatarUrl: null });
+			const secondUser = await insertUser(ctx, { avatarUrl: null });
 			const [connectedPublicNamedPeer] = await insertConnectedPeers(ctx, [
-				{ accountId, publicName: "Bob" },
-				secondAccount.id,
+				{ userId, publicName: "Bob" },
+				secondUser.id,
 			]);
-			const extraPeer = await insertPeer(ctx, accountId, {
+			const extraPeer = await insertPeer(ctx, userId, {
 				name: "Z - last name in a list",
 			});
 
@@ -159,14 +159,14 @@ describe("peers.getPaged", () => {
 		});
 
 		test("returns paged results", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			const limit = 2;
 			await Promise.all(
 				Array.from({ length: limit }, async (_, index) => {
-					await insertPeer(ctx, accountId, { name: `Alice ${index}` });
+					await insertPeer(ctx, userId, { name: `Alice ${index}` });
 					if (index !== 0) {
-						await insertPeer(ctx, accountId, {
+						await insertPeer(ctx, userId, {
 							name: `Alice ${index} - additional`,
 						});
 					}
@@ -191,13 +191,13 @@ describe("peers.getPaged", () => {
 		});
 
 		test("same-named peers are ordered by ids", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			await insertPeer(ctx, accountId, { name: "Alice" });
-			await insertPeer(ctx, accountId, { name: "Alice" });
-			await insertPeer(ctx, accountId, { name: "Alice" });
-			await insertPeer(ctx, accountId, { name: "Alice" });
-			await insertPeer(ctx, accountId, { name: "Alice" });
+			await insertPeer(ctx, userId, { name: "Alice" });
+			await insertPeer(ctx, userId, { name: "Alice" });
+			await insertPeer(ctx, userId, { name: "Alice" });
+			await insertPeer(ctx, userId, { name: "Alice" });
+			await insertPeer(ctx, userId, { name: "Alice" });
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -210,12 +210,12 @@ describe("peers.getPaged", () => {
 
 		describe("multiple intentions", () => {
 			test("success", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
 				const peers = mapPeers(
 					await Promise.all(
 						Array.from({ length: 10 }, async (_, index) =>
-							insertPeer(ctx, accountId, { name: `Alice ${index}` }),
+							insertPeer(ctx, userId, { name: `Alice ${index}` }),
 						),
 					),
 				);
@@ -247,8 +247,8 @@ describe("peers.getPaged", () => {
 			});
 
 			test("mixed success and fail", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const peer = await insertPeer(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const peer = await insertPeer(ctx, userId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runInBand([

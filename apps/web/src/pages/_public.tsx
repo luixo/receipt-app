@@ -24,19 +24,19 @@ export const Route = createFileRoute("/_public")({
 		}
 		const trpc = getLoaderTrpcClient(context);
 		try {
-			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
+			await context.queryClient.fetchQuery(trpc.user.get.queryOptions());
 		} catch (error) {
 			if (error instanceof TRPCClientError) {
 				const castedError = error as TRPCError;
 				if (castedError.data?.code === "UNAUTHORIZED") {
-					// It's ok we get an error for the account on public route - bail out
+					// It's ok we get an error for the  user on public route - bail out
 					return;
 				}
 			}
 			captureSentryError(error as Error);
 			throw error;
 		}
-		// If we do get an account - we're authorized and we need to get to the app page
+		// If we do get an  user - we're authorized and we need to get to the app page
 		// oxlint-disable-next-line typescript/only-throw-error
 		throw redirect({ to: search.redirect || "/receipts" });
 	},

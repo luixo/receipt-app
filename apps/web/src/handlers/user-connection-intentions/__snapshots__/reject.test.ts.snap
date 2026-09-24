@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`userConnectionIntentions.reject > functionality > user connection intention is rejected 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:d4bdd530-7901-43e0-bb25-a752d1237ede": {
+        "connectedUserId": null,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;

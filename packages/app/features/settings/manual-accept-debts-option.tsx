@@ -9,17 +9,17 @@ import { useTRPC } from "~app/utils/trpc";
 import { SkeletonSwitch } from "~components/skeleton-switch";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
-import { options as accountSettingsUpdateOptions } from "~mutations/account-settings/update";
+import { options as userSettingsUpdateOptions } from "~mutations/user-settings/update";
 
 export const ManualAcceptDebtsOption = suspendedFallback(
 	() => {
 		const trpc = useTRPC();
 		const { data: settings } = useSuspenseQuery(
-			trpc.accountSettings.get.queryOptions(),
+			trpc.userSettings.get.queryOptions(),
 		);
 		const updateSettingsMutation = useMutation(
-			trpc.accountSettings.update.mutationOptions(
-				useTrpcMutationOptions(accountSettingsUpdateOptions),
+			trpc.userSettings.update.mutationOptions(
+				useTrpcMutationOptions(userSettingsUpdateOptions),
 			),
 		);
 		const onChange = React.useCallback(

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/_protected/receipts/add")({
 		await ctx.context.i18nContext.loadNamespaces("receipts");
 		const trpc = getLoaderTrpcClient(ctx.context);
 		await Promise.all([
-			ctx.context.queryClient.prefetchQuery(trpc.account.get.queryOptions()),
+			ctx.context.queryClient.prefetchQuery(trpc.user.get.queryOptions()),
 			ctx.context.queryClient.prefetchQuery(
 				trpc.currency.top.queryOptions({ options: { type: "receipts" } }),
 			),

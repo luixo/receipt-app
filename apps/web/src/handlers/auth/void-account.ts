@@ -18,7 +18,7 @@ export const procedure = unauthProcedure
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const account = await database
-			.selectFrom("accounts")
+			.selectFrom("users")
 			.select(["id", "email"])
 			.where("confirmationToken", "=", input.token)
 			.limit(1)
@@ -30,8 +30,8 @@ export const procedure = unauthProcedure
 			});
 		}
 		await database
-			.deleteFrom("accounts")
-			.where("accounts.id", "=", account.id)
+			.deleteFrom("users")
+			.where("users.id", "=", account.id)
 			.executeTakeFirst();
 		return {
 			email: account.email,
