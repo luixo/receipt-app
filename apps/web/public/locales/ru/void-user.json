@@ -14,7 +14,7 @@
 		"toLogin": "На страницу входа"
 	},
 	"toasts": {
-		"voidAccount": {
+		"voidUser": {
 			"error": "Ошибка удаления аккаунта: {{errors, uniqueErrors}}",
 			"success": "Аккаунт успешно удален, подождите.."
 		}

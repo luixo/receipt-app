@@ -14,7 +14,7 @@ import { Route as ProtectedRouteImport } from './../pages/_protected'
 import { Route as IndexRouteImport } from './../pages/index'
 import { Route as ApiPingRouteImport } from './../pages/api/ping'
 import { Route as ApiCoverageRouteImport } from './../pages/api/coverage'
-import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
+import { Route as PublicVoidUserRouteImport } from './../pages/_public/void-user'
 import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
 import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
 import { Route as PublicPlaygroundRouteImport } from './../pages/_public/playground'
@@ -65,9 +65,9 @@ const ApiCoverageRoute = ApiCoverageRouteImport.update({
   path: '/api/coverage',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PublicVoidAccountRoute = PublicVoidAccountRouteImport.update({
-  id: '/void-account',
-  path: '/void-account',
+const PublicVoidUserRoute = PublicVoidUserRouteImport.update({
+  id: '/void-user',
+  path: '/void-user',
   getParentRoute: () => PublicRoute,
 } as any)
 const PublicResetPasswordRoute = PublicResetPasswordRouteImport.update({
@@ -217,7 +217,7 @@ export interface FileRoutesByFullPath {
   '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
+  '/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
@@ -249,7 +249,7 @@ export interface FileRoutesByTo {
   '/playground': typeof PublicPlaygroundRoute
   '/register': typeof PublicRegisterRoute
   '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
+  '/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/debts/$id': typeof ProtectedDebtsIdRoute
@@ -284,7 +284,7 @@ export interface FileRoutesById {
   '/_public/playground': typeof PublicPlaygroundRoute
   '/_public/register': typeof PublicRegisterRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
-  '/_public/void-account': typeof PublicVoidAccountRoute
+  '/_public/void-user': typeof PublicVoidUserRoute
   '/api/coverage': typeof ApiCoverageRoute
   '/api/ping': typeof ApiPingRoute
   '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
@@ -318,7 +318,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/register'
     | '/reset-password'
-    | '/void-account'
+    | '/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
@@ -350,7 +350,7 @@ export interface FileRouteTypes {
     | '/playground'
     | '/register'
     | '/reset-password'
-    | '/void-account'
+    | '/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/debts/$id'
@@ -384,7 +384,7 @@ export interface FileRouteTypes {
     | '/_public/playground'
     | '/_public/register'
     | '/_public/reset-password'
-    | '/_public/void-account'
+    | '/_public/void-user'
     | '/api/coverage'
     | '/api/ping'
     | '/_protected/debts/$id'
@@ -454,11 +454,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCoverageRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/void-account': {
-      id: '/_public/void-account'
-      path: '/void-account'
-      fullPath: '/void-account'
-      preLoaderRoute: typeof PublicVoidAccountRouteImport
+    '/_public/void-user': {
+      id: '/_public/void-user'
+      path: '/void-user'
+      fullPath: '/void-user'
+      preLoaderRoute: typeof PublicVoidUserRouteImport
       parentRoute: typeof PublicRoute
     }
     '/_public/reset-password': {
@@ -702,7 +702,7 @@ interface PublicRouteChildren {
   PublicPlaygroundRoute: typeof PublicPlaygroundRoute
   PublicRegisterRoute: typeof PublicRegisterRoute
   PublicResetPasswordRoute: typeof PublicResetPasswordRoute
-  PublicVoidAccountRoute: typeof PublicVoidAccountRoute
+  PublicVoidUserRoute: typeof PublicVoidUserRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
@@ -711,7 +711,7 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicPlaygroundRoute: PublicPlaygroundRoute,
   PublicRegisterRoute: PublicRegisterRoute,
   PublicResetPasswordRoute: PublicResetPasswordRoute,
-  PublicVoidAccountRoute: PublicVoidAccountRoute,
+  PublicVoidUserRoute: PublicVoidUserRoute,
 }
 
 const PublicRouteWithChildren =

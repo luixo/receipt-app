@@ -11,11 +11,11 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 
-import { procedure } from "./void-account";
+import { procedure } from "./void-user";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("auth.voidAccount", () => {
+describe("auth.voidUser", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
@@ -31,7 +31,7 @@ describe("auth.voidAccount", () => {
 		test("no confirmation token exists", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
-			// Verify that not every not verified account counts
+			// Verify that not every not verified user counts
 			await insertUserWithSession(ctx);
 			await insertUserWithSession(ctx, {
 				user: { confirmation: {} },
@@ -39,13 +39,13 @@ describe("auth.voidAccount", () => {
 			await expectTRPCError(
 				() => caller.procedure({ token: confirmationToken }),
 				"NOT_FOUND",
-				`There is no account with confirmation token "${confirmationToken}".`,
+				`There is no user with confirmation token "${confirmationToken}".`,
 			);
 		});
 	});
 
 	describe("functionality", () => {
-		test("account voided", async ({ ctx }) => {
+		test("user voided", async ({ ctx }) => {
 			const {
 				user: { confirmationToken, email },
 			} = await insertUserWithSession(ctx, {
@@ -60,7 +60,7 @@ describe("auth.voidAccount", () => {
 			const caller = createCaller(context);
 			assert.ok(
 				confirmationToken,
-				"Confirmation token should exist on creation of test account",
+				"Confirmation token should exist on creation of test user",
 			);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ token: confirmationToken }),
@@ -68,11 +68,11 @@ describe("auth.voidAccount", () => {
 			expect(result).toStrictEqual<typeof result>({ email });
 		});
 
-		test.todo("verify account peers are removed");
-		test.todo("verify account debts are removed");
-		test.todo("verify account receipts are removed");
-		test.todo("verify account connection intentions are removed");
-		test.todo("verify account settings are removed");
-		test.todo("verify account reset password intentions are removed");
+		test.todo("verify user peers are removed");
+		test.todo("verify user debts are removed");
+		test.todo("verify user receipts are removed");
+		test.todo("verify user connection intentions are removed");
+		test.todo("verify user settings are removed");
+		test.todo("verify user reset password intentions are removed");
 	});
 });

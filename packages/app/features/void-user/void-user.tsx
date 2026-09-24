@@ -10,21 +10,21 @@ import { Button } from "~components/button";
 import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
 import { View } from "~components/view";
-import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
+import { options as authVoidUserOptions } from "~mutations/auth/void-user";
 
 type Props = {
 	token: string;
 };
 
-export const VoidAccount: React.FC<Props> = ({ token }) => {
-	const { t } = useTranslation("void-account");
+export const VoidUser: React.FC<Props> = ({ token }) => {
+	const { t } = useTranslation("void-user");
 	const trpc = useTRPC();
 	const voidMutation = useMutation(
-		trpc.auth.voidAccount.mutationOptions(
-			useTrpcMutationOptions(authVoidAccountOptions),
+		trpc.auth.voidUser.mutationOptions(
+			useTrpcMutationOptions(authVoidUserOptions),
 		),
 	);
-	const voidAccount = React.useCallback(
+	const voidUser = React.useCallback(
 		() => voidMutation.mutate({ token }),
 		[voidMutation, token],
 	);
@@ -48,7 +48,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			<View className="flex-row gap-2">
 				<Button
 					className="flex-1"
-					onPress={voidAccount}
+					onPress={voidUser}
 					isDisabled={isPending}
 					isLoading={isPending}
 					color="danger"

@@ -1,6 +1,6 @@
 {
 	"mutations": {
-		"auth.voidAccount": {
+		"auth.voidUser": {
 			"1": {
 				"state": {
 					"data": {

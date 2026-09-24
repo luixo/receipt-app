@@ -1,11 +1,11 @@
 import type React from "react";
 
 import { PageWrapper } from "~app/components/page-wrapper";
-import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
+import { VoidUserScreen } from "~app/features/void-user/void-user-screen";
 
 const Wrapper = () => (
 	<PageWrapper>
-		<VoidAccountScreen />
+		<VoidUserScreen />
 	</PageWrapper>
 );
 

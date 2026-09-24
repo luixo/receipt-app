@@ -1,39 +1,39 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { voidAccountTokenSchema } from "~app/utils/validation";
+import { voidUserTokenSchema } from "~app/utils/validation";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
 	.meta({
-		title: "Void account",
+		title: "Void user",
 		description:
-			"Permanently deletes an unconfirmed account identified by its confirmation token.",
+			"Permanently deletes an unconfirmed user identified by its confirmation token.",
 	})
 	.input(
 		z.strictObject({
-			token: voidAccountTokenSchema,
+			token: voidUserTokenSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const account = await database
+		const user = await database
 			.selectFrom("users")
 			.select(["id", "email"])
 			.where("confirmationToken", "=", input.token)
 			.limit(1)
 			.executeTakeFirst();
-		if (!account) {
+		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `There is no account with confirmation token "${input.token}".`,
+				message: `There is no user with confirmation token "${input.token}".`,
 			});
 		}
 		await database
 			.deleteFrom("users")
-			.where("users.id", "=", account.id)
+			.where("users.id", "=", user.id)
 			.executeTakeFirst();
 		return {
-			email: account.email,
+			email: user.email,
 		};
 	});

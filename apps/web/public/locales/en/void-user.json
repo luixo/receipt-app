@@ -14,7 +14,7 @@
 		"toLogin": "To login page"
 	},
 	"toasts": {
-		"voidAccount": {
+		"voidUser": {
 			"error": "Void account failed: {{errors, uniqueErrors}}",
 			"success": "Account successfully voided, redirecting.."
 		}

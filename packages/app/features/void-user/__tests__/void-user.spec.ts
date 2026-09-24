@@ -16,7 +16,7 @@ test("On load with token", async ({
 
 	const token = faker.string.uuid();
 	await snapshotQueries(() =>
-		page.navigate({ to: "/void-account", search: { token } }),
+		page.navigate({ to: "/void-user", search: { token } }),
 	);
 	await expect(page.getByRole("heading", { level: 3 })).toHaveText(
 		"Are you sure you want to void your account?",
@@ -35,12 +35,12 @@ test("Navigating back to the home page", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 	const token = faker.string.uuid();
-	await page.navigate({ to: "/void-account", search: { token } });
+	await page.navigate({ to: "/void-user", search: { token } });
 	await cancelButton.click();
 	await page.expectUrl({ to: "/login" });
 });
 
-test("'auth.voidAccount' mutation", async ({
+test("'auth.voidUser' mutation", async ({
 	page,
 	api,
 	voidButton,
@@ -52,28 +52,26 @@ test("'auth.voidAccount' mutation", async ({
 	faker,
 }) => {
 	api.mockUtils.noAuthPage();
-	api.mockFirst("auth.voidAccount", () => {
+	api.mockFirst("auth.voidUser", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
-			message: `Mock "auth.voidAccount" error`,
+			message: `Mock "auth.voidUser" error`,
 		});
 	});
 
 	const token = faker.string.uuid();
-	await page.navigate({ to: "/void-account", search: { token } });
+	await page.navigate({ to: "/void-user", search: { token } });
 
 	await snapshotQueries(async () => {
 		await voidButton.click();
-		await verifyToastTexts(
-			`Void account failed: Mock "auth.voidAccount" error`,
-		);
-		await awaitCacheKey("auth.voidAccount", { error: 1 });
+		await verifyToastTexts(`Void account failed: Mock "auth.voidUser" error`);
+		await awaitCacheKey("auth.voidUser", { error: 1 });
 	});
-	await page.expectUrl({ to: "/void-account", search: { token } });
+	await page.expectUrl({ to: "/void-user", search: { token } });
 
-	const voidAccountPause = api.createPause();
-	api.mockFirst("auth.voidAccount", async () => {
-		await voidAccountPause.promise;
+	const voidUserPause = api.createPause();
+	api.mockFirst("auth.voidUser", async () => {
+		await voidUserPause.promise;
 		return { email: "foo@gmail.com" };
 	});
 	const buttonWithLoader = withLoader(voidButton);
@@ -88,13 +86,13 @@ test("'auth.voidAccount' mutation", async ({
 		},
 		{ name: "loading" },
 	);
-	await page.expectUrl({ to: "/void-account", search: { token } });
+	await page.expectUrl({ to: "/void-user", search: { token } });
 
 	await snapshotQueries(
 		async () => {
-			voidAccountPause.resolve();
+			voidUserPause.resolve();
 			await verifyToastTexts("Account successfully voided, redirecting..");
-			await awaitCacheKey("auth.voidAccount");
+			await awaitCacheKey("auth.voidUser");
 		},
 		{ skipQueries: true, name: "success" },
 	);
@@ -104,7 +102,7 @@ test("'auth.voidAccount' mutation", async ({
 	await expect(page.getByRole("heading", { level: 4 })).toHaveText(
 		"Account removed succesfully",
 	);
-	await page.expectUrl({ to: "/void-account", search: { token } });
+	await page.expectUrl({ to: "/void-user", search: { token } });
 	await page.getByText("To login page").click();
 	await page.expectUrl({ to: "/login" });
 });

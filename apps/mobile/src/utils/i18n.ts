@@ -10,7 +10,7 @@ import registerEn from "@ra/web/public/locales/en/register.json";
 import resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import settingsEn from "@ra/web/public/locales/en/settings.json";
 import userEn from "@ra/web/public/locales/en/user.json";
-import voidAccountEn from "@ra/web/public/locales/en/void-account.json";
+import voidUserEn from "@ra/web/public/locales/en/void-user.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
 import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
@@ -22,7 +22,7 @@ import registerRu from "@ra/web/public/locales/ru/register.json";
 import resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import settingsRu from "@ra/web/public/locales/ru/settings.json";
 import userRu from "@ra/web/public/locales/ru/user.json";
-import voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
+import voidUserRu from "@ra/web/public/locales/ru/void-user.json";
 /* oxlint-enable import-js/no-extraneous-dependencies */
 
 import type { Language, Namespace } from "~app/utils/i18n-data";
@@ -37,7 +37,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		receipts: receiptsEn,
 		register: registerEn,
 		"reset-password": resetPasswordEn,
-		"void-account": voidAccountEn,
+		"void-user": voidUserEn,
 		peers: peersEn,
 		debts: debtsEn,
 		email: emailEn,
@@ -51,7 +51,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		receipts: receiptsRu,
 		register: registerRu,
 		"reset-password": resetPasswordRu,
-		"void-account": voidAccountRu,
+		"void-user": voidUserRu,
 		peers: peersRu,
 		debts: debtsRu,
 		email: emailRu,

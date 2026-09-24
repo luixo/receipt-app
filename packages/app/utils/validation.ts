@@ -194,8 +194,7 @@ export const localeSchema = z.string().transform((value, ctx) => {
 
 export const resetPasswordTokenSchema = z.uuid();
 export const confirmEmailTokenSchema = z.uuid();
-export const voidAccountTokenSchema = z.uuid();
-export const voidUserTokenSchema = voidAccountTokenSchema;
+export const voidUserTokenSchema = z.uuid();
 
 export const offsetSchema = z.int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.int().gt(0).max(MAX_LIMIT);

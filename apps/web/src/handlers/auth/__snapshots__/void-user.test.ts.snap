@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`auth.voidAccount > functionality > account voided 1`] = `
+exports[`auth.voidUser > functionality > account voided 1`] = `
 {
   "deleted": {
     "peers": {

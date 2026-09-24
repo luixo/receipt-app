@@ -9,7 +9,7 @@ test("Open without token", async ({
 }) => {
 	api.mockUtils.noAuthPage();
 
-	await page.navigate({ to: "/void-account" });
+	await page.navigate({ to: "/void-user" });
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 		"Void account",
 	);

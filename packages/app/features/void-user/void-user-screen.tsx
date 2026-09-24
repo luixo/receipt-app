@@ -5,17 +5,17 @@ import { PageHeader } from "~app/components/page-header";
 import { getPathHooks } from "~app/utils/navigation";
 import { Text } from "~components/text";
 
-import { VoidAccount } from "./void-account";
+import { VoidUser } from "./void-user";
 
-export const VoidAccountScreen = () => {
-	const { useQueryState } = getPathHooks("/_public/void-account");
+export const VoidUserScreen = () => {
+	const { useQueryState } = getPathHooks("/_public/void-user");
 	const [token] = useQueryState("token");
-	const { t } = useTranslation("void-account");
+	const { t } = useTranslation("void-user");
 	return (
 		<>
 			<PageHeader>{t("header")}</PageHeader>
 			{token ? (
-				<VoidAccount token={token} />
+				<VoidUser token={token} />
 			) : (
 				<EmptyCard title={t("noToken.title")}>
 					<Text variant="h3" className="text-center">
