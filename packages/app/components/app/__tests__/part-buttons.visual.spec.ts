@@ -17,7 +17,7 @@ const generatePeers: GeneratePeers = ({ faker }) => [
 		id: faker.string.uuid(),
 		name: "Other peer",
 		publicName: undefined,
-		connectedAccount: undefined,
+		connectedUser: undefined,
 	},
 ];
 

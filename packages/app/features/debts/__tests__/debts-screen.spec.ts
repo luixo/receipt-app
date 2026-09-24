@@ -288,7 +288,7 @@ test("'debts.getPeersPaged' error shows error message", async ({
 		});
 	});
 	consoleManager.ignore(mockErrorMessage);
-	api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+	api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 
 	await snapshotQueries(
 		async () => {

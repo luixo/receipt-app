@@ -5,7 +5,7 @@ import { describe, expect } from "vitest";
 import type { AppRouter } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { createAuthContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
@@ -22,9 +22,7 @@ describe("errors formatting", () => {
 			const client = getTestClient<typeof router>(ctx, url, {
 				headers: { cookie: `${AUTH_COOKIE}=fake` },
 			});
-			const queryError = await client.account.get
-				.query()
-				.catch((error) => error);
+			const queryError = await client.user.get.query().catch((error) => error);
 			expect(queryError).toBeInstanceOf(TRPCClientError);
 			const typedError = queryError as TRPCClientError<typeof router>;
 			expect(typedError.shape?.data.stack).toMatch(
@@ -36,7 +34,7 @@ describe("errors formatting", () => {
 				data: {
 					code: "UNAUTHORIZED",
 					httpStatus: 401,
-					path: "account.get",
+					path: "user.get",
 					stack: typedError.shape?.data.stack,
 				},
 				input: undefined,
@@ -45,7 +43,7 @@ describe("errors formatting", () => {
 	});
 
 	test("zod error formatting", async ({ ctx }) => {
-		const { sessionId } = await insertAccountWithSession(ctx);
+		const { sessionId } = await insertUserWithSession(ctx);
 		const caller = createCaller(createAuthContext(ctx, sessionId));
 		await expectTRPCError(
 			() => caller.peers.add({ name: "", publicName: "" }),
@@ -75,9 +73,7 @@ test("error is captured", async ({ ctx }) => {
 			},
 			headers: { cookie: `${AUTH_COOKIE}=fake` },
 		});
-		const caughtError = await client.account.get
-			.query()
-			.catch((error) => error);
+		const caughtError = await client.user.get.query().catch((error) => error);
 		expect(caughtError).toBeInstanceOf(TRPCClientError);
 		const errorComponents = (
 			caughtError as TRPCClientError<AppRouter>

@@ -8,31 +8,23 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get all debt intentions",
 		description:
-			"Returns inbound debts from connected peers that are new or differ from the current account's mirrored debt.",
+			"Returns inbound debts from connected peers that are new or differ from the current  user's mirrored debt.",
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
 		const debts = await database
 			.selectFrom("peers")
 			.where((eb) =>
-				eb("peers.connectedAccountId", "=", ctx.auth.accountId).and(
-					"peers.ownerAccountId",
+				eb("peers.connectedUserId", "=", ctx.auth.userId).and(
+					"peers.ownerUserId",
 					"<>",
-					ctx.auth.accountId,
+					ctx.auth.userId,
 				),
 			)
 			.innerJoin("peers as reciprocalPeers", (qb) =>
 				qb
-					.onRef(
-						"reciprocalPeers.ownerAccountId",
-						"=",
-						"peers.connectedAccountId",
-					)
-					.onRef(
-						"reciprocalPeers.connectedAccountId",
-						"=",
-						"peers.ownerAccountId",
-					),
+					.onRef("reciprocalPeers.ownerUserId", "=", "peers.connectedUserId")
+					.onRef("reciprocalPeers.connectedUserId", "=", "peers.ownerUserId"),
 			)
 			.innerJoin("debts as theirDebts", (qb) =>
 				qb.onRef("theirDebts.peerId", "=", "peers.id"),
@@ -40,16 +32,12 @@ export const procedure = authProcedure
 			.leftJoin("debts as selfDebts", (qb) =>
 				qb
 					.onRef("theirDebts.id", "=", "selfDebts.id")
-					.onRef("selfDebts.ownerAccountId", "=", "peers.connectedAccountId"),
+					.onRef("selfDebts.ownerUserId", "=", "peers.connectedUserId"),
 			)
 			.innerJoin("peers as peersMine", (qb) =>
 				qb
-					.onRef(
-						"peersMine.connectedAccountId",
-						"=",
-						"theirDebts.ownerAccountId",
-					)
-					.onRef("peersMine.ownerAccountId", "=", "peers.connectedAccountId"),
+					.onRef("peersMine.connectedUserId", "=", "theirDebts.ownerUserId")
+					.onRef("peersMine.ownerUserId", "=", "peers.connectedUserId"),
 			)
 			.where((eb) =>
 				eb.or([
@@ -71,7 +59,7 @@ export const procedure = authProcedure
 			)
 			.select([
 				"theirDebts.id",
-				"theirDebts.ownerAccountId",
+				"theirDebts.ownerUserId",
 				"theirDebts.timestamp",
 				"theirDebts.updatedAt",
 				"theirDebts.amount",

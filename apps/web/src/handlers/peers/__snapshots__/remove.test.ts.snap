@@ -4,7 +4,7 @@ exports[`peers.remove > functionality > peer is removed 1`] = `
 {
   "deleted": {
     "debts": {
-      "id:d1c71a64-c72f-4cee-89fb-3b9f9d7bb5a8|ownerAccountId:6bd22676-fdd0-4afd-bdd7-a9150fcf481c": undefined,
+      "id:d1c71a64-c72f-4cee-89fb-3b9f9d7bb5a8|ownerUserId:6bd22676-fdd0-4afd-bdd7-a9150fcf481c": undefined,
     },
     "peers": {
       "id:7eb32614-62eb-497d-9121-9451b2f4ab7d": undefined,

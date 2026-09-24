@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"user.get:[[]]": {
+			"state": {
+				"data": {
+					"user": {
+						"id": "eacca0a0-7511-443d-bdf4-b9fa6e75d13e",
+						"email": "Eve_Weissnat0@gmail.com",
+						"verified": false,
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>"
+					},
+					"peer": {
+						"name": "Brad"
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

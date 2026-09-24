@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`user.logout > functionality > session is removed 1`] = `
+{
+  "deleted": {
+    "sessions": {
+      "sessionId:faf6a39d-8f06-48ce-9415-2e5bfadf2c81": undefined,
+    },
+  },
+}
+`;

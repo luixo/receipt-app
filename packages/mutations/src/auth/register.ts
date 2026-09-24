@@ -1,19 +1,19 @@
-import { update as updateAccount } from "../cache/account";
+import { update as updateUser } from "../cache/user";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.register"> = {
 	mutationKey: "auth.register",
 	onSuccess:
 		({ queryClient, trpc }) =>
-		async ({ account: { id, verified } }, variables) => {
+		async ({ user: { id, verified } }, variables) => {
 			await queryClient.invalidateQueries(trpc.pathFilter());
-			updateAccount(
+			updateUser(
 				{ queryClient, trpc },
 				{
 					get: (controller) => {
 						controller.upsert({
 							peer: { name: variables.name },
-							account: {
+							user: {
 								id,
 								email: variables.email,
 								verified,

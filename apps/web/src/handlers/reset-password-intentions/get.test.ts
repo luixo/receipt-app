@@ -3,9 +3,9 @@ import { describe, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertResetPasswordIntention,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -40,8 +40,8 @@ describe("resetPasswordIntentions.get", () => {
 
 		test("intention token is expired", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
-			const { id: accountId } = await insertAccount(ctx);
-			const { token } = await insertResetPasswordIntention(ctx, accountId, {
+			const { id: userId } = await insertUser(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, userId, {
 				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
@@ -57,10 +57,10 @@ describe("resetPasswordIntentions.get", () => {
 	describe("functionality", () => {
 		test("email is returned", async ({ ctx }) => {
 			const {
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			const { token } = await insertResetPasswordIntention(ctx, accountId);
+				userId,
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, userId);
 			const caller = createCaller(createContext(ctx));
 			const result = await caller.procedure({ token });
 			expect(result).toStrictEqual<typeof result>({ email });

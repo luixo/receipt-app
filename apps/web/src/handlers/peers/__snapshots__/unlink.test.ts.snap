@@ -1,15 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`peers.unlink > functionality > account is unlinked from a peer 1`] = `
+exports[`peers.unlink > functionality > user is unlinked from a peer 1`] = `
 {
   "updated": {
     "peers": {
-      "id:3415eb75-b08f-4667-9964-f0f3eac997e4": {
-        "connectedAccountId": null,
+      "id:35448dd9-5303-4a36-8ab7-28cb0892f277": {
+        "connectedUserId": null,
         "updatedAt": "2020-01-01 00:01:00+00",
       },
-      "id:3573f239-bee1-4e68-9d43-5254415a2644": {
-        "connectedAccountId": null,
+      "id:e6b4b8f7-49f2-4459-a807-2c9f6730dfb1": {
+        "connectedUserId": null,
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

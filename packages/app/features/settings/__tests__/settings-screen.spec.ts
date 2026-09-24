@@ -17,7 +17,7 @@ test.describe("Language", () => {
 		cookieManager,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		await expect(languageSelectButton).toHaveText("English");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -66,7 +66,7 @@ test.describe("Color mode", () => {
 		cookieManager,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		await expect(colorModeAutoCheckbox).toBeChecked();
 		await expect(colorModeSwitch).toBeDisabled();
@@ -118,7 +118,7 @@ test.describe("Show resolved debts", () => {
 		page,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		await expect(showResolvedDebtsSwitch).not.toBeChecked();
 		expect(await cookieManager.getCookie(SETTINGS_STORE_NAME)).toBeUndefined();
@@ -149,7 +149,7 @@ test.describe("Default limit", () => {
 		cookieManager,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		await expect(limitSelectButton).toHaveText("Items per page");
 		expect(await cookieManager.getCookie(LIMIT_STORE_NAME)).toBeUndefined();
@@ -177,7 +177,7 @@ test.describe("Default limit", () => {
 });
 
 test.describe("Manually accept debts", () => {
-	test("'accountSettings.update' mutation success", async ({
+	test("'userSettings.update' mutation success", async ({
 		api,
 		page,
 		manualAcceptDebtsSwitch,
@@ -186,21 +186,21 @@ test.describe("Manually accept debts", () => {
 		verifyToastTexts,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		await expect(manualAcceptDebtsSwitch).not.toBeChecked();
-		api.mockFirst("accountSettings.update", undefined);
+		api.mockFirst("userSettings.update", undefined);
 
 		await snapshotQueries(async () => {
 			await manualAcceptDebtsSwitch.click();
-			await awaitCacheKey("accountSettings.update");
+			await awaitCacheKey("userSettings.update");
 			await verifyToastTexts();
 		});
 
 		await expect(manualAcceptDebtsSwitch).toBeChecked();
 	});
 
-	test("'accountSettings.update' mutation pending / error", async ({
+	test("'userSettings.update' mutation pending / error", async ({
 		api,
 		page,
 		manualAcceptDebtsSwitch,
@@ -212,26 +212,26 @@ test.describe("Manually accept debts", () => {
 		withLoader,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 		const pause = api.createPause();
-		api.mockFirst("accountSettings.update", async () => {
+		api.mockFirst("userSettings.update", async () => {
 			await pause.promise;
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Mock "accountSettings.update" error`,
+				message: `Mock "userSettings.update" error`,
 			});
 		});
 		const switchWithLoader = withLoader(manualAcceptDebtsSwitch);
 		await expect(switchWithLoader).toBeHidden();
-		await awaitCacheKey("accountSettings.get");
+		await awaitCacheKey("userSettings.get");
 
 		await snapshotQueries(
 			async () => {
 				await manualAcceptDebtsSwitch.click();
 				await expect(manualAcceptDebtsSwitch).toBeDisabled();
 				await expect(switchWithLoader).toBeVisible();
-				await awaitCacheKey("accountSettings.update", { pending: 1 });
+				await awaitCacheKey("userSettings.update", { pending: 1 });
 			},
 			{ name: "loading" },
 		);
@@ -239,9 +239,9 @@ test.describe("Manually accept debts", () => {
 		await snapshotQueries(
 			async () => {
 				pause.resolve();
-				await awaitCacheKey("accountSettings.update", { error: 1 });
+				await awaitCacheKey("userSettings.update", { error: 1 });
 				await verifyToastTexts(
-					`Account settings update failed: Mock "accountSettings.update" error`,
+					`Your settings update failed: Mock "userSettings.update" error`,
 				);
 			},
 			{ name: "error" },
@@ -249,7 +249,7 @@ test.describe("Manually accept debts", () => {
 
 		await expect(manualAcceptDebtsSwitch).not.toBeChecked();
 		await expect(
-			errorMessage(`Mock "accountSettings.update" error`),
+			errorMessage(`Mock "userSettings.update" error`),
 		).toBeVisible();
 
 		await manualAcceptDebtsResetButton.click();
@@ -265,10 +265,10 @@ test.describe("Refresh", () => {
 		snapshotQueries,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		await page.navigate({ to: "/settings" });
 
-		// Refetches everything currently mounted, e.g. `accountSettings.get`
+		// Refetches everything currently mounted, e.g. `userSettings.get`
 		await snapshotQueries(async () => {
 			await refreshButton.click();
 		});

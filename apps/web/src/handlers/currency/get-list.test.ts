@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
@@ -17,7 +17,7 @@ describe("currency.getList", () => {
 
 	describe("functionality", () => {
 		test(`list returned`, async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toMatchSnapshot();

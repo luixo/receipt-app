@@ -8,7 +8,7 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Get reset password intention",
 		description:
-			"Returns the account email for a valid, unexpired reset password token.",
+			"Returns the  user email for a valid, unexpired reset password token.",
 	})
 	.input(
 		z.strictObject({
@@ -26,8 +26,8 @@ export const procedure = unauthProcedure
 					Temporal.Now.zonedDateTimeISO(),
 				),
 			)
-			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
+			.innerJoin("users", (qb) =>
+				qb.onRef("users.id", "=", "resetPasswordIntentions.userId"),
 			)
 			.select("email")
 			.limit(1)

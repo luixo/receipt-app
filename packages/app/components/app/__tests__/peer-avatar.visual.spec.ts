@@ -6,7 +6,7 @@ import { test as peerAvatarFixture } from "./peer-avatar.utils";
 
 const test = mergeTests(receiptTest, peerAvatarFixture);
 
-test("Generated avatar (no connected account)", async ({
+test("Generated avatar (no connected  user)", async ({
 	faker,
 	mockReceipt,
 	openReceipt,
@@ -22,7 +22,7 @@ test("Generated avatar (no connected account)", async ({
 				id: peerId,
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: undefined,
+				connectedUser: undefined,
 			},
 		],
 		generateReceiptItems: () => [],
@@ -40,7 +40,7 @@ test("Generated avatar (no connected account)", async ({
 	});
 });
 
-test("Connected account image", async ({
+test("Connected  user image", async ({
 	faker,
 	mockReceipt,
 	openReceipt,
@@ -54,7 +54,7 @@ test("Connected account image", async ({
 		id: faker.string.uuid(),
 		name: faker.person.fullName(),
 		publicName: undefined,
-		connectedAccount: {
+		connectedUser: {
 			id: faker.string.uuid(),
 			email: faker.internet.email(),
 			avatarUrl: mockAvatar,
@@ -68,7 +68,7 @@ test("Connected account image", async ({
 		],
 	});
 	await openReceipt(receipt);
-	await expectScreenshotWithSchemes("connected-account.png", {
+	await expectScreenshotWithSchemes("connected- user.png", {
 		locator: peerAvatar.last(),
 	});
 });

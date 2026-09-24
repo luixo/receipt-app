@@ -9,10 +9,10 @@ export const Route = createFileRoute("/_protected/admin")({
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("admin");
 		const trpc = getLoaderTrpcClient(ctx.context);
-		const account = await ctx.context.queryClient.fetchQuery(
-			trpc.account.get.queryOptions(),
+		const user = await ctx.context.queryClient.fetchQuery(
+			trpc.user.get.queryOptions(),
 		);
-		if (account.account.role !== "admin") {
+		if (user.user.role !== "admin") {
 			// oxlint-disable-next-line typescript/only-throw-error
 			throw redirect({ to: "/" });
 		}

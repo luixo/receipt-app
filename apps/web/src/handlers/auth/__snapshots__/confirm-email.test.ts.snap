@@ -5,15 +5,15 @@ exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
   "added": {
     "sessions": {
       "sessionId:54e49148-5318-46ad-8fb5-743e18fa67ca": {
-        "accountId": "97594d2d-5a16-4d2b-9414-77c59ae1c35b",
         "createdAt": "2020-01-01 00:00:00+00",
         "expirationTimestamp": "2020-01-31 00:00:00+00",
         "sessionId": "54e49148-5318-46ad-8fb5-743e18fa67ca",
+        "userId": "97594d2d-5a16-4d2b-9414-77c59ae1c35b",
       },
     },
   },
   "updated": {
-    "accounts": {
+    "users": {
       "id:97594d2d-5a16-4d2b-9414-77c59ae1c35b": {
         "confirmationToken": null,
         "confirmationTokenTimestamp": null,

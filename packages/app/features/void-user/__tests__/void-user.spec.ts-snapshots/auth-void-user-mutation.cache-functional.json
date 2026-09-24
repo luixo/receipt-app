@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"auth.voidUser": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"auth.voidUser\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"token": "00ff15b7-b030-42b2-9dc3-c28247922444"
+					}
+				}
+			}
+		]
+	}
+}

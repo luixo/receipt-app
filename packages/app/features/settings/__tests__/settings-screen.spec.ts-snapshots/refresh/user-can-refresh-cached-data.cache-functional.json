@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"accountSettings.get:[[]]": {
+		"userSettings.get:[[]]": {
 			"state": {
 				"dataUpdateCount": 1
 			}

@@ -24,21 +24,21 @@ export const procedure = unauthProcedure
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const result = await database
-			.selectFrom("accounts")
+			.selectFrom("users")
 			.where("email", "=", input.email.lowercase)
 			.innerJoin("peers", (qb) =>
-				qb.onRef("peers.connectedAccountId", "=", "accounts.id"),
+				qb.onRef("peers.connectedUserId", "=", "users.id"),
 			)
-			.whereRef("peers.id", "=", "peers.connectedAccountId")
+			.whereRef("peers.id", "=", "peers.connectedUserId")
 			.select([
-				"accounts.id as accountId",
-				"accounts.email",
-				"accounts.passwordSalt",
-				"accounts.passwordHash",
-				"accounts.role",
+				"users.id as userId",
+				"users.email",
+				"users.passwordSalt",
+				"users.passwordHash",
+				"users.role",
 				"peers.name",
-				"accounts.confirmationToken",
-				"accounts.avatarUrl",
+				"users.confirmationToken",
+				"users.avatarUrl",
 			])
 			.limit(1)
 			.executeTakeFirst();
@@ -64,15 +64,15 @@ export const procedure = unauthProcedure
 		}
 		const { authToken, expirationDate } = await createAuthorizationSession(
 			ctx,
-			result.accountId,
+			result.userId,
 		);
 		ctx.logger.debug(
 			`Authentication of account "${input.email.original}" succeed.`,
 		);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
-			account: {
-				id: result.accountId,
+			user: {
+				id: result.userId,
 				verified: !result.confirmationToken,
 				avatarUrl: result.avatarUrl || undefined,
 				role: result.role ?? undefined,

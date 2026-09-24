@@ -8,7 +8,7 @@ import { cn } from "~components/utils";
 import type { PeerId } from "~db/ids";
 
 export const SkeletonPeer: React.FC<
-	Omit<Props, "id" | "name" | "connectedAccount" | "avatarProps">
+	Omit<Props, "id" | "name" | "connectedUser" | "avatarProps">
 > = ({ className, ...props }) => (
 	<RawUser
 		{...props}
@@ -25,13 +25,13 @@ export const SkeletonPeer: React.FC<
 export type Props = {
 	id: PeerId;
 	name: string;
-	connectedAccount?: PeerType["connectedAccount"];
+	connectedUser?: PeerType["connectedUser"];
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const Peer: React.FC<Props> = ({
 	id,
 	name,
-	connectedAccount,
+	connectedUser,
 	className,
 	avatarProps: rawAvatarProps,
 	...props
@@ -41,9 +41,9 @@ export const Peer: React.FC<Props> = ({
 		testID="peer"
 		className={cn("text-foreground", className)}
 		name={name}
-		description={connectedAccount?.email}
+		description={connectedUser?.email}
 		avatarProps={{
-			...getPeerAvatarProps({ id, connectedAccount }),
+			...getPeerAvatarProps({ id, connectedUser }),
 			...rawAvatarProps,
 		}}
 	/>

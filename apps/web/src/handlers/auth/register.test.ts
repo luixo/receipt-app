@@ -8,7 +8,7 @@ import {
 	MIN_USERNAME_LENGTH,
 } from "~app/utils/validation";
 import { createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
@@ -102,8 +102,8 @@ describe("auth.register", () => {
 		test("email already exist", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const {
-				account: { email: existingEmail },
-			} = await insertAccountWithSession(ctx);
+				user: { email: existingEmail },
+			} = await insertUserWithSession(ctx);
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -129,9 +129,9 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(result.account.id).toMatch(UUID_REGEX);
+			expect(result.user.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
-				account: { id: result.account.id, verified: true },
+				user: { id: result.user.id, verified: true },
 			});
 			const responseHeaders = [...context.resHeaders.entries()];
 			const setCookieTuple = responseHeaders.find(
@@ -162,7 +162,7 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(result.account.verified).toStrictEqual(false);
+			expect(result.user.verified).toStrictEqual(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.emailOptions.mock.getMessages();
 			assert(message);

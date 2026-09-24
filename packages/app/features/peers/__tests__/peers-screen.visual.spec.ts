@@ -48,11 +48,11 @@ test("Connections badge", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	await mockBase();
-	api.mockFirst("accountConnectionIntentions.getAll", {
+	api.mockFirst("userConnectionIntentions.getAll", {
 		inbound: Array.from(
 			{ length: faker.number.int({ min: 3, max: 6 }) },
 			() => ({
-				account: {
+				user: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
 				},
@@ -61,7 +61,7 @@ test("Connections badge", async ({
 		outbound: [],
 	});
 	await page.navigate({ to: "/peers" });
-	await awaitCacheKey("accountConnectionIntentions.getAll");
+	await awaitCacheKey("userConnectionIntentions.getAll");
 	await expectScreenshotWithSchemes("connections-badge.png", {
 		locator: [headerAside, connectionsBadge],
 	});

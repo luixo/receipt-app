@@ -25,8 +25,8 @@ export const ConfirmEmailEmail: React.FC<Props> = ({ token }) => {
 				{t("confirmEmail.confirm")}
 			</Button>
 			<Text>{t("confirmEmail.notRegistered")}</Text>
-			<Button navigate={{ to: "/void-account", search: { token } }}>
-				{t("confirmEmail.voidAccount")}
+			<Button navigate={{ to: "/void-user", search: { token } }}>
+				{t("confirmEmail.voidUser")}
 			</Button>
 		</EmailLayout>
 	);

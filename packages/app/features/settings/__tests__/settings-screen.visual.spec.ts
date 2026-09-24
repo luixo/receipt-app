@@ -6,7 +6,7 @@ import { test } from "./utils";
 
 test.beforeEach(async ({ api, page }) => {
 	await api.mockUtils.authPage();
-	api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+	api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 	await page.navigate({ to: "/settings" });
 });
 
@@ -23,7 +23,7 @@ test("Manual accept debts mutation loading state", async ({
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
 	const pause = api.createPause();
-	api.mockFirst("accountSettings.update", async () => {
+	api.mockFirst("userSettings.update", async () => {
 		await pause.promise;
 	});
 	await manualAcceptDebtsSwitch.click();
@@ -44,16 +44,16 @@ test("Manual accept debts mutation error state", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	api.mockFirst("accountSettings.update", () => {
+	api.mockFirst("userSettings.update", () => {
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
-			message: `Mock "accountSettings.update" error`,
+			message: `Mock "userSettings.update" error`,
 		});
 	});
 	await manualAcceptDebtsSwitch.click();
-	await awaitCacheKey("accountSettings.update", { error: 1 });
+	await awaitCacheKey("userSettings.update", { error: 1 });
 	await verifyToastTexts(
-		`Account settings update failed: Mock "accountSettings.update" error`,
+		`Your settings update failed: Mock "userSettings.update" error`,
 	);
 	await expectScreenshotWithSchemes("manual-accept-debts-error.png", {
 		locator: errorMessage(),

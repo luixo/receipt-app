@@ -1,0 +1,126 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`userConnectionIntentions.accept > functionality > auto-accepted debts > both are auto-accepted 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:7d12f3b3-df37-437f-b3c7-ea2b605dc97f|ownerUserId:abe3f702-b036-4293-972b-f7c1a164d9cd": {
+        "amount": "-572.3600",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "currencyCode": "BDT",
+        "id": "7d12f3b3-df37-437f-b3c7-ea2b605dc97f",
+        "note": "Capillus voluptate caelum adamo vorax cibus callide amplexus celer conventus.",
+        "ownerUserId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
+        "peerId": "9de5bd27-b8d8-46a6-a55c-a05f98926c07",
+        "receiptId": null,
+        "timestamp": "2020-01-01",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+      "id:ff41c2ae-f6cd-42ef-a4b6-84eb43292461|ownerUserId:6cd26971-98bb-4120-808c-36555ab43ede": {
+        "amount": "-334.6900",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "currencyCode": "BOB",
+        "id": "ff41c2ae-f6cd-42ef-a4b6-84eb43292461",
+        "note": "Sint speculum tepesco vomica soleo adflicto colligo.",
+        "ownerUserId": "6cd26971-98bb-4120-808c-36555ab43ede",
+        "peerId": "5bfaa329-134b-441e-a055-d9918cb8660f",
+        "receiptId": null,
+        "timestamp": "2020-01-01",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+  "updated": {
+    "peers": {
+      "id:5bfaa329-134b-441e-a055-d9918cb8660f": {
+        "connectedUserId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.accept > functionality > auto-accepted debts > foreign  user auto accepts 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:13990d75-a4bc-4362-b25e-584a75f1647d|ownerUserId:f0f4b79f-f569-41d9-95e6-8539b0e7f7da": {
+        "amount": "158.6900",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "currencyCode": "CZK",
+        "id": "13990d75-a4bc-4362-b25e-584a75f1647d",
+        "note": "Et ulterius denuncio vereor omnis.",
+        "ownerUserId": "f0f4b79f-f569-41d9-95e6-8539b0e7f7da",
+        "peerId": "e484109b-1e5b-42ae-aad1-0e0eddffa2be",
+        "receiptId": null,
+        "timestamp": "2020-01-01",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+  "updated": {
+    "peers": {
+      "id:a399fde5-0b88-4827-93e5-48c213cbda44": {
+        "connectedUserId": "f0f4b79f-f569-41d9-95e6-8539b0e7f7da",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.accept > functionality > auto-accepted debts > none are auto-accepted 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:20546404-a1a4-4d97-b382-7de80b3d9d10": {
+        "connectedUserId": "11294055-863e-4d7b-93b0-42aabfa4d3d5",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.accept > functionality > auto-accepted debts > self  user auto accepts 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:5b9ec2be-0752-4699-926d-c16f8c873b2d|ownerUserId:7dbca6dd-b645-4440-a3b9-d316c23f99b7": {
+        "amount": "24.1600",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "currencyCode": "XAF",
+        "id": "5b9ec2be-0752-4699-926d-c16f8c873b2d",
+        "note": "Acidus sapiente causa sonitus administratio.",
+        "ownerUserId": "7dbca6dd-b645-4440-a3b9-d316c23f99b7",
+        "peerId": "d33cfc01-739e-451a-b03f-e0af473b7499",
+        "receiptId": null,
+        "timestamp": "2020-01-01",
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+  },
+  "updated": {
+    "peers": {
+      "id:d33cfc01-739e-451a-b03f-e0af473b7499": {
+        "connectedUserId": "bbd998db-d059-47a2-b221-3af11785e8ec",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.accept > functionality > user connection intention is accepted 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:8d688d12-9872-4c00-a543-89bf6142a7be": {
+        "connectedUserId": "b3a50a29-bb52-46c6-826a-2c0b0563d86c",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;

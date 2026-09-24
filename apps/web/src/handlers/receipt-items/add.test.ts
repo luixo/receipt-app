@@ -4,11 +4,11 @@ import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -55,9 +55,9 @@ describe("receiptItems.add", () => {
 		);
 
 		test("receipt does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(fakeReceiptId)),
@@ -66,39 +66,31 @@ describe("receiptItems.add", () => {
 			);
 		});
 
-		test("receipt is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } =
-				await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+		test("receipt is not owned by an  user", async ({ ctx }) => {
+			const { sessionId, userId, user } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
-				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}"`,
+				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${user.email}"`,
 			);
 		});
 
 		test("receipt role is lower than editor", async ({ ctx }) => {
-			const { sessionId, accountId, account } =
-				await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+			const { sessionId, userId, user } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
 			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-				foreignAccountId,
-				accountId,
+				foreignUserId,
+				userId,
 			]);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
@@ -110,14 +102,14 @@ describe("receiptItems.add", () => {
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
-				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}" with role "viewer"`,
+				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${user.email}" with role "viewer"`,
 			);
 		});
 
 		test("mixed success and fail", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			const fakeReceiptId = faker.string.uuid();
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -141,18 +133,15 @@ describe("receiptItems.add", () => {
 
 	describe("functionality", () => {
 		test("items are added", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
 			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-				foreignAccountId,
-				accountId,
+				foreignUserId,
+				userId,
 			]);
 
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
@@ -161,8 +150,8 @@ describe("receiptItems.add", () => {
 			);
 
 			// Verify unrelated data doesn't affect the result
-			await insertReceipt(ctx, accountId);
-			await insertReceipt(ctx, foreignAccountId);
+			await insertReceipt(ctx, userId);
+			await insertReceipt(ctx, foreignUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>

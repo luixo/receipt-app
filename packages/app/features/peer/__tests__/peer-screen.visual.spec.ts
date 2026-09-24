@@ -28,7 +28,7 @@ test("Filled state", async ({
 		return {
 			...targetPeer,
 			publicName: "Public nickname",
-			connectedAccount: {
+			connectedUser: {
 				id: faker.string.uuid(),
 				email: "connected@example.com",
 				avatarUrl: undefined,

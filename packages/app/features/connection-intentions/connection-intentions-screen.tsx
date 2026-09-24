@@ -46,7 +46,7 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 		const { t } = useTranslation("peers");
 		const trpc = useTRPC();
 		const { data } = useSuspenseQuery(
-			trpc.accountConnectionIntentions.getAll.queryOptions(),
+			trpc.userConnectionIntentions.getAll.queryOptions(),
 		);
 		if (data.inbound.length === 0 && data.outbound.length === 0) {
 			return <EmptyCard title={t("intentions.emptyTitle")} />;
@@ -57,7 +57,7 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 					<ConnectionsWrapper type="inbound">
 						{data.inbound.map((intention) => (
 							<InboundConnectionIntention
-								key={intention.account.id}
+								key={intention.user.id}
 								intention={intention}
 							/>
 						))}
@@ -67,7 +67,7 @@ const ConnectionIntentions: React.FC = suspendedFallback(
 					<ConnectionsWrapper type="outbound">
 						{data.outbound.map((intention) => (
 							<OutboundConnectionIntention
-								key={intention.account.id}
+								key={intention.user.id}
 								intention={intention}
 							/>
 						))}
