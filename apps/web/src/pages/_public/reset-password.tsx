@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_public/reset-password")({
 	loaderDeps: (opts) => ({ token: opts.search.token }),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("reset-password");
-		const trpc = await getLoaderTrpcClient(ctx.context);
+		const trpc = getLoaderTrpcClient(ctx.context);
 		if (ctx.deps.token) {
 			await ctx.context.queryClient.prefetchQuery(
 				trpc.resetPasswordIntentions.get.queryOptions({

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/debts/$id")({
 	component: DebtScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("debts");
-		const trpc = await getLoaderTrpcClient(ctx.context);
+		const trpc = getLoaderTrpcClient(ctx.context);
 		const debt = await ctx.context.queryClient.fetchQuery(
 			trpc.debts.get.queryOptions({ id: ctx.params.id }),
 		);

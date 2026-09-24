@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import type { router } from "~web/handlers/index";
-import { getApiTrpcClient } from "~web/utils/server/trpc";
+import { getApiTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/api/utils/cleanup")({
 	server: {

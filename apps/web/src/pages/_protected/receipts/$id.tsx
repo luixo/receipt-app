@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/receipts/$id")({
 	component: ReceiptScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("receipts");
-		const trpc = await getLoaderTrpcClient(ctx.context);
+		const trpc = getLoaderTrpcClient(ctx.context);
 		const receipt = await ctx.context.queryClient.fetchQuery(
 			trpc.receipts.get.queryOptions({ id: ctx.params.id }),
 		);
