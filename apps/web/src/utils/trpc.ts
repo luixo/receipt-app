@@ -1,5 +1,8 @@
 import { createIsomorphicFn } from "@tanstack/react-start";
-import { createTRPCClient } from "@trpc/client";
+import {
+	createTRPCClient,
+	unstable_localLink as localLink,
+} from "@trpc/client";
 import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { fromEntries } from "remeda";
@@ -8,8 +11,10 @@ import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
 import { getLinks } from "~app/utils/trpc";
 import type { GetLinksOptions } from "~app/utils/trpc";
+import { transformer } from "~utils/transformer";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
+import { createServerContext } from "~web/utils/server/trpc";
 
 const getServerLinksParams = (
 	request: Request,
@@ -22,7 +27,6 @@ const getServerLinksParams = (
 		debug: Boolean(url.searchParams.get("debug")),
 		headers: fromEntries([...request.headers.entries()]),
 		source,
-		keepError: Boolean(import.meta.env.VITEST),
 		captureError: captureSentryError,
 	};
 };
@@ -43,6 +47,20 @@ const getClientLinksParams = (
 };
 /* c8 ignore stop */
 
+export const getServerTrpcClient = <R extends AnyRouter = AppRouter>(
+	router: R,
+	req: Request,
+) =>
+	createTRPCClient<R>({
+		links: [
+			localLink({
+				router,
+				transformer,
+				createContext: () => Promise.resolve(createServerContext(req)),
+			}),
+		],
+	});
+
 const getIsomorphicLinkParams = createIsomorphicFn()
 	.server((request: Request | null): GetLinksOptions =>
 		// oxlint-disable-next-line typescript/no-non-null-assertion
@@ -51,13 +69,6 @@ const getIsomorphicLinkParams = createIsomorphicFn()
 	/* c8 ignore start */
 	.client((): GetLinksOptions => getClientLinksParams("csr-loader"));
 /* c8 ignore stop */
-
-export const getApiTrpcClient = <R extends AnyRouter = AnyRouter>(
-	request: Request,
-) =>
-	createTRPCClient<R>({
-		links: getLinks(getServerLinksParams(request, "api")),
-	});
 
 export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 	context: Pick<RouterContext, "queryClient" | "request">,
