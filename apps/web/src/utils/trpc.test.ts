@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { getApiTrpcClient } from "@ra/web/src/utils/server/trpc";
 import { QueryClient } from "@tanstack/react-query";
 import { fromEntries, pick } from "remeda";
 import { describe, expect, vi } from "vitest";
@@ -7,7 +8,7 @@ import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
 
-import { getApiTrpcClient, getLoaderTrpcClient } from "./trpc";
+import { getLoaderTrpcClient } from "./trpc";
 
 const router = t.router({
 	getHeaders: t.procedure.query(({ ctx }) =>

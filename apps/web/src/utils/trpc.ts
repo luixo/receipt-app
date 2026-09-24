@@ -10,7 +10,7 @@ import { getLinks } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
-const getLinksParamsFromRequest = (
+export const getLinksParamsFromRequest = (
 	request: Request,
 	source: GetLinksOptions["source"],
 ) => {
@@ -49,10 +49,3 @@ export const getLoaderTrpcClient = async <R extends AnyRouter = AppRouter>(
 		queryClient: context.queryClient,
 	});
 };
-
-export const getApiTrpcClient = <R extends AnyRouter = AppRouter>(
-	req: Request,
-) =>
-	createTRPCClient<R>({
-		links: getLinks(getLinksParamsFromRequest(req, "api")),
-	});
