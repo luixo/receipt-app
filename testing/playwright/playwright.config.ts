@@ -4,6 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
 
 import {
+	coverageDir,
 	localSettings,
 	serverName,
 	serverSettings,
@@ -101,6 +102,9 @@ export default defineConfig({
 
 		timezoneId: localSettings.timezone,
 		locale: localSettings.locale,
+
+		// For environments with a TLS-intercepting proxy (e.g. sandboxes), external resources like fonts fail otherwise
+		ignoreHTTPSErrors: Boolean(process.env.PW_IGNORE_HTTPS_ERRORS),
 	},
 	build: {
 		jsxImportSource: "react",
@@ -124,12 +128,7 @@ export default defineConfig({
 			PORT: urlSettings.port.toString(),
 			PLAYWRIGHT: "true",
 			...(process.env.COVERAGE
-				? {
-						NODE_V8_COVERAGE: path.join(
-							rootDir,
-							"testing/playwright/coverage/data/server",
-						),
-					}
+				? { NODE_V8_COVERAGE: path.join(coverageDir, "raw/server") }
 				: {}),
 		},
 		name: serverName,

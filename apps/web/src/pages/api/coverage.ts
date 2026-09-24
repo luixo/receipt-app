@@ -3,11 +3,9 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import { stopCoverage, takeCoverage } from "node:v8";
 
-import { mapV8Coverage, mergeCoverageMaps } from "~utils/server/coverage";
 import { env } from "~web/utils/env";
 
-// oxlint-disable-next-line func-style
-async function* getCoverage() {
+const getCoverage = async () => {
 	const serverCoveragePath = env.NODE_V8_COVERAGE;
 	if (!serverCoveragePath) {
 		throw new Error(
@@ -24,14 +22,11 @@ async function* getCoverage() {
 		if (!serverFile.endsWith(".json")) {
 			continue;
 		}
-		yield* mapV8Coverage(
-			JSON.parse(
-				await fs.readFile(path.join(serverCoveragePath, serverFile), "utf8"),
-			) as Parameters<typeof mapV8Coverage>[0],
-		);
+		return fs.readFile(path.join(serverCoveragePath, serverFile), "utf8");
 	}
-}
+};
 
+// Flushes V8 coverage to `NODE_V8_COVERAGE` directory, it is processed by the test runner
 export const Route = createFileRoute("/api/coverage")({
 	server: {
 		handlers: {
@@ -39,10 +34,14 @@ export const Route = createFileRoute("/api/coverage")({
 				if (!env.PLAYWRIGHT) {
 					return new Response(null, { status: 404 });
 				}
+				if (!env.NODE_V8_COVERAGE) {
+					throw new Error(
+						"Expected to have NODE_V8_COVERAGE when coverage is called",
+					);
+				}
 				takeCoverage();
 				stopCoverage();
-				const coverageData = await mergeCoverageMaps(getCoverage());
-				return Response.json(coverageData.data);
+				return new Response(await getCoverage());
 			},
 		},
 	},

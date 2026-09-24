@@ -142,7 +142,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: frontend-coverage-${{ matrix.shardIndex }}
-          path: testing/playwright/coverage/data/total-coverage.json
+          path: testing/playwright/coverage/data
           retention-days: 1
           if-no-files-found: error
 
@@ -182,7 +182,7 @@ jobs:
       - name: Download coverage data from shards
         uses: actions/download-artifact@v8
         with:
-          path: frontend-coverage
+          path: testing/playwright/coverage
           pattern: frontend-coverage-*
       - name: Merge coverage reports
         run: bun frontend:merge-coverage
@@ -190,9 +190,9 @@ jobs:
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           name: frontend
-          working-directory: testing/playwright
-          json-summary-path: coverage/report/coverage-summary.json
-          json-final-path: coverage/report/coverage-final.json
+          working-directory: testing/playwright/coverage/report
+          json-summary-path: coverage-summary.json
+          json-final-path: coverage-final.json
       - name: Upload frontend coverage report
         uses: actions/upload-artifact@v7
         with:

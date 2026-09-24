@@ -79,6 +79,8 @@ const config = defineConfig(({ mode }) => ({
 		nitro({
 			preset: mode === "test" ? "node-server" : "bun",
 			sourcemap: mode === "test",
+			buildDir:
+				mode === "test" ? path.join(webDir, ".output/.nitro") : undefined,
 			experimental: mode === "test" ? { sourcemapMinify: false } : undefined,
 			output: { dir: path.join(webDir, ".output") },
 			publicAssets: [{ dir: path.join(webDir, "public"), maxAge: 0 }],
