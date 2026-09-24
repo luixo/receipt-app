@@ -26,8 +26,9 @@ const getLinksParamsFromRequest = (
 	};
 };
 
-export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
+export const getLoaderTrpcClient = async <R extends AnyRouter = AppRouter>(
 	context: Pick<RouterContext, "queryClient" | "request">,
+	// oxlint-disable-next-line typescript/require-await
 ) => {
 	const linksParams = context.request
 		? /* c8 ignore start */

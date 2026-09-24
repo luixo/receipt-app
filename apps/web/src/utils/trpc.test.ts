@@ -49,7 +49,7 @@ describe("loader call", () => {
 			vi.stubEnv("BASE_URL", url.toString());
 			const queryClient = new QueryClient();
 			url.searchParams.set("debug", "true");
-			const client = getLoaderTrpcClient<typeof router>({
+			const client = await getLoaderTrpcClient<typeof router>({
 				queryClient,
 				request: new Request(url),
 			});

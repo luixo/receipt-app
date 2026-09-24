@@ -19,7 +19,7 @@ export const Route = createFileRoute("/_protected/receipts/")({
 	}),
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("receipts");
-		const trpc = getLoaderTrpcClient(ctx.context);
+		const trpc = await getLoaderTrpcClient(ctx.context);
 		const prefetched = await prefetchQueriesWith(
 			ctx,
 			() =>

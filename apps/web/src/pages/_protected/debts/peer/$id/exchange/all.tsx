@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_protected/debts/peer/$id/exchange/all")(
 			if (!import.meta.env.SSR) {
 				return;
 			}
-			const trpc = getLoaderTrpcClient(ctx.context);
+			const trpc = await getLoaderTrpcClient(ctx.context);
 			const debts = await ctx.context.queryClient.fetchQuery(
 				trpc.debts.getAllPeer.queryOptions({ peerId: ctx.params.id }),
 			);

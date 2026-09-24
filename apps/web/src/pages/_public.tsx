@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_public")({
 		if (!context.request) {
 			return;
 		}
-		const trpc = getLoaderTrpcClient(context);
+		const trpc = await getLoaderTrpcClient(context);
 		try {
 			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
 		} catch (error) {
