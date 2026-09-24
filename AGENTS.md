@@ -26,6 +26,7 @@ Bun monorepo: a TanStack Start web app and an Expo mobile app sharing one tRPC b
 All packages from `packages` are referred as `~package/*` (e.g. `packages/foo/bar.ts` is `~foo/bar`)
 
 - `packages/utils/**` - low-level shared tools
+- `packages/coverage/**` - frontend (Playwright) coverage: V8 client & server coverage projected onto istanbul maps of original sources
 - `packages/db/**` - database migrations, types and Kysely instance generator
 - `packages/components/**` - design system
 - `packages/mutations/**` - mutation descriptors and cache controllers (see `@.docs/mutations.md` for details)

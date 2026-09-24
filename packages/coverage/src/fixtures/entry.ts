@@ -1,0 +1,30 @@
+import {
+	Box,
+	curried,
+	earlyExit,
+	guarded,
+	inlined,
+	kind,
+	neverCalled,
+	neverRuns,
+	pick,
+} from "./sample";
+
+(globalThis as Record<string, unknown>).coverageResults = [
+	pick(7),
+	pick(3),
+	pick(0),
+	curried(1),
+	Box.create(),
+	kind("b"),
+	kind("z"),
+	kind("z"),
+	neverCalled,
+	earlyExit(true),
+	earlyExit(true),
+	guarded(true),
+	guarded(true),
+	neverRuns,
+	inlined(1),
+	inlined(2),
+];

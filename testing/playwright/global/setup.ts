@@ -1,21 +1,24 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
-import type { CoverageMapData } from "istanbul-lib-coverage";
-import { entries, isNonNullish, keys } from "remeda";
+import * as fs from "node:fs/promises";
+import path from "node:path";
+import { entries, isNonNullish } from "remeda";
 
-import { urlSettings } from "~tests/frontend/consts";
-import { getIgnoredIndex } from "~tests/frontend/fixtures/console";
+import type { NodeV8Coverage } from "~coverage/index";
 import {
+	fromNodeV8Coverage,
+	fromPlaywrightCoverage,
 	generateCoverageReport,
-	prepareCoverageEnv,
-} from "~tests/frontend/global/coverage";
+	mergeCoverageMaps,
+} from "~coverage/index";
+import { coverageDir, urlSettings } from "~tests/frontend/consts";
+import { getIgnoredIndex } from "~tests/frontend/fixtures/console";
 import { promisifyServer } from "~utils/promise";
-import { mapJsCoverage } from "~utils/server/coverage";
 import { baseLogger } from "~web/providers/logger";
 
 import {
 	appRouter,
-	coverageData as clientCoverage,
+	coverageData as rawClientCoverage,
 	testErrorEntries,
 } from "./router";
 
@@ -34,15 +37,15 @@ const getServerCoverage = async () => {
 	if (!response.ok) {
 		throw new Error(`Failed to stop server coverage: ${response.status}`);
 	}
-	return (await response.json()) as CoverageMapData;
+	return fromNodeV8Coverage((await response.json()) as NodeV8Coverage);
 };
 
 const UNKNOWN_IDS = new Set(["unknown", "no-test-id"]);
 const handleErrors = () => {
 	const unknownErrors = entries(testErrorEntries)
-		.flatMap(([key, values]) =>
+		.flatMap(([key, subEntries]) =>
 			// oxlint-disable-next-line typescript/no-non-null-assertion
-			UNKNOWN_IDS.has(key) ? values! : [],
+			UNKNOWN_IDS.has(key) ? subEntries! : [],
 		)
 		.map((entry) => {
 			const ignoredIndex = getIgnoredIndex(globalServerIgnored, entry.text);
@@ -65,19 +68,50 @@ const handleErrors = () => {
 	}
 };
 
+const coverageDataDir = path.join(coverageDir, "data");
 const handleCoverage = async () => {
 	if (!process.env.COVERAGE) {
 		return;
 	}
 	const serverCoverage = await getServerCoverage();
+	const clientCoverage = await fromPlaywrightCoverage(rawClientCoverage);
 	baseLogger.info(
-		`Generating coverage from ${clientCoverage.length} client and ${keys(serverCoverage).length} server data points`,
+		`Handling coverage of ${clientCoverage.files().length} client and ${serverCoverage.files().length} server files`,
 	);
-	await generateCoverageReport({
-		client: await mapJsCoverage(clientCoverage),
-		server: serverCoverage,
+	await fs.mkdir(coverageDataDir, { recursive: true });
+	await fs.writeFile(
+		path.join(coverageDataDir, "server.json"),
+		JSON.stringify(serverCoverage.data),
+	);
+	await fs.writeFile(
+		path.join(coverageDataDir, "client.json"),
+		JSON.stringify(clientCoverage.data),
+	);
+	baseLogger.info("Generating coverage report");
+	const mergedCoverage = await mergeCoverageMaps([
+		clientCoverage,
+		serverCoverage,
+	]);
+	generateCoverageReport({
+		dir: path.join(coverageDir, "report"),
+		coverageMap: mergedCoverage,
 	});
-	baseLogger.info("Coverage generated.");
+	baseLogger.info("Coverage report generated");
+};
+
+const prepareCoverageEnv = async () => {
+	if (!process.env.COVERAGE) {
+		return;
+	}
+	if (
+		await fs.access(coverageDir).then(
+			() => true,
+			() => false,
+		)
+	) {
+		await fs.rm(coverageDir, { recursive: true, force: true });
+		await fs.mkdir(coverageDir);
+	}
 };
 
 const globalSetup = async () => {

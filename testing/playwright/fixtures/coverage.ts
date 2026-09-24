@@ -10,7 +10,7 @@ type CoverageFixtures = {
 	coverage: void;
 };
 
-const clientCoverageDir = path.join(playwrightDir, "coverage/data/client");
+const clientCoverageDir = path.join(playwrightDir, "coverage/raw/client");
 
 export const coverageFixtures = test.extend<CoverageFixtures>({
 	coverage: [
@@ -27,11 +27,7 @@ export const coverageFixtures = test.extend<CoverageFixtures>({
 			const jsCoverage = await page.coverage.stopJSCoverage();
 			await fs.mkdir(clientCoverageDir, { recursive: true });
 			await fs.writeFile(
-				path.join(
-					playwrightDir,
-					"coverage/data/client",
-					`${testInfo.testId}.json`,
-				),
+				path.join(clientCoverageDir, `${testInfo.testId}.json`),
 				JSON.stringify(jsCoverage, null, 4),
 			);
 			await serverClient.addCoverage.mutate(jsCoverage);
