@@ -8,7 +8,7 @@ import { getLoaderTrpcClient } from "~web/utils/trpc";
 export const Route = createFileRoute("/_protected/settings")({
 	component: SettingsScreen,
 	loader: async (ctx) => {
-		const trpc = await getLoaderTrpcClient(ctx.context);
+		const trpc = getLoaderTrpcClient(ctx.context);
 		const prefetched = prefetchQueries(
 			ctx,
 			trpc.accountSettings.get.queryOptions(),

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/peers/$id")({
 	component: PeerScreen,
 	loader: async (ctx) => {
 		await ctx.context.i18nContext.loadNamespaces("peers");
-		const trpc = await getLoaderTrpcClient(ctx.context);
+		const trpc = getLoaderTrpcClient(ctx.context);
 		await ctx.context.queryClient.prefetchQuery(
 			trpc.peers.get.queryOptions({ id: ctx.params.id }),
 		);

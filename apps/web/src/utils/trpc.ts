@@ -1,3 +1,4 @@
+import { createIsomorphicFn } from "@tanstack/react-start";
 import { createTRPCClient } from "@trpc/client";
 import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
@@ -5,20 +6,20 @@ import { fromEntries } from "remeda";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
-import type { GetLinksOptions } from "~app/utils/trpc";
 import { getLinks } from "~app/utils/trpc";
+import type { GetLinksOptions } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
-export const getLinksParamsFromRequest = (
+const getServerLinksParams = (
 	request: Request,
 	source: GetLinksOptions["source"],
 ) => {
-	const urlObject = new URL(request.url);
-	urlObject.pathname = DEFAULT_TRPC_ENDPOINT;
+	const url = new URL(request.url);
+	url.pathname = DEFAULT_TRPC_ENDPOINT;
 	return {
-		debug: Boolean(urlObject.searchParams.get("debug")),
-		url: urlObject.toString(),
+		url: url.toString(),
+		debug: Boolean(url.searchParams.get("debug")),
 		headers: fromEntries([...request.headers.entries()]),
 		source,
 		keepError: Boolean(import.meta.env.VITEST),
@@ -26,26 +27,44 @@ export const getLinksParamsFromRequest = (
 	};
 };
 
-export const getLoaderTrpcClient = async <R extends AnyRouter = AppRouter>(
-	context: Pick<RouterContext, "queryClient" | "request">,
-	// oxlint-disable-next-line typescript/require-await
-) => {
-	const linksParams = context.request
-		? /* c8 ignore start */
-			getLinksParamsFromRequest(context.request, "ssr-loader")
-		: {
-				debug: false,
-				headers: {},
-				source: "csr-loader" as GetLinksOptions["source"],
-				url: DEFAULT_TRPC_ENDPOINT,
-				captureError: captureSentryError,
-			};
-	/* c8 ignore stop */
+/* c8 ignore start */
+const getClientLinksParams = (
+	source: GetLinksOptions["source"],
+): GetLinksOptions => {
+	const url = new URL(window.location.href);
+	return {
+		url: DEFAULT_TRPC_ENDPOINT,
+		debug: Boolean(url.searchParams.get("debug")),
+		headers: {},
+		source,
+		keepError: Boolean(import.meta.env.VITEST),
+		captureError: captureSentryError,
+	};
+};
+/* c8 ignore stop */
 
-	return createTRPCOptionsProxy<R>({
+const getIsomorphicLinkParams = createIsomorphicFn()
+	.server((request: Request | null): GetLinksOptions =>
+		// oxlint-disable-next-line typescript/no-non-null-assertion
+		getServerLinksParams(request!, "ssr-loader"),
+	)
+	/* c8 ignore start */
+	.client((): GetLinksOptions => getClientLinksParams("csr-loader"));
+/* c8 ignore stop */
+
+export const getApiTrpcClient = <R extends AnyRouter = AnyRouter>(
+	request: Request,
+) =>
+	createTRPCClient<R>({
+		links: getLinks(getServerLinksParams(request, "api")),
+	});
+
+export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
+	context: Pick<RouterContext, "queryClient" | "request">,
+) =>
+	createTRPCOptionsProxy<R>({
 		client: createTRPCClient<R>({
-			links: getLinks(linksParams),
+			links: getLinks(getIsomorphicLinkParams(context.request)),
 		}),
 		queryClient: context.queryClient,
 	});
-};

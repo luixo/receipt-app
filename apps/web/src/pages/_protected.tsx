@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_protected")({
 		if (!context.request) {
 			return;
 		}
-		const trpc = await getLoaderTrpcClient(context);
+		const trpc = getLoaderTrpcClient(context);
 		try {
 			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
 		} catch (error) {

@@ -1,5 +1,4 @@
 import { faker } from "@faker-js/faker";
-import { getApiTrpcClient } from "@ra/web/src/utils/server/trpc";
 import { QueryClient } from "@tanstack/react-query";
 import { fromEntries, pick } from "remeda";
 import { describe, expect, vi } from "vitest";
@@ -8,7 +7,7 @@ import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
 
-import { getLoaderTrpcClient } from "./trpc";
+import { getApiTrpcClient, getLoaderTrpcClient } from "./trpc";
 
 const router = t.router({
 	getHeaders: t.procedure.query(({ ctx }) =>
@@ -50,7 +49,7 @@ describe("loader call", () => {
 			vi.stubEnv("BASE_URL", url.toString());
 			const queryClient = new QueryClient();
 			url.searchParams.set("debug", "true");
-			const client = await getLoaderTrpcClient<typeof router>({
+			const client = getLoaderTrpcClient<typeof router>({
 				queryClient,
 				request: new Request(url),
 			});
