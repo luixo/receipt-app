@@ -20,7 +20,7 @@ test("Shows a pick button while loading, then auto-selects a top currency", asyn
 		return next();
 	});
 
-	await page.goto("/debts/add");
+	await page.navigate({ to: "/debts/add" });
 	const pickButton = page.getByRole("button", { name: "Pick currency" });
 	await expect(pickButton).toBeVisible();
 	await expect(currencyInput).not.toBeAttached();
@@ -37,7 +37,7 @@ test("Opens the currencies picker when the input is pressed", async ({
 	currenciesPicker,
 }) => {
 	await mockBase();
-	await page.goto("/debts/add");
+	await page.navigate({ to: "/debts/add" });
 
 	await expect(currencyInput).toBeVisible();
 	await currencyInput.click();

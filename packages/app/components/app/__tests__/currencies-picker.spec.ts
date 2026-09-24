@@ -17,13 +17,12 @@ const TOP_CODES: CurrencyCode[] = ["USD", "EUR", "GBP"];
 const mockTopCurrencies = (api: ExtractFixture<typeof addDebtTest>["api"]) => {
 	// Overrides `mockBase`'s random top currencies - must run after it, since
 	// the most recently registered `mockFirst` handler wins.
-	api.mockFirst(
-		"currency.top",
-		TOP_CODES.map((currencyCode, index) => ({
+	api.mockFirst("currency.top", {
+		items: TOP_CODES.map((currencyCode, index) => ({
 			currencyCode,
 			count: TOP_CODES.length - index,
 		})),
-	);
+	});
 };
 
 test("Lists top currencies before a divider, then the rest", async ({
@@ -36,7 +35,7 @@ test("Lists top currencies before a divider, then the rest", async ({
 }) => {
 	await mockBase();
 	mockTopCurrencies(api);
-	await page.goto("/debts/add");
+	await page.navigate({ to: "/debts/add" });
 
 	await currencyInput.click();
 	await expect(currenciesPicker).toBeVisible();
@@ -76,7 +75,7 @@ test("Highlights the selected currency and swaps it on click", async ({
 }) => {
 	await mockBase();
 	mockTopCurrencies(api);
-	await page.goto("/debts/add");
+	await page.navigate({ to: "/debts/add" });
 
 	// Auto-loaded selection is the highest-count top currency.
 	await expectCurrency(currencyInput, "USD");

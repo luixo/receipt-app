@@ -2,7 +2,7 @@ import { mergeTests } from "@playwright/test";
 import { isNonNullish } from "remeda";
 
 import { test as debtTest } from "~app/features/debt/__tests__/utils";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import {
 	defaultGenerateDebts,
 	theirDesynced,
@@ -18,13 +18,13 @@ const test = mergeTests(debtTest, debtSyncStatusFixture);
 type Api = ExtractFixture<typeof debtTest>["api"];
 type Faker = ExtractFixture<typeof debtTest>["faker"];
 
-const mockConnectedAccount = (api: Api, faker: Faker, userId: UserId) => {
-	api.mockFirst("users.get", ({ input, next }) => {
-		if (input.id !== userId) {
+const mockConnectedAccount = (api: Api, faker: Faker, peerId: PeerId) => {
+	api.mockFirst("peers.get", ({ input, next }) => {
+		if (input.id !== peerId) {
 			return next();
 		}
 		return {
-			id: userId,
+			id: peerId,
 			name: faker.person.fullName(),
 			publicName: undefined,
 			connectedAccount: {
@@ -46,11 +46,11 @@ test("Out of sync (push)", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirNonExistent).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 	await expectScreenshotWithSchemes("out-of-sync-push.png", {
 		locator: debtSyncStatus,
@@ -67,11 +67,11 @@ test("In sync", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirSynced).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 	await expectScreenshotWithSchemes("in-sync.png", {
 		locator: debtSyncStatus,
@@ -88,11 +88,11 @@ test("Out of sync (incoming)", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirDesynced).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 	await expectScreenshotWithSchemes("out-of-sync-incoming.png", {
 		locator: debtSyncStatus,

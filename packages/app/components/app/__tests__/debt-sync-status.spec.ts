@@ -3,7 +3,7 @@ import { mergeTests } from "@playwright/test";
 import { isNonNullish } from "remeda";
 
 import { test as debtTest } from "~app/features/debt/__tests__/utils";
-import type { UserId } from "~db/ids";
+import type { PeerId } from "~db/ids";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateDebts,
@@ -22,13 +22,13 @@ type Faker = ExtractFixture<typeof debtTest>["faker"];
 
 // DebtSyncStatus is only rendered next to a debt user with a connected
 // account - `mockDebt` generates a user without one by default.
-const mockConnectedAccount = (api: Api, faker: Faker, userId: UserId) => {
-	api.mockFirst("users.get", ({ input, next }) => {
-		if (input.id !== userId) {
+const mockConnectedAccount = (api: Api, faker: Faker, peerId: PeerId) => {
+	api.mockFirst("peers.get", ({ input, next }) => {
+		if (input.id !== peerId) {
 			return next();
 		}
 		return {
-			id: userId,
+			id: peerId,
 			name: faker.person.fullName(),
 			publicName: undefined,
 			connectedAccount: {
@@ -57,11 +57,11 @@ test("No their debt - shows an out-of-sync push status", async ({
 	debtSyncStatus,
 	tooltip,
 }) => {
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirNonExistent).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 
 	await expect(debtSyncStatus).toBeVisible();
@@ -86,11 +86,11 @@ test("Their debt in sync - shows an in-sync status", async ({
 	debtSyncStatus,
 	tooltip,
 }) => {
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirSynced).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 
 	await expect(debtSyncStatus).toBeVisible();
@@ -116,11 +116,11 @@ test("Desynced, their update is more recent - shows an incoming icon", async ({
 	debtSyncStatus,
 	tooltip,
 }) => {
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map(theirDesynced).filter(isNonNullish),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 
 	await expect(debtSyncStatus).toBeVisible();
@@ -145,7 +145,7 @@ test("Desynced, our update is more recent (or tied) - shows an outcoming icon", 
 	debtSyncStatus,
 	tooltip,
 }) => {
-	const { debt, debtUser } = await mockDebt({
+	const { debt, debtPeer } = await mockDebt({
 		generateDebts: (opts) =>
 			defaultGenerateDebts(opts).map((generatedDebt) => ({
 				...generatedDebt,
@@ -157,7 +157,7 @@ test("Desynced, our update is more recent (or tied) - shows an outcoming icon", 
 				},
 			})),
 	});
-	mockConnectedAccount(api, faker, debtUser.id);
+	mockConnectedAccount(api, faker, debtPeer.id);
 	await openDebtScreen(debt.id);
 
 	await expect(debtSyncStatus).toBeVisible();
