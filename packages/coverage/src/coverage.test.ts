@@ -35,7 +35,7 @@ const runNode = async (args: string[], env: Record<string, string> = {}) => {
 };
 
 const fixturesDir = path.join(import.meta.dirname, "fixtures");
-const samplePath = "packages/coverage/src/__tests__/fixtures/sample.ts";
+const samplePath = "packages/coverage/src/fixtures/sample.ts";
 const include = (repoPath: string) => repoPath === samplePath;
 const sampleSource = await fs.readFile(
 	path.join(fixturesDir, "sample.ts"),
@@ -195,7 +195,14 @@ describe("coverage canonicalization", () => {
 		const { file } = await bundle("node", { format: "esm", minify: false });
 		const coverageDir = path.join(tmpDir, "node-coverage");
 		await runNode([file], { NODE_V8_COVERAGE: coverageDir });
-		const data = await fs.readFile(coverageDir, "utf8");
+		const [coverageFile] = await fs.readdir(coverageDir);
+		if (!coverageFile) {
+			throw new Error("Node did not produce a coverage file");
+		}
+		const data = await fs.readFile(
+			path.join(coverageDir, coverageFile),
+			"utf8",
+		);
 		return fromNodeV8Coverage(JSON.parse(data) as NodeV8Coverage, { include });
 	};
 
@@ -254,12 +261,11 @@ describe("coverage canonicalization", () => {
 		expect(browser.fnMap).toStrictEqual(node.fnMap);
 		expect(browser.branchMap).toStrictEqual(node.branchMap);
 
-		// Fixtures are in `__tests__` which is not reported
 		const reported = await mergeCoverageMaps([
 			nodeCoverageMap,
 			browserCoverageMap,
 		]);
-		expect(reported.files()).toStrictEqual([]);
+		expect(reported.files()).toStrictEqual([samplePath]);
 
 		const merged = istanbulCoverage.createFileCoverage(structuredClone(node));
 		merged.merge(structuredClone(browser));
@@ -280,8 +286,7 @@ describe("coverage canonicalization", () => {
 		const coverageDir = "packages/coverage/src";
 		const empty = await getEmptyCoverage([coverageDir]);
 		expect(empty.files()).toContain(`${coverageDir}/index.ts`);
-		// `__tests__` files are not reported
-		expect(empty.files()).not.toContain(samplePath);
+		expect(empty.files()).toContain(samplePath);
 
 		const node = getSampleCoverage(await collectNodeCoverage());
 		const skeleton = await getSkeleton(samplePath);
