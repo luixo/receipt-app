@@ -168,7 +168,9 @@ describe("coverage canonicalization", () => {
 	let tmpDir = "";
 
 	beforeAll(async () => {
-		tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "coverage-test-"));
+		tmpDir = await fs.realpath(
+			await fs.mkdtemp(path.join(os.tmpdir(), "coverage-test-")),
+		);
 		return () => fs.rm(tmpDir, { recursive: true, force: true });
 	});
 

@@ -1,8 +1,15 @@
+import {
+	createTRPCClient,
+	unstable_localLink as localLink,
+} from "@trpc/client";
+import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import * as crypto from "node:crypto";
 import { doNothing } from "remeda";
 import { v4 } from "uuid";
 
+import type { AppRouter } from "~app/trpc";
 import { getDatabase } from "~db/database";
+import { transformer } from "~utils/transformer";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { env } from "~web/utils/env";
@@ -41,3 +48,17 @@ export const createServerContext = (req: Request): UnauthorizedContext => {
 	};
 };
 /* c8 ignore stop */
+
+export const getServerTrpcClient = <R extends AnyRouter = AppRouter>(
+	router: R,
+	req: Request,
+) =>
+	createTRPCClient<R>({
+		links: [
+			localLink({
+				router,
+				transformer,
+				createContext: () => Promise.resolve(createServerContext(req)),
+			}),
+		],
+	});
