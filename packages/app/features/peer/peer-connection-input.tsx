@@ -13,10 +13,10 @@ import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
-import type { AccountId, PeerId } from "~db/ids";
-import { options as accountConnectionsAddOptions } from "~mutations/account-connection-intentions/add";
-import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
+import type { PeerId, UserId } from "~db/ids";
 import { options as peersUnlinkOptions } from "~mutations/peers/unlink";
+import { options as userConnectionsAddOptions } from "~mutations/user-connection-intentions/add";
+import { options as userConnectionsRemoveOptions } from "~mutations/user-connection-intentions/remove";
 
 type Props = {
 	id: PeerId;
@@ -31,7 +31,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 			trpc.peers.get.queryOptions({ id }),
 		);
 		const { data: connectionIntentions } = useSuspenseQuery(
-			trpc.accountConnectionIntentions.getAll.queryOptions(),
+			trpc.userConnectionIntentions.getAll.queryOptions(),
 		);
 		const outboundConnectionIntention =
 			connectionIntentions.outbound.find(
@@ -39,13 +39,13 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 			) ?? null;
 
 		const connectPeerMutation = useMutation(
-			trpc.accountConnectionIntentions.add.mutationOptions(
-				useTrpcMutationOptions(accountConnectionsAddOptions),
+			trpc.userConnectionIntentions.add.mutationOptions(
+				useTrpcMutationOptions(userConnectionsAddOptions),
 			),
 		);
 
 		const form = useAppForm({
-			defaultValues: { value: peer.connectedAccount?.email ?? "" },
+			defaultValues: { value: peer.connectedUser?.email ?? "" },
 			validators: { onChange: z.object({ value: emailSchema }) },
 			onSubmit: ({ value }) => {
 				connectPeerMutation.mutate({
@@ -55,12 +55,12 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 			},
 		});
 		const [inputShown, setInputShown] = React.useState(
-			Boolean(peer.connectedAccount),
+			Boolean(peer.connectedUser),
 		);
 
 		const cancelRequestMutation = useMutation(
-			trpc.accountConnectionIntentions.remove.mutationOptions(
-				useTrpcMutationOptions(accountConnectionsRemoveOptions, {
+			trpc.userConnectionIntentions.remove.mutationOptions(
+				useTrpcMutationOptions(userConnectionsRemoveOptions, {
 					onSuccess: () => {
 						form.reset();
 						setInputShown(false);
@@ -69,8 +69,8 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 			),
 		);
 		const cancelRequest = React.useCallback(
-			(accountId: AccountId) =>
-				cancelRequestMutation.mutate({ targetAccountId: accountId }),
+			(userId: UserId) =>
+				cancelRequestMutation.mutate({ targetUserId: userId }),
 			[cancelRequestMutation],
 		);
 
@@ -88,7 +88,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 			return (
 				<Input
 					label={t("peer.connection.outbound.label")}
-					value={outboundConnectionIntention.account.email}
+					value={outboundConnectionIntention.user.email}
 					isReadOnly
 					mutation={cancelRequestMutation}
 					endContent={
@@ -98,9 +98,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 							isLoading={cancelRequestMutation.isPending}
 							color="danger"
 							isIconOnly
-							onPress={() =>
-								cancelRequest(outboundConnectionIntention.account.id)
-							}
+							onPress={() => cancelRequest(outboundConnectionIntention.user.id)}
 						>
 							<Icon name="trash" className="size-6" />
 						</Button>
@@ -135,11 +133,11 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 						label={t("peer.connection.email.label")}
 						mutation={[connectPeerMutation, unlinkMutation]}
 						isDisabled={isLoading}
-						isReadOnly={Boolean(peer.connectedAccount)}
+						isReadOnly={Boolean(peer.connectedUser)}
 						endContent={
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) =>
-									peer.connectedAccount ? (
+									peer.connectedUser ? (
 										<Button
 											title={t("peer.connection.unlink.title")}
 											variant="light"

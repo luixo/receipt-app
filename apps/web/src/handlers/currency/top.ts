@@ -10,7 +10,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get top currencies",
 		description:
-			"Returns the currencies used most in the last month across the account's receipts or debts, ordered by usage count.",
+			"Returns the currencies used most in the last month across the  user's receipts or debts, ordered by usage count.",
 	})
 	.input(
 		z.strictObject({
@@ -39,9 +39,9 @@ export const procedure = authProcedure
 						])
 						.where((eb) =>
 							eb("timestamp", ">", minimalTimestamp).and(
-								"debts.ownerAccountId",
+								"debts.ownerUserId",
 								"=",
-								ctx.auth.accountId,
+								ctx.auth.userId,
 							),
 						)
 						.groupBy("currencyCode")
@@ -53,7 +53,7 @@ export const procedure = authProcedure
 					.with("mergedReceipts", () => {
 						const participantReceipts = getParticipantsReceipts(
 							ctx.database,
-							ctx.auth.accountId,
+							ctx.auth.userId,
 						)
 							.select([
 								"receipts.currencyCode",
@@ -61,10 +61,7 @@ export const procedure = authProcedure
 							])
 							.where("issued", ">", minimalTimestamp)
 							.groupBy("receipts.currencyCode");
-						const ownerReceipts = getOwnReceipts(
-							ctx.database,
-							ctx.auth.accountId,
-						)
+						const ownerReceipts = getOwnReceipts(ctx.database, ctx.auth.userId)
 							.select([
 								"receipts.currencyCode",
 								ctx.database.fn.count<number>("receipts.id").as("count"),

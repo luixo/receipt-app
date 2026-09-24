@@ -9,7 +9,7 @@ import { test as localTest } from "./inbound-connection-intention.utils";
 
 const test = mergeTests(localTest, peersSuggestFixture);
 
-test("'accountConnectionIntentions.reject' mutation", async ({
+test("'userConnectionIntentions.reject' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
@@ -23,31 +23,31 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	assert.ok(intention);
 	await page.navigate({ to: "/peers/connections" });
 
-	api.mockFirst("accountConnectionIntentions.reject", () => {
+	api.mockFirst("userConnectionIntentions.reject", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Mock "accountConnectionIntentions.reject" error`,
+			message: `Mock "userConnectionIntentions.reject" error`,
 		});
 	});
 	await snapshotQueries(
 		async () => {
 			await rejectButton.click();
-			await awaitCacheKey("accountConnectionIntentions.reject", { error: 1 });
+			await awaitCacheKey("userConnectionIntentions.reject", { error: 1 });
 			await verifyToastTexts(
-				`Error rejecting invite: Mock "accountConnectionIntentions.reject" error`,
+				`Error rejecting invite: Mock "userConnectionIntentions.reject" error`,
 			);
 		},
 		{ blacklistKeys: ["peers.suggestTop"] },
 	);
 	await expect(page.getByLabel("Email to connect")).toHaveValue(
-		intention.account.email,
+		intention.user.email,
 	);
 
-	api.mockFirst("accountConnectionIntentions.reject", undefined);
+	api.mockFirst("userConnectionIntentions.reject", undefined);
 	await snapshotQueries(
 		async () => {
 			await rejectButton.click();
-			await awaitCacheKey("accountConnectionIntentions.reject", {
+			await awaitCacheKey("userConnectionIntentions.reject", {
 				success: 1,
 			});
 		},
@@ -56,7 +56,7 @@ test("'accountConnectionIntentions.reject' mutation", async ({
 	await expect(page.getByLabel("Email to connect")).not.toBeAttached();
 });
 
-test("'accountConnectionIntentions.accept' mutation", async ({
+test("'userConnectionIntentions.accept' mutation", async ({
 	page,
 	api,
 	mockConnectionIntentions,
@@ -87,7 +87,7 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	await input.click();
 	await firstOption.click();
 	await expect(confirmDialog).toContainText(
-		`This will connect account "${intention.account.email}" with a peer "${firstPeer.name}"`,
+		`This will connect account "${intention.user.email}" with a peer "${firstPeer.name}"`,
 	);
 
 	await confirmNoButton.click();
@@ -95,17 +95,17 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 
 	await input.click();
 	await firstOption.click();
-	api.mockFirst("accountConnectionIntentions.accept", () => {
+	api.mockFirst("userConnectionIntentions.accept", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Mock "accountConnectionIntentions.accept" error`,
+			message: `Mock "userConnectionIntentions.accept" error`,
 		});
 	});
 	await snapshotQueries(async () => {
 		await confirmYesButton.click();
-		await awaitCacheKey("accountConnectionIntentions.accept", { error: 1 });
+		await awaitCacheKey("userConnectionIntentions.accept", { error: 1 });
 		await verifyToastTexts(
-			`Error accepting invite: Mock "accountConnectionIntentions.accept" error`,
+			`Error accepting invite: Mock "userConnectionIntentions.accept" error`,
 		);
 	});
 	await expect(page.getByLabel("Email to connect")).toBeAttached();
@@ -115,17 +115,17 @@ test("'accountConnectionIntentions.accept' mutation", async ({
 	await input.click();
 	await retryOption.click();
 	await expect(confirmDialog).toContainText(
-		`This will connect account "${intention.account.email}" with a peer "${secondPeer.name}"`,
+		`This will connect account "${intention.user.email}" with a peer "${secondPeer.name}"`,
 	);
-	api.mockFirst("accountConnectionIntentions.accept", {
-		id: intention.account.id,
-		email: intention.account.email,
+	api.mockFirst("userConnectionIntentions.accept", {
+		id: intention.user.id,
+		email: intention.user.email,
 		avatarUrl: undefined,
 	});
 	await snapshotQueries(
 		async () => {
 			await confirmYesButton.click();
-			await awaitCacheKey("accountConnectionIntentions.accept", {
+			await awaitCacheKey("userConnectionIntentions.accept", {
 				success: 1,
 			});
 		},

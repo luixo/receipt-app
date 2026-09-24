@@ -1,26 +1,26 @@
-import type { AccountConnectionIntentions } from "~app/trpc-types";
+import type { UserConnectionIntentions } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 
 type Fixtures = {
 	mockConnectionIntentions: (options?: {
 		inboundAmount?: number;
 		outboundAmount?: number;
-	}) => Promise<AccountConnectionIntentions>;
+	}) => Promise<UserConnectionIntentions>;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	mockConnectionIntentions: ({ api, faker }, use) =>
 		use(async ({ inboundAmount = 0, outboundAmount = 0 } = {}) => {
 			await api.mockUtils.authPage();
-			const intentions: AccountConnectionIntentions = {
+			const intentions: UserConnectionIntentions = {
 				inbound: Array.from({ length: inboundAmount }, () => ({
-					account: {
+					user: {
 						id: faker.string.uuid(),
 						email: faker.internet.email(),
 					},
 				})),
 				outbound: Array.from({ length: outboundAmount }, () => ({
-					account: {
+					user: {
 						id: faker.string.uuid(),
 						email: faker.internet.email(),
 					},
@@ -30,7 +30,7 @@ export const test = originalTest.extend<Fixtures>({
 					},
 				})),
 			};
-			api.mockFirst("accountConnectionIntentions.getAll", intentions);
+			api.mockFirst("userConnectionIntentions.getAll", intentions);
 			api.mockFirst("peers.suggestTop", { items: [] });
 			api.mockFirst("peers.getPaged", { cursor: 0, count: 0, items: [] });
 			return intentions;

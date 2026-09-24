@@ -29,7 +29,7 @@ test.describe("Emails", () => {
 			page.getByRole("link", { name: "Void account" }),
 		).toHaveAttribute(
 			"href",
-			`${mockContext.baseUrl}/void-account?token=${token}`,
+			`${mockContext.baseUrl}/void-user?token=${token}`,
 		);
 	});
 

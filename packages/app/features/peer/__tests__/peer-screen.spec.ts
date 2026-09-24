@@ -179,7 +179,7 @@ test.describe("Public name", () => {
 });
 
 test.describe("Connection", () => {
-	test("connects to an account, then cancels the outbound request", async ({
+	test("connects to an  user, then cancels the outbound request", async ({
 		api,
 		faker,
 		mockBase,
@@ -204,23 +204,23 @@ test.describe("Connection", () => {
 		await connectionEmailInput.fill(email);
 		await expect(linkButton).toBeEnabled();
 
-		api.mockFirst("accountConnectionIntentions.add", () => {
+		api.mockFirst("userConnectionIntentions.add", () => {
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `Mock "accountConnectionIntentions.add" error`,
+				message: `Mock "userConnectionIntentions.add" error`,
 			});
 		});
 		await snapshotQueries(async () => {
 			await linkButton.click();
-			await awaitCacheKey("accountConnectionIntentions.add", { error: 1 });
+			await awaitCacheKey("userConnectionIntentions.add", { error: 1 });
 			await verifyToastTexts(
-				`Error sending connection intention: Mock "accountConnectionIntentions.add" error`,
+				`Error sending connection intention: Mock "userConnectionIntentions.add" error`,
 			);
 		});
 
-		api.mockFirst("accountConnectionIntentions.add", ({ input }) => ({
+		api.mockFirst("userConnectionIntentions.add", ({ input }) => ({
 			connected: false,
-			account: {
+			user: {
 				id: faker.string.uuid(),
 				email: input.email,
 				avatarUrl: undefined,
@@ -230,34 +230,34 @@ test.describe("Connection", () => {
 		await snapshotQueries(
 			async () => {
 				await linkButton.click();
-				await awaitCacheKey("accountConnectionIntentions.add");
+				await awaitCacheKey("userConnectionIntentions.add");
 				await verifyToastTexts(`Connection intention to "${email}" sent`);
 			},
 			{ name: "success" },
 		);
 		await expect(outboundRequestInput).toHaveValue(email);
 
-		api.mockFirst("accountConnectionIntentions.remove", () => {
+		api.mockFirst("userConnectionIntentions.remove", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "accountConnectionIntentions.remove" error`,
+				message: `Mock "userConnectionIntentions.remove" error`,
 			});
 		});
 		await snapshotQueries(async () => {
 			await cancelRequestButton.click();
-			await awaitCacheKey("accountConnectionIntentions.remove", {
+			await awaitCacheKey("userConnectionIntentions.remove", {
 				error: 1,
 			});
 			await verifyToastTexts(
-				`Error removing invite: Mock "accountConnectionIntentions.remove" error`,
+				`Error removing invite: Mock "userConnectionIntentions.remove" error`,
 			);
 		});
 
-		api.mockFirst("accountConnectionIntentions.remove", undefined);
+		api.mockFirst("userConnectionIntentions.remove", undefined);
 		await snapshotQueries(
 			async () => {
 				await cancelRequestButton.click();
-				await awaitCacheKey("accountConnectionIntentions.remove", {
+				await awaitCacheKey("userConnectionIntentions.remove", {
 					success: 1,
 				});
 			},
@@ -286,7 +286,7 @@ test.describe("Connection", () => {
 			}
 			return {
 				...targetPeer,
-				connectedAccount: {
+				connectedUser: {
 					id: faker.string.uuid(),
 					email: connectedEmail,
 					avatarUrl: undefined,

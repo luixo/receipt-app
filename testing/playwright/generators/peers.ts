@@ -1,4 +1,4 @@
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 
 import type { GeneratorFnWithAmount } from "./utils";
 import { generateAmount } from "./utils";
@@ -7,9 +7,9 @@ export type GeneratePeers = GeneratorFnWithAmount<{
 	id: PeerId;
 	name: string;
 	publicName: string | undefined;
-	connectedAccount:
+	connectedUser:
 		| {
-				id: AccountId;
+				id: UserId;
 				email: string;
 				avatarUrl?: string;
 		  }
@@ -24,5 +24,5 @@ export const defaultGeneratePeers = ({
 		id: faker.string.uuid(),
 		name: faker.person.fullName(),
 		publicName: undefined,
-		connectedAccount: undefined,
+		connectedUser: undefined,
 	}));

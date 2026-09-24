@@ -121,8 +121,8 @@ const callback = async (
 					});
 				}
 			}
-			if (error.code === "UNAUTHORIZED" && path === "account.get") {
-				// Do not log an attempt to fetch the account without a cookie
+			if (error.code === "UNAUTHORIZED" && path === "user.get") {
+				// Do not log an attempt to fetch the  user without a cookie
 				return;
 			}
 			ctx.logger.error(

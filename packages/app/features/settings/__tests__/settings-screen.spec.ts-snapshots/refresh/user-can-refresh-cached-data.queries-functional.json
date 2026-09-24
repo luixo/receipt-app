@@ -1,5 +1,5 @@
 {
-	"accountSettings.get": {
+	"userSettings.get": {
 		"clientCalls": 1
 	}
 }

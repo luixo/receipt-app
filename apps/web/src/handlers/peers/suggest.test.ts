@@ -5,12 +5,12 @@ import { describe, expect } from "vitest";
 import { MAX_LIMIT, MAX_OFFSET, MAX_QUERY_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -60,7 +60,7 @@ describe("peers.suggest", () => {
 
 		describe("input", () => {
 			test("is too long", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -78,7 +78,7 @@ describe("peers.suggest", () => {
 
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -94,7 +94,7 @@ describe("peers.suggest", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -110,7 +110,7 @@ describe("peers.suggest", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -128,7 +128,7 @@ describe("peers.suggest", () => {
 
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -144,7 +144,7 @@ describe("peers.suggest", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -160,7 +160,7 @@ describe("peers.suggest", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -178,7 +178,7 @@ describe("peers.suggest", () => {
 
 		describe("filtered ids", () => {
 			test("has non-uuid values", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -197,7 +197,7 @@ describe("peers.suggest", () => {
 
 		describe("non-connected receipt id", () => {
 			test("has non-uuid value", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -218,9 +218,9 @@ describe("peers.suggest", () => {
 		});
 
 		test("receipt does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other receipts don't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 			const nonExistentReceiptId = faker.string.uuid();
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -241,9 +241,9 @@ describe("peers.suggest", () => {
 		});
 
 		test("has no role in a requested receipt", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, otherAccountId);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -265,30 +265,27 @@ describe("peers.suggest", () => {
 
 	describe("functionality", () => {
 		test("returns matched peers with no restrictions", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			const accounts = await Promise.all([
-				insertAccount(ctx),
-				insertAccount(ctx),
-			]);
+			const users = await Promise.all([insertUser(ctx), insertUser(ctx)]);
 
 			const matchedPeers = await Promise.all([
-				insertPeer(ctx, accountId, { name: "Alice from work" }),
-				insertPeer(ctx, accountId, {
+				insertPeer(ctx, userId, { name: "Alice from work" }),
+				insertPeer(ctx, userId, {
 					name: "Alice from school",
 					publicName: faker.person.fullName(),
 				}),
-				insertPeer(ctx, accountId, { name: "Alice from gym" }),
+				insertPeer(ctx, userId, { name: "Alice from gym" }),
 			]);
 			const [connectedMatchedPeer] = await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Alice" },
-				accounts[0].id,
+				{ userId, name: "Connected Alice" },
+				users[0].id,
 			]);
 			matchedPeers.push(connectedMatchedPeer);
-			await insertPeer(ctx, accountId, { name: "Bob" });
+			await insertPeer(ctx, userId, { name: "Bob" });
 			await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Bob" },
-				accounts[1].id,
+				{ userId, name: "Connected Bob" },
+				users[1].id,
 			]);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -306,15 +303,15 @@ describe("peers.suggest", () => {
 		});
 
 		test("returns results with short request", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const matchedPeers = await Promise.all([
-				insertPeer(ctx, accountId, { name: "Ally" }),
-				insertPeer(ctx, accountId, {
+				insertPeer(ctx, userId, { name: "Ally" }),
+				insertPeer(ctx, userId, {
 					name: "Alice",
 					publicName: faker.person.fullName(),
 				}),
-				insertPeer(ctx, accountId, { name: "Aliko" }),
+				insertPeer(ctx, userId, { name: "Aliko" }),
 			]);
 			const result = await caller.procedure({
 				input: "Al",
@@ -331,7 +328,7 @@ describe("peers.suggest", () => {
 		});
 
 		test("returns empty results", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
@@ -349,34 +346,31 @@ describe("peers.suggest", () => {
 		test("returns matched peers not connected to a given receipt", async ({
 			ctx,
 		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			const accounts = await Promise.all([
-				insertAccount(ctx),
-				insertAccount(ctx),
-			]);
+			const users = await Promise.all([insertUser(ctx), insertUser(ctx)]);
 
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 
-			const { id: filteredPeerId } = await insertPeer(ctx, accountId, {
+			const { id: filteredPeerId } = await insertPeer(ctx, userId, {
 				name: "Alice from work",
 			});
-			const { id: participatingPeerId } = await insertPeer(ctx, accountId, {
+			const { id: participatingPeerId } = await insertPeer(ctx, userId, {
 				name: "Alice from school",
 				publicName: faker.person.fullName(),
 			});
 			const matchedPeers = [
-				await insertPeer(ctx, accountId, { name: "Alice from gym" }),
+				await insertPeer(ctx, userId, { name: "Alice from gym" }),
 			];
 			const [matchedConnectedPeer] = await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Alice" },
-				accounts[0].id,
+				{ userId, name: "Connected Alice" },
+				users[0].id,
 			]);
 			matchedPeers.push(matchedConnectedPeer);
-			await insertPeer(ctx, accountId, { name: "Bob" });
+			await insertPeer(ctx, userId, { name: "Bob" });
 			await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Bob" },
-				accounts[1].id,
+				{ userId, name: "Connected Bob" },
+				users[1].id,
 			]);
 
 			await insertReceiptParticipant(ctx, receiptId, participatingPeerId);
@@ -397,30 +391,27 @@ describe("peers.suggest", () => {
 			});
 		});
 
-		test("returns matched peers with no connected account", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+		test("returns matched peers with no connected  user", async ({ ctx }) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			const accounts = await Promise.all([
-				insertAccount(ctx),
-				insertAccount(ctx),
-			]);
+			const users = await Promise.all([insertUser(ctx), insertUser(ctx)]);
 
 			const matchedPeers = await Promise.all([
-				insertPeer(ctx, accountId, { name: "Alice from work" }),
-				insertPeer(ctx, accountId, {
+				insertPeer(ctx, userId, { name: "Alice from work" }),
+				insertPeer(ctx, userId, {
 					name: "Alice from school",
 					publicName: faker.person.fullName(),
 				}),
-				insertPeer(ctx, accountId, { name: "Alice from gym" }),
+				insertPeer(ctx, userId, { name: "Alice from gym" }),
 			]);
 			await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Alice" },
-				accounts[0].id,
+				{ userId, name: "Connected Alice" },
+				users[0].id,
 			]);
-			await insertPeer(ctx, accountId, { name: "Bob from work" });
+			await insertPeer(ctx, userId, { name: "Bob from work" });
 			await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Bob" },
-				accounts[1].id,
+				{ userId, name: "Connected Bob" },
+				users[1].id,
 			]);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -439,18 +430,18 @@ describe("peers.suggest", () => {
 		});
 
 		test("returns fuzzily matched peers", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			const matchedPeers = await Promise.all([
-				insertPeer(ctx, accountId, { name: "Alice from work" }),
-				insertPeer(ctx, accountId, {
+				insertPeer(ctx, userId, { name: "Alice from work" }),
+				insertPeer(ctx, userId, {
 					name: "Alice from school",
 					publicName: faker.person.fullName(),
 				}),
-				insertPeer(ctx, accountId, { name: "Alide - a typo" }),
+				insertPeer(ctx, userId, { name: "Alide - a typo" }),
 			]);
 			// Too fuzzy - should not be returned
-			await insertPeer(ctx, accountId, { name: "Alcc - a heavier typo" });
+			await insertPeer(ctx, userId, { name: "Alcc - a heavier typo" });
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -468,14 +459,14 @@ describe("peers.suggest", () => {
 		});
 
 		test("returns paged results", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			const limit = 2;
 			await Promise.all(
 				Array.from({ length: limit }, async (_, index) => {
-					await insertPeer(ctx, accountId, { name: `Alice ${index}` });
+					await insertPeer(ctx, userId, { name: `Alice ${index}` });
 					if (index !== 0) {
-						await insertPeer(ctx, accountId, {
+						await insertPeer(ctx, userId, {
 							name: `Alice ${index} - additional`,
 						});
 					}
@@ -504,23 +495,23 @@ describe("peers.suggest", () => {
 		});
 
 		test("returns peers with given filtered peers", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
-			const accounts = [await insertAccount(ctx)] as const;
+			const users = [await insertUser(ctx)] as const;
 
-			const { id: filteredPeerId } = await insertPeer(ctx, accountId, {
+			const { id: filteredPeerId } = await insertPeer(ctx, userId, {
 				name: "Alice from work",
 			});
 			const matchedPeers = await Promise.all([
-				insertPeer(ctx, accountId, {
+				insertPeer(ctx, userId, {
 					name: "Alice from school",
 					publicName: faker.person.fullName(),
 				}),
-				insertPeer(ctx, accountId, { name: "Alice from gym" }),
+				insertPeer(ctx, userId, { name: "Alice from gym" }),
 			]);
 			const [connectedMatchedPeer] = await insertConnectedPeers(ctx, [
-				{ accountId, name: "Connected Alice" },
-				accounts[0].id,
+				{ userId, name: "Connected Alice" },
+				users[0].id,
 			]);
 			matchedPeers.push(connectedMatchedPeer);
 
@@ -540,10 +531,10 @@ describe("peers.suggest", () => {
 		});
 
 		test("doesn't return self peer", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+			const { sessionId, userId } = await insertUserWithSession(ctx, {
 				peer: { name: "Self Alice" },
 			});
-			const peer = await insertPeer(ctx, accountId, {
+			const peer = await insertPeer(ctx, userId, {
 				name: "Alice from work",
 			});
 
@@ -563,13 +554,13 @@ describe("peers.suggest", () => {
 
 		describe("multiple intentions", () => {
 			test("success", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 
 				const peers = mapPeers(
 					"Alice",
 					await Promise.all(
 						Array.from({ length: 10 }, async (_, index) =>
-							insertPeer(ctx, accountId, { name: `Alice ${index}` }),
+							insertPeer(ctx, userId, { name: `Alice ${index}` }),
 						),
 					),
 				);
@@ -606,8 +597,8 @@ describe("peers.suggest", () => {
 			});
 
 			test("mixed success and fail", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const peer = await insertPeer(ctx, accountId, { name: "Alice" });
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const peer = await insertPeer(ctx, userId, { name: "Alice" });
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const commonOptions = {

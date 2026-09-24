@@ -1,8 +1,5 @@
 import { t } from "~web/handlers/trpc";
 
-import { router as accountConnectionIntentionsRouter } from "./account-connection-intentions/index";
-import { router as accountSettingsRouter } from "./account-settings/index";
-import { router as accountRouter } from "./account/index";
 import { router as adminRouter } from "./admin/index";
 import { router as authRouter } from "./auth/index";
 import { router as currencyRouter } from "./currency/index";
@@ -16,6 +13,9 @@ import { router as receiptParticipantsRouter } from "./receipt-participants/inde
 import { router as receiptsRouter } from "./receipts/index";
 import { router as resetPasswordIntentionsRouter } from "./reset-password-intentions/index";
 import { router as sessionsRouter } from "./sessions/index";
+import { router as userConnectionIntentionsRouter } from "./user-connection-intentions/index";
+import { router as userSettingsRouter } from "./user-settings/index";
+import { router as userRouter } from "./user/index";
 import { router as utilsRouter } from "./utils/index";
 
 export const router = t.router({
@@ -25,8 +25,8 @@ export const router = t.router({
 	resetPasswordIntentions: resetPasswordIntentionsRouter,
 	utils: utilsRouter,
 	// Auth
-	account: accountRouter,
-	accountSettings: accountSettingsRouter,
+	user: userRouter,
+	userSettings: userSettingsRouter,
 	receipts: receiptsRouter,
 	receiptItems: receiptItemsRouter,
 	peers: peersRouter,
@@ -34,7 +34,7 @@ export const router = t.router({
 	currency: currencyRouter,
 	receiptItemConsumers: receiptItemConsumersRouter,
 	receiptItemPayers: receiptItemPayersRouter,
-	accountConnectionIntentions: accountConnectionIntentionsRouter,
+	userConnectionIntentions: userConnectionIntentionsRouter,
 	debts: debtsRouter,
 	debtIntentions: debtIntentionsRouter,
 	// Admin

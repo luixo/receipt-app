@@ -40,8 +40,8 @@ test("'auth.login' mutation", async ({
 	api.mockFirst("auth.login", async () => {
 		await loginPause.promise;
 		return {
-			account: {
-				id: "test-account-id",
+			user: {
+				id: "test- user-id",
 				verified: true,
 				avatarUrl: undefined,
 				role: undefined,

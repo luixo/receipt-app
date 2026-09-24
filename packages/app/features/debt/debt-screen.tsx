@@ -443,7 +443,7 @@ const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
 					<>
-						{peer.connectedAccount ? (
+						{peer.connectedUser ? (
 							<DebtSyncStatus debt={debt} theirDebt={debt.their} size="lg" />
 						) : null}
 						{debt.receiptId ? (

@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"userConnectionIntentions.remove": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"targetUserId": "8cd33d59-b673-4cbf-b40f-11ac0ee4b576"
+					}
+				}
+			}
+		}
+	}
+}

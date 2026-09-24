@@ -56,21 +56,21 @@ const getData = async (
 				.leftJoin("peers", (jb) =>
 					jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 				)
-				.leftJoin("accounts", (jb) =>
+				.leftJoin("users", (jb) =>
 					jb
-						.onRef("accounts.id", "=", "peers.connectedAccountId")
-						.on("accounts.id", "=", ctx.auth.accountId),
+						.onRef("users.id", "=", "peers.connectedUserId")
+						.on("users.id", "=", ctx.auth.userId),
 				)
 				.groupBy([
-					"accounts.id",
-					"receipts.ownerAccountId",
+					"users.id",
+					"receipts.ownerUserId",
 					"receipts.id",
 					"receiptParticipants.role",
 					"receiptItems.id",
 				])
 				.select([
-					"accounts.id as selfAccountId",
-					"receipts.ownerAccountId",
+					"users.id as selfUserId",
+					"receipts.ownerUserId",
 					"receipts.id as receiptId",
 					"receiptParticipants.role",
 					"receiptItems.id as itemId",
@@ -118,10 +118,10 @@ const getConsumersOrErrors = (
 				message: `Receipt item "${input.itemId}" does not exist.`,
 			});
 		}
-		const { receiptId, ownerAccountId } = firstReceiptItem;
-		if (ownerAccountId !== ctx.auth.accountId) {
+		const { receiptId, ownerUserId } = firstReceiptItem;
+		if (ownerUserId !== ctx.auth.userId) {
 			const selfReceiptItemRole = matchedReceiptItems.find(
-				(receiptItem) => receiptItem.selfAccountId === ctx.auth.accountId,
+				(receiptItem) => receiptItem.selfUserId === ctx.auth.userId,
 			)?.role;
 			const parsed = roleSchema.safeParse(selfReceiptItemRole);
 			if (!parsed.success) {

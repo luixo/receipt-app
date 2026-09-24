@@ -22,7 +22,7 @@ export const procedure = authProcedure
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
 			)
-			.select(["receipts.id as receiptId", "receipts.ownerAccountId"])
+			.select(["receipts.id as receiptId", "receipts.ownerUserId"])
 			.where("receiptItems.id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -40,8 +40,8 @@ export const procedure = authProcedure
 		}
 		const accessRole = await getAccessRole(
 			database,
-			{ id: receiptItem.receiptId, ownerAccountId: receiptItem.ownerAccountId },
-			ctx.auth.accountId,
+			{ id: receiptItem.receiptId, ownerUserId: receiptItem.ownerUserId },
+			ctx.auth.userId,
 		);
 		if (!accessRole) {
 			throw new TRPCError({

@@ -4,7 +4,7 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test("Card is hidden when account is verified", async ({
+test("Card is hidden when  user is verified", async ({
 	page,
 	api,
 	emailVerificationCard,
@@ -16,17 +16,17 @@ test("Card is hidden when account is verified", async ({
 
 	await snapshotQueries(
 		async () => {
-			await page.navigate({ to: "/account" });
-			await awaitCacheKey("account.get");
+			await page.navigate({ to: "/user" });
+			await awaitCacheKey("user.get");
 		},
-		{ whitelistKeys: ["account.get"] },
+		{ whitelistKeys: ["user.get"] },
 	);
 
 	await expect(emailVerificationCard).not.toBeAttached();
 	await expect(resendButton).not.toBeAttached();
 });
 
-test("Card is shown when account is unverified", async ({
+test("Card is shown when  user is unverified", async ({
 	page,
 	mockBase,
 	emailVerificationCard,
@@ -38,10 +38,10 @@ test("Card is shown when account is unverified", async ({
 
 	await snapshotQueries(
 		async () => {
-			await page.navigate({ to: "/account" });
-			await awaitCacheKey("account.get");
+			await page.navigate({ to: "/user" });
+			await awaitCacheKey("user.get");
 		},
-		{ whitelistKeys: ["account.get"] },
+		{ whitelistKeys: ["user.get"] },
 	);
 
 	await expect(emailVerificationCard).toBeVisible();
@@ -56,7 +56,7 @@ test("Card is shown when account is unverified", async ({
 	await expect(resendButton).toHaveText("Resend email");
 });
 
-test.describe("'account.resendEmail' mutation", () => {
+test.describe("'user.resendEmail' mutation", () => {
 	test("error", async ({
 		page,
 		api,
@@ -68,26 +68,26 @@ test.describe("'account.resendEmail' mutation", () => {
 		verifyToastTexts,
 	}) => {
 		await mockBase();
-		api.mockFirst("account.resendEmail", () => {
+		api.mockFirst("user.resendEmail", () => {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
-				message: `Mock "account.resendEmail" error`,
+				message: `Mock "user.resendEmail" error`,
 			});
 		});
-		await page.navigate({ to: "/account" });
+		await page.navigate({ to: "/user" });
 		await expect(resendButton).toBeVisible();
 
 		await snapshotQueries(
 			async () => {
 				await resendButton.click();
-				await awaitCacheKey("account.resendEmail", { error: 1 });
+				await awaitCacheKey("user.resendEmail", { error: 1 });
 				await verifyToastTexts(
-					`Resend email failed: Mock "account.resendEmail" error`,
+					`Resend email failed: Mock "user.resendEmail" error`,
 				);
 			},
-			{ whitelistKeys: ["account.get"] },
+			{ whitelistKeys: ["user.get"] },
 		);
-		await page.expectUrl({ to: "/account" });
+		await page.expectUrl({ to: "/user" });
 
 		await expect(emailVerificationCard).toBeVisible();
 		await expect(resendButton).toBeVisible();
@@ -105,13 +105,13 @@ test.describe("'account.resendEmail' mutation", () => {
 		verifyToastTexts,
 		withLoader,
 	}) => {
-		const { account } = await mockBase();
+		const { user } = await mockBase();
 		const resendPause = api.createPause();
-		api.mockFirst("account.resendEmail", async () => {
+		api.mockFirst("user.resendEmail", async () => {
 			await resendPause.promise;
-			return { email: account.email };
+			return { email: user.email };
 		});
-		await page.navigate({ to: "/account" });
+		await page.navigate({ to: "/user" });
 		await expect(resendButton).toBeVisible();
 
 		const buttonWithLoader = withLoader(resendButton);
@@ -123,23 +123,23 @@ test.describe("'account.resendEmail' mutation", () => {
 				await expect(resendButton).toBeDisabled();
 				await expect(buttonWithLoader).toBeVisible();
 				await verifyToastTexts();
-				await awaitCacheKey("account.resendEmail", { pending: 1 });
+				await awaitCacheKey("user.resendEmail", { pending: 1 });
 			},
-			{ name: "loading", whitelistKeys: ["account.get"] },
+			{ name: "loading", whitelistKeys: ["user.get"] },
 		);
 
 		await snapshotQueries(
 			async () => {
 				resendPause.resolve();
-				await awaitCacheKey("account.resendEmail");
+				await awaitCacheKey("user.resendEmail");
 				await verifyToastTexts();
 				await expect(resendButton).not.toBeAttached();
 				await expect(emailVerificationCard).toContainText(
-					`Email successfully sent to ${account.email}!`,
+					`Email successfully sent to ${user.email}!`,
 				);
 			},
-			{ name: "success", skipQueries: true, whitelistKeys: ["account.get"] },
+			{ name: "success", skipQueries: true, whitelistKeys: ["user.get"] },
 		);
-		await page.expectUrl({ to: "/account" });
+		await page.expectUrl({ to: "/user" });
 	});
 });

@@ -4,14 +4,14 @@ import { describe } from "vitest";
 import type { TRPCMutationInput } from "~app/trpc";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -36,25 +36,25 @@ const runTests = (
 	getUpdate: () => TRPCMutationInput<"receiptItems.update">["update"],
 ) => {
 	const runTest = async (ctx: TestContext, type: "own" | "foreign") => {
-		const { sessionId, accountId } = await insertAccountWithSession(ctx);
-		const { id: receiptId } = await insertReceipt(ctx, accountId);
-		const { id: peerId } = await insertPeer(ctx, accountId);
+		const { sessionId, userId } = await insertUserWithSession(ctx);
+		const { id: receiptId } = await insertReceipt(ctx, userId);
+		const { id: peerId } = await insertPeer(ctx, userId);
 		const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 		await insertReceiptParticipant(ctx, receiptId, peerId);
 		await insertReceiptItemConsumer(ctx, receiptItemId, peerId);
 
 		// Verify unrelated data doesn't affect the result
-		const { id: anotherPeerId } = await insertPeer(ctx, accountId);
-		const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
+		const { id: anotherPeerId } = await insertPeer(ctx, userId);
+		const { id: anotherReceiptId } = await insertReceipt(ctx, userId);
 		await insertReceiptParticipant(ctx, anotherReceiptId, anotherPeerId);
 		await insertReceiptItem(ctx, anotherReceiptId);
 
-		const { id: foreignAccountId } = await insertAccount(ctx);
-		const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
-		const { id: foreignReceiptId } = await insertReceipt(ctx, foreignAccountId);
+		const { id: foreignUserId } = await insertUser(ctx);
+		const { id: foreignPeerId } = await insertPeer(ctx, foreignUserId);
+		const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 		const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-			foreignAccountId,
-			accountId,
+			foreignUserId,
+			userId,
 		]);
 		await insertReceiptParticipant(ctx, foreignReceiptId, foreignPeerId);
 		await insertReceiptParticipant(ctx, foreignReceiptId, foreignToSelfPeerId, {
@@ -127,9 +127,9 @@ describe("receiptItems.update", () => {
 		);
 
 		test("receipt item does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeReceiptItemId = faker.string.uuid();
 			await expectTRPCError(
@@ -143,16 +143,12 @@ describe("receiptItems.update", () => {
 			);
 		});
 
-		test("receipt is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } =
-				await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+		test("receipt is not owned by an  user", async ({ ctx }) => {
+			const { sessionId, userId, user } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			const { id: foreignReceiptItemId } = await insertReceiptItem(
 				ctx,
 				foreignReceiptId,
@@ -166,24 +162,20 @@ describe("receiptItems.update", () => {
 						update: { type: "name", name: faker.lorem.words() },
 					}),
 				"FORBIDDEN",
-				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}".`,
+				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${user.email}".`,
 			);
 		});
 
 		test("receipt role is lower than editor", async ({ ctx }) => {
-			const { sessionId, accountId, account } =
-				await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+			const { sessionId, userId, user } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: foreignUserId } = await insertUser(ctx);
 			const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-				foreignAccountId,
-				accountId,
+				foreignUserId,
+				userId,
 			]);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,
@@ -203,13 +195,13 @@ describe("receiptItems.update", () => {
 						update: { type: "name", name: faker.lorem.words() },
 					}),
 				"FORBIDDEN",
-				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}" with role "viewer"`,
+				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${user.email}" with role "viewer"`,
 			);
 		});
 
 		test("payer receipt item", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(

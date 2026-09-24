@@ -29,23 +29,23 @@ const TYPES: Record<
 			receipts: ["currencyCode"],
 		},
 	},
-	accountId: {
-		expression: "AccountId",
+	userId: {
+		expression: "UserId",
 		importSource: "~db/ids",
 		tables: {
-			accountSettings: ["accountId"],
-			accounts: ["id"],
-			debts: ["ownerAccountId"],
-			receipts: ["ownerAccountId"],
-			resetPasswordIntentions: ["accountId"],
-			peers: ["ownerAccountId"],
+			userSettings: ["userId"],
+			users: ["id"],
+			debts: ["ownerUserId"],
+			receipts: ["ownerUserId"],
+			resetPasswordIntentions: ["userId"],
+			peers: ["ownerUserId"],
 		},
 	},
 	// Kysely can't introspect references ids yet
-	accountIdNullable: {
-		expression: "AccountId | null",
+	userIdNullable: {
+		expression: "UserId | null",
 		tables: {
-			peers: ["connectedAccountId"],
+			peers: ["connectedUserId"],
 		},
 	},
 	debtId: {

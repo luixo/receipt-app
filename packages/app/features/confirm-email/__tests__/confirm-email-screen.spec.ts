@@ -108,7 +108,7 @@ test("Navigating back to the home page", async ({
 	faker,
 	consoleManager,
 }) => {
-	const { unmockAccount, errorMessage } = api.mockUtils.noAuthPage();
+	const { unmockUser, errorMessage } = api.mockUtils.noAuthPage();
 	consoleManager.ignore(errorMessage);
 	const confirmEmailPause = api.createPause();
 	api.mockFirst("auth.confirmEmail", async ({ headers }) => {
@@ -122,7 +122,7 @@ test("Navigating back to the home page", async ({
 	const token = faker.string.uuid();
 	await page.navigate({ to: "/confirm-email", search: { token } });
 	await api.mockUtils.authPage();
-	unmockAccount();
+	unmockUser();
 	api.mockFirst("receipts.getPaged", { items: [], count: 0, cursor: 0 });
 	confirmEmailPause.resolve();
 	await page.getByRole("button", { name: "To home page" }).click();

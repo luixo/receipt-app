@@ -1,5 +1,5 @@
 {
-	"account.get": {
+	"user.get": {
 		"serverCalls": 1
 	}
 }

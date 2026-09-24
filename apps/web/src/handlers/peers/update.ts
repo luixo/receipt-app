@@ -11,7 +11,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Update peer",
 		description:
-			"Updates the name or public name of a peer owned by the current account.",
+			"Updates the name or public name of a peer owned by the current  user.",
 	})
 	.input(
 		z.strictObject({
@@ -29,13 +29,13 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		if (input.id === ctx.auth.accountId) {
+		if (input.id === ctx.auth.userId) {
 			switch (input.update.type) {
 				case "name":
 					throw new TRPCError({
 						code: "BAD_REQUEST",
 						message:
-							'Please use "account.changeName" handler to update your own name.',
+							'Please use "user.changeName" handler to update your own name.',
 					});
 				default:
 					throw new TRPCError({
@@ -48,7 +48,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const peer = await database
 			.selectFrom("peers")
-			.select("ownerAccountId")
+			.select("ownerUserId")
 			.where("id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -58,7 +58,7 @@ export const procedure = authProcedure
 				message: `No peer found by id "${input.id}".`,
 			});
 		}
-		if (peer.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${input.id}" is not owned by "${ctx.auth.email}".`,

@@ -9,23 +9,23 @@ import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
 import { Text } from "~components/text";
-import { options as accountResendEmailOptions } from "~mutations/account/resend-email";
+import { options as userResendEmailOptions } from "~mutations/user/resend-email";
 
 export const EmailVerificationCard = suspendedFallback(
 	() => {
 		const { t } = useTranslation();
 		const trpc = useTRPC();
-		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
+		const { data: user } = useSuspenseQuery(trpc.user.get.queryOptions());
 		const resendEmailMutation = useMutation(
-			trpc.account.resendEmail.mutationOptions(
-				useTrpcMutationOptions(accountResendEmailOptions),
+			trpc.user.resendEmail.mutationOptions(
+				useTrpcMutationOptions(userResendEmailOptions),
 			),
 		);
 		const resendEmail = React.useCallback(
 			() => resendEmailMutation.mutate(),
 			[resendEmailMutation],
 		);
-		if (account.account.verified) {
+		if (user.user.verified) {
 			return null;
 		}
 		return (

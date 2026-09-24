@@ -25,7 +25,7 @@
 	},
 	"toasts": {
 		"updateSettings": {
-			"error": "Account settings update failed: {{errors, uniqueErrors}}"
+			"error": "Your settings update failed: {{errors, uniqueErrors}}"
 		}
 	}
 }

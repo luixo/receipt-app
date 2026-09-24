@@ -2,7 +2,7 @@ import type { QueryCreator } from "kysely";
 import type { z } from "zod";
 
 import type { Database } from "~db/database";
-import type { AccountId } from "~db/ids";
+import type { UserId } from "~db/ids";
 import type { DB } from "~db/types.gen";
 import type { assignableRoleSchema } from "~web/handlers/validation";
 import { roleSchema } from "~web/handlers/validation";
@@ -12,10 +12,10 @@ export type AssignableRole = z.infer<typeof assignableRoleSchema>;
 
 export const getAccessRole = async (
 	database: Database,
-	receipt: { ownerAccountId: string; id: string },
-	accountId: string,
+	receipt: { ownerUserId: string; id: string },
+	userId: string,
 ): Promise<Role | undefined> => {
-	if (receipt.ownerAccountId === accountId) {
+	if (receipt.ownerUserId === userId) {
 		return "owner";
 	}
 	const participant = await database
@@ -23,25 +23,17 @@ export const getAccessRole = async (
 		.innerJoin("peers", (jb) =>
 			jb.onRef("peers.id", "=", "receiptParticipants.peerId"),
 		)
-		.innerJoin("accounts", (jb) =>
-			jb.onRef("accounts.id", "=", "peers.connectedAccountId"),
+		.innerJoin("users", (jb) =>
+			jb.onRef("users.id", "=", "peers.connectedUserId"),
 		)
 		.innerJoin("peers as reciprocalPeers", (jb) =>
 			jb
-				.onRef(
-					"reciprocalPeers.ownerAccountId",
-					"=",
-					"peers.connectedAccountId",
-				)
-				.onRef(
-					"reciprocalPeers.connectedAccountId",
-					"=",
-					"peers.ownerAccountId",
-				),
+				.onRef("reciprocalPeers.ownerUserId", "=", "peers.connectedUserId")
+				.onRef("reciprocalPeers.connectedUserId", "=", "peers.ownerUserId"),
 		)
 		.where((eb) =>
 			eb.and({
-				"accounts.id": accountId,
+				"users.id": userId,
 				receiptId: receipt.id,
 			}),
 		)
@@ -63,21 +55,20 @@ export const getAccessRole = async (
 
 export const getOwnReceipts = (
 	database: Database | QueryCreator<DB>,
-	ownerAccountId: AccountId,
-) =>
-	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
+	ownerUserId: UserId,
+) => database.selectFrom("receipts").where("ownerUserId", "=", ownerUserId);
 
 export const getParticipantsReceipts = (
 	database: Database | QueryCreator<DB>,
-	ownerAccountId: AccountId,
+	ownerUserId: UserId,
 ) =>
 	database
 		.selectFrom("peers")
 		.where((eb) =>
-			eb("peers.connectedAccountId", "=", ownerAccountId).and(
-				"peers.ownerAccountId",
+			eb("peers.connectedUserId", "=", ownerUserId).and(
+				"peers.ownerUserId",
 				"<>",
-				ownerAccountId,
+				ownerUserId,
 			),
 		)
 		.innerJoin("receiptParticipants", (jb) =>
@@ -85,16 +76,8 @@ export const getParticipantsReceipts = (
 		)
 		.innerJoin("peers as reciprocalPeers", (jb) =>
 			jb
-				.onRef(
-					"reciprocalPeers.ownerAccountId",
-					"=",
-					"peers.connectedAccountId",
-				)
-				.onRef(
-					"reciprocalPeers.connectedAccountId",
-					"=",
-					"peers.ownerAccountId",
-				),
+				.onRef("reciprocalPeers.ownerUserId", "=", "peers.connectedUserId")
+				.onRef("reciprocalPeers.connectedUserId", "=", "peers.ownerUserId"),
 		)
 		.innerJoin("receipts", (jb) =>
 			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),

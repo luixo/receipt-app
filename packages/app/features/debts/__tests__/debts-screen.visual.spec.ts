@@ -131,7 +131,7 @@ test("Error state", async ({
 		});
 	});
 	api.mockFirst("debts.getByPeerPaged", { items: [], count: 0, cursor: 0 });
-	api.mockFirst("accountSettings.get", { manualAcceptDebts: false });
+	api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 
 	await page.navigate({ to: "/debts" });
 	await awaitCacheKey("debts.getPeersPaged", { error: 1 });

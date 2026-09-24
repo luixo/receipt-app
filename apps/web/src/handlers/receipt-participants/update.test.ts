@@ -3,12 +3,12 @@ import { describe } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -34,7 +34,7 @@ describe("receiptParticipants.update", () => {
 
 		describe("receiptId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -51,7 +51,7 @@ describe("receiptParticipants.update", () => {
 
 		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -67,9 +67,9 @@ describe("receiptParticipants.update", () => {
 		});
 
 		test("receipt does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -85,8 +85,8 @@ describe("receiptParticipants.update", () => {
 
 		describe("peer", () => {
 			test("does not exist", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -103,11 +103,11 @@ describe("receiptParticipants.update", () => {
 			});
 
 			test("is not participating in the receipt", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertReceipt(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertReceipt(ctx, userId);
 
-				const { id: notParticipantPeerId } = await insertPeer(ctx, accountId);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const { id: notParticipantPeerId } = await insertPeer(ctx, userId);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -127,10 +127,10 @@ describe("receiptParticipants.update", () => {
 			test("cannot be updated for yourself as an owner", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				await insertReceiptParticipant(ctx, receiptId, selfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -149,15 +149,15 @@ describe("receiptParticipants.update", () => {
 			test("cannot be updated for anyone if you are not a receipt owner", async ({
 				ctx,
 			}) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
 				const { id: foreignReceiptId } = await insertReceipt(
 					ctx,
-					foreignAccountId,
+					foreignUserId,
 				);
 				const [{ id: foreignToSelfPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					accountId,
+					foreignUserId,
+					userId,
 				]);
 				await insertReceiptParticipant(
 					ctx,
@@ -186,14 +186,14 @@ describe("receiptParticipants.update", () => {
 			test("for another peer", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				const [{ id: foreignPeerId }] = await insertConnectedPeers(ctx, [
-					accountId,
-					foreignAccountId,
+					userId,
+					foreignUserId,
 				]);
 				await insertReceiptParticipant(ctx, receiptId, foreignPeerId, {
 					role: "editor",

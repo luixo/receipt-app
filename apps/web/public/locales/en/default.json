@@ -11,7 +11,7 @@
 		"peer": "Peer",
 		"addPeer": "Add peer",
 		"peersConnections": "Peers' connections",
-		"account": "My account",
+		"user": "My account",
 		"admin": "Admin panel",
 		"debts": "Debts",
 		"debt": "Debt",
@@ -26,7 +26,7 @@
 		"register": "Register",
 		"login": "Login",
 		"resetPassword": "Reset password",
-		"voidAccount": "Void account"
+		"voidUser": "Void account"
 	},
 	"common": {
 		"andJoiner": " and "
@@ -35,7 +35,7 @@
 		"receipts": "Receipts",
 		"debts": "Debts",
 		"peers": "Peers",
-		"account": "Account",
+		"user": "User",
 		"settings": "Settings",
 		"admin": "Admin",
 		"login": "Login",

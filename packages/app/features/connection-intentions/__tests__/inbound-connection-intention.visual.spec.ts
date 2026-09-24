@@ -15,7 +15,7 @@ test("Row", async ({
 }) => {
 	await mockConnectionIntentions({ inboundAmount: 1 });
 	await page.navigate({ to: "/peers/connections" });
-	await awaitCacheKey("accountConnectionIntentions.getAll");
+	await awaitCacheKey("userConnectionIntentions.getAll");
 	await expectScreenshotWithSchemes("row.png", {
 		locator: page.getByTestId("inbound-connection-intention"),
 		mask: [peersSuggest],

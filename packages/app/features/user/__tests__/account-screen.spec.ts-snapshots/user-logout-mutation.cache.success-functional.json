@@ -1,0 +1,11 @@
+{
+	"mutations": {
+		"user.logout": {
+			"1": {
+				"state": {
+					"status": "success"
+				}
+			}
+		}
+	}
+}

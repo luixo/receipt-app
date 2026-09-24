@@ -1,0 +1,13 @@
+{
+	"mutations": {
+		"user.resendEmail": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending"
+				}
+			}
+		]
+	}
+}

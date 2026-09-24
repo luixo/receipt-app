@@ -33,7 +33,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select("ownerAccountId")
+			.select("ownerUserId")
 			.where("id", "=", input.receiptId)
 			.limit(1)
 			.executeTakeFirst();
@@ -45,7 +45,7 @@ export const procedure = authProcedure
 		}
 		const peer = await database
 			.selectFrom("peers")
-			.select(["ownerAccountId", "connectedAccountId"])
+			.select(["ownerUserId", "connectedUserId"])
 			.where("id", "=", input.peerId)
 			.limit(1)
 			.executeTakeFirst();
@@ -59,13 +59,13 @@ export const procedure = authProcedure
 			// We want this to blow up in case we add more cases
 			// oxlint-disable-next-line typescript/no-unnecessary-condition
 			case "role":
-				if (receipt.ownerAccountId !== ctx.auth.accountId) {
+				if (receipt.ownerUserId !== ctx.auth.userId) {
 					throw new TRPCError({
 						code: "FORBIDDEN",
 						message: `Only receipt owner can modify peer receipt role.`,
 					});
 				}
-				if (input.peerId === ctx.auth.accountId) {
+				if (input.peerId === ctx.auth.userId) {
 					throw new TRPCError({
 						code: "BAD_REQUEST",
 						message: `Cannot modify your own receipt role.`,

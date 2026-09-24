@@ -3,12 +3,12 @@ import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -31,7 +31,7 @@ describe("peers.getForeign", () => {
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -45,9 +45,9 @@ describe("peers.getForeign", () => {
 		});
 
 		test("peer not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other peers doesn't affect the error
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentPeerId = faker.string.uuid();
 			await expectTRPCError(
@@ -60,12 +60,12 @@ describe("peers.getForeign", () => {
 			);
 		});
 
-		test("peer is not owned by the account", async ({ ctx }) => {
-			// Self account
-			const { sessionId } = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, otherAccountId);
+		test("peer is not owned by the  user", async ({ ctx }) => {
+			// Self  user
+			const { sessionId } = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -78,10 +78,10 @@ describe("peers.getForeign", () => {
 		});
 
 		test("peer is our own peer", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verify other peers do not interfere
-			await insertPeer(ctx, accountId);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
+			const { id: peerId } = await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: peerId }),
@@ -93,29 +93,29 @@ describe("peers.getForeign", () => {
 
 	describe("functionality", () => {
 		describe("peer is not connected to a local peer", () => {
-			test("peer has an account and public name", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: otherAccountId } = await insertAccount(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+			test("peer has an  user and public name", async ({ ctx }) => {
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
+				const { id: otherUserId } = await insertUser(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, foreignUserId);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				// Verify other peers do not interfere
-				const { id: otherPeerId } = await insertPeer(ctx, accountId);
+				const { id: otherPeerId } = await insertPeer(ctx, userId);
 				// Verify other receipt participants do not interfere
 				await insertReceiptParticipant(ctx, receiptId, otherPeerId);
 
 				const [{ id: foreignPeerId, name, publicName: foreignPublicName }] =
 					await insertConnectedPeers(ctx, [
 						{
-							accountId: foreignAccountId,
+							userId: foreignUserId,
 							publicName: faker.person.fullName(),
 						},
-						otherAccountId,
+						otherUserId,
 					]);
 				const [{ id: foreignSelfPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					accountId,
+					foreignUserId,
+					userId,
 				]);
 
 				// Adding a foreign peer into the receipt
@@ -139,20 +139,20 @@ describe("peers.getForeign", () => {
 				});
 			});
 
-			test("peer has no account and public name", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
+			test("peer has no  user and public name", async ({ ctx }) => {
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
 
 				const [{ id: foreignSelfPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					accountId,
+					foreignUserId,
+					userId,
 				]);
 				const { id: foreignPeerId, name: foreignPeerName } = await insertPeer(
 					ctx,
-					foreignAccountId,
+					foreignUserId,
 				);
 
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+				const { id: receiptId } = await insertReceipt(ctx, foreignUserId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfPeerId);
 				await insertReceiptParticipant(ctx, receiptId, foreignPeerId);
 
@@ -169,35 +169,35 @@ describe("peers.getForeign", () => {
 		});
 
 		describe("connected to a local peer", () => {
-			test("as a third-party account", async ({ ctx }) => {
+			test("as a third-party  user", async ({ ctx }) => {
 				const {
-					id: connectedAccountId,
+					id: connectedUserId,
 					email: connectedEmail,
 					avatarUrl: connectedAvatarUrl,
-				} = await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
+				} = await insertUser(ctx);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
 
 				const [{ id: localConnectedPeerId, name, publicName }] =
 					await insertConnectedPeers(ctx, [
-						{ accountId, publicName: faker.person.fullName() },
-						connectedAccountId,
+						{ userId, publicName: faker.person.fullName() },
+						connectedUserId,
 					]);
 				const [{ id: foreignPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					connectedAccountId,
+					foreignUserId,
+					connectedUserId,
 				]);
 				const [{ id: foreignSelfPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					accountId,
+					foreignUserId,
+					userId,
 				]);
 
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+				const { id: receiptId } = await insertReceipt(ctx, foreignUserId);
 				await insertReceiptParticipant(ctx, receiptId, foreignPeerId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfPeerId);
 
 				// Verify other peers do not interfere
-				const { id: otherPeerId } = await insertPeer(ctx, accountId);
+				const { id: otherPeerId } = await insertPeer(ctx, userId);
 				// Verify other receipt participants do not interfere
 				await insertReceiptParticipant(ctx, receiptId, otherPeerId);
 
@@ -205,8 +205,8 @@ describe("peers.getForeign", () => {
 				const result = await caller.procedure({ id: foreignPeerId });
 				expect(result).toStrictEqual<typeof result>({
 					id: localConnectedPeerId,
-					connectedAccount: {
-						id: connectedAccountId,
+					connectedUser: {
+						id: connectedUserId,
 						email: connectedEmail,
 						avatarUrl: connectedAvatarUrl,
 					},
@@ -215,59 +215,59 @@ describe("peers.getForeign", () => {
 				});
 			});
 
-			test("as a self account", async ({ ctx }) => {
-				const { sessionId, accountId, peerId, account, name } =
-					await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
+			test("as a self  user", async ({ ctx }) => {
+				const { sessionId, userId, peerId, user, name } =
+					await insertUserWithSession(ctx);
+				const { id: foreignUserId } = await insertUser(ctx);
 
 				const [{ id: foreignSelfPeerId }] = await insertConnectedPeers(ctx, [
-					foreignAccountId,
-					accountId,
+					foreignUserId,
+					userId,
 				]);
 
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+				const { id: receiptId } = await insertReceipt(ctx, foreignUserId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: foreignSelfPeerId });
 				expect(result).toStrictEqual<typeof result>({
 					id: peerId,
-					connectedAccount: {
-						id: accountId,
-						email: account.email,
-						avatarUrl: account.avatarUrl,
+					connectedUser: {
+						id: userId,
+						email: user.email,
+						avatarUrl: user.avatarUrl,
 					},
 					name,
 					publicName: undefined,
 				});
 			});
 
-			test("as a foreign account", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			test("as a foreign  user", async ({ ctx }) => {
+				const { sessionId, userId } = await insertUserWithSession(ctx);
 				const {
-					id: foreignAccountId,
+					id: foreignUserId,
 					email: foreignEmail,
-					peerId: foreignAccountPeerId,
-				} = await insertAccount(ctx, { avatarUrl: null });
+					peerId: foreignUserPeerId,
+				} = await insertUser(ctx, { avatarUrl: null });
 
 				const [
 					{ id: foreignPeerId, name, publicName },
 					{ id: foreignSelfPeerId },
 				] = await insertConnectedPeers(ctx, [
-					{ accountId, publicName: faker.person.fullName() },
-					foreignAccountId,
+					{ userId, publicName: faker.person.fullName() },
+					foreignUserId,
 				]);
 
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-				await insertReceiptParticipant(ctx, receiptId, foreignAccountPeerId);
+				const { id: receiptId } = await insertReceipt(ctx, foreignUserId);
+				await insertReceiptParticipant(ctx, receiptId, foreignUserPeerId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: foreignAccountPeerId });
+				const result = await caller.procedure({ id: foreignUserPeerId });
 				expect(result).toStrictEqual<typeof result>({
 					id: foreignPeerId,
-					connectedAccount: {
-						id: foreignAccountId,
+					connectedUser: {
+						id: foreignUserId,
 						email: foreignEmail,
 						avatarUrl: undefined,
 					},

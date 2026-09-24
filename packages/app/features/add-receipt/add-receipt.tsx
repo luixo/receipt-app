@@ -71,8 +71,8 @@ const ContextedAddReceipt = suspendedFallback<{
 		payersState: [payers, setPayers],
 	}) => {
 		const trpc = useTRPC();
-		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
-		const selfPeerId = account.account.id as PeerId;
+		const { data: user } = useSuspenseQuery(trpc.user.get.queryOptions());
+		const selfPeerId = user.user.id as PeerId;
 		const formValues = useTypedValues(formStore, defaultFormValues);
 		const receiptId = React.useId();
 		const participants = useParticipants({
@@ -126,14 +126,14 @@ export const AddReceipt = () => {
 	const navigate = useNavigate();
 
 	const queryClient = useQueryClient();
-	const optimisticAccount = queryClient.getQueryData(
-		trpc.account.get.queryOptions().queryKey,
+	const optimisticUser = queryClient.getQueryData(
+		trpc.user.get.queryOptions().queryKey,
 	);
 	const addReceiptMutation = useMutation(
 		trpc.receipts.add.mutationOptions(
 			useTrpcMutationOptions(receiptsAddOptions, {
-				context: optimisticAccount
-					? { selfAccountId: optimisticAccount.account.id }
+				context: optimisticUser
+					? { selfUserId: optimisticUser.user.id }
 					: skipToken,
 				onSuccess: ({ id }) =>
 					navigate({ to: "/receipts/$id", params: { id }, replace: true }),

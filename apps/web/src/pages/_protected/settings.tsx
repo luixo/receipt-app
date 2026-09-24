@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_protected/settings")({
 		const trpc = getLoaderTrpcClient(ctx.context);
 		const prefetched = prefetchQueries(
 			ctx,
-			trpc.accountSettings.get.queryOptions(),
+			trpc.userSettings.get.queryOptions(),
 		);
 		await ctx.context.i18nContext.loadNamespaces("settings");
 		return { prefetched };

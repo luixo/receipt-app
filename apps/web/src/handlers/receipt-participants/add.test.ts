@@ -4,12 +4,12 @@ import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -36,7 +36,7 @@ describe("receiptParticipants.add", () => {
 
 		describe("receiptId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -53,7 +53,7 @@ describe("receiptParticipants.add", () => {
 
 		describe("peerId", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -70,7 +70,7 @@ describe("receiptParticipants.add", () => {
 
 		describe("role", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -86,9 +86,9 @@ describe("receiptParticipants.add", () => {
 		});
 
 		test("receipt does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -102,15 +102,12 @@ describe("receiptParticipants.add", () => {
 			);
 		});
 
-		test("receipt is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
+		test("receipt is not owned by an  user", async ({ ctx }) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			await insertReceipt(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			const fakePeerId = faker.string.uuid();
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -128,8 +125,8 @@ describe("receiptParticipants.add", () => {
 
 		describe("peer", () => {
 			test("does not exist", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -145,11 +142,11 @@ describe("receiptParticipants.add", () => {
 				);
 			});
 
-			test("is not owned by the account", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+			test("is not owned by the  user", async ({ ctx }) => {
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
+				const { id: foreignUserId } = await insertUser(ctx);
+				const { id: foreignPeerId } = await insertPeer(ctx, foreignUserId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -165,11 +162,11 @@ describe("receiptParticipants.add", () => {
 			});
 
 			test("is already added to the receipt", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertReceipt(ctx, accountId);
+				const { sessionId, userId } = await insertUserWithSession(ctx);
+				await insertReceipt(ctx, userId);
 
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const { id: participantPeerId } = await insertPeer(ctx, accountId);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
+				const { id: participantPeerId } = await insertPeer(ctx, userId);
 				await insertReceiptParticipant(ctx, receiptId, participantPeerId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -189,10 +186,10 @@ describe("receiptParticipants.add", () => {
 			test("duplicate tuples of peer id and receipt id", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -219,10 +216,10 @@ describe("receiptParticipants.add", () => {
 			test("mixed success and fail", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				const fakePeerId = faker.string.uuid();
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -257,27 +254,24 @@ describe("receiptParticipants.add", () => {
 		test("participants are added", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
-			const peer = await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx, {
+			} = await insertUserWithSession(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
+			const { id: anotherReceiptId } = await insertReceipt(ctx, userId);
+			const peer = await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx, {
 				avatarUrl: null,
 			});
 			const [foreignPeer, { id: foreignToSelfPeerId }] =
-				await insertConnectedPeers(ctx, [accountId, foreignAccountId]);
+				await insertConnectedPeers(ctx, [userId, foreignUserId]);
 
 			// Verify unrelated data doesn't affect the result
-			const { id: skippedReceiptId } = await insertReceipt(ctx, accountId);
-			const { id: anotherPeerId } = await insertPeer(ctx, accountId);
+			const { id: skippedReceiptId } = await insertReceipt(ctx, userId);
+			const { id: anotherPeerId } = await insertPeer(ctx, userId);
 			await insertReceiptParticipant(ctx, skippedReceiptId, anotherPeerId);
 
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			await insertReceiptParticipant(
 				ctx,
 				foreignReceiptId,

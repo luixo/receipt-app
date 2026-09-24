@@ -1,16 +1,16 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 
-// Account
-export type Account = TRPCQueryOutput<"account.get">;
-export type AccountSettings = TRPCQueryOutput<"accountSettings.get">;
+//User
+export type User = TRPCQueryOutput<"user.get">;
+export type UserSettings = TRPCQueryOutput<"userSettings.get">;
 // Peers
 export type Peer = TRPCQueryOutput<"peers.get">;
 export type ForeignPeer = TRPCQueryOutput<"peers.getForeign">;
 
-export type AccountConnectionIntentions =
-	TRPCQueryOutput<"accountConnectionIntentions.getAll">;
-export type InboundIntention = AccountConnectionIntentions["inbound"][number];
-export type OutboundIntention = AccountConnectionIntentions["outbound"][number];
+export type UserConnectionIntentions =
+	TRPCQueryOutput<"userConnectionIntentions.getAll">;
+export type InboundIntention = UserConnectionIntentions["inbound"][number];
+export type OutboundIntention = UserConnectionIntentions["outbound"][number];
 
 // Debts
 export type AggregatedDebts = TRPCQueryOutput<"debts.getAll">;

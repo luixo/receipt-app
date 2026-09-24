@@ -19,11 +19,11 @@ const getData = async (ctx: AuthorizedContext, inputs: readonly Input[]) => {
 		ctx.database
 			.selectFrom("peers")
 			.where("peers.id", "in", peerIds)
-			.select(["peers.id", "peers.ownerAccountId"])
+			.select(["peers.id", "peers.ownerUserId"])
 			.execute(),
 		ctx.database
 			.selectFrom("debts")
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.where("debts.ownerUserId", "=", ctx.auth.userId)
 			.where("debts.peerId", "in", peerIds)
 			.select([
 				"debts.peerId",
@@ -51,7 +51,7 @@ const queueGetAllPeer = queueCallFactory<
 				message: `Peer "${debt.peerId}" does not exist.`,
 			});
 		}
-		if (matchedPeer.ownerAccountId !== ctx.auth.accountId) {
+		if (matchedPeer.ownerUserId !== ctx.auth.userId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${matchedPeer.id}" is not owned by "${ctx.auth.email}".`,
@@ -73,7 +73,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get all debts for peer",
 		description:
-			"Returns the current account's debt amounts with a given peerId, summed per currency.",
+			"Returns the current  user's debt amounts with a given peerId, summed per currency.",
 	})
 	.input(getAllPeerSchema)
 	.query(queueGetAllPeer);

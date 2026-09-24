@@ -1,0 +1,28 @@
+{
+	"mutations": {
+		"userConnectionIntentions.add": {
+			"1": {
+				"state": {
+					"data": {
+						"connected": false,
+						"user": {
+							"id": "e81a3c70-8d79-4d24-84a8-bcc9035acb10",
+							"email": "Daija.Waelchi@yahoo.com",
+							"avatarUrl": "<undefined>"
+						},
+						"peer": {
+							"name": "Halie Kilback"
+						}
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"peerId": "bc084552-f745-4bf9-a2e5-c0ff6e63d408",
+						"email": "Daija.Waelchi@yahoo.com"
+					}
+				}
+			}
+		}
+	}
+}

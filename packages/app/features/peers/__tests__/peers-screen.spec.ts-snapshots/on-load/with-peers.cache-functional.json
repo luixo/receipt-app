@@ -6,7 +6,7 @@
 					"id": "12d2d97e-f5c9-4c77-8c13-64c783742405",
 					"name": "Mr. Chadd Wolf",
 					"publicName": "<undefined>",
-					"connectedAccount": "<undefined>"
+					"connectedUser": "<undefined>"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -22,7 +22,7 @@
 					"id": "a7818253-9a19-4879-a5e5-f6fc11d8ab97",
 					"name": "Eda O'Hara",
 					"publicName": "<undefined>",
-					"connectedAccount": "<undefined>"
+					"connectedUser": "<undefined>"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -38,7 +38,7 @@
 					"id": "f9fe697b-364c-42ad-a749-fa9f8157924b",
 					"name": "Scot Nader",
 					"publicName": "<undefined>",
-					"connectedAccount": "<undefined>"
+					"connectedUser": "<undefined>"
 				},
 				"dataUpdateCount": 1,
 				"error": null,

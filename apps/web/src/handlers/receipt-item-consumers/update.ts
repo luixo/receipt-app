@@ -32,10 +32,10 @@ export const procedure = authProcedure
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
 			)
-			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "receipts.ownerAccountId"),
+			.innerJoin("users", (qb) =>
+				qb.onRef("users.id", "=", "receipts.ownerUserId"),
 			)
-			.select(["receipts.id", "receipts.ownerAccountId"])
+			.select(["receipts.id", "receipts.ownerUserId"])
 			.limit(1)
 			.executeTakeFirst();
 		if (!receipt) {
@@ -44,11 +44,7 @@ export const procedure = authProcedure
 				message: `Receipt item "${input.itemId}" does not exist.`,
 			});
 		}
-		const accessRole = await getAccessRole(
-			database,
-			receipt,
-			ctx.auth.accountId,
-		);
+		const accessRole = await getAccessRole(database, receipt, ctx.auth.userId);
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",

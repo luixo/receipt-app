@@ -19,16 +19,16 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const account = await database
-			.selectFrom("accounts")
+		const user = await database
+			.selectFrom("users")
 			.select("id")
 			.where("email", "=", input.email.lowercase)
 			.limit(1)
 			.executeTakeFirst();
-		if (!account) {
+		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Account "${input.email.original}" does not exist.`,
+				message: `User "${input.email.original}" does not exist.`,
 			});
 		}
 		const uuid: string = ctx.getUuid();
@@ -44,7 +44,7 @@ export const procedure = unauthProcedure
 		const currentIntentions = await database
 			.selectFrom("resetPasswordIntentions")
 			.where((eb) =>
-				eb("resetPasswordIntentions.accountId", "=", account.id).and(
+				eb("resetPasswordIntentions.userId", "=", user.id).and(
 					"expiresTimestamp",
 					">",
 					Temporal.Now.zonedDateTimeISO(),
@@ -61,7 +61,7 @@ export const procedure = unauthProcedure
 		await database
 			.insertInto("resetPasswordIntentions")
 			.values({
-				accountId: account.id,
+				userId: user.id,
 				expiresTimestamp: expirationDate,
 				token: uuid,
 			})

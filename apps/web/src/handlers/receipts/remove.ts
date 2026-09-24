@@ -8,7 +8,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Remove receipt",
 		description:
-			"Removes a receipt owned by the current account, unlinking any debts that reference it.",
+			"Removes a receipt owned by the current  user, unlinking any debts that reference it.",
 	})
 	.input(
 		z.strictObject({
@@ -19,7 +19,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select("ownerAccountId")
+			.select("ownerUserId")
 			.where("id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -29,7 +29,7 @@ export const procedure = authProcedure
 				message: `No receipt found by id "${input.id}".`,
 			});
 		}
-		if (receipt.ownerAccountId !== ctx.auth.accountId) {
+		if (receipt.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt "${input.id}" is not owned by "${ctx.auth.email}".`,

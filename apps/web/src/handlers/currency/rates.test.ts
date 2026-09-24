@@ -3,7 +3,7 @@ import { fromEntries, keys } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
@@ -30,7 +30,7 @@ describe("currency.rates", () => {
 		);
 
 		test(`invalid "from" currency code`, async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "foo", to: ["USD"] }),
@@ -40,7 +40,7 @@ describe("currency.rates", () => {
 		});
 
 		test(`invalid "to" currency code`, async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["USD", "bar"] }),
@@ -50,7 +50,7 @@ describe("currency.rates", () => {
 		});
 
 		test(`invalid "to" codes amount`, async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: [] }),
@@ -60,7 +60,7 @@ describe("currency.rates", () => {
 		});
 
 		test(`"to" and "from" codes are the same`, async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["EUR", "USD"] }),
@@ -77,7 +77,7 @@ describe("currency.rates", () => {
 				dbMock.setResponder("getValue", () => {
 					throw new Error('Throw on "getValue" request');
 				});
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ from: "USD", to: ["EUR"] }),
@@ -92,7 +92,7 @@ describe("currency.rates", () => {
 				dbMock.setResponder("setValue", () => {
 					throw new Error('Throw on "setValue" request');
 				});
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				// Throwing on setValue doesn't affect flow as result may be discarded
 				await caller.procedure({ from: "USD", to: ["EUR"] });
@@ -106,7 +106,7 @@ describe("currency.rates", () => {
 				ctx.exchangeRateOptions.mock.addInterceptor(() => {
 					throw new Error("Generic exchange rate mock error");
 				});
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -125,7 +125,7 @@ describe("currency.rates", () => {
 				ctx.exchangeRateOptions.mock.addInterceptor(() =>
 					Promise.resolve(getFakeRate()),
 				);
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
@@ -174,7 +174,7 @@ describe("currency.rates", () => {
 				dbMock.setResponder("setValue", async () => {
 					/* empty */
 				});
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
@@ -228,7 +228,7 @@ describe("currency.rates", () => {
 					assert(currencyTo, "Expected to have format 'USD->EUR' in key");
 					return Promise.resolve(fakeRates[currencyTo]?.toString() ?? null);
 				});
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					from: currencyFrom,
@@ -258,7 +258,7 @@ describe("currency.rates", () => {
 			dbMock.setResponder("getValue", () =>
 				Promise.resolve(getFakeRate().toString()),
 			);
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const currencyFrom = "uSd";
 			const currenciesTo = ["EUR", "mop", "VnD"];

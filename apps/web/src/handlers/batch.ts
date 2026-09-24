@@ -46,7 +46,7 @@ const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
 	// there are no batched requests with no auth yet
 	/* c8 ignore start */
 	if ("auth" in context) {
-		return (context as AuthorizedContext).auth.accountId;
+		return (context as AuthorizedContext).auth.userId;
 	}
 	return "anonymous";
 	/* c8 ignore stop */

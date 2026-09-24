@@ -18,7 +18,7 @@ import {
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
 	resetPasswordTokenSchema,
-	voidAccountTokenSchema,
+	voidUserTokenSchema,
 } from "~app/utils/validation";
 import type { TreeRouter } from "~web/entry/router";
 import type { FileRoutesById, FileRoutesByTo } from "~web/entry/routeTree.gen";
@@ -114,8 +114,8 @@ export const searchParamsMapping = {
 		debug: z.coerce.boolean().default(false).catch(false),
 		redirect: z.string().default("").catch(""),
 	}),
-	"/_public/void-account": z.object({
-		token: voidAccountTokenSchema.optional().catch(undefined),
+	"/_public/void-user": z.object({
+		token: voidUserTokenSchema.optional().catch(undefined),
 	}),
 	"/_public/reset-password": z.object({
 		token: resetPasswordTokenSchema.optional().catch(undefined),

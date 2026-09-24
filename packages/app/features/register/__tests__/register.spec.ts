@@ -61,7 +61,7 @@ test("'auth.register' mutation", async ({
 	await api.mockUtils.authPage();
 	api.mockFirst("auth.register", async () => {
 		await registerPause.promise;
-		return { account: { id: "test", verified: true } };
+		return { user: { id: "test", verified: true } };
 	});
 	const buttonWithLoader = withLoader(registerButton);
 	await expect(buttonWithLoader).toBeHidden();

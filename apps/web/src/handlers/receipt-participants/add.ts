@@ -31,7 +31,7 @@ const getData = async (
 		ctx.database
 			.selectFrom("receipts")
 			.where("id", "in", receiptIds)
-			.select(["receipts.id", "receipts.ownerAccountId"])
+			.select(["receipts.id", "receipts.ownerUserId"])
 			.execute(),
 		ctx.database
 			.selectFrom("peers")
@@ -47,7 +47,7 @@ const getData = async (
 			)
 			.select([
 				"peers.id",
-				"peers.ownerAccountId",
+				"peers.ownerUserId",
 				"receiptParticipants.receiptId",
 			])
 			.execute(),
@@ -70,7 +70,7 @@ const getParticipants = (
 				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
-		if (matchedReceipt.ownerAccountId !== ctx.auth.accountId) {
+		if (matchedReceipt.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to add participant "${input.peerId}" to receipt "${input.receiptId}".`,
@@ -78,10 +78,7 @@ const getParticipants = (
 		}
 		const matchedPeers = peers.filter((peer) => peer.id === input.peerId);
 		const [firstMatchedPeer] = matchedPeers;
-		if (
-			!firstMatchedPeer ||
-			firstMatchedPeer.ownerAccountId !== ctx.auth.accountId
-		) {
+		if (!firstMatchedPeer || firstMatchedPeer.ownerUserId !== ctx.auth.userId) {
 			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `Peer "${input.peerId}" does not exist or is not owned by you.`,
@@ -101,7 +98,7 @@ const getParticipants = (
 			receiptId: input.receiptId,
 			peerId: input.peerId,
 			role:
-				matchedReceipt.ownerAccountId === input.peerId
+				matchedReceipt.ownerUserId === input.peerId
 					? ("owner" as const)
 					: input.role,
 		};

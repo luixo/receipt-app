@@ -1,0 +1,38 @@
+import { describe, expect } from "vitest";
+
+import { createAuthContext } from "~tests/backend/utils/context";
+import { insertUserWithSession } from "~tests/backend/utils/data";
+import {
+	expectDatabaseDiffSnapshot,
+	expectUnauthorizedError,
+} from "~tests/backend/utils/expect";
+import { test } from "~tests/backend/utils/test";
+import { t } from "~web/handlers/trpc";
+
+import { procedure } from "./logout";
+
+const createCaller = t.createCallerFactory(t.router({ procedure }));
+
+describe("user.logout", () => {
+	describe("input verification", () => {
+		expectUnauthorizedError((context) => createCaller(context).procedure());
+	});
+
+	describe("functionality", () => {
+		test("session is removed", async ({ ctx }) => {
+			// Verifying other users are not affected
+			await insertUserWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const context = createAuthContext(ctx, sessionId);
+			const caller = createCaller(context);
+			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
+			const responseHeaders = [...context.resHeaders.entries()];
+			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+				[
+					"set-cookie",
+					"authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
+				],
+			]);
+		});
+	});
+});

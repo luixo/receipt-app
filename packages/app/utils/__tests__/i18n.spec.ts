@@ -11,7 +11,7 @@ test.use({ locale: "en-GB" });
 test.describe("Language strategies", () => {
 	test("Cookie", async ({ api, page, getI18nResource, setLanguageCookie }) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await setLanguageCookie("ru");
 		await page.navigate({ to: "/settings" });
 		const ru = await getI18nResource("ru", "settings");
@@ -23,7 +23,7 @@ test.describe("Language strategies", () => {
 
 		test("Full tag", async ({ api, page, getI18nResource }) => {
 			await api.mockUtils.authPage();
-			api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+			api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 			await page.navigate({ to: "/settings" });
 			const ru = await getI18nResource("ru", "settings");
 			await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -35,7 +35,7 @@ test.describe("Language strategies", () => {
 
 		test("Short tag", async ({ api, page, getI18nResource }) => {
 			await api.mockUtils.authPage();
-			api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+			api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 			await page.navigate({ to: "/settings" });
 			const ru = await getI18nResource("ru", "settings");
 			await expect(page.getByRole("heading", { level: 1 })).toHaveText(
@@ -46,7 +46,7 @@ test.describe("Language strategies", () => {
 
 	test("Fallback", async ({ api, page, getI18nResource }) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await page.navigate({ to: "/settings" });
 		const en = await getI18nResource("en", "settings");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);
@@ -60,7 +60,7 @@ test.describe("Language strategies", () => {
 	}) => {
 		await setLanguageCookie("de" as Language);
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await page.navigate({ to: "/settings" });
 		const en = await getI18nResource("en", "settings");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);
@@ -78,7 +78,7 @@ test.describe("Server-side translations", () => {
 	}) => {
 		await setLanguageCookie("ru");
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await page.navigate({ to: "/settings" });
 		const ru = await getI18nResource("ru", "default");
 		expect(await page.title()).toEqual(
@@ -94,7 +94,7 @@ test.describe("Server-side translations", () => {
 	}) => {
 		await setLanguageCookie("ru");
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await page.navigate({ to: "/settings" });
 		const ru = await getI18nResource("ru", "settings");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(ru.header);
@@ -109,9 +109,9 @@ test.describe("Client-side translations", () => {
 		api,
 	}) => {
 		await api.mockUtils.authPage();
-		await page.navigate({ to: "/account" });
-		await awaitCacheKey("account.get");
-		expect(await getNamespaces()).toEqual(["default", "account"]);
+		await page.navigate({ to: "/user" });
+		await awaitCacheKey("user.get");
+		expect(await getNamespaces()).toEqual(["default", "user"]);
 	});
 
 	test("Changing namespace loads data", async ({
@@ -120,12 +120,12 @@ test.describe("Client-side translations", () => {
 		getNamespaces,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
-		await page.navigate({ to: "/account" });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
+		await page.navigate({ to: "/user" });
 		await page.getByRole("link", { name: "Settings" }).click();
 		await expect
 			.poll(() => getNamespaces())
-			.toEqual(["default", "account", "settings"]);
+			.toEqual(["default", "user", "settings"]);
 	});
 
 	test("Changing language loads data", async ({
@@ -136,9 +136,9 @@ test.describe("Client-side translations", () => {
 		awaitCacheKey,
 	}) => {
 		await api.mockUtils.authPage();
-		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
+		api.mockFirst("userSettings.get", { manualAcceptDebts: true });
 		await page.navigate({ to: "/settings" });
-		await awaitCacheKey("accountSettings.get");
+		await awaitCacheKey("userSettings.get");
 		expect(await getLanguages()).toEqual(["en"]);
 		const en = await getI18nResource("en", "settings");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(en.header);

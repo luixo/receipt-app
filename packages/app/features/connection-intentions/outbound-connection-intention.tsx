@@ -11,7 +11,7 @@ import { Icon } from "~components/icons";
 import { Input } from "~components/input";
 import { SkeletonInput } from "~components/skeleton-input";
 import { View } from "~components/view";
-import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
+import { options as userConnectionsRemoveOptions } from "~mutations/user-connection-intentions/remove";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {
 	const { t } = useTranslation("peers");
@@ -40,20 +40,20 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const trpc = useTRPC();
 	const { t } = useTranslation("peers");
 	const removeConnectionMutation = useMutation(
-		trpc.accountConnectionIntentions.remove.mutationOptions(
-			useTrpcMutationOptions(accountConnectionsRemoveOptions),
+		trpc.userConnectionIntentions.remove.mutationOptions(
+			useTrpcMutationOptions(userConnectionsRemoveOptions),
 		),
 	);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({
-			targetAccountId: intention.account.id,
+			targetUserId: intention.user.id,
 		});
-	}, [removeConnectionMutation, intention.account.id]);
+	}, [removeConnectionMutation, intention.user.id]);
 
 	return (
 		<View testID="outbound-connection-intention">
 			<Input
-				value={intention.account.email}
+				value={intention.user.email}
 				label={intention.peer.name}
 				isReadOnly
 				mutation={removeConnectionMutation}

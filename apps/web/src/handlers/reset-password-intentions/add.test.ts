@@ -3,8 +3,8 @@ import { assert, describe, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
 import {
-	insertAccountWithSession,
 	insertResetPasswordIntention,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -37,18 +37,18 @@ describe("resetPasswordIntentions.add", () => {
 			await expectTRPCError(
 				() => caller.procedure({ email }),
 				"NOT_FOUND",
-				`Account "${email}" does not exist.`,
+				`User "${email}" does not exist.`,
 			);
 		});
 
 		test("too many reset intentions", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const {
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+				userId,
+				user: { email },
+			} = await insertUserWithSession(ctx);
 			await Array.fromAsync({ length: MAX_INTENTIONS_AMOUNT }, () =>
-				insertResetPasswordIntention(ctx, accountId),
+				insertResetPasswordIntention(ctx, userId),
 			);
 			await expectTRPCError(
 				() => caller.procedure({ email }),
@@ -62,8 +62,8 @@ describe("resetPasswordIntentions.add", () => {
 		test("email service is disabled", async ({ ctx }) => {
 			ctx.emailOptions.setActive(false);
 			const {
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+				user: { email },
+			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -76,8 +76,8 @@ describe("resetPasswordIntentions.add", () => {
 		test("email service is broken", async ({ ctx }) => {
 			ctx.emailOptions.setBroken(true);
 			const {
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+				user: { email },
+			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -89,13 +89,13 @@ describe("resetPasswordIntentions.add", () => {
 
 		test("reset password intention added", async ({ ctx }) => {
 			const {
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+				userId,
+				user: { email },
+			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createContext(ctx));
 
 			// Verify we can add an intention even if we already have one
-			await insertResetPasswordIntention(ctx, accountId);
+			await insertResetPasswordIntention(ctx, userId);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure({ email }));
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.emailOptions.mock.getMessages();

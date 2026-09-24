@@ -6,16 +6,16 @@ import { describe, expect } from "vitest";
 import type { TRPCQueryInput } from "~app/trpc";
 import type { ReceiptPageEntry } from "~app/trpc-types";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountId } from "~db/ids";
+import type { UserId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectTRPCError,
@@ -44,16 +44,16 @@ type Input = TRPCQueryInput<"receipts.getPaged">;
 const mockData = async (ctx: TestContext) => {
 	const {
 		sessionId,
-		accountId,
+		userId,
 		peerId: selfPeerId,
-	} = await insertAccountWithSession(ctx);
-	const foreignAccount = await insertAccount(ctx);
+	} = await insertUserWithSession(ctx);
+	const foreignUser = await insertUser(ctx);
 
 	// Verify other peers do not interfere
-	await insertReceipt(ctx, foreignAccount.id);
+	await insertReceipt(ctx, foreignUser.id);
 
 	// Self receipt
-	const selfReceipt = await insertReceipt(ctx, accountId, {
+	const selfReceipt = await insertReceipt(ctx, userId, {
 		issued: Temporal.PlainDate.from("2020-01-06"),
 	});
 	// Self receipt: participants
@@ -70,14 +70,14 @@ const mockData = async (ctx: TestContext) => {
 	};
 
 	// Other self receipt
-	const otherSelfReceipt = await insertReceipt(ctx, accountId, {
+	const otherSelfReceipt = await insertReceipt(ctx, userId, {
 		issued: Temporal.PlainDate.from("2020-02-06"),
 	});
 	const otherSelfReceiptWithItems = {
 		...otherSelfReceipt,
 		items: [],
 	};
-	const peer = await insertPeer(ctx, accountId);
+	const peer = await insertPeer(ctx, userId);
 	// Other self receipt: participants
 	await Promise.all([
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfPeerId),
@@ -86,15 +86,15 @@ const mockData = async (ctx: TestContext) => {
 
 	// Foreign receipt
 	const [foreignToSelfPeer] = await insertConnectedPeers(ctx, [
-		foreignAccount.id,
-		accountId,
+		foreignUser.id,
+		userId,
 	]);
-	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
+	const foreignReceipt = await insertReceipt(ctx, foreignUser.id, {
 		issued: Temporal.PlainDate.from("2020-03-06"),
 	});
 	// Foreign receipt: participants
 	await Promise.all([
-		insertReceiptParticipant(ctx, foreignReceipt.id, foreignAccount.peerId),
+		insertReceiptParticipant(ctx, foreignReceipt.id, foreignUser.peerId),
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfPeer.id),
 	]);
 	// Foreign receipt: items
@@ -109,7 +109,7 @@ const mockData = async (ctx: TestContext) => {
 	};
 
 	// Other foreign receipt
-	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
+	const otherForeignReceipt = await insertReceipt(ctx, foreignUser.id, {
 		issued: Temporal.PlainDate.from("2020-04-06"),
 		name: "T'zolkin",
 	});
@@ -140,7 +140,7 @@ const mockData = async (ctx: TestContext) => {
 	];
 
 	return {
-		accountId,
+		userId,
 		sessionId,
 		receipts,
 	};
@@ -155,11 +155,11 @@ const runFunctionalTest = async (
 		modifyInput?: (input: Input, opts: { receipts: MockReceipt[] }) => Input;
 		modifyOutput?: (
 			receipts: MockReceipt[],
-			opts: { accountId: AccountId },
+			opts: { userId: UserId },
 		) => ReceiptPageEntry[];
 	} = {},
 ) => {
-	const { accountId, sessionId, receipts } = await mockData(ctx);
+	const { userId, sessionId, receipts } = await mockData(ctx);
 
 	const limit = 10;
 	const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -174,7 +174,7 @@ const runFunctionalTest = async (
 			{ receipts: sortedReceipts },
 		),
 	);
-	const output = modifyOutput(sortedReceipts, { accountId });
+	const output = modifyOutput(sortedReceipts, { userId });
 	expect(output.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
 		count: output.length,
@@ -195,7 +195,7 @@ describe("receipts.getPaged", () => {
 
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0, orderBy: "date-desc" }),
@@ -205,7 +205,7 @@ describe("receipts.getPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -220,7 +220,7 @@ describe("receipts.getPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -237,7 +237,7 @@ describe("receipts.getPaged", () => {
 
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -248,7 +248,7 @@ describe("receipts.getPaged", () => {
 			});
 
 			test("is too big", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -263,7 +263,7 @@ describe("receipts.getPaged", () => {
 			});
 
 			test("is fractional", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -280,7 +280,7 @@ describe("receipts.getPaged", () => {
 
 		describe("orderBy", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -298,11 +298,11 @@ describe("receipts.getPaged", () => {
 
 	describe("functionality", () => {
 		test("returns empty results", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
 
 			// Verify other receipts do not interfere
-			await insertReceipt(ctx, otherAccountId);
+			await insertReceipt(ctx, otherUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -322,15 +322,15 @@ describe("receipts.getPaged", () => {
 		});
 
 		test("returns paged results", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			const limit = 2;
 			const count = 2 * limit - 1;
 			await Promise.all(
 				Array.from({ length: limit }, async (_, index) => {
-					await insertReceipt(ctx, accountId, { name: `Receipt ${index}` });
+					await insertReceipt(ctx, userId, { name: `Receipt ${index}` });
 					if (index !== 0) {
-						await insertReceipt(ctx, accountId, {
+						await insertReceipt(ctx, userId, {
 							name: `Receipt ${index} - additional`,
 						});
 					}
@@ -377,9 +377,9 @@ describe("receipts.getPaged", () => {
 								...input,
 								filters: { ownedByMe: true },
 							}),
-							modifyOutput: (receipts, { accountId: selfAccountId }) =>
+							modifyOutput: (receipts, { userId: selfUserId }) =>
 								receipts
-									.filter((receipt) => receipt.ownerAccountId === selfAccountId)
+									.filter((receipt) => receipt.ownerUserId === selfUserId)
 									.map(mapReceipt),
 						});
 					});
@@ -390,9 +390,9 @@ describe("receipts.getPaged", () => {
 								...input,
 								filters: { ownedByMe: false },
 							}),
-							modifyOutput: (receipts, { accountId: selfAccountId }) =>
+							modifyOutput: (receipts, { userId: selfUserId }) =>
 								receipts
-									.filter((receipt) => receipt.ownerAccountId !== selfAccountId)
+									.filter((receipt) => receipt.ownerUserId !== selfUserId)
 									.map(mapReceipt),
 						});
 					});

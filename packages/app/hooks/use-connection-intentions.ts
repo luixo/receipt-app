@@ -5,7 +5,7 @@ import { useTRPC } from "~app/utils/trpc";
 export const useConnectionIntentions = () => {
 	const trpc = useTRPC();
 	const connections = useSuspenseQuery(
-		trpc.accountConnectionIntentions.getAll.queryOptions(),
+		trpc.userConnectionIntentions.getAll.queryOptions(),
 	);
 	return connections.data.inbound.length;
 };

@@ -3,10 +3,10 @@ import { describe } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertConnectedPeers,
 	insertPeer,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -28,7 +28,7 @@ describe("peers.unlink", () => {
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -42,9 +42,9 @@ describe("peers.unlink", () => {
 		});
 
 		test("peer not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			// Verifying adding other peers doesn't affect the error
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentPeerId = faker.string.uuid();
 			await expectTRPCError(
@@ -54,15 +54,15 @@ describe("peers.unlink", () => {
 			);
 		});
 
-		test("peer is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("peer is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, otherAccountId);
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignPeerId }),
@@ -71,36 +71,36 @@ describe("peers.unlink", () => {
 			);
 		});
 
-		test("peer is not connected to the account", async ({ ctx }) => {
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
-			// Connected account
-			await insertConnectedPeers(ctx, [accountId, otherAccountId]);
-			// Not connected account
-			const { id: notConnectedPeerId } = await insertPeer(ctx, accountId);
+		test("peer is not connected to the  user", async ({ ctx }) => {
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			// Connected  user
+			await insertConnectedPeers(ctx, [userId, otherUserId]);
+			// Not connected  user
+			const { id: notConnectedPeerId } = await insertPeer(ctx, userId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: notConnectedPeerId }),
 				"NOT_FOUND",
-				`Peer "${notConnectedPeerId}" doesn't have account connected to it.`,
+				`Peer "${notConnectedPeerId}" doesn't have  user connected to it.`,
 			);
 		});
 	});
 
 	describe("functionality", () => {
-		test("account is unlinked from a peer", async ({ ctx }) => {
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
-			// Connected account
+		test("user is unlinked from a peer", async ({ ctx }) => {
+			// Self  user
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id: otherUserId } = await insertUser(ctx);
+			// Connected  user
 			const [{ id: connectedPeerId }] = await insertConnectedPeers(ctx, [
-				accountId,
-				otherAccountId,
+				userId,
+				otherUserId,
 			]);
 			// Verify other peers are not affected
-			await insertPeer(ctx, accountId);
-			await insertPeer(ctx, otherAccountId);
+			await insertPeer(ctx, userId);
+			await insertPeer(ctx, otherUserId);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: connectedPeerId }),

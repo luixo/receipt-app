@@ -7,7 +7,7 @@ import { expect } from "~tests/frontend/fixtures";
 
 const test = mergeTests(peersFixture, peerFixture);
 
-test("No connected account - no description", async ({
+test("No connected  user - no description", async ({
 	faker,
 	mockBase,
 	page,
@@ -21,7 +21,7 @@ test("No connected account - no description", async ({
 				id: faker.string.uuid(),
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: undefined,
+				connectedUser: undefined,
 			},
 		],
 	});
@@ -32,7 +32,7 @@ test("No connected account - no description", async ({
 	await expect(peerLocator).not.toContainText("@");
 });
 
-test("Connected account - description", async ({
+test("Connected  user - description", async ({
 	faker,
 	mockBase,
 	peer,
@@ -46,7 +46,7 @@ test("Connected account - description", async ({
 				id: faker.string.uuid(),
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: {
+				connectedUser: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
 					avatarUrl: undefined,
@@ -55,9 +55,9 @@ test("Connected account - description", async ({
 		],
 	});
 	assert.ok(firstPeer);
-	assert.ok(firstPeer.connectedAccount);
+	assert.ok(firstPeer.connectedUser);
 	await page.navigate({ to: "/peers" });
 	const peerLocator = peer.filter({ hasText: firstPeer.name });
 	await expect(peerLocator).toBeVisible();
-	await expect(peerLocator).toContainText(firstPeer.connectedAccount.email);
+	await expect(peerLocator).toContainText(firstPeer.connectedUser.email);
 });

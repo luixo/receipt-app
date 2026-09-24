@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"account.get:[[]]": {
+		"user.get:[[]]": {
 			"state": {
 				"error": {
 					"type": "TRPCClientError",

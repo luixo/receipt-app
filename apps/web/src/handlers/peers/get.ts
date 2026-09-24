@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -13,31 +13,21 @@ const fetchPeers = async (
 ) =>
 	database
 		.selectFrom("peers")
-		.leftJoin("accounts", (qb) =>
-			qb.onRef("connectedAccountId", "=", "accounts.id"),
-		)
+		.leftJoin("users", (qb) => qb.onRef("connectedUserId", "=", "users.id"))
 		.leftJoin("peers as reciprocalPeers", (qb) =>
 			qb
-				.onRef(
-					"reciprocalPeers.ownerAccountId",
-					"=",
-					"peers.connectedAccountId",
-				)
-				.onRef(
-					"reciprocalPeers.connectedAccountId",
-					"=",
-					"peers.ownerAccountId",
-				),
+				.onRef("reciprocalPeers.ownerUserId", "=", "peers.connectedUserId")
+				.onRef("reciprocalPeers.connectedUserId", "=", "peers.ownerUserId"),
 		)
 		.where("peers.id", "in", ids)
-		.where("peers.ownerAccountId", "=", auth.accountId)
+		.where("peers.ownerUserId", "=", auth.userId)
 		.select([
 			"peers.id",
 			"peers.name",
 			"peers.publicName",
-			"accounts.id as accountId",
-			"accounts.avatarUrl",
-			"accounts.email",
+			"users.id as userId",
+			"users.avatarUrl",
+			"users.email",
 			"reciprocalPeers.id as reciprocalPeerId",
 		])
 		.execute();
@@ -46,17 +36,17 @@ const mapPeer = (peer: Awaited<ReturnType<typeof fetchPeers>>[number]) => ({
 	id: peer.id,
 	name: peer.name,
 	publicName: peer.publicName === null ? undefined : peer.publicName,
-	connectedAccount:
+	connectedUser:
 		peer.email === null ||
-		peer.accountId === null ||
+		peer.userId === null ||
 		peer.reciprocalPeerId === null
 			? undefined
 			: ({
-					id: peer.accountId,
+					id: peer.userId,
 					email: peer.email,
 					avatarUrl: peer.avatarUrl || undefined,
 				} as {
-					id: AccountId;
+					id: UserId;
 					email: string;
 					avatarUrl?: string;
 				}),
@@ -86,7 +76,7 @@ const queuePeer = queueCallFactory<
 export const procedure = authProcedure
 	.meta({
 		title: "Get peer",
-		description: "Returns a peer by id owned by the current account.",
+		description: "Returns a peer by id owned by the current  user.",
 	})
 	.input(z.strictObject({ id: peerIdSchema }))
 	.query(queuePeer);

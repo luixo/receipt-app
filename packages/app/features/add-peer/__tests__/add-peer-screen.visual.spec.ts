@@ -13,7 +13,7 @@ test("Form", async ({
 	await api.mockUtils.authPage();
 
 	await page.navigate({ to: "/peers/add" });
-	await awaitCacheKey("account.get");
+	await awaitCacheKey("user.get");
 	await expect(page.getByRole("heading", { level: 1 })).toHaveText("Add peer");
 	await expectScreenshotWithSchemes("empty.png");
 
@@ -36,7 +36,7 @@ test.describe("Errors in form", () => {
 		await api.mockUtils.authPage();
 
 		await page.navigate({ to: "/peers/add" });
-		await awaitCacheKey("account.get");
+		await awaitCacheKey("user.get");
 
 		// fill then clear: isDirty stays true so the error renders
 		await nameInput.fill("x");
@@ -74,7 +74,7 @@ test.describe("'peers.add' mutation", () => {
 		});
 
 		await page.navigate({ to: "/peers/add" });
-		await awaitCacheKey("account.get");
+		await awaitCacheKey("user.get");
 		await expect(page.getByRole("heading", { level: 1 })).toHaveText(
 			"Add peer",
 		);

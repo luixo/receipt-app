@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_protected")({
 		}
 		const trpc = getLoaderTrpcClient(context);
 		try {
-			await context.queryClient.fetchQuery(trpc.account.get.queryOptions());
+			await context.queryClient.fetchQuery(trpc.user.get.queryOptions());
 		} catch (error) {
 			if (error instanceof TRPCClientError) {
 				const castedError = error as TRPCError;

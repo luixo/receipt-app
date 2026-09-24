@@ -1,8 +1,8 @@
-import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import {
 	invalidateSuggest as invalidateSuggestPeers,
 	update as updatePeers,
 } from "../cache/peers";
+import { update as updateUserConnections } from "../cache/user-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"peers.add"> = {
@@ -16,7 +16,7 @@ export const options: UseContextedMutationOptions<"peers.add"> = {
 						id,
 						name: variables.name,
 						publicName: undefined,
-						connectedAccount: undefined,
+						connectedUser: undefined,
 					});
 				},
 				getForeign: undefined,
@@ -25,12 +25,12 @@ export const options: UseContextedMutationOptions<"peers.add"> = {
 				},
 			});
 			if (connection && !connection.connected) {
-				updateAccountConnections(controllerContext, {
+				updateUserConnections(controllerContext, {
 					getAll: (controller) =>
 						controller.outbound.add({
-							account: {
-								id: connection.account.id,
-								email: connection.account.email,
+							user: {
+								id: connection.user.id,
+								email: connection.user.email,
 							},
 							peer: {
 								id,

@@ -8,10 +8,10 @@ export const options: UseContextedMutationOptions<"peers.unlink"> = {
 			get: (controller) =>
 				controller.update(
 					variables.id,
-					(peer) => ({ ...peer, connectedAccount: undefined }),
+					(peer) => ({ ...peer, connectedUser: undefined }),
 					(snapshot) => (peer) => ({
 						...peer,
-						connectedAccount: snapshot.connectedAccount,
+						connectedUser: snapshot.connectedUser,
 					}),
 				),
 			getForeign: (controller) => controller.removeOwn(variables.id),

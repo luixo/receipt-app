@@ -26,9 +26,7 @@ export const LoadablePeerAvatar = suspendedFallback<Props>(
 		if ("remoteId" in data) {
 			return <PeerAvatar id={data.remoteId} dimmed {...props} />;
 		}
-		return (
-			<PeerAvatar id={id} connectedAccount={data.connectedAccount} {...props} />
-		);
+		return <PeerAvatar id={id} connectedUser={data.connectedUser} {...props} />;
 	},
 	SkeletonAvatar,
 );

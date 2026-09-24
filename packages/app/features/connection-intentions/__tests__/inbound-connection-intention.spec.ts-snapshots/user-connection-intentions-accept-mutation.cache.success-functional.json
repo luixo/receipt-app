@@ -1,0 +1,36 @@
+{
+	"queries": {
+		"peers.get:[{\"id\":\"330ace64-1ad9-4559-ae8e-e6425c1cc1ba\"}]": {
+			"state": {
+				"data": {
+					"connectedUser": {
+						"id": "d1030244-d2ea-46d5-a102-b5d3ea790571",
+						"email": "Gerry_Walter@hotmail.com",
+						"avatarUrl": "<undefined>"
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"userConnectionIntentions.accept": {
+			"1": {
+				"state": {
+					"data": {
+						"id": "d1030244-d2ea-46d5-a102-b5d3ea790571",
+						"email": "Gerry_Walter@hotmail.com",
+						"avatarUrl": "<undefined>"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"userId": "d1030244-d2ea-46d5-a102-b5d3ea790571",
+						"peerId": "330ace64-1ad9-4559-ae8e-e6425c1cc1ba"
+					}
+				}
+			}
+		}
+	}
+}

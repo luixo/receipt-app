@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`userConnectionIntentions.remove > functionality > user connection intention is removed 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:c80c44d9-ec21-4c42-ab09-b0eb56261349": {
+        "connectedUserId": null,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;

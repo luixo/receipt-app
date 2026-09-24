@@ -24,7 +24,7 @@ import {
 import { OuterProvider } from "~app/providers/outer";
 import { createI18nContext } from "~app/utils/i18n";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
-import { PRETEND_ACCOUNT_STORE_NAME } from "~app/utils/store/pretend-account";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -125,7 +125,7 @@ export const getRouter = () => {
 		},
 		Wrap: ({ children }) => {
 			const pretendEmail =
-				externalContext.initialValues[PRETEND_ACCOUNT_STORE_NAME].email;
+				externalContext.initialValues[PRETEND_USER_STORE_NAME].email;
 			return (
 				<OuterProvider
 					getQueryClientsRecord={React.useCallback(

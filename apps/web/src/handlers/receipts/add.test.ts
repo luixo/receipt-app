@@ -6,11 +6,11 @@ import type { z } from "zod";
 import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -64,7 +64,7 @@ describe("receipts.add", () => {
 
 		describe("participants", () => {
 			test("invalid uuid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const invalidUuid = "not-a-uuid";
 				await expectTRPCError(
@@ -84,7 +84,7 @@ describe("receipts.add", () => {
 
 		describe("items", () => {
 			test("invalid uuid", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx);
+				const { sessionId } = await insertUserWithSession(ctx);
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -105,9 +105,9 @@ describe("receipts.add", () => {
 		});
 
 		test("peer does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await insertPeer(ctx, accountId);
+			await insertPeer(ctx, userId);
 			const fakePeerId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -120,12 +120,12 @@ describe("receipts.add", () => {
 			);
 		});
 
-		test("peer is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertPeer(ctx, accountId);
+		test("peer is not owned by an  user", async ({ ctx }) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			await insertPeer(ctx, userId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignPeerId } = await insertPeer(ctx, foreignAccountId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignPeerId } = await insertPeer(ctx, foreignUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -142,7 +142,7 @@ describe("receipts.add", () => {
 		describe("inner fails", () => {
 			test("participants errors", async ({ ctx }) => {
 				const { sessionId, peerId: selfPeerId } =
-					await insertAccountWithSession(ctx);
+					await insertUserWithSession(ctx);
 
 				const fakePeerId = faker.string.uuid();
 				const anotherFakePeerId = faker.string.uuid();
@@ -164,7 +164,7 @@ describe("receipts.add", () => {
 
 			test("payers errors", async ({ ctx }) => {
 				const { sessionId, peerId: selfPeerId } =
-					await insertAccountWithSession(ctx);
+					await insertUserWithSession(ctx);
 
 				const fakePeerId = faker.string.uuid();
 				const anotherFakePeerId = faker.string.uuid();
@@ -187,16 +187,16 @@ describe("receipts.add", () => {
 			test("parts fail", async ({ ctx }) => {
 				const {
 					sessionId,
-					accountId,
+					userId,
 					peerId: selfPeerId,
-				} = await insertAccountWithSession(ctx);
-				const { id: peerId } = await insertPeer(ctx, accountId);
+				} = await insertUserWithSession(ctx);
+				const { id: peerId } = await insertPeer(ctx, userId);
 
 				// Verify unrelated data doesn't affect the result
-				await insertPeer(ctx, accountId);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				await insertPeer(ctx, foreignAccountId);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				await insertPeer(ctx, userId);
+				const { id: foreignUserId } = await insertUser(ctx);
+				await insertPeer(ctx, foreignUserId);
+				const { id: receiptId } = await insertReceipt(ctx, userId);
 				await insertReceiptItem(ctx, receiptId);
 
 				const participants: NonNullable<Input["participants"]> = [
@@ -237,12 +237,12 @@ describe("receipts.add", () => {
 
 	describe("functionality", () => {
 		test("empty receipt", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verify unrelated data doesn't affect the result
-			await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, foreignAccountId);
+			await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			await insertPeer(ctx, foreignUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -261,15 +261,15 @@ describe("receipts.add", () => {
 		test("receipt with participants", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
 			// Verify unrelated data doesn't affect the result
-			await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, foreignAccountId);
+			await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			await insertPeer(ctx, foreignUserId);
 
 			const participants: NonNullable<Input["participants"]> = [
 				{ peerId, role: "editor" },
@@ -293,13 +293,13 @@ describe("receipts.add", () => {
 		});
 
 		test("receipt with items", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verify unrelated data doesn't affect the result
-			await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, foreignAccountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			await insertPeer(ctx, foreignUserId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptItem(ctx, receiptId);
 
 			const receiptItems: NonNullable<Input["items"]> = [
@@ -333,16 +333,16 @@ describe("receipts.add", () => {
 		test("receipt with consumers", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
 			// Verify unrelated data doesn't affect the result
-			await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, foreignAccountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			await insertPeer(ctx, foreignUserId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptItem(ctx, receiptId);
 
 			const participants: NonNullable<Input["participants"]> = [
@@ -402,15 +402,15 @@ describe("receipts.add", () => {
 		test("receipt with payers", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
 
 			// Verify unrelated data doesn't affect the result
-			await insertPeer(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertPeer(ctx, foreignAccountId);
+			await insertPeer(ctx, userId);
+			const { id: foreignUserId } = await insertUser(ctx);
+			await insertPeer(ctx, foreignUserId);
 
 			const payers: NonNullable<Input["payers"]> = [
 				{ peerId, part: 1 },

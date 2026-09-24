@@ -1,0 +1,13 @@
+{
+	"mutations": {
+		"user.logout": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending"
+				}
+			}
+		}
+	}
+}

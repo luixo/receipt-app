@@ -1,19 +1,19 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { AccountId, PeerId } from "~db/ids";
+import type { PeerId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { getParticipantsReceipts } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { peerIdSchema } from "~web/handlers/validation";
 
-// We allow account fetch foreign peers
+// We allow  user fetch foreign peers
 // In case they share the same receipt (as participant or as payer)
 const fetchPeers = async (ctx: AuthorizedContext, ids: PeerId[]) =>
 	ctx.database
 		.with("mergedReceipts", (qc) =>
-			getParticipantsReceipts(qc, ctx.auth.accountId)
+			getParticipantsReceipts(qc, ctx.auth.userId)
 				.groupBy("receipts.id")
 				.select("receipts.id"),
 		)
@@ -31,41 +31,37 @@ const fetchPeers = async (ctx: AuthorizedContext, ids: PeerId[]) =>
 		.innerJoin("mergedParticipants", (qb) =>
 			qb.onRef("peersTheir.id", "=", "mergedParticipants.peerId"),
 		)
-		.leftJoin("accounts", (qb) =>
-			qb.onRef("peersTheir.connectedAccountId", "=", "accounts.id"),
+		.leftJoin("users", (qb) =>
+			qb.onRef("peersTheir.connectedUserId", "=", "users.id"),
 		)
 		.leftJoin("peers as peersMine", (qb) =>
 			qb
-				.onRef(
-					"peersMine.connectedAccountId",
-					"=",
-					"peersTheir.connectedAccountId",
-				)
-				.on("peersMine.ownerAccountId", "=", ctx.auth.accountId),
+				.onRef("peersMine.connectedUserId", "=", "peersTheir.connectedUserId")
+				.on("peersMine.ownerUserId", "=", ctx.auth.userId),
 		)
 		.select([
 			"peersMine.id as mineId",
 			"peersMine.name as mineName",
 			"peersMine.publicName as minePublicName",
-			"accounts.id as accountId",
-			"accounts.email",
-			"accounts.avatarUrl",
+			"users.id as userId",
+			"users.email",
+			"users.avatarUrl",
 			"peersTheir.id as theirId",
 			"peersTheir.name as theirName",
 			"peersTheir.publicName as theirPublicName",
-			"peersTheir.ownerAccountId",
+			"peersTheir.ownerUserId",
 		])
 		.groupBy([
 			"peersMine.id",
 			"peersMine.name",
 			"peersMine.publicName",
-			"accounts.id",
-			"accounts.email",
-			"accounts.avatarUrl",
+			"users.id",
+			"users.email",
+			"users.avatarUrl",
 			"peersTheir.id",
 			"peersTheir.name",
 			"peersTheir.publicName",
-			"peersTheir.ownerAccountId",
+			"peersTheir.ownerUserId",
 		])
 		.execute();
 
@@ -78,19 +74,19 @@ const getForeignPeer = (
 });
 
 const mapPeer = (peer: Awaited<ReturnType<typeof fetchPeers>>[number]) => {
-	if (peer.mineId && peer.mineName && peer.email && peer.accountId) {
+	if (peer.mineId && peer.mineName && peer.email && peer.userId) {
 		return {
 			id: peer.mineId,
 			name: peer.mineName,
 			publicName:
 				peer.minePublicName === null ? undefined : peer.minePublicName,
-			connectedAccount: {
-				id: peer.accountId,
+			connectedUser: {
+				id: peer.userId,
 				email: peer.email,
 				avatarUrl: peer.avatarUrl || undefined,
 			} as
 				| {
-						id: AccountId;
+						id: UserId;
 						email: string;
 						avatarUrl?: string;
 				  }
@@ -125,7 +121,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get foreign peer",
 		description:
-			"Returns a peer by id owned by another account, provided they share a receipt with the current account.",
+			"Returns a peer by id owned by another  user, provided they share a receipt with the current  user.",
 	})
 	.input(z.strictObject({ id: peerIdSchema }))
 	.query(queuePeer);

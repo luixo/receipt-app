@@ -1,12 +1,12 @@
-import { update as updateAccount } from "../cache/account";
+import { update as updateUser } from "../cache/user";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.confirmEmail"> = {
 	mutationKey: "auth.confirmEmail",
 	onSuccess: (controllerContext) => () =>
-		updateAccount(controllerContext, {
+		updateUser(controllerContext, {
 			get: (controller) => {
-				controller.update((account) => ({ ...account, verified: true }));
+				controller.update((user) => ({ ...user, verified: true }));
 			},
 		}),
 	mutateToastOptions:

@@ -7,7 +7,7 @@ import { test as peersFixture } from "~app/features/peers/__tests__/utils";
 
 const test = mergeTests(peersFixture, peerFixture, peerAvatarFixture);
 
-test("No connected account", async ({
+test("No connected  user", async ({
 	faker,
 	mockBase,
 	page,
@@ -26,14 +26,14 @@ test("No connected account", async ({
 				id: faker.string.uuid(),
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: undefined,
+				connectedUser: undefined,
 			},
 		],
 	});
 	assert.ok(firstPeer);
 	await page.navigate({ to: "/peers" });
 	await awaitCacheKey("peers.getPaged");
-	await expectScreenshotWithSchemes("no-account.png", {
+	await expectScreenshotWithSchemes("no- user.png", {
 		locator: peer.filter({ hasText: firstPeer.name }),
 		mask: [peerAvatar],
 		mapExpectedPixels: ({ expectedPixels }) => [
@@ -43,7 +43,7 @@ test("No connected account", async ({
 	});
 });
 
-test("Connected account", async ({
+test("Connected  user", async ({
 	page,
 	awaitCacheKey,
 	faker,
@@ -62,7 +62,7 @@ test("Connected account", async ({
 				id: faker.string.uuid(),
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: {
+				connectedUser: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
 					avatarUrl: undefined,
@@ -73,7 +73,7 @@ test("Connected account", async ({
 	assert.ok(firstPeer);
 	await page.navigate({ to: "/peers" });
 	await awaitCacheKey("peers.getPaged");
-	await expectScreenshotWithSchemes("connected-account.png", {
+	await expectScreenshotWithSchemes("connected- user.png", {
 		locator: peer.filter({ hasText: firstPeer.name }),
 		mask: [peerAvatar],
 		mapExpectedPixels: ({ expectedPixels }) => [
@@ -102,7 +102,7 @@ test("Loading skeleton", async ({
 				id: faker.string.uuid(),
 				name: faker.person.fullName(),
 				publicName: undefined,
-				connectedAccount: undefined,
+				connectedUser: undefined,
 			},
 		],
 	});

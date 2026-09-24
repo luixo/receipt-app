@@ -102,7 +102,7 @@ test("'debtIntentions.accept' pending / error", async ({
 				"debts.getAll",
 				"debts.getAllPeer",
 				"debts.getPeersPaged",
-				"accountSettings.get",
+				"userSettings.get",
 			],
 		},
 	);
@@ -160,7 +160,7 @@ test("Accept and edit button navigates to debt page on success", async ({
 				"debts.getAllPeer",
 				"debts.getPeersPaged",
 				"debts.get",
-				"accountSettings.get",
+				"userSettings.get",
 			],
 		},
 	);

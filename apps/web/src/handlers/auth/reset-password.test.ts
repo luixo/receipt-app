@@ -8,8 +8,8 @@ import {
 import { createContext } from "~tests/backend/utils/context";
 import {
 	assertDatabase,
-	insertAccountWithSession,
 	insertResetPasswordIntention,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -83,8 +83,8 @@ describe("auth.resetPassword", () => {
 		});
 
 		test("intention expires", async ({ ctx }) => {
-			const { accountId } = await insertAccountWithSession(ctx);
-			const { token } = await insertResetPasswordIntention(ctx, accountId, {
+			const { userId } = await insertUserWithSession(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, userId, {
 				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
@@ -104,19 +104,19 @@ describe("auth.resetPassword", () => {
 
 	describe("functionality", () => {
 		test("password reset", async ({ ctx }) => {
-			const { accountId } = await insertAccountWithSession(ctx);
-			// Verifying other accounts are not affected
-			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
+			const { userId } = await insertUserWithSession(ctx);
+			// Verifying other users are not affected
+			const { userId: otherUserId } = await insertUserWithSession(ctx);
 			// Verifying other intentions are not affected
-			await insertResetPasswordIntention(ctx, otherAccountId);
+			await insertResetPasswordIntention(ctx, otherUserId);
 			// Verifying other intentions of the same peer are removed
-			await insertResetPasswordIntention(ctx, accountId);
-			await insertResetPasswordIntention(ctx, accountId, {
+			await insertResetPasswordIntention(ctx, userId);
+			await insertResetPasswordIntention(ctx, userId, {
 				expiresTimestamp: Temporal.Now.zonedDateTimeISO().subtract({
 					minutes: 1,
 				}),
 			});
-			const { token } = await insertResetPasswordIntention(ctx, accountId);
+			const { token } = await insertResetPasswordIntention(ctx, userId);
 			const context = createContext(ctx);
 			const caller = createCaller(context);
 			const password = faker.internet.password();
@@ -128,8 +128,8 @@ describe("auth.resetPassword", () => {
 			);
 			const database = assertDatabase(ctx);
 			const { passwordHash, passwordSalt } = await database
-				.selectFrom("accounts")
-				.where("id", "=", accountId)
+				.selectFrom("users")
+				.where("id", "=", userId)
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
 			await expect(getHash(password, passwordSalt)).resolves.toStrictEqual(

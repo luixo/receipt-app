@@ -154,9 +154,9 @@ test.describe("Header aside", () => {
 		}) => {
 			await mockBase();
 			const inboundAmount = faker.number.int({ min: 3, max: 6 });
-			api.mockFirst("accountConnectionIntentions.getAll", {
+			api.mockFirst("userConnectionIntentions.getAll", {
 				inbound: Array.from({ length: inboundAmount }, () => ({
-					account: {
+					user: {
 						id: faker.string.uuid(),
 						email: faker.internet.email(),
 					},
@@ -165,7 +165,7 @@ test.describe("Header aside", () => {
 			});
 			await page.navigate({ to: "/peers" });
 
-			await awaitCacheKey("accountConnectionIntentions.getAll");
+			await awaitCacheKey("userConnectionIntentions.getAll");
 			await expect(connectionsBadge).toHaveText(String(inboundAmount));
 		});
 
@@ -178,7 +178,7 @@ test.describe("Header aside", () => {
 			await mockBase();
 			await page.navigate({ to: "/peers" });
 
-			await awaitCacheKey("accountConnectionIntentions.getAll");
+			await awaitCacheKey("userConnectionIntentions.getAll");
 			await expect(connectionsBadge).toHaveCount(0);
 		});
 	});

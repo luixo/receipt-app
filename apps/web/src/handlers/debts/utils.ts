@@ -23,21 +23,21 @@ export const upsertAutoAcceptedDebts = async (
 					debt.isNew
 						? debt.receiptId
 							? eb.and({
-									ownerAccountId: debt.ownerAccountId,
+									ownerUserId: debt.ownerUserId,
 									peerId: debt.peerId,
 									receiptId: debt.receiptId,
 								})
-							: eb("debts.ownerAccountId", "is", null)
+							: eb("debts.ownerUserId", "is", null)
 						: eb.and({
 								id: debt.id,
-								ownerAccountId: debt.ownerAccountId,
+								ownerUserId: debt.ownerUserId,
 							}),
 				),
 			),
 		)
 		.select([
 			"debts.id",
-			"debts.ownerAccountId",
+			"debts.ownerUserId",
 			"debts.peerId",
 			"debts.receiptId",
 		])
@@ -49,13 +49,13 @@ export const upsertAutoAcceptedDebts = async (
 					return false;
 				}
 				return (
-					fetchedDebt.ownerAccountId === debt.ownerAccountId &&
+					fetchedDebt.ownerUserId === debt.ownerUserId &&
 					fetchedDebt.peerId === debt.peerId &&
 					fetchedDebt.receiptId === debt.receiptId
 				);
 			}
 			return (
-				fetchedDebt.ownerAccountId === debt.ownerAccountId &&
+				fetchedDebt.ownerUserId === debt.ownerUserId &&
 				fetchedDebt.id === debt.id
 			);
 		}),
@@ -89,7 +89,7 @@ export const upsertAutoAcceptedDebts = async (
 				.where((eb) =>
 					eb.and({
 						id: currentDebt.id,
-						ownerAccountId: currentDebt.ownerAccountId,
+						ownerUserId: currentDebt.ownerUserId,
 						peerId: currentDebt.peerId,
 					}),
 				)

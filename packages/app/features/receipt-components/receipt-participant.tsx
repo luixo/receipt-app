@@ -39,7 +39,7 @@ const getParticipantError = (
 	t: TFunction<"receipts">,
 	participant: Participant,
 	debt: Debt | undefined,
-	hasConnectedAccount: boolean,
+	hasConnectedUser: boolean,
 	isOwner: boolean,
 	isSelfParticipant: boolean,
 ) => {
@@ -72,7 +72,7 @@ const getParticipantError = (
 			}),
 		};
 	}
-	if (!hasConnectedAccount) {
+	if (!hasConnectedUser) {
 		// Debt is not syncable
 		return;
 	}
@@ -121,7 +121,7 @@ const RenderParticipantError = suspendedFallback<{
 			t,
 			participant,
 			debt,
-			Boolean(peer?.connectedAccount),
+			Boolean(peer?.connectedUser),
 			isOwner,
 			participant.peerId === selfPeerId,
 		);

@@ -8,7 +8,7 @@ test("On load", async ({ page, api, loginButton, snapshotQueries }) => {
 	api.mockUtils.noAuthPage();
 
 	await snapshotQueries(() => page.navigate({ to: "/login" }), {
-		whitelistKeys: "account.get",
+		whitelistKeys: "user.get",
 	});
 	await expect(page).toHaveTitle("RA - Login");
 	await expect(
@@ -62,7 +62,7 @@ test.describe("Form", () => {
 				await verifyToastTexts(`Login failed: ${mockErrorMessage}`);
 			},
 			{
-				whitelistKeys: "account.get",
+				whitelistKeys: "user.get",
 			},
 		);
 		await page.expectUrl({ to: "/login", search: { redirect: "/receipts" } });
@@ -72,8 +72,8 @@ test.describe("Form", () => {
 		api.mockFirst("auth.login", async () => {
 			await loginPause.promise;
 			return {
-				account: {
-					id: "test-account-id",
+				user: {
+					id: "test- user-id",
 					verified: true,
 					avatarUrl: undefined,
 					role: undefined,
@@ -90,7 +90,7 @@ test.describe("Form", () => {
 				await expect(buttonWithLoader).toBeVisible();
 				await verifyToastTexts();
 			},
-			{ name: "loading", whitelistKeys: "account.get" },
+			{ name: "loading", whitelistKeys: "user.get" },
 		);
 		await expect(loginButton).toBeDisabled();
 		await expect(buttonWithLoader).toBeVisible();
@@ -106,7 +106,7 @@ test.describe("Form", () => {
 				await verifyToastTexts("Login successful, redirecting..");
 			},
 			{
-				whitelistKeys: "account.get",
+				whitelistKeys: "user.get",
 				blacklistKeys: "receipts.getPaged",
 				name: "success",
 			},

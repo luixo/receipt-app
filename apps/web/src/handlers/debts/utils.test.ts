@@ -8,7 +8,7 @@ import {
 } from "~app/utils/validation";
 import type { PeerId, ReceiptId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import { insertUserWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -38,7 +38,7 @@ export const verifyAmount = <T>(
 ) => {
 	describe("amount", () => {
 		test("zero", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 0),
@@ -48,7 +48,7 @@ export const verifyAmount = <T>(
 		});
 
 		test("fraction precision", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 1.001),
@@ -58,7 +58,7 @@ export const verifyAmount = <T>(
 		});
 
 		test("too big", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 10 ** 15),
@@ -75,7 +75,7 @@ export const verifyNote = <T>(
 ) => {
 	describe("note", () => {
 		test("minimal length", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MIN_DEBT_NOTE_LENGTH - 1)),
@@ -85,7 +85,7 @@ export const verifyNote = <T>(
 		});
 
 		test("maximum length", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MAX_DEBT_NOTE_LENGTH + 1)),
@@ -105,7 +105,7 @@ export const verifyCurrencyCode = <T>(
 ) => {
 	describe("currencyCode", () => {
 		test("invalid", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
@@ -125,7 +125,7 @@ export const verifyTimestamp = <T>(
 ) => {
 	describe("timestamp", () => {
 		test("not a date", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				// @ts-expect-error We test an error here
@@ -147,7 +147,7 @@ export const verifyReceiptId = <T>(
 ) => {
 	describe("receiptId", () => {
 		test("invalid", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-uuid"),
@@ -164,7 +164,7 @@ export const verifyPeerId = <T>(
 ) => {
 	describe("peerId", () => {
 		test("invalid", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),

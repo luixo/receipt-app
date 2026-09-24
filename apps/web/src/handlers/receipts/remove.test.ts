@@ -3,12 +3,12 @@ import { describe } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptParticipant,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
@@ -38,10 +38,10 @@ describe("receipts.remove", () => {
 		);
 
 		test("receipt not found", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			// Verifying adding other receipts doesn't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentReceiptId = faker.string.uuid();
@@ -52,19 +52,19 @@ describe("receipts.remove", () => {
 			);
 		});
 
-		test("receipt is not owned by the account", async ({ ctx }) => {
-			// Self account
+		test("receipt is not owned by the  user", async ({ ctx }) => {
+			// Self  user
 			const {
 				sessionId,
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
-			// Foreign account
-			const { id: otherAccountId } = await insertAccount(ctx);
-			const { id: foreignReceiptId } = await insertReceipt(ctx, otherAccountId);
+				userId,
+				user: { email },
+			} = await insertUserWithSession(ctx);
+			// Foreign  user
+			const { id: otherUserId } = await insertUser(ctx);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, otherUserId);
 
 			// Verifying adding other receipts doesn't affect the error
-			await insertReceipt(ctx, accountId);
+			await insertReceipt(ctx, userId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -79,11 +79,11 @@ describe("receipts.remove", () => {
 		test("receipt is removed", async ({ ctx }) => {
 			const {
 				sessionId,
-				accountId,
+				userId,
 				peerId: selfPeerId,
-			} = await insertAccountWithSession(ctx);
-			const { id: peerId } = await insertPeer(ctx, accountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			} = await insertUserWithSession(ctx);
+			const { id: peerId } = await insertPeer(ctx, userId);
+			const { id: receiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptParticipant(ctx, receiptId, peerId);
 			await insertReceiptParticipant(ctx, receiptId, selfPeerId);
 			await insertReceiptItem(ctx, receiptId);
@@ -91,16 +91,13 @@ describe("receipts.remove", () => {
 			await insertReceiptItem(ctx, receiptId);
 
 			// Verify unrelated data doesn't affect the result
-			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
+			const { id: anotherReceiptId } = await insertReceipt(ctx, userId);
 			await insertReceiptParticipant(ctx, anotherReceiptId, peerId);
 			await insertReceiptItem(ctx, anotherReceiptId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: foreignPeer } = await insertPeer(ctx, foreignAccountId);
-			const { id: foreignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
+			const { id: foreignUserId } = await insertUser(ctx);
+			const { id: foreignPeer } = await insertPeer(ctx, foreignUserId);
+			const { id: foreignReceiptId } = await insertReceipt(ctx, foreignUserId);
 			await insertReceiptParticipant(ctx, foreignReceiptId, foreignPeer);
 			await insertReceiptItem(ctx, foreignReceiptId);
 

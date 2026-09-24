@@ -8,7 +8,7 @@ import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { PRETEND_ACCOUNT_STORE_NAME } from "~app/utils/store/pretend-account";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
@@ -34,7 +34,7 @@ const BecomeModal: React.FC<ModalProps> = ({
 	setMockedEmail,
 }) => {
 	const { t } = useTranslation("admin");
-	const becomeAccount = React.useCallback(() => {
+	const becomeUser = React.useCallback(() => {
 		setMockedEmail(email);
 		closeModal();
 	}, [setMockedEmail, closeModal, email]);
@@ -45,7 +45,7 @@ const BecomeModal: React.FC<ModalProps> = ({
 			header={<Text variant="h3">{t("pretend.modal.title", { email })}</Text>}
 			bodyClassName="flex-row gap-4 p-4"
 		>
-			<Button color="warning" onPress={becomeAccount} className="flex-1">
+			<Button color="warning" onPress={becomeUser} className="flex-1">
 				{t("pretend.modal.yes")}
 			</Button>
 			<Button color="default" onPress={closeModal} className="flex-1">
@@ -55,22 +55,22 @@ const BecomeModal: React.FC<ModalProps> = ({
 	);
 };
 
-const SkeletonAdminAccountCard: React.FC = () => (
+const SkeletonAdminUserCard: React.FC = () => (
 	<Card bodyClassName="flex-row items-start justify-between">
 		<SkeletonPeer />
 	</Card>
 );
 
-const AdminAccountCard: React.FC<
-	TRPCQueryOutput<"admin.accounts">["items"][number] & {
+const AdminUserCard: React.FC<
+	TRPCQueryOutput<"admin.users">["items"][number] & {
 		children?: ViewReactNode;
 	}
-> = ({ peer, account, children }) => (
+> = ({ peer, user, children }) => (
 	<Card bodyClassName="flex-row items-start justify-between">
 		<Peer
-			id={peer ? peer.id : (account.id as PeerId)}
-			name={peer ? peer.name : account.email}
-			connectedAccount={account}
+			id={peer ? peer.id : (user.id as PeerId)}
+			name={peer ? peer.name : user.email}
+			connectedUser={user}
 			avatarProps={{ dimmed: !peer }}
 		/>
 		<View>{children}</View>
@@ -80,15 +80,15 @@ const AdminAccountCard: React.FC<
 const AdminCard = suspendedFallback(
 	() => {
 		const trpc = useTRPC();
-		const { data: account } = useSuspenseQuery(trpc.account.get.queryOptions());
+		const { data: user } = useSuspenseQuery(trpc.user.get.queryOptions());
 		return (
-			<AdminAccountCard
+			<AdminUserCard
 				peer={{
-					...account.peer,
-					// Typesystem doesn't know that we use account id as self peer id;
-					id: account.account.id as PeerId,
+					...user.peer,
+					// Typesystem doesn't know that we use  user id as self peer id;
+					id: user.user.id as PeerId,
 				}}
-				account={account.account}
+				user={user.user}
 			/>
 		);
 	},
@@ -99,20 +99,18 @@ const AdminScreenInner = suspendedFallback(
 	() => {
 		const { t } = useTranslation("admin");
 		const trpc = useTRPC();
-		const { data: accounts } = useSuspenseQuery(
-			trpc.admin.accounts.queryOptions(),
-		);
+		const { data: users } = useSuspenseQuery(trpc.admin.users.queryOptions());
 		const [modalEmail, setModalEmail] = React.useState<string | undefined>();
 		const {
-			[PRETEND_ACCOUNT_STORE_NAME]: [
-				pretendAccount,
-				setPretendAccount,
-				resetPretendAccount,
+			[PRETEND_USER_STORE_NAME]: [
+				pretendUser,
+				setPretendUser,
+				resetPretendUser,
 			],
 		} = React.use(StoreDataContext);
 		const setPretendEmail = React.useCallback(
-			(email: string) => setPretendAccount({ email }),
-			[setPretendAccount],
+			(email: string) => setPretendUser({ email }),
+			[setPretendUser],
 		);
 		const closeModal = React.useCallback(() => setModalEmail(undefined), []);
 		const setModalEmailCurried = React.useCallback(
@@ -121,17 +119,15 @@ const AdminScreenInner = suspendedFallback(
 			},
 			[],
 		);
-		const pretendAccountAccount = pretendAccount.email
-			? accounts.items.find(
-					(element) => element.account.email === pretendAccount.email,
-				)
+		const pretendUserUser = pretendUser.email
+			? users.items.find((element) => element.user.email === pretendUser.email)
 			: null;
 		return (
 			<View className="flex flex-col items-stretch gap-2">
-				{pretendAccountAccount ? (
+				{pretendUserUser ? (
 					<>
-						<AdminAccountCard {...pretendAccountAccount} />
-						<Button onPress={resetPretendAccount} color="primary">
+						<AdminUserCard {...pretendUserUser} />
+						<Button onPress={resetPretendUser} color="primary">
 							{t("pretend.resetToSelfButton")}
 						</Button>
 					</>
@@ -139,17 +135,17 @@ const AdminScreenInner = suspendedFallback(
 					<AdminCard />
 				)}
 				<Divider />
-				{accounts.items
-					.filter((element) => pretendAccount.email !== element.account.email)
+				{users.items
+					.filter((element) => pretendUser.email !== element.user.email)
 					.map((element) => (
-						<AdminAccountCard key={element.account.id} {...element}>
+						<AdminUserCard key={element.user.id} {...element}>
 							<Button
-								onPress={setModalEmailCurried(element.account.email)}
+								onPress={setModalEmailCurried(element.user.email)}
 								color="warning"
 							>
 								{t("pretend.becomeButton")}
 							</Button>
-						</AdminAccountCard>
+						</AdminUserCard>
 					))}
 				<BecomeModal
 					isModalOpen={Boolean(modalEmail)}
@@ -161,11 +157,11 @@ const AdminScreenInner = suspendedFallback(
 		);
 	},
 	<View className="flex flex-col items-stretch gap-2 px-1 py-3">
-		<SkeletonAdminAccountCard />
+		<SkeletonAdminUserCard />
 		<Divider />
-		<SkeletonAdminAccountCard />
-		<SkeletonAdminAccountCard />
-		<SkeletonAdminAccountCard />
+		<SkeletonAdminUserCard />
+		<SkeletonAdminUserCard />
+		<SkeletonAdminUserCard />
 	</View>,
 );
 

@@ -19,16 +19,16 @@ const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
 	input: Input,
 ) => {
-	const accountPeers = database.selectFrom("peers").where((eb) =>
-		eb("peers.ownerAccountId", "=", auth.accountId).and(
+	const userPeers = database.selectFrom("peers").where((eb) =>
+		eb("peers.ownerUserId", "=", auth.userId).and(
 			"peers.id",
 			"<>",
-			// Typesystem doesn't know that we use account id as self peer id;
-			auth.accountId as PeerId,
+			// Typesystem doesn't know that we use  user id as self peer id;
+			auth.userId as PeerId,
 		),
 	);
 	const [peers, peersCount] = await Promise.all([
-		accountPeers
+		userPeers
 			.select("peers.id")
 			// Stable order for peers with the same name
 			.orderBy("peers.name")
@@ -36,7 +36,7 @@ const fetchPage = async (
 			.offset(input.cursor)
 			.limit(input.limit)
 			.execute(),
-		accountPeers
+		userPeers
 			.select(database.fn.count<number>("id").as("amount"))
 			.executeTakeFirstOrThrow(),
 	]);
@@ -59,7 +59,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get peers, paged",
 		description:
-			"Returns a page of peerIds owned by the current account, excluding the self-peer.",
+			"Returns a page of peerIds owned by the current  user, excluding the self-peer.",
 	})
 	.input(inputSchema)
 	.query(queuePeerList);

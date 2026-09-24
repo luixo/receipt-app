@@ -11,7 +11,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Suggest top peers",
 		description:
-			"Returns the current account's peers most recently active in debts or a given receipt, for quick selection.",
+			"Returns the current  user's peers most recently active in debts or a given receipt, for quick selection.",
 	})
 	.input(
 		z.strictObject({
@@ -33,17 +33,14 @@ export const procedure = authProcedure
 	.output(z.strictObject({ items: z.array(peerIdSchema) }))
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const filterIds = [
-			...(input.filterIds || []),
-			ctx.auth.accountId as PeerId,
-		];
+		const filterIds = [...(input.filterIds || []), ctx.auth.userId as PeerId];
 		const monthAgo = Temporal.Now.plainDateISO().subtract({ months: 1 });
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
 			const { receiptId } = options;
 			const receipt = await database
 				.selectFrom("receipts")
-				.select(["ownerAccountId", "id"])
+				.select(["ownerUserId", "id"])
 				.where("id", "=", receiptId)
 				.limit(1)
 				.executeTakeFirst();
@@ -56,7 +53,7 @@ export const procedure = authProcedure
 			const accessRole = await getAccessRole(
 				database,
 				receipt,
-				ctx.auth.accountId,
+				ctx.auth.userId,
 			);
 			if (!accessRole) {
 				throw new TRPCError({
@@ -69,7 +66,7 @@ export const procedure = authProcedure
 					qc
 						.selectFrom("peers")
 						.where((eb) =>
-							eb("peers.ownerAccountId", "=", ctx.auth.accountId).and(
+							eb("peers.ownerUserId", "=", ctx.auth.userId).and(
 								"peers.id",
 								"not in",
 								(ebb) =>
@@ -116,8 +113,8 @@ export const procedure = authProcedure
 				.selectFrom("peers")
 				.where((eb) =>
 					eb.and([
-						eb("peers.ownerAccountId", "=", ctx.auth.accountId),
-						eb("peers.connectedAccountId", "is", null),
+						eb("peers.ownerUserId", "=", ctx.auth.userId),
+						eb("peers.connectedUserId", "is", null),
 					]),
 				)
 				.leftJoin("debts", (qb) =>
@@ -142,10 +139,10 @@ export const procedure = authProcedure
 		const peers = await database
 			.selectFrom("peers")
 			.where((eb) =>
-				eb("peers.ownerAccountId", "=", ctx.auth.accountId).and(
+				eb("peers.ownerUserId", "=", ctx.auth.userId).and(
 					"peers.id",
 					"<>",
-					ctx.auth.accountId as PeerId,
+					ctx.auth.userId as PeerId,
 				),
 			)
 			.leftJoin("debts", (qb) =>

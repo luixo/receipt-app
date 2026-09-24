@@ -43,14 +43,14 @@ const fetchPage = async (
 	{ database, auth }: AuthorizedContext,
 	input: Input,
 ) => {
-	let filterIds = [...(input.filterIds || []), auth.accountId as PeerId];
+	let filterIds = [...(input.filterIds || []), auth.userId as PeerId];
 	const cursor = input.cursor || 0;
 	const options = input.options || { type: "all" };
 	if (options.type === "not-connected-receipt") {
 		const { receiptId } = options;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select(["id", "ownerAccountId"])
+			.select(["id", "ownerUserId"])
 			.where("id", "=", receiptId)
 			.limit(1)
 			.executeTakeFirst();
@@ -60,7 +60,7 @@ const fetchPage = async (
 				message: `Receipt "${receiptId}" does not exist.`,
 			});
 		}
-		const accessRole = await getAccessRole(database, receipt, auth.accountId);
+		const accessRole = await getAccessRole(database, receipt, auth.userId);
 		if (!accessRole) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
@@ -84,9 +84,9 @@ const fetchPage = async (
 		.$if(filterIds.length !== 0, (qb) =>
 			qb.where("peers.id", "not in", filterIds),
 		)
-		.where("peers.ownerAccountId", "=", auth.accountId)
+		.where("peers.ownerUserId", "=", auth.userId)
 		.$if(options.type === "not-connected", (qb) =>
-			qb.where("peers.connectedAccountId", "is", null),
+			qb.where("peers.connectedUserId", "is", null),
 		)
 		.$if(input.input.length < 3, (qb) =>
 			qb.where("name", "ilike", `%${input.input}%`),
@@ -135,7 +135,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Suggest peers",
 		description:
-			"Returns a page of the current account's peerIds fuzzy-matched by name against a search query.",
+			"Returns a page of the current  user's peerIds fuzzy-matched by name against a search query.",
 	})
 	.input(inputSchema)
 	.query(queueSuggestPeerList);

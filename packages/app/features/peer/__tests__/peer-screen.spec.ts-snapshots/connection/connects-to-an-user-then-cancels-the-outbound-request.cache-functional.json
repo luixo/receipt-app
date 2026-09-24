@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"userConnectionIntentions.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"userConnectionIntentions.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"peerId": "bc084552-f745-4bf9-a2e5-c0ff6e63d408",
+						"email": "Daija.Waelchi@yahoo.com"
+					}
+				}
+			}
+		]
+	}
+}

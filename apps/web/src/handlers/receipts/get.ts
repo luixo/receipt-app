@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-import type { AccountId, DebtId, PeerId, ReceiptId } from "~db/ids";
+import type { DebtId, PeerId, ReceiptId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -17,24 +17,24 @@ const fetchReceipts = async (
 		.where("receipts.id", "in", ids)
 		.innerJoin("peers as meFromReceiptOwnerView", (jb) =>
 			jb
-				.on("meFromReceiptOwnerView.connectedAccountId", "=", auth.accountId)
+				.on("meFromReceiptOwnerView.connectedUserId", "=", auth.userId)
 				.onRef(
-					"meFromReceiptOwnerView.ownerAccountId",
+					"meFromReceiptOwnerView.ownerUserId",
 					"=",
-					"receipts.ownerAccountId",
+					"receipts.ownerUserId",
 				),
 		)
 		.innerJoin("peers as receiptOwnerFromMyView", (jb) =>
 			jb
 				.onRef(
-					"receiptOwnerFromMyView.ownerAccountId",
+					"receiptOwnerFromMyView.ownerUserId",
 					"=",
-					"meFromReceiptOwnerView.connectedAccountId",
+					"meFromReceiptOwnerView.connectedUserId",
 				)
 				.onRef(
-					"receiptOwnerFromMyView.connectedAccountId",
+					"receiptOwnerFromMyView.connectedUserId",
 					"=",
-					"receipts.ownerAccountId",
+					"receipts.ownerUserId",
 				),
 		)
 		.select((eb) => [
@@ -42,7 +42,7 @@ const fetchReceipts = async (
 			"receipts.createdAt",
 			"receipts.name",
 			"receipts.currencyCode",
-			"receipts.ownerAccountId",
+			"receipts.ownerUserId",
 			"receipts.issued",
 			"receiptOwnerFromMyView.id as ownerPeerId",
 			"meFromReceiptOwnerView.id as selfPeerId",
@@ -94,11 +94,11 @@ const fetchReceipts = async (
 					.leftJoin("peers as peersMine", (jb) =>
 						jb
 							.onRef(
-								"peersMine.connectedAccountId",
+								"peersMine.connectedUserId",
 								"=",
-								"peersTheir.connectedAccountId",
+								"peersTheir.connectedUserId",
 							)
-							.on("peersMine.ownerAccountId", "=", auth.accountId),
+							.on("peersMine.ownerUserId", "=", auth.userId),
 					)
 					.select([
 						"receiptParticipants.peerId",
@@ -122,15 +122,15 @@ const fetchDebts = async (
 		.select([
 			"debts.id as debtId",
 			"debts.receiptId",
-			"debts.ownerAccountId",
+			"debts.ownerUserId",
 			"peers.id as peerId",
 		])
 		.execute();
 
 const getReceiptDebts = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
-	receiptOwnerAccountId: AccountId,
-	selfAccountId: AccountId,
+	receiptOwnerUserId: UserId,
+	selfUserId: UserId,
 	receiptSelfPeerId: PeerId,
 ):
 	| ({
@@ -144,9 +144,9 @@ const getReceiptDebts = (
 			direction: "outcoming";
 			debts: { id: DebtId; peerId: PeerId }[];
 	  } => {
-	if (receiptOwnerAccountId === selfAccountId) {
+	if (receiptOwnerUserId === selfUserId) {
 		const outcomingDebt = debts
-			.filter((debt) => debt.ownerAccountId === selfAccountId)
+			.filter((debt) => debt.ownerUserId === selfUserId)
 			.toSorted((a, b) => a.debtId.localeCompare(b.debtId))
 			.map((debt) => ({ id: debt.debtId, peerId: debt.peerId }));
 		return {
@@ -155,12 +155,11 @@ const getReceiptDebts = (
 		};
 	}
 	const mineDebtId = debts.find(
-		(debt) => debt.ownerAccountId === selfAccountId,
+		(debt) => debt.ownerUserId === selfUserId,
 	)?.debtId;
 	const foreignDebtId = debts.find(
 		(debt) =>
-			debt.ownerAccountId !== selfAccountId &&
-			debt.peerId === receiptSelfPeerId,
+			debt.ownerUserId !== selfUserId && debt.peerId === receiptSelfPeerId,
 	)?.debtId;
 	if (mineDebtId) {
 		return {
@@ -191,7 +190,7 @@ const mapReceipt = (
 	receipt: Awaited<ReturnType<typeof fetchReceipts>>[number],
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
 ) => {
-	const { ownerAccountId, items, participants, ...receiptRest } = receipt;
+	const { ownerUserId, items, participants, ...receiptRest } = receipt;
 	const payersItem = items.find((item) => item.id === receipt.id);
 	const regularItems = items.filter((item) => item !== payersItem);
 	return {
@@ -210,12 +209,7 @@ const mapReceipt = (
 			})),
 		})),
 		participants,
-		debts: getReceiptDebts(
-			debts,
-			ownerAccountId,
-			auth.accountId,
-			receipt.selfPeerId,
-		),
+		debts: getReceiptDebts(debts, ownerUserId, auth.userId, receipt.selfPeerId),
 		// This can't happen as payers item always exists
 		payers:
 			/* c8 ignore next */
@@ -247,14 +241,14 @@ const queueReceipt = queueCallFactory<
 			});
 		}
 		if (
-			receipt.ownerPeerId !== ctx.auth.accountId &&
+			receipt.ownerPeerId !== ctx.auth.userId &&
 			!receipt.participants.some(
 				(participant) => participant.peerId === receipt.selfPeerId,
 			)
 		) {
 			return new TRPCError({
 				code: "FORBIDDEN",
-				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
+				message: `User "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
 		try {
@@ -276,7 +270,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get receipt",
 		description:
-			"Returns a receipt by id with its items, participants, payers and linked debts, if the account owns or participates in it.",
+			"Returns a receipt by id with its items, participants, payers and linked debts, if the  user owns or participates in it.",
 	})
 	.input(
 		z.strictObject({

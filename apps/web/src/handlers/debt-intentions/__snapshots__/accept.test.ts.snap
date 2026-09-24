@@ -1,18 +1,18 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debtIntentions.accept > functionality > debt did not exist on our account beforehand 1`] = `
+exports[`debtIntentions.accept > functionality > debt did not exist on our  user beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:96bf9c27-198e-418f-be49-8ef9c6946592|ownerAccountId:ac99ee4b-9080-4ced-a8a0-444f173ef623": {
-        "amount": "470.9100",
+      "id:a720dafa-99fe-4b9b-bb62-92e1d2d10948|ownerUserId:ca436da1-7e15-4442-8763-fbbba2a806e6": {
+        "amount": "-450.1100",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "GMD",
-        "id": "96bf9c27-198e-418f-be49-8ef9c6946592",
-        "note": "Carpo earum xiphias vitium.",
-        "ownerAccountId": "ac99ee4b-9080-4ced-a8a0-444f173ef623",
-        "peerId": "24b84697-f90f-4add-9643-086c1aec6193",
-        "receiptId": "288a1bc7-c6ef-4d35-81f4-55bc8c93e0aa",
+        "currencyCode": "CRC",
+        "id": "a720dafa-99fe-4b9b-bb62-92e1d2d10948",
+        "note": "Deprecator repellat attonbitus soleo somnus talio aer auxilium contigo.",
+        "ownerUserId": "ca436da1-7e15-4442-8763-fbbba2a806e6",
+        "peerId": "8d4d58ed-67b0-4ea8-b40b-619ff4769d8f",
+        "receiptId": "a0133a29-6e50-4610-9740-a6b9421bda82",
         "timestamp": "2020-01-01",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
@@ -21,13 +21,13 @@ exports[`debtIntentions.accept > functionality > debt did not exist on our accou
 }
 `;
 
-exports[`debtIntentions.accept > functionality > debt existed on our account beforehand - our updatedAt ahead 1`] = `
+exports[`debtIntentions.accept > functionality > debt existed on our  user beforehand - our updatedAt ahead 1`] = `
 {
   "updated": {
     "debts": {
-      "id:8809ceb6-73e4-4ee0-9dc8-3fcc4e64865a|ownerAccountId:4bba98a1-6f92-48a9-a3c2-3bfdc9d8ed1b": {
-        "amount": "315.7100",
-        "currencyCode": "HUF",
+      "id:8afae919-a24e-4ea2-912b-c7056d2173b1|ownerUserId:947e74fa-8e48-4733-8ba4-c4474afc99ab": {
+        "amount": "129.3200",
+        "currencyCode": "XOF",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
@@ -36,13 +36,13 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
 }
 `;
 
-exports[`debtIntentions.accept > functionality > debt existed on our account beforehand - their updatedAt ahead 1`] = `
+exports[`debtIntentions.accept > functionality > debt existed on our  user beforehand - their updatedAt ahead 1`] = `
 {
   "updated": {
     "debts": {
-      "id:bad54f6a-aca7-4dbf-bee5-68efd4e4fdd8|ownerAccountId:7b1ff11a-6b5d-4bae-a328-2631994177cd": {
-        "amount": "-623.4000",
-        "currencyCode": "SSP",
+      "id:f740eadf-c639-4879-9cc5-ebfe5e73b22f|ownerUserId:ba3e5908-7197-4a4a-9450-3e85d53be5aa": {
+        "amount": "-307.1100",
+        "currencyCode": "PGK",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -55,13 +55,13 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
 {
   "added": {
     "debts": {
-      "id:53ea6480-fb35-4af8-aa39-7512c00f7942|ownerAccountId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
+      "id:53ea6480-fb35-4af8-aa39-7512c00f7942|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
         "amount": "-891.4400",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "BSD",
         "id": "53ea6480-fb35-4af8-aa39-7512c00f7942",
         "note": "Coepi arx capillus odit natus altus cohors.",
-        "ownerAccountId": "23e84239-9142-44d8-8eef-6c8da9fd21fa",
+        "ownerUserId": "23e84239-9142-44d8-8eef-6c8da9fd21fa",
         "peerId": "e15ca8d8-3098-4115-8e61-1969d3882c2f",
         "receiptId": null,
         "timestamp": "2020-01-01",
@@ -71,13 +71,13 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
   },
   "updated": {
     "debts": {
-      "id:4cf9dbb9-533b-45e6-b9ab-af9c177fe39a|ownerAccountId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
+      "id:4cf9dbb9-533b-45e6-b9ab-af9c177fe39a|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
         "amount": "590.0500",
         "currencyCode": "PLN",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
-      "id:683719a8-df12-46a8-8295-4701aca86cf9|ownerAccountId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
+      "id:683719a8-df12-46a8-8295-4701aca86cf9|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
         "amount": "-642.6300",
         "currencyCode": "HNL",
         "timestamp": "2020-04-01",
@@ -92,13 +92,13 @@ exports[`debtIntentions.accept > input verification > mixed success and fail 1`]
 {
   "added": {
     "debts": {
-      "id:62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb|ownerAccountId:1d263b1a-801e-44e4-a018-32c2cbc9f60e": {
+      "id:62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb|ownerUserId:1d263b1a-801e-44e4-a018-32c2cbc9f60e": {
         "amount": "-981.5400",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "BAM",
         "id": "62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb",
         "note": "Cresco temperantia asporto.",
-        "ownerAccountId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
+        "ownerUserId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
         "peerId": "c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3",
         "receiptId": "e6ada951-0179-4108-b2be-222cbc95533e",
         "timestamp": "2020-01-01",

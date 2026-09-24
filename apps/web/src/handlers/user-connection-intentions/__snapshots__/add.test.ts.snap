@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`userConnectionIntentions.add > functionality > user connection intention added > avatar url exists 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
+        "connectedUserId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.add > functionality > user connection intention collapse - has a vice versa intention > avatar url exists 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:1ff05717-f376-4ed5-b7f6-ea9e0ab84fe3": {
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+      "id:b9fc248f-10cc-42f1-98b2-6d4a62666168": {
+        "connectedUserId": "4b9cc8ce-fd83-458e-aab0-380ad161a965",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`userConnectionIntentions.add > input verification > multiple intentions > mixed success and fail 1`] = `
+{
+  "updated": {
+    "peers": {
+      "id:c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3": {
+        "connectedUserId": "fee5e6cd-7254-4a0f-ba7f-34f93f7b94fc",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;

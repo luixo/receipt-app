@@ -14,7 +14,7 @@ test("On load", async ({
 	await api.mockUtils.authPage();
 	await snapshotQueries(async () => {
 		await page.navigate({ to: "/peers/add" });
-		await awaitCacheKey("account.get");
+		await awaitCacheKey("user.get");
 	});
 	await expect(page).toHaveTitle("RA - Add peer");
 	await expect(addButton).toBeDisabled();
@@ -24,7 +24,7 @@ test.describe("Invalid form disables submit button", () => {
 	test.beforeEach(async ({ api, page, awaitCacheKey, fillValidForm }) => {
 		await api.mockUtils.authPage();
 		await page.navigate({ to: "/peers/add" });
-		await awaitCacheKey("account.get");
+		await awaitCacheKey("user.get");
 		await fillValidForm();
 	});
 
@@ -65,7 +65,7 @@ test("'peers.add' mutation", async ({
 	});
 
 	await page.navigate({ to: "/peers/add" });
-	await awaitCacheKey("account.get");
+	await awaitCacheKey("user.get");
 	await fillValidForm(peerName);
 
 	await snapshotQueries(
@@ -104,7 +104,7 @@ test("'peers.add' mutation", async ({
 				id: peerId,
 				name: peerName,
 				publicName: undefined,
-				connectedAccount: undefined,
+				connectedUser: undefined,
 			};
 		}
 		return next();

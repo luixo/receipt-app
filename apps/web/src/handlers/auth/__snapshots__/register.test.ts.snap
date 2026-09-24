@@ -3,7 +3,28 @@
 exports[`auth.register > functionality > email sent if active 1`] = `
 {
   "added": {
-    "accounts": {
+    "peers": {
+      "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
+        "acceptReceipts": true,
+        "connectedUserId": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": true,
+        "id": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "name": "Amari",
+        "ownerUserId": "de5ea241-44ca-47ef-a736-a5ac82459079",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+    "sessions": {
+      "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
+        "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
+        "userId": "de5ea241-44ca-47ef-a736-a5ac82459079",
+      },
+    },
+    "users": {
       "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
         "avatarUrl": null,
         "confirmationToken": "f0bc24b0-e797-4768-a3e0-1abbfff5172c",
@@ -15,27 +36,6 @@ exports[`auth.register > functionality > email sent if active 1`] = `
         "passwordSalt": "8eb97beb90d65352743a847afae2d45cebfce8224eb1de716ce0615720fe986ef36ebefaf3fcbccdb1c00a1d6fcabd5eacfb9e2c3fdcdb393da494b1e9df4f61",
         "role": null,
         "updatedAt": "2020-01-01 00:00:00+00",
-      },
-    },
-    "peers": {
-      "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
-        "acceptReceipts": true,
-        "connectedAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "exposeReceipts": true,
-        "id": "de5ea241-44ca-47ef-a736-a5ac82459079",
-        "name": "Amari",
-        "ownerAccountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
-        "publicName": null,
-        "updatedAt": "2020-01-01 00:00:00+00",
-      },
-    },
-    "sessions": {
-      "sessionId:a25a8574-a877-4f39-83eb-25b7b69c7342": {
-        "accountId": "de5ea241-44ca-47ef-a736-a5ac82459079",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "a25a8574-a877-4f39-83eb-25b7b69c7342",
       },
     },
   },
@@ -125,7 +125,7 @@ exports[`auth.register > functionality > email sent if active 2`] = `
                               void your account.
                             </p>
                             <a
-                              href="http://receipt-app.test/void-account?token=f0bc24b0-e797-4768-a3e0-1abbfff5172c"
+                              href="http://receipt-app.test/void-user?token=f0bc24b0-e797-4768-a3e0-1abbfff5172c"
                               style="line-height:20px;text-decoration:none;display:inline-block;max-width:100%;mso-padding-alt:0px;border-color:rgb(236,8,103);background-color:rgb(236,8,103);border-radius:0.375rem;border-style:solid;border-width:1px;padding-right:24px;padding-left:24px;padding-bottom:12px;padding-top:12px;font-size:14px;font-weight:700;color:rgb(255,255,255);text-transform:capitalize;text-decoration-line:none"
                               target="_blank"
                               ><span
@@ -199,7 +199,28 @@ exports[`auth.register > functionality > email sent if active 2`] = `
 exports[`auth.register > functionality > register successful 1`] = `
 {
   "added": {
-    "accounts": {
+    "peers": {
+      "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
+        "acceptReceipts": true,
+        "connectedUserId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": true,
+        "id": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "name": "Judge",
+        "ownerUserId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+        "publicName": null,
+        "updatedAt": "2020-01-01 00:00:00+00",
+      },
+    },
+    "sessions": {
+      "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
+        "createdAt": "2020-01-01 00:00:00+00",
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
+        "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",
+        "userId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
+      },
+    },
+    "users": {
       "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
         "avatarUrl": null,
         "confirmationToken": null,
@@ -211,27 +232,6 @@ exports[`auth.register > functionality > register successful 1`] = `
         "passwordSalt": "227c6db6e43edbdb9b32b2ab2721b8cab31fc50a8d4f7a580f42cc18de41dbb966a3c08efbedf7ad8e7f6c6febbcdb3bebaeae63cae3ed09fa52c403a24ef0c1",
         "role": null,
         "updatedAt": "2020-01-01 00:00:00+00",
-      },
-    },
-    "peers": {
-      "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
-        "acceptReceipts": true,
-        "connectedAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "exposeReceipts": true,
-        "id": "cd711995-3c83-40a3-945e-c6a067b3eb09",
-        "name": "Judge",
-        "ownerAccountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
-        "publicName": null,
-        "updatedAt": "2020-01-01 00:00:00+00",
-      },
-    },
-    "sessions": {
-      "sessionId:8cb55f42-26f8-4226-aae2-81cab61a1bcb": {
-        "accountId": "cd711995-3c83-40a3-945e-c6a067b3eb09",
-        "createdAt": "2020-01-01 00:00:00+00",
-        "expirationTimestamp": "2020-01-31 00:00:00+00",
-        "sessionId": "8cb55f42-26f8-4226-aae2-81cab61a1bcb",
       },
     },
   },

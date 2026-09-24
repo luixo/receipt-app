@@ -1,0 +1,225 @@
+import { Jimp, JimpMime } from "jimp";
+import { File } from "node:buffer";
+import { assert, describe, expect } from "vitest";
+
+import { createAuthContext } from "~tests/backend/utils/context";
+import { insertUserWithSession } from "~tests/backend/utils/data";
+import {
+	expectDatabaseDiffSnapshot,
+	expectTRPCError,
+	expectUnauthorizedError,
+} from "~tests/backend/utils/expect";
+import { test } from "~tests/backend/utils/test";
+import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
+import { t } from "~web/handlers/trpc";
+
+import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
+
+const createCaller = t.createCallerFactory(t.router({ procedure }));
+
+const getFormData = (bits?: Buffer[]) => {
+	const formData = new FormData();
+	if (bits) {
+		formData.append(
+			"avatar",
+			new File(
+				bits.map((bit) => Uint8Array.from(bit)),
+				"avatar.png",
+			),
+		);
+	}
+	return formData;
+};
+
+// Minimal valid RIFF/WEBP header, just enough for `image-size` to detect the
+// format without needing a real VP8 bitstream.
+const WEBP_BUFFER = Buffer.alloc(30);
+WEBP_BUFFER.write("RIFF", 0, "ascii");
+WEBP_BUFFER.writeUInt32LE(22, 4);
+WEBP_BUFFER.write("WEBP", 8, "ascii");
+WEBP_BUFFER.write("VP8 ", 12, "ascii");
+WEBP_BUFFER.writeUInt32LE(10, 16);
+
+type FormImageOptions = {
+	format?: "png" | "jpeg" | "webp";
+	type?: "static" | "noise";
+};
+const defaultSettings: FormImageOptions = {
+	format: "png",
+};
+
+const generateFormWithImage = async (
+	width: number,
+	height: number,
+	{ format = "png", type = "static" }: FormImageOptions = defaultSettings,
+) => {
+	if (format === "webp") {
+		return getFormData([WEBP_BUFFER]);
+	}
+	const image = new Jimp({ width, height, color: 0xff_00_00_80 });
+	if (type === "noise") {
+		for (let index = 0; index < image.bitmap.data.length; index += 1) {
+			image.bitmap.data[index] = Math.floor(Math.random() * 256);
+		}
+	}
+	const buffer = await image.getBuffer(JimpMime[format]);
+	return getFormData([buffer]);
+};
+
+describe("user.changeAvatar", () => {
+	describe("input verification", () => {
+		expectUnauthorizedError((context) =>
+			createCaller(context).procedure(getFormData([])),
+		);
+
+		describe("avatar", () => {
+			test("is too big in bytes", async ({ ctx }) => {
+				const { sessionId } = await insertUserWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					async () =>
+						caller.procedure(
+							await generateFormWithImage(
+								MAX_AVATAR_SIDE_SIZE * 3,
+								MAX_AVATAR_SIDE_SIZE * 3,
+								{ type: "noise" },
+							),
+						),
+					"BAD_REQUEST",
+					`Maximum bytesize allowed is ${MAX_AVATAR_BYTESIZE}.`,
+				);
+			});
+
+			test("is too tall", async ({ ctx }) => {
+				const { sessionId } = await insertUserWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					async () =>
+						caller.procedure(
+							await generateFormWithImage(
+								MAX_AVATAR_SIDE_SIZE,
+								MAX_AVATAR_SIDE_SIZE + 1,
+							),
+						),
+					"BAD_REQUEST",
+					`Maximum height allowed is ${MAX_AVATAR_SIDE_SIZE}.`,
+				);
+			});
+
+			test("is too wide", async ({ ctx }) => {
+				const { sessionId } = await insertUserWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					async () =>
+						caller.procedure(
+							await generateFormWithImage(
+								MAX_AVATAR_SIDE_SIZE + 1,
+								MAX_AVATAR_SIDE_SIZE,
+							),
+						),
+					"BAD_REQUEST",
+					`Maximum width allowed is ${MAX_AVATAR_SIDE_SIZE}.`,
+				);
+			});
+
+			test("is not square", async ({ ctx }) => {
+				const { sessionId } = await insertUserWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					async () =>
+						caller.procedure(
+							await generateFormWithImage(
+								MAX_AVATAR_SIDE_SIZE,
+								MAX_AVATAR_SIDE_SIZE - 1,
+							),
+						),
+					"BAD_REQUEST",
+					`Expected to have equal height and width, got ${MAX_AVATAR_SIDE_SIZE}x${
+						MAX_AVATAR_SIDE_SIZE - 1
+					}.`,
+				);
+			});
+
+			test("is not of allowed format", async ({ ctx }) => {
+				const { sessionId } = await insertUserWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					async () =>
+						caller.procedure(
+							await generateFormWithImage(
+								MAX_AVATAR_SIDE_SIZE,
+								MAX_AVATAR_SIDE_SIZE,
+								{ format: "webp" },
+							),
+						),
+					"BAD_REQUEST",
+					`Format "webp" is not allowed.`,
+				);
+			});
+		});
+
+		test("provider broken", async ({ ctx }) => {
+			ctx.s3Options.setBroken(true);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				async () =>
+					caller.procedure(
+						await generateFormWithImage(
+							MAX_AVATAR_SIDE_SIZE,
+							MAX_AVATAR_SIDE_SIZE,
+						),
+					),
+				"INTERNAL_SERVER_ERROR",
+				"Test context broke s3 service error",
+			);
+		});
+	});
+
+	describe("functionality", () => {
+		test("avatar changes to null", async ({ ctx }) => {
+			// Verifying other peers are not affected
+			await insertUserWithSession(ctx);
+			const { sessionId } = await insertUserWithSession(ctx);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure(getFormData()),
+			);
+			expect(result).toStrictEqual<typeof result>(undefined);
+			expect(ctx.s3Options.mock.getMessages()).toHaveLength(0);
+		});
+
+		test("avatar changes to a given image", async ({ ctx }) => {
+			// Verifying other peers are not affected
+			await insertUserWithSession(ctx);
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+
+			const result = await expectDatabaseDiffSnapshot(ctx, async () =>
+				caller.procedure(
+					await generateFormWithImage(
+						MAX_AVATAR_SIDE_SIZE,
+						MAX_AVATAR_SIDE_SIZE,
+					),
+				),
+			);
+			const key = [S3_AVATAR_PREFIX, `${userId}.png`].join("/");
+			const url = `${[
+				ctx.s3Options.mock.endpoint,
+				ctx.s3Options.mock.bucket,
+				key,
+			].join("/")}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
+			expect(result).toStrictEqual({ url });
+			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
+			const [message] = ctx.s3Options.mock.getMessages();
+			assert(message);
+			expect(message.objectLength).toBeGreaterThan(1000);
+			expect(message.objectLength).toBeLessThan(5000);
+			expect(message).toStrictEqual<typeof message>({
+				key,
+				objectLength: message.objectLength,
+			});
+		});
+	});
+});

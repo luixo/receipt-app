@@ -28,7 +28,7 @@ const fetchPage = async (
 		.with("debtSummaries", () =>
 			database
 				.selectFrom("debts")
-				.where("debts.ownerAccountId", "=", auth.accountId)
+				.where("debts.ownerUserId", "=", auth.userId)
 				.innerJoin("peers", (qb) => qb.onRef("peers.id", "=", "debts.peerId"))
 				.select([
 					"debts.peerId",
@@ -88,7 +88,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get peers with debts, paged",
 		description:
-			"Returns a page of peerIds the current account has debts with, optionally excluding peers whose debts are fully resolved.",
+			"Returns a page of peerIds the current  user has debts with, optionally excluding peers whose debts are fully resolved.",
 	})
 	.input(inputSchema)
 	.query(queuePeerList);

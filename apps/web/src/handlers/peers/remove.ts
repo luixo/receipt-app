@@ -7,7 +7,7 @@ import { peerIdSchema } from "~web/handlers/validation";
 export const procedure = authProcedure
 	.meta({
 		title: "Remove peer",
-		description: "Removes a peer by id owned by the current account.",
+		description: "Removes a peer by id owned by the current  user.",
 	})
 	.input(
 		z.strictObject({
@@ -18,7 +18,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const peer = await database
 			.selectFrom("peers")
-			.select("ownerAccountId")
+			.select("ownerUserId")
 			.where("id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -28,7 +28,7 @@ export const procedure = authProcedure
 				message: `No peer found by id "${input.id}".`,
 			});
 		}
-		if (peer.ownerAccountId !== ctx.auth.accountId) {
+		if (peer.ownerUserId !== ctx.auth.userId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${input.id}" is not owned by "${ctx.auth.email}".`,

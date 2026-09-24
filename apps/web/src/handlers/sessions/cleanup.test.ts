@@ -2,9 +2,9 @@ import { describe } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
 import {
-	insertAccount,
-	insertAccountWithSession,
 	insertSession,
+	insertUser,
+	insertUserWithSession,
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
@@ -18,18 +18,18 @@ describe("sessions.cleanup", () => {
 	describe("functionality", () => {
 		test("sessions are removed", async ({ ctx }) => {
 			// Verifying other sessions are not affected
-			await insertAccountWithSession(ctx);
+			await insertUserWithSession(ctx);
 			const now = Temporal.Now.zonedDateTimeISO();
-			const { id: accountId } = await insertAccount(ctx);
-			await insertSession(ctx, accountId, {
+			const { id: userId } = await insertUser(ctx);
+			await insertSession(ctx, userId, {
 				// non-expired session
 				expirationTimestamp: now.add({ minutes: 1 }),
 			});
-			await insertSession(ctx, accountId, {
+			await insertSession(ctx, userId, {
 				// just expired session
 				expirationTimestamp: now.subtract({ minutes: 1 }),
 			});
-			await insertSession(ctx, accountId, {
+			await insertSession(ctx, userId, {
 				// long expired session
 				expirationTimestamp: now.subtract({ years: 1 }),
 			});

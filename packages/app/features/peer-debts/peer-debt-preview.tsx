@@ -67,14 +67,14 @@ export const PeerDebtPreviewSkeleton = () => (
 	/>
 );
 
-const OnlyWithConnectedAccount = suspendedFallback<
+const OnlyWithConnectedUser = suspendedFallback<
 	React.PropsWithChildren<{ peerId: PeerId }>
 >(({ peerId, children }) => {
 	const trpc = useTRPC();
 	const { data: peer } = useSuspenseQuery(
 		trpc.peers.get.queryOptions({ id: peerId }),
 	);
-	if (peer.connectedAccount) {
+	if (peer.connectedUser) {
 		return <>{children}</>;
 	}
 	return null;
@@ -130,9 +130,9 @@ export const PeerDebtPreview = suspendedFallback<{
 					}
 					timestamp={<Text>{formatPlainDate(debt.timestamp)}</Text>}
 					synced={
-						<OnlyWithConnectedAccount peerId={debt.peerId}>
+						<OnlyWithConnectedUser peerId={debt.peerId}>
 							<DebtSyncStatus debt={debt} theirDebt={debt.their} />
-						</OnlyWithConnectedAccount>
+						</OnlyWithConnectedUser>
 					}
 					note={<Text>{debt.note}</Text>}
 				/>

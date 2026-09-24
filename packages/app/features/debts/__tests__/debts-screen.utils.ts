@@ -38,7 +38,7 @@ export const test = debtsTest.extend<Fixtures>({
 					id: peer.id,
 					name: peer.name,
 					publicName: undefined,
-					connectedAccount: undefined,
+					connectedUser: undefined,
 				};
 			});
 		}),

@@ -85,20 +85,20 @@ const fetchDebts = async (
 				"debts.id",
 				"in",
 				updates.map((update) => update.id),
-			).and("debts.ownerAccountId", "=", ctx.auth.accountId),
+			).and("debts.ownerUserId", "=", ctx.auth.userId),
 		)
 		.innerJoin("peers", (qb) =>
 			qb
 				.onRef("peers.id", "=", "debts.peerId")
-				.onRef("peers.ownerAccountId", "=", "debts.ownerAccountId"),
+				.onRef("peers.ownerUserId", "=", "debts.ownerUserId"),
 		)
-		.leftJoin("accountSettings", (qb) =>
-			qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
+		.leftJoin("userSettings", (qb) =>
+			qb.onRef("peers.connectedUserId", "=", "userSettings.userId"),
 		)
 		.leftJoin("peers as peersTheir", (qb) =>
 			qb
-				.onRef("peersTheir.connectedAccountId", "=", "debts.ownerAccountId")
-				.onRef("peersTheir.ownerAccountId", "=", "peers.connectedAccountId"),
+				.onRef("peersTheir.connectedUserId", "=", "debts.ownerUserId")
+				.onRef("peersTheir.ownerUserId", "=", "peers.connectedUserId"),
 		)
 		.select([
 			"debts.id",
@@ -109,8 +109,8 @@ const fetchDebts = async (
 			"debts.amount",
 			"debts.timestamp",
 			"debts.receiptId",
-			"peers.connectedAccountId as foreignAccountId",
-			"accountSettings.manualAcceptDebts",
+			"peers.connectedUserId as foreignUserId",
+			"userSettings.manualAcceptDebts",
 			"peersTheir.id as theirPeerId",
 		])
 		.execute();
@@ -156,14 +156,10 @@ const updateAutoAcceptingDebts = async (
 	const autoAcceptedData = debtsToUpdate
 		.map((debtToUpdate) => {
 			const { debt, setObject, reverseSetObject } = debtToUpdate;
-			if (
-				!debt.manualAcceptDebts &&
-				debt.foreignAccountId &&
-				debt.theirPeerId
-			) {
+			if (!debt.manualAcceptDebts && debt.foreignUserId && debt.theirPeerId) {
 				return {
 					id: debt.id,
-					ownerAccountId: debt.foreignAccountId,
+					ownerUserId: debt.foreignUserId,
 					peerId: debt.theirPeerId,
 					currencyCode: debt.currencyCode,
 					amount: (-Number(debt.amount)).toString(),
@@ -214,7 +210,7 @@ const updateDebts = async (
 					.where((eb) =>
 						eb.and({
 							id: debtToUpdate.debt.id,
-							ownerAccountId: ctx.auth.accountId,
+							ownerUserId: ctx.auth.userId,
 						}),
 					)
 					.returning(["debts.id", "debts.updatedAt"])
@@ -244,7 +240,7 @@ const queueUpdateDebt = queueCallFactory<
 		if (!matchedDebt) {
 			return new TRPCError({
 				code: "NOT_FOUND",
-				message: `Debt "${update.id}" does not exist on account "${ctx.auth.email}".`,
+				message: `Debt "${update.id}" does not exist on  user "${ctx.auth.email}".`,
 			});
 		}
 		return { ...buildSetObjects(update), debt: matchedDebt };
@@ -262,7 +258,7 @@ const queueUpdateDebt = queueCallFactory<
 	]);
 	const localPeerIds = unique(
 		debts
-			.filter((debt) => debt.foreignAccountId === null)
+			.filter((debt) => debt.foreignUserId === null)
 			.map((debt) => debt.peerId),
 	);
 	return updatesOrErrors.map((updateOrError) => {
@@ -293,7 +289,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Update debt",
 		description:
-			"Updates a debt owned by the current account, auto-updating the counterparty's mirrored debt unless they require manual acceptance.",
+			"Updates a debt owned by the current  user, auto-updating the counterparty's mirrored debt unless they require manual acceptance.",
 	})
 	.input(updateDebtSchema)
 	.mutation(queueUpdateDebt);

@@ -40,20 +40,20 @@ const getData = async (
 	const [peers, debtReceiptTuples] = await Promise.all([
 		ctx.database
 			.selectFrom("peers")
-			.leftJoin("accountSettings", (qb) =>
-				qb.onRef("peers.connectedAccountId", "=", "accountSettings.accountId"),
+			.leftJoin("userSettings", (qb) =>
+				qb.onRef("peers.connectedUserId", "=", "userSettings.userId"),
 			)
 			.leftJoin("peers as peersTheir", (qb) =>
 				qb
-					.onRef("peersTheir.ownerAccountId", "=", "peers.connectedAccountId")
-					.on("peersTheir.connectedAccountId", "=", ctx.auth.accountId),
+					.onRef("peersTheir.ownerUserId", "=", "peers.connectedUserId")
+					.on("peersTheir.connectedUserId", "=", ctx.auth.userId),
 			)
 			.select([
 				"peers.id as peerId",
-				"peers.ownerAccountId as selfAccountId",
-				"peers.connectedAccountId as foreignAccountId",
+				"peers.ownerUserId as selfUserId",
+				"peers.connectedUserId as foreignUserId",
 				"peersTheir.id as theirPeerId",
-				"accountSettings.manualAcceptDebts",
+				"userSettings.manualAcceptDebts",
 			])
 			.where("peers.id", "in", peerIds)
 			.execute(),
@@ -71,7 +71,7 @@ const getData = async (
 							),
 						),
 					)
-					.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+					.where("debts.ownerUserId", "=", ctx.auth.userId)
 					.select(["debts.peerId", "debts.receiptId"])
 					.execute(),
 	]);
@@ -108,7 +108,7 @@ const addAutoAcceptingDebts = async (
 			.map(({ generatedId, ...debt }) => {
 				const peer = getMatchedPeer(debt, peers);
 				if (
-					!peer.foreignAccountId ||
+					!peer.foreignUserId ||
 					!peer.theirPeerId ||
 					peer.manualAcceptDebts
 				) {
@@ -120,7 +120,7 @@ const addAutoAcceptingDebts = async (
 					currencyCode: debt.currencyCode,
 					timestamp: debt.timestamp || Temporal.Now.plainDateISO(),
 					receiptId: debt.receiptId,
-					ownerAccountId: peer.foreignAccountId,
+					ownerUserId: peer.foreignUserId,
 					peerId: peer.theirPeerId,
 					amount: (-debt.amount).toString(),
 					isNew: true,
@@ -189,7 +189,7 @@ const addDebts = async (
 					currencyCode: debt.currencyCode,
 					timestamp: debt.timestamp || Temporal.Now.plainDateISO(),
 					receiptId: debt.receiptId,
-					ownerAccountId: ctx.auth.accountId,
+					ownerUserId: ctx.auth.userId,
 					peerId: debt.peerId,
 					amount: debt.amount.toString(),
 				}))
@@ -225,13 +225,13 @@ const queueAddDebt = queueCallFactory<
 				message: `Peer "${debt.peerId}" does not exist.`,
 			});
 		}
-		if (matchedPeer.selfAccountId !== ctx.auth.accountId) {
+		if (matchedPeer.selfUserId !== ctx.auth.userId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Peer "${debt.peerId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (debt.peerId === matchedPeer.selfAccountId) {
+		if (debt.peerId === matchedPeer.selfUserId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Cannot add a debt for yourself.`,
@@ -260,7 +260,7 @@ const queueAddDebt = queueCallFactory<
 	);
 	const localPeerIds = new Set(
 		peers
-			.filter((peer) => peer.foreignAccountId === null)
+			.filter((peer) => peer.foreignUserId === null)
 			.map((peer) => peer.peerId),
 	);
 	const addedDebts = await addDebts(ctx, debts, reverseIdMap);
@@ -296,7 +296,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Add debt",
 		description:
-			"Adds a debt for a given peerId, auto-accepting the mirrored debt on the counterparty's account unless they require manual acceptance.",
+			"Adds a debt for a given peerId, auto-accepting the mirrored debt on the counterparty's  user unless they require manual acceptance.",
 	})
 	.input(addDebtSchema)
 	.mutation(queueAddDebt);
