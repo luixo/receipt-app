@@ -1,7 +1,9 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
+import type { Kysely } from "kysely";
 
 import type { Database } from "~db/database";
 import type { TestContext } from "~tests/backend/utils/test";
+import type { AuthDB } from "~web/auth/tables";
 import type { authProcedure } from "~web/handlers/trpc";
 import type { CacheDbOptions } from "~web/providers/cache-db";
 import type { EmailOptions } from "~web/providers/email";
@@ -10,6 +12,8 @@ import type { Logger } from "~web/providers/logger";
 import type { S3Options } from "~web/providers/s3";
 
 type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
+	authDatabase: Kysely<AuthDB>;
+	authSecret: string;
 	database: Database;
 	logger: Logger;
 	emailOptions: EmailOptions;

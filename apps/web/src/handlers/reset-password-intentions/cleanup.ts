@@ -1,3 +1,5 @@
+// Better Auth stores timestamps as native Date values.
+// oxlint-disable eslint-js/no-restricted-syntax
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
@@ -6,10 +8,11 @@ export const procedure = unauthProcedure
 		description: "Deletes all expired reset password intentions.",
 	})
 	.mutation(async ({ ctx }) => {
-		const { database } = ctx;
-		const result = await database
-			.deleteFrom("resetPasswordIntentions")
-			.where("expiresTimestamp", "<", Temporal.Now.zonedDateTimeISO())
+		const { authDatabase } = ctx;
+		const result = await authDatabase
+			.deleteFrom("auth.verification")
+			.where("identifier", "like", "reset-password:%")
+			.where("expiresAt", "<", new Date())
 			.executeTakeFirstOrThrow();
 		return { count: Number(result.numDeletedRows) };
 	});

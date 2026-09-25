@@ -35,13 +35,13 @@ describe("auth.confirmEmail", () => {
 			await expectTRPCError(
 				() => caller.procedure({ token: confirmationToken }),
 				"NOT_FOUND",
-				`There is no account with confirmation token "${confirmationToken}".`,
+				`There is no user with confirmation token "${confirmationToken}".`,
 			);
 		});
 	});
 
 	describe("functionality", () => {
-		test("account confirmed", async ({ ctx }) => {
+		test("user confirmed", async ({ ctx }) => {
 			const {
 				user: { confirmationToken, email },
 			} = await insertUserWithSession(ctx, {
@@ -56,7 +56,7 @@ describe("auth.confirmEmail", () => {
 			const caller = createCaller(context);
 			assert.ok(
 				confirmationToken,
-				"Confirmation token should exist on creation of test account",
+				"Confirmation token should exist on creation of test user",
 			);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ token: confirmationToken }),

@@ -1,3 +1,6 @@
+// Better Auth persists verification expiry as a native Date.
+// oxlint-disable eslint-js/no-restricted-syntax
+
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -8,7 +11,7 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Get reset password intention",
 		description:
-			"Returns the  user email for a valid, unexpired reset password token.",
+			"Returns the user email for a valid, unexpired reset password token.",
 	})
 	.input(
 		z.strictObject({
@@ -16,29 +19,36 @@ export const procedure = unauthProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		const { database } = ctx;
-		const resetPasswordIntention = await database
-			.selectFrom("resetPasswordIntentions")
-			.where((eb) =>
-				eb("token", "=", input.token).and(
-					"expiresTimestamp",
-					">",
-					Temporal.Now.zonedDateTimeISO(),
-				),
+		const intention = await ctx.authDatabase
+			.selectFrom("auth.verification")
+			.select(["auth.verification.value"])
+			.where(
+				"auth.verification.identifier",
+				"=",
+				`reset-password:${input.token}`,
 			)
-			.innerJoin("users", (qb) =>
-				qb.onRef("users.id", "=", "resetPasswordIntentions.userId"),
-			)
-			.select("email")
+			.where("auth.verification.expiresAt", ">", new Date())
 			.limit(1)
 			.executeTakeFirst();
-		if (!resetPasswordIntention) {
+		if (!intention) {
+			throw new TRPCError({
+				code: "NOT_FOUND",
+				message: `Reset password intention "${input.token}" does not exist or expired.`,
+			});
+		}
+		const user = await ctx.authDatabase
+			.selectFrom("auth.user")
+			.select("email")
+			.where("id", "=", intention.value)
+			.limit(1)
+			.executeTakeFirst();
+		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Reset password intention "${input.token}" does not exist or expired.`,
 			});
 		}
 		return {
-			email: resetPasswordIntention.email,
+			email: user.email,
 		};
 	});

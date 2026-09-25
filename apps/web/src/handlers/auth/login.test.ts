@@ -63,7 +63,7 @@ describe("auth.login", () => {
 			});
 		});
 
-		test("account not found", async ({ ctx }) => {
+		test("user not found", async ({ ctx }) => {
 			const caller = createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
@@ -73,7 +73,7 @@ describe("auth.login", () => {
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 					}),
 				"UNAUTHORIZED",
-				`Authentication of account "${email}" failed: account not found.`,
+				`Authentication of user "${email}" failed: user not found.`,
 			);
 		});
 
@@ -89,7 +89,7 @@ describe("auth.login", () => {
 						password: `${password}_fail`,
 					}),
 				"UNAUTHORIZED",
-				`Authentication of account "${email}" failed: password is wrong.`,
+				`Authentication of user "${email}" failed: password is wrong.`,
 			);
 		});
 	});

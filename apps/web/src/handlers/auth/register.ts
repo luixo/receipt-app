@@ -1,4 +1,7 @@
+// Better Auth's adapter requires native Date values at the database boundary.
+// oxlint-disable eslint-js/no-restricted-syntax
 import { TRPCError } from "@trpc/server";
+import { hashPassword } from "better-auth/crypto";
 import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
@@ -15,9 +18,9 @@ import { setCookie } from "~web/utils/cookies";
 
 export const procedure = unauthProcedure
 	.meta({
-		title: "Register account",
+		title: "Register user",
 		description:
-			"Creates a new account and its self-peer, sends a verification email if enabled, and starts a new session.",
+			"Creates a new user and its self-peer, sends a verification email if enabled, and starts a new session.",
 	})
 	.input(
 		z.strictObject({
@@ -28,15 +31,15 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const account = await database
+		const user = await database
 			.selectFrom("users")
 			.select([])
 			.where("email", "=", input.email.lowercase)
 			.limit(1)
 			.executeTakeFirst();
-		if (account) {
+		if (user) {
 			ctx.logger.debug(
-				`Registration of account "${input.email.original}" failed: email already exists.`,
+				`Registration of user "${input.email.original}" failed: email already exists.`,
 			);
 			throw new TRPCError({
 				code: "CONFLICT",
@@ -67,10 +70,36 @@ export const procedure = unauthProcedure
 					: null,
 			})
 			.execute();
+		await ctx.authDatabase
+			.insertInto("auth.user")
+			.values({
+				id,
+				name: input.name,
+				email: input.email.lowercase,
+				emailVerified: !emailServiceActive,
+				image: null,
+				role: null,
+				verificationEmailSentAt: emailServiceActive ? new Date() : null,
+				updatedAt: new Date(),
+			})
+			.execute();
+		await ctx.authDatabase
+			.insertInto("auth.account")
+			.values({
+				id,
+				accountId: id,
+				providerId: "credential",
+				userId: id,
+				password: await hashPassword(input.password),
+				legacyPasswordSalt: passwordData.salt,
+				legacyPasswordHash: passwordData.hash,
+				updatedAt: new Date(),
+			})
+			.execute();
 		await database
 			.insertInto("peers")
 			.values({
-				// Typesystem doesn't know that we use account id as self peer id
+				// Typesystem doesn't know that we use user id as self peer id
 				id: id as PeerId,
 				name: input.name,
 				ownerUserId: id,
@@ -83,9 +112,7 @@ export const procedure = unauthProcedure
 			ctx,
 			id,
 		);
-		ctx.logger.debug(
-			`Registration of account "${input.email.original}" succeed.`,
-		);
+		ctx.logger.debug(`Registration of user "${input.email.original}" succeed.`);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
 			user: { id, verified: !emailServiceActive },
