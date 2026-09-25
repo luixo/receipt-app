@@ -7,6 +7,7 @@ import { consoleFixtures } from "./fixtures/console";
 import { coverageFixtures } from "./fixtures/coverage";
 import { currencyFixtures } from "./fixtures/currency";
 import { formFixtures } from "./fixtures/form";
+import { lighthouseFixtures } from "./fixtures/lighthouse";
 import { mockFixtures } from "./fixtures/mock";
 import { pageFixtures } from "./fixtures/page";
 import { queriesFixtures } from "./fixtures/queries";
@@ -33,5 +34,6 @@ export const test = mergeTests(
 	cacheFixtures,
 	formFixtures,
 	coverageFixtures,
+	lighthouseFixtures,
 );
 export { expect } from "@playwright/test";
