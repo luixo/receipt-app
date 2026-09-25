@@ -15,6 +15,7 @@ Bun monorepo: a TanStack Start web app and an Expo mobile app sharing one tRPC b
 
 - Backend is tested via Vitest: `bun run backend:test`. Tests should emit 100% coverage. `bun run backend:test <path>` runs one file, `--update` rewrites snapshots. See `@.docs/be-test.md` for details.
 - Frontend is tested via Playwright. As this requires running a server, see details in `@.docs/fe-test.md` if you need to run FE tests.
+- Mobile is smoke-tested on an Android emulator via Mobilewright: `bun run mobile:test`. As this requires an emulator, a built APK and a running `mobilecli` server, see details in `@.docs/mobile-test.md` if you need to run mobile tests.
 
 ### Development
 
