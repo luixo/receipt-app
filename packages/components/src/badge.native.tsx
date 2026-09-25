@@ -8,7 +8,7 @@ const badge = tv({
 	slots: {
 		base: "relative self-start",
 		badge:
-			"border-background min-size-6 text-small absolute top-0 right-0 z-10 box-border translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[2px] font-medium",
+			"min-size-6 text-small border-background absolute top-0 right-0 z-10 box-border translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-[2px] font-medium",
 	},
 	variants: {
 		color: {

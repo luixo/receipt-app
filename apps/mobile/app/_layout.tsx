@@ -35,11 +35,30 @@ import { storeContext } from "~mobile/utils/store";
 
 import "../app.css";
 
+const ComponentSettingsProvider: React.FC<React.PropsWithChildren> = ({
+	children,
+}) => {
+	const config = React.useMemo(
+		() => ({
+			devInfo: { stylingPrinciples: false },
+			isRTL: getLocales()[0].textDirection === "rtl",
+			textInputProps: {
+				allowFontScaling: true,
+				maxFontSizeMultiplier: 1.5,
+			},
+		}),
+		[],
+	);
+	return (
+		<HeroUINativeProvider config={config}>{children}</HeroUINativeProvider>
+	);
+};
+
 export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 	error,
 	retry,
 }) => (
-	<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
+	<ComponentSettingsProvider>
 		<View className="flex size-full items-center justify-center">
 			<ErrorMessage
 				title="Global error"
@@ -52,15 +71,7 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
 				}}
 			/>
 		</View>
-	</HeroUINativeProvider>
-);
-
-const WrappedToastProvider: React.FC<React.PropsWithChildren> = ({
-	children,
-}) => (
-	<HeroUINativeProvider config={{ devInfo: { stylingPrinciples: false } }}>
-		<ToastProvider>{children}</ToastProvider>
-	</HeroUINativeProvider>
+	</ComponentSettingsProvider>
 );
 
 const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN as string | undefined;
@@ -117,18 +128,20 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 			initialQueryClientKey={SELF_QUERY_CLIENT_KEY}
 			i18nContext={i18nContext}
 		>
-			<InnerProvider
-				storeContext={storeContext}
-				storage={storage}
-				linksContext={linksContext}
-				navigationContext={navigationContext}
-				DevToolsProvider={DevToolsProvider}
-				ToastProvider={WrappedToastProvider}
-				applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
-			>
-				<SplashScreenManager timeout={2000} />
-				{children}
-			</InnerProvider>
+			<ComponentSettingsProvider>
+				<InnerProvider
+					storeContext={storeContext}
+					storage={storage}
+					linksContext={linksContext}
+					navigationContext={navigationContext}
+					DevToolsProvider={DevToolsProvider}
+					ToastProvider={ToastProvider}
+					applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
+				>
+					<SplashScreenManager timeout={2000} />
+					{children}
+				</InnerProvider>
+			</ComponentSettingsProvider>
 		</OuterProvider>
 	);
 };
@@ -137,7 +150,7 @@ const App: React.FC = () => (
 	<GestureHandlerRootView>
 		<ClientProvider>
 			<SafeAreaListener onChange={({ insets }) => Uniwind.updateInsets(insets)}>
-				<View className="bg-background text-foreground flex-1 p-safe">
+				<View className="text-foreground bg-background flex-1 p-safe">
 					<Stack />
 				</View>
 			</SafeAreaListener>

@@ -24,7 +24,7 @@ export const DevToolsProvider: React.FC<React.PropsWithChildren<object>> = ({
 		},
 		enableLogs: false,
 		envVariables: {
-			NODE_ENV: process.env.NODE_ENV || "unknown",
+			NODE_ENV: process.env.NODE_ENV,
 		},
 		asyncStorage: AsyncStorage,
 		secureStorage: SecureStore,
