@@ -2,7 +2,7 @@ import "~utils/temporal-polyfill";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import type { TestProject } from "vitest/node";
 
-import { promisifyServer } from "~utils/promise";
+import { promisifyServer } from "~utils/server/promise";
 
 import { appRouter, createCaller } from "./databases/router";
 

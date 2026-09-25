@@ -13,7 +13,7 @@ import {
 } from "~coverage/index";
 import { coverageDir, urlSettings } from "~tests/frontend/consts";
 import { getIgnoredIndex } from "~tests/frontend/fixtures/console";
-import { promisifyServer } from "~utils/promise";
+import { promisifyServer } from "~utils/server/promise";
 import { baseLogger } from "~web/providers/logger";
 
 import {

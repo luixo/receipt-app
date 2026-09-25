@@ -9,7 +9,8 @@ import type { GetLinksOptions, SimpleHeaders } from "~app/utils/trpc";
 import { getLinks } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
-import { promisifyServer, wait } from "~utils/promise";
+import { wait } from "~utils/promise";
+import { promisifyServer } from "~utils/server/promise";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
