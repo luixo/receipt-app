@@ -17,6 +17,7 @@
 		"format": "bun run --cwd utils/format write",
 		"format:verify": "bun run --cwd utils/format check",
 		"frontend:test": "bun run --cwd testing/playwright test",
+		"mobile:test": "bun run --cwd testing/mobile test",
 		"install:immutable": "bun install --frozen-lockfile",
 		"lint": "bun run --cwd utils/lint lint",
 		"lint-staged": "lint-staged",
