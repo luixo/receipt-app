@@ -21,7 +21,7 @@ type RoutedPage = OriginalPage & {
 	) => Promise<void>;
 };
 
-const setProxyHeaders = async (
+export const setProxyHeaders = async (
 	page: Page,
 	api: ExtractFixture<typeof test>["api"],
 	baseUrl = "",
