@@ -102,9 +102,6 @@ export default defineConfig({
 
 		timezoneId: localSettings.timezone,
 		locale: localSettings.locale,
-
-		// For environments with a TLS-intercepting proxy (e.g. sandboxes), external resources like fonts fail otherwise
-		ignoreHTTPSErrors: Boolean(process.env.PW_IGNORE_HTTPS_ERRORS),
 	},
 	build: {
 		jsxImportSource: "react",
