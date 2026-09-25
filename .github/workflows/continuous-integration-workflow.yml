@@ -9,7 +9,7 @@ on:
 jobs:
   replace-pr-number:
     name: Replace PR number in a message
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: ${{ github.ref != 'refs/heads/main' }}
     steps:
       - name: Replace Pull Request Body
@@ -23,7 +23,7 @@ jobs:
 
   format:
     name: Format
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -32,7 +32,7 @@ jobs:
 
   typecheck:
     name: Typecheck
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -41,7 +41,7 @@ jobs:
 
   linter:
     name: Linter
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -50,7 +50,7 @@ jobs:
 
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: typecheck
     steps:
       - uses: actions/checkout@v6
@@ -79,7 +79,7 @@ jobs:
 
   backend-test:
     name: Backend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
@@ -108,7 +108,7 @@ jobs:
 
   frontend-test:
     name: Frontend tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: build
     strategy:
       fail-fast: false
@@ -150,7 +150,7 @@ jobs:
     name: Merge Playwright reports
     if: ${{ !cancelled() }}
     needs: frontend-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -173,7 +173,7 @@ jobs:
   merge-frontend-coverage:
     name: Merge frontend coverage
     needs: frontend-test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
@@ -209,7 +209,7 @@ jobs:
 
   update-badges:
     name: Badges
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       pull-requests: write
     needs:
@@ -254,7 +254,7 @@ jobs:
 
   check-generated-db-types:
     name: Check generated DB types
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -274,7 +274,7 @@ jobs:
 
   check-generated-route-types:
     name: Check generated route types
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: build
     steps:
       - name: Check for uncommitted changes
@@ -289,7 +289,7 @@ jobs:
 
   analyze:
     name: Analyze bundle
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     if: ${{ github.ref != 'refs/heads/main' }}
     needs: build
     permissions:
@@ -320,7 +320,7 @@ jobs:
 
   verify-native-health:
     name: Check native health
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -331,7 +331,7 @@ jobs:
 
   verify-routers-match:
     name: Check routers match between web and native
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
