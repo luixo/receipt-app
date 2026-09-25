@@ -2,7 +2,13 @@ import React from "react";
 import type { TextInput } from "react-native";
 import { Platform } from "react-native";
 
-import { TextField } from "heroui-native";
+import {
+	Description,
+	FieldError,
+	Input as InputRaw,
+	Label,
+	TextField,
+} from "heroui-native";
 import { tv } from "tailwind-variants";
 
 import { Icon } from "~components/icons";
@@ -20,7 +26,8 @@ const input = tv({
 		outer: "min-w-[320px]",
 		base: "",
 		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
-		wrapper: "bg-field border-field justify-center rounded-2xl border-2 px-3",
+		wrapper:
+			"bg-field border-field-border justify-center rounded-2xl border-2 px-3",
 		innerWrapper: "flex-row items-center justify-center",
 		sideContent: "max-h-6 flex-row items-center justify-center gap-2",
 		label: "text-normal",
@@ -341,9 +348,9 @@ const InnerInput = ({
 		variant,
 	});
 	const labelElement = label ? (
-		<TextField.Label>
+		<Label>
 			<Text className={slots.label()}>{label}</Text>
-		</TextField.Label>
+		</Label>
 	) : null;
 	const shouldRenderClearable = isClearable && Platform.OS !== "ios";
 	return (
@@ -364,7 +371,7 @@ const InnerInput = ({
 									{startContent}
 								</View>
 							) : null}
-							<TextField.Input
+							<InputRaw
 								ref={ref}
 								aria-label={ariaLabel}
 								placeholder={placeholder}
@@ -406,14 +413,14 @@ const InnerInput = ({
 						</View>
 					</View>
 					{description ? (
-						<TextField.Description>
+						<Description>
 							<Text className={slots.description()}>{description}</Text>
-						</TextField.Description>
+						</Description>
 					) : null}
 					{errorMessage ? (
-						<TextField.ErrorMessage>
+						<FieldError>
 							<Text>{errorMessage}</Text>
-						</TextField.ErrorMessage>
+						</FieldError>
 					) : null}
 				</View>
 			</TextField>

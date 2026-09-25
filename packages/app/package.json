@@ -8,7 +8,7 @@
 		"@ra/components": "workspace:*",
 		"@ra/mutations": "workspace:*",
 		"@ra/utils": "workspace:*",
-		"@react-native-vector-icons/lucide": "^12.4.0",
+		"@react-native-vector-icons/lucide": "^13.1.4",
 		"@tanstack/query-async-storage-persister": "5.80.6",
 		"@tanstack/react-form": "^1.23.7",
 		"@tanstack/react-pacer": "^0.16.3",
