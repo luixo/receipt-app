@@ -36,9 +36,10 @@ beforeAll(
 			return;
 		}
 		const { databaseName, connectionData } = await client.lockDatabase.mutate();
+		const connectionString = makeConnectionString(connectionData, databaseName);
 		const database = getDatabase({
 			logger,
-			connectionString: makeConnectionString(connectionData, databaseName),
+			connectionString,
 		});
 		if (filepath) {
 			// Metadata is not serializable though `file` reference stays on the run
@@ -48,12 +49,21 @@ beforeAll(
 				logger,
 				database: {
 					instance: database,
+					connectionString,
 					dump: () => client.dumpDatabase.mutate({ databaseName }),
 					truncate: () => client.truncateDatabase.mutate({ databaseName }),
 				},
 			};
 		}
 		return async () => {
+			const { getAuthDatabase } = await import("~web/auth/database");
+			const authDatabase = getAuthDatabase(connectionString);
+			await authDatabase.deleteFrom("auth.session").execute();
+			await authDatabase.deleteFrom("auth.account").execute();
+			await authDatabase.deleteFrom("auth.user").execute();
+			await authDatabase.deleteFrom("auth.verification").execute();
+			const { destroyAuthDatabase } = await import("~web/auth/database");
+			await destroyAuthDatabase(connectionString);
 			await database.destroy();
 			await client.releaseDatabase.mutate({ databaseName });
 		};

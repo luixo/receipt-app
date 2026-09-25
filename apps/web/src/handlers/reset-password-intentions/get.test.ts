@@ -21,9 +21,9 @@ describe("resetPasswordIntentions.get", () => {
 			test("invalid", async ({ ctx }) => {
 				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
-					() => caller.procedure({ token: "invalid-uuid" }),
+					() => caller.procedure({ token: "" }),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "token": Invalid UUID`,
+					`Zod error\n\nAt "token": Too small: expected string to have >=1 characters`,
 				);
 			});
 		});

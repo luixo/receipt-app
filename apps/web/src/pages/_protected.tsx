@@ -6,7 +6,7 @@ import { serialize } from "cookie";
 
 import { ProtectedPage } from "~app/components/protected-page";
 import type { TRPCError } from "~app/trpc";
-import { AUTH_COOKIE } from "~app/utils/auth";
+import { AUTH_COOKIE, AUTH_SECURE_COOKIE } from "~app/utils/auth";
 import { Spinner } from "~components/spinner";
 import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
@@ -33,17 +33,23 @@ export const Route = createFileRoute("/_protected")({
 			if (error instanceof TRPCClientError) {
 				const castedError = error as TRPCError;
 				if (castedError.data?.code === "UNAUTHORIZED") {
+					const expired = getOptions({
+						expires: Temporal.Now.zonedDateTimeISO(),
+					});
 					// oxlint-disable-next-line typescript/only-throw-error
 					throw redirect({
 						to: "/login",
 						search: { redirect: location.href, ...location.search },
-						headers: {
-							"set-cookie": serialize(
-								AUTH_COOKIE,
-								"",
-								getOptions({ expires: Temporal.Now.zonedDateTimeISO() }),
-							),
-						},
+						headers: [
+							["set-cookie", serialize(AUTH_COOKIE, "", expired)],
+							[
+								"set-cookie",
+								serialize(AUTH_SECURE_COOKIE, "", {
+									...expired,
+									secure: true,
+								}),
+							],
+						],
 					});
 				}
 			}
