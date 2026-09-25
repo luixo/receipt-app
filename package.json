@@ -90,7 +90,7 @@
 		"@faker-js/faker": "^10.6.0",
 		"timekeeper": "^2.3.1",
 		"deep-object-diff": "^1.1.9",
-		"uniwind": "^1.2.2",
+		"uniwind": "^1.12.0",
 		"uuid": "14.0.2",
 		"zod": "4.5.4"
 	},
@@ -105,7 +105,6 @@
 		"lucide-react@0.562.0": "patches/lucide-react-npm-0.562.0.patch",
 		"react-native-color-matrix-image-filters@8.0.2": "patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
 		"react-native-web@0.21.2": "patches/react-native-web-npm-0.21.2.patch",
-		"uniwind@1.2.2": "patches/uniwind-npm-1.2.2.patch",
 		"playwright@1.63.0": "patches/playwright@1.63.0.patch"
 	},
 	"trustedDependencies": [
