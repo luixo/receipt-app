@@ -64,7 +64,13 @@ const visualProjects: Project[] = [
 const functionalProject: Project = {
 	name: "functional",
 	use: devices["Desktop Chrome"],
-	testMatch: /.*(?<!visual|utils)\.spec\.ts/,
+	testMatch: /.*(?<!visual|utils|lighthouse)\.spec\.ts/,
+};
+
+const lighthouseProject: Project = {
+	name: "lighthouse",
+	use: devices["Desktop Chrome"],
+	testMatch: /.*\.lighthouse\.spec\.ts/,
 };
 
 const localDir = import.meta.dirname;
@@ -106,7 +112,7 @@ export default defineConfig({
 	build: {
 		jsxImportSource: "react",
 	},
-	projects: [...visualProjects, functionalProject],
+	projects: [...visualProjects, functionalProject, lighthouseProject],
 	snapshotPathTemplate:
 		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
 	/* Run your local dev server before starting the tests */
