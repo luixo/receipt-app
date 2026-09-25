@@ -4,31 +4,31 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:40c15d0a-667c-41d9-9a40-ca0dccd1be52": {
+      "id:2ad411c2-9643-4482-bc2c-4c1b96b20ab1": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "40c15d0a-667c-41d9-9a40-ca0dccd1be52",
-        "name": "brevis balbus verbera",
-        "price": "650.0400",
-        "quantity": "21.0000",
-        "receiptId": "a84cc0f4-0768-4f2a-9e62-e3f3035b557c",
+        "id": "2ad411c2-9643-4482-bc2c-4c1b96b20ab1",
+        "name": "clementia commodo tenax",
+        "price": "221.7300",
+        "quantity": "20.0000",
+        "receiptId": "251090cf-d477-48ff-b3bb-003b4df687eb",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:93586693-ad80-4272-a54b-45c49d31aece": {
+      "id:3a19a714-45d6-4648-8292-79aa0d0002e4": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "93586693-ad80-4272-a54b-45c49d31aece",
-        "name": "quos veniam tutamen",
-        "price": "152.9000",
-        "quantity": "33.0000",
-        "receiptId": "5183f7b7-880a-4d64-af40-4fc8b8f41427",
+        "id": "3a19a714-45d6-4648-8292-79aa0d0002e4",
+        "name": "tutamen argumentum conatus",
+        "price": "68.4400",
+        "quantity": "27.0000",
+        "receiptId": "40e8343a-0e02-4fec-9b67-83adb9c3a4e9",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
-      "id:a8ce2bf9-91af-4919-8687-d4c4432f3142": {
+      "id:f272369a-d984-4704-9d9d-36eb4001eab9": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "a8ce2bf9-91af-4919-8687-d4c4432f3142",
-        "name": "amicitia agnitio clementia",
-        "price": "323.9200",
-        "quantity": "77.0000",
-        "receiptId": "a84cc0f4-0768-4f2a-9e62-e3f3035b557c",
+        "id": "f272369a-d984-4704-9d9d-36eb4001eab9",
+        "name": "verbera sol beneficium",
+        "price": "631.2100",
+        "quantity": "91.0000",
+        "receiptId": "251090cf-d477-48ff-b3bb-003b4df687eb",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
@@ -40,13 +40,13 @@ exports[`receiptItems.add > input verification > mixed success and fail 1`] = `
 {
   "added": {
     "receiptItems": {
-      "id:bb9c6125-1c9a-40c3-bb1f-7e6c4e870372": {
+      "id:ea3d9ca7-6601-4435-9285-d509a5f907e5": {
         "createdAt": "2020-01-01 00:00:00+00",
-        "id": "bb9c6125-1c9a-40c3-bb1f-7e6c4e870372",
-        "name": "creber cometes alias",
-        "price": "566.2600",
-        "quantity": "54.0000",
-        "receiptId": "8de070d3-b416-4c09-9fa4-81f293c86ae0",
+        "id": "ea3d9ca7-6601-4435-9285-d509a5f907e5",
+        "name": "depereo creber cometes",
+        "price": "88.0700",
+        "quantity": "57.0000",
+        "receiptId": "8b0ff2bf-6c01-49ef-8320-fb7657d5c6ad",
         "updatedAt": "2020-01-01 00:00:00+00",
       },
     },

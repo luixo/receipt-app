@@ -4,8 +4,8 @@ exports[`receipts.update > functionality > update currency code 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:7d9b1e24-9ce5-43c6-a4fc-9e11f08dc0d6": {
-        "currencyCode": "FKP",
+      "id:a016a14b-41ab-4970-a31f-826713234921": {
+        "currencyCode": "PEN",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
@@ -17,7 +17,7 @@ exports[`receipts.update > functionality > update issued 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:8837e103-a58d-400f-83af-de1ccab1e158": {
+      "id:c97e6495-51a6-4983-820c-628d50435171": {
         "issued": "2020-06-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -30,8 +30,8 @@ exports[`receipts.update > functionality > update name 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:1f13ba3f-43a6-45b5-8300-0477beaa45b9": {
-        "name": "repellendus vinculum ipsa",
+      "id:b8fa34ec-cd6d-4b07-a848-dee3e266ed85": {
+        "name": "apparatus repellendus vinculum",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
