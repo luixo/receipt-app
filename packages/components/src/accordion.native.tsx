@@ -1,4 +1,5 @@
-import { Accordion as AccordionRaw, PressableFeedback } from "heroui-native";
+import { Accordion as AccordionRaw } from "heroui-native/accordion";
+import { PressableFeedback } from "heroui-native/pressable-feedback";
 
 import type { ItemProps, Props } from "~components/accordion";
 

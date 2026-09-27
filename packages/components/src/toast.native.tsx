@@ -4,7 +4,7 @@ import {
 	Toast,
 	ToastProvider as ToastProviderRaw,
 	useToast,
-} from "heroui-native";
+} from "heroui-native/toast";
 import { tv } from "tailwind-variants";
 
 import { Icon } from "~components/icons";

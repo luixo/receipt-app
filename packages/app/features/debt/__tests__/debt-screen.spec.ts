@@ -305,6 +305,7 @@ test.describe("Currency", () => {
 
 		await currencyTriggerButton.click();
 		await expect(currenciesPicker).toBeVisible();
+		await awaitCacheKey("currency.top");
 
 		await snapshotQueries(async () => {
 			await currencyButton("EUR").click();

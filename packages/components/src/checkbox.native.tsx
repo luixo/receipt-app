@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Checkbox as CheckboxRaw } from "heroui-native";
+import { Checkbox as CheckboxRaw } from "heroui-native/checkbox";
 import { tv } from "tailwind-variants";
 import { useCSSVariable } from "uniwind";
 

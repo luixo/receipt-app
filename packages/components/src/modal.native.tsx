@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { BottomSheet } from "heroui-native";
+import { BottomSheet } from "heroui-native/bottom-sheet";
 import { tv } from "tailwind-variants";
 
 import { Icon } from "~components/icons";

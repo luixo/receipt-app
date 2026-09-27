@@ -4,7 +4,7 @@ import * as Sentry from "@sentry/react-native";
 import { getLocales } from "expo-localization";
 import type { ErrorBoundaryProps } from "expo-router";
 import { fetch } from "expo/fetch";
-import { HeroUINativeProvider } from "heroui-native";
+import { HeroUINativeProvider } from "heroui-native/provider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaListener } from "react-native-safe-area-context";
 import { isNonNullish } from "remeda";

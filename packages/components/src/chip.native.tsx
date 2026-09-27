@@ -1,7 +1,7 @@
 import type React from "react";
 import { Pressable } from "react-native";
 
-import { Chip as ChipRaw } from "heroui-native";
+import { Chip as ChipRaw } from "heroui-native/chip";
 
 import type { Props } from "./chip";
 

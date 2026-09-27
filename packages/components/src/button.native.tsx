@@ -3,7 +3,7 @@ import React from "react";
 // We currently reuse the styles from button / buttonGroup of the web components
 // oxlint-disable-next-line eslint-js/no-restricted-syntax
 import { button, buttonGroup } from "@heroui/react";
-import { Button as ButtonRaw } from "heroui-native";
+import { Button as ButtonRaw } from "heroui-native/button";
 
 import { Text } from "~components/text";
 import { TextWrapper } from "~components/text.native";

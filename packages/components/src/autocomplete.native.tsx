@@ -1,7 +1,7 @@
 import React from "react";
 
-import type { PopoverTriggerRef } from "heroui-native";
-import { Popover } from "heroui-native";
+import type { PopoverTriggerRef } from "heroui-native/popover";
+import { Popover } from "heroui-native/popover";
 
 import type { Props } from "~components/autocomplete";
 import { Icon } from "~components/icons";

@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Skeleton as SkeletonRaw } from "heroui-native";
+import { Skeleton as SkeletonRaw } from "heroui-native/skeleton";
 
 import type { Props } from "./skeleton.web";
 

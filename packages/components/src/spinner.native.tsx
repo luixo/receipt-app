@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Spinner as SpinnerRaw } from "heroui-native";
+import { Spinner as SpinnerRaw } from "heroui-native/spinner";
 
 import type { Props } from "./spinner";
 
