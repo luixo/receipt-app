@@ -26,9 +26,7 @@ emulator @smoke -gpu swiftshader_indirect -accel on -no-window -no-audio -no-boo
 ```
 
 ```sh
-# Build and install (release keeps parity with CI; debug also works)
-bun run native:run:android
-# Or: install an existing APK
+# Build and install the release APK for the CI-equivalent smoke run
 adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
 ```
 
@@ -38,8 +36,12 @@ auto-start is unreliable and fixtures time out without it:
 
 ```sh
 ./node_modules/.bin/mobilecli server start > mobilecli.log 2>&1 &
-MOBILEWRIGHT_DISABLE_TELEMETRY=1 bun run mobile:test
+CI=1 MOBILEWRIGHT_DISABLE_TELEMETRY=1 bun run mobile:test
 ```
+
+Without `CI=1`, the config retains the local debug profile: it targets the
+`Resizable Experimental` AVD and installs
+`apps/mobile/android/app/build/outputs/apk/debug/app-debug.apk` automatically.
 
 Useful debugging: `mobilecli devices` (discovery), `mobilecli dump ui` (view
 tree — flaky under load, retry), `adb exec-out screencap -p` (screenshots),
