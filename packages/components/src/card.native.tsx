@@ -1,7 +1,7 @@
 import type React from "react";
 import { TouchableOpacity } from "react-native";
 
-import { Card as CardRaw } from "heroui-native";
+import { Card as CardRaw } from "heroui-native/card";
 import { tv } from "tailwind-variants";
 
 import { Divider } from "~components/divider";

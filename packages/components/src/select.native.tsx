@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Select as SelectRaw } from "heroui-native";
+import { Select as SelectRaw } from "heroui-native/select";
 
 import { Button } from "~components/button";
 import { Text } from "~components/text";

@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Switch as SwitchRaw } from "heroui-native";
+import { Switch as SwitchRaw } from "heroui-native/switch";
 import { tv } from "tailwind-variants";
 import { useResolveClassNames } from "uniwind";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Popover } from "heroui-native";
+import { Popover } from "heroui-native/popover";
 
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
