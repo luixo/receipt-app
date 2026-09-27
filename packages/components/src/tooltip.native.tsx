@@ -35,7 +35,10 @@ export const Tooltip: React.FC<Props> = ({
 			<Popover.Portal>
 				<TextClassContext value={textContext}>
 					<Popover.Overlay />
-					<Popover.Content className={cn("px-2.5 py-1", className)}>
+					<Popover.Content
+						presentation="popover"
+						className={cn("px-2.5 py-1", className)}
+					>
 						{typeof content === "string" ? <Text>{content}</Text> : content}
 					</Popover.Content>
 				</TextClassContext>

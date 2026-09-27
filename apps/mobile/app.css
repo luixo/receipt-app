@@ -10,10 +10,8 @@
 /* Remove this and @heroui/theme patch when https://github.com/uni-stack/uniwind/issues/305 is resolved */
 @plugin "./heroui-override.ts";
 
-@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @source "../../packages/components";
 @source "../../packages/app";
-@source "../../node_modules/heroui-native/lib";
 
 @layer theme {
 	:root {
@@ -115,6 +113,10 @@
 	--font-sans-bold: "Inter-Bold";
 	--font-sans-extra-bold: "Inter-ExtraBold";
 	--font-sans-black: "Inter-Black";
+	--font-normal: "Inter-Regular";
+	--font-medium: "Inter-Medium";
+	--font-semibold: "Inter-SemiBold";
+	--font-bold: "Inter-Bold";
 }
 @layer base {
 	.font-thin {
