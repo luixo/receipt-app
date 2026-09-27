@@ -66,7 +66,6 @@ export const Page: React.FC<Props> = ({ elements }) => {
 					<NativeTabs.Trigger.Icon
 						src={
 							<NativeTabs.Trigger.VectorIcon
-								// @ts-expect-error null / undefined problem will be resolved in next release
 								family={IconFamily}
 								name={glyphMapping[iconName]}
 							/>

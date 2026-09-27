@@ -67,7 +67,11 @@ export const Autocomplete: React.FC<Props> = ({
 			<Popover.Portal forceMount>
 				<TextClassContext value={textContext}>
 					<Popover.Overlay />
-					<Popover.Content className="w-full gap-1 p-2" width="trigger">
+					<Popover.Content
+						presentation="popover"
+						className="w-full gap-1 p-2"
+						width="trigger"
+					>
 						<ScrollView className="max-h-[200px]" onScroll={onScroll}>
 							{children.length === 0
 								? emptyContent

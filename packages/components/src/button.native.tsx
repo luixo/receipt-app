@@ -127,7 +127,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 			isDisabled={isDisabled}
 			isIconOnly={isIconOnly ?? sureGroupContext.isIconOnly}
 			onPress={isDisabled ? undefined : onPress}
-			pressableFeedbackVariant="ripple"
+			feedbackVariant="scale-ripple"
 			className={className}
 			{...viewProps}
 		>
