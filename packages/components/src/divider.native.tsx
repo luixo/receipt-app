@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Divider as DividerRaw } from "heroui-native";
+import { Separator as DividerRaw } from "heroui-native";
 
 import type { Props } from "./divider";
 

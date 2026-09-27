@@ -3,7 +3,6 @@ import * as React from "react";
 import { Select as SelectRaw } from "heroui-native";
 
 import { Button } from "~components/button";
-import { Icon } from "~components/icons";
 import { Text } from "~components/text";
 import { TextClassContext } from "~components/text.native";
 import { cn } from "~components/utils";
@@ -65,7 +64,7 @@ export const Select = <T extends object, K extends string>({
 				}
 			}}
 		>
-			<SelectRaw.Trigger asChild>
+			<SelectRaw.Trigger variant="unstyled" asChild>
 				<Button
 					className="w-full max-w-40 justify-between"
 					isDisabled={isDisabled}
@@ -78,13 +77,13 @@ export const Select = <T extends object, K extends string>({
 					) : (
 						renderedValue
 					)}
-					<Icon name="chevron-down" className="size-5" />
+					<SelectRaw.TriggerIndicator />
 				</Button>
 			</SelectRaw.Trigger>
 			<SelectRaw.Portal>
 				<TextClassContext value={textContext}>
 					<SelectRaw.Overlay />
-					<SelectRaw.Content className="p-2">
+					<SelectRaw.Content presentation="popover" className="p-2">
 						{items.map((item) => {
 							const key = getKey(item);
 							const label = getTextValue(item);

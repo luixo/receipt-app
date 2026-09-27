@@ -1,9 +1,3 @@
-// If you skip this - the app will fail to run
-// Not sure why this is happening
-// Seems like Expo Router should import that before it runs SafeAreaView context
-// But it does not
-// Expo Go version of the app runs ok nevertheless
-import "react-native/Libraries/Renderer/shims/ReactNative";
 // Hermes (React Native runtime) has no native `Temporal`, so we ship the polyfill and assign it to the global.
 import "~utils/temporal-polyfill";
 // It is expected to have .js extensions for these polyfills

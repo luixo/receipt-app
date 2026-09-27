@@ -30,15 +30,7 @@ const injectImportMetaEnv = (): PluginObj => ({
 const config: ConfigFunction = (api) => {
 	api.cache.forever();
 	return {
-		presets: [
-			[
-				"babel-preset-expo",
-				{
-					// Enable the transform for import.meta
-					unstable_transformImportMeta: true,
-				},
-			],
-		],
+		presets: ["babel-preset-expo"],
 		plugins: ["react-native-reanimated/plugin", injectImportMetaEnv],
 	};
 };
