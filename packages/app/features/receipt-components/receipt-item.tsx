@@ -196,6 +196,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 											consumer={consumer}
 											item={item}
 											isDisabled={isRemovalPending}
+											consumeType="percent"
 										/>
 									</View>
 								</View>

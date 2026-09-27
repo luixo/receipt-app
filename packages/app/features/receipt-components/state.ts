@@ -2,6 +2,8 @@ import type { PeerId, ReceiptItemId } from "~db/ids";
 
 export type { Participant } from "~app/hooks/use-participants";
 
+export type ConsumeType = "part" | "percent" | "amount";
+
 export type Item = {
 	id: ReceiptItemId;
 	name: string;

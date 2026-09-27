@@ -16,21 +16,24 @@ import { Button } from "~components/button";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import { updateSetStateAction } from "~utils/react";
+import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
-import type { Item } from "./state";
+import type { ConsumeType, Item } from "./state";
 
 type Props = {
 	consumer: Item["consumers"][number];
 	item: Item;
 	isDisabled: boolean;
+	consumeType: ConsumeType;
 };
 
 export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	consumer,
 	item,
 	isDisabled: isExternalDisabled,
+	consumeType,
 }) => {
 	const { t } = useTranslation("receipts");
 	const { updateItemConsumerPart, removeItemConsumer } =
@@ -124,10 +127,12 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 			{(currentValue) => (
 				<>
 					<Text>
-						{t("item.form.consumer.value", {
-							part: Number.isNaN(currentValue) ? "-" : currentValue,
-							totalParts,
-						})}
+						{consumeType === "percent"
+							? `${round((currentValue / totalParts) * 100)}%`
+							: t("item.form.consumer.value", {
+								part: Number.isNaN(currentValue) ? "-" : currentValue,
+								totalParts,
+							})}
 					</Text>
 					<View className="absolute top-1 right-1">{updateElement}</View>
 				</>
