@@ -21,7 +21,6 @@ addAlias("react-native", "react-native-web");
 const optimizedDeps = [
 	"react-native-web",
 	"expo-modules-core",
-	"uniwind",
 	"react-native-safe-area-context",
 	"react-native-reanimated",
 	"react-native-worklets",
@@ -61,6 +60,7 @@ const config = defineConfig(({ mode }) => ({
 	plugins: [
 		devtools(),
 		vitePluginInspect(),
+		reactNativeWeb(),
 		tailwindcss(),
 		uniwind({
 			cssEntryFile: path.join(rootDir, "apps/web/src/app.css"),
@@ -92,7 +92,6 @@ const config = defineConfig(({ mode }) => ({
 			filter: (id) =>
 				optimizedDeps.some((dep) => id.includes(`node_modules/${dep}/`)),
 		}),
-		reactNativeWeb(),
 		// `vite-plugin-react-native-web` unconditionally does
 		// `define: { global: "self" }`, which is only correct in a browser.
 		// Since the server bundle now goes through the very same Vite
