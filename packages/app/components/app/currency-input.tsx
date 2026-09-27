@@ -110,6 +110,7 @@ export const CurrencyInput: React.FC<Props> = ({
 					onValueChange={onValueChange}
 					label={t("components.currencyInput.currency")}
 					name="currency"
+					testID="currency-input"
 					mutation={mutation}
 					isReadOnly
 					onPress={openModal}

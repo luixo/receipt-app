@@ -13,6 +13,7 @@ type SelectorsFixtures = {
 	backLink: Locator;
 	suspendedOverlay: Locator;
 	paginationBlock: Locator;
+	divider: Locator;
 };
 
 export const selectorsFixtures = test.extend<SelectorsFixtures>({
@@ -64,4 +65,5 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 		use(page.getByTestId("suspended-overlay").visible()),
 	paginationBlock: ({ page }, use) =>
 		use(page.getByTestId("pagination-block").visible()),
+	divider: ({ page }, use) => use(page.getByTestId("divider").visible()),
 });
