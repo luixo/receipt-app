@@ -137,7 +137,7 @@ const App: React.FC = () => (
 	<GestureHandlerRootView>
 		<ClientProvider>
 			<SafeAreaListener onChange={({ insets }) => Uniwind.updateInsets(insets)}>
-				<View className="bg-background text-foreground flex-1 p-safe">
+				<View className="text-foreground flex-1 bg-background p-safe">
 					<Stack />
 				</View>
 			</SafeAreaListener>
