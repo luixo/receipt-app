@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Pressable } from "react-native";
 
-import { Avatar as AvatarRaw } from "heroui-native";
+import { Avatar as AvatarRaw } from "heroui-native/avatar";
 import { Grayscale } from "react-native-color-matrix-image-filters";
 import * as svg from "react-native-svg";
 

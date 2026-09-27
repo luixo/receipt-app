@@ -102,8 +102,7 @@ const restrictedImports: ((
 	},
 	{
 		from: "heroui-native",
-		message: "Please use ~components or @heroui/react in web components",
-		omitTags: ["native-only"],
+		message: "Please use granular exports from heroui-native",
 	},
 	{
 		from: "~web/handlers/validation",

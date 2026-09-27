@@ -2,13 +2,11 @@ import React from "react";
 import type { TextInput } from "react-native";
 import { Platform } from "react-native";
 
-import {
-	Description,
-	FieldError,
-	Input as InputRaw,
-	Label,
-	TextField,
-} from "heroui-native";
+import { Description } from "heroui-native/description";
+import { FieldError } from "heroui-native/field-error";
+import { Input as InputRaw } from "heroui-native/input";
+import { Label } from "heroui-native/label";
+import { TextField } from "heroui-native/text-field";
 import { tv } from "tailwind-variants";
 
 import { Icon } from "~components/icons";
