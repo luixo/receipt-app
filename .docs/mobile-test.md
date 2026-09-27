@@ -37,7 +37,7 @@ adb directly. Start it explicitly before running — the test runner's
 auto-start is unreliable and fixtures time out without it:
 
 ```sh
-./node_modules/.bin/mobilecli server start
+./node_modules/.bin/mobilecli server start > mobilecli.log 2>&1 &
 MOBILEWRIGHT_DISABLE_TELEMETRY=1 bun run mobile:test
 ```
 

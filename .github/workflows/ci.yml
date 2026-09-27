@@ -466,7 +466,7 @@ jobs:
         # content; restore it to keep the tree clean for subsequent steps
         run: git checkout -- apps/mobile/package.json
       - name: Build release APK (emulator ABI only)
-        run: ./gradlew -p apps/mobile/android app:assembleRelease -x lint -x test --build-cache -PreactNativeDevServerPort=8081 -PreactNativeArchitectures=x86_64
+        run: apps/mobile/android/gradlew -p apps/mobile/android app:assembleRelease -x lint -x test --build-cache -PreactNativeDevServerPort=8081 -PreactNativeArchitectures=x86_64
         env:
           # Baked into the bundle at build time; the emulator reaches the
           # host loopback through this alias. The guest smoke test needs no
@@ -490,7 +490,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: |
             adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
-            ./node_modules/.bin/mobilecli server start
+            ./node_modules/.bin/mobilecli server start > mobilecli.log 2>&1 &
             MOBILEWRIGHT_DISABLE_TELEMETRY=1 bun run mobile:test
       - name: Upload failure context
         if: failure()
