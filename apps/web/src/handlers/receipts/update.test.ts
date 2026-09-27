@@ -154,6 +154,12 @@ describe("receipts.update", () => {
 	});
 
 	describe("functionality", () => {
+		test("update default consume type", async ({ ctx }) => {
+			await runTest(ctx, () => ({
+				type: "consumeType",
+				consumeType: "amount",
+			}));
+		});
 		test("update name", async ({ ctx }) => {
 			await runTest(ctx, () => ({ type: "name", name: faker.lorem.words() }));
 		});

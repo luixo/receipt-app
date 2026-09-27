@@ -36,6 +36,7 @@ const useAddItem = (setItems: SetItems) =>
 						name,
 						price,
 						quantity,
+						consumeType: null,
 						consumers: [],
 						payers: [],
 						createdAt: Temporal.Now.zonedDateTimeISO(),
@@ -104,6 +105,15 @@ const useUpdateItemQuantity = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
 	return React.useCallback<ActionsHooks["updateItemQuantity"]>(
 		(itemId, quantity, options) => updateItem(itemId, { quantity }, options),
+		[updateItem],
+	);
+};
+
+const useUpdateItemConsumeType = (setItems: SetItems) => {
+	const updateItem = useUpdateItem(setItems);
+	return React.useCallback<ActionsHooks["updateItemConsumeType"]>(
+		(itemId, consumeType, options) =>
+			updateItem(itemId, { consumeType }, options),
 		[updateItem],
 	);
 };
@@ -431,6 +441,7 @@ export const useActionsHooks = (
 		updateItemName: useUpdateItemName(setItems),
 		updateItemPrice: useUpdateItemPrice(setItems),
 		updateItemQuantity: useUpdateItemQuantity(setItems),
+		updateItemConsumeType: useUpdateItemConsumeType(setItems),
 		addItemConsumer: useAddItemConsumer(setItems),
 		removeItemConsumer: useRemoveItemConsumer(setItems),
 		updateItemConsumerPart: useUpdateItemConsumerPart(setItems),
@@ -459,6 +470,7 @@ export const useAddReceiptContext = (
 	ownerPeerId: selfPeerId,
 	payers,
 	currencyCode: form.currencyCode ?? "???",
+	consumeType: "parts",
 	receiptDisabled: false,
 	confirmItemRemoval: false,
 	items,

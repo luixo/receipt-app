@@ -1,4 +1,11 @@
 {
+	"consumeType": {
+		"label": "Split consumers by",
+		"default": "Receipt default",
+		"parts": "Parts",
+		"percent": "Percent",
+		"amount": "Amount"
+	},
 	"list": {
 		"header": "Receipts",
 		"addButton": "Add receipt",

@@ -8,6 +8,7 @@
 					"name": "capio crepusculum eius",
 					"issued": "2020-02-01",
 					"currencyCode": "VND",
+					"consumeType": "parts",
 					"participants": [
 						{
 							"role": "viewer",
@@ -27,6 +28,7 @@
 							"name": "Awesome Silk Sausages",
 							"price": 21,
 							"quantity": 5,
+							"consumeType": "amount",
 							"consumers": [
 								{
 									"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
@@ -47,6 +49,7 @@
 							"name": "Modern Concrete Mouse",
 							"price": 76.8,
 							"quantity": 21,
+							"consumeType": null,
 							"consumers": [],
 							"payers": []
 						},
@@ -56,6 +59,7 @@
 							"name": "Licensed Cotton Gloves",
 							"price": 8.54,
 							"quantity": 2,
+							"consumeType": null,
 							"consumers": [],
 							"payers": []
 						}

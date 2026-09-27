@@ -7,6 +7,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "thesis patruus comparo",
 					"currencyCode": "GEL",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
 					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
@@ -19,6 +20,7 @@
 							"id": "7ccf9416-ab3f-4f26-8fd4-29b1881b8598",
 							"price": 261.32,
 							"quantity": 40,
+							"consumeType": null,
 							"name": "Elegant Plastic Bacon",
 							"createdAt": "2019-12-03T23:37:19.955+00:00[UTC]",
 							"consumers": [
@@ -64,6 +66,7 @@
 							"id": "bba9881c-6bde-4e3d-8c36-dff89a91773c",
 							"price": 219.11,
 							"quantity": 79,
+							"consumeType": null,
 							"name": "Small Aluminum Table",
 							"createdAt": "2019-12-08T04:24:26.576+00:00[UTC]",
 							"consumers": [
@@ -109,6 +112,7 @@
 							"id": "f6846c47-d915-4216-9f63-d3d566611160",
 							"price": 944.02,
 							"quantity": 87,
+							"consumeType": null,
 							"name": "Gorgeous Metal Soap",
 							"createdAt": "2019-12-26T03:20:51.007+00:00[UTC]",
 							"consumers": [
@@ -205,6 +209,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "aspernatur architecto aperiam",
 					"currencyCode": "MZN",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
 					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
@@ -217,6 +222,7 @@
 							"id": "ff36f4b1-51f3-4d59-8c3d-777f6fe06784",
 							"price": 313.91,
 							"quantity": 90,
+							"consumeType": null,
 							"name": "Intelligent Concrete Pizza",
 							"createdAt": "2019-12-29T10:24:25.489+00:00[UTC]",
 							"consumers": [
@@ -262,6 +268,7 @@
 							"id": "103d4509-700d-4bcf-9a09-8a40450b91f2",
 							"price": 439.56,
 							"quantity": 33,
+							"consumeType": null,
 							"name": "Unbranded Steel Salad",
 							"createdAt": "2019-12-13T03:56:53.967+00:00[UTC]",
 							"consumers": [
@@ -307,6 +314,7 @@
 							"id": "41e242eb-3535-4934-b7f5-e79938376a1e",
 							"price": 618.42,
 							"quantity": 52,
+							"consumeType": null,
 							"name": "Rustic Marble Chair",
 							"createdAt": "2019-12-30T07:59:13.514+00:00[UTC]",
 							"consumers": [
@@ -352,6 +360,7 @@
 							"id": "9578884e-1c43-43fd-9c5c-0664418abafe",
 							"price": 259.63,
 							"quantity": 13,
+							"consumeType": null,
 							"name": "Refined Bamboo Shirt",
 							"createdAt": "2019-12-15T11:54:03.451+00:00[UTC]",
 							"consumers": [
@@ -448,6 +457,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "consectetur vomica decet",
 					"currencyCode": "MYR",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
 					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
@@ -460,6 +470,7 @@
 							"id": "91b4c912-2e24-4111-8a3c-3301e881ae94",
 							"price": 829.42,
 							"quantity": 82,
+							"consumeType": null,
 							"name": "Handmade Granite Shoes",
 							"createdAt": "2019-12-10T05:32:55.557+00:00[UTC]",
 							"consumers": [
@@ -505,6 +516,7 @@
 							"id": "291350d6-226e-41be-9250-0b1302cb36cd",
 							"price": 476.2,
 							"quantity": 98,
+							"consumeType": null,
 							"name": "Handmade Cotton Bike",
 							"createdAt": "2019-12-15T10:32:21.03+00:00[UTC]",
 							"consumers": [
@@ -550,6 +562,7 @@
 							"id": "45d9445e-931a-4d84-850b-d77fac3f4b41",
 							"price": 147.25,
 							"quantity": 49,
+							"consumeType": null,
 							"name": "Recycled Plastic Table",
 							"createdAt": "2019-12-15T15:34:26.595+00:00[UTC]",
 							"consumers": [
@@ -595,6 +608,7 @@
 							"id": "eed6a2b3-54d6-484a-8755-a5b2c9d453cc",
 							"price": 624.49,
 							"quantity": 23,
+							"consumeType": null,
 							"name": "Incredible Gold Computer",
 							"createdAt": "2019-12-25T13:31:49.139+00:00[UTC]",
 							"consumers": [
@@ -640,6 +654,7 @@
 							"id": "50891aee-8909-46d6-8d2a-bd1303d4715f",
 							"price": 901.14,
 							"quantity": 60,
+							"consumeType": null,
 							"name": "Sleek Wooden Mouse",
 							"createdAt": "2019-12-16T03:43:05.188+00:00[UTC]",
 							"consumers": [
@@ -685,6 +700,7 @@
 							"id": "e0523a43-813a-4798-b297-09c67ad8e76c",
 							"price": 407.77,
 							"quantity": 86,
+							"consumeType": null,
 							"name": "Fantastic Concrete Salad",
 							"createdAt": "2019-12-19T00:01:31.954+00:00[UTC]",
 							"consumers": [

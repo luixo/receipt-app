@@ -13,6 +13,7 @@ import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput } from "~app/trpc";
 import type { Receipt } from "~app/trpc-types";
+import type { ConsumeType } from "~app/utils/consume-type";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
@@ -228,6 +229,29 @@ const useUpdateItemQuantity = (receiptId: ReceiptId) => {
 	);
 };
 
+const useUpdateItemConsumeType = (receiptId: ReceiptId) => {
+	const trpc = useTRPC();
+	const updateMutation = useMutation(
+		trpc.receiptItems.update.mutationOptions(
+			useTrpcMutationOptions(receiptItemsUpdateOptions, {
+				context: { receiptId },
+			}),
+		),
+	);
+	return React.useCallback(
+		(
+			itemId: ReceiptItemId,
+			consumeType: ConsumeType | null,
+			options: EmptyMutateOptions = {},
+		) =>
+			updateMutation.mutate(
+				{ id: itemId, update: { type: "consumeType", consumeType } },
+				options,
+			),
+		[updateMutation],
+	);
+};
+
 const useAddItemConsumer = (receiptId: ReceiptId) => {
 	const trpc = useTRPC();
 	const addItemConsumerMutation = useMutation(
@@ -354,6 +378,7 @@ export const useActionHooks = (receipt: Receipt) => ({
 	updateItemName: useUpdateItemName(receipt.id),
 	updateItemPrice: useUpdateItemPrice(receipt.id),
 	updateItemQuantity: useUpdateItemQuantity(receipt.id),
+	updateItemConsumeType: useUpdateItemConsumeType(receipt.id),
 	addItemConsumer: useAddItemConsumer(receipt.id),
 	removeItemConsumer: useRemoveItemConsumer(receipt.id),
 	updateItemConsumerPart: useUpdateItemConsumerPart(receipt.id),
@@ -371,6 +396,7 @@ export const useActionHooks = (receipt: Receipt) => ({
 export type ReceiptContext = {
 	receiptId: ReceiptId;
 	currencyCode: CurrencyCode;
+	consumeType: ConsumeType;
 	selfPeerId: PeerId;
 	ownerPeerId: PeerId;
 
@@ -401,6 +427,7 @@ export const useGetReceiptContext = (
 		payers: receipt.payers,
 		ownerPeerId: receipt.ownerPeerId,
 		currencyCode: receipt.currencyCode,
+		consumeType: receipt.consumeType,
 		receiptDisabled,
 		confirmItemRemoval: true,
 		items: receipt.items,

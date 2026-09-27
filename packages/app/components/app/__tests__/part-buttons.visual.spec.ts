@@ -31,6 +31,7 @@ const generateReceiptItemsWithConsumers =
 			id: item.id,
 			price: item.price,
 			quantity: item.quantity,
+			consumeType: null,
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant, index) => ({

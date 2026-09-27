@@ -1,5 +1,55 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`receiptItems.update > functionality > reset consume type to receipt default > foreign 1`] = `
+{
+  "updated": {
+    "receiptItems": {
+      "id:92190998-0b5f-4424-99ed-35892271544c": {
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`receiptItems.update > functionality > reset consume type to receipt default > own 1`] = `
+{
+  "updated": {
+    "receiptItems": {
+      "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`receiptItems.update > functionality > update consume type > foreign 1`] = `
+{
+  "updated": {
+    "receiptItems": {
+      "id:92190998-0b5f-4424-99ed-35892271544c": {
+        "consumeType": "percent",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`receiptItems.update > functionality > update consume type > own 1`] = `
+{
+  "updated": {
+    "receiptItems": {
+      "id:4fbfa846-5616-44f4-ada1-73e3d14c5bf9": {
+        "consumeType": "percent",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
 exports[`receiptItems.update > functionality > update name > foreign 1`] = `
 {
   "updated": {

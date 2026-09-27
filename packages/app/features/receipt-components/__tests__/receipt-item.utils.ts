@@ -133,6 +133,7 @@ export const test = base.extend<Fixtures>({
 				generateReceiptItemsWithConsumers: ({ receiptItems, participants }) =>
 					receiptItems.map((item) => ({
 						...item,
+						consumeType: null,
 						consumers: participants.slice(0, consumers).map((participant) => ({
 							peerId: participant.peerId,
 							part: 1,

@@ -7,6 +7,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "decerno quos usitas",
 					"currencyCode": "XOF",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -19,6 +20,7 @@
 							"id": "cf644080-2eac-4d61-998d-df92981ea272",
 							"price": 307.79,
 							"quantity": 82,
+							"consumeType": null,
 							"name": "Electronic Ceramic Chips",
 							"createdAt": "2019-12-07T23:28:23.245+00:00[UTC]",
 							"consumers": [
@@ -49,6 +51,7 @@
 							"id": "95623283-d93d-449b-81ed-5f586dbd468c",
 							"price": 593.89,
 							"quantity": 91,
+							"consumeType": null,
 							"name": "Modern Rubber Pizza",
 							"createdAt": "2019-12-20T16:55:08.259+00:00[UTC]",
 							"consumers": [
@@ -79,6 +82,7 @@
 							"id": "a366cce4-444e-4d0e-9058-ac42647063cd",
 							"price": 355.08,
 							"quantity": 31,
+							"consumeType": null,
 							"name": "Sleek Bamboo Ball",
 							"createdAt": "2019-12-07T07:15:18.185+00:00[UTC]",
 							"consumers": [
@@ -109,6 +113,7 @@
 							"id": "f98cfbc5-55c4-4e4f-9e2f-e301c2575800",
 							"price": 717.12,
 							"quantity": 79,
+							"consumeType": null,
 							"name": "Rustic Cotton Car",
 							"createdAt": "2019-12-07T15:54:35.493+00:00[UTC]",
 							"consumers": [
@@ -139,6 +144,7 @@
 							"id": "e35aede6-1071-4aa8-9349-f0ee712e2ab3",
 							"price": 432.38,
 							"quantity": 20,
+							"consumeType": null,
 							"name": "Modern Plastic Hat",
 							"createdAt": "2019-12-31T05:07:53.713+00:00[UTC]",
 							"consumers": [
@@ -205,6 +211,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "ver centum avarus",
 					"currencyCode": "STN",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -217,6 +224,7 @@
 							"id": "7f9df0e0-2fb0-4535-ad52-80f5f1229f04",
 							"price": 565.1,
 							"quantity": 78,
+							"consumeType": null,
 							"name": "Handcrafted Concrete Table",
 							"createdAt": "2019-12-17T06:39:05.299+00:00[UTC]",
 							"consumers": [
@@ -247,6 +255,7 @@
 							"id": "922f576c-837d-44ef-9487-c9dd68c1edc3",
 							"price": 422.15,
 							"quantity": 44,
+							"consumeType": null,
 							"name": "Gorgeous Granite Shirt",
 							"createdAt": "2019-12-22T08:40:45.363+00:00[UTC]",
 							"consumers": [
@@ -277,6 +286,7 @@
 							"id": "bebf2aa5-be2d-4735-9197-2238e1b58de3",
 							"price": 949.98,
 							"quantity": 75,
+							"consumeType": null,
 							"name": "Licensed Bamboo Shoes",
 							"createdAt": "2019-12-09T15:17:38.899+00:00[UTC]",
 							"consumers": [
@@ -307,6 +317,7 @@
 							"id": "d294b6ad-60fe-40bf-a77e-11e998e080d1",
 							"price": 915.76,
 							"quantity": 2,
+							"consumeType": null,
 							"name": "Awesome Bamboo Mouse",
 							"createdAt": "2019-12-05T14:54:16.706+00:00[UTC]",
 							"consumers": [
@@ -337,6 +348,7 @@
 							"id": "ddea24cf-a4f3-4547-8ca4-370b1f9628bc",
 							"price": 37.32,
 							"quantity": 56,
+							"consumeType": null,
 							"name": "Oriental Rubber Shirt",
 							"createdAt": "2019-12-17T09:29:29.317+00:00[UTC]",
 							"consumers": [
@@ -367,6 +379,7 @@
 							"id": "b1090d65-afac-492b-b4b5-d213a58bca5c",
 							"price": 162.36,
 							"quantity": 14,
+							"consumeType": null,
 							"name": "Tasty Rubber Tuna",
 							"createdAt": "2019-12-31T11:31:02.22+00:00[UTC]",
 							"consumers": [
@@ -397,6 +410,7 @@
 							"id": "dd8045c8-5907-4231-8268-9929839c9c22",
 							"price": 365.24,
 							"quantity": 86,
+							"consumeType": null,
 							"name": "Handmade Metal Towels",
 							"createdAt": "2019-12-14T04:36:24.792+00:00[UTC]",
 							"consumers": [
@@ -463,6 +477,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "perspiciatis auctor patruus",
 					"currencyCode": "GHS",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -475,6 +490,7 @@
 							"id": "40b4c0bc-801a-4df8-930d-bd83170f4012",
 							"price": 557.39,
 							"quantity": 83,
+							"consumeType": null,
 							"name": "Practical Gold Chair",
 							"createdAt": "2019-12-04T07:51:31.744+00:00[UTC]",
 							"consumers": [
@@ -505,6 +521,7 @@
 							"id": "555fc0cc-fc45-4f18-b20d-3d62e176cd40",
 							"price": 62.58,
 							"quantity": 13,
+							"consumeType": null,
 							"name": "Luxurious Silk Table",
 							"createdAt": "2019-12-13T10:35:26.258+00:00[UTC]",
 							"consumers": [
@@ -535,6 +552,7 @@
 							"id": "47bd3954-d3e8-4c2a-a691-21cce3d7a99a",
 							"price": 665.34,
 							"quantity": 64,
+							"consumeType": null,
 							"name": "Handmade Cotton Table",
 							"createdAt": "2019-12-24T09:33:33.295+00:00[UTC]",
 							"consumers": [
@@ -565,6 +583,7 @@
 							"id": "74077b97-4e48-4e3c-86e7-477c937238f1",
 							"price": 889.54,
 							"quantity": 11,
+							"consumeType": null,
 							"name": "Tasty Ceramic Pizza",
 							"createdAt": "2019-12-10T11:50:47.393+00:00[UTC]",
 							"consumers": [
@@ -631,6 +650,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "acsi tactus celo",
 					"currencyCode": "BSD",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -643,6 +663,7 @@
 							"id": "8bb4a67d-d74a-4778-8eb0-b06e9f0be879",
 							"price": 221.56,
 							"quantity": 66,
+							"consumeType": null,
 							"name": "Fresh Marble Chicken",
 							"createdAt": "2019-12-04T23:18:04.249+00:00[UTC]",
 							"consumers": [
@@ -673,6 +694,7 @@
 							"id": "d6e17ceb-ac89-4a94-b4e1-b9a1f1bbbcf3",
 							"price": 658.43,
 							"quantity": 38,
+							"consumeType": null,
 							"name": "Oriental Steel Cheese",
 							"createdAt": "2019-12-23T21:54:05.022+00:00[UTC]",
 							"consumers": [
@@ -703,6 +725,7 @@
 							"id": "a3ccb905-4b4b-402e-9785-6e1a51356dec",
 							"price": 237.47,
 							"quantity": 77,
+							"consumeType": null,
 							"name": "Awesome Concrete Chips",
 							"createdAt": "2019-12-22T03:33:46.832+00:00[UTC]",
 							"consumers": [
@@ -769,6 +792,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "cruentus amplus communis",
 					"currencyCode": "CDF",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -781,6 +805,7 @@
 							"id": "9dd72c24-cfb4-4c3f-a1ae-801a8df20a21",
 							"price": 566.45,
 							"quantity": 49,
+							"consumeType": null,
 							"name": "Fantastic Gold Computer",
 							"createdAt": "2019-12-28T15:09:50.626+00:00[UTC]",
 							"consumers": [
@@ -811,6 +836,7 @@
 							"id": "3c0db2b9-9b21-4ee9-89c4-1fd7fe5eea22",
 							"price": 721.58,
 							"quantity": 54,
+							"consumeType": null,
 							"name": "Refined Rubber Sausages",
 							"createdAt": "2019-12-06T08:42:42.484+00:00[UTC]",
 							"consumers": [
@@ -841,6 +867,7 @@
 							"id": "8bc3d7b7-455a-4944-a47b-c10f10af7b8a",
 							"price": 437.23,
 							"quantity": 28,
+							"consumeType": null,
 							"name": "Intelligent Metal Salad",
 							"createdAt": "2019-12-29T03:25:15.398+00:00[UTC]",
 							"consumers": [
@@ -871,6 +898,7 @@
 							"id": "d71e96fc-bc65-46dc-b793-556d99d25c4a",
 							"price": 1.2,
 							"quantity": 70,
+							"consumeType": null,
 							"name": "Recycled Plastic Salad",
 							"createdAt": "2019-12-12T03:55:48.868+00:00[UTC]",
 							"consumers": [
@@ -901,6 +929,7 @@
 							"id": "9f660cd9-bc5d-49b9-9c4c-52ece7329b24",
 							"price": 104.2,
 							"quantity": 95,
+							"consumeType": null,
 							"name": "Oriental Bronze Car",
 							"createdAt": "2019-12-18T16:41:35.447+00:00[UTC]",
 							"consumers": [
@@ -967,6 +996,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "stipes adhuc tollo",
 					"currencyCode": "SDG",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -979,6 +1009,7 @@
 							"id": "a52c2477-ce5b-44d2-8d3e-b700f946e036",
 							"price": 349.78,
 							"quantity": 72,
+							"consumeType": null,
 							"name": "Unbranded Plastic Table",
 							"createdAt": "2019-12-27T07:39:00.411+00:00[UTC]",
 							"consumers": [
@@ -1009,6 +1040,7 @@
 							"id": "3a9827b0-5d98-4cba-b8f7-afe75b3fa220",
 							"price": 785.49,
 							"quantity": 83,
+							"consumeType": null,
 							"name": "Recycled Concrete Chair",
 							"createdAt": "2019-12-01T11:45:14.784+00:00[UTC]",
 							"consumers": [
@@ -1039,6 +1071,7 @@
 							"id": "59ccb288-56f6-4768-af14-ab230fe423a2",
 							"price": 937.39,
 							"quantity": 82,
+							"consumeType": null,
 							"name": "Ergonomic Silk Shoes",
 							"createdAt": "2019-12-14T04:15:34.634+00:00[UTC]",
 							"consumers": [
@@ -1105,6 +1138,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "cunae aranea carmen",
 					"currencyCode": "AFN",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -1117,6 +1151,7 @@
 							"id": "0ed25d72-00d8-4f41-8739-2d40d834e23e",
 							"price": 449.84,
 							"quantity": 27,
+							"consumeType": null,
 							"name": "Oriental Plastic Computer",
 							"createdAt": "2019-12-09T23:17:20.373+00:00[UTC]",
 							"consumers": [
@@ -1147,6 +1182,7 @@
 							"id": "6d312deb-35c4-48da-ab20-edaeb4d0fe81",
 							"price": 19.95,
 							"quantity": 8,
+							"consumeType": null,
 							"name": "Incredible Bamboo Cheese",
 							"createdAt": "2019-12-28T20:25:30.101+00:00[UTC]",
 							"consumers": [
@@ -1177,6 +1213,7 @@
 							"id": "cfb73b5b-9929-430d-88b5-c8ee306b0527",
 							"price": 697.12,
 							"quantity": 75,
+							"consumeType": null,
 							"name": "Soft Cotton Towels",
 							"createdAt": "2019-12-15T21:42:27.841+00:00[UTC]",
 							"consumers": [
@@ -1207,6 +1244,7 @@
 							"id": "54258fbc-fdf4-4835-9f12-279c07baad17",
 							"price": 557.26,
 							"quantity": 66,
+							"consumeType": null,
 							"name": "Tasty Steel Fish",
 							"createdAt": "2019-12-09T04:34:15.736+00:00[UTC]",
 							"consumers": [
@@ -1273,6 +1311,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "cariosus comminor arguo",
 					"currencyCode": "IDR",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -1285,6 +1324,7 @@
 							"id": "4353fcfd-2cf4-434d-8813-34cd97824a10",
 							"price": 979.67,
 							"quantity": 88,
+							"consumeType": null,
 							"name": "Awesome Aluminum Hat",
 							"createdAt": "2019-12-16T17:07:58.728+00:00[UTC]",
 							"consumers": [
@@ -1315,6 +1355,7 @@
 							"id": "2f5db298-293b-4d85-a183-77c6a76fb299",
 							"price": 381.52,
 							"quantity": 62,
+							"consumeType": null,
 							"name": "Bespoke Gold Bike",
 							"createdAt": "2019-12-08T02:20:14.12+00:00[UTC]",
 							"consumers": [
@@ -1345,6 +1386,7 @@
 							"id": "4f1ceef2-43ae-4f05-952b-cbc4458bec24",
 							"price": 678.3,
 							"quantity": 58,
+							"consumeType": null,
 							"name": "Tasty Ceramic Pizza",
 							"createdAt": "2019-12-15T14:51:29.037+00:00[UTC]",
 							"consumers": [
@@ -1375,6 +1417,7 @@
 							"id": "289a302d-09be-4c56-b281-2149ed678778",
 							"price": 556.71,
 							"quantity": 90,
+							"consumeType": null,
 							"name": "Frozen Steel Salad",
 							"createdAt": "2019-12-14T18:53:49.907+00:00[UTC]",
 							"consumers": [
@@ -1405,6 +1448,7 @@
 							"id": "8bb52603-43a7-4619-aee5-a32d3b41295b",
 							"price": 696.02,
 							"quantity": 63,
+							"consumeType": null,
 							"name": "Recycled Gold Towels",
 							"createdAt": "2019-12-24T10:10:12.426+00:00[UTC]",
 							"consumers": [
@@ -1435,6 +1479,7 @@
 							"id": "5fabb9d2-9cca-42ad-8db0-348466833a06",
 							"price": 541.15,
 							"quantity": 28,
+							"consumeType": null,
 							"name": "Soft Gold Pants",
 							"createdAt": "2019-12-12T06:29:25.955+00:00[UTC]",
 							"consumers": [
@@ -1465,6 +1510,7 @@
 							"id": "d163470a-ca44-4491-9543-abab7ea9c73d",
 							"price": 64.42,
 							"quantity": 59,
+							"consumeType": null,
 							"name": "Handcrafted Rubber Salad",
 							"createdAt": "2019-12-13T19:23:47.902+00:00[UTC]",
 							"consumers": [
@@ -1495,6 +1541,7 @@
 							"id": "203a45a7-906b-4a4d-b7b2-868eec5db7c7",
 							"price": 163.64,
 							"quantity": 25,
+							"consumeType": null,
 							"name": "Fantastic Marble Bacon",
 							"createdAt": "2019-12-23T07:28:09.906+00:00[UTC]",
 							"consumers": [
@@ -1561,6 +1608,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "substantia adulatio ciminatio",
 					"currencyCode": "TRY",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -1573,6 +1621,7 @@
 							"id": "8f0df177-5803-4490-a7d6-cb77799463a6",
 							"price": 580.41,
 							"quantity": 24,
+							"consumeType": null,
 							"name": "Modern Plastic Shoes",
 							"createdAt": "2019-12-07T00:22:03.206+00:00[UTC]",
 							"consumers": [
@@ -1603,6 +1652,7 @@
 							"id": "59432396-fe7b-4e07-ba6f-03f95d60d409",
 							"price": 839.01,
 							"quantity": 19,
+							"consumeType": null,
 							"name": "Handcrafted Concrete Chicken",
 							"createdAt": "2019-12-16T19:31:59.113+00:00[UTC]",
 							"consumers": [
@@ -1633,6 +1683,7 @@
 							"id": "2b4009a8-72ee-4702-9965-bade467fa9ed",
 							"price": 327.27,
 							"quantity": 9,
+							"consumeType": null,
 							"name": "Elegant Concrete Ball",
 							"createdAt": "2019-12-30T01:46:40.744+00:00[UTC]",
 							"consumers": [
@@ -1663,6 +1714,7 @@
 							"id": "ed937abc-d44d-4179-8bf8-fc65eb8ff7bd",
 							"price": 158.3,
 							"quantity": 26,
+							"consumeType": null,
 							"name": "Oriental Gold Keyboard",
 							"createdAt": "2019-12-30T10:37:47.637+00:00[UTC]",
 							"consumers": [
@@ -1693,6 +1745,7 @@
 							"id": "648945cf-022e-4ef0-8241-c04a139d976b",
 							"price": 483.15,
 							"quantity": 18,
+							"consumeType": null,
 							"name": "Ergonomic Steel Soap",
 							"createdAt": "2019-12-03T07:20:06.452+00:00[UTC]",
 							"consumers": [
@@ -1759,6 +1812,7 @@
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 					"name": "comedo solus illum",
 					"currencyCode": "MOP",
+					"consumeType": "parts",
 					"issued": "2020-01-01",
 					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
 					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
@@ -1771,6 +1825,7 @@
 							"id": "e6bdac77-7512-4b08-a5f6-7792921d4d63",
 							"price": 178.07,
 							"quantity": 39,
+							"consumeType": null,
 							"name": "Fantastic Bronze Pants",
 							"createdAt": "2019-12-08T02:22:12.529+00:00[UTC]",
 							"consumers": [
@@ -1801,6 +1856,7 @@
 							"id": "ad32c711-63cf-4da5-9397-69b8ba191d76",
 							"price": 544.46,
 							"quantity": 94,
+							"consumeType": null,
 							"name": "Refined Aluminum Sausages",
 							"createdAt": "2019-12-19T14:42:24.449+00:00[UTC]",
 							"consumers": [
@@ -1831,6 +1887,7 @@
 							"id": "d309e3df-c1c6-4cbc-8a4c-bc7bba5acf95",
 							"price": 906.38,
 							"quantity": 59,
+							"consumeType": null,
 							"name": "Tasty Metal Chair",
 							"createdAt": "2019-12-06T06:30:32.818+00:00[UTC]",
 							"consumers": [
@@ -1861,6 +1918,7 @@
 							"id": "db165930-e234-470a-ace4-eb989dac40ba",
 							"price": 938.18,
 							"quantity": 84,
+							"consumeType": null,
 							"name": "Fantastic Ceramic Keyboard",
 							"createdAt": "2019-12-23T10:34:54.73+00:00[UTC]",
 							"consumers": [

@@ -7,7 +7,10 @@ import type {
 	GenerateReceiptItems,
 	GenerateReceiptItemsWithConsumers,
 } from "~tests/frontend/generators/receipts";
-import { defaultGenerateReceiptItems } from "~tests/frontend/generators/receipts";
+import {
+	defaultGenerateReceipt,
+	defaultGenerateReceiptItems,
+} from "~tests/frontend/generators/receipts";
 
 import { test as partButtonsFixture } from "./part-buttons.utils";
 
@@ -34,6 +37,7 @@ const generateReceiptItemsWithConsumers =
 			id: item.id,
 			price: item.price,
 			quantity: item.quantity,
+			consumeType: null,
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant, index) => ({
@@ -80,4 +84,57 @@ test("Down button is enabled when the part is one", async ({
 	await openReceipt(receipt);
 	await expect(partButtonsDown.first()).toBeEnabled();
 	await expect(partButtonsUp.first()).toBeEnabled();
+});
+
+test("Receipt percent default renders editable consumer sliders", async ({
+	api,
+	mockReceipt,
+	openReceipt,
+	page,
+	awaitCacheKey,
+}) => {
+	api.mockFirst("receiptItemConsumers.update", undefined);
+	const { receipt } = await mockReceipt({
+		generatePeers,
+		generateReceiptItems,
+		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
+		generateReceipt: (options) => ({
+			...defaultGenerateReceipt(options),
+			consumeType: "percent",
+		}),
+	});
+	await openReceipt(receipt);
+	const slider = page
+		.getByRole("slider", { name: "Item consumer part" })
+		.first();
+	await expect(slider).toBeVisible();
+	await slider.press("ArrowRight");
+	await awaitCacheKey("receiptItemConsumers.update");
+	await expect(page.getByText("50%", { exact: true })).toHaveCount(0);
+});
+
+test("Item amount override renders an editable amount slider", async ({
+	api,
+	mockReceipt,
+	openReceipt,
+	page,
+	awaitCacheKey,
+}) => {
+	api.mockFirst("receiptItemConsumers.update", undefined);
+	const { receipt } = await mockReceipt({
+		generatePeers,
+		generateReceiptItems,
+		generateReceiptItemsWithConsumers: (options) =>
+			generateReceiptItemsWithConsumers(1)(options).map((item) => ({
+				...item,
+				consumeType: "amount",
+			})),
+	});
+	await openReceipt(receipt);
+	const slider = page
+		.getByRole("slider", { name: "Item consumer part" })
+		.first();
+	await expect(slider).toBeVisible();
+	await slider.press("Home");
+	await awaitCacheKey("receiptItemConsumers.update");
 });

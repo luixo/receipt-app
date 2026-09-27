@@ -8,6 +8,7 @@
 					"name": "eos validus allatus",
 					"issued": "2020-02-01",
 					"currencyCode": "NGN",
+					"consumeType": "parts",
 					"participants": [],
 					"items": [],
 					"payers": [],

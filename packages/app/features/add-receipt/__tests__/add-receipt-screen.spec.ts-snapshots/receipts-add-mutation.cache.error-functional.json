@@ -11,6 +11,7 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
+						"consumeType": "parts",
 						"name": "eos validus allatus",
 						"currencyCode": "NGN",
 						"issued": "2020-02-01",

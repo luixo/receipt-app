@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { omit, values } from "remeda";
 import { z } from "zod";
 
+import { consumeTypeSchema } from "~app/utils/consume-type";
 import { receiptNameSchema } from "~app/utils/validation";
 import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
 import { temporalSchemas } from "~utils/temporal";
@@ -32,6 +33,7 @@ import { currencyCodeSchema } from "~web/handlers/validation";
 export const addReceiptSchema = z.strictObject({
 	name: receiptNameSchema,
 	currencyCode: currencyCodeSchema,
+	consumeType: consumeTypeSchema,
 	participants: z
 		.array(addParticipantSchema.omit({ receiptId: true }))
 		.optional(),
@@ -437,6 +439,7 @@ export const procedure = authProcedure
 					id: receiptId,
 					name: input.name,
 					currencyCode: input.currencyCode,
+					consumeType: input.consumeType,
 					issued: input.issued,
 					ownerUserId: ctx.auth.userId,
 				})

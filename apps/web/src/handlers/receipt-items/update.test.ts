@@ -217,6 +217,12 @@ describe("receiptItems.update", () => {
 	});
 
 	describe("functionality", () => {
+		describe("update consume type", () => {
+			runTests(() => ({ type: "consumeType", consumeType: "percent" }));
+		});
+		describe("reset consume type to receipt default", () => {
+			runTests(() => ({ type: "consumeType", consumeType: null }));
+		});
 		describe("update name", () => {
 			runTests(() => ({ type: "name", name: faker.lorem.words() }));
 		});

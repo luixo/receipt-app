@@ -22,6 +22,7 @@ import { View } from "~components/view";
 import type { ViewHandle } from "~components/view.base";
 import { round } from "~utils/math";
 
+import { ConsumeTypeSelect } from "./consume-type-select";
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
 import { ReceiptItemConsumers } from "./receipt-item-consumers";
@@ -39,14 +40,24 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants, confirmItemRemoval } =
-		useReceiptContext();
-	const { addItemConsumer, removeItem } = useActionsHooksContext();
+	const {
+		currencyCode,
+		participants,
+		consumeType,
+		receiptDisabled,
+		confirmItemRemoval,
+	} = useReceiptContext();
+	const { addItemConsumer, removeItem, updateItemConsumeType } =
+		useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
 	const locale = useLocale();
 
 	const trpc = useTRPC();
+	const updateTypeMutation = useTrpcMutationState<"receiptItems.update">(
+		trpc.receiptItems.update.mutationKey(),
+		(vars) => vars.id === item.id && vars.update.type === "consumeType",
+	);
 	const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
 		trpc.receiptItems.remove.mutationKey(),
 		(vars) => vars.id === item.id,
@@ -166,6 +177,19 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
 					</View>
 				) : null}
+				<View className="flex-row flex-wrap items-center gap-2">
+					<ConsumeTypeSelect
+						value={item.consumeType}
+						allowDefault
+						isDisabled={
+							!canEdit ||
+							receiptDisabled ||
+							isRemovalPending ||
+							updateTypeMutation?.status === "pending"
+						}
+						onChange={(next) => updateItemConsumeType(item.id, next)}
+					/>
+				</View>
 				{sortedConsumers.length <= 1 ? null : (
 					<>
 						{sortedConsumers.map((consumer) => {
@@ -196,7 +220,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 											consumer={consumer}
 											item={item}
 											isDisabled={isRemovalPending}
-											consumeType="percent"
+											consumeType={item.consumeType ?? consumeType}
 										/>
 									</View>
 								</View>

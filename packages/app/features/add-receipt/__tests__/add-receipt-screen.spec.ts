@@ -163,6 +163,7 @@ test("'receipts.add' mutation", async ({
 		debts: { direction: "outcoming", debts: [] },
 		name: receiptName,
 		currencyCode: receiptCurrencyCode,
+		consumeType: "parts",
 		issued: receiptDate,
 		createdAt: Temporal.Now.zonedDateTimeISO(),
 		participants: [],
@@ -436,6 +437,7 @@ test("Complete draft submits only surviving edited data and navigates to the cre
 	api.mockFirst("receipts.add", async ({ input }) => {
 		await pause.promise;
 		const createdAt = Temporal.Now.zonedDateTimeISO();
+		expect(input.items?.[0]?.consumeType).toBe("amount");
 		return {
 			id: receiptId,
 			createdAt: Temporal.Now.zonedDateTimeISO(),
@@ -460,6 +462,7 @@ test("Complete draft submits only surviving edited data and navigates to the cre
 		debts: { direction: "outcoming", debts: [] },
 		name: "-",
 		currencyCode: "USD",
+		consumeType: "parts",
 		issued: Temporal.Now.plainDateISO(),
 		createdAt: Temporal.Now.zonedDateTimeISO(),
 		participants: [],
@@ -525,6 +528,9 @@ test("Complete draft submits only surviving edited data and navigates to the cre
 	});
 	await consumerPart.fill("2");
 	await consumerPart.press("Tab");
+	await first.getByRole("button", { name: "Split consumers by" }).click();
+	await page.getByRole("option", { name: "Amount", exact: true }).click();
+	await expect(first.getByRole("slider")).toHaveCount(2);
 	await snapshotQueries(
 		async () => {
 			await addButton.click();

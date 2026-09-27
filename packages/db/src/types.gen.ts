@@ -7,6 +7,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtId, PeerId, ReceiptId, ReceiptItemId, SessionId, UserId } from "~db/ids";
 import type { ColumnType } from "kysely";
 
+export type ConsumeType = "amount" | "parts" | "percent";
+
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
@@ -57,6 +59,7 @@ export interface ReceiptItemPayer {
 }
 
 export interface ReceiptItem {
+  consumeType: ConsumeType | null;
   createdAt: Generated<Temporal.ZonedDateTime>;
   id: ReceiptItemId;
   name: string;
@@ -75,6 +78,7 @@ export interface ReceiptParticipant {
 }
 
 export interface Receipt {
+  consumeType: Generated<ConsumeType>;
   createdAt: Generated<Temporal.ZonedDateTime>;
   currencyCode: CurrencyCode;
   id: ReceiptId;

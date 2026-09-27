@@ -10,6 +10,7 @@
 							"quantity": 3,
 							"name": "Refined Wooden Keyboard",
 							"createdAt": "2019-12-06T23:15:14.315+00:00[UTC]",
+							"consumeType": null,
 							"consumers": [],
 							"payers": []
 						}

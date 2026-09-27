@@ -13,6 +13,19 @@ exports[`receipts.update > functionality > update currency code 1`] = `
 }
 `;
 
+exports[`receipts.update > functionality > update default consume type 1`] = `
+{
+  "updated": {
+    "receipts": {
+      "id:2d39a70d-ca5a-493e-b5c1-7b5a366491fc": {
+        "consumeType": "amount",
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
 exports[`receipts.update > functionality > update issued 1`] = `
 {
   "updated": {

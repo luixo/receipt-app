@@ -108,6 +108,7 @@ const TYPES: Record<
 
 const mapping: Partial<Record<string, string>> = {
 	Receiptrole: "ReceiptRole",
+	Consumetype: "ConsumeType",
 };
 const remapName = (name: string) => mapping[name] ?? name;
 
