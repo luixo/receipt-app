@@ -151,3 +151,25 @@ test.describe("Client-side translations", () => {
 		await expect.poll(() => getLanguages()).toEqual(["en", "ru"]);
 	});
 });
+
+test.describe("Zod validation", () => {
+	test("uses the selected language for reports", async ({
+		api,
+		page,
+		setLanguageCookie,
+	}) => {
+		api.mockUtils.noAuthPage();
+		await setLanguageCookie("ru");
+		await page.navigate({ to: "/login" });
+
+		const password = page.getByRole("textbox", { name: "Пароль" });
+		await password.fill("x");
+		await password.press("Tab");
+
+		await expect(
+			page
+				.locator('[data-slot="base"]', { has: password })
+				.locator('[data-slot="description"]'),
+		).toHaveText("Минимальная длина для пароля — 6");
+	});
+});

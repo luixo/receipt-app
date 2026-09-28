@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { entries } from "remeda";
 
 import { StoreDataContext } from "~app/contexts/store-data-context";
+import { changeValidatorLocale } from "~app/utils/i18n";
 import type { Language } from "~app/utils/i18n-data";
 import type { Locale } from "~app/utils/locale";
 import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
@@ -30,13 +31,14 @@ export const LanguageSettings: React.FC = () => {
 	const { i18n, t } = useTranslation("settings");
 	const currentLanguage = i18n.language as Language;
 	const onChange = React.useCallback(
-		(nextLanguage: Language) => {
+		async (nextLanguage: Language) => {
 			if (nextLanguage === currentLanguage) {
 				return;
 			}
-			void i18n.changeLanguage(nextLanguage);
 			setLanguage(nextLanguage);
 			setLocale(LANGUAGE_TO_LOCALE_MAP[nextLanguage]);
+			await i18n.changeLanguage(nextLanguage);
+			await changeValidatorLocale(nextLanguage, i18n);
 		},
 		[currentLanguage, i18n, setLocale, setLanguage],
 	);
@@ -54,7 +56,7 @@ export const LanguageSettings: React.FC = () => {
 				renderValue={(values) => values.map((value) => value.text).join(", ")}
 				selectedKeys={[currentLanguage]}
 				// oxlint-disable-next-line typescript/no-non-null-assertion
-				onSelectionChange={(key) => onChange(key[0]!)}
+				onSelectionChange={(key) => void onChange(key[0]!)}
 				getKey={({ language }) => language}
 			>
 				{({ language, text }) => (

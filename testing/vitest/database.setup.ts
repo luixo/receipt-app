@@ -1,8 +1,15 @@
+import baseDefault from "@ra/web/public/locales/en/default.json" with { type: "json" };
 // oxlint-disable vitest/require-top-level-describe
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
+// I don't know why
+// oxlint-disable-next-line import-js/no-extraneous-dependencies
+import { createInstance } from "i18next";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
+import { z } from "zod";
 
+import { getValidatorMessageFactory, validatorLocales } from "~app/utils/i18n";
+import { baseLanguage } from "~app/utils/i18n-data";
 import { getDatabase } from "~db/database";
 import { freezeTemporal } from "~tests/utils/temporal-freeze";
 import { transformer } from "~utils/transformer";
@@ -21,9 +28,24 @@ const client = createTRPCClient<typeof appRouter>({
 
 const databaseIgnoredFiles = [/api\/trpc/];
 
+const setupI18n = async () => {
+	const i18n = createInstance();
+	await i18n.init({
+		lng: baseLanguage,
+		resources: { [baseLanguage]: { default: baseDefault } },
+		defaultNS: "default",
+	});
+	const { default: locale } = await validatorLocales[baseLanguage]();
+	z.config({
+		...locale(),
+		customError: getValidatorMessageFactory(i18n, baseLanguage),
+	});
+};
+
 beforeAll(
 	// oxlint-disable-next-line no-empty-pattern
 	async ({}, fileOrSuite) => {
+		await setupI18n();
 		const logger = getLogger();
 		const filepath =
 			"filepath" in fileOrSuite ? fileOrSuite.filepath : undefined;

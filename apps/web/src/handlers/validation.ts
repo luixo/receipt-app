@@ -11,20 +11,18 @@ export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
 export const currencyCodeSchema = flavored<CurrencyCode>(
 	z.string().toUpperCase(),
-	"currency code",
 ).refine((code) => CURRENCY_CODES.includes(code), {
-	error: `Currency does not exist in currency list`,
+	params: { i18nKey: "validation.currencyDoesNotExist" },
 });
 
-export const receiptIdSchema = flavored<ReceiptId>(z.uuid(), "receipt id");
-export const receiptItemIdSchema = flavored<ReceiptItemId>(
-	z.uuid(),
-	"receipt item id",
-);
-export const sessionIdSchema = flavored<SessionId>(z.uuid(), "session id");
-export const debtIdSchema = flavored<DebtId>(z.uuid(), "debt id");
+export const receiptIdSchema = flavored<ReceiptId>(z.uuid());
+export const receiptItemIdSchema = flavored<ReceiptItemId>(z.uuid());
+export const sessionIdSchema = flavored<SessionId>(z.uuid());
+export const debtIdSchema = flavored<DebtId>(z.uuid());
 export const emailSchema = z.codec(
-	z.email({ message: "Invalid email address" }),
+	z.string().refine((value) => z.email().safeParse(value).success, {
+		params: { i18nKey: "validation.invalidEmail" },
+	}),
 	z.object({ lowercase: z.email(), original: z.email() }),
 	{
 		decode: (email) => ({ lowercase: email.toLowerCase(), original: email }),
