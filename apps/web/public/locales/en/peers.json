@@ -62,6 +62,10 @@
 		"remove": {
 			"button": "Remove peer",
 			"subtitle": "This will remove peer and all his participations"
+		},
+		"receipts": {
+			"header": "Shared receipts",
+			"empty": "No shared receipts yet"
 		}
 	},
 	"intentions": {

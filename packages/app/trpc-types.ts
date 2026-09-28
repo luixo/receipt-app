@@ -35,5 +35,7 @@ export type ReceiptItemConsumer = ReceiptItem["consumers"][number];
 export type ReceiptPageEntry =
 	TRPCQueryOutput<"receipts.getPaged">["items"][number];
 
+export type ReceiptsByPeerPage = TRPCQueryOutput<"receipts.getByPeerPaged">;
+
 // Misc
 export type Currencies = TRPCQueryOutput<"currency.top">["items"];
