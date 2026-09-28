@@ -31,6 +31,28 @@
 	"common": {
 		"andJoiner": " and "
 	},
+	"validation": {
+		"fields": {
+			"password": "password",
+			"receiptName": "receipt name",
+			"receiptItemName": "receipt item name",
+			"peerName": "peer name",
+			"note": "note",
+			"price": "price",
+			"quantity": "quantity",
+			"part": "part",
+			"debtAmount": "debt amount",
+			"currencyRate": "currency rate"
+		},
+		"minLength": "Minimal length for {{target}} is {{amount}}",
+		"maxLength": "Maximum length for {{target}} is {{amount}}",
+		"invalidEmail": "Invalid email address",
+		"maxDecimals": "{{target}} should have at maximum {{decimals}} decimals",
+		"greaterThanZero": "{{target}} should be greater than 0",
+		"lessThan": "{{target}} should be less than {{maximum}}",
+		"nonZero": "{{target}} should be non-zero",
+		"currencyDoesNotExist": "Currency does not exist in currency list"
+	},
 	"navigation": {
 		"receipts": "Receipts",
 		"debts": "Debts",
