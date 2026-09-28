@@ -10,13 +10,19 @@ import { fromEntries, keys, omit } from "remeda";
 
 const getExtraneousDependenciesConfig = (
 	packageJsonDir: string,
-	devDependencies: string[] | boolean = false,
+	devDependencies: string[] | true = [],
 ) => ({
 	devDependencies:
-		devDependencies &&
-		(Array.isArray(devDependencies)
-			? devDependencies.map((filename) => path.join(packageJsonDir, filename))
-			: devDependencies),
+		devDependencies === true
+			? devDependencies
+			: [
+					...devDependencies,
+					"**/*.config.js",
+					"**/*.config.ts",
+					"**/*.test.ts",
+					"**/*.spec.ts",
+					"**/__tests__/**",
+				].map((filename) => path.join(packageJsonDir, filename)),
 	optionalDependencies: false,
 	packageDir: [".", packageJsonDir].filter(Boolean),
 });
@@ -315,11 +321,6 @@ const overriddenRules = {
 	// We don't want `next` to trigger this rule
 	"node/callback-return": ["error", ["callback", "cb"]],
 
-	// Custom devDependencies
-	"import-js/no-extraneous-dependencies": [
-		"error",
-		getExtraneousDependenciesConfig("", ["*.config.ts"]),
-	],
 	"import-js/no-useless-path-segments": ["error", { noUselessIndex: false }],
 
 	// Allow expressions for stuff like `<>{children}</>`
@@ -653,24 +654,15 @@ export default defineConfig({
 		},
 		...((
 			[
-				[
-					"apps/web",
-					[
-						"vite.config.ts",
-						"vitest.config.ts",
-						"**/test.*.ts",
-						"**/*.test.ts",
-						"**/*.spec.ts",
-					],
-				],
-				["apps/mobile", ["babel.config.js", "metro.config.ts"]],
+				["apps/web"],
+				["apps/mobile"],
 				["packages/components"],
 				["packages/mutations"],
 				["packages/queries"],
 				["packages/utils"],
-				["packages/coverage", ["vitest.config.ts", "**/*.test.ts"]],
-				["packages/db", ["scripts/**/*", "**/*.test.ts", "vitest.config.ts"]],
-				["packages/app", ["**/*.spec.ts", "**/__tests__/**"]],
+				["packages/coverage"],
+				["packages/db", ["scripts/**/*"]],
+				["packages/app"],
 				["utils/scripts", true],
 				["utils/lint", true],
 				["utils/format", true],

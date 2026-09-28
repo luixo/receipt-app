@@ -5,7 +5,7 @@ import { describe, expect, vi } from "vitest";
 import { test } from "~tests/backend/utils/test";
 import type { router as appRouter } from "~web/handlers/index";
 import { t } from "~web/handlers/trpc";
-import { getServerRouteMethod } from "~web/pages/api/test.utils";
+import { getServerRouteMethod } from "~web/pages/api/utils.test";
 
 import { Route } from "./cleanup";
 
