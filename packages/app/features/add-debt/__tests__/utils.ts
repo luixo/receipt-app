@@ -5,10 +5,7 @@ import type { Currencies, Peer } from "~app/trpc-types";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { GeneratePeers } from "~tests/frontend/generators/peers";
 import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
-import {
-	generateAmount,
-	generateCurrencyCodes,
-} from "~tests/frontend/generators/utils";
+import { generateCurrencyCodes } from "~tests/frontend/generators/utils";
 import type { ExtractFixture } from "~tests/frontend/types";
 
 type Fixtures = {
@@ -35,12 +32,12 @@ export const test = originalTest.extend<Fixtures>({
 		use(async (amount = 5) => {
 			const auth = await api.mockUtils.authPage();
 			const topCurrencyCodes = generateCurrencyCodes(faker, amount);
-			const topCurrencies = generateAmount(faker, amount, (index) => ({
-				// We just generated them
-				// oxlint-disable-next-line typescript/no-non-null-assertion
-				currencyCode: topCurrencyCodes[index]!,
-				count: faker.number.int(100),
-			})).toSorted((a, b) => b.count - a.count);
+			const topCurrencies = topCurrencyCodes
+				.map((currencyCode) => ({
+					currencyCode,
+					count: faker.number.int(100),
+				}))
+				.toSorted((a, b) => b.count - a.count);
 			api.mockFirst("currency.top", { items: topCurrencies });
 			const peers = defaultGeneratePeers({ faker });
 			api.mockFirst("peers.suggestTop", { items: peers.map((u) => u.id) });
