@@ -4,7 +4,7 @@ exports[`receiptItems.remove > functionality > foreign receipt 1`] = `
 {
   "deleted": {
     "receiptItems": {
-      "id:b4376571-bb19-4959-82ed-efa4c22bc8b7": undefined,
+      "id:b47ec0e6-8880-481f-8a84-50e575e188a4": undefined,
     },
   },
 }
@@ -14,7 +14,7 @@ exports[`receiptItems.remove > functionality > own receipt 1`] = `
 {
   "deleted": {
     "receiptItems": {
-      "id:2cf1208d-e308-4053-8481-3f626290b2c0": undefined,
+      "id:9abf4d08-92ee-407e-9f69-ee8737322076": undefined,
     },
   },
 }
