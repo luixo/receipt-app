@@ -28,7 +28,7 @@ export const LoginScreen = () => {
 	const push = usePush();
 	const queryClient = useQueryClient();
 
-	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
+	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 
 	const loginMutation = useMutation(
@@ -110,10 +110,7 @@ export const LoginScreen = () => {
 			>
 				{t("forgotPassword.button")}
 			</Button>
-			<ResetPasswordModal
-				isModalOpen={modalOpen}
-				switchModalOpen={switchModalOpen}
-			/>
+			<ResetPasswordModal isModalOpen={modalOpen} closeModal={closeModal} />
 		</>
 	);
 };
