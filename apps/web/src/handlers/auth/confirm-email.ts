@@ -11,7 +11,7 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Confirm email",
 		description:
-			"Confirms an account's email using a confirmation token and logs the account in.",
+			"Confirms an user's email using a confirmation token and logs the user in.",
 	})
 	.input(
 		z.strictObject({
@@ -20,29 +20,29 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const account = await database
+		const user = await database
 			.selectFrom("users")
 			.select(["id", "email"])
 			.where("confirmationToken", "=", input.token)
 			.limit(1)
 			.executeTakeFirst();
-		if (!account) {
+		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `There is no account with confirmation token "${input.token}".`,
+				message: `There is no user with confirmation token "${input.token}".`,
 			});
 		}
 		await database
 			.updateTable("users")
 			.set({ confirmationToken: null, confirmationTokenTimestamp: null })
-			.where("users.id", "=", account.id)
+			.where("users.id", "=", user.id)
 			.executeTakeFirst();
 		const { authToken, expirationDate } = await createAuthorizationSession(
 			ctx,
-			account.id,
+			user.id,
 		);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
-			email: account.email,
+			email: user.email,
 		};
 	});

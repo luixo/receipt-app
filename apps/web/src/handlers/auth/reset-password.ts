@@ -12,7 +12,7 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Reset password",
 		description:
-			"Sets a new password for the account matching a valid, unexpired reset password token.",
+			"Sets a new password for the user matching a valid, unexpired reset password token.",
 	})
 	.input(
 		z.strictObject({

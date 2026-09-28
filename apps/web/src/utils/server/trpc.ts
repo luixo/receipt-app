@@ -10,6 +10,7 @@ import { v4 } from "uuid";
 import type { AppRouter } from "~app/trpc";
 import { getDatabase } from "~db/database";
 import { transformer } from "~utils/transformer";
+import { getAuthDatabase } from "~web/auth/database";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { env } from "~web/utils/env";
@@ -31,6 +32,9 @@ export const createServerContext = (req: Request): UnauthorizedContext => {
 			connectionString: env.DATABASE_URL,
 			sharedKey: "tRPC",
 		}),
+		authDatabase: getAuthDatabase(env.DATABASE_URL),
+		authSecret:
+			env.BETTER_AUTH_SECRET ?? "development-secret-change-me-0123456789",
 		emailOptions: {
 			getActive: () => active,
 			setActive: () => {
