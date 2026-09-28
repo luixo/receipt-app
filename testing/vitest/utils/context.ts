@@ -1,7 +1,10 @@
 import { assert } from "vitest";
 
-import type { SessionId } from "~db/ids";
 import type { TestContext } from "~tests/backend/utils/test";
+import { getAuthDatabase } from "~web/auth/database";
+
+export const TEST_AUTH_SECRET =
+	"receipt-app-test-secret-012345678901234567890123456789";
 
 type ContextOptions = {
 	reqHeaders?: Headers | Record<string, string>;
@@ -20,6 +23,8 @@ export const createContext = (
 	return {
 		...rest,
 		database: database.instance,
+		authDatabase: getAuthDatabase(database.connectionString),
+		authSecret: TEST_AUTH_SECRET,
 		reqHeaders: new Headers(reqHeaders),
 		resHeaders,
 	};
@@ -27,12 +32,12 @@ export const createContext = (
 
 export const createAuthContext = (
 	ctx: TestContext,
-	sessionId: SessionId,
+	sessionCookie: string,
 	{ reqHeaders, ...options }: ContextOptions = {},
 ) => {
 	const headers = new Headers(reqHeaders);
 	headers.set("x-test-id", ctx.task.id);
-	headers.append("Cookie", `authToken=${sessionId}`);
+	headers.append("Cookie", `better-auth.session_token=${sessionCookie}`);
 	return createContext(ctx, {
 		reqHeaders: headers,
 		...options,

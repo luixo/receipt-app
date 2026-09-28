@@ -10,6 +10,7 @@ export const env = createEnv({
 		PLAYWRIGHT: z.coerce.boolean().catch(false),
 		COVERAGE: z.coerce.boolean().catch(false),
 		BASE_URL: z.url().optional(),
+		BETTER_AUTH_SECRET: z.string().min(32).optional(),
 		MAILER_SENDER: z.string().optional(),
 		MAILER_TOKEN: z.string().optional(),
 		S3_BUCKET: z.string(),

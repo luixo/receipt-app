@@ -13,7 +13,7 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Log in",
 		description:
-			"Authenticates an account by email and password and starts a new session.",
+			"Authenticates an user by email and password and starts a new session.",
 	})
 	.input(
 		z.strictObject({
@@ -44,7 +44,7 @@ export const procedure = unauthProcedure
 			.executeTakeFirst();
 
 		if (!result) {
-			const errorMessage = `Authentication of account "${input.email.original}" failed: account not found.`;
+			const errorMessage = `Authentication of user "${input.email.original}" failed: user not found.`;
 			ctx.logger.debug(errorMessage);
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -55,7 +55,7 @@ export const procedure = unauthProcedure
 			(await getHash(input.password, result.passwordSalt)) ===
 			result.passwordHash;
 		if (!isPasswordValid) {
-			const errorMessage = `Authentication of account "${input.email.original}" failed: password is wrong.`;
+			const errorMessage = `Authentication of user "${input.email.original}" failed: password is wrong.`;
 			ctx.logger.debug(errorMessage);
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -67,7 +67,7 @@ export const procedure = unauthProcedure
 			result.userId,
 		);
 		ctx.logger.debug(
-			`Authentication of account "${input.email.original}" succeed.`,
+			`Authentication of user "${input.email.original}" succeed.`,
 		);
 		setCookie(ctx, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {

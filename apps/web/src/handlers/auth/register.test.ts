@@ -141,13 +141,18 @@ describe("auth.register", () => {
 				setCookieTuple,
 				"Header 'set-cookie' has to be set in the response",
 			);
-			const tokenMatch = /authToken=(?<token>[^;]+)/.exec(setCookieTuple[1]);
-			assert(tokenMatch, "Cookie 'authToken' should be present");
+			const tokenMatch = /better-auth\.session_token=(?<token>[^;]+)/.exec(
+				setCookieTuple[1],
+			);
+			assert(
+				tokenMatch,
+				"Cookie 'better-auth.session_token' should be present",
+			);
 			const [, token] = tokenMatch;
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
-					`authToken=${token}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
+					`better-auth.session_token=${token}; Max-Age=2592000; Path=/; HttpOnly; SameSite=Lax`,
 				],
 			]);
 		});
@@ -174,20 +179,16 @@ describe("auth.register", () => {
 			expect(message.body).toMatchSnapshot();
 		});
 
-		test("email reports error if broken", async ({ ctx }) => {
+		test("registration succeeds even if email is broken", async ({ ctx }) => {
 			ctx.emailOptions.setBroken(true);
 			const context = createContext(ctx);
 			const caller = createCaller(context);
-			await expectTRPCError(
-				() =>
-					caller.procedure({
-						email: faker.internet.email(),
-						password: faker.internet.password(),
-						name: faker.person.firstName(),
-					}),
-				"INTERNAL_SERVER_ERROR",
-				"Something went wrong: Test context broke email service error",
-			);
+			const result = await caller.procedure({
+				email: faker.internet.email(),
+				password: "a".repeat(MIN_PASSWORD_LENGTH),
+				name: faker.person.firstName(),
+			});
+			expect(result.user.verified).toBe(false);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(0);
 		});
 	});
