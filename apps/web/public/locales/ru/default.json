@@ -31,6 +31,28 @@
 	"common": {
 		"andJoiner": " и "
 	},
+	"validation": {
+		"fields": {
+			"password": "пароля",
+			"receiptName": "названия чека",
+			"receiptItemName": "названия позиции",
+			"peerName": "имени пользователя",
+			"note": "заметки",
+			"price": "цена",
+			"quantity": "количество",
+			"part": "доля",
+			"debtAmount": "сумма долга",
+			"currencyRate": "курс валюты"
+		},
+		"minLength": "Минимальная длина для {{target}} — {{amount}}",
+		"maxLength": "Максимальная длина для {{target}} — {{amount}}",
+		"invalidEmail": "Неверный email адрес",
+		"maxDecimals": "{{target}}: не более {{decimals}} знаков после запятой",
+		"greaterThanZero": "{{target}}: значение должно быть больше 0",
+		"lessThan": "{{target}}: значение должно быть меньше {{maximum}}",
+		"nonZero": "{{target}}: значение не должно быть равно нулю",
+		"currencyDoesNotExist": "Валюта отсутствует в списке валют"
+	},
 	"navigation": {
 		"receipts": "Чеки",
 		"debts": "Долги",
