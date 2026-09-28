@@ -13,7 +13,7 @@ import { View } from "~components/view";
 const getContent = (
 	t: TFunction,
 	synced: boolean,
-	debt: DebtPartial,
+	theirUpdateIsNewer: boolean,
 	theirDebt: DebtPartial | undefined,
 ) => {
 	if (!theirDebt) {
@@ -22,9 +22,9 @@ const getContent = (
 	if (synced) {
 		return t("components.debtSyncStatus.inSync");
 	}
-	return Temporal.ZonedDateTime.compare(debt.updatedAt, theirDebt.updatedAt)
-		? t("components.debtSyncStatus.outOfSyncWe")
-		: t("components.debtSyncStatus.outOfSyncThey");
+	return theirUpdateIsNewer
+		? t("components.debtSyncStatus.outOfSyncThey")
+		: t("components.debtSyncStatus.outOfSyncWe");
 };
 
 type DebtPartial = Pick<
@@ -47,9 +47,12 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	const iconClassName = size === "md" ? "size-6" : "size-9";
 
 	const synced = theirDebt ? areDebtsSynced(debt, theirDebt) : false;
+	const theirUpdateIsNewer = theirDebt
+		? Temporal.ZonedDateTime.compare(theirDebt.updatedAt, debt.updatedAt) > 0
+		: false;
 	return (
 		<Tooltip
-			content={getContent(t, synced, debt, theirDebt)}
+			content={getContent(t, synced, theirUpdateIsNewer, theirDebt)}
 			placement="bottom-end"
 		>
 			<View
@@ -66,11 +69,7 @@ export const DebtSyncStatus: React.FC<Props> = ({
 						size === "md" ? "left-[13px]" : "left-[20px]"
 					} top-0`}
 				>
-					{synced ? null : theirDebt?.updatedAt &&
-					  Temporal.ZonedDateTime.compare(
-							theirDebt.updatedAt,
-							debt.updatedAt,
-					  ) > 0 ? (
+					{synced ? null : theirUpdateIsNewer ? (
 						<Icon name="incoming" className={iconClassName} />
 					) : (
 						<Icon name="outcoming" className={iconClassName} />

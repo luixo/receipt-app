@@ -5,7 +5,7 @@
 				"data": {
 					"id": "f9ef90f7-36c9-4313-b508-96981f372ae8",
 					"amount": 10,
-					"currencyCode": "LSL",
+					"currencyCode": "HUF",
 					"peerId": "94e6552e-5d5d-4352-9982-a8a5f1a2b20f",
 					"timestamp": "2019-12-31",
 					"note": "Test debt note",
@@ -36,7 +36,7 @@
 					"status": "success",
 					"variables": {
 						"note": "Test debt note",
-						"currencyCode": "LSL",
+						"currencyCode": "HUF",
 						"peerId": "94e6552e-5d5d-4352-9982-a8a5f1a2b20f",
 						"amount": 10,
 						"timestamp": "2019-12-31"

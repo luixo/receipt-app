@@ -33,19 +33,30 @@ export const getCurrencySymbol = (
 	return symbolPart?.value ?? currencyCode;
 };
 
+// see https://issues.chromium.org/issues/566540087
+const FALLBACK_CODES: Partial<Record<CurrencyCode, string>> = {
+	SLE: "Sierra Leonean Leone (SLE)",
+	XCG: "Caribbean guilder (Cg. / XCG)",
+	ZWG: "Zimbabwean Gold (ZWG)",
+};
+
 export const getCurrencyDescription = (
 	locale: Locale,
 	currencyCode: CurrencyCode,
 ) => {
 	const currencySymbol = getCurrencySymbol(locale, currencyCode);
-	const displayName = new Intl.DisplayNames(locale, { type: "currency" }).of(
-		currencyCode,
-	);
+	const displayName = new Intl.DisplayNames(locale, {
+		type: "currency",
+		fallback: "none",
+	}).of(currencyCode);
 	const symbol =
 		currencySymbol === currencyCode
 			? currencySymbol
 			: `${currencySymbol} / ${currencyCode}`;
 	if (!displayName) {
+		if (FALLBACK_CODES[currencyCode]) {
+			return FALLBACK_CODES[currencyCode];
+		}
 		return symbol;
 	}
 	if (displayName === symbol) {
