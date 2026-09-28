@@ -10,7 +10,7 @@ import type {
 	SessionId,
 	UserId,
 } from "~db/ids";
-import type { ReceiptRole } from "~db/types.gen";
+import type { Receiptrole as ReceiptRole } from "~db/types.gen";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import { generatePasswordData } from "~utils/server/crypto";

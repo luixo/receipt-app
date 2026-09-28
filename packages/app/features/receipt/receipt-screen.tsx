@@ -1,11 +1,12 @@
 import React from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
 import { PageHeader } from "~app/components/page-header";
 import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { ConsumeTypeSelect } from "~app/features/receipt-components/consume-type-select";
 import {
 	ActionsHooksContext,
 	ReceiptContext,
@@ -19,6 +20,7 @@ import {
 	ReceiptParticipantsPreviewSkeleton,
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
@@ -27,6 +29,7 @@ import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { View } from "~components/view";
+import { options as receiptUpdateOptions } from "~mutations/receipts/update";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";
@@ -57,6 +60,11 @@ export const ReceiptScreen = suspendedFallback(
 		const { useParams } = getPathHooks("/_protected/receipts/$id");
 		const { id } = useParams();
 		const trpc = useTRPC();
+		const updateTypeMutation = useMutation(
+			trpc.receipts.update.mutationOptions(
+				useTrpcMutationOptions(receiptUpdateOptions),
+			),
+		);
 		const { data: receipt } = useSuspenseQuery(
 			trpc.receipts.get.queryOptions({ id }),
 		);
@@ -116,6 +124,18 @@ export const ReceiptScreen = suspendedFallback(
 				<ReceiptContext value={getReceiptContext}>
 					<ActionsHooksContext value={actionsHooks}>
 						<View className="items-start gap-2">
+							<ConsumeTypeSelect
+								value={receipt.consumeType}
+								isDisabled={disabled || updateTypeMutation.isPending}
+								onChange={(next) => {
+									if (next) {
+										updateTypeMutation.mutate({
+											id: receipt.id,
+											update: { type: "consumeType", consumeType: next },
+										});
+									}
+								}}
+							/>
 							<View className="flex w-full flex-row items-start justify-between gap-2">
 								<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 								<View className="flex flex-row gap-2">

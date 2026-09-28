@@ -5,6 +5,7 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
   "added": {
     "receiptItems": {
       "id:40c15d0a-667c-41d9-9a40-ca0dccd1be52": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "40c15d0a-667c-41d9-9a40-ca0dccd1be52",
         "name": "brevis balbus verbera",
@@ -14,6 +15,7 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:93586693-ad80-4272-a54b-45c49d31aece": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "93586693-ad80-4272-a54b-45c49d31aece",
         "name": "quos veniam tutamen",
@@ -23,6 +25,7 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:a8ce2bf9-91af-4919-8687-d4c4432f3142": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "a8ce2bf9-91af-4919-8687-d4c4432f3142",
         "name": "amicitia agnitio clementia",
@@ -41,6 +44,7 @@ exports[`receiptItems.add > input verification > mixed success and fail 1`] = `
   "added": {
     "receiptItems": {
       "id:bb9c6125-1c9a-40c3-bb1f-7e6c4e870372": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "bb9c6125-1c9a-40c3-bb1f-7e6c4e870372",
         "name": "creber cometes alias",

@@ -17,6 +17,7 @@ import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 export const getValidReceipt = () => ({
 	name: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
+	consumeType: "parts" as const,
 	issued: Temporal.Now.plainDateISO(),
 });
 

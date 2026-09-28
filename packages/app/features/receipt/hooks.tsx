@@ -13,6 +13,7 @@ import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput } from "~app/trpc";
 import type { Receipt } from "~app/trpc-types";
+import type { ConsumeType } from "~app/utils/consume-type";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
@@ -371,6 +372,7 @@ export const useActionHooks = (receipt: Receipt) => ({
 export type ReceiptContext = {
 	receiptId: ReceiptId;
 	currencyCode: CurrencyCode;
+	consumeType: ConsumeType;
 	selfPeerId: PeerId;
 	ownerPeerId: PeerId;
 
@@ -400,6 +402,7 @@ export const useGetReceiptContext = (
 		payers: receipt.payers,
 		ownerPeerId: receipt.ownerPeerId,
 		currencyCode: receipt.currencyCode,
+		consumeType: receipt.consumeType,
 		receiptDisabled,
 		items: receipt.items,
 		participants,

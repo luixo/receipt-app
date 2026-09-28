@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
+import { consumeTypeSchema } from "~app/utils/consume-type";
 import {
 	priceSchema,
 	quantitySchema,
@@ -30,6 +31,10 @@ export const procedure = authProcedure
 				z.strictObject({
 					type: z.literal("quantity"),
 					quantity: quantitySchema,
+				}),
+				z.strictObject({
+					type: z.literal("consumeType"),
+					consumeType: consumeTypeSchema.nullable(),
 				}),
 			]),
 		}),
@@ -76,6 +81,9 @@ export const procedure = authProcedure
 		}
 		let setObject: Updateable<DB["receiptItems"]> = {};
 		switch (input.update.type) {
+			case "consumeType":
+				setObject = { consumeType: input.update.consumeType };
+				break;
 			case "name":
 				setObject = { name: input.update.name };
 				break;

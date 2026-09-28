@@ -42,6 +42,7 @@ const fetchReceipts = async (
 			"receipts.createdAt",
 			"receipts.name",
 			"receipts.currencyCode",
+			"receipts.consumeType",
 			"receipts.ownerUserId",
 			"receipts.issued",
 			"receiptOwnerFromMyView.id as ownerPeerId",
@@ -54,6 +55,7 @@ const fetchReceipts = async (
 						"receiptItems.name",
 						"receiptItems.price",
 						"receiptItems.quantity",
+						"receiptItems.consumeType",
 						"receiptItems.createdAt",
 						jsonArrayFrom(
 							ebb

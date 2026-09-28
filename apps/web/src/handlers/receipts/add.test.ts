@@ -246,7 +246,7 @@ describe("receipts.add", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure(getValidReceipt()),
+				caller.procedure({ ...getValidReceipt(), consumeType: "percent" }),
 			);
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
@@ -303,7 +303,7 @@ describe("receipts.add", () => {
 			await insertReceiptItem(ctx, receiptId);
 
 			const receiptItems: NonNullable<Input["items"]> = [
-				getValidReceiptItemNoReceiptId(),
+				{ ...getValidReceiptItemNoReceiptId(), consumeType: "amount" },
 				getValidReceiptItemNoReceiptId(),
 			];
 

@@ -1,10 +1,12 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
@@ -16,8 +18,10 @@ import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { ViewHandle } from "~components/view.base";
+import { options as itemUpdateOptions } from "~mutations/receipt-items/update";
 import { round } from "~utils/math";
 
+import { ConsumeTypeSelect } from "./consume-type-select";
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import {
@@ -39,12 +43,23 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants } = useReceiptContext();
+	const {
+		currencyCode,
+		participants,
+		consumeType,
+		receiptId,
+		receiptDisabled,
+	} = useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const locale = useLocale();
 
 	const trpc = useTRPC();
+	const updateTypeMutation = useMutation(
+		trpc.receiptItems.update.mutationOptions(
+			useTrpcMutationOptions(itemUpdateOptions, { context: { receiptId } }),
+		),
+	);
 	const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
 		trpc.receiptItems.remove.mutationKey(),
 		(vars) => vars.id === item.id,
@@ -120,6 +135,22 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 				bodyClassName="gap-2"
 			>
 				<View className="flex-row flex-wrap items-center gap-2">
+					<ConsumeTypeSelect
+						value={item.consumeType}
+						allowDefault
+						isDisabled={
+							!canEdit ||
+							receiptDisabled ||
+							isRemovalPending ||
+							updateTypeMutation.isPending
+						}
+						onChange={(next) =>
+							updateTypeMutation.mutate({
+								id: item.id,
+								update: { type: "consumeType", consumeType: next },
+							})
+						}
+					/>
 					<ReceiptItemPriceInput
 						item={item}
 						isDisabled={isRemovalPending}
@@ -164,6 +195,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									item={item}
 									participant={matchedParticipant}
 									isDisabled={isRemovalPending}
+									consumeType={item.consumeType ?? consumeType}
 								/>
 							);
 						})}

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { unique } from "remeda";
 import { z } from "zod";
 
+import { consumeTypeSchema } from "~app/utils/consume-type";
 import {
 	priceSchema,
 	quantitySchema,
@@ -19,6 +20,7 @@ export const addItemSchema = z.strictObject({
 	name: receiptItemNameSchema,
 	price: priceSchema,
 	quantity: quantitySchema,
+	consumeType: consumeTypeSchema.nullish(),
 });
 
 export type ItemOutput = {
@@ -84,6 +86,7 @@ const getItemsOrErrors = (
 			name: item.name,
 			price: item.price.toString(),
 			quantity: item.quantity.toString(),
+			consumeType: item.consumeType ?? null,
 			receiptId: item.receiptId,
 		};
 	});

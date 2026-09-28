@@ -8,6 +8,7 @@
 					"name": "surculus appono itaque",
 					"issued": "2020-02-01",
 					"currencyCode": "USD",
+					"consumeType": "parts",
 					"participants": [],
 					"items": [],
 					"payers": [],

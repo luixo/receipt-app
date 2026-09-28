@@ -80,6 +80,7 @@ const ContextedAddReceipt = suspendedFallback<{
 			createdAt: Temporal.Now.zonedDateTimeISO(),
 			issued: formValues.issued,
 			currencyCode: formValues.currencyCode ?? "???",
+			consumeType: "parts",
 			participants: rawParticipants,
 			items,
 			ownerPeerId: selfPeerId,
@@ -167,6 +168,7 @@ export const AddReceipt = () => {
 		},
 		onSubmit: ({ value }) => {
 			addReceiptMutation.mutate({
+				consumeType: "parts",
 				name: value.name,
 				currencyCode: value.currencyCode,
 				issued: value.issued,

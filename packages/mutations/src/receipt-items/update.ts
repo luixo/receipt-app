@@ -12,6 +12,8 @@ const applyUpdate =
 	): UpdateFn<ReceiptItem> =>
 	(item) => {
 		switch (update.type) {
+			case "consumeType":
+				return { ...item, consumeType: update.consumeType };
 			case "name":
 				return { ...item, name: update.name };
 			case "price":
@@ -28,6 +30,8 @@ const getRevert =
 	(snapshot) =>
 	(item) => {
 		switch (update.type) {
+			case "consumeType":
+				return { ...item, consumeType: snapshot.consumeType };
 			case "name":
 				return { ...item, name: snapshot.name };
 			case "price":

@@ -13,13 +13,14 @@ import { View } from "~components/view";
 import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
 import { ReceiptItemConsumerInput } from "./receipt-item-consumer-input";
-import type { Item, Participant } from "./state";
+import type { ConsumeType, Item, Participant } from "./state";
 
 type Props = {
 	consumer: Item["consumers"][number];
 	item: Item;
 	participant: Participant;
 	isDisabled: boolean;
+	consumeType: ConsumeType;
 };
 
 export const ReceiptItemConsumer: React.FC<Props> = ({
@@ -27,6 +28,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	item,
 	participant,
 	isDisabled: isExternalDisabled,
+	consumeType,
 }) => {
 	const { removeItemConsumer } = useActionsHooksContext();
 	const canEdit = useCanEdit();
@@ -52,6 +54,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 					consumer={consumer}
 					item={item}
 					isDisabled={isDisabled}
+					consumeType={consumeType}
 				/>
 				{canEdit ? (
 					<RemoveButton

@@ -21,6 +21,7 @@ export const options: UseContextedMutationOptions<
 					name: variables.name,
 					price: variables.price,
 					quantity: variables.quantity,
+					consumeType: variables.consumeType ?? null,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					consumers: [],
 					payers: [],

@@ -133,6 +133,7 @@ test("'receipts.add' mutation", async ({
 		debts: { direction: "outcoming", debts: [] },
 		name: receiptName,
 		currencyCode: receiptCurrencyCode,
+		consumeType: "parts",
 		issued: receiptDate,
 		createdAt: Temporal.Now.zonedDateTimeISO(),
 		participants: [],

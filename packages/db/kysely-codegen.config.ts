@@ -35,6 +35,7 @@ const TYPES: Record<
 		tables: {
 			userSettings: ["userId"],
 			users: ["id"],
+			sessions: ["userId"],
 			debts: ["ownerUserId"],
 			receipts: ["ownerUserId"],
 			resetPasswordIntentions: ["userId"],
@@ -104,12 +105,11 @@ export default defineConfig({
 	outFile: "packages/db/src/types.gen.ts",
 	singularize: true,
 	customImports: {
-		Temporal: "~utils/date",
-		...fromEntries(
+		...(fromEntries(
 			values(TYPES)
 				.filter(({ importSource }) => Boolean(importSource))
 				.map(({ expression, importSource }) => [expression, importSource]),
-		),
+		) as Record<string, string>),
 	},
 	overrides: {
 		columns: fromEntries(

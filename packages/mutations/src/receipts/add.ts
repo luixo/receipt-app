@@ -23,6 +23,7 @@ export const options: UseContextedMutationOptions<
 						name: variables.name,
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,
+						consumeType: variables.consumeType,
 						participants:
 							variables.participants?.map(({ peerId, role }, index) => {
 								const matchedResult = result.participants[index];
@@ -51,6 +52,7 @@ export const options: UseContextedMutationOptions<
 									name: item.name,
 									price: item.price,
 									quantity: item.quantity,
+									consumeType: item.consumeType ?? null,
 									consumers:
 										item.consumers?.map((consumer) => {
 											const matchedConsumer = matchedItem.consumers?.find(

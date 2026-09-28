@@ -9,6 +9,8 @@ const applyUpdate =
 	(update: TRPCMutationInput<"receipts.update">["update"]): UpdateFn<Receipt> =>
 	(item) => {
 		switch (update.type) {
+			case "consumeType":
+				return { ...item, consumeType: update.consumeType };
 			case "name":
 				return { ...item, name: update.name };
 			case "issued":
@@ -25,6 +27,8 @@ const getRevert =
 	(snapshot) =>
 	(receipt) => {
 		switch (update.type) {
+			case "consumeType":
+				return { ...receipt, consumeType: snapshot.consumeType };
 			case "name":
 				return { ...receipt, name: snapshot.name };
 			case "issued":

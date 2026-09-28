@@ -5,6 +5,7 @@ exports[`receipts.add > functionality > empty receipt 1`] = `
   "added": {
     "receiptItems": {
       "id:77ce22c5-ef8a-48af-b7dc-70443373f2e6": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "77ce22c5-ef8a-48af-b7dc-70443373f2e6",
         "name": "",
@@ -16,6 +17,7 @@ exports[`receipts.add > functionality > empty receipt 1`] = `
     },
     "receipts": {
       "id:77ce22c5-ef8a-48af-b7dc-70443373f2e6": {
+        "consumeType": "percent",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "MVR",
         "id": "77ce22c5-ef8a-48af-b7dc-70443373f2e6",
@@ -66,6 +68,7 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
     },
     "receiptItems": {
       "id:2d659cae-9a91-4188-b5ac-4de41909364a": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "2d659cae-9a91-4188-b5ac-4de41909364a",
         "name": "quas arca adnuo",
@@ -75,6 +78,7 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:80c204c8-f18a-4fe6-a069-f950e73f6752": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "80c204c8-f18a-4fe6-a069-f950e73f6752",
         "name": "",
@@ -84,6 +88,7 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:8c54cb27-3a72-456b-89bc-4c3a6a2cea59": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "8c54cb27-3a72-456b-89bc-4c3a6a2cea59",
         "name": "attero tempus contra",
@@ -111,6 +116,7 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
     },
     "receipts": {
       "id:80c204c8-f18a-4fe6-a069-f950e73f6752": {
+        "consumeType": "parts",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "MGA",
         "id": "80c204c8-f18a-4fe6-a069-f950e73f6752",
@@ -129,6 +135,7 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
   "added": {
     "receiptItems": {
       "id:8d1da110-db7e-4565-b1ed-6fda17cc0052": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
         "name": "",
@@ -138,6 +145,7 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:9541d729-10c0-4b3a-8a74-3c4fa2c125d9": {
+        "consumeType": "amount",
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "9541d729-10c0-4b3a-8a74-3c4fa2c125d9",
         "name": "apostolus possimus stella",
@@ -147,6 +155,7 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:ea036ecc-abde-441a-8059-8830b10dd5b7": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "ea036ecc-abde-441a-8059-8830b10dd5b7",
         "name": "annus consequuntur iure",
@@ -158,6 +167,7 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
     },
     "receipts": {
       "id:8d1da110-db7e-4565-b1ed-6fda17cc0052": {
+        "consumeType": "parts",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "WST",
         "id": "8d1da110-db7e-4565-b1ed-6fda17cc0052",
@@ -176,6 +186,7 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
   "added": {
     "receiptItems": {
       "id:8dd65dc8-e9fe-400a-8f49-d80a41448177": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
         "name": "",
@@ -203,6 +214,7 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
     },
     "receipts": {
       "id:8dd65dc8-e9fe-400a-8f49-d80a41448177": {
+        "consumeType": "parts",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "LAK",
         "id": "8dd65dc8-e9fe-400a-8f49-d80a41448177",
@@ -237,6 +249,7 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
     },
     "receiptItems": {
       "id:226d5e72-176f-4b9f-b93f-282e7bb931e2": {
+        "consumeType": null,
         "createdAt": "2020-01-01 00:00:00+00",
         "id": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
         "name": "",
@@ -264,6 +277,7 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
     },
     "receipts": {
       "id:226d5e72-176f-4b9f-b93f-282e7bb931e2": {
+        "consumeType": "parts",
         "createdAt": "2020-01-01 00:00:00+00",
         "currencyCode": "CDF",
         "id": "226d5e72-176f-4b9f-b93f-282e7bb931e2",
