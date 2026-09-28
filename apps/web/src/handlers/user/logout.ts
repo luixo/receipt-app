@@ -1,6 +1,5 @@
-import { AUTH_COOKIE } from "~app/utils/auth";
+import { forwardAuthCookies, getRequestAuth } from "~web/auth/auth";
 import { authProcedure } from "~web/handlers/trpc";
-import { setCookie } from "~web/utils/cookies";
 
 export const procedure = authProcedure
 	.meta({
@@ -8,12 +7,10 @@ export const procedure = authProcedure
 		description: "Ends the current session and clears the auth cookie.",
 	})
 	.mutation(async ({ ctx }) => {
-		const { database } = ctx;
-		await database
-			.deleteFrom("sessions")
-			.where("sessionId", "=", ctx.authToken)
-			.executeTakeFirst();
-		setCookie(ctx, AUTH_COOKIE, "", {
-			expires: Temporal.Now.zonedDateTimeISO(),
+		const auth = getRequestAuth(ctx);
+		const response = await auth.api.signOut({
+			headers: ctx.reqHeaders,
+			asResponse: true,
 		});
+		forwardAuthCookies(response, ctx.resHeaders);
 	});
