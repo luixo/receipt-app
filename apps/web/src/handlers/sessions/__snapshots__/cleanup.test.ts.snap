@@ -1,12 +1,3 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`sessions.cleanup > functionality > sessions are removed 1`] = `
-{
-  "deleted": {
-    "sessions": {
-      "sessionId:8c47b259-91c3-4ad1-a2bb-48399e025c2f": undefined,
-      "sessionId:b5a21bde-e25a-4b49-801f-70a8a2cb8db6": undefined,
-    },
-  },
-}
-`;
+exports[`sessions.cleanup > functionality > sessions are removed 1`] = `{}`;

@@ -222,14 +222,18 @@ describe("auth module", () => {
 
 	describe("helpers", () => {
 		test("getAuthResponseError", async () => {
-			await expect(getAuthResponseError(new Response())).resolves.toBeUndefined();
-			await expect(getAuthResponseError(
-					Response.json({ code: "FOO" }, { status: 400 }),
-				)).resolves.toBe("FOO");
-			await expect(getAuthResponseError(Response.json({}, { status: 400 }))).resolves.toBeUndefined();
-			await expect(getAuthResponseError(
-					Response.json({ code: 42 }, { status: 400 }),
-				)).resolves.toBeUndefined();
+			await expect(
+				getAuthResponseError(new Response()),
+			).resolves.toBeUndefined();
+			await expect(
+				getAuthResponseError(Response.json({ code: "FOO" }, { status: 400 })),
+			).resolves.toBe("FOO");
+			await expect(
+				getAuthResponseError(Response.json({}, { status: 400 })),
+			).resolves.toBeUndefined();
+			await expect(
+				getAuthResponseError(Response.json({ code: 42 }, { status: 400 })),
+			).resolves.toBeUndefined();
 		});
 
 		test("forwardAuthCookies", () => {
@@ -251,7 +255,9 @@ describe("auth module", () => {
 		test("getAuthProfiles", async ({ ctx }) => {
 			const { id } = await insertAccount(ctx);
 			const authDatabase = assertAuthDatabase(ctx);
-			await expect(getAuthProfiles(authDatabase, [])).resolves.toStrictEqual(new Map());
+			await expect(getAuthProfiles(authDatabase, [])).resolves.toStrictEqual(
+				new Map(),
+			);
 			const profiles = await getAuthProfiles(authDatabase, [
 				id,
 				ctx.getTestUuid(),
