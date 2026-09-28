@@ -80,11 +80,10 @@ describe("resetPasswordIntentions.add", () => {
 			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createContext(ctx));
 
-			await expectTRPCError(
-				() => caller.procedure({ email }),
-				"INTERNAL_SERVER_ERROR",
-				"Test context broke email service error",
-			);
+			// Better Auth only logs background email failures,
+			// the intention itself is still created
+			await caller.procedure({ email });
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(0);
 		});
 
 		test("reset password intention added", async ({ ctx }) => {

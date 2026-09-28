@@ -20,6 +20,7 @@ type FileContext = {
 	logger: LoggerMock;
 	database?: {
 		instance: Database;
+		connectionString: string;
 		dump: () => Promise<inferProcedureOutput<AppRouter["dumpDatabase"]>>;
 		truncate: () => Promise<
 			inferProcedureOutput<AppRouter["truncateDatabase"]>
@@ -40,6 +41,7 @@ type FakerContext = {
 	getTestUuid: () => string;
 	getSalt: () => string;
 	getTestSalt: () => string;
+	getAuthTestUuid: () => string;
 };
 
 type MockContext = {
@@ -71,9 +73,10 @@ export const test = originalTest.extend<TestFixture>({
 		const { fileContext } = task.file;
 		fileContext.logger.resetMessages();
 		// Stable faker to generate uuid / salt on handler side
-		const handlerIdFaker = createStableFaker(task.name);
+		const handlerIdFaker = createStableFaker(`handler:${task.name}`);
 		// Stable faker to generate uuid / salt on tests side
-		const testIdFaker = createStableFaker(task.name);
+		const testIdFaker = createStableFaker(`fixture:${task.name}`);
+		const authIdFaker = createStableFaker(`auth-fixture:${task.id}`);
 		const testId = task.name;
 		// Regular faker to generate fake data in a test
 		setSeed(globalFaker, testId);
@@ -96,6 +99,7 @@ export const test = originalTest.extend<TestFixture>({
 					casing: "lower",
 					prefix: "",
 				}),
+			getAuthTestUuid: () => authIdFaker.string.uuid(),
 			task,
 			baseUrl: "http://receipt-app.test/",
 			...fileContext,

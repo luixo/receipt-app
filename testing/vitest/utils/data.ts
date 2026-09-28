@@ -1,4 +1,8 @@
+// Better Auth's adapter requires native Date values at the database boundary.
+// oxlint-disable eslint-js/no-restricted-syntax
 import { faker } from "@faker-js/faker";
+import { hashPassword } from "better-auth/crypto";
+import { createHmac } from "node:crypto";
 import { assert } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -11,13 +15,27 @@ import type {
 	UserId,
 } from "~db/ids";
 import type { ReceiptRole } from "~db/types.gen";
+import { TEST_AUTH_SECRET } from "~tests/backend/utils/context";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import { generatePasswordData } from "~utils/server/crypto";
+import { getAuthDatabase } from "~web/auth/database";
 
 export const assertDatabase = (ctx: TestContext) => {
 	assert(ctx.database, "This test required DB to exist");
 	return ctx.database.instance;
+};
+
+export const assertAuthDatabase = (ctx: TestContext) => {
+	assert(ctx.database, "This test required DB to exist");
+	return getAuthDatabase(ctx.database.connectionString);
+};
+
+export const signSessionCookie = (token: string) => {
+	const signature = createHmac("sha256", TEST_AUTH_SECRET)
+		.update(token)
+		.digest("base64");
+	return encodeURIComponent(`${token}.${signature}`);
 };
 
 export type UserSettingsData = {
@@ -78,47 +96,75 @@ type UserData = {
 	settings?: UserSettingsData;
 	peer?: Pick<PeerData, "name">;
 	role?: string;
+	legacy?: { salt: string; hash: string };
 };
 
+// oxlint-disable-next-line complexity
 export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 	const database = assertDatabase(ctx);
+	const authDatabase = assertAuthDatabase(ctx);
 	const password = data.password || faker.internet.password();
 	const { salt: passwordSalt, hash: passwordHash } = await generatePasswordData(
 		{ getSalt: ctx.getTestSalt },
 		password,
 	);
-	const {
-		id,
-		email,
-		confirmationToken,
-		confirmationTokenTimestamp,
-		avatarUrl,
-	} = await database
+	let id = data.id || ctx.getTestUuid();
+	if (
+		await authDatabase
+			.selectFrom("auth.user")
+			.select("id")
+			.where("id", "=", id)
+			.executeTakeFirst()
+	) {
+		id = ctx.getAuthTestUuid();
+	}
+	const email = (data.email || faker.internet.email()).toLowerCase();
+	const avatarUrl =
+		data.avatarUrl === null ? null : data.avatarUrl || faker.image.avatar();
+	const confirmationToken = data.confirmation
+		? data.confirmation.token || ctx.getTestUuid()
+		: undefined;
+	const confirmationTokenTimestamp = data.confirmation?.timestamp;
+	await authDatabase
+		.insertInto("auth.user")
+		.values({
+			id,
+			name: email,
+			email,
+			emailVerified: !data.confirmation,
+			image: avatarUrl,
+			role: data.role ?? null,
+			verificationEmailSentAt: confirmationTokenTimestamp
+				? new Date(confirmationTokenTimestamp.toInstant().epochMilliseconds)
+				: null,
+			updatedAt: new Date(),
+		})
+		.executeTakeFirstOrThrow();
+	await authDatabase
+		.insertInto("auth.account")
+		.values({
+			id,
+			accountId: id,
+			providerId: "credential",
+			userId: id,
+			password: data.legacy ? null : await hashPassword(password),
+			legacyPasswordSalt: data.legacy?.salt ?? passwordSalt,
+			legacyPasswordHash: data.legacy?.hash ?? passwordHash,
+			updatedAt: new Date(),
+		})
+		.executeTakeFirstOrThrow();
+	await database
 		.insertInto("users")
 		.values({
-			id: data.id || ctx.getTestUuid(),
-			email: (data.email || faker.internet.email()).toLowerCase(),
+			id,
+			email,
 			passwordHash,
 			passwordSalt,
-			confirmationToken: data.confirmation
-				? data.confirmation.token || ctx.getTestUuid()
-				: undefined,
-			confirmationTokenTimestamp: data.confirmation
-				? data.confirmation.timestamp || Temporal.Now.zonedDateTimeISO()
-				: undefined,
-			avatarUrl:
-				data.avatarUrl === null
-					? data.avatarUrl
-					: data.avatarUrl || faker.image.avatar(),
-			role: data.role,
+			confirmationToken: confirmationToken ?? null,
+			confirmationTokenTimestamp: confirmationTokenTimestamp ?? null,
+			avatarUrl,
+			role: data.role ?? null,
 		})
-		.returning([
-			"id",
-			"email",
-			"confirmationToken",
-			"confirmationTokenTimestamp",
-			"avatarUrl",
-		])
 		.executeTakeFirstOrThrow();
 	if (data.settings) {
 		await insertUserSettings(ctx, id, data.settings);
@@ -146,6 +192,11 @@ export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 		avatarUrl: avatarUrl || undefined,
 	};
 };
+
+export const insertAccount = async (
+	ctx: TestContext,
+	data: UserData & { user?: Pick<PeerData, "name"> } = {},
+) => insertUser(ctx, { ...data, peer: data.user ?? data.peer });
 
 type ConnectedPeerData = { userId: UserId } & Omit<PeerData, "connectedUserId">;
 
@@ -215,19 +266,22 @@ export const insertSession = async (
 	userId: UserId,
 	data: SessionData = {},
 ) => {
-	const database = assertDatabase(ctx);
-	const { sessionId, expirationTimestamp } = await database
-		.insertInto("sessions")
+	const authDatabase = assertAuthDatabase(ctx);
+	const id = data.id || ctx.getAuthTestUuid();
+	const expirationTimestamp =
+		data.expirationTimestamp ||
+		Temporal.Now.zonedDateTimeISO().add({ years: 1 });
+	await authDatabase
+		.insertInto("auth.session")
 		.values({
-			sessionId: data.id || ctx.getTestUuid(),
+			id,
+			token: id,
 			userId,
-			expirationTimestamp:
-				data.expirationTimestamp ||
-				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
+			expiresAt: new Date(expirationTimestamp.toInstant().epochMilliseconds),
+			updatedAt: new Date(),
 		})
-		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();
-	return { id: sessionId, expirationTimestamp };
+	return { id: signSessionCookie(id), expirationTimestamp };
 };
 
 type ResetPasswordIntentionData = {
@@ -241,17 +295,19 @@ export const insertResetPasswordIntention = async (
 	userId: UserId,
 	data: ResetPasswordIntentionData = {},
 ) => {
-	const database = assertDatabase(ctx);
-	const { token, expiresTimestamp } = await database
-		.insertInto("resetPasswordIntentions")
+	const authDatabase = assertAuthDatabase(ctx);
+	const token = data.token || ctx.getTestUuid();
+	const expiresTimestamp =
+		data.expiresTimestamp || Temporal.Now.zonedDateTimeISO().add({ years: 1 });
+	await authDatabase
+		.insertInto("auth.verification")
 		.values({
-			userId,
-			expiresTimestamp:
-				data.expiresTimestamp ||
-				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
-			token: data.token || ctx.getTestUuid(),
+			id: ctx.getAuthTestUuid(),
+			identifier: `reset-password:${token}`,
+			value: userId,
+			expiresAt: new Date(expiresTimestamp.toInstant().epochMilliseconds),
+			updatedAt: new Date(),
 		})
-		.returning(["expiresTimestamp", "token"])
 		.executeTakeFirstOrThrow();
 	return { token, expiresTimestamp };
 };

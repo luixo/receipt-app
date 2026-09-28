@@ -30,7 +30,15 @@ describe("user.logout", () => {
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
-					"authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
+					"better-auth.session_token=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+				],
+				[
+					"set-cookie",
+					"better-auth.session_data=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
+				],
+				[
+					"set-cookie",
+					"better-auth.dont_remember=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax",
 				],
 			]);
 		});
