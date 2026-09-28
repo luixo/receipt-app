@@ -16,7 +16,7 @@ import type { FlattenObject, UnionToIntersection } from "~utils/types";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
-import { getServerRouteMethod } from "~web/pages/api/test.utils";
+import { getServerRouteMethod } from "~web/pages/api/utils.test";
 import { baseLogger } from "~web/providers/logger";
 
 import { Route } from "./$";
