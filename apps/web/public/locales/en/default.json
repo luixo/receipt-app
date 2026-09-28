@@ -57,7 +57,7 @@
 		},
 		"addPeerModal": {
 			"title": "Add peer",
-			"label": "Add a peer"
+			"label": "Add peer"
 		},
 		"currenciesPicker": {
 			"title": "Please choose currency",
@@ -72,14 +72,14 @@
 			"addPeer": {
 				"title": "Add new peer",
 				"withName": "Add peer \"{{name}}\"",
-				"empty": "Add a peer"
+				"empty": "Add peer"
 			}
 		},
 		"debtSyncStatus": {
-			"outOfSyncPush": "Out of sync, we intent to push",
+			"outOfSyncPush": "Out of sync, we intend to push",
 			"inSync": "In sync with them",
-			"outOfSyncWe": "Out of sync, we intent to sync",
-			"outOfSyncThey": "Out of sync, they intent to sync"
+			"outOfSyncWe": "Out of sync, we intend to sync",
+			"outOfSyncThey": "Out of sync, they intend to sync"
 		},
 		"signButtonGroup": {
 			"positive": "i paid",

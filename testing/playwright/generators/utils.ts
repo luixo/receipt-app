@@ -5,14 +5,14 @@ import { CURRENCY_CODES } from "~utils/currency-data";
 export const generateAmount = <T>(
 	faker: Faker,
 	generatedAmount: NumberOrRange,
-	generatorFn: () => T,
+	generatorFn: (index: number) => T,
 ): T[] => {
 	const amount =
 		typeof generatedAmount === "number"
 			? generatedAmount
 			: generatedAmount.min +
 				faker.number.int(generatedAmount.max - generatedAmount.min);
-	return Array.from({ length: amount }, generatorFn);
+	return Array.from({ length: amount }, (_, index) => generatorFn(index));
 };
 
 export type GeneratorFnWithFaker<O, I = object> = (

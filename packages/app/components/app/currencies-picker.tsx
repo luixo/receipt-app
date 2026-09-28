@@ -71,9 +71,20 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 			[hiddenCurrencies, currencies],
 		);
 		onLoad?.(codes, topCurrencyCodes);
-		const sortedCodes = codes.toSorted(
-			(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
-		);
+		const sortedCodes = codes.toSorted((a, b) => {
+			const aIndex = topCurrencyCodes.indexOf(a);
+			const bIndex = topCurrencyCodes.indexOf(b);
+			if (aIndex === -1 && bIndex === -1) {
+				return 0;
+			}
+			if (aIndex === -1) {
+				return 1;
+			}
+			if (bIndex === -1) {
+				return -1;
+			}
+			return aIndex - bIndex;
+		});
 		const formattedCurrencies = sortedCodes.map((currencyCode) => ({
 			code: currencyCode,
 			description: getCurrencyDescription(locale, currencyCode),
