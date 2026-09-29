@@ -1,7 +1,6 @@
 import type { TRPCMutationInput } from "~app/trpc";
 import type { Debt } from "~app/trpc-types";
 import type { DebtId, PeerId, ReceiptId } from "~db/ids";
-import { round } from "~utils/math";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -13,16 +12,6 @@ const isUpdateSyncable = (update: DebtUpdateObject) =>
 	update.amount !== undefined ||
 	update.timestamp !== undefined ||
 	update.currencyCode !== undefined;
-
-export const applySumUpdate =
-	(prevAmount: number, update: DebtUpdateObject): UpdateFn<number> =>
-	(sum) => {
-		if (update.amount !== undefined) {
-			const delta = update.amount - prevAmount;
-			return round(sum + delta);
-		}
-		return sum;
-	};
 
 export const applyUpdate =
 	(update: DebtUpdateObject): UpdateFn<Debt> =>
@@ -45,17 +34,6 @@ export const applyUpdate =
 			nextDebt.updatedAt = Temporal.Now.zonedDateTimeISO();
 		}
 		return nextDebt;
-	};
-
-export const getSumRevert =
-	(prevAmount: number, update: DebtUpdateObject): SnapshotFn<number> =>
-	(updatedSum) =>
-	(currentSum) => {
-		if (update.amount !== undefined) {
-			const delta = updatedSum - prevAmount;
-			return round(currentSum - delta);
-		}
-		return currentSum;
 	};
 
 export const getRevert =

@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { CurrencyCode } from "~app/utils/currency";
 import { flavored } from "~app/utils/validation";
 import type { DebtId, ReceiptId, ReceiptItemId, SessionId } from "~db/ids";
-import { CURRENCY_CODES } from "~utils/currency-data";
+import { isCurrencyCode } from "~utils/currency-data";
 
 export const assignableRoleSchema = z.literal(["viewer", "editor"]);
 
@@ -11,7 +11,7 @@ export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
 export const currencyCodeSchema = flavored<CurrencyCode>(
 	z.string().toUpperCase(),
-).refine((code) => CURRENCY_CODES.includes(code), {
+).refine(isCurrencyCode, {
 	params: { i18nKey: "validation.currencyDoesNotExist" },
 });
 

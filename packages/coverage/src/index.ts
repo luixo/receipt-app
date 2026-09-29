@@ -20,6 +20,8 @@ import type { ProjectorOptions } from "./projector";
 import { createProjector } from "./projector";
 import { getSkeleton } from "./skeleton";
 
+export type { CoverageMapData, Totals } from "istanbul-lib-coverage";
+
 // All coverage below is canonical:
 // keyed by repository-relative paths, with statement / function / branch maps
 // derived from the original source (see `skeleton.ts`), so any sources merge exactly.

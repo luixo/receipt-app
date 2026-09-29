@@ -23,8 +23,6 @@ import {
 } from "~tests/frontend/generators/receipts";
 import type { ExtractFixture } from "~tests/frontend/types";
 
-export type { ReceiptId } from "~db/ids";
-
 type Fixtures = {
 	mockBase: () => Promise<
 		Awaited<

@@ -8,11 +8,11 @@ import {
 } from "kysely-plugin-serialize";
 import type { PoolConfig } from "pg";
 import { Pool, types } from "pg";
-import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
 import type { DB } from "~db/types.gen";
 import type { TemporalMapping } from "~utils/temporal";
+import type { Logger } from "~web/providers/logger";
 
 export type Database = Kysely<DB>;
 

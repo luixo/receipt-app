@@ -2,7 +2,7 @@ import type { AppJSONConfig } from "expo/config";
 import fs from "node:fs";
 
 // oxlint-disable-next-line node/no-sync
-const version = fs.readFileSync(".version", "utf8");
+const version = fs.readFileSync(new URL(".version", import.meta.url), "utf8");
 
 const fonts = [
 	"100Thin",
