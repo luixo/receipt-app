@@ -1,4 +1,4 @@
-name: Update packages
+name: Update major packages
 
 on:
   schedule:
@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   update:
+    name: Check for major package updates
     runs-on: ubuntu-26.04
     env:
       GH_TOKEN: ${{ github.token }}
@@ -42,7 +43,7 @@ jobs:
             echo "updated=true" >> "$GITHUB_OUTPUT"
             bun install --lockfile-only
             {
-              echo '## Suggested package updates'
+              echo '## Suggested major package updates'
               echo
               echo 'Includes all workspaces and the root catalog. Review major upgrades and patched dependencies before merging.'
               echo
