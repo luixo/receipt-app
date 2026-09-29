@@ -15,7 +15,7 @@ import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
 
-export const ConfirmEmail: React.FC<{
+const ConfirmEmail: React.FC<{
 	confirmMutation: TRPCMutationResult<"auth.confirmEmail">;
 	token: string;
 }> = ({ confirmMutation, token }) => {

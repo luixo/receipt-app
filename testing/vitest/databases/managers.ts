@@ -7,7 +7,7 @@ import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";
 
 type TemplateDatabaseListener<T> = () => Promise<T>;
-export const templateDatabaseManagerFactory = () => {
+const templateDatabaseManagerFactory = () => {
 	const listeners: TemplateDatabaseListener<unknown>[] = [];
 	const release = async () => {
 		const [topListener] = listeners;

@@ -1,7 +1,7 @@
-import type { Level, pino } from "pino";
 import { entries, keys, mapValues } from "remeda";
 
 import type { Tail } from "~utils/types";
+import type { Bindings, Level, Logger } from "~web/providers/logger";
 
 type LevelWithSilent = Level | "silent";
 
@@ -33,12 +33,12 @@ const createMessagesHandler = (): MessagesHandler => {
 		},
 	};
 };
-export type LoggerMock = pino.Logger & {
+export type LoggerMock = Logger & {
 	getMessages: () => Tail<Message>[];
 	resetMessages: () => void;
 };
 export const getLogger = (
-	bindings: pino.Bindings = {},
+	bindings: Bindings = {},
 	messagesHandler: MessagesHandler = createMessagesHandler(),
 ): LoggerMock => {
 	// see https://github.com/pinojs/pino/blob/master/docs/api.md#optionslevel-string
@@ -73,9 +73,6 @@ export const getLogger = (
 			messagesHandler.resetMessages();
 		},
 		child: (childBindings) =>
-			getLogger(
-				{ ...bindings, ...childBindings },
-				messagesHandler,
-			) as pino.Logger,
+			getLogger({ ...bindings, ...childBindings }, messagesHandler) as Logger,
 	} as LoggerMock;
 };

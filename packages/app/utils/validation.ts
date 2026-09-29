@@ -62,7 +62,7 @@ export const peerNameSchema = constrainLength(z.string(), {
 	target: "validation.fields.peerName",
 });
 
-export const MIN_QUERY_LENGTH = 3;
+const MIN_QUERY_LENGTH = 3;
 export const MAX_QUERY_LENGTH = 255;
 
 export const MIN_DEBT_NOTE_LENGTH = 1;
@@ -173,11 +173,6 @@ export const currencyCodeSchema = flavored<CurrencyCode>(
 	z.string().toUpperCase(),
 );
 
-export const currencySchema = z.object({
-	code: currencyCodeSchema,
-	name: z.string().nonempty(),
-	symbol: z.string().nonempty(),
-});
 export const currencyRateSchemaDecimal = 6;
 export const currencyRateSchema = createNumberSchema({
 	name: "validation.fields.currencyRate",
@@ -213,7 +208,7 @@ export const limitSchema = z.int().gt(0).max(MAX_LIMIT);
 export const directionSchema = z.enum(["forward", "backward"]);
 
 export const queryNoMinSchema = z.string().max(MAX_QUERY_LENGTH);
-export const querySchema = queryNoMinSchema.min(MIN_QUERY_LENGTH);
+const querySchema = queryNoMinSchema.min(MIN_QUERY_LENGTH);
 
 export const receiptsFiltersSchema = z.strictObject({
 	ownedByMe: z.boolean().optional(),

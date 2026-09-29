@@ -60,7 +60,7 @@ export type TestContext = FakerContext &
 	MetaContext;
 export type TestFixture = { ctx: TestContext };
 
-export const createStableFaker = (input: string) => {
+const createStableFaker = (input: string) => {
 	const instance = new Faker({ locale: en });
 	setSeed(instance, input);
 	return instance;

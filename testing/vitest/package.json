@@ -13,6 +13,7 @@
 		"@trpc/server": "catalog:",
 		"@vitest/coverage-v8": "^4.1.11",
 		"deep-object-diff": "catalog:",
+		"i18next": "catalog:",
 		"kysely": "catalog:",
 		"testcontainers": "^12.1.0",
 		"timekeeper": "catalog:",

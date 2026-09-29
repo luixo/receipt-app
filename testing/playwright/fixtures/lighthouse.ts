@@ -1,13 +1,10 @@
-// oxlint-disable-next-line import-js/no-extraneous-dependencies
 import browserProtocol from "devtools-protocol/json/browser_protocol.json" with { type: "json" };
-// oxlint-disable-next-line import-js/no-extraneous-dependencies
 import jsProtocol from "devtools-protocol/json/js_protocol.json" with { type: "json" };
 import lighthouse from "lighthouse";
 import type { CDPSession } from "playwright";
 
 import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
 import { setProxyHeaders } from "~tests/frontend/fixtures/page";
-import type { ExtractFixture } from "~tests/frontend/types";
 import { buildUrl } from "~utils/server/url";
 
 import { apiFixtures as baseTest } from "./api";
@@ -87,7 +84,7 @@ const adaptCdpSession = (session: CDPSession) => {
 	return adaptedSession;
 };
 
-const test = baseTest.extend<Fixtures>({
+export const lighthouseFixtures = baseTest.extend<Fixtures>({
 	runAudit: async ({ page, api, baseURL }, use, testInfo) => {
 		await use(async (target) => {
 			await setProxyHeaders(page, api, baseURL);
@@ -126,6 +123,3 @@ const test = baseTest.extend<Fixtures>({
 		});
 	},
 });
-
-export const lighthouseFixtures = test;
-export type LighthouseFixture = ExtractFixture<typeof test>;

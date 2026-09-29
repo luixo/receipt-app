@@ -38,7 +38,7 @@ export type PathParams<K extends RouteId> = RouteById<
 >["types"]["allParams"];
 export type OutputRouteSearchParams<K extends RouteId> =
 	FileRoutesById[K]["types"]["searchSchema"];
-export type InputRouteSearchParams<K extends RouteId> =
+type InputRouteSearchParams<K extends RouteId> =
 	FileRoutesById[K]["types"]["searchSchemaInput"];
 
 export type SearchParamStateByRoute<

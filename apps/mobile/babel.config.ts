@@ -1,6 +1,4 @@
 import type { ConfigFunction, PluginObj } from "@babel/core";
-// Let's skip this for now
-// oxlint-disable-next-line import-js/no-extraneous-dependencies
 import { statement } from "@babel/template";
 
 // We use `unstable_transformImportMeta` to have `import.meta` in Expo environment

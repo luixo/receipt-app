@@ -28,7 +28,7 @@ type ShapeProps<T> = {
 
 // Generic component has to be a function
 // oxlint-disable-next-line func-style
-export function PaginationBlockShape<T>({
+function PaginationBlockShape<T>({
 	limit,
 	totalCount,
 	offset,

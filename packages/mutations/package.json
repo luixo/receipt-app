@@ -3,8 +3,12 @@
 	"version": "0.0.0",
 	"type": "module",
 	"sideEffects": false,
-	"main": "src/index.ts",
 	"dependencies": {
 		"@ra/utils": "workspace:*"
+	},
+	"devDependencies": {
+		"@tanstack/react-query": "catalog:",
+		"@trpc/react-query": "catalog:",
+		"i18next": "catalog:"
 	}
 }

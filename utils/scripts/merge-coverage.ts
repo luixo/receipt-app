@@ -1,8 +1,8 @@
-import type { CoverageMapData, Totals } from "istanbul-lib-coverage";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import { capitalize, keys } from "remeda";
 
+import type { CoverageMapData, Totals } from "~coverage/index";
 import {
 	generateCoverageReport,
 	getEmptyCoverage,

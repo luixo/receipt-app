@@ -1,8 +1,6 @@
 import baseDefault from "@ra/web/public/locales/en/default.json" with { type: "json" };
 // oxlint-disable vitest/require-top-level-describe
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
-// I don't know why
-// oxlint-disable-next-line import-js/no-extraneous-dependencies
 import { createInstance } from "i18next";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";

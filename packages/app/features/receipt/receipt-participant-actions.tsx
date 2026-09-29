@@ -24,7 +24,7 @@ type Props = {
 	outcomingDebtId?: DebtId;
 };
 
-export const ReceiptParticipantNoDebtAction: React.FC<
+const ReceiptParticipantNoDebtAction: React.FC<
 	Omit<Props, "outcomingDebtId">
 > = ({ receipt, participant }) => {
 	const { t } = useTranslation("receipts");
@@ -65,7 +65,7 @@ export const ReceiptParticipantNoDebtAction: React.FC<
 	);
 };
 
-export const ReceiptParticipantDebtActions = suspendedFallback<
+const ReceiptParticipantDebtActions = suspendedFallback<
 	Omit<Props, "outcomingDebtId"> & {
 		outcomingDebtId: DebtId;
 	}

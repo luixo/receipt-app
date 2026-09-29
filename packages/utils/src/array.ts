@@ -5,13 +5,6 @@ export const rotate = <T>(array: T[], by: number): T[] => {
 	return array.slice(byConstrained).concat(array.slice(0, byConstrained));
 };
 
-export const isSameOrder = <T>(a: T[], b: T[]): boolean => {
-	if (a.length !== b.length) {
-		return false;
-	}
-	return a.every((aValue, index) => aValue === b[index]);
-};
-
 export type ItemWithIndex<T> = { index: number; item: T };
 
 const replace = <T>(

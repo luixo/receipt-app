@@ -5,11 +5,10 @@
 	"sideEffects": [
 		"src/temporal-polyfill.ts"
 	],
-	"main": "src/index.ts",
 	"dependencies": {
 		"@js-temporal/polyfill": "0.5.1",
 		"@tanstack/router-core": "catalog:",
-		"superjson": "^2.2.2",
+		"superjson": "catalog:",
 		"zod": "catalog:"
 	}
 }

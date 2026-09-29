@@ -9,7 +9,7 @@ import {
 import type { StoreStates, StoreValues } from "~app/utils/store-data";
 
 // The data above + data we add on each render
-export type StoreData = {
+type StoreData = {
 	values?: StoreValues;
 	// Without this timestamp relative dates might differ on server and client
 	// (e.g. "1 second ago" and "2 seconds ago")

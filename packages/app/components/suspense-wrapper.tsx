@@ -36,7 +36,7 @@ export const ErrorComponent: ErrorRouteComponent = ({
 	);
 };
 
-export const SuspenseWrapper: React.FC<
+const SuspenseWrapper: React.FC<
 	React.PropsWithChildren<{
 		fallback: React.ReactNode;
 		errorComponent?: ErrorComponent;

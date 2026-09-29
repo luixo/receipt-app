@@ -26,23 +26,10 @@ export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
 				}
 			: T;
 
-export type ParametersExceptFirst<F> = F extends (
-	arg0: unknown,
-	...rest: infer R
-) => unknown
-	? R
-	: never;
-
 export type SplitStringByComma<S extends string> =
 	S extends `${infer SS}.${infer SSS}` ? [SS, ...SplitStringByComma<SSS>] : [S];
 
 type ExtractObj<S extends object, K> = K extends keyof S ? S[K] : never;
-
-type NonNullableFields<T> = {
-	[P in keyof T]: NonNullable<T[P]>;
-};
-export type NonNullableField<T, K extends keyof T> = T &
-	NonNullableFields<Pick<T, K>>;
 
 export type ExtractObjectByPath<
 	S extends object,
@@ -152,18 +139,14 @@ export type MappedNullableObject<
 
 export type MaybePromise<T> = T | Promise<T>;
 
-export type Equals<X, Y> =
+type Equals<X, Y> =
 	(<T>() => T extends X ? 1 : 2) extends <T>() => T extends Y ? 1 : 2
 		? true
 		: false;
 
-export type AssertTrue<A extends true, X> = A extends true ? X : never;
+type AssertTrue<A extends true, X> = A extends true ? X : never;
 
-export type AllEqual<T extends unknown[]> = T extends [
-	infer A,
-	infer B,
-	...infer Rest,
-]
+type AllEqual<T extends unknown[]> = T extends [infer A, infer B, ...infer Rest]
 	? Equals<A, B> extends true
 		? AllEqual<[B, ...Rest]>
 		: false
@@ -173,9 +156,6 @@ export type AssertAllEqual<T extends unknown[]> = AssertTrue<
 	AllEqual<T>,
 	T extends (infer U)[] ? U : never
 >;
-
-// oxlint-disable-next-line typescript/no-explicit-any
-export type Constructor<T> = new (...args: any[]) => T;
 
 export type ArrayOf<T extends unknown[]> = {
 	[K in keyof T]: [T[K], ...T[K][]];

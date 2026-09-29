@@ -1,8 +1,8 @@
 import React from "react";
 
 import type {
+	FormApi,
 	FormAsyncValidateOrFn,
-	FormState,
 	FormValidateOrFn,
 } from "@tanstack/react-form";
 import {
@@ -11,7 +11,6 @@ import {
 	useQueryClient,
 	useSuspenseQuery,
 } from "@tanstack/react-query";
-import type { Derived } from "@tanstack/react-store";
 import { useTranslation } from "react-i18next";
 import type z from "zod";
 
@@ -43,21 +42,19 @@ import type { Form, Item, Participant } from "./state";
 import { formSchema } from "./state";
 
 const ContextedAddReceipt = suspendedFallback<{
-	formStore: Derived<
-		FormState<
-			Form,
-			typeof formSchema,
-			typeof formSchema,
-			FormAsyncValidateOrFn<Form> | undefined,
-			FormValidateOrFn<Form> | undefined,
-			FormAsyncValidateOrFn<Form> | undefined,
-			typeof formSchema,
-			FormAsyncValidateOrFn<Form> | undefined,
-			FormValidateOrFn<Form> | undefined,
-			FormAsyncValidateOrFn<Form> | undefined,
-			FormAsyncValidateOrFn<Form> | undefined
-		>
-	>;
+	formStore: FormApi<
+		Form,
+		typeof formSchema,
+		typeof formSchema,
+		FormAsyncValidateOrFn<Form> | undefined,
+		FormValidateOrFn<Form> | undefined,
+		FormAsyncValidateOrFn<Form> | undefined,
+		typeof formSchema,
+		FormAsyncValidateOrFn<Form> | undefined,
+		FormValidateOrFn<Form> | undefined,
+		FormAsyncValidateOrFn<Form> | undefined,
+		FormAsyncValidateOrFn<Form> | undefined
+	>["store"];
 	defaultFormValues: Pick<z.infer<typeof formSchema>, "name" | "issued">;
 	itemsState: UseStateReturn<Item[]>;
 	participantsState: UseStateReturn<Participant[]>;

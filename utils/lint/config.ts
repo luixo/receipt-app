@@ -3,29 +3,9 @@ import tailwindPlugin from "eslint-plugin-better-tailwindcss";
 import { configs as packageJsonConfigs } from "eslint-plugin-package-json";
 import playwrightPlugin from "eslint-plugin-playwright";
 import htmlTags from "html-tags";
-import path from "node:path";
-import type { DummyRule, DummyRuleMap, OxlintOverride } from "oxlint";
+import type { DummyRule, DummyRuleMap } from "oxlint";
 import { defineConfig } from "oxlint";
 import { fromEntries, keys, omit } from "remeda";
-
-const getExtraneousDependenciesConfig = (
-	packageJsonDir: string,
-	devDependencies: string[] | true = [],
-) => ({
-	devDependencies:
-		devDependencies === true
-			? devDependencies
-			: [
-					...devDependencies,
-					"**/*.config.js",
-					"**/*.config.ts",
-					"**/*.test.ts",
-					"**/*.spec.ts",
-					"**/__tests__/**",
-				].map((filename) => path.join(packageJsonDir, filename)),
-	optionalDependencies: false,
-	packageDir: [".", packageJsonDir].filter(Boolean),
-});
 
 type RestrictedTag =
 	// These can be used in server environment
@@ -321,8 +301,6 @@ const overriddenRules = {
 	// We don't want `next` to trigger this rule
 	"node/callback-return": ["error", ["callback", "cb"]],
 
-	"import-js/no-useless-path-segments": ["error", { noUselessIndex: false }],
-
 	// Allow expressions for stuff like `<>{children}</>`
 	"react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
 	// We forbid all HTML elements for react-native
@@ -592,7 +570,6 @@ export default defineConfig({
 		nursery: "error",
 	},
 	jsPlugins: [
-		{ name: "import-js", specifier: "eslint-plugin-import" },
 		{ name: "eslint-js", specifier: "oxlint-plugin-eslint" },
 		{
 			name: "better-tailwindcss",
@@ -608,11 +585,6 @@ export default defineConfig({
 		node: true,
 	},
 	settings: {
-		"import-js/resolver": {
-			typescript: {
-				project: true,
-			},
-		},
 		"better-tailwindcss": {
 			entryPoint: "apps/web/src/app.css",
 			callees: ["tv", "cn"],
@@ -650,39 +622,6 @@ export default defineConfig({
 						],
 					},
 				],
-			},
-		},
-		...((
-			[
-				["apps/web"],
-				["apps/mobile"],
-				["packages/components"],
-				["packages/mutations"],
-				["packages/queries"],
-				["packages/utils"],
-				["packages/coverage"],
-				["packages/db", ["scripts/**/*"]],
-				["packages/app"],
-				["utils/scripts", true],
-				["utils/lint", true],
-				["utils/format", true],
-				["testing/utils", true],
-				["testing/vitest", true],
-				["testing/playwright", true],
-			] satisfies Parameters<typeof getExtraneousDependenciesConfig>[]
-		).map(([dir, devDependencies]) => ({
-			files: [`${dir}/**/*`],
-			rules: {
-				"import-js/no-extraneous-dependencies": [
-					"error",
-					getExtraneousDependenciesConfig(dir, devDependencies),
-				],
-			},
-		})) satisfies OxlintOverride[]),
-		{
-			files: ["packages/components/src/*"],
-			rules: {
-				"import-js/no-extraneous-dependencies": "off",
 			},
 		},
 		{
@@ -795,12 +734,7 @@ export default defineConfig({
 			},
 		},
 		{
-			files: [
-				"**/*.config.ts",
-				"testing/**/*",
-				"apps/mobile/**/*",
-				"utils/scripts/**",
-			],
+			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*", "utils/**"],
 			rules: {
 				"node/no-process-env": "off",
 			},

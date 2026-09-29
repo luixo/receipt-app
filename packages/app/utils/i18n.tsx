@@ -18,7 +18,7 @@ import { promisifyEvent } from "~utils/promise";
 import type { Language, Namespace } from "./i18n-data";
 import { baseLanguage, defaultNamespace, languages } from "./i18n-data";
 
-export const i18nInitOptions: InitOptions = {
+const i18nInitOptions: InitOptions = {
 	fallbackLng: baseLanguage,
 	defaultNS: defaultNamespace,
 	ns: [defaultNamespace],

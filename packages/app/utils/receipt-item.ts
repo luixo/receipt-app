@@ -63,10 +63,7 @@ const getSortPeersByReceipt = (
 	};
 };
 
-export const getItemCalculations = (
-	sum: number,
-	parts: Record<PeerId, number>,
-) => {
+const getItemCalculations = (sum: number, parts: Record<PeerId, number>) => {
 	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
 	const sumsByPeer = mapValues(parts, (part) => (part / partsAmount) * sum);
 	const flooredByPeers = mapValues(sumsByPeer, (sumByPeer) =>
