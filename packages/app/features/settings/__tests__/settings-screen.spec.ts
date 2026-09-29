@@ -274,3 +274,12 @@ test.describe("Refresh", () => {
 		});
 	});
 });
+
+test.describe("Version", () => {
+	test("is shown", async ({ api, page }) => {
+		await api.mockUtils.authPage();
+		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
+		await page.navigate({ to: "/settings" });
+		await expect(page.getByText(/Version .*/)).toBeVisible();
+	});
+});

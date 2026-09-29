@@ -141,6 +141,7 @@ const RootComponent = () => {
 				html.classList.add(colorMode);
 				html.classList.remove(colorMode === "dark" ? "light" : "dark");
 			}}
+			appVersion={import.meta.env.VITE_COMMIT_SHA ?? "unknown"}
 		>
 			<RootDocument>
 				<NavigationProvider>

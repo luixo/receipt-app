@@ -2,6 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
+import { AppVersion } from "~app/components/app-version";
 import { PageHeader } from "~app/components/page-header";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import { LIMIT_STORE_NAME } from "~app/utils/store/limit";
@@ -42,6 +43,9 @@ export const SettingsScreen = () => {
 			</View>
 			<Divider />
 			<RefreshSettings />
+			<View className="absolute right-0 bottom-0 translate-y-full py-2">
+				<AppVersion textProps={{ className: "text-default text-sm" }} />
+			</View>
 		</>
 	);
 };

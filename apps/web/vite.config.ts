@@ -4,8 +4,10 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import initModuleAlias, { addAlias } from "module-alias";
 import { nitro } from "nitro/vite";
+import { execFile as execFileRaw } from "node:child_process";
 import fsp from "node:fs/promises";
 import path from "node:path";
+import { promisify } from "node:util";
 import { uniwind } from "uniwind/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
@@ -13,6 +15,13 @@ import { cjsInterop } from "vite-plugin-cjs-interop";
 import commonjs from "vite-plugin-commonjs";
 import vitePluginInspect from "vite-plugin-inspect";
 import reactNativeWeb from "vite-plugin-react-native-web";
+
+// oxlint-disable-next-line typescript/strict-void-return
+const execFile = promisify(execFileRaw);
+const gitRevResult = await execFile("git", ["rev-parse", "--short", "HEAD"], {
+	encoding: "utf8",
+});
+const commitSha = gitRevResult.stdout.trim();
 
 // This is the only way I found to make SSR render with `react-native-web` so far
 initModuleAlias();
@@ -56,6 +65,11 @@ const config = defineConfig(({ mode }) => ({
 			".json",
 		],
 		tsconfigPaths: true,
+	},
+	define: {
+		"import.meta.env.VITE_COMMIT_SHA": JSON.stringify(
+			mode === "test" ? "<test>" : commitSha,
+		),
 	},
 	plugins: [
 		devtools(),

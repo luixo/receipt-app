@@ -1,5 +1,6 @@
 import type React from "react";
 
+import { AppVersionContext } from "~app/contexts/app-version-context";
 import { LinksContext } from "~app/contexts/links-context";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { NavigationContext } from "~app/contexts/navigation-context";
@@ -21,6 +22,7 @@ type Props = {
 	applyColorMode: React.ComponentProps<typeof ThemeProvider>["applyColorMode"];
 	DevToolsProvider: React.ComponentType<React.PropsWithChildren>;
 	ToastProvider: React.ComponentType<React.PropsWithChildren>;
+	appVersion: string;
 };
 
 export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
@@ -32,24 +34,27 @@ export const InnerProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	DevToolsProvider,
 	ToastProvider,
 	applyColorMode,
+	appVersion,
 }) => (
-	<NavigationContext value={navigationContext}>
-		<LinksContext value={linksContext}>
-			<StoreContext value={storeContext}>
-				<StoredDataProvider>
-					<ThemeProvider applyColorMode={applyColorMode}>
-						<QueryProviderWithPretend>
-							<ShimsProvider>
-								<PersisterProvider storage={storage}>
-									<DevToolsProvider>
-										<ToastProvider>{children}</ToastProvider>
-									</DevToolsProvider>
-								</PersisterProvider>
-							</ShimsProvider>
-						</QueryProviderWithPretend>
-					</ThemeProvider>
-				</StoredDataProvider>
-			</StoreContext>
-		</LinksContext>
-	</NavigationContext>
+	<AppVersionContext value={appVersion}>
+		<NavigationContext value={navigationContext}>
+			<LinksContext value={linksContext}>
+				<StoreContext value={storeContext}>
+					<StoredDataProvider>
+						<ThemeProvider applyColorMode={applyColorMode}>
+							<QueryProviderWithPretend>
+								<ShimsProvider>
+									<PersisterProvider storage={storage}>
+										<DevToolsProvider>
+											<ToastProvider>{children}</ToastProvider>
+										</DevToolsProvider>
+									</PersisterProvider>
+								</ShimsProvider>
+							</QueryProviderWithPretend>
+						</ThemeProvider>
+					</StoredDataProvider>
+				</StoreContext>
+			</LinksContext>
+		</NavigationContext>
+	</AppVersionContext>
 );
