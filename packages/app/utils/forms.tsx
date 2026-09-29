@@ -1,12 +1,11 @@
 import React from "react";
 
-import type { FormState } from "@tanstack/react-form";
+import type { FormApi } from "@tanstack/react-form";
 import {
 	createFormHook,
 	createFormHookContexts,
 	useStore,
 } from "@tanstack/react-form";
-import type { Derived } from "@tanstack/react-store";
 
 import { Form as RawForm } from "~components/form";
 import { Input } from "~components/input";
@@ -26,7 +25,7 @@ const Form: React.FC<React.ComponentProps<typeof RawForm>> = ({
 	return <RawForm {...props} onSubmit={onSubmit} />;
 };
 
-export const { useAppForm, withForm } = createFormHook({
+export const { useAppForm } = createFormHook({
 	fieldComponents: {
 		TextField: Input,
 		NumberField: NumberInput,
@@ -39,10 +38,21 @@ export const { useAppForm, withForm } = createFormHook({
 });
 
 export const useTypedValues = <Form, DefaultValues extends Partial<Form>>(
-	formStore: Derived<
-		// oxlint-disable-next-line typescript/no-explicit-any
-		FormState<Form, any, any, any, any, any, any, any, any, any, any>
-	>,
+	formStore: FormApi<
+		Form,
+		// oxlint-disable typescript/no-explicit-any
+		any,
+		any,
+		any,
+		any,
+		any,
+		any,
+		any,
+		any,
+		any,
+		any
+		// oxlint-enable typescript/no-explicit-any
+	>["store"],
 	// This is only needed for types
 	// oxlint-disable-next-line typescript/no-unused-vars
 	_defaultValues: DefaultValues,

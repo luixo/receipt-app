@@ -1,7 +1,6 @@
 import React from "react";
 
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
-import { useIsSSR } from "@react-aria/ssr";
 
 import type { InputHandler, Props as InputProps } from "~components/input";
 import { cn, getErrorState, getMutationLoading } from "~components/utils";
@@ -64,7 +63,7 @@ export const NumberInput: React.FC<Props> = ({
 		mutation,
 		fieldError,
 	});
-	const isSSR = useIsSSR();
+	const isSSR = typeof window === "undefined";
 	return (
 		<NumberInputRaw
 			ref={innerRef}

@@ -1,4 +1,3 @@
-/* oxlint-disable import-js/no-extraneous-dependencies */
 import adminEn from "@ra/web/public/locales/en/admin.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
@@ -23,7 +22,6 @@ import resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import settingsRu from "@ra/web/public/locales/ru/settings.json";
 import userRu from "@ra/web/public/locales/ru/user.json";
 import voidUserRu from "@ra/web/public/locales/ru/void-user.json";
-/* oxlint-enable import-js/no-extraneous-dependencies */
 
 import type { Language, Namespace } from "~app/utils/i18n-data";
 

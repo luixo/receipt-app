@@ -2,19 +2,18 @@
 	"name": "@ra/app",
 	"version": "0.0.0",
 	"type": "module",
-	"main": "index.ts",
 	"dependencies": {
-		"@heroui/use-infinite-scroll": "^2.2.11",
+		"@heroui/theme": "catalog:",
 		"@ra/components": "workspace:*",
 		"@ra/mutations": "workspace:*",
 		"@ra/utils": "workspace:*",
-		"@react-native-vector-icons/lucide": "^13.1.4",
 		"@tanstack/query-async-storage-persister": "5.80.6",
 		"@tanstack/react-form": "^1.23.7",
 		"@tanstack/react-pacer": "^0.16.3",
 		"@tanstack/react-query": "catalog:",
 		"@tanstack/react-query-persist-client": "^5.80.6",
 		"@tanstack/react-router": "catalog:",
+		"@tanstack/router-core": "catalog:",
 		"@trpc/client": "catalog:",
 		"@trpc/react-query": "catalog:",
 		"@trpc/server": "catalog:",
@@ -24,18 +23,16 @@
 		"dataloader": "catalog:",
 		"expo-router": "catalog:",
 		"i18next": "catalog:",
-		"react-easy-crop": "^5.4.2",
 		"react-i18next": "catalog:",
 		"tailwindcss": "catalog:",
 		"uniwind": "catalog:",
-		"uuid": "catalog:",
 		"zod": "catalog:",
 		"zod-form-data": "^3.0.0"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "catalog:",
 		"@playwright/test": "catalog:",
 		"@ra/playwright": "workspace:*",
-		"@react-types/shared": "^3.18.1",
-		"@types/uuid": "catalog:"
+		"vite": "catalog:"
 	}
 }

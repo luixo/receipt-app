@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-// oxlint-disable-next-line import-js/no-extraneous-dependencies
 import semver from "semver";
 
 const versionFilePath = path.join(import.meta.dirname, "./.version");

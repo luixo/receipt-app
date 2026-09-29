@@ -8,4 +8,4 @@ export const baseLogger = pino(
 	}),
 );
 
-export { type Logger } from "pino";
+export type { Logger, Level, Bindings } from "pino";

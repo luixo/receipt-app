@@ -2,8 +2,6 @@ export type Locale = string & {
 	__flavor?: "locale";
 };
 
-export const DEFAULT_LOCALE: Locale = "en-US";
-
 export const VALID_LOCALES = Intl.getCanonicalLocales();
 
 // TODO: this is needed to be refined

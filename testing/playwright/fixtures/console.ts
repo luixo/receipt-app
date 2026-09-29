@@ -23,7 +23,7 @@ const DEV_ONLY_PATTERNS = [
 	/React does not recognize the `%s` prop on a DOM element/,
 ];
 
-export const DEFAULT_IGNORED: IgnoredPattern[] = [
+const DEFAULT_IGNORED: IgnoredPattern[] = [
 	// TODO: figure out the problem with preloaded resources
 	/The resource .*? was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it wasn't preloaded for nothing./,
 ];

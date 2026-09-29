@@ -118,7 +118,7 @@ export type TRPCQueryOutput<Path extends TRPCQueryKey> = inferProcedureOutput<
 	TRPCQueryValues[Path]
 >;
 
-export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
+type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 	TRPCQueryOutput<Path>,
 	TRPCError
 >;
@@ -145,7 +145,7 @@ export type TRPCQuery<K extends TRPCQueryKey> = Query<
 	]
 >;
 
-export type TRPCQueryProcedures = UtilsLike<AppRouter>;
+type TRPCQueryProcedures = UtilsLike<AppRouter>;
 
 export type TRPCQueryProcedure<Path extends TRPCQueryKey> = ExtractObjectByPath<
 	TRPCQueryProcedures,

@@ -1,0 +1,12 @@
+{
+	"name": "@ra/deps",
+	"version": "0.0.0",
+	"type": "module",
+	"main": "config.ts",
+	"scripts": {
+		"knip": "bun --cwd ../.. knip"
+	},
+	"devDependencies": {
+		"knip": "^6.38.0"
+	}
+}

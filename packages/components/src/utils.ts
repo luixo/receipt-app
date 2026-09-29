@@ -1,4 +1,3 @@
-import type { StandardSchemaV1Issue } from "@tanstack/react-form";
 import clsx from "clsx";
 import type { ClassValue } from "clsx";
 import { isNonNullish } from "remeda";
@@ -8,9 +7,13 @@ import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export type FieldError =
-	| (StandardSchemaV1Issue | undefined)
-	| (StandardSchemaV1Issue | undefined)[];
+type PropertyKey = string | number | symbol;
+type Issue = {
+	readonly message: string;
+	readonly path?: readonly (PropertyKey | { key: PropertyKey })[] | undefined;
+};
+
+export type FieldError = (Issue | undefined) | (Issue | undefined)[];
 
 // oxlint-disable-next-line typescript/no-explicit-any
 type MutationOrState = TRPCMutationResult<any> | TRPCMutationState<any>;

@@ -1,12 +1,7 @@
 import React from "react";
 
-import type {
-	QueryObserverLoadingErrorResult,
-	QueryObserverRefetchErrorResult,
-} from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import type { TRPCError } from "~app/trpc";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
 import { Icon } from "~components/icons";
@@ -53,34 +48,5 @@ export const ErrorMessage: React.FC<Props> = ({
 			<Text className="whitespace-pre-wrap">{message}</Text>
 			<Text className="text-sm whitespace-pre-wrap">{stack}</Text>
 		</Card>
-	);
-};
-
-type QueryObserverErrorResult =
-	| QueryObserverLoadingErrorResult<unknown, TRPCError>
-	| QueryObserverRefetchErrorResult<unknown, TRPCError>;
-type PickedQueryObserverErrorResult = Pick<
-	QueryObserverErrorResult,
-	"refetch" | "error"
->;
-
-type QueryProps = {
-	query: PickedQueryObserverErrorResult;
-};
-
-export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
-	const { t } = useTranslation("default");
-	const refetch = React.useCallback(() => query.refetch(), [query]);
-	return (
-		<ErrorMessage
-			button={React.useMemo(
-				() => ({
-					text: t("components.errorMessage.refetch"),
-					onPress: refetch,
-				}),
-				[refetch, t],
-			)}
-			message={query.error.message}
-		/>
 	);
 };

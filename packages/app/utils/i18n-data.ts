@@ -41,20 +41,6 @@ export const isLanguage = (input: string): input is Language =>
 // To add a namespace add name in the list, namespace json, import at (*) and verification at (**)
 export type Namespace = keyof Resources;
 export const defaultNamespace: Namespace = "default";
-export const namespaces: Record<Namespace, true> = {
-	default: true,
-	settings: true,
-	user: true,
-	admin: true,
-	login: true,
-	receipts: true,
-	register: true,
-	"reset-password": true,
-	"void-user": true,
-	peers: true,
-	debts: true,
-	email: true,
-};
 
 export type Resources = {
 	default: typeof defaultEn;
