@@ -15,11 +15,7 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"target": "ESNext",
-		"types": ["node", "bun"],
-		"paths": {
-			"~app/utils/currency": ["./packages/app/utils/currency"],
-			"~db/ids": ["./packages/db/src/ids"]
-		}
+		"types": ["node", "bun"]
 	},
 	"include": ["**/*", ".opencode/**/*", "**/package.json"]
 }

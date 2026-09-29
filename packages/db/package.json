@@ -13,7 +13,7 @@
 	},
 	"scripts": {
 		"db:migrate": "bun --bun --env-file=../../.env,../../.env.local kysely migrate latest",
-		"db:generate-types": "bun --bun --env-file=../../.env,../../.env.local kysely-codegen"
+		"db:generate-types": "node --env-file-if-exists=../../.env --env-file-if-exists=../../.env.local generate-types.ts"
 	},
 	"dependencies": {
 		"kysely": "catalog:",
@@ -24,6 +24,7 @@
 		"receipt-app-utils": "workspace:*"
 	},
 	"devDependencies": {
-		"receipt-app-vitest": "workspace:*"
+		"receipt-app-vitest": "workspace:*",
+		"typescript-codegen": "npm:typescript@5.9.3"
 	}
 }

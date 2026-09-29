@@ -23,7 +23,7 @@ const TYPES: Record<
 > = {
 	currencyCode: {
 		expression: "CurrencyCode",
-		importSource: "#app/utils/currency",
+		importSource: "#app/utils/currency.ts",
 		tables: {
 			debts: ["currencyCode"],
 			receipts: ["currencyCode"],
@@ -31,7 +31,7 @@ const TYPES: Record<
 	},
 	userId: {
 		expression: "UserId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			userSettings: ["userId"],
 			users: ["id"],
@@ -39,6 +39,7 @@ const TYPES: Record<
 			receipts: ["ownerUserId"],
 			resetPasswordIntentions: ["userId"],
 			peers: ["ownerUserId"],
+			sessions: ["userId"],
 		},
 	},
 	// Kysely can't introspect references ids yet
@@ -50,14 +51,14 @@ const TYPES: Record<
 	},
 	debtId: {
 		expression: "DebtId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			debts: ["id"],
 		},
 	},
 	receiptItemId: {
 		expression: "ReceiptItemId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			receiptItemConsumers: ["itemId"],
 			receiptItems: ["id"],
@@ -66,7 +67,7 @@ const TYPES: Record<
 	},
 	receiptId: {
 		expression: "ReceiptId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			receiptItems: ["receiptId"],
 			receiptParticipants: ["receiptId"],
@@ -82,14 +83,14 @@ const TYPES: Record<
 	},
 	sessionsSessionId: {
 		expression: "SessionId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			sessions: ["sessionId"],
 		},
 	},
 	peerId: {
 		expression: "PeerId",
-		importSource: "#db/ids",
+		importSource: "#db/ids.ts",
 		tables: {
 			debts: ["peerId"],
 			receiptItemConsumers: ["peerId"],
@@ -101,14 +102,13 @@ const TYPES: Record<
 };
 
 export default defineConfig({
-	outFile: "packages/db/src/types.gen.ts",
+	outFile: "src/types.gen.ts",
 	singularize: true,
 	customImports: {
-		Temporal: "#utils/date",
 		...fromEntries(
-			values(TYPES)
-				.filter(({ importSource }) => Boolean(importSource))
-				.map(({ expression, importSource }) => [expression, importSource]),
+			values(TYPES).flatMap(({ expression, importSource }) =>
+				importSource ? [[expression, importSource] as const] : [],
+			),
 		),
 	},
 	overrides: {
