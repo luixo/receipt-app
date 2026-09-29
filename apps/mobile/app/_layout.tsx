@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as Sentry from "@sentry/react-native";
+import { nativeBuildVersion } from "expo-application";
 import { getLocales } from "expo-localization";
 import type { ErrorBoundaryProps } from "expo-router";
 import { fetch } from "expo/fetch";
@@ -109,6 +110,7 @@ const i18nContext = createI18nContext({
 void i18nContext.initialize({ language, data: resources });
 
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+	const appVersion = nativeBuildVersion ?? "unknown";
 	const baseUrl = useBaseUrl();
 	const baseLinksContext = React.use(LinksContext);
 	const linksContext = React.useMemo<LinksContextType>(
@@ -119,8 +121,11 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 			useBatch: true,
 			source: "native",
 			captureError: captureSentryError,
+			headers: {
+				"x-app-version": appVersion,
+			},
 		}),
-		[baseLinksContext.url, baseUrl],
+		[baseLinksContext.url, baseUrl, appVersion],
 	);
 	return (
 		<OuterProvider
@@ -137,6 +142,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 					DevToolsProvider={DevToolsProvider}
 					ToastProvider={ToastProvider}
 					applyColorMode={(colorMode) => Uniwind.setTheme(colorMode)}
+					appVersion={appVersion}
 				>
 					<SplashScreenManager timeout={2000} />
 					{children}
