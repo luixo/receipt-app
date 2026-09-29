@@ -1,8 +1,8 @@
 import { isNonNullish } from "remeda";
 
-import type { Debt, DebtIntention } from "~app/trpc-types";
-import { getParticipantSums } from "~app/utils/receipt-item";
-import type { PeerId } from "~db/ids";
+import type { Debt, DebtIntention } from "#app/trpc-types.ts";
+import { getParticipantSums } from "#app/utils/receipt-item.ts";
+import type { PeerId } from "#db/ids.ts";
 
 import type {
 	GenerateReceiptBase,

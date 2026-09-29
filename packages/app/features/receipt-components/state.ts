@@ -1,6 +1,6 @@
-import type { PeerId, ReceiptItemId } from "~db/ids";
+import type { PeerId, ReceiptItemId } from "#db/ids.ts";
 
-export type { Participant } from "~app/hooks/use-participants";
+export type { Participant } from "#app/hooks/use-participants.ts";
 
 export type Item = {
 	id: ReceiptItemId;

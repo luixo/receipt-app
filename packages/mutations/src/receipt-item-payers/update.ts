@@ -1,6 +1,6 @@
-import type { TRPCMutationInput } from "~app/trpc";
-import type { ReceiptItemPayer } from "~app/trpc-types";
-import type { ReceiptId } from "~db/ids";
+import type { ReceiptItemPayer } from "#app/trpc-types.ts";
+import type { TRPCMutationInput } from "#app/trpc.ts";
+import type { ReceiptId } from "#db/ids.ts";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";

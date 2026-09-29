@@ -1,5 +1,5 @@
-import type { PeerId, UserId } from "~db/ids";
-import { authProcedure } from "~web/handlers/trpc";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

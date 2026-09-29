@@ -4,12 +4,12 @@ import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import { fromEntries } from "remeda";
 
-import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
-import type { AppRouter } from "~app/trpc";
-import { getLinks } from "~app/utils/trpc";
-import type { GetLinksOptions } from "~app/utils/trpc";
-import type { RouterContext } from "~web/pages/__root";
-import { captureSentryError } from "~web/utils/sentry";
+import { DEFAULT_TRPC_ENDPOINT } from "#app/contexts/links-context.ts";
+import type { AppRouter } from "#app/trpc.ts";
+import { getLinks } from "#app/utils/trpc.ts";
+import type { GetLinksOptions } from "#app/utils/trpc.ts";
+import type { RouterContext } from "#web/pages/__root.tsx";
+import { captureSentryError } from "#web/utils/sentry.ts";
 
 const getServerLinksParams = (
 	request: Request,

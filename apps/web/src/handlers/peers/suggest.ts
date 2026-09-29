@@ -7,16 +7,16 @@ import {
 	limitSchema,
 	offsetSchema,
 	queryNoMinSchema,
-} from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { SIMILARTY_THRESHOLD } from "~utils/server/trigram";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { getAccessRole } from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema, receiptIdSchema } from "~web/handlers/validation";
-import type { GeneralOutput } from "~web/utils/batch";
-import { queueList } from "~web/utils/batch";
+} from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { SIMILARTY_THRESHOLD } from "#utils/server/trigram.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { getAccessRole } from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema, receiptIdSchema } from "#web/handlers/validation.ts";
+import type { GeneralOutput } from "#web/utils/batch.ts";
+import { queueList } from "#web/utils/batch.ts";
 
 const inputSchema = z.strictObject({
 	input: queryNoMinSchema,

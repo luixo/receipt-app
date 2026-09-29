@@ -1,5 +1,5 @@
-import type { DB } from "~db/types.gen";
-import { authProcedure } from "~web/handlers/trpc";
+import type { DB } from "#db/types.gen.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 type Settings = Omit<DB["userSettings"], "userId" | "updatedAt">;
 

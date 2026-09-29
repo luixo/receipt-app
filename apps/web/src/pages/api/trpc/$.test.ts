@@ -9,15 +9,15 @@ import type { SuperJSONResult } from "superjson";
 import { assert, beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod";
 
-import { test } from "~tests/backend/utils/test";
-import { apiCookieNames } from "~utils/mocks";
-import { transformer } from "~utils/transformer";
-import type { FlattenObject, UnionToIntersection } from "~utils/types";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { t } from "~web/handlers/trpc";
-import { withTestServer } from "~web/handlers/utils.test";
-import { getServerRouteMethod } from "~web/pages/api/utils.test";
-import { baseLogger } from "~web/providers/logger";
+import { test } from "#tests/backend/utils/test.ts";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { FlattenObject, UnionToIntersection } from "#utils/types.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { withTestServer } from "#web/handlers/utils.test.ts";
+import { getServerRouteMethod } from "#web/pages/api/utils.test.ts";
+import { baseLogger } from "#web/providers/logger.ts";
 
 import { Route } from "./$";
 

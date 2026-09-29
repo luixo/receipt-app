@@ -1,4 +1,4 @@
-import { unauthProcedure } from "~web/handlers/trpc";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = unauthProcedure
 	.meta({

@@ -13,10 +13,13 @@ import {
 } from "expo-router";
 import { fromEntries, mapValues } from "remeda";
 
-import type { NavigationContext } from "~app/contexts/navigation-context";
-import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
-import { searchParamsMapping } from "~app/utils/navigation";
-import { updateSetStateAction } from "~utils/react";
+import type { NavigationContext } from "#app/contexts/navigation-context.ts";
+import type {
+	OutputRouteSearchParams,
+	RouteId,
+} from "#app/utils/navigation.tsx";
+import { searchParamsMapping } from "#app/utils/navigation.tsx";
+import { updateSetStateAction } from "#utils/react.ts";
 
 type SearchParams = Record<string, string | string[]>;
 

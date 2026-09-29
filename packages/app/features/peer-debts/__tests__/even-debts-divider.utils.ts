@@ -1,9 +1,9 @@
 import type { Locator } from "@playwright/test";
 import assert from "node:assert";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as originalTest } from "./utils";
 

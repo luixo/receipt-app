@@ -3,12 +3,12 @@ import type React from "react";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 
-import type { Debt } from "~app/trpc-types";
-import { areDebtsSynced } from "~app/utils/debts";
-import { Icon } from "~components/icons";
-import { Tooltip } from "~components/tooltip";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import type { Debt } from "#app/trpc-types.ts";
+import { areDebtsSynced } from "#app/utils/debts.ts";
+import { Icon } from "#components/icons.tsx";
+import { Tooltip } from "#components/tooltip.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 const getContent = (
 	t: TFunction,

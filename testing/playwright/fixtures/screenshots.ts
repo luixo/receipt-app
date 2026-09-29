@@ -9,7 +9,7 @@ import { Jimp, JimpMime } from "jimp";
 import assert from "node:assert";
 import { isNonNullish } from "remeda";
 
-import type { ColorMode } from "~app/utils/store/color-modes";
+import type { ColorMode } from "#app/utils/store/color-modes.ts";
 
 import { toastsFixtures as test } from "./toasts";
 

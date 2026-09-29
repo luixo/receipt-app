@@ -1,4 +1,4 @@
-import { Stack } from "~mobile/components/stack";
+import { Stack } from "#mobile/components/stack.tsx";
 
 const Wrapper = () => <Stack />;
 

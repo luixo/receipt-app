@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ViewReactNode } from "~components/view";
+import type { ViewReactNode } from "#components/view.tsx";
 
 export type Props = Pick<React.ComponentProps<"form">, "className" | "id"> & {
 	onSubmit?: () => void;

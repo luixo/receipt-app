@@ -3,9 +3,9 @@ import type React from "react";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useCSSVariable } from "uniwind";
 
-import type { IconName } from "~components/icons";
-import { IconFamily, glyphMapping } from "~components/icons.native";
-import type { FileRouteTypes } from "~web/entry/routeTree.gen";
+import { IconFamily, glyphMapping } from "#components/icons.native.tsx";
+import type { IconName } from "#components/icons.tsx";
+import type { FileRouteTypes } from "#web/entry/routeTree.gen.ts";
 
 type ShowProps = {
 	useShow?: () => boolean;

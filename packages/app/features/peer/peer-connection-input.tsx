@@ -4,19 +4,19 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { emailSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Input } from "~components/input";
-import { SkeletonInput } from "~components/skeleton-input";
-import type { PeerId, UserId } from "~db/ids";
-import { options as peersUnlinkOptions } from "~mutations/peers/unlink";
-import { options as userConnectionsAddOptions } from "~mutations/user-connection-intentions/add";
-import { options as userConnectionsRemoveOptions } from "~mutations/user-connection-intentions/remove";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { emailSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Input } from "#components/input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { options as peersUnlinkOptions } from "#mutations/peers/unlink.ts";
+import { options as userConnectionsAddOptions } from "#mutations/user-connection-intentions/add.ts";
+import { options as userConnectionsRemoveOptions } from "#mutations/user-connection-intentions/remove.ts";
 
 type Props = {
 	id: PeerId;

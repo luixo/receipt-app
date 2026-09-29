@@ -3,14 +3,14 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage } from "~app/components/error-message";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { ButtonLink } from "~components/link";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import { options as authVoidUserOptions } from "~mutations/auth/void-user";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { ButtonLink } from "#components/link.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import { options as authVoidUserOptions } from "#mutations/auth/void-user.ts";
 
 type Props = {
 	token: string;

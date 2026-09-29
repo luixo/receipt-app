@@ -2,13 +2,13 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { SkeletonPeer } from "~app/components/app/peer";
-import { RemoveButton } from "~app/components/remove-button";
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { useTRPC } from "~app/utils/trpc";
-import { Skeleton } from "~components/skeleton";
-import { View } from "~components/view";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { SkeletonPeer } from "#app/components/app/peer.tsx";
+import { RemoveButton } from "#app/components/remove-button.tsx";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Skeleton } from "#components/skeleton.tsx";
+import { View } from "#components/view.tsx";
 
 import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";

@@ -1,11 +1,11 @@
 import assert from "node:assert";
 
-import type { DebtId } from "~db/ids";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { DebtId } from "#db/ids.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<{

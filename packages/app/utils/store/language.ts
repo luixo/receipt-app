@@ -1,9 +1,9 @@
 import { keys } from "remeda";
 import z from "zod";
 
-import { languages } from "~app/utils/i18n-data";
-import type { Language } from "~app/utils/i18n-data";
-import { fallback } from "~app/utils/validation";
+import { languages } from "#app/utils/i18n-data.ts";
+import type { Language } from "#app/utils/i18n-data.ts";
+import { fallback } from "#app/utils/validation.ts";
 
 export const LANGUAGE_STORE_NAME = "ssrContext:language";
 

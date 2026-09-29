@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 
-import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
-import { Select } from "~components/select";
+import { DEFAULT_LIMIT, LIMITS } from "#app/utils/validation.ts";
+import { Select } from "#components/select.tsx";
 
 export const LimitOption = ({
 	limit: selectedValue,

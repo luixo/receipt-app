@@ -4,13 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCMutationOutput } from "~app/trpc";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { emailSchema, peerNameSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { options as peersAddOptions } from "~mutations/peers/add";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { TRPCMutationOutput } from "#app/trpc.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { emailSchema, peerNameSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { options as peersAddOptions } from "#mutations/peers/add.ts";
 
 const formSchema = z.object({
 	name: peerNameSchema,

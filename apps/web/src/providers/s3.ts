@@ -1,7 +1,7 @@
 import * as aws from "@aws-sdk/client-s3";
 
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { env } from "~web/utils/env";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { env } from "#web/utils/env.ts";
 
 export type S3Options = {
 	mock?: S3Client;

@@ -1,12 +1,12 @@
 import type React from "react";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import type { InputHandler, Props } from "~components/input";
-import { getErrorState, getMutationLoading } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import type { InputHandler, Props } from "#components/input.tsx";
+import { getErrorState, getMutationLoading } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 export const usePasswordVisibility = ({
 	type,

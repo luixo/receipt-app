@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { PageHeader } from "~app/components/page-header";
-import { PeerDebtsGroup } from "~app/components/peer-debts-group";
-import { getPathHooks } from "~app/utils/navigation";
-import { BackLink } from "~components/back-link";
-import { ButtonLink } from "~components/link";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { PeerDebtsGroup } from "#app/components/peer-debts-group.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { BackLink } from "#components/back-link.tsx";
+import { ButtonLink } from "#components/link.tsx";
 
 export const DebtsExchangeScreen = () => {
 	const { useParams } = getPathHooks("/_protected/debts/peer/$id/exchange/");

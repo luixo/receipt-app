@@ -1,15 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { formatCurrency, getCurrencySymbol } from "#app/utils/currency.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 import {
 	generateCurrencyCode,
 	generateCurrencyCodes,
-} from "~tests/frontend/generators/utils";
-import { round } from "~utils/math";
+} from "#tests/frontend/generators/utils.ts";
+import { round } from "#utils/math.ts";
 
 import { getPlannedDebtsAmount, test } from "./utils";
 

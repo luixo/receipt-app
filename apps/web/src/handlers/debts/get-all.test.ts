@@ -2,18 +2,18 @@ import { faker } from "@faker-js/faker";
 import { fromEntries, mapValues } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { createAuthContext } from "~tests/backend/utils/context";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertDebt,
 	insertPeer,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
-import { expectUnauthorizedError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { round } from "~utils/math";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/data.ts";
+import { expectUnauthorizedError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { round } from "#utils/math.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./get-all";
 

@@ -2,15 +2,15 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useLocale } from "~app/hooks/use-locale";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import { formatCurrency } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
-import { round } from "~utils/math";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useShowResolvedDebts } from "#app/hooks/use-show-resolved-debts.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
+import { round } from "#utils/math.ts";
 
 const DebtGroupElementSkeleton = () => (
 	<Skeleton className="h-6 w-20 rounded-sm" testID="debt-group-element" />

@@ -1,10 +1,10 @@
 import type React from "react";
 
-import { LinksContext } from "~app/contexts/links-context";
-import type { LinksContextType } from "~app/contexts/links-context";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { StoreContext } from "~app/contexts/store-context";
-import type { StoreContextType } from "~app/contexts/store-context";
+import { LinksContext } from "#app/contexts/links-context.ts";
+import type { LinksContextType } from "#app/contexts/links-context.ts";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { StoreContext } from "#app/contexts/store-context.ts";
+import type { StoreContextType } from "#app/contexts/store-context.ts";
 
 import { PersisterProvider } from "./persist-client";
 import type { Props as PersisterProps } from "./persist-client";

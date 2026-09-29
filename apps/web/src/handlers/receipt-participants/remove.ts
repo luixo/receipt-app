@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema, receiptIdSchema } from "~web/handlers/validation";
+import { getReceiptParticipant } from "#web/handlers/receipt-participants/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema, receiptIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

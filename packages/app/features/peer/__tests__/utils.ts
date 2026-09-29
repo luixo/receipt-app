@@ -1,10 +1,10 @@
 import type { Locator } from "@playwright/test";
 import assert from "node:assert";
 
-import type { PeerId } from "~db/ids";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { PeerId } from "#db/ids.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<{ targetPeer: ReturnType<GeneratePeers>[number] }>;

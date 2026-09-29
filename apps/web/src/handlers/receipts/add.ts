@@ -2,32 +2,32 @@ import { TRPCError } from "@trpc/server";
 import { omit, values } from "remeda";
 import { z } from "zod";
 
-import { receiptNameSchema } from "~app/utils/validation";
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
-import { temporalSchemas } from "~utils/temporal";
-import type { AuthorizedContext } from "~web/handlers/context";
-import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
+import { receiptNameSchema } from "#app/utils/validation.ts";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import type { ConsumerOutput } from "#web/handlers/receipt-item-consumers/add.ts";
 import {
 	batchFn as addConsumers,
 	addItemConsumerSchema,
-} from "~web/handlers/receipt-item-consumers/add";
-import type { PayerOutput } from "~web/handlers/receipt-item-payers/add";
+} from "#web/handlers/receipt-item-consumers/add.ts";
+import type { PayerOutput } from "#web/handlers/receipt-item-payers/add.ts";
 import {
 	addItemPayerSchema,
 	batchFn as addPayers,
-} from "~web/handlers/receipt-item-payers/add";
-import type { ItemOutput } from "~web/handlers/receipt-items/add";
+} from "#web/handlers/receipt-item-payers/add.ts";
+import type { ItemOutput } from "#web/handlers/receipt-items/add.ts";
 import {
 	addItemSchema,
 	batchFn as addItems,
-} from "~web/handlers/receipt-items/add";
-import type { ParticipantOutput } from "~web/handlers/receipt-participants/add";
+} from "#web/handlers/receipt-items/add.ts";
+import type { ParticipantOutput } from "#web/handlers/receipt-participants/add.ts";
 import {
 	addParticipantSchema,
 	batchFn as addParticipants,
-} from "~web/handlers/receipt-participants/add";
-import { authProcedure } from "~web/handlers/trpc";
-import { currencyCodeSchema } from "~web/handlers/validation";
+} from "#web/handlers/receipt-participants/add.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { currencyCodeSchema } from "#web/handlers/validation.ts";
 
 export const addReceiptSchema = z.strictObject({
 	name: receiptNameSchema,

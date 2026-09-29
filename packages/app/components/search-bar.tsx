@@ -2,8 +2,8 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Icon } from "~components/icons";
-import { Input } from "~components/input";
+import { Icon } from "#components/icons.tsx";
+import { Input } from "#components/input.tsx";
 
 export const SearchBar: React.FC<
 	Omit<React.ComponentProps<typeof Input>, "value" | "onValueChange"> & {

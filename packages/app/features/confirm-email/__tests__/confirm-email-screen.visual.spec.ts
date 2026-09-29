@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { test } from "~tests/frontend/fixtures";
+import { test } from "#tests/frontend/fixtures.ts";
 
 test("Empty card on error", async ({
 	page,

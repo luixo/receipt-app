@@ -1,8 +1,8 @@
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 
-import { MAX_AVATAR_SIDE_SIZE } from "~utils/images";
-import { promisifyEvent } from "~utils/promise";
+import { MAX_AVATAR_SIDE_SIZE } from "#utils/images.ts";
+import { promisifyEvent } from "#utils/promise.ts";
 
 export type Props = {
 	image: string;

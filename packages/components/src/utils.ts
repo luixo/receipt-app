@@ -4,7 +4,7 @@ import type { ClassValue } from "clsx";
 import { isNonNullish } from "remeda";
 import { twMerge } from "tailwind-merge";
 
-import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";
+import type { TRPCMutationResult, TRPCMutationState } from "#app/trpc.ts";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 

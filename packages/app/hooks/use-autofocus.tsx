@@ -1,7 +1,7 @@
 import React from "react";
 
-import type { InputHandler } from "~components/input";
-import { emptyInputHandler } from "~components/input.base";
+import { emptyInputHandler } from "#components/input.base.tsx";
+import type { InputHandler } from "#components/input.tsx";
 
 export const useAutofocus = ({ shouldFocus }: { shouldFocus: boolean }) => {
 	const ref = React.useRef<InputHandler>(emptyInputHandler);

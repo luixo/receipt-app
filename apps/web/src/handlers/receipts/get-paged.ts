@@ -9,25 +9,25 @@ import {
 	offsetSchema,
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
-} from "~app/utils/validation";
-import type { ReceiptId, ReceiptItemId } from "~db/ids";
-import type { DB } from "~db/types.gen";
-import type { Interval } from "~utils/array";
-import { mergeIntervals } from "~utils/array";
+} from "#app/utils/validation.ts";
+import type { ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
+import type { Interval } from "#utils/array.ts";
+import { mergeIntervals } from "#utils/array.ts";
 import {
 	SIMILARTY_THRESHOLD,
 	trigramSimilarity,
 	trigramsForString,
-} from "~utils/server/trigram";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
+} from "#utils/server/trigram.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
 import {
 	getOwnReceipts,
 	getParticipantsReceipts,
-} from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import type { GeneralOutput } from "~web/utils/batch";
-import { queueList } from "~web/utils/batch";
+} from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import type { GeneralOutput } from "#web/utils/batch.ts";
+import { queueList } from "#web/utils/batch.ts";
 
 const inputSchema = z.strictObject({
 	cursor: offsetSchema,

@@ -1,10 +1,13 @@
 import { z } from "zod";
 
-import type { TRPCMutationInput } from "~app/trpc";
-import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
-import { temporalSchemas } from "~utils/temporal";
+import type { TRPCMutationInput } from "#app/trpc.ts";
+import {
+	currencyCodeSchema,
+	receiptNameSchema,
+} from "#app/utils/validation.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
 
-export type { Item, Payer } from "~app/features/receipt-components/state";
+export type { Item, Payer } from "#app/features/receipt-components/state.ts";
 
 export const formSchema = z.object({
 	name: receiptNameSchema,

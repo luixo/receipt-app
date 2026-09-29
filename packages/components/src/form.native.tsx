@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View } from "~components/view";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./form";
 

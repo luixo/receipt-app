@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 import { randomUUID } from "node:crypto";
 
-import { getDatabase } from "~db/database";
+import { getDatabase } from "#db/database.ts";
 
 import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";

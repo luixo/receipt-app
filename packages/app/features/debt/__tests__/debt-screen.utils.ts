@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { ReceiptId } from "~db/ids";
+import type { ReceiptId } from "#db/ids.ts";
 
 import { test as originalTest } from "./utils";
 

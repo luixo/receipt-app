@@ -2,9 +2,9 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { ConfirmModal } from "~app/components/confirm-modal";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
+import { ConfirmModal } from "#app/components/confirm-modal.tsx";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
 
 export const SkeletonRemoveButton: React.FC<
 	React.ComponentProps<typeof Button>

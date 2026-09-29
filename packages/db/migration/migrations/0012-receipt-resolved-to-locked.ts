@@ -1,8 +1,8 @@
 import type { Updateable } from "kysely";
 
-import type { Database } from "~db/database";
-import { CURRENT_TIMESTAMP } from "~db/migration/consts";
-import type { DB } from "~db/types.gen";
+import type { Database } from "#db/database.ts";
+import { CURRENT_TIMESTAMP } from "#db/migration/consts.ts";
+import type { DB } from "#db/types.gen.ts";
 
 type ReceiptsUpdateObject = Updateable<DB["receipts"]>;
 

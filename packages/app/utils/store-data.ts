@@ -8,24 +8,30 @@ import {
 	SELECTED_COLOR_MODE_STORE_NAME,
 	lastColorModeSchema,
 	selectedColorModeSchema,
-} from "~app/utils/store/color-modes";
-import { LANGUAGE_STORE_NAME, languageSchema } from "~app/utils/store/language";
-import { LIMIT_STORE_NAME, limitSchema } from "~app/utils/store/limit";
+} from "#app/utils/store/color-modes.ts";
+import {
+	LANGUAGE_STORE_NAME,
+	languageSchema,
+} from "#app/utils/store/language.ts";
+import { LIMIT_STORE_NAME, limitSchema } from "#app/utils/store/limit.ts";
 import {
 	LOCALE_STORE_NAME,
 	getLocale,
 	localeSchema,
-} from "~app/utils/store/locale";
+} from "#app/utils/store/locale.ts";
 import {
 	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
-} from "~app/utils/store/pretend-user";
-import { SETTINGS_STORE_NAME, settingsSchema } from "~app/utils/store/settings";
+} from "#app/utils/store/pretend-user.ts";
+import {
+	SETTINGS_STORE_NAME,
+	settingsSchema,
+} from "#app/utils/store/settings.ts";
 import {
 	TIMEZONE_STORE_NAME,
 	getTimezone,
 	timezoneSchema,
-} from "~app/utils/store/timezone";
+} from "#app/utils/store/timezone.ts";
 
 export type SerializedValues = Partial<Record<string, string>>;
 

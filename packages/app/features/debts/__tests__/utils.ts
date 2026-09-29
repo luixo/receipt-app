@@ -1,15 +1,15 @@
 import { TRPCError } from "@trpc/server";
 import { entries, flat, fromEntries, mapValues, values } from "remeda";
 
-import type { Debt } from "~app/trpc-types";
-import type { CurrencyCode } from "~app/utils/currency";
-import type { PeerId } from "~db/ids";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
-import type { GeneratorFnWithAmount } from "~tests/frontend/generators/utils";
+import type { Debt } from "#app/trpc-types.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { PeerId } from "#db/ids.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
+import type { GeneratorFnWithAmount } from "#tests/frontend/generators/utils.ts";
 
 type LocalGenerateDebts = GeneratorFnWithAmount<
 	Debt,

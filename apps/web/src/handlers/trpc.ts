@@ -2,26 +2,26 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import { performance } from "node:perf_hooks";
 import { isNonNullish, unique } from "remeda";
 
-import { AUTH_COOKIE } from "~app/utils/auth";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
 import {
 	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
-} from "~app/utils/store/pretend-user";
-import type { UserId } from "~db/ids";
-import { transformer } from "~utils/transformer";
+} from "#app/utils/store/pretend-user.ts";
+import type { UserId } from "#db/ids.ts";
+import { transformer } from "#utils/transformer.ts";
 import {
 	SESSION_REFRESH_DURATION,
 	getExpirationDate,
-} from "~web/handlers/auth/utils";
-import { queueCallFactory } from "~web/handlers/batch";
+} from "#web/handlers/auth/utils.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
 import type {
 	HandlerMeta,
 	NetContext,
 	UnauthorizedContext,
-} from "~web/handlers/context";
-import { formatErrorMessage } from "~web/handlers/errors";
-import { sessionIdSchema } from "~web/handlers/validation";
-import { getCookie, setCookie } from "~web/utils/cookies";
+} from "#web/handlers/context.ts";
+import { formatErrorMessage } from "#web/handlers/errors.ts";
+import { sessionIdSchema } from "#web/handlers/validation.ts";
+import { getCookie, setCookie } from "#web/utils/cookies.ts";
 
 export const t = initTRPC
 	.context<UnauthorizedContext>()

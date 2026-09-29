@@ -7,10 +7,10 @@ import { TRPCClientError } from "@trpc/client";
 import type { ResolverDef, TRPCQueryOptions } from "@trpc/tanstack-react-query";
 import { isNonNullish } from "remeda";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useMountEffect } from "~app/hooks/use-mount-effect";
-import { transformer } from "~utils/transformer";
-import type { RouterContext } from "~web/pages/__root";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useMountEffect } from "#app/hooks/use-mount-effect.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { RouterContext } from "#web/pages/__root.tsx";
 
 // see https://github.com/TanStack/router/issues/4084
 const ERROR_TAG = "__error__";

@@ -1,4 +1,4 @@
-import { useMountEffect } from "~app/hooks/use-mount-effect";
+import { useMountEffect } from "#app/hooks/use-mount-effect.ts";
 
 export const useHydratedMark = () => {
 	useMountEffect(() => {

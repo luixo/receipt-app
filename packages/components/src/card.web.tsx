@@ -7,7 +7,7 @@ import {
 	Card as CardRaw,
 } from "@heroui/card";
 
-import { Divider } from "~components/divider";
+import { Divider } from "#components/divider.tsx";
 
 export type Props = React.PropsWithChildren<{
 	className?: string;

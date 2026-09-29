@@ -2,21 +2,21 @@ import type React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useFormat } from "~app/hooks/use-format";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { formatCurrency } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Checkbox } from "~components/checkbox";
-import { Link } from "~components/link";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { DebtId, PeerId } from "~db/ids";
+import { DebtSyncStatus } from "#app/components/app/debt-sync-status.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useFormat } from "#app/hooks/use-format.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Checkbox } from "#components/checkbox.tsx";
+import { Link } from "#components/link.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { DebtId, PeerId } from "#db/ids.ts";
 
 type DebtShape = {
 	amount: ViewReactNode;

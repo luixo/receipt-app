@@ -1,9 +1,9 @@
 import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as addDebtTest } from "~app/features/add-debt/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import { test as addDebtTest } from "#app/features/add-debt/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test as peersSuggestFixture } from "./peers-suggest.utils";
 

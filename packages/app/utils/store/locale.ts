@@ -1,8 +1,8 @@
-import type { Locale } from "~app/utils/locale";
+import type { Locale } from "#app/utils/locale.ts";
 import {
 	fallback,
 	localeSchema as rawLocaleSchema,
-} from "~app/utils/validation";
+} from "#app/utils/validation.ts";
 
 export const LOCALE_STORE_NAME = "ssrContext:locale";
 

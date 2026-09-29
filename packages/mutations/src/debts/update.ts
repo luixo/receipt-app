@@ -1,5 +1,5 @@
-import type { CurrencyCode } from "~app/utils/currency";
-import type { PeerId, ReceiptId } from "~db/ids";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { PeerId, ReceiptId } from "#db/ids.ts";
 
 import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";

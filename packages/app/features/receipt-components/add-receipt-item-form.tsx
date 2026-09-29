@@ -3,20 +3,20 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
 import {
 	priceSchema,
 	priceSchemaDecimal,
 	quantitySchema,
 	quantitySchemaDecimal,
 	receiptItemNameSchema,
-} from "~app/utils/validation";
-import { Button } from "~components/button";
-import type { InputHandler } from "~components/input";
-import { emptyInputHandler } from "~components/input.base";
-import { View } from "~components/view";
+} from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { emptyInputHandler } from "#components/input.base.tsx";
+import type { InputHandler } from "#components/input.tsx";
+import { View } from "#components/view.tsx";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 

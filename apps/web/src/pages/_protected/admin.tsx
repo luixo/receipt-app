@@ -1,8 +1,8 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { AdminScreen } from "~app/features/admin/admin-screen";
-import { getTitle } from "~web/utils/i18n";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { AdminScreen } from "#app/features/admin/admin-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/admin")({
 	component: AdminScreen,

@@ -2,8 +2,8 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as peersSuggestFixture } from "~app/components/app/__tests__/peers-suggest.utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as peersSuggestFixture } from "#app/components/app/__tests__/peers-suggest.utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as localTest } from "./inbound-connection-intention.utils";
 

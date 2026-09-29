@@ -1,7 +1,7 @@
 import { serialize } from "cookie";
 
-import type { StoreContextType } from "~app/contexts/store-context";
-import type { StoreValues } from "~app/utils/store-data";
+import type { StoreContextType } from "#app/contexts/store-context.ts";
+import type { StoreValues } from "#app/utils/store-data.ts";
 
 export const getStoreContext = (
 	nowTimestamp: Temporal.ZonedDateTime,

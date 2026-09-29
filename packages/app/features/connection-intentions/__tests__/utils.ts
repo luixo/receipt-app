@@ -1,5 +1,5 @@
-import type { UserConnectionIntentions } from "~app/trpc-types";
-import { test as originalTest } from "~tests/frontend/fixtures";
+import type { UserConnectionIntentions } from "#app/trpc-types.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
 
 type Fixtures = {
 	mockConnectionIntentions: (options?: {

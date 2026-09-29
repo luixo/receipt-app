@@ -4,13 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { Receipt } from "~app/trpc-types";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { receiptNameSchema } from "~app/utils/validation";
-import { SaveButton } from "~components/save-button";
-import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { receiptNameSchema } from "#app/utils/validation.ts";
+import { SaveButton } from "#components/save-button.tsx";
+import { options as receiptsUpdateOptions } from "#mutations/receipts/update.ts";
 
 type Props = {
 	receipt: Receipt;

@@ -1,7 +1,7 @@
 import { assert } from "vitest";
 
-import type { SessionId } from "~db/ids";
-import type { TestContext } from "~tests/backend/utils/test";
+import type { SessionId } from "#db/ids.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
 
 type ContextOptions = {
 	reqHeaders?: Headers | Record<string, string>;

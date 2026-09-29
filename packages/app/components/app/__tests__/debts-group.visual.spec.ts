@@ -1,9 +1,9 @@
 import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as debtsTest } from "~app/features/debts/__tests__/utils";
-import { LIMIT_STORE_NAME } from "~app/utils/store/limit";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { test as debtsTest } from "#app/features/debts/__tests__/utils.ts";
+import { LIMIT_STORE_NAME } from "#app/utils/store/limit.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 

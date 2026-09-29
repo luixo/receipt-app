@@ -1,8 +1,8 @@
 import React from "react";
 import { useColorScheme } from "react-native";
 
-import { useColorModes } from "~app/hooks/use-color-modes";
-import type { ColorMode } from "~app/utils/store/color-modes";
+import { useColorModes } from "#app/hooks/use-color-modes.ts";
+import type { ColorMode } from "#app/utils/store/color-modes.ts";
 
 export const ThemeProvider: React.FC<
 	React.PropsWithChildren<{

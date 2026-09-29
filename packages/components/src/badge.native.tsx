@@ -1,8 +1,8 @@
 import { tv } from "tailwind-variants";
 
-import type { Props } from "~components/badge";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import type { Props } from "#components/badge.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 const badge = tv({
 	slots: {

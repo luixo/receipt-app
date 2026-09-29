@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AddReceiptScreen } from "~app/features/add-receipt/add-receipt-screen";
-import { getTitle } from "~web/utils/i18n";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { AddReceiptScreen } from "#app/features/add-receipt/add-receipt-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/receipts/add")({
 	component: AddReceiptScreen,

@@ -15,9 +15,9 @@ import type {
 	TRPCMutationKey,
 	TRPCQueryInput,
 	TRPCQueryKey,
-} from "~app/trpc";
-import { expectSubscribe } from "~tests/frontend/utils/expect";
-import { router } from "~web/handlers";
+} from "#app/trpc.ts";
+import { expectSubscribe } from "#tests/frontend/utils/expect.ts";
+import { router } from "#web/handlers/index.ts";
 
 import { apiFixtures as test } from "./api";
 

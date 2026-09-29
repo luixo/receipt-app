@@ -1,14 +1,14 @@
 import React from "react";
 
-import { SearchBar } from "~app/components/search-bar";
-import { LimitOption } from "~app/features/settings/limit-options";
-import type { SearchParamStateDefaulted } from "~app/utils/navigation";
-import { DEFAULT_LIMIT } from "~app/utils/validation";
-import { Checkbox } from "~components/checkbox";
-import { Pagination } from "~components/pagination";
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { SearchBar } from "#app/components/search-bar.tsx";
+import { LimitOption } from "#app/features/settings/limit-options.tsx";
+import type { SearchParamStateDefaulted } from "#app/utils/navigation.tsx";
+import { DEFAULT_LIMIT } from "#app/utils/validation.ts";
+import { Checkbox } from "#components/checkbox.tsx";
+import { Pagination } from "#components/pagination.tsx";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 type ShapeProps<T> = {
 	limit: number;

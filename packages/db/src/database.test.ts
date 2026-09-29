@@ -1,8 +1,8 @@
 import { sql } from "kysely";
 import { assert, describe, expect } from "vitest";
 
-import { assertDatabase } from "~tests/backend/utils/data";
-import { test } from "~tests/backend/utils/test";
+import { assertDatabase } from "#tests/backend/utils/data.ts";
+import { test } from "#tests/backend/utils/test.ts";
 
 describe("database", () => {
 	test("SQL error logger works", async ({ ctx }) => {

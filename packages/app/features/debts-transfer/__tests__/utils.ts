@@ -3,16 +3,16 @@ import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 import { entries } from "remeda";
 
-import { test as peersSuggestFixture } from "~app/components/app/__tests__/peers-suggest.utils";
-import { getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import type { PeerId } from "~db/ids";
-import { localSettings } from "~tests/frontend/consts";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { test as peersSuggestFixture } from "#app/components/app/__tests__/peers-suggest.utils.ts";
+import { getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { PeerId } from "#db/ids.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<{

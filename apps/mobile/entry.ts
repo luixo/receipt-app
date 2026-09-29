@@ -1,5 +1,5 @@
 // Hermes (React Native runtime) has no native `Temporal`, so we ship the polyfill and assign it to the global.
-import "~utils/temporal-polyfill";
+import "#utils/temporal-polyfill.ts";
 // It is expected to have .js extensions for these polyfills
 import "@formatjs/intl-pluralrules/polyfill-force.js";
 import "@formatjs/intl-pluralrules/locale-data/en.js";

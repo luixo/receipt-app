@@ -1,9 +1,9 @@
 import { expect, test as originalTest } from "@playwright/test";
 import type { Locator } from "@playwright/test";
 
-import { getCurrencyDescription } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { localSettings } from "~tests/frontend/consts";
+import { getCurrencyDescription } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
 
 export type Fixtures = {
 	currencyButton: (currencyCode?: string) => Locator;

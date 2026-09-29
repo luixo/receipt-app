@@ -2,9 +2,9 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import type { Receipt } from "~app/trpc-types";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
+import type { Receipt } from "#app/trpc-types.ts";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
 
 type Props = {
 	receipt: Receipt;

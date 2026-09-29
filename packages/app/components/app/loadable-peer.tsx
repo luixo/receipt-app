@@ -2,10 +2,10 @@ import type React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { Peer, SkeletonPeer } from "~app/components/app/peer";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useTRPC } from "~app/utils/trpc";
-import type { PeerId } from "~db/ids";
+import { Peer, SkeletonPeer } from "#app/components/app/peer.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import type { PeerId } from "#db/ids.ts";
 
 type Props = Omit<
 	React.ComponentProps<typeof Peer>,

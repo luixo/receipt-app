@@ -9,13 +9,13 @@ import { Label } from "heroui-native/label";
 import { TextField } from "heroui-native/text-field";
 import { tv } from "tailwind-variants";
 
-import { Icon } from "~components/icons";
+import { Icon } from "#components/icons.tsx";
 import {
 	useMutationErrors,
 	usePasswordVisibility,
-} from "~components/input.base";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+} from "#components/input.base.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./input";
 

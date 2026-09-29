@@ -2,17 +2,17 @@ import { TRPCError } from "@trpc/server";
 import { isNonNullish, unique } from "remeda";
 import { z } from "zod";
 
-import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { DebtId } from "~db/ids";
-import { temporalSchemas } from "~utils/temporal";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
+import { debtAmountSchema, debtNoteSchema } from "#app/utils/validation.ts";
+import type { DebtId } from "#db/ids.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 import {
 	currencyCodeSchema,
 	peerIdSchema,
 	receiptIdSchema,
-} from "~web/handlers/validation";
+} from "#web/handlers/validation.ts";
 
 import { upsertAutoAcceptedDebts } from "./utils";
 

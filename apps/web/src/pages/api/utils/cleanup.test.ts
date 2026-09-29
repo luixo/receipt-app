@@ -2,10 +2,10 @@ import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { describe, expect, vi } from "vitest";
 
-import { test } from "~tests/backend/utils/test";
-import type { router as appRouter } from "~web/handlers/index";
-import { t } from "~web/handlers/trpc";
-import { getServerRouteMethod } from "~web/pages/api/utils.test";
+import { test } from "#tests/backend/utils/test.ts";
+import type { router as appRouter } from "#web/handlers/index.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { getServerRouteMethod } from "#web/pages/api/utils.test.ts";
 
 import { Route } from "./cleanup";
 
@@ -18,7 +18,7 @@ const removedResetPasswordIntentions = faker.number.int({
 });
 
 // oxlint-disable-next-line typescript/require-await
-vi.mock(import("~web/handlers/index"), async () => ({
+vi.mock(import("#web/handlers/index.ts"), async () => ({
 	router: t.router({
 		sessions: t.router({
 			cleanup: t.procedure.mutation(({ ctx }) => {

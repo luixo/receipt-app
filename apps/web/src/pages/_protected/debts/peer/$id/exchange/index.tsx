@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsExchangeScreen } from "~app/features/debts-exchange/debts-exchange-screen";
-import { getTitle } from "~web/utils/i18n";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { DebtsExchangeScreen } from "#app/features/debts-exchange/debts-exchange-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/debts/peer/$id/exchange/")({
 	component: DebtsExchangeScreen,

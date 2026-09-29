@@ -3,9 +3,9 @@ import React from "react";
 import type {
 	useActionHooks as useActionHooksRaw,
 	useGetReceiptContext,
-} from "~app/features/receipt/hooks";
-import type { EmptyMutateOptions } from "~app/utils/queries";
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
+} from "#app/features/receipt/hooks.tsx";
+import type { EmptyMutateOptions } from "#app/utils/queries.ts";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
 
 import type { Form, Item, Participant, Payer } from "./state";
 

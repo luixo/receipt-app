@@ -1,8 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { MAX_LIMIT } from "~app/utils/validation";
-import { createAuthContext } from "~tests/backend/utils/context";
+import { MAX_LIMIT } from "#app/utils/validation.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertDebt,
@@ -11,13 +11,13 @@ import {
 	insertReceiptParticipant,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./suggest-top";
 

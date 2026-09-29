@@ -1,11 +1,11 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 import {
 	CURRENT_TIMESTAMP,
 	FUNCTIONS,
 	RECEIPT_ITEM_PAYERS,
-} from "~db/migration/consts";
+} from "#db/migration/consts.ts";
 
 const createItemPayersTable = async (db: Database) => {
 	await db.schema

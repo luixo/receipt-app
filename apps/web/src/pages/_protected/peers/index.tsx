@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { PeersScreen } from "~app/features/peers/peers-screen";
-import { withDefaultLimit } from "~app/utils/store/limit";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetchQueriesWith } from "~web/utils/ssr";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { PeersScreen } from "#app/features/peers/peers-screen.tsx";
+import { withDefaultLimit } from "#app/utils/store/limit.ts";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
+import { prefetchQueriesWith } from "#web/utils/ssr.tsx";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/peers/")({
 	component: PeersScreen,

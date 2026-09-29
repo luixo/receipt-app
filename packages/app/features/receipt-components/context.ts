@@ -3,7 +3,7 @@ import React from "react";
 import type {
 	ReceiptContext as ReceiptContextType,
 	useActionHooks,
-} from "~app/features/receipt/hooks";
+} from "#app/features/receipt/hooks.tsx";
 
 export type ActionsHooksContext = ReturnType<typeof useActionHooks>;
 

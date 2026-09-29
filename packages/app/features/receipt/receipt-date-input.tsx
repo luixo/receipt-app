@@ -2,11 +2,11 @@ import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
 
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { Receipt } from "~app/trpc-types";
-import { useTRPC } from "~app/utils/trpc";
-import { DateInput } from "~components/date-input";
-import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { DateInput } from "#components/date-input.tsx";
+import { options as receiptsUpdateOptions } from "#mutations/receipts/update.ts";
 
 type Props = {
 	receipt: Receipt;

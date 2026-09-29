@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "~app/utils/validation";
+import { fallback } from "#app/utils/validation.ts";
 
 export const SETTINGS_STORE_NAME = "receipt_settings";
 

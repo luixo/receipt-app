@@ -1,8 +1,8 @@
 import type { Selectable } from "kysely";
 
-import type { DB } from "~db/types.gen";
-import type { MappedNullableObject } from "~utils/types";
-import { authProcedure } from "~web/handlers/trpc";
+import type { DB } from "#db/types.gen.ts";
+import type { MappedNullableObject } from "#utils/types.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

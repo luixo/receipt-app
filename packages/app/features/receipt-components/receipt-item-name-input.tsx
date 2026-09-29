@@ -3,14 +3,14 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { receiptItemNameSchema } from "~app/utils/validation";
-import { SaveButton } from "~components/save-button";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { receiptItemNameSchema } from "#app/utils/validation.ts";
+import { SaveButton } from "#components/save-button.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";

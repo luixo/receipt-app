@@ -2,11 +2,11 @@ import React from "react";
 
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 
-import { useDecimals } from "~app/hooks/use-decimals";
-import type { Receipt, ReceiptParticipant } from "~app/trpc-types";
-import { getParticipantSums } from "~app/utils/receipt-item";
-import { useTRPC } from "~app/utils/trpc";
-import type { PeerId } from "~db/ids";
+import { useDecimals } from "#app/hooks/use-decimals.ts";
+import type { Receipt, ReceiptParticipant } from "#app/trpc-types.ts";
+import { getParticipantSums } from "#app/utils/receipt-item.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import type { PeerId } from "#db/ids.ts";
 
 const getDebtIds = (receipt: Pick<Receipt, "debts">) =>
 	receipt.debts.direction === "outcoming"

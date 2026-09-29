@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { confirmEmailTokenSchema } from "~app/utils/validation";
-import { createAuthorizationSession } from "~web/handlers/auth/utils";
-import { unauthProcedure } from "~web/handlers/trpc";
-import { setCookie } from "~web/utils/cookies";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { confirmEmailTokenSchema } from "#app/utils/validation.ts";
+import { createAuthorizationSession } from "#web/handlers/auth/utils.ts";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
+import { setCookie } from "#web/utils/cookies.ts";
 
 export const procedure = unauthProcedure
 	.meta({

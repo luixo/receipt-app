@@ -2,14 +2,14 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { SearchParamState } from "~app/utils/navigation";
-import { Button } from "~components/button";
-import { Divider } from "~components/divider";
-import { Icon } from "~components/icons";
-import { Modal } from "~components/modal";
-import { Select } from "~components/select";
-import { Text } from "~components/text";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import type { SearchParamState } from "#app/utils/navigation.tsx";
+import { Button } from "#components/button.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Modal } from "#components/modal.tsx";
+import { Select } from "#components/select.tsx";
+import { Text } from "#components/text.tsx";
 
 type Props = {
 	sortState: SearchParamState<"/_protected/receipts/", "sort">;

@@ -1,6 +1,6 @@
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { Badge } from "~components/badge";
-import type { ViewReactNode } from "~components/view.web";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { Badge } from "#components/badge.tsx";
+import type { ViewReactNode } from "#components/view.web.tsx";
 
 type Children = ViewReactNode | ((props: { amount: number }) => ViewReactNode);
 const renderChildren = (children: Children, amount: number) =>

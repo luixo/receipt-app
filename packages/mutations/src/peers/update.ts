@@ -1,6 +1,6 @@
-import type { TRPCMutationInput } from "~app/trpc";
-import type { ForeignPeer, Peer } from "~app/trpc-types";
-import type { PeerId } from "~db/ids";
+import type { ForeignPeer, Peer } from "#app/trpc-types.ts";
+import type { TRPCMutationInput } from "#app/trpc.ts";
+import type { PeerId } from "#db/ids.ts";
 
 import {
 	invalidateSuggest as invalidateSuggestPeers,

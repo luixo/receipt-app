@@ -4,13 +4,13 @@ import {
 	debtsFiltersSchema,
 	limitSchema,
 	offsetSchema,
-} from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import type { GeneralOutput } from "~web/utils/batch";
-import { queueList } from "~web/utils/batch";
+} from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import type { GeneralOutput } from "#web/utils/batch.ts";
+import { queueList } from "#web/utils/batch.ts";
 
 const inputSchema = z.strictObject({
 	cursor: offsetSchema,

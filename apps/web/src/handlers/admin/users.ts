@@ -1,4 +1,4 @@
-import { adminProcedure } from "~web/handlers/trpc";
+import { adminProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = adminProcedure
 	.meta({

@@ -6,13 +6,13 @@ import {
 	priceSchema,
 	quantitySchema,
 	receiptItemNameSchema,
-} from "~app/utils/validation";
-import type { ReceiptItemId } from "~db/ids";
-import type { BatchLoadContextFn } from "~web/handlers/batch";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import { receiptIdSchema, roleSchema } from "~web/handlers/validation";
+} from "#app/utils/validation.ts";
+import type { ReceiptItemId } from "#db/ids.ts";
+import type { BatchLoadContextFn } from "#web/handlers/batch.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { receiptIdSchema, roleSchema } from "#web/handlers/validation.ts";
 
 export const addItemSchema = z.strictObject({
 	receiptId: receiptIdSchema,

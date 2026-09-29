@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 
 export const up = async (db: Database) => {
 	await db.schema

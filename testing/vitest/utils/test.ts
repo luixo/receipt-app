@@ -3,18 +3,18 @@ import type { inferProcedureOutput } from "@trpc/server";
 import type { RunnerTestCase } from "vitest";
 import { test as originalTest } from "vitest";
 
-import type { Database } from "~db/database";
-import type { AppRouter } from "~tests/backend/databases/router";
-import type { CacheDbOptionsMock } from "~tests/backend/utils/mocks/cache-db";
-import { getCacheDbOptions } from "~tests/backend/utils/mocks/cache-db";
-import type { EmailOptionsMock } from "~tests/backend/utils/mocks/email";
-import { getEmailOptions } from "~tests/backend/utils/mocks/email";
-import type { ExchangeRateOptionsMock } from "~tests/backend/utils/mocks/exchange-rate";
-import { getExchangeRateOptions } from "~tests/backend/utils/mocks/exchange-rate";
-import type { LoggerMock } from "~tests/backend/utils/mocks/logger";
-import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
-import { getS3Options } from "~tests/backend/utils/mocks/s3";
-import { setSeed } from "~tests/utils/faker";
+import type { Database } from "#db/database.ts";
+import type { AppRouter } from "#tests/backend/databases/router.ts";
+import type { CacheDbOptionsMock } from "#tests/backend/utils/mocks/cache-db.ts";
+import { getCacheDbOptions } from "#tests/backend/utils/mocks/cache-db.ts";
+import type { EmailOptionsMock } from "#tests/backend/utils/mocks/email.ts";
+import { getEmailOptions } from "#tests/backend/utils/mocks/email.ts";
+import type { ExchangeRateOptionsMock } from "#tests/backend/utils/mocks/exchange-rate.ts";
+import { getExchangeRateOptions } from "#tests/backend/utils/mocks/exchange-rate.ts";
+import type { LoggerMock } from "#tests/backend/utils/mocks/logger.ts";
+import type { S3OptionsMock } from "#tests/backend/utils/mocks/s3.ts";
+import { getS3Options } from "#tests/backend/utils/mocks/s3.ts";
+import { setSeed } from "#tests/utils/faker.ts";
 
 type FileContext = {
 	logger: LoggerMock;

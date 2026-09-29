@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { ExtractFixture } from "~tests/frontend/types";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 import { test as receiptsTest } from "./utils";
 

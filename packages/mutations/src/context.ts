@@ -6,8 +6,8 @@ import type {
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
-} from "~app/trpc";
-import type { ArrayOf, MaybeAddElementToArray } from "~utils/types";
+} from "#app/trpc.ts";
+import type { ArrayOf, MaybeAddElementToArray } from "#utils/types.ts";
 
 import type { ControllerContext } from "./types";
 

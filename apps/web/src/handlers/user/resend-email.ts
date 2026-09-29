@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { sendVerificationEmail } from "~web/handlers/auth/utils";
-import { authProcedure } from "~web/handlers/trpc";
+import { sendVerificationEmail } from "#web/handlers/auth/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

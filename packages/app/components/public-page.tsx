@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Page } from "~app/components/page";
+import { Page } from "#app/components/page.tsx";
 
 type Props = {
 	children: React.ReactNode;

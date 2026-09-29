@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 
-import { SELECTED_COLOR_MODE_STORE_NAME } from "~app/utils/store/color-modes";
-import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
-import { LIMIT_STORE_NAME } from "~app/utils/store/limit";
-import { LOCALE_STORE_NAME } from "~app/utils/store/locale";
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { expect } from "~tests/frontend/fixtures";
+import { SELECTED_COLOR_MODE_STORE_NAME } from "#app/utils/store/color-modes.ts";
+import { LANGUAGE_STORE_NAME } from "#app/utils/store/language.ts";
+import { LIMIT_STORE_NAME } from "#app/utils/store/limit.ts";
+import { LOCALE_STORE_NAME } from "#app/utils/store/locale.ts";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test } from "./utils";
 

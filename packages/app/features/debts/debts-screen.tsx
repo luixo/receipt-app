@@ -1,16 +1,16 @@
 import { useTranslation } from "react-i18next";
 
-import { AllDebtsGroup } from "~app/components/all-debts-group";
-import { AmountBadge } from "~app/components/amount-badge";
-import { PageHeader } from "~app/components/page-header";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
-import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getPathHooks } from "~app/utils/navigation";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
-import { View } from "~components/view";
+import { AllDebtsGroup } from "#app/components/all-debts-group.tsx";
+import { AmountBadge } from "#app/components/amount-badge.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { ShowResolvedDebtsOption } from "#app/features/settings/show-resolved-debts-option.tsx";
+import { useDebtsIntentions } from "#app/hooks/use-debts-intentions.ts";
+import { useDefaultLimit } from "#app/hooks/use-default-limit.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
+import { View } from "#components/view.tsx";
 
 import { Debts } from "./debts";
 

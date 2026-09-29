@@ -13,29 +13,29 @@ import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 import { fromEntries, keys, omit } from "remeda";
 
-import type { LinksContextType } from "~app/contexts/links-context";
-import { LinksContext } from "~app/contexts/links-context";
-import { useColorModes } from "~app/hooks/use-color-modes";
-import { InnerProvider } from "~app/providers/inner";
-import type { I18nContext } from "~app/utils/i18n";
-import type { StoreValues } from "~app/utils/store-data";
-import { ToastProvider } from "~components/toast";
-import appCss from "~web/app.css?url";
-import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
-import { useI18nHelper } from "~web/hooks/use-i18-helper";
-import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
-import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
-import { useToastHelper } from "~web/hooks/use-toast-helper";
-import { DevToolsProvider } from "~web/providers/client/devtools";
-import { NavigationProvider } from "~web/providers/client/navigation";
-import { getTitle } from "~web/utils/i18n";
+import type { LinksContextType } from "#app/contexts/links-context.ts";
+import { LinksContext } from "#app/contexts/links-context.ts";
+import { useColorModes } from "#app/hooks/use-color-modes.ts";
+import { InnerProvider } from "#app/providers/inner.tsx";
+import type { I18nContext } from "#app/utils/i18n.tsx";
+import type { StoreValues } from "#app/utils/store-data.ts";
+import { ToastProvider } from "#components/toast.tsx";
+import appCss from "#web/app.css?url";
+import { useHydratedMark } from "#web/hooks/use-hydrated-mark.ts";
+import { useI18nHelper } from "#web/hooks/use-i18-helper.ts";
+import { useStoreLocalSettings } from "#web/hooks/use-local-settings.ts";
+import { useQueryClientHelper } from "#web/hooks/use-query-client-helper.ts";
+import { useToastHelper } from "#web/hooks/use-toast-helper.ts";
+import { DevToolsProvider } from "#web/providers/client/devtools.tsx";
+import { NavigationProvider } from "#web/providers/client/navigation.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
 import {
 	navigationContext,
 	searchParamsWithDefaults,
-} from "~web/utils/navigation";
-import { captureSentryError } from "~web/utils/sentry";
-import { storage } from "~web/utils/storage";
-import { getStoreContext } from "~web/utils/store";
+} from "#web/utils/navigation.ts";
+import { captureSentryError } from "#web/utils/sentry.ts";
+import { storage } from "#web/utils/storage.ts";
+import { getStoreContext } from "#web/utils/store.ts";
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();

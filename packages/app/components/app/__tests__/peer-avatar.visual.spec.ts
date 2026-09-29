@@ -1,6 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
+import { test as receiptTest } from "#app/features/receipt/__tests__/utils.ts";
 
 import { test as peerAvatarFixture } from "./peer-avatar.utils";
 

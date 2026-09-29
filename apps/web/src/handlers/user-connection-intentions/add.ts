@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { UserId } from "~db/ids";
-import type { BatchLoadContextFn } from "~web/handlers/batch";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import { emailSchema, peerIdSchema } from "~web/handlers/validation";
-import { getDuplicates } from "~web/utils/batch";
+import type { UserId } from "#db/ids.ts";
+import type { BatchLoadContextFn } from "#web/handlers/batch.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { emailSchema, peerIdSchema } from "#web/handlers/validation.ts";
+import { getDuplicates } from "#web/utils/batch.ts";
 
 const addConnectionIntentionSchema = z.strictObject({
 	peerId: peerIdSchema,

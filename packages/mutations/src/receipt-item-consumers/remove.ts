@@ -1,4 +1,4 @@
-import type { ReceiptId } from "~db/ids";
+import type { ReceiptId } from "#db/ids.ts";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";

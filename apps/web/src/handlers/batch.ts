@@ -6,11 +6,11 @@ import type { Options } from "dataloader";
 import Dataloader from "dataloader";
 import { doNothing } from "remeda";
 
-import type { MaybePromise } from "~utils/types";
+import type { MaybePromise } from "#utils/types.ts";
 import type {
 	AuthorizedContext,
 	UnauthorizedContext,
-} from "~web/handlers/context";
+} from "#web/handlers/context.ts";
 
 const SCHEDULE_DELAY = 100;
 const CLEAR_CACHE_DELAY = 2000;

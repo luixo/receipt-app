@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
-import { createAuthContext } from "~tests/backend/utils/context";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertPeer,
@@ -10,15 +10,15 @@ import {
 	insertReceiptParticipant,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
-import { runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./add";
 

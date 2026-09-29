@@ -4,16 +4,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { PageHeader } from "~app/components/page-header";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { noBatchContext, useTRPC } from "~app/utils/trpc";
-import { emailSchema, passwordSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Input } from "~components/input";
-import { options as authLoginOptions } from "~mutations/auth/login";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { noBatchContext, useTRPC } from "#app/utils/trpc.ts";
+import { emailSchema, passwordSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Input } from "#components/input.tsx";
+import { options as authLoginOptions } from "#mutations/auth/login.ts";
 
 import { ResetPasswordModal } from "./reset-password-modal";
 

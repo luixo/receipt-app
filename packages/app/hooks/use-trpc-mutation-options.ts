@@ -3,16 +3,16 @@ import React from "react";
 import { skipToken, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import type { TRPCMutationKey } from "~app/trpc";
-import { getMutationToaster } from "~app/utils/toasts";
-import { useTRPC } from "~app/utils/trpc";
+import type { TRPCMutationKey } from "#app/trpc.ts";
+import { getMutationToaster } from "#app/utils/toasts.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
 import type {
 	InternalContext,
 	TRPCMutationOptions,
 	UseContextedMutationOptions,
-} from "~mutations/context";
-import type { ControllerContext } from "~mutations/types";
-import type { Exact, MaybeAddElementToArray } from "~utils/types";
+} from "#mutations/context.ts";
+import type { ControllerContext } from "#mutations/types.ts";
+import type { Exact, MaybeAddElementToArray } from "#utils/types.ts";
 
 const getToastArgs = <OC>(
 	internalContext: Pick<InternalContext<OC>, "outerContext">,

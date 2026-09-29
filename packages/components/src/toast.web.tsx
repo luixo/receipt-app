@@ -9,7 +9,7 @@ import {
 	DESCRIPTION_CLASSNAME,
 	MAX_VISIBLE_TOASTS,
 	TOAST_TIMEOUT,
-} from "~utils/toast";
+} from "#utils/toast.ts";
 
 export type ToastProviderProps = React.PropsWithChildren;
 

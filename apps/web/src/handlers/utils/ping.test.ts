@@ -1,9 +1,9 @@
 import { describe, expect } from "vitest";
 
-import { createContext } from "~tests/backend/utils/context";
-import { expectTRPCError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+import { createContext } from "#tests/backend/utils/context.ts";
+import { expectTRPCError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./ping";
 

@@ -3,13 +3,13 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
 
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { useTRPC } from "~app/utils/trpc";
-import { Icon } from "~components/icons";
-import { Select } from "~components/select";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { AssignableRole, Role } from "~web/handlers/receipts/utils";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Icon } from "#components/icons.tsx";
+import { Select } from "#components/select.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { AssignableRole, Role } from "#web/handlers/receipts/utils.ts";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";

@@ -2,7 +2,7 @@ import istanbulCoverage from "istanbul-lib-coverage";
 import type { FileCoverageData } from "istanbul-lib-coverage";
 import { fromEntries, isNonNullish } from "remeda";
 
-import { baseLogger } from "~web/providers/logger";
+import { baseLogger } from "#web/providers/logger.ts";
 
 import type { RestoreRangeEnd } from "./generated-code";
 import { analyzeGeneratedCode } from "./generated-code";

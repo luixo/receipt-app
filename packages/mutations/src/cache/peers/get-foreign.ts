@@ -1,5 +1,5 @@
-import type { ForeignPeer } from "~app/trpc-types";
-import type { PeerId } from "~db/ids";
+import type { ForeignPeer } from "#app/trpc-types.ts";
+import type { PeerId } from "#db/ids.ts";
 
 import type {
 	ControllerContext,

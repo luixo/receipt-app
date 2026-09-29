@@ -5,7 +5,7 @@ import { Migrator } from "kysely/migration";
 import path from "node:path";
 import * as url from "node:url";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 
 export const migrate = async (
 	database: Database,

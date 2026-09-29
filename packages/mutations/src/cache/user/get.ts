@@ -1,4 +1,4 @@
-import type { User } from "~app/trpc-types";
+import type { User } from "#app/trpc-types.ts";
 
 import type {
 	ControllerContext,

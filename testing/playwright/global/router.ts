@@ -2,7 +2,7 @@ import { initTRPC } from "@trpc/server";
 import type { Coverage } from "playwright/test";
 import { z } from "zod";
 
-import { transformer } from "~utils/transformer";
+import { transformer } from "#utils/transformer.ts";
 
 const { router, procedure } = initTRPC.create({ transformer });
 

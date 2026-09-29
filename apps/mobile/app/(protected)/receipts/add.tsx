@@ -1,5 +1,5 @@
-import { PageWrapper } from "~app/components/page-wrapper";
-import { AddReceiptScreen } from "~app/features/add-receipt/add-receipt-screen";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { AddReceiptScreen } from "#app/features/add-receipt/add-receipt-screen.tsx";
 
 const Wrapper = () => (
 	<PageWrapper>

@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test } from "./utils";
 

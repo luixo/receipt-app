@@ -1,16 +1,16 @@
 import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
-import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { getCurrencySymbol } from "~app/utils/currency";
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { generateCurrencyCode } from "~tests/frontend/generators/utils";
-import { CURRENCY_CODES } from "~utils/currency-data";
+import { test as currenciesPickerTest } from "#app/components/app/__tests__/currencies-picker.utils.ts";
+import { test as debtsGroupFixture } from "#app/components/app/__tests__/debts-group.utils.ts";
+import { getCurrencySymbol } from "#app/utils/currency.ts";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { generateCurrencyCode } from "#tests/frontend/generators/utils.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
 
 import { test as localTest } from "./utils";
 

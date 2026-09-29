@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { createAuthContext } from "~tests/backend/utils/context";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertDebt,
@@ -9,10 +9,10 @@ import {
 	insertReceipt,
 	insertReceiptParticipant,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
-import { expectUnauthorizedError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/data.ts";
+import { expectUnauthorizedError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./top";
 

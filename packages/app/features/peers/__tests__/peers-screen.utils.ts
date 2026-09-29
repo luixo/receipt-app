@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test as peersTest } from "./utils";
 

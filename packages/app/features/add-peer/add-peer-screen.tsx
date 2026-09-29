@@ -2,11 +2,11 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { PageHeader } from "~app/components/page-header";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import type { TRPCMutationOutput } from "~app/trpc";
-import { BackLink } from "~components/back-link";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import type { TRPCMutationOutput } from "#app/trpc.ts";
+import { BackLink } from "#components/back-link.tsx";
 
 import { AddPeerForm } from "./add-peer-form";
 

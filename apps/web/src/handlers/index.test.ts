@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 
-import { test } from "~tests/backend/utils/test";
+import { test } from "#tests/backend/utils/test.ts";
 
 import { router } from "./index";
 

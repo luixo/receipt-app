@@ -1,5 +1,5 @@
-import type { TRPCMutationOutput } from "~app/trpc";
-import type { PeerId } from "~db/ids";
+import type { TRPCMutationOutput } from "#app/trpc.ts";
+import type { PeerId } from "#db/ids.ts";
 
 import { update as updateDebts } from "../cache/debts";
 import {

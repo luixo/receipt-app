@@ -1,6 +1,6 @@
 import React from "react";
 
-import { promisifyEvent } from "~utils/promise";
+import { promisifyEvent } from "#utils/promise.ts";
 
 export type Props = {
 	onClickRef?: React.RefObject<() => void>;

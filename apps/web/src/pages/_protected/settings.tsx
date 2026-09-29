@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { SettingsScreen } from "~app/features/settings/settings-screen";
-import { getTitle } from "~web/utils/i18n";
-import { prefetchQueries } from "~web/utils/ssr";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { SettingsScreen } from "#app/features/settings/settings-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { prefetchQueries } from "#web/utils/ssr.tsx";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/settings")({
 	component: SettingsScreen,

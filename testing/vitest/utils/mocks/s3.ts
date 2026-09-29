@@ -1,4 +1,4 @@
-import type { S3Options } from "~web/providers/s3";
+import type { S3Options } from "#web/providers/s3.ts";
 
 type InterceptedMessage = { key: string; objectLength: number };
 

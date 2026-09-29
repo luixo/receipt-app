@@ -1,8 +1,8 @@
 import type React from "react";
 
-import { Overlay } from "~components/overlay";
-import { Spinner } from "~components/spinner";
-import type { ViewReactNode } from "~components/view";
+import { Overlay } from "#components/overlay.tsx";
+import { Spinner } from "#components/spinner.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
 
 type Props = {
 	isPending?: boolean;

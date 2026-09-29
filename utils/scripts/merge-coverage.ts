@@ -7,8 +7,8 @@ import {
 	generateCoverageReport,
 	getEmptyCoverage,
 	mergeCoverageMaps,
-} from "~coverage/index";
-import { baseLogger } from "~web/providers/logger";
+} from "#coverage/index.ts";
+import { baseLogger } from "#web/providers/logger.ts";
 
 const rootDir = path.join(import.meta.dirname, "../..");
 const coverageDir = path.join(rootDir, "testing/playwright/coverage");

@@ -4,15 +4,15 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { entries, mapValues } from "remeda";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { SkeletonPeer } from "~app/components/app/peer";
-import { EmptyCard } from "~app/components/empty-card";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { SkeletonPeer } from "#app/components/app/peer.tsx";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import type { TRPCQuerySuccessResult } from "#app/trpc.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import {

@@ -1,7 +1,7 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { test as peerFixture } from "~app/components/app/__tests__/peer.utils";
+import { test as debtsGroupFixture } from "#app/components/app/__tests__/debts-group.utils.ts";
+import { test as peerFixture } from "#app/components/app/__tests__/peer.utils.ts";
 
 import { test as localTest } from "./utils";
 

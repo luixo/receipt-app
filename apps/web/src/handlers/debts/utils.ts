@@ -1,10 +1,10 @@
 import type { Insertable } from "kysely";
 import { isNonNullish, omit } from "remeda";
 
-import type { Database } from "~db/database";
-import type { DebtId, PeerId } from "~db/ids";
-import type { DB } from "~db/types.gen";
-import type { MakeUndefinedOptional } from "~utils/types";
+import type { Database } from "#db/database.ts";
+import type { DebtId, PeerId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
+import type { MakeUndefinedOptional } from "#utils/types.ts";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,

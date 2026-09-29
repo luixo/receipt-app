@@ -3,20 +3,20 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useLocale } from "~app/hooks/use-locale";
-import type { TRPCQueryInput } from "~app/trpc";
-import { getCurrencyDescription } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Divider } from "~components/divider";
-import { Modal } from "~components/modal";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import { rotate } from "~utils/array";
-import { getIndexByString } from "~utils/hash";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import { getCurrencyDescription } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Modal } from "#components/modal.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import { rotate } from "#utils/array.ts";
+import { getIndexByString } from "#utils/hash.ts";
 
 const widths = ["w-20", "w-20", "w-20", "w-32", "w-32", "w-48"];
 const SkeletonCurrencyButton = () => {

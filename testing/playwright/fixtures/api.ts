@@ -9,6 +9,7 @@ import http from "node:http";
 import { fromEntries } from "remeda";
 import { v4 } from "uuid";
 
+import type { Peer } from "#app/trpc-types.ts";
 import type {
 	TRPCKey,
 	TRPCMutationInput,
@@ -17,19 +18,18 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
-} from "~app/trpc";
-import type { Peer } from "~app/trpc-types";
-import { AUTH_COOKIE } from "~app/utils/auth";
-import type { PeerId, UserId } from "~db/ids";
-import { urlSettings } from "~tests/frontend/consts";
-import { CURRENCY_CODES } from "~utils/currency-data";
-import { apiCookieNames } from "~utils/mocks";
-import { promisifyEvent } from "~utils/promise";
-import { promisifyServer } from "~utils/server/promise";
-import { transformer } from "~utils/transformer";
-import type { TransformerResult } from "~utils/transformer";
-import type { MaybePromise } from "~utils/types";
-import { getCookie } from "~web/utils/cookies";
+} from "#app/trpc.ts";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { urlSettings } from "#tests/frontend/consts.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { promisifyEvent } from "#utils/promise.ts";
+import { promisifyServer } from "#utils/server/promise.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { TransformerResult } from "#utils/transformer.ts";
+import type { MaybePromise } from "#utils/types.ts";
+import { getCookie } from "#web/utils/cookies.ts";
 
 import { mockFixtures } from "./mock";
 import { serverFixtures } from "./server";

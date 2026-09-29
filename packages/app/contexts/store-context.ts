@@ -2,8 +2,8 @@ import React from "react";
 
 import { doNothing } from "remeda";
 
-import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
-import type { StoreValues } from "~app/utils/store-data";
+import { getStoreValuesFromInitialValues } from "#app/utils/store-data.ts";
+import type { StoreValues } from "#app/utils/store-data.ts";
 
 export type StoreContextType = {
 	getInitialItems: () => StoreValues & {

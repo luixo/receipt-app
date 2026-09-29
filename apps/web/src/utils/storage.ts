@@ -1,7 +1,7 @@
 import { isServer } from "@tanstack/react-query";
 import { del, get, set } from "idb-keyval";
 
-import type { Props } from "~app/providers/persist-client";
+import type { Props } from "#app/providers/persist-client.tsx";
 
 export const storage: Props["storage"] = isServer
 	? undefined

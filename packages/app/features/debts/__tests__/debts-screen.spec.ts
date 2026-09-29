@@ -2,14 +2,14 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as debtsGroupTest } from "~app/components/app/__tests__/debts-group.utils";
-import { DEFAULT_LIMIT } from "~app/utils/validation";
-import { expect } from "~tests/frontend/fixtures";
+import { test as debtsGroupTest } from "#app/components/app/__tests__/debts-group.utils.ts";
+import { DEFAULT_LIMIT } from "#app/utils/validation.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 import {
 	defaultGenerateDebtIntentions,
 	defaultGenerateDebts,
-} from "~tests/frontend/generators/debts";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+} from "#tests/frontend/generators/debts.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test as debtsScreenTest } from "./debts-screen.utils";
 

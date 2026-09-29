@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 import { z } from "zod";
 
-import { acceptNewIntentions } from "~web/handlers/debt-intentions/accept";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema, userIdSchema } from "~web/handlers/validation";
+import { acceptNewIntentions } from "#web/handlers/debt-intentions/accept.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema, userIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

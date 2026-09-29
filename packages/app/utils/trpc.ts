@@ -11,8 +11,8 @@ import { observable } from "@trpc/server/observable";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { omitBy } from "remeda";
 
-import type { AppRouter } from "~app/trpc";
-import { transformer } from "~utils/transformer";
+import type { AppRouter } from "#app/trpc.ts";
+import { transformer } from "#utils/transformer.ts";
 
 type UnexpectedErrorLinkOptions<Router extends AnyTRPCRouter> = {
 	mapper: (error: TRPCClientError<Router>) => TRPCClientError<Router>;

@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { passwordSchema } from "~app/utils/validation";
-import { generatePasswordData, getHash } from "~utils/server/crypto";
-import { authProcedure } from "~web/handlers/trpc";
+import { passwordSchema } from "#app/utils/validation.ts";
+import { generatePasswordData, getHash } from "#utils/server/crypto.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

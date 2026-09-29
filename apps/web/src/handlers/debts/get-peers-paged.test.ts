@@ -2,8 +2,8 @@ import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { assert, describe, expect } from "vitest";
 
-import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import { createAuthContext } from "~tests/backend/utils/context";
+import { MAX_LIMIT, MAX_OFFSET } from "#app/utils/validation.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertDebt,
@@ -11,15 +11,15 @@ import {
 	insertSyncedDebts,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { getRandomAmount } from "~web/handlers/debts/utils.test";
-import { t } from "~web/handlers/trpc";
-import { runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { getRandomAmount } from "#web/handlers/debts/utils.test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./get-peers-paged";
 

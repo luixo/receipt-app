@@ -2,8 +2,8 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { PageHeader } from "~app/components/page-header";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
 
 import { DebtIntentions } from "./debts-intentions";
 

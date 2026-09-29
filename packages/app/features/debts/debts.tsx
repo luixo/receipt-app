@@ -4,31 +4,31 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
-import { DebtsGroupSkeleton } from "~app/components/app/debts-group";
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { SkeletonPeer } from "~app/components/app/peer";
-import { EmptyCard } from "~app/components/empty-card";
+import { DebtsGroupSkeleton } from "#app/components/app/debts-group.tsx";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { SkeletonPeer } from "#app/components/app/peer.tsx";
+import { EmptyCard } from "#app/components/empty-card.tsx";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
-} from "~app/components/pagination-block";
-import { SuspendedOverlay } from "~app/components/pagination-overlay";
-import { PeerDebtsGroup } from "~app/components/peer-debts-group";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useCursorPaging } from "~app/hooks/use-cursor-paging";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+} from "#app/components/pagination-block.tsx";
+import { SuspendedOverlay } from "#app/components/pagination-overlay.tsx";
+import { PeerDebtsGroup } from "#app/components/peer-debts-group.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useCursorPaging } from "#app/hooks/use-cursor-paging.ts";
+import { useShowResolvedDebts } from "#app/hooks/use-show-resolved-debts.ts";
 import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
-} from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
-import { Card } from "~components/card";
-import { Icon } from "~components/icons";
-import { ButtonLink, CardLink } from "~components/link";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+} from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Card } from "#components/card.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink, CardLink } from "#components/link.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 const cardClassName =
 	"flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center";

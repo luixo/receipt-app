@@ -1,12 +1,12 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
-import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
-import { test as debtSyncStatusTest } from "~app/components/app/__tests__/debt-sync-status.utils";
-import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { test as currenciesPickerTest } from "#app/components/app/__tests__/currencies-picker.utils.ts";
+import { test as debtSyncStatusTest } from "#app/components/app/__tests__/debt-sync-status.utils.ts";
+import { formatCurrency, getCurrencySymbol } from "#app/utils/currency.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as debtControlButtonsTest } from "./debt-control-buttons.utils";
 import { test as localTest } from "./debt-screen.utils";

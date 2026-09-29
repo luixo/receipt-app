@@ -1,10 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { generateResetPasswordEmail } from "~web/email/utils";
-import { unauthProcedure } from "~web/handlers/trpc";
-import { MAX_INTENTIONS_AMOUNT, emailSchema } from "~web/handlers/validation";
-import { getEmailClient } from "~web/providers/email";
+import { generateResetPasswordEmail } from "#web/email/utils.tsx";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
+import {
+	MAX_INTENTIONS_AMOUNT,
+	emailSchema,
+} from "#web/handlers/validation.ts";
+import { getEmailClient } from "#web/providers/email.ts";
 
 export const procedure = unauthProcedure
 	.meta({

@@ -9,8 +9,8 @@ import type {
 	RouteId,
 	RouteTo,
 	SearchParamStateByRoute,
-} from "~app/utils/navigation";
-import type { TreeRouter } from "~web/entry/router";
+} from "#app/utils/navigation.tsx";
+import type { TreeRouter } from "#web/entry/router.tsx";
 
 export type NavigationContext = {
 	useNavigate: () => <K extends RouteTo>(

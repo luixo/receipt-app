@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsExchangeAllScreen } from "~app/features/debts-exchange-all/debts-exchange-all-screen";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { DebtsExchangeAllScreen } from "#app/features/debts-exchange-all/debts-exchange-all-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/debts/peer/$id/exchange/all")(
 	{

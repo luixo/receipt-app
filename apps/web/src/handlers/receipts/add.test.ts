@@ -3,24 +3,24 @@ import { omit } from "remeda";
 import { describe, expect } from "vitest";
 import type { z } from "zod";
 
-import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
-import { createAuthContext } from "~tests/backend/utils/context";
+import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "#app/utils/validation.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { getValidReceiptItem } from "~web/handlers/receipt-items/utils.test";
-import { t } from "~web/handlers/trpc";
-import { UUID_REGEX } from "~web/handlers/validation";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { getValidReceiptItem } from "#web/handlers/receipt-items/utils.test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { UUID_REGEX } from "#web/handlers/validation.ts";
 
 import type { addReceiptSchema as schema } from "./add";
 import { procedure } from "./add";

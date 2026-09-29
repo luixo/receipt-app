@@ -1,10 +1,10 @@
 import React from "react";
 
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import { useMountEffect } from "~app/hooks/use-mount-effect";
-import type { StoreValues } from "~app/utils/store-data";
-import { LOCALE_STORE_NAME, getLocale } from "~app/utils/store/locale";
-import { TIMEZONE_STORE_NAME, getTimezone } from "~app/utils/store/timezone";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import { useMountEffect } from "#app/hooks/use-mount-effect.ts";
+import type { StoreValues } from "#app/utils/store-data.ts";
+import { LOCALE_STORE_NAME, getLocale } from "#app/utils/store/locale.ts";
+import { TIMEZONE_STORE_NAME, getTimezone } from "#app/utils/store/timezone.ts";
 
 const useSetLocalSetting = <T extends keyof StoreValues>(
 	key: T,

@@ -1,12 +1,12 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 import {
 	DEBTS,
 	FUNCTIONS,
 	PEERS,
 	RECEIPT_PARTICIPANTS,
-} from "~db/migration/consts";
+} from "#db/migration/consts.ts";
 
 const dropOldIndexesTriggers = async (db: Database) => {
 	for (const index of [

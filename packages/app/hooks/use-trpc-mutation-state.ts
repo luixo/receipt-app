@@ -8,7 +8,7 @@ import type {
 	TRPCMutationKey,
 	TRPCMutationOutput,
 	TRPCMutationState,
-} from "~app/trpc";
+} from "#app/trpc.ts";
 
 export const useTrpcMutationStates = <Key extends TRPCMutationKey>(
 	mutationKey: MutationKey,

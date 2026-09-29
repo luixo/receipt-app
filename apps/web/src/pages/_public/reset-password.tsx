@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { ResetPasswordScreen } from "~app/features/reset-password/reset-password-screen";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { ResetPasswordScreen } from "#app/features/reset-password/reset-password-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_public/reset-password")({
 	component: ResetPasswordScreen,

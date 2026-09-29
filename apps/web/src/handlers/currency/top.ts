@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
 	getOwnReceipts,
 	getParticipantsReceipts,
-} from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
+} from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

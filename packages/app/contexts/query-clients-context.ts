@@ -2,7 +2,7 @@ import React from "react";
 
 import { QueryClient } from "@tanstack/react-query";
 
-import { getQueryClientConfig } from "~app/utils/trpc";
+import { getQueryClientConfig } from "#app/utils/trpc.ts";
 
 export const getQueryClient = () => new QueryClient(getQueryClientConfig());
 

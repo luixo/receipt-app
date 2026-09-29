@@ -4,20 +4,20 @@ import { describe, expect } from "vitest";
 import {
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
-} from "~app/utils/validation";
-import { createContext } from "~tests/backend/utils/context";
+} from "#app/utils/validation.ts";
+import { createContext } from "#tests/backend/utils/context.ts";
 import {
 	assertDatabase,
 	insertResetPasswordIntention,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { getHash } from "~utils/server/crypto";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { getHash } from "#utils/server/crypto.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./reset-password";
 

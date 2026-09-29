@@ -12,36 +12,36 @@ import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, pullObject } from "remeda";
 import { z } from "zod";
 
-import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { PeersSuggest } from "~app/components/app/peers-suggest";
-import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useLocale } from "~app/hooks/use-locale";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import { getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useAppForm } from "~app/utils/forms";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
+import { CurrenciesPicker } from "#app/components/app/currencies-picker.tsx";
+import { PeersSuggest } from "#app/components/app/peers-suggest.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { ShowResolvedDebtsOption } from "#app/features/settings/show-resolved-debts-option.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useShowResolvedDebts } from "#app/hooks/use-show-resolved-debts.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useTrpcMutationStates } from "#app/hooks/use-trpc-mutation-state.ts";
+import { getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
-} from "~app/utils/validation";
-import { BackLink } from "~components/back-link";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Skeleton } from "~components/skeleton";
-import { SkeletonNumberInput } from "~components/skeleton-number-input";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
-import { options as debtsAddOptions } from "~mutations/debts/add";
+} from "#app/utils/validation.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { SkeletonNumberInput } from "#components/skeleton-number-input.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
+import { options as debtsAddOptions } from "#mutations/debts/add.ts";
 
 const formSchema = z
 	.record(currencyCodeSchema, debtAmountSchema.or(z.literal(0)))

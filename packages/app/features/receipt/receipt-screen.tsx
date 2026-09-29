@@ -3,30 +3,30 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
-import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
+import { LoadablePeerAvatar } from "#app/components/app/loadable-peer-avatar.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
 import {
 	ActionsHooksContext,
 	ReceiptContext,
-} from "~app/features/receipt-components/context";
+} from "#app/features/receipt-components/context.ts";
 import {
 	ReceiptItems,
 	ReceiptItemsSkeleton,
-} from "~app/features/receipt-components/receipt-items";
+} from "#app/features/receipt-components/receipt-items.tsx";
 import {
 	ReceiptParticipants,
 	ReceiptParticipantsPreviewSkeleton,
-} from "~app/features/receipt-components/receipt-participants";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
-import { BackLink } from "~components/back-link";
-import { Icon } from "~components/icons";
-import { Skeleton } from "~components/skeleton";
-import { SkeletonAvatar } from "~components/skeleton-avatar";
-import { SkeletonDateInput } from "~components/skeleton-date-input";
-import { View } from "~components/view";
+} from "#app/features/receipt-components/receipt-participants.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Icon } from "#components/icons.tsx";
+import { SkeletonAvatar } from "#components/skeleton-avatar.tsx";
+import { SkeletonDateInput } from "#components/skeleton-date-input.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { View } from "#components/view.tsx";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";

@@ -3,9 +3,9 @@ import type { Reporter, TestCase } from "@playwright/test/reporter";
 import colors from "colors";
 import { stripVTControlCharacters } from "node:util";
 
-import { serverName } from "~tests/frontend/consts";
-import { addTestServerError } from "~tests/frontend/global/router";
-import { decryptTag } from "~utils/server/tag";
+import { serverName } from "#tests/frontend/consts.ts";
+import { addTestServerError } from "#tests/frontend/global/router.ts";
+import { decryptTag } from "#utils/server/tag.ts";
 
 class ServerMessagesReporter implements Reporter {
 	public onStd(

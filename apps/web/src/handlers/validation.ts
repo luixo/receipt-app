@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { flavored } from "~app/utils/validation";
-import type { DebtId, ReceiptId, ReceiptItemId, SessionId } from "~db/ids";
-import { CURRENCY_CODES } from "~utils/currency-data";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { flavored } from "#app/utils/validation.ts";
+import type { DebtId, ReceiptId, ReceiptItemId, SessionId } from "#db/ids.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
 
 export const assignableRoleSchema = z.literal(["viewer", "editor"]);
 
@@ -36,4 +36,4 @@ export const UUID_REGEX =
 
 export const MAX_INTENTIONS_AMOUNT = 3;
 
-export { userIdSchema, peerIdSchema } from "~app/utils/validation";
+export { userIdSchema, peerIdSchema } from "#app/utils/validation.ts";

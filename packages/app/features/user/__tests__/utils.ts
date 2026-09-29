@@ -1,7 +1,7 @@
 import type { Locator } from "@playwright/test";
 
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { ExtractFixture } from "~tests/frontend/types";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 // 1×1 transparent PNG — small enough to keep tests fast, valid enough for react-easy-crop
 const TEST_IMAGE_DATA_URL =

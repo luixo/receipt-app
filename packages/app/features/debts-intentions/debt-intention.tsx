@@ -1,16 +1,16 @@
 import type React from "react";
 
-import { useFormat } from "~app/hooks/use-format";
-import { useLocale } from "~app/hooks/use-locale";
-import type { DebtIntention as DebtIntentionType } from "~app/trpc-types";
-import { formatCurrency } from "~app/utils/currency";
-import { Card } from "~components/card";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { useFormat } from "#app/hooks/use-format.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import type { DebtIntention as DebtIntentionType } from "#app/trpc-types.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { Card } from "#components/card.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 export const SkeletonDebtIntention: React.FC<{ children?: ViewReactNode }> = ({
 	children,

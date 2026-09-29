@@ -1,8 +1,8 @@
 import { capitalize } from "remeda";
 import type { z } from "zod";
 
-import type { Locale } from "~app/utils/locale";
-import type { currencySchema } from "~app/utils/validation";
+import type { Locale } from "#app/utils/locale.ts";
+import type { currencySchema } from "#app/utils/validation.ts";
 
 export type CurrencyCode = string & {
 	__flavor?: "currencyCode";

@@ -6,9 +6,9 @@ import { Lucide as LucideRaw } from "@react-native-vector-icons/lucide";
 import type { SFSymbol } from "sf-symbols-typescript";
 import { withUniwind } from "uniwind";
 
-import { TextClassContext } from "~components/text.native";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { TextClassContext } from "#components/text.native.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 import type { IconName, Props } from "./icons";
 

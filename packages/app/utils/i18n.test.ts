@@ -1,17 +1,16 @@
-/* oxlint-disable import-js/no-extraneous-dependencies */
-import enDefault from "@ra/web/public/locales/en/default.json" with { type: "json" };
-import ruDefault from "@ra/web/public/locales/ru/default.json" with { type: "json" };
-/* oxlint-enable import-js/no-extraneous-dependencies */
 import { createInstance } from "i18next";
 import { expect, test } from "vitest";
 
-import { getValidatorMessageFactory } from "~app/utils/i18n";
+import { getValidatorMessageFactory } from "#app/utils/i18n.tsx";
 import {
 	emailSchema,
 	passwordSchema,
 	peerNameSchema,
 	priceSchema,
-} from "~app/utils/validation";
+} from "#app/utils/validation.ts";
+
+import enDefault from "../../../apps/web/public/locales/en/default.json" with { type: "json" };
+import ruDefault from "../../../apps/web/public/locales/ru/default.json" with { type: "json" };
 
 test.describe("Zod validation", () => {
 	test.describe("translates", async () => {

@@ -8,7 +8,7 @@ import type {
 } from "@tanstack/router-core";
 import { z } from "zod";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
 import {
 	confirmEmailTokenSchema,
 	currencyCodeSchema,
@@ -19,9 +19,12 @@ import {
 	receiptsOrderBySchema,
 	resetPasswordTokenSchema,
 	voidUserTokenSchema,
-} from "~app/utils/validation";
-import type { TreeRouter } from "~web/entry/router";
-import type { FileRoutesById, FileRoutesByTo } from "~web/entry/routeTree.gen";
+} from "#app/utils/validation.ts";
+import type { TreeRouter } from "#web/entry/router.tsx";
+import type {
+	FileRoutesById,
+	FileRoutesByTo,
+} from "#web/entry/routeTree.gen.ts";
 
 declare module "@react-types/shared" {
 	// oxlint-disable-next-line typescript/consistent-type-definitions

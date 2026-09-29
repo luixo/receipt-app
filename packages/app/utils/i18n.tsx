@@ -12,8 +12,8 @@ import { I18nextProvider } from "react-i18next";
 import { capitalize, clone, keys, unique } from "remeda";
 import z from "zod";
 
-import type { TRPCError } from "~app/trpc";
-import { promisifyEvent } from "~utils/promise";
+import type { TRPCError } from "#app/trpc.ts";
+import { promisifyEvent } from "#utils/promise.ts";
 
 import type { Language, Namespace } from "./i18n-data";
 import { baseLanguage, defaultNamespace, languages } from "./i18n-data";

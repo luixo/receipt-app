@@ -7,11 +7,11 @@ import {
 } from "heroui-native/toast";
 import { tv } from "tailwind-variants";
 
-import { Icon } from "~components/icons";
-import type { IconName } from "~components/icons";
-import type { AddProps, ToastProviderProps } from "~components/toast";
-import { View } from "~components/view";
-import { MAX_VISIBLE_TOASTS, TOAST_TIMEOUT } from "~utils/toast";
+import { Icon } from "#components/icons.tsx";
+import type { IconName } from "#components/icons.tsx";
+import type { AddProps, ToastProviderProps } from "#components/toast.tsx";
+import { View } from "#components/view.tsx";
+import { MAX_VISIBLE_TOASTS, TOAST_TIMEOUT } from "#utils/toast.ts";
 
 let toastManager: ReturnType<typeof useToast> | undefined = undefined;
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => {

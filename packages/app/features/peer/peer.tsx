@@ -4,27 +4,27 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { PageHeader } from "~app/components/page-header";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
 import {
 	RemoveButton,
 	SkeletonRemoveButton,
-} from "~app/components/remove-button";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { peerNameSchema } from "~app/utils/validation";
-import { BackLink } from "~components/back-link";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { SaveButton } from "~components/save-button";
-import { SkeletonInput } from "~components/skeleton-input";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
-import { options as peersRemoveOptions } from "~mutations/peers/remove";
-import { options as peersUpdateOptions } from "~mutations/peers/update";
+} from "#app/components/remove-button.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { peerNameSchema } from "#app/utils/validation.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { SaveButton } from "#components/save-button.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
+import { options as peersRemoveOptions } from "#mutations/peers/remove.ts";
+import { options as peersUpdateOptions } from "#mutations/peers/update.ts";
 
 import { PeerConnectionInput } from "./peer-connection-input";
 

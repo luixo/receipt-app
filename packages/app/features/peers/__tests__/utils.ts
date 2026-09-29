@@ -1,7 +1,7 @@
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
-import type { ExtractFixture } from "~tests/frontend/types";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 type AuthPageResult = Awaited<
 	ReturnType<

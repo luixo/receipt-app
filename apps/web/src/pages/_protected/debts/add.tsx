@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
+import { AddDebtScreen } from "#app/features/add-debt/add-debt-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
 
 export const Route = createFileRoute("/_protected/debts/add")({
 	component: AddDebtScreen,

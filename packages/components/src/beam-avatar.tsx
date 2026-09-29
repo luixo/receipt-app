@@ -2,7 +2,7 @@ import React from "react";
 
 import type * as svg from "react-native-svg";
 
-import { hslToRgb } from "~utils/color";
+import { hslToRgb } from "#utils/color.ts";
 
 const DEGREES = 360;
 // We use a color from a color circle divided in given sectors

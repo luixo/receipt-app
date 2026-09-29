@@ -3,17 +3,17 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { EmptyCard } from "~app/components/empty-card";
-import { ErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCMutationResult } from "~app/trpc";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
-import { ButtonLink } from "~components/link";
-import { Spinner } from "~components/spinner";
-import { Text } from "~components/text";
-import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { TRPCMutationResult } from "#app/trpc.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { ButtonLink } from "#components/link.tsx";
+import { Spinner } from "#components/spinner.tsx";
+import { Text } from "#components/text.tsx";
+import { options as authConfirmEmailOptions } from "#mutations/auth/confirm-email.ts";
 
 export const ConfirmEmail: React.FC<{
 	confirmMutation: TRPCMutationResult<"auth.confirmEmail">;

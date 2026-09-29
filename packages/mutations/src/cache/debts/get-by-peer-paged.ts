@@ -1,5 +1,5 @@
-import type { TRPCQueryInput } from "~app/trpc";
-import type { PeerId } from "~db/ids";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import type { PeerId } from "#db/ids.ts";
 
 import type { ControllerContext, ControllerWith } from "../../types";
 

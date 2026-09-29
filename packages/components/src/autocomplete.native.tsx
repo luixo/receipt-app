@@ -3,14 +3,14 @@ import React from "react";
 import type { PopoverTriggerRef } from "heroui-native/popover";
 import { Popover } from "heroui-native/popover";
 
-import type { Props } from "~components/autocomplete";
-import { Icon } from "~components/icons";
-import { Input } from "~components/input";
-import { ScrollView } from "~components/scroll-view";
-import { Text } from "~components/text";
-import { TextClassContext } from "~components/text.native";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import type { Props } from "#components/autocomplete.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Input } from "#components/input.tsx";
+import { ScrollView } from "#components/scroll-view.tsx";
+import { TextClassContext } from "#components/text.native.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 export const Autocomplete: React.FC<Props> = ({
 	inputValue,

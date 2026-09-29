@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "~app/utils/validation";
+import { fallback } from "#app/utils/validation.ts";
 
 export const PRETEND_USER_STORE_NAME = "receipt_pretendUser";
 

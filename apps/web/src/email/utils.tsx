@@ -3,10 +3,10 @@ import React from "react";
 import { render } from "@react-email/components";
 import type { ParseKeys } from "i18next";
 
-import { createI18nContext } from "~app/utils/i18n";
-import { BaseUrlContext } from "~web/email/components";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
+import { createI18nContext } from "#app/utils/i18n.tsx";
+import { BaseUrlContext } from "#web/email/components.tsx";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { getBackendModule, getLanguageFromRequest } from "#web/utils/i18n.ts";
 
 import { ConfirmEmailEmail } from "./confirm-email-email";
 import { ResetPasswordEmail } from "./reset-password-email";

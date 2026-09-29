@@ -1,7 +1,7 @@
 import * as crypto from "node:crypto";
 import { promisify } from "node:util";
 
-import type { UnauthorizedContext } from "~web/handlers/context";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
 
 type PasswordData = {
 	hash: string;

@@ -4,9 +4,9 @@ import type { AnyFormApi } from "@tanstack/react-form";
 import { useStore } from "@tanstack/react-form";
 import { useDebouncedCallback } from "@tanstack/react-pacer";
 
-import { Icon } from "~components/icons";
-import { Spinner } from "~components/spinner";
-import { cn } from "~components/utils";
+import { Icon } from "#components/icons.tsx";
+import { Spinner } from "#components/spinner.tsx";
+import { cn } from "#components/utils.ts";
 
 export const useAutosave = ({
 	isUpdatePending,

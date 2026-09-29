@@ -2,12 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useColorModes } from "~app/hooks/use-color-modes";
-import { Checkbox } from "~components/checkbox";
-import { Icon } from "~components/icons";
-import { Switch } from "~components/switch";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import { useColorModes } from "#app/hooks/use-color-modes.ts";
+import { Checkbox } from "#components/checkbox.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Switch } from "#components/switch.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 export const ColorModeSettings: React.FC = () => {
 	const { t } = useTranslation("settings");

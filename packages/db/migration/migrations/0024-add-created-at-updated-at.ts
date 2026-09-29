@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 import {
 	ACCOUNTS,
 	ACCOUNT_CONNECTIONS_INTENTIONS,
@@ -14,8 +14,8 @@ import {
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
 	RESET_PASSWORD_INTENTIONS,
-} from "~db/migration/consts";
-import { isTestEnv } from "~db/migration/utils";
+} from "#db/migration/consts.ts";
+import { isTestEnv } from "#db/migration/utils.ts";
 
 const updateColumn = "updatedAt";
 // Project inception date

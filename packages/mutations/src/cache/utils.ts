@@ -8,8 +8,8 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 	TRPCSplitQueryKey,
-} from "~app/trpc";
-import type { MaybePromise } from "~utils/types";
+} from "#app/trpc.ts";
+import type { MaybePromise } from "#utils/types.ts";
 
 import type {
 	ControllerContext,

@@ -1,9 +1,9 @@
 import type React from "react";
 
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 type Props = {
 	updatePart: React.Dispatch<React.SetStateAction<number>>;

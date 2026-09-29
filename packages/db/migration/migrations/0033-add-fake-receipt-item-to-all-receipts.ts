@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 
 const addFakeReceiptItems = async (db: Database) => {
 	await db

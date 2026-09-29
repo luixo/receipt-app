@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { resetPasswordTokenSchema } from "~app/utils/validation";
-import { unauthProcedure } from "~web/handlers/trpc";
+import { resetPasswordTokenSchema } from "#app/utils/validation.ts";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = unauthProcedure
 	.meta({

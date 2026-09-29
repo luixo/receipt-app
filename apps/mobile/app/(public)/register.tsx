@@ -1,7 +1,7 @@
 import type React from "react";
 
-import { PageWrapper } from "~app/components/page-wrapper";
-import { RegisterScreen } from "~app/features/register/register-screen";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { RegisterScreen } from "#app/features/register/register-screen.tsx";
 
 const Wrapper = () => (
 	<PageWrapper>

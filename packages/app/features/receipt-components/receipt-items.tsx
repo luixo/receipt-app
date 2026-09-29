@@ -2,12 +2,12 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
-import type { ViewHandle } from "~components/view.base";
-import type { ReceiptItemId } from "~db/ids";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewHandle } from "#components/view.base.tsx";
+import type { ReceiptItemId } from "#db/ids.ts";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { useReceiptContext } from "./context";

@@ -1,7 +1,7 @@
 import type { Locator } from "@playwright/test";
 
-import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
-import type { GenerateReceipt } from "~tests/frontend/generators/receipts";
+import type { GenerateDebtsFromReceipt } from "#tests/frontend/generators/debts.ts";
+import type { GenerateReceipt } from "#tests/frontend/generators/receipts.ts";
 
 import { test as originalTest } from "./utils";
 

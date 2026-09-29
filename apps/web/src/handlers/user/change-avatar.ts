@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { imageSize } from "image-size";
 
-import { avatarFormSchema } from "~app/utils/validation";
-import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
-import { authProcedure } from "~web/handlers/trpc";
-import { getS3Client } from "~web/providers/s3";
+import { avatarFormSchema } from "#app/utils/validation.ts";
+import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "#utils/images.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { getS3Client } from "#web/providers/s3.ts";
 
 export const S3_AVATAR_PREFIX = "avatars";
 

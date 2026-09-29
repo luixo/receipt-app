@@ -1,12 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { PeerId, UserId } from "~db/ids";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { getParticipantsReceipts } from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema } from "~web/handlers/validation";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { getParticipantsReceipts } from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema } from "#web/handlers/validation.ts";
 
 // We allow  user fetch foreign peers
 // In case they share the same receipt (as participant or as payer)

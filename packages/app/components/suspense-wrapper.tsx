@@ -11,8 +11,8 @@ import type {
 import { CatchBoundary } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
-import { ErrorMessage } from "~app/components/error-message";
-import { LinksContext } from "~app/contexts/links-context";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { LinksContext } from "#app/contexts/links-context.ts";
 
 export const ErrorComponent: ErrorRouteComponent = ({
 	error,

@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Text } from "~components/text";
+import { Text } from "#components/text.tsx";
 
 import type { Props } from "./highlighted-text";
 

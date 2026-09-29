@@ -1,6 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as peersSuggestFixture } from "~app/components/app/__tests__/peers-suggest.utils";
+import { test as peersSuggestFixture } from "#app/components/app/__tests__/peers-suggest.utils.ts";
 
 import { test as localTest } from "./inbound-connection-intention.utils";
 

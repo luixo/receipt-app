@@ -3,9 +3,9 @@ import { TRPCError } from "@trpc/server";
 import { pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
-import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
-import type { PeerId, UserId } from "~db/ids";
-import { createAuthContext } from "~tests/backend/utils/context";
+import type { TRPCMutationInput, TRPCMutationOutput } from "#app/trpc.ts";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	assertDatabase,
 	insertConnectedPeers,
@@ -15,17 +15,17 @@ import {
 	insertSyncedDebts,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectLocalTRPCError,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import type { TestContext } from "~tests/backend/utils/test";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
-import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { getRandomCurrencyCode, runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./update";
 import {

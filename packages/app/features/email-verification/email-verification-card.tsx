@@ -3,13 +3,13 @@ import React from "react";
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Card } from "~components/card";
-import { Text } from "~components/text";
-import { options as userResendEmailOptions } from "~mutations/user/resend-email";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Card } from "#components/card.tsx";
+import { Text } from "#components/text.tsx";
+import { options as userResendEmailOptions } from "#mutations/user/resend-email.ts";
 
 export const EmailVerificationCard = suspendedFallback(
 	() => {

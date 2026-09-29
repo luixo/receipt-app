@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test } from "./peers-screen.utils";
 

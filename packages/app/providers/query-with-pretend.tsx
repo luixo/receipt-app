@@ -1,10 +1,10 @@
 import React from "react";
 
-import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import { QueryProvider } from "~app/providers/query";
-import { TRPCProvider } from "~app/providers/trpc";
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { SELF_QUERY_CLIENT_KEY } from "#app/contexts/query-clients-context.ts";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import { QueryProvider } from "#app/providers/query.tsx";
+import { TRPCProvider } from "#app/providers/trpc.tsx";
+import { PRETEND_USER_STORE_NAME } from "#app/utils/store/pretend-user.ts";
 
 export const QueryProviderWithPretend: React.FC<React.PropsWithChildren> = ({
 	children,

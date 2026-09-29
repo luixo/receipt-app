@@ -2,7 +2,7 @@ import type React from "react";
 import { View as RawView } from "react-native";
 import type { LayoutRectangle, ViewStyle } from "react-native";
 
-import { cn } from "~components/utils";
+import { cn } from "#components/utils.ts";
 
 import type { ViewHandle } from "./view.base";
 import { useScrollView } from "./view.base";

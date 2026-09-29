@@ -2,10 +2,10 @@ import * as React from "react";
 
 import { Select as SelectRaw } from "heroui-native/select";
 
-import { Button } from "~components/button";
-import { Text } from "~components/text";
-import { TextClassContext } from "~components/text.native";
-import { cn } from "~components/utils";
+import { Button } from "#components/button.tsx";
+import { TextClassContext } from "#components/text.native.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
 
 import type { Props } from "./select";
 

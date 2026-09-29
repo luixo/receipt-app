@@ -2,8 +2,8 @@ import {
 	DEFAULT_LIMIT,
 	fallback,
 	limitSchema as rawLimitSchema,
-} from "~app/utils/validation";
-import type { RouterContext } from "~web/pages/__root";
+} from "#app/utils/validation.ts";
+import type { RouterContext } from "#web/pages/__root.tsx";
 
 export const LIMIT_STORE_NAME = "receipt_limit";
 

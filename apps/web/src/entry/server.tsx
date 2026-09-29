@@ -16,8 +16,8 @@ import type { ReadableStream as NodeReadableStream } from "node:stream/web";
 import ReactDOMServer from "react-dom/server";
 import { keys } from "remeda";
 
-import { encryptTag } from "~utils/server/tag";
-import { env } from "~web/utils/env";
+import { encryptTag } from "#utils/server/tag.ts";
+import { env } from "#web/utils/env.ts";
 
 import type { TreeRouter } from "./router";
 

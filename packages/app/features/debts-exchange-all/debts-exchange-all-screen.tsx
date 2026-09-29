@@ -2,16 +2,16 @@ import React from "react";
 
 import { doNothing } from "remeda";
 
-import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { PageHeader } from "~app/components/page-header";
-import { PeerDebtsGroup } from "~app/components/peer-debts-group";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { CurrencyCode } from "~app/utils/currency";
-import { getPathHooks } from "~app/utils/navigation";
-import { BackLink } from "~components/back-link";
-import { Divider } from "~components/divider";
+import { CurrenciesPicker } from "#app/components/app/currencies-picker.tsx";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { PeerDebtsGroup } from "#app/components/peer-debts-group.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { BackLink } from "#components/back-link.tsx";
+import { Divider } from "#components/divider.tsx";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";

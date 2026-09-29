@@ -1,4 +1,4 @@
-import "~utils/temporal-polyfill";
+import "#utils/temporal-polyfill.ts";
 import type { Project } from "@playwright/test";
 import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
@@ -9,7 +9,7 @@ import {
 	serverName,
 	serverSettings,
 	urlSettings,
-} from "~tests/frontend/consts";
+} from "#tests/frontend/consts.ts";
 
 const visualProjectsMatch = /.*\.visual\.spec\.ts/;
 const visualProjects: Project[] = [

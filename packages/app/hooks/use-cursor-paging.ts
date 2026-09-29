@@ -6,9 +6,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type {
 	TRPCDecoratedInfiniteQueryProcedure,
 	TRPCInfiniteQueryKey,
-} from "~app/trpc";
-import type { SearchParamState } from "~app/utils/navigation";
-import { updateSetStateAction } from "~utils/react";
+} from "#app/trpc.ts";
+import type { SearchParamState } from "#app/utils/navigation.tsx";
+import { updateSetStateAction } from "#utils/react.ts";
 
 const validateOffset = ({
 	limit,

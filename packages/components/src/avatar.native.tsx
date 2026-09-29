@@ -5,10 +5,10 @@ import { Avatar as AvatarRaw } from "heroui-native/avatar";
 import { Grayscale } from "react-native-color-matrix-image-filters";
 import * as svg from "react-native-svg";
 
-import { BeamAvatar } from "~components/beam-avatar";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { BeamAvatar } from "#components/beam-avatar.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 import type { GroupProps, Props } from "./avatar";
 

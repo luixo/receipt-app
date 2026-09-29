@@ -1,5 +1,5 @@
-import type { Database } from "~db/database";
-import { DEBTS } from "~db/migration/consts";
+import type { Database } from "#db/database.ts";
+import { DEBTS } from "#db/migration/consts.ts";
 
 const addReceiptIdColumn = async (db: Database) => {
 	await db.schema

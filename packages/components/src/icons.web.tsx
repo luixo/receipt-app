@@ -47,7 +47,7 @@ import {
 	X,
 } from "lucide-react";
 
-import { cn } from "~components/utils";
+import { cn } from "#components/utils.ts";
 
 const mapping = {
 	refresh: RefreshCw,

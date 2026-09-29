@@ -1,4 +1,4 @@
-import { getDummy } from "~components/dummy";
+import { getDummy } from "#components/dummy.ts";
 
 export type { ButtonGroupProps, ButtonProps } from "./button.base";
 

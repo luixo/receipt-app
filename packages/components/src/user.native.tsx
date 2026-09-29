@@ -1,10 +1,10 @@
 import type React from "react";
 
-import { Avatar } from "~components/avatar";
-import { Text } from "~components/text";
-import type { Props } from "~components/user";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { Avatar } from "#components/avatar.tsx";
+import { Text } from "#components/text.tsx";
+import type { Props } from "#components/user.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 export const User: React.FC<Props> = ({
 	avatarProps,

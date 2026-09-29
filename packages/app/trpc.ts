@@ -26,15 +26,15 @@ import type {
 	TRPCOptionsProxy,
 } from "@trpc/tanstack-react-query";
 
-import type { useTRPC } from "~app/utils/trpc";
+import type { useTRPC } from "#app/utils/trpc.ts";
 import type {
 	ExtractObjectByPath,
 	FlattenObject,
 	OmitDeep,
 	SplitStringByComma,
 	UnionToIntersection,
-} from "~utils/types";
-import type { router } from "~web/handlers";
+} from "#utils/types.ts";
+import type { router } from "#web/handlers/index.ts";
 
 export type AppRouter = typeof router;
 

@@ -2,10 +2,10 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { AddPeerForm } from "~app/features/add-peer/add-peer-form";
-import type { TRPCMutationOutput } from "~app/trpc";
-import { Modal } from "~components/modal";
-import { Text } from "~components/text";
+import { AddPeerForm } from "#app/features/add-peer/add-peer-form.tsx";
+import type { TRPCMutationOutput } from "#app/trpc.ts";
+import { Modal } from "#components/modal.tsx";
+import { Text } from "#components/text.tsx";
 
 type Props = {
 	initialValue: string;

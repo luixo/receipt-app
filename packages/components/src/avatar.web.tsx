@@ -6,8 +6,8 @@ import {
 	useAvatarGroupContext,
 } from "@heroui/avatar";
 
-import { BeamAvatar } from "~components/beam-avatar";
-import { cn } from "~components/utils";
+import { BeamAvatar } from "#components/beam-avatar.tsx";
+import { cn } from "#components/utils.ts";
 
 const avatarComponents: React.ComponentProps<typeof BeamAvatar>["components"] =
 	{

@@ -2,11 +2,11 @@ import React from "react";
 
 import { fromEntries, keys } from "remeda";
 
-import { StoreContext } from "~app/contexts/store-context";
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import type { StoreStates, StoreValues } from "~app/utils/store-data";
-import { getStoreStatesFromValues, schemas } from "~app/utils/store-data";
-import { updateSetStateAction } from "~utils/react";
+import { StoreContext } from "#app/contexts/store-context.ts";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import type { StoreStates, StoreValues } from "#app/utils/store-data.ts";
+import { getStoreStatesFromValues, schemas } from "#app/utils/store-data.ts";
+import { updateSetStateAction } from "#utils/react.ts";
 
 const resolveState = (values: StoreValues) =>
 	fromEntries(keys(schemas).map((key) => [key, values[key]])) as StoreValues;

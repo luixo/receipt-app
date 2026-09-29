@@ -3,14 +3,14 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { DebtIntention as DebtIntentionData } from "~app/trpc-types";
-import { formatCurrency } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Button, ButtonGroup } from "~components/button";
-import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { DebtIntention as DebtIntentionData } from "#app/trpc-types.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button, ButtonGroup } from "#components/button.tsx";
+import { options as acceptDebtIntentionOptions } from "#mutations/debt-intentions/accept.ts";
 
 import { DebtIntention, SkeletonDebtIntention } from "./debt-intention";
 

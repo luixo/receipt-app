@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { isNonNullish } from "remeda";
 
-import { getParticipantSums } from "~app/utils/receipt-item";
-import { expect } from "~tests/frontend/fixtures";
+import { getParticipantSums } from "#app/utils/receipt-item.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 import {
 	defaultGenerateDebtsFromReceipt,
 	ourDesynced,
@@ -11,9 +11,9 @@ import {
 	remapDebts,
 	theirDesynced,
 	theirSynced,
-} from "~tests/frontend/generators/debts";
-import { defaultGenerateReceiptItemsWithConsumers } from "~tests/frontend/generators/receipts";
-import { getMutationsByKey } from "~tests/frontend/utils/queries";
+} from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateReceiptItemsWithConsumers } from "#tests/frontend/generators/receipts.ts";
+import { getMutationsByKey } from "#tests/frontend/utils/queries.ts";
 
 import { test } from "./debts.utils";
 

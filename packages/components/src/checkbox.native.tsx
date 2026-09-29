@@ -4,9 +4,9 @@ import { Checkbox as CheckboxRaw } from "heroui-native/checkbox";
 import { tv } from "tailwind-variants";
 import { useCSSVariable } from "uniwind";
 
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./checkbox";
 

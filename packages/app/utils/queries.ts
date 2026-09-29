@@ -5,7 +5,7 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 	TRPCTanstackQueryKey,
-} from "~app/trpc";
+} from "#app/trpc.ts";
 
 export type EmptyMutateOptions = {
 	onSuccess?: () => void;

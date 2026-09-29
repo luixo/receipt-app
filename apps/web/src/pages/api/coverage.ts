@@ -3,7 +3,7 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import { stopCoverage, takeCoverage } from "node:v8";
 
-import { env } from "~web/utils/env";
+import { env } from "#web/utils/env.ts";
 
 const getCoverage = async () => {
 	const serverCoveragePath = env.NODE_V8_COVERAGE;

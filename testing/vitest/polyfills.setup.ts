@@ -1,1 +1,1 @@
-import "~utils/temporal-polyfill";
+import "#utils/temporal-polyfill.ts";

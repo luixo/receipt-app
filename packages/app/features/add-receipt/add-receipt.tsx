@@ -15,28 +15,28 @@ import type { Derived } from "@tanstack/react-store";
 import { useTranslation } from "react-i18next";
 import type z from "zod";
 
-import { CurrencyInput } from "~app/components/app/currency-input";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
+import { CurrencyInput } from "#app/components/app/currency-input.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
 import {
 	ActionsHooksContext,
 	ReceiptContext,
-} from "~app/features/receipt-components/context";
+} from "#app/features/receipt-components/context.ts";
 import {
 	ReceiptItems,
 	SkeletonAddReceiptItemController,
-} from "~app/features/receipt-components/receipt-items";
-import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
-import type { Payer } from "~app/features/receipt-components/state";
-import { useParticipants } from "~app/hooks/use-participants";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm, useTypedValues } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { DateInput } from "~components/date-input";
-import type { PeerId } from "~db/ids";
-import { options as receiptsAddOptions } from "~mutations/receipts/add";
-import type { UseStateReturn } from "~utils/react";
+} from "#app/features/receipt-components/receipt-items.tsx";
+import { ReceiptParticipants } from "#app/features/receipt-components/receipt-participants.tsx";
+import type { Payer } from "#app/features/receipt-components/state.ts";
+import { useParticipants } from "#app/hooks/use-participants.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm, useTypedValues } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { DateInput } from "#components/date-input.tsx";
+import type { PeerId } from "#db/ids.ts";
+import { options as receiptsAddOptions } from "#mutations/receipts/add.ts";
+import type { UseStateReturn } from "#utils/react.ts";
 
 import { useActionsHooks, useAddReceiptContext } from "./hooks";
 import type { Form, Item, Participant } from "./state";

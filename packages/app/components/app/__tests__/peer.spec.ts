@@ -1,9 +1,9 @@
 import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as peerFixture } from "~app/components/app/__tests__/peer.utils";
-import { test as peersFixture } from "~app/features/peers/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as peerFixture } from "#app/components/app/__tests__/peer.utils.ts";
+import { test as peersFixture } from "#app/features/peers/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 const test = mergeTests(peersFixture, peerFixture);
 

@@ -1,10 +1,10 @@
 import type React from "react";
 
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 type Props = {
 	aside?: ViewReactNode;

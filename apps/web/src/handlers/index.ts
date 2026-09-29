@@ -1,4 +1,4 @@
-import { t } from "~web/handlers/trpc";
+import { t } from "#web/handlers/trpc.ts";
 
 import { router as adminRouter } from "./admin/index";
 import { router as authRouter } from "./auth/index";

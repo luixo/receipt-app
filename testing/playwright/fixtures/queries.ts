@@ -1,16 +1,16 @@
 import { expect } from "@playwright/test";
 
-import type { TRPCKey } from "~app/trpc";
-import type { KeysLists } from "~tests/frontend/utils/queries";
+import type { TRPCKey } from "#app/trpc.ts";
+import type { KeysLists } from "#tests/frontend/utils/queries.ts";
 import {
 	getDehydratedCache,
 	getDiff,
 	remapActions,
-} from "~tests/frontend/utils/queries";
+} from "#tests/frontend/utils/queries.ts";
 import {
 	addAttachment,
 	getSnapshotName,
-} from "~tests/frontend/utils/test-info";
+} from "#tests/frontend/utils/test-info.ts";
 
 import { apiFixtures as test } from "./api";
 import type { ApiManager } from "./api";

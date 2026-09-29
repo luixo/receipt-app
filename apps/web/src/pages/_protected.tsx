@@ -4,12 +4,12 @@ import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { TRPCClientError } from "@trpc/client";
 import { serialize } from "cookie";
 
-import { ProtectedPage } from "~app/components/protected-page";
-import type { TRPCError } from "~app/trpc";
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { Spinner } from "~components/spinner";
-import { captureSentryError } from "~web/utils/sentry";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { ProtectedPage } from "#app/components/protected-page.tsx";
+import type { TRPCError } from "#app/trpc.ts";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { Spinner } from "#components/spinner.tsx";
+import { captureSentryError } from "#web/utils/sentry.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 import { getOptions } from "../utils/cookies";
 

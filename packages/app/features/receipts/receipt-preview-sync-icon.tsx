@@ -1,12 +1,12 @@
 import type React from "react";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useParticipantsWithDebts } from "~app/hooks/use-participants";
-import type { Receipt } from "~app/trpc-types";
-import { isDebtInSyncWithReceipt } from "~app/utils/debts";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Skeleton } from "~components/skeleton";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useParticipantsWithDebts } from "#app/hooks/use-participants.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import { isDebtInSyncWithReceipt } from "#app/utils/debts.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
 
 export const skeletonReceiptPreviewSyncIcon = (
 	<Skeleton className="size-6 rounded-sm" />

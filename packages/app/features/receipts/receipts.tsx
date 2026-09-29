@@ -5,29 +5,29 @@ import { useMutation } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
-import { EmptyCard } from "~app/components/empty-card";
+import { EmptyCard } from "#app/components/empty-card.tsx";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
-} from "~app/components/pagination-block";
-import { SuspendedOverlay } from "~app/components/pagination-overlay";
-import { RemoveButton } from "~app/components/remove-button";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useCursorPaging } from "~app/hooks/use-cursor-paging";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+} from "#app/components/pagination-block.tsx";
+import { SuspendedOverlay } from "#app/components/pagination-overlay.tsx";
+import { RemoveButton } from "#app/components/remove-button.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useCursorPaging } from "#app/hooks/use-cursor-paging.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
 import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
-} from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
-import { Divider } from "~components/divider";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { ReceiptId } from "~db/ids";
-import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
+} from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Divider } from "#components/divider.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { ReceiptId } from "#db/ids.ts";
+import { options as receiptsRemoveOptions } from "#mutations/receipts/remove.ts";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 

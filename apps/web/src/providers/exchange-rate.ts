@@ -2,11 +2,11 @@ import Dataloader from "dataloader";
 import { entries, fromEntries, keys } from "remeda";
 import { z } from "zod";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import type { CacheInstance } from "~web/providers/cache-db";
-import { getCacheInstance } from "~web/providers/cache-db";
-import { env } from "~web/utils/env";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import type { CacheInstance } from "#web/providers/cache-db.ts";
+import { getCacheInstance } from "#web/providers/cache-db.ts";
+import { env } from "#web/utils/env.ts";
 
 export type ExchangeRateOptions = {
 	mock?: {

@@ -1,5 +1,5 @@
-import type { Debt } from "~app/trpc-types";
-import type { DebtId } from "~db/ids";
+import type { Debt } from "#app/trpc-types.ts";
+import type { DebtId } from "#db/ids.ts";
 
 import type {
 	ControllerContext,

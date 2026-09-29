@@ -1,12 +1,12 @@
 import type { NumberOrRange } from "@faker-js/faker";
 import type { Locator } from "@playwright/test";
 
-import type { Currencies, Peer } from "~app/trpc-types";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
-import { generateCurrencyCodes } from "~tests/frontend/generators/utils";
-import type { ExtractFixture } from "~tests/frontend/types";
+import type { Currencies, Peer } from "#app/trpc-types.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { generateCurrencyCodes } from "#tests/frontend/generators/utils.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 type Fixtures = {
 	mockBase: (amount?: NumberOrRange) => Promise<

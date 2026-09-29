@@ -1,6 +1,6 @@
 import { defaultStringifySearch, interpolatePath } from "@tanstack/router-core";
 
-import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
+import type { NavigationOptions, RouteTo } from "#app/utils/navigation.tsx";
 
 export const buildUrl = <K extends RouteTo>({
 	to,

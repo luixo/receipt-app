@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsExchangeSpecificScreen } from "~app/features/debts-exchange-specific/debts-exchange-specific-screen";
-import { getTitle } from "~web/utils/i18n";
+import { DebtsExchangeSpecificScreen } from "#app/features/debts-exchange-specific/debts-exchange-specific-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
 
 export const Route = createFileRoute(
 	"/_protected/debts/peer/$id/exchange/specific",

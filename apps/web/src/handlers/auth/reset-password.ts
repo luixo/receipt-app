@@ -4,9 +4,9 @@ import { z } from "zod";
 import {
 	passwordSchema,
 	resetPasswordTokenSchema,
-} from "~app/utils/validation";
-import { generatePasswordData } from "~utils/server/crypto";
-import { unauthProcedure } from "~web/handlers/trpc";
+} from "#app/utils/validation.ts";
+import { generatePasswordData } from "#utils/server/crypto.ts";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = unauthProcedure
 	.meta({

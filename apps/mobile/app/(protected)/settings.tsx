@@ -1,5 +1,5 @@
-import { PageWrapper } from "~app/components/page-wrapper";
-import { SettingsScreen } from "~app/features/settings/settings-screen";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { SettingsScreen } from "#app/features/settings/settings-screen.tsx";
 
 const Wrapper = () => (
 	<PageWrapper>

@@ -3,11 +3,11 @@ import { TRPCError } from "@trpc/server";
 import { identity } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { TRPCQueryInput } from "~app/trpc";
-import type { ReceiptPageEntry } from "~app/trpc-types";
-import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { UserId } from "~db/ids";
-import { createAuthContext } from "~tests/backend/utils/context";
+import type { ReceiptPageEntry } from "#app/trpc-types.ts";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import { MAX_LIMIT, MAX_OFFSET } from "#app/utils/validation.ts";
+import type { UserId } from "#db/ids.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertPeer,
@@ -16,15 +16,15 @@ import {
 	insertReceiptParticipant,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import type { TestContext } from "~tests/backend/utils/test";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
-import { runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./get-paged";
 

@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Icon } from "~components/icons";
+import { Icon } from "#components/icons.tsx";
 
 import { Button } from "./button";
 

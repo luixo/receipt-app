@@ -1,8 +1,8 @@
 import type React from "react";
 
-import { ARIA_LEVEL, ROLE, textVariants } from "~components/text.base";
-import type { TextVariant } from "~components/text.base";
-import { cn } from "~components/utils";
+import { ARIA_LEVEL, ROLE, textVariants } from "#components/text.base.tsx";
+import type { TextVariant } from "#components/text.base.tsx";
+import { cn } from "#components/utils.ts";
 
 export type MaybeText = string | number | undefined;
 

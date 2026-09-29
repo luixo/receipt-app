@@ -3,11 +3,11 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 import DatePicker from "react-native-date-picker";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormat } from "~app/hooks/use-format";
-import { useLocale } from "~app/hooks/use-locale";
-import { Input } from "~components/input";
-import { getMutationLoading } from "~components/utils";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useFormat } from "#app/hooks/use-format.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { Input } from "#components/input.tsx";
+import { getMutationLoading } from "#components/utils.ts";
 
 import type { Props } from "./date-input";
 

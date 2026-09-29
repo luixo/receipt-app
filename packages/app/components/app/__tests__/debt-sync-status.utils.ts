@@ -1,8 +1,8 @@
 import type { Locator } from "@playwright/test";
 
-import type { Peer } from "~app/trpc-types";
-import type { PeerId } from "~db/ids";
-import { test as originalTest } from "~tests/frontend/fixtures";
+import type { Peer } from "#app/trpc-types.ts";
+import type { PeerId } from "#db/ids.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
 
 export type Fixtures = {
 	debtSyncStatus: Locator;

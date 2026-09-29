@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsIntentionsScreen } from "~app/features/debts-intentions/debts-intentions-screen";
-import { getTitle } from "~web/utils/i18n";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { DebtsIntentionsScreen } from "#app/features/debts-intentions/debts-intentions-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/debts/intentions")({
 	component: DebtsIntentionsScreen,

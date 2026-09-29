@@ -8,22 +8,25 @@ import {
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { PageHeader, SkeletonPageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { ChangePasswordScreen } from "~app/features/user/change-password";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { noBatchContext, useTRPC } from "~app/utils/trpc";
-import { peerNameSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { SaveButton } from "~components/save-button";
-import { SkeletonInput } from "~components/skeleton-input";
-import { View } from "~components/view";
-import { options as userChangeNameOptions } from "~mutations/user/change-name";
-import { options as userLogoutOptions } from "~mutations/user/logout";
+import {
+	PageHeader,
+	SkeletonPageHeader,
+} from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { ChangePasswordScreen } from "#app/features/user/change-password.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { noBatchContext, useTRPC } from "#app/utils/trpc.ts";
+import { peerNameSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { SaveButton } from "#components/save-button.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { View } from "#components/view.tsx";
+import { options as userChangeNameOptions } from "#mutations/user/change-name.ts";
+import { options as userLogoutOptions } from "#mutations/user/logout.ts";
 
 import { UserAvatarInput } from "./user-avatar-input";
 

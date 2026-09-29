@@ -5,10 +5,10 @@ import type {
 	ReceiptItem,
 	ReceiptParticipant,
 	ReceiptPayer,
-} from "~app/trpc-types";
-import type { CurrencyCode } from "~app/utils/currency";
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
+} from "#app/trpc-types.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import type { GeneratePeers } from "./peers";
 import type { GeneratorFnWithFaker } from "./utils";

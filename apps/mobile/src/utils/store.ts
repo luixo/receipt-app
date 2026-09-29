@@ -1,8 +1,8 @@
 import { createMMKV } from "react-native-mmkv";
 import { fromEntries } from "remeda";
 
-import type { StoreContextType } from "~app/contexts/store-context";
-import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
+import type { StoreContextType } from "#app/contexts/store-context.ts";
+import { getStoreValuesFromInitialValues } from "#app/utils/store-data.ts";
 
 const storage = createMMKV({ id: "cookie-jar" });
 

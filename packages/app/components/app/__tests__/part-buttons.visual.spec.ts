@@ -1,12 +1,12 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
+import { test as receiptTest } from "#app/features/receipt/__tests__/utils.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
 import type {
 	GenerateReceiptItems,
 	GenerateReceiptItemsWithConsumers,
-} from "~tests/frontend/generators/receipts";
-import { defaultGenerateReceiptItems } from "~tests/frontend/generators/receipts";
+} from "#tests/frontend/generators/receipts.ts";
+import { defaultGenerateReceiptItems } from "#tests/frontend/generators/receipts.ts";
 
 import { test as partButtonsFixture } from "./part-buttons.utils";
 

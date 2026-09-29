@@ -3,12 +3,12 @@ import { TRPCClientError } from "@trpc/client";
 import { fromEntries, pick } from "remeda";
 import { describe, expect } from "vitest";
 
-import { test } from "~tests/backend/utils/test";
-import { apiCookieNames } from "~utils/mocks";
-import { router as appRouter } from "~web/handlers/index";
-import { t } from "~web/handlers/trpc";
-import { withTestServer } from "~web/handlers/utils.test";
-import { getServerTrpcClient } from "~web/utils/server/trpc";
+import { test } from "#tests/backend/utils/test.ts";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { router as appRouter } from "#web/handlers/index.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { withTestServer } from "#web/handlers/utils.test.ts";
+import { getServerTrpcClient } from "#web/utils/server/trpc.ts";
 
 import { getLoaderTrpcClient } from "./trpc";
 

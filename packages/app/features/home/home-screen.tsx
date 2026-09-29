@@ -2,9 +2,9 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { Spinner } from "~components/spinner";
-import { Text } from "~components/text";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { Spinner } from "#components/spinner.tsx";
+import { Text } from "#components/text.tsx";
 
 export const HomeScreen = () => {
 	const { useNavigate } = React.use(NavigationContext);

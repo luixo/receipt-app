@@ -3,8 +3,8 @@ import type React from "react";
 import { BottomSheet } from "heroui-native/bottom-sheet";
 import { tv } from "tailwind-variants";
 
-import { Icon } from "~components/icons";
-import { View } from "~components/view";
+import { Icon } from "#components/icons.tsx";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./modal";
 

@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsScreen } from "~app/features/debts/debts-screen";
-import { withDefaultLimit } from "~app/utils/store/limit";
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { prefetchQueriesWith } from "~web/utils/ssr";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { DebtsScreen } from "#app/features/debts/debts-screen.tsx";
+import { withDefaultLimit } from "#app/utils/store/limit.ts";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
+import { prefetchQueriesWith } from "#web/utils/ssr.tsx";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/debts/")({
 	component: DebtsScreen,

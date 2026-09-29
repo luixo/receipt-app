@@ -4,13 +4,13 @@ import type { AnyTRPCRouter } from "@trpc/server";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { entries } from "remeda";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import type { GetLinksOptions, SimpleHeaders } from "~app/utils/trpc";
-import { getLinks } from "~app/utils/trpc";
-import type { TestContext } from "~tests/backend/utils/test";
-import { CURRENCY_CODES } from "~utils/currency-data";
-import { wait } from "~utils/promise";
-import { promisifyServer } from "~utils/server/promise";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { GetLinksOptions, SimpleHeaders } from "#app/utils/trpc.ts";
+import { getLinks } from "#app/utils/trpc.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
+import { wait } from "#utils/promise.ts";
+import { promisifyServer } from "#utils/server/promise.ts";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>
 	faker.helpers.arrayElement(CURRENCY_CODES);

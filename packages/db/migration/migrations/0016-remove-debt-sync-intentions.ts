@@ -1,4 +1,4 @@
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 
 import {
 	createDebtsSyncIntentionsTable,

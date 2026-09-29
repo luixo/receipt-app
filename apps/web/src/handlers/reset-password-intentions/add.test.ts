@@ -1,18 +1,18 @@
 import { faker } from "@faker-js/faker";
 import { assert, describe, expect } from "vitest";
 
-import { createContext } from "~tests/backend/utils/context";
+import { createContext } from "#tests/backend/utils/context.ts";
 import {
 	insertResetPasswordIntention,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
-import { MAX_INTENTIONS_AMOUNT } from "~web/handlers/validation";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { MAX_INTENTIONS_AMOUNT } from "#web/handlers/validation.ts";
 
 import { procedure } from "./add";
 

@@ -3,14 +3,14 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useLocale } from "~app/hooks/use-locale";
-import { getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Button, ButtonGroup } from "~components/button";
-import { Skeleton } from "~components/skeleton";
-import type { PeerId } from "~db/ids";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button, ButtonGroup } from "#components/button.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 type Props = {
 	selectedCurrencyCode?: CurrencyCode;

@@ -6,12 +6,12 @@ import type {
 } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import type { TRPCError } from "~app/trpc";
-import { Button } from "~components/button";
-import { Card } from "~components/card";
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import type { TRPCError } from "#app/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Card } from "#components/card.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 type Props = {
 	title?: string;

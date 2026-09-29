@@ -2,14 +2,14 @@ import { TRPCError } from "@trpc/server";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import type { DB } from "~db/types.gen";
-import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils";
-import { authProcedure } from "~web/handlers/trpc";
+import type { DB } from "#db/types.gen.ts";
+import { getReceiptParticipant } from "#web/handlers/receipt-participants/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 import {
 	assignableRoleSchema,
 	peerIdSchema,
 	receiptIdSchema,
-} from "~web/handlers/validation";
+} from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

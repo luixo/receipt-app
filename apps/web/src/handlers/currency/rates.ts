@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { authProcedure } from "~web/handlers/trpc";
-import { currencyCodeSchema } from "~web/handlers/validation";
-import { getExchangeRates } from "~web/providers/exchange-rate";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { currencyCodeSchema } from "#web/handlers/validation.ts";
+import { getExchangeRates } from "#web/providers/exchange-rate.ts";
 
 export const procedure = authProcedure
 	.meta({

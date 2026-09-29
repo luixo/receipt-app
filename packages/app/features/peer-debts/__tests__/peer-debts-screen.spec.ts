@@ -2,12 +2,12 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as debtsGroupTest } from "~app/components/app/__tests__/debts-group.utils";
-import { formatCurrency } from "~app/utils/currency";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import { test as debtsGroupTest } from "#app/components/app/__tests__/debts-group.utils.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test as localTest } from "./utils";
 

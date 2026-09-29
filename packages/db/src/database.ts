@@ -11,8 +11,8 @@ import { Pool, types } from "pg";
 import type { Logger } from "pino";
 import { entries, isPlainObject, mapValues } from "remeda";
 
-import type { DB } from "~db/types.gen";
-import type { TemporalMapping } from "~utils/temporal";
+import type { DB } from "#db/types.gen.ts";
+import type { TemporalMapping } from "#utils/temporal.ts";
 
 export type Database = Kysely<DB>;
 

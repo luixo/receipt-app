@@ -6,18 +6,18 @@ import { useTranslation } from "react-i18next";
 import {
 	PeersSuggest,
 	SkeletonPeersSuggest,
-} from "~app/components/app/peers-suggest";
-import { ConfirmModal } from "~app/components/confirm-modal";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { InboundIntention } from "~app/trpc-types";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Input } from "~components/input";
-import { SkeletonInput } from "~components/skeleton-input";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
-import { options as userConnectionsAcceptOptions } from "~mutations/user-connection-intentions/accept";
-import { options as userConnectionsRejectOptions } from "~mutations/user-connection-intentions/reject";
+} from "#app/components/app/peers-suggest.tsx";
+import { ConfirmModal } from "#app/components/confirm-modal.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { InboundIntention } from "#app/trpc-types.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Input } from "#components/input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
+import { options as userConnectionsAcceptOptions } from "#mutations/user-connection-intentions/accept.ts";
+import { options as userConnectionsRejectOptions } from "#mutations/user-connection-intentions/reject.ts";
 
 export const SkeletonInboundConnectionIntention = () => {
 	const { t } = useTranslation("peers");

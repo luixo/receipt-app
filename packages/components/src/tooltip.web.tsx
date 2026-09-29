@@ -2,7 +2,7 @@ import type React from "react";
 
 import { Tooltip as TooltipRaw } from "@heroui/tooltip";
 
-import type { ViewReactNode } from "~components/view.web";
+import type { ViewReactNode } from "#components/view.web.tsx";
 
 export type Props = Pick<
 	React.ComponentProps<typeof TooltipRaw>,

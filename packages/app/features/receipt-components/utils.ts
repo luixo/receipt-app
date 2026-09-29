@@ -1,4 +1,4 @@
-import type { Participant } from "~app/hooks/use-participants";
+import type { Participant } from "#app/hooks/use-participants.ts";
 
 import type { Item } from "./state";
 

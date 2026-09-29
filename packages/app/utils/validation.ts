@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { VALID_LOCALES, getValidLocale } from "~app/utils/locale";
-import type { PeerId, UserId } from "~db/ids";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { VALID_LOCALES, getValidLocale } from "#app/utils/locale.ts";
+import type { PeerId, UserId } from "#db/ids.ts";
 
 const constrainLength = (
 	schema: z.ZodString,

@@ -2,14 +2,14 @@ import React from "react";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 
-import { ErrorMessage } from "~app/components/error-message";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useTRPC } from "~app/utils/trpc";
-import { SkeletonSwitch } from "~components/skeleton-switch";
-import { Spinner } from "~components/spinner";
-import { Switch } from "~components/switch";
-import { options as userSettingsUpdateOptions } from "~mutations/user-settings/update";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { SkeletonSwitch } from "#components/skeleton-switch.tsx";
+import { Spinner } from "#components/spinner.tsx";
+import { Switch } from "#components/switch.tsx";
+import { options as userSettingsUpdateOptions } from "#mutations/user-settings/update.ts";
 
 export const ManualAcceptDebtsOption = suspendedFallback(
 	() => {

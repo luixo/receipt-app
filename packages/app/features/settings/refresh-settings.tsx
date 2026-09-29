@@ -3,9 +3,9 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Text } from "#components/text.tsx";
 
 export const RefreshSettings: React.FC = () => {
 	const { t } = useTranslation("settings");

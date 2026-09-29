@@ -5,8 +5,8 @@ import { doNothing } from "remeda";
 import {
 	getStoreStatesFromValues,
 	getStoreValuesFromInitialValues,
-} from "~app/utils/store-data";
-import type { StoreStates, StoreValues } from "~app/utils/store-data";
+} from "#app/utils/store-data.ts";
+import type { StoreStates, StoreValues } from "#app/utils/store-data.ts";
 
 // The data above + data we add on each render
 export type StoreData = {

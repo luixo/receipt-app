@@ -15,25 +15,25 @@ import { getCookies, getRequest } from "@tanstack/react-start/server";
 import { useTranslation } from "react-i18next";
 import { fromEntries } from "remeda";
 
-import { ErrorComponent } from "~app/components/suspense-wrapper";
-import { LinksContext } from "~app/contexts/links-context";
+import { ErrorComponent } from "#app/components/suspense-wrapper.tsx";
+import { LinksContext } from "#app/contexts/links-context.ts";
 import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
-} from "~app/contexts/query-clients-context";
-import { OuterProvider } from "~app/providers/outer";
-import { createI18nContext } from "~app/utils/i18n";
-import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
-import { Spinner } from "~components/spinner";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import { apiCookieNames } from "~utils/mocks";
-import { transformer } from "~utils/transformer";
-import type { ExternalRouterContext } from "~web/pages/__root";
-import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
-import { HydrationBoundary } from "~web/utils/ssr";
-import { getHostUrl } from "~web/utils/url";
+} from "#app/contexts/query-clients-context.ts";
+import { OuterProvider } from "#app/providers/outer.tsx";
+import { createI18nContext } from "#app/utils/i18n.tsx";
+import { getStoreValuesFromInitialValues } from "#app/utils/store-data.ts";
+import { PRETEND_USER_STORE_NAME } from "#app/utils/store/pretend-user.ts";
+import { Spinner } from "#components/spinner.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { ExternalRouterContext } from "#web/pages/__root.tsx";
+import { getBackendModule, getLanguageFromRequest } from "#web/utils/i18n.ts";
+import { HydrationBoundary } from "#web/utils/ssr.tsx";
+import { getHostUrl } from "#web/utils/url.ts";
 
 import { routeTree } from "./routeTree.gen";
 

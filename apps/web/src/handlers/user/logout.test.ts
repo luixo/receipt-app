@@ -1,13 +1,13 @@
 import { describe, expect } from "vitest";
 
-import { createAuthContext } from "~tests/backend/utils/context";
-import { insertUserWithSession } from "~tests/backend/utils/data";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import { insertUserWithSession } from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./logout";
 

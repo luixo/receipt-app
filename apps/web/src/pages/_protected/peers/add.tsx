@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { AddPeerScreen } from "~app/features/add-peer/add-peer-screen";
-import { getTitle } from "~web/utils/i18n";
+import { AddPeerScreen } from "#app/features/add-peer/add-peer-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
 
 export const Route = createFileRoute("/_protected/peers/add")({
 	component: AddPeerScreen,

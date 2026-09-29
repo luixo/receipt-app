@@ -1,7 +1,7 @@
 import type { IncomingMessage, Server, ServerResponse } from "node:http";
 import { format } from "node:url";
 
-import { promisifyEvent } from "~utils/promise";
+import { promisifyEvent } from "#utils/promise.ts";
 
 export const promisifyServer = <
 	Request extends typeof IncomingMessage = typeof IncomingMessage,

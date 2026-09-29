@@ -10,19 +10,19 @@ import {
 import { useTranslation } from "react-i18next";
 import { isNonNull } from "remeda";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { Peer } from "~app/components/app/peer";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useDebouncedValue } from "~app/hooks/use-debounced-value";
-import type { TRPCQueryInput } from "~app/trpc";
-import { useTRPC } from "~app/utils/trpc";
-import { Autocomplete } from "~components/autocomplete";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { SkeletonInput } from "~components/skeleton-input";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { Peer } from "#app/components/app/peer.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useDebouncedValue } from "#app/hooks/use-debounced-value.ts";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Autocomplete } from "#components/autocomplete.tsx";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 import { AddPeerModal } from "./add-peer-modal";
 

@@ -1,7 +1,7 @@
 import { Accordion as AccordionRaw } from "heroui-native/accordion";
 import { PressableFeedback } from "heroui-native/pressable-feedback";
 
-import type { ItemProps, Props } from "~components/accordion";
+import type { ItemProps, Props } from "#components/accordion.tsx";
 
 export const Accordion = ({ children }: Props) => (
 	<AccordionRaw>{children}</AccordionRaw>

@@ -1,8 +1,8 @@
 import type React from "react";
 
-import { NumberInput } from "~components/number-input";
-import { Skeleton } from "~components/skeleton";
-import { cn } from "~components/utils";
+import { NumberInput } from "#components/number-input.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { cn } from "#components/utils.ts";
 
 export const SkeletonNumberInput: React.FC<
 	Partial<

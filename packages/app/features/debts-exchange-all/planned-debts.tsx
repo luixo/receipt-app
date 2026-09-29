@@ -7,28 +7,28 @@ import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, unique } from "remeda";
 import { z } from "zod";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useAppForm } from "~app/utils/forms";
-import type { Locale } from "~app/utils/locale";
-import { useTRPC } from "~app/utils/trpc";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useTrpcMutationStates } from "#app/hooks/use-trpc-mutation-state.ts";
+import { formatCurrency, getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import type { Locale } from "#app/utils/locale.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
 import {
 	currencyCodeSchema,
 	currencyRateSchema,
 	currencyRateSchemaDecimal,
-} from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Skeleton } from "~components/skeleton";
-import { SkeletonNumberInput } from "~components/skeleton-number-input";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
-import { options as debtsAddOptions } from "~mutations/debts/add";
-import { round } from "~utils/math";
+} from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { SkeletonNumberInput } from "#components/skeleton-number-input.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
+import { options as debtsAddOptions } from "#mutations/debts/add.ts";
+import { round } from "#utils/math.ts";
 
 const createFormSchema = (t: TFunction<"debts">) =>
 	z.record(

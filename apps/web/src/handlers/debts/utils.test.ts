@@ -1,18 +1,18 @@
 import { faker } from "@faker-js/faker";
 import { describe } from "vitest";
 
-import type { CurrencyCode } from "~app/utils/currency";
+import type { CurrencyCode } from "#app/utils/currency.ts";
 import {
 	MAX_DEBT_NOTE_LENGTH,
 	MIN_DEBT_NOTE_LENGTH,
-} from "~app/utils/validation";
-import type { PeerId, ReceiptId } from "~db/ids";
-import { createAuthContext } from "~tests/backend/utils/context";
-import { insertUserWithSession } from "~tests/backend/utils/data";
-import { expectTRPCError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { getRandomCurrencyCode } from "~web/handlers/utils.test";
+} from "#app/utils/validation.ts";
+import type { PeerId, ReceiptId } from "#db/ids.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import { insertUserWithSession } from "#tests/backend/utils/data.ts";
+import { expectTRPCError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { getRandomCurrencyCode } from "#web/handlers/utils.test.ts";
 
 export const getRandomAmount = () =>
 	(faker.datatype.boolean() ? 1 : -1) * Number(faker.finance.amount());

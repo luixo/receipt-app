@@ -2,20 +2,20 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
-import { PeersSuggest } from "~app/components/app/peers-suggest";
-import { EmptyCard } from "~app/components/empty-card";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import type { ReceiptDebts } from "~app/trpc-types";
-import { AvatarGroup } from "~components/avatar";
-import { Button } from "~components/button";
-import { Divider } from "~components/divider";
-import { Icon } from "~components/icons";
-import { Modal } from "~components/modal";
-import { SkeletonAvatar } from "~components/skeleton-avatar";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+import { LoadablePeerAvatar } from "#app/components/app/loadable-peer-avatar.tsx";
+import { PeersSuggest } from "#app/components/app/peers-suggest.tsx";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import type { ReceiptDebts } from "#app/trpc-types.ts";
+import { AvatarGroup } from "#components/avatar.tsx";
+import { Button } from "#components/button.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Modal } from "#components/modal.tsx";
+import { SkeletonAvatar } from "#components/skeleton-avatar.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";

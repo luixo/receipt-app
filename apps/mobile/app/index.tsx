@@ -2,12 +2,12 @@ import React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { PageWrapper } from "~app/components/page-wrapper";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { HomeScreen } from "~app/features/home/home-screen";
-import { useTRPC } from "~app/utils/trpc";
-import { Spinner } from "~components/spinner";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { HomeScreen } from "#app/features/home/home-screen.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Spinner } from "#components/spinner.tsx";
 
 const RedirectPage: React.FC = suspendedFallback(
 	() => {

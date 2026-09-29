@@ -1,4 +1,4 @@
-import type { ReceiptItemId } from "~db/ids";
+import type { ReceiptItemId } from "#db/ids.ts";
 
 import {
 	update as updateReceipts,

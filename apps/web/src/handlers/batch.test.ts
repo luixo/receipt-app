@@ -3,9 +3,9 @@ import { isNonNullish } from "remeda";
 import { assert, describe, expect } from "vitest";
 import { z } from "zod";
 
-import { test } from "~tests/backend/utils/test";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { t, unauthProcedure } from "~web/handlers/trpc";
+import { test } from "#tests/backend/utils/test.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { t, unauthProcedure } from "#web/handlers/trpc.ts";
 
 import { queueCallFactory } from "./batch";
 import { getTestClient, withTestServer } from "./utils.test";

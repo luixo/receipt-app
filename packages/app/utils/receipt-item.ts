@@ -8,9 +8,9 @@ import {
 	values,
 } from "remeda";
 
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
-import { rotate } from "~utils/array";
-import { getIndexByString } from "~utils/hash";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import { rotate } from "#utils/array.ts";
+import { getIndexByString } from "#utils/hash.ts";
 
 type ReceiptItem = {
 	id: ReceiptItemId;

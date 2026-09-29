@@ -5,9 +5,9 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 import { z } from "zod";
 
-import { getDatabase, temporalParsers } from "~db/database";
-import { migrate } from "~db/migration/index";
-import { transformer } from "~utils/transformer";
+import { getDatabase, temporalParsers } from "#db/database.ts";
+import { migrate } from "#db/migration/index.ts";
+import { transformer } from "#utils/transformer.ts";
 
 import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";

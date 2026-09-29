@@ -1,7 +1,7 @@
 import type { Level, pino } from "pino";
 import { entries, keys, mapValues } from "remeda";
 
-import type { Tail } from "~utils/types";
+import type { Tail } from "#utils/types.ts";
 
 type LevelWithSilent = Level | "silent";
 

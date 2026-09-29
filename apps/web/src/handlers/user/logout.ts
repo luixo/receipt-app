@@ -1,6 +1,6 @@
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { authProcedure } from "~web/handlers/trpc";
-import { setCookie } from "~web/utils/cookies";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { setCookie } from "#web/utils/cookies.ts";
 
 export const procedure = authProcedure
 	.meta({

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { assert } from "vitest";
 
-import type { CurrencyCode } from "~app/utils/currency";
+import type { CurrencyCode } from "#app/utils/currency.ts";
 import type {
 	DebtId,
 	PeerId,
@@ -9,11 +9,11 @@ import type {
 	ReceiptItemId,
 	SessionId,
 	UserId,
-} from "~db/ids";
-import type { ReceiptRole } from "~db/types.gen";
-import type { TestContext } from "~tests/backend/utils/test";
-import { asFixedSizeArray } from "~utils/array";
-import { generatePasswordData } from "~utils/server/crypto";
+} from "#db/ids.ts";
+import type { ReceiptRole } from "#db/types.gen.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { asFixedSizeArray } from "#utils/array.ts";
+import { generatePasswordData } from "#utils/server/crypto.ts";
 
 export const assertDatabase = (ctx: TestContext) => {
 	assert(ctx.database, "This test required DB to exist");

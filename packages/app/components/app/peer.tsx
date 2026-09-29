@@ -1,11 +1,11 @@
 import type React from "react";
 
-import { getPeerAvatarProps } from "~app/components/app/peer-avatar";
-import type { Peer as PeerType } from "~app/trpc-types";
-import { Skeleton } from "~components/skeleton";
-import { User as RawUser } from "~components/user";
-import { cn } from "~components/utils";
-import type { PeerId } from "~db/ids";
+import { getPeerAvatarProps } from "#app/components/app/peer-avatar.tsx";
+import type { Peer as PeerType } from "#app/trpc-types.ts";
+import { Skeleton } from "#components/skeleton.tsx";
+import { User as RawUser } from "#components/user.tsx";
+import { cn } from "#components/utils.ts";
+import type { PeerId } from "#db/ids.ts";
 
 export const SkeletonPeer: React.FC<
 	Omit<Props, "id" | "name" | "connectedUser" | "avatarProps">

@@ -1,11 +1,11 @@
 import type { QueryCreator } from "kysely";
 import type { z } from "zod";
 
-import type { Database } from "~db/database";
-import type { UserId } from "~db/ids";
-import type { DB } from "~db/types.gen";
-import type { assignableRoleSchema } from "~web/handlers/validation";
-import { roleSchema } from "~web/handlers/validation";
+import type { Database } from "#db/database.ts";
+import type { UserId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
+import type { assignableRoleSchema } from "#web/handlers/validation.ts";
+import { roleSchema } from "#web/handlers/validation.ts";
 
 export type Role = z.infer<typeof roleSchema>;
 export type AssignableRole = z.infer<typeof assignableRoleSchema>;

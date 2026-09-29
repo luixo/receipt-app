@@ -5,13 +5,13 @@ import { proxyRequest } from "@tanstack/react-start/server";
 import { TRPCError } from "@trpc/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
-import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
-import { apiCookieNames } from "~utils/mocks";
-import { transformer } from "~utils/transformer";
-import { router } from "~web/handlers";
-import { getCookie } from "~web/utils/cookies";
-import { env } from "~web/utils/env";
-import { createServerContext } from "~web/utils/server/trpc";
+import { DEFAULT_TRPC_ENDPOINT } from "#app/contexts/links-context.ts";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { transformer } from "#utils/transformer.ts";
+import { router } from "#web/handlers/index.ts";
+import { getCookie } from "#web/utils/cookies.ts";
+import { env } from "#web/utils/env.ts";
+import { createServerContext } from "#web/utils/server/trpc.ts";
 
 type Callback = RouteMethodHandlerFn<
 	Register,

@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
-import { CURRENT_TIMESTAMP, FUNCTIONS } from "~db/migration/consts";
+import type { Database } from "#db/database.ts";
+import { CURRENT_TIMESTAMP, FUNCTIONS } from "#db/migration/consts.ts";
 
 const table = "accountConnectionsIntentions";
 const accountIndex = "accountConnectionsIntentions:accountId:index";

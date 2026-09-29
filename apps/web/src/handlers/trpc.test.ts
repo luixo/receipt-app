@@ -1,16 +1,22 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
-import { createAuthContext, createContext } from "~tests/backend/utils/context";
-import { insertUser, insertUserWithSession } from "~tests/backend/utils/data";
+import { PRETEND_USER_STORE_NAME } from "#app/utils/store/pretend-user.ts";
+import {
+	createAuthContext,
+	createContext,
+} from "#tests/backend/utils/context.ts";
+import {
+	insertUser,
+	insertUserWithSession,
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { SESSION_REFRESH_DURATION } from "#web/handlers/auth/utils.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { router } from "./index";
 

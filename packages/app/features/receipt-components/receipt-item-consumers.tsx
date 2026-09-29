@@ -4,15 +4,15 @@ import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
-import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import { useTRPC } from "~app/utils/trpc";
-import { AvatarGroup } from "~components/avatar";
-import { Select } from "~components/select";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+import { LoadablePeerAvatar } from "#app/components/app/loadable-peer-avatar.tsx";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { useTrpcMutationStates } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { AvatarGroup } from "#components/avatar.tsx";
+import { Select } from "#components/select.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";

@@ -2,7 +2,7 @@
 // But we have to keep it in the root to make it read env files
 import { defineConfig } from "kysely-ctl";
 
-import { getDatabase } from "~db/database";
+import { getDatabase } from "#db/database.ts";
 
 const databaseUrl = import.meta.env.DATABASE_URL;
 if (!databaseUrl) {

@@ -1,13 +1,13 @@
 import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 
-import type { Database } from "~db/database";
-import type { TestContext } from "~tests/backend/utils/test";
-import type { authProcedure } from "~web/handlers/trpc";
-import type { CacheDbOptions } from "~web/providers/cache-db";
-import type { EmailOptions } from "~web/providers/email";
-import type { ExchangeRateOptions } from "~web/providers/exchange-rate";
-import type { Logger } from "~web/providers/logger";
-import type { S3Options } from "~web/providers/s3";
+import type { Database } from "#db/database.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import type { authProcedure } from "#web/handlers/trpc.ts";
+import type { CacheDbOptions } from "#web/providers/cache-db.ts";
+import type { EmailOptions } from "#web/providers/email.ts";
+import type { ExchangeRateOptions } from "#web/providers/exchange-rate.ts";
+import type { Logger } from "#web/providers/logger.ts";
+import type { S3Options } from "#web/providers/s3.ts";
 
 type TestContextPicks = Pick<TestContext, "getSalt" | "getUuid"> & {
 	database: Database;

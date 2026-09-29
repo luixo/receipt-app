@@ -2,12 +2,12 @@ import React from "react";
 
 import { QueryClientProvider } from "@tanstack/react-query";
 
-import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
+import type { QueryClientsRecord } from "#app/contexts/query-clients-context.ts";
 import {
 	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
-} from "~app/contexts/query-clients-context";
+} from "#app/contexts/query-clients-context.ts";
 
 type Props = {
 	queryClientKey: keyof QueryClientsRecord;

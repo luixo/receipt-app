@@ -2,9 +2,9 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button } from "~components/button";
-import { Spinner } from "~components/spinner";
-import { View } from "~components/view";
+import { Button } from "#components/button.tsx";
+import { Spinner } from "#components/spinner.tsx";
+import { View } from "#components/view.tsx";
 
 export type Direction = "+" | "-";
 

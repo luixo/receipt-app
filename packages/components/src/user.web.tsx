@@ -2,8 +2,8 @@ import type React from "react";
 
 import { User as UserRaw } from "@heroui/user";
 
-import type { Props as AvatarProps } from "~components/avatar";
-import { useAvatarProps } from "~components/avatar.web";
+import type { Props as AvatarProps } from "#components/avatar.tsx";
+import { useAvatarProps } from "#components/avatar.web.tsx";
 
 export type Props = {
 	avatarProps?: AvatarProps;

@@ -1,6 +1,6 @@
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { generateCurrencyCode } from "~tests/frontend/generators/utils";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { generateCurrencyCode } from "#tests/frontend/generators/utils.ts";
 
 import { test } from "./even-debts-divider.utils";
 

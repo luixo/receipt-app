@@ -5,10 +5,10 @@ import type {
 	ReceiptItemPayer,
 	ReceiptParticipant,
 	ReceiptPayer,
-} from "~app/trpc-types";
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
-import type { ItemWithIndex } from "~utils/array";
-import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
+} from "#app/trpc-types.ts";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import type { ItemWithIndex } from "#utils/array.ts";
+import { addToArray, removeFromArray, replaceInArray } from "#utils/array.ts";
 
 import type {
 	ControllerContext,

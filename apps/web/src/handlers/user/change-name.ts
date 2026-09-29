@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { peerNameSchema } from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { authProcedure } from "~web/handlers/trpc";
+import { peerNameSchema } from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

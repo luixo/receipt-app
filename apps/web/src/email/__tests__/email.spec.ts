@@ -1,8 +1,8 @@
-import { expect, test } from "~tests/frontend/fixtures";
+import { expect, test } from "#tests/frontend/fixtures.ts";
 import {
 	generateConfirmEmailEmail,
 	generateResetPasswordEmail,
-} from "~web/email/utils";
+} from "#web/email/utils.tsx";
 
 const mockContext = {
 	baseUrl: "http://receipt-test.app",

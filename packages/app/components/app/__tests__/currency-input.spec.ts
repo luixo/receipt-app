@@ -1,9 +1,9 @@
 import { mergeTests } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as addDebtTest } from "~app/features/add-debt/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
-import { CURRENCY_CODES } from "~utils/currency-data";
+import { test as addDebtTest } from "#app/features/add-debt/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
 
 import { test as currenciesPickerFixture } from "./currencies-picker.utils";
 import { test as currencyInputFixture } from "./currency-input.utils";

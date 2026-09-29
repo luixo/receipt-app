@@ -3,22 +3,22 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { Peer, SkeletonPeer } from "~app/components/app/peer";
-import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import type { TRPCQueryOutput } from "~app/trpc";
-import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Card } from "~components/card";
-import { Divider } from "~components/divider";
-import { Modal } from "~components/modal";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { PeerId } from "~db/ids";
+import { Peer, SkeletonPeer } from "#app/components/app/peer.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import type { TRPCQueryOutput } from "#app/trpc.ts";
+import { PRETEND_USER_STORE_NAME } from "#app/utils/store/pretend-user.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Card } from "#components/card.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Modal } from "#components/modal.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 type ModalProps = {
 	isModalOpen: boolean;

@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-import type { DebtId, PeerId, ReceiptId, UserId } from "~db/ids";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import { receiptIdSchema } from "~web/handlers/validation";
+import type { DebtId, PeerId, ReceiptId, UserId } from "#db/ids.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { receiptIdSchema } from "#web/handlers/validation.ts";
 
 const fetchReceipts = async (
 	{ database, auth }: AuthorizedContext,

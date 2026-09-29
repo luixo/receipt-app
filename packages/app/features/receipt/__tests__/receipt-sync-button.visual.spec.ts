@@ -3,8 +3,8 @@ import {
 	ourDesynced,
 	ourNonExistent,
 	remapDebts,
-} from "~tests/frontend/generators/debts";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+} from "#tests/frontend/generators/debts.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 import { test } from "./debts.utils";
 

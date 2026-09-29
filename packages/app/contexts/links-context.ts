@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import * as React from "react";
 
-import type { getLinks } from "~app/utils/trpc";
+import type { getLinks } from "#app/utils/trpc.ts";
 
 export type LinksContextType = Parameters<typeof getLinks>[0];
 

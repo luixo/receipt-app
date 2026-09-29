@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/tanstackstart-react";
 
-import type { GetLinksOptions } from "~app/utils/trpc";
+import type { GetLinksOptions } from "#app/utils/trpc.ts";
 
 export const captureSentryError: GetLinksOptions["captureError"] = (error) => {
 	const transactionId = Math.random().toString(36).slice(2, 9);

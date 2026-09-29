@@ -12,10 +12,13 @@ import type { ValidateNavigateOptions } from "@tanstack/router-core";
 import { mapValues, omitBy } from "remeda";
 import { z } from "zod";
 
-import type { NavigationContext } from "~app/contexts/navigation-context";
-import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
-import { searchParamsMapping } from "~app/utils/navigation";
-import { updateSetStateAction } from "~utils/react";
+import type { NavigationContext } from "#app/contexts/navigation-context.ts";
+import type {
+	OutputRouteSearchParams,
+	RouteId,
+} from "#app/utils/navigation.tsx";
+import { searchParamsMapping } from "#app/utils/navigation.tsx";
+import { updateSetStateAction } from "#utils/react.ts";
 
 declare module "@react-types/shared" {
 	// oxlint-disable-next-line typescript/consistent-type-definitions

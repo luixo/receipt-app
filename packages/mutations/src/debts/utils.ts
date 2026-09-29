@@ -1,7 +1,7 @@
-import type { TRPCMutationInput } from "~app/trpc";
-import type { Debt } from "~app/trpc-types";
-import type { DebtId, PeerId, ReceiptId } from "~db/ids";
-import { round } from "~utils/math";
+import type { Debt } from "#app/trpc-types.ts";
+import type { TRPCMutationInput } from "#app/trpc.ts";
+import type { DebtId, PeerId, ReceiptId } from "#db/ids.ts";
+import { round } from "#utils/math.ts";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";

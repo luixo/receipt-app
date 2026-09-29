@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native";
 import { Card as CardRaw } from "heroui-native/card";
 import { tv } from "tailwind-variants";
 
-import { Divider } from "~components/divider";
+import { Divider } from "#components/divider.tsx";
 
 import type { Props } from "./card";
 

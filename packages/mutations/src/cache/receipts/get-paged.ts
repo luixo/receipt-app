@@ -1,6 +1,6 @@
-import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
-import type { ReceiptPageEntry } from "~app/trpc-types";
-import type { ReceiptId } from "~db/ids";
+import type { ReceiptPageEntry } from "#app/trpc-types.ts";
+import type { TRPCQueryInput, TRPCQueryOutput } from "#app/trpc.ts";
+import type { ReceiptId } from "#db/ids.ts";
 
 import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
 import {

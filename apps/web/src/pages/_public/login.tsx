@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { LoginScreen } from "~app/features/login/login-screen";
-import { getTitle } from "~web/utils/i18n";
+import { LoginScreen } from "#app/features/login/login-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
 
 export const Route = createFileRoute("/_public/login")({
 	component: LoginScreen,

@@ -1,5 +1,5 @@
-import type { Database } from "~db/database";
-import { PEERS } from "~db/migration/consts";
+import type { Database } from "#db/database.ts";
+import { PEERS } from "#db/migration/consts.ts";
 
 const addUsersOwnerAccountIdIndex = async (db: Database) => {
 	await db.schema

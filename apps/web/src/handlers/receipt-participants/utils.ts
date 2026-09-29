@@ -1,8 +1,8 @@
 import type { SelectExpression, Selection } from "kysely";
 
-import type { Database } from "~db/database";
-import type { PeerId, ReceiptId } from "~db/ids";
-import type { DB } from "~db/types.gen";
+import type { Database } from "#db/database.ts";
+import type { PeerId, ReceiptId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
 
 type ReceiptsSelectExpression<TB extends keyof DB> = SelectExpression<DB, TB>;
 

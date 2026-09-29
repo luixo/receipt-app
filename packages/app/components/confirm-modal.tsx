@@ -2,10 +2,10 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { Button } from "~components/button";
-import { Modal } from "~components/modal";
-import { Text } from "~components/text";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { Button } from "#components/button.tsx";
+import { Modal } from "#components/modal.tsx";
+import { Text } from "#components/text.tsx";
 
 type Props = {
 	onConfirm: () => void;

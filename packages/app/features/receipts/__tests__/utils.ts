@@ -1,10 +1,10 @@
 import { TRPCError } from "@trpc/server";
 
-import type { Receipt } from "~app/trpc-types";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { Receipt } from "#app/trpc-types.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GenerateDebtsFromReceipt } from "#tests/frontend/generators/debts.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -12,7 +12,7 @@ import type {
 	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
 	GenerateReceiptPayers,
-} from "~tests/frontend/generators/receipts";
+} from "#tests/frontend/generators/receipts.ts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
@@ -20,10 +20,10 @@ import {
 	defaultGenerateReceiptItemsWithConsumers,
 	defaultGenerateReceiptParticipants,
 	defaultGenerateReceiptPayers,
-} from "~tests/frontend/generators/receipts";
-import type { ExtractFixture } from "~tests/frontend/types";
+} from "#tests/frontend/generators/receipts.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
-export type { ReceiptId } from "~db/ids";
+export type { ReceiptId } from "#db/ids.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<

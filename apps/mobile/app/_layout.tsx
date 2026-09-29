@@ -10,28 +10,28 @@ import { SafeAreaListener } from "react-native-safe-area-context";
 import { isNonNullish } from "remeda";
 import { Uniwind } from "uniwind";
 
-import { ErrorMessage } from "~app/components/error-message";
-import type { LinksContextType } from "~app/contexts/links-context";
-import { LinksContext } from "~app/contexts/links-context";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import type { LinksContextType } from "#app/contexts/links-context.ts";
+import { LinksContext } from "#app/contexts/links-context.ts";
 import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
-} from "~app/contexts/query-clients-context";
-import { InnerProvider } from "~app/providers/inner";
-import { OuterProvider } from "~app/providers/outer";
-import { createI18nContext } from "~app/utils/i18n";
-import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
-import { ToastProvider } from "~components/toast";
-import { View } from "~components/view";
-import { SplashScreenManager } from "~mobile/components/splash-screen-manager";
-import { Stack } from "~mobile/components/stack";
-import { useBaseUrl } from "~mobile/hooks/use-base-url";
-import { DevToolsProvider } from "~mobile/providers/devtools";
-import { resources } from "~mobile/utils/i18n";
-import { navigationContext } from "~mobile/utils/navigation";
-import { captureSentryError } from "~mobile/utils/sentry";
-import { storage } from "~mobile/utils/storage";
-import { storeContext } from "~mobile/utils/store";
+} from "#app/contexts/query-clients-context.ts";
+import { InnerProvider } from "#app/providers/inner.tsx";
+import { OuterProvider } from "#app/providers/outer.tsx";
+import { baseLanguage, isLanguage } from "#app/utils/i18n-data.ts";
+import { createI18nContext } from "#app/utils/i18n.tsx";
+import { ToastProvider } from "#components/toast.tsx";
+import { View } from "#components/view.tsx";
+import { SplashScreenManager } from "#mobile/components/splash-screen-manager.tsx";
+import { Stack } from "#mobile/components/stack.tsx";
+import { useBaseUrl } from "#mobile/hooks/use-base-url.ts";
+import { DevToolsProvider } from "#mobile/providers/devtools.tsx";
+import { resources } from "#mobile/utils/i18n.ts";
+import { navigationContext } from "#mobile/utils/navigation.ts";
+import { captureSentryError } from "#mobile/utils/sentry.ts";
+import { storage } from "#mobile/utils/storage.ts";
+import { storeContext } from "#mobile/utils/store.ts";
 
 import "../app.css";
 

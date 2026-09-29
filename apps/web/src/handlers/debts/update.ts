@@ -3,17 +3,17 @@ import type { Updateable } from "kysely";
 import { isNonNullish, keys, omitBy, unique } from "remeda";
 import { z } from "zod";
 
-import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { DB } from "~db/types.gen";
-import { temporalSchemas } from "~utils/temporal";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
+import { debtAmountSchema, debtNoteSchema } from "#app/utils/validation.ts";
+import type { DB } from "#db/types.gen.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 import {
 	currencyCodeSchema,
 	debtIdSchema,
 	receiptIdSchema,
-} from "~web/handlers/validation";
+} from "#web/handlers/validation.ts";
 
 import { upsertAutoAcceptedDebts } from "./utils";
 

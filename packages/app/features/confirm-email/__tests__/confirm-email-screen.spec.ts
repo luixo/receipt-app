@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { serialize } from "cookie";
 
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { expect, test } from "~tests/frontend/fixtures";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { expect, test } from "#tests/frontend/fixtures.ts";
 
 test("On load without token", async ({ page, api, snapshotQueries }) => {
 	api.mockUtils.noAuthPage();

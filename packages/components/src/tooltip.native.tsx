@@ -2,11 +2,11 @@ import React from "react";
 
 import { Popover } from "heroui-native/popover";
 
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
-import { TextClassContext } from "~components/text.native";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { Icon } from "#components/icons.tsx";
+import { TextClassContext } from "#components/text.native.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./tooltip";
 

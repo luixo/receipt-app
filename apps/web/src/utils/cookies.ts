@@ -2,7 +2,7 @@ import { createServerOnlyFn } from "@tanstack/react-start";
 import type { SerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
 
-import type { UnauthorizedContext } from "~web/handlers/context";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
 
 export const getCookie = (
 	cookieHeader: string | null,

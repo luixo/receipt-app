@@ -1,1 +1,1 @@
-export { default } from "@ra/lint";
+export { default } from "./utils/lint/config.ts";

@@ -7,7 +7,7 @@ import {
 	Modal as ModalRaw,
 } from "@heroui/modal";
 
-import type { ViewReactNode } from "~components/view";
+import type { ViewReactNode } from "#components/view.tsx";
 
 export type Props = {
 	isOpen: boolean;

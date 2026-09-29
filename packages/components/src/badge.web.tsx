@@ -2,8 +2,8 @@ import type React from "react";
 
 import { Badge as BadgeRaw } from "@heroui/badge";
 
-import type { MaybeText } from "~components/text.web";
-import type { ViewReactNode } from "~components/view.web";
+import type { MaybeText } from "#components/text.web.tsx";
+import type { ViewReactNode } from "#components/view.web.tsx";
 
 export type Props = {
 	color: "warning" | "danger";

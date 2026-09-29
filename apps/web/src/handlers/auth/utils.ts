@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import type { SessionId, UserId } from "~db/ids";
-import { generateConfirmEmailEmail } from "~web/email/utils";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { getEmailClient } from "~web/providers/email";
+import type { SessionId, UserId } from "#db/ids.ts";
+import { generateConfirmEmailEmail } from "#web/email/utils.tsx";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { getEmailClient } from "#web/providers/email.ts";
 
 // How long a session should last
 const SESSION_EXPIRATION_DURATION = { days: 30 };

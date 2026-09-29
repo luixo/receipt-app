@@ -3,11 +3,11 @@ import React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { AdminWrapper } from "~app/components/app/admin-wrapper";
-import { Page } from "~app/components/page";
-import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
-import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import { useTRPC } from "~app/utils/trpc";
+import { AdminWrapper } from "#app/components/app/admin-wrapper.tsx";
+import { Page } from "#app/components/page.tsx";
+import { useConnectionIntentions } from "#app/hooks/use-connection-intentions.ts";
+import { useDebtsIntentions } from "#app/hooks/use-debts-intentions.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
 
 const useShowAdmin = () => {
 	const trpc = useTRPC();

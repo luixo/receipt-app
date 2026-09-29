@@ -1,4 +1,4 @@
-import type { DebtIntention } from "~app/trpc-types";
+import type { DebtIntention } from "#app/trpc-types.ts";
 
 import {
 	update as updateDebts,

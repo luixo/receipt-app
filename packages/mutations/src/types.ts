@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import type { Utils } from "~app/trpc";
+import type { Utils } from "#app/trpc.ts";
 
 type EmptyFn = () => void;
 

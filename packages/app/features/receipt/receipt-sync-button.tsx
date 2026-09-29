@@ -3,18 +3,18 @@ import React from "react";
 import { skipToken, useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useParticipantsWithDebts } from "~app/hooks/use-participants";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { Receipt } from "~app/trpc-types";
-import { isDebtInSyncWithReceipt } from "~app/utils/debts";
-import { getReceiptDebtName } from "~app/utils/receipt";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Tooltip } from "~components/tooltip";
-import { options as debtsAddOptions } from "~mutations/debts/add";
-import { options as debtsUpdateOptions } from "~mutations/debts/update";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useParticipantsWithDebts } from "#app/hooks/use-participants.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import { isDebtInSyncWithReceipt } from "#app/utils/debts.ts";
+import { getReceiptDebtName } from "#app/utils/receipt.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Tooltip } from "#components/tooltip.tsx";
+import { options as debtsAddOptions } from "#mutations/debts/add.ts";
+import { options as debtsUpdateOptions } from "#mutations/debts/update.ts";
 
 type Props = {
 	receipt: Receipt;

@@ -1,8 +1,8 @@
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import type { DB } from "~db/types.gen";
-import { authProcedure } from "~web/handlers/trpc";
+import type { DB } from "#db/types.gen.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 import { DEFAULT_ACCOUNT_SETTINGS } from "./get";
 

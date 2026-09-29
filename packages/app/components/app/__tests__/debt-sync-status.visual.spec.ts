@@ -1,13 +1,13 @@
 import { mergeTests } from "@playwright/test";
 import { isNonNullish } from "remeda";
 
-import { test as debtTest } from "~app/features/debt/__tests__/utils";
+import { test as debtTest } from "#app/features/debt/__tests__/utils.ts";
 import {
 	defaultGenerateDebts,
 	theirDesynced,
 	theirNonExistent,
 	theirSynced,
-} from "~tests/frontend/generators/debts";
+} from "#tests/frontend/generators/debts.ts";
 
 import { test as debtSyncStatusFixture } from "./debt-sync-status.utils";
 

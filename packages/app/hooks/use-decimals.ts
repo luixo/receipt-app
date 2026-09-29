@@ -3,7 +3,7 @@ import React from "react";
 import {
 	debtAmountSchemaDecimal,
 	partSchemaDecimal,
-} from "~app/utils/validation";
+} from "#app/utils/validation.ts";
 
 const getDecimalsPower = (decimalDigits: number) => 10 ** decimalDigits;
 

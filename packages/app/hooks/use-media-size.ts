@@ -2,8 +2,8 @@ import React from "react";
 
 import { entries, fromEntries } from "remeda";
 
-import { useWindowSize } from "~app/hooks/use-window-size";
-import { screens } from "~app/utils/styles";
+import { useWindowSize } from "#app/hooks/use-window-size.ts";
+import { screens } from "#app/utils/styles.ts";
 
 const DEFAULT_WIDTH = 720;
 

@@ -1,4 +1,4 @@
-import { expect, test } from "~tests/frontend/fixtures";
+import { expect, test } from "#tests/frontend/fixtures.ts";
 
 test("Admin wrapper renders the admin page and its navigation item", async ({
 	page,

@@ -1,9 +1,9 @@
 import type React from "react";
 
-import { HighlightedText } from "~components/highlighted-text";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { Interval } from "~utils/array";
+import { HighlightedText } from "#components/highlighted-text.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
+import type { Interval } from "#utils/array.ts";
 
 const getInterlacedResult = (intervals: Interval[], input: string) => {
 	const interlacedTexts = intervals.reduce<{

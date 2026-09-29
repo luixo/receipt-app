@@ -1,7 +1,7 @@
 import type React from "react";
 
-import { Icon } from "~components/icons";
-import { Link } from "~components/link";
+import { Icon } from "#components/icons.tsx";
+import { Link } from "#components/link.tsx";
 
 export const BackLink: typeof Link = (props) => (
 	<Link testID="back-link" color="foreground" {...props}>

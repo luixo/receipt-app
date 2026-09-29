@@ -1,7 +1,7 @@
 import { keys } from "remeda";
 import { SuperJSON } from "superjson";
 
-import type { TemporalMapping } from "~utils/temporal";
+import type { TemporalMapping } from "#utils/temporal.ts";
 
 const superJSONInstance = new SuperJSON({ dedupe: true });
 const temporalEntries = {

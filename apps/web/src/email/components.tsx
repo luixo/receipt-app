@@ -3,9 +3,9 @@ import React, { createContext, use } from "react";
 import { Button as RawButton, Link as RawLink } from "@react-email/components";
 import { omit } from "remeda";
 
-import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
-import { cn } from "~components/utils";
-import { buildUrl } from "~utils/server/url";
+import type { NavigationOptions, RouteTo } from "#app/utils/navigation.tsx";
+import { cn } from "#components/utils.ts";
+import { buildUrl } from "#utils/server/url.ts";
 
 const buildAbsoluteUrl = <K extends RouteTo>(
 	navigate: NavigationOptions<K>,

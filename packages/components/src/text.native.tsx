@@ -1,8 +1,8 @@
 import React from "react";
 import { Text as RawText } from "react-native";
 
-import { ARIA_LEVEL, ROLE, textVariants } from "~components/text.base";
-import { cn } from "~components/utils";
+import { ARIA_LEVEL, ROLE, textVariants } from "#components/text.base.tsx";
+import { cn } from "#components/utils.ts";
 
 import type { Props } from "./text";
 

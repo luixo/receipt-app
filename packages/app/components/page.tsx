@@ -1,17 +1,17 @@
 import React from "react";
 
-import { AmountBadge } from "~app/components/amount-badge";
-import { PageWrapper } from "~app/components/page-wrapper";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { Icon } from "~components/icons";
-import type { IconName } from "~components/icons";
-import { Link } from "~components/link";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { FileRouteTypes } from "~web/entry/routeTree.gen";
+import { AmountBadge } from "#app/components/amount-badge.tsx";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { Icon } from "#components/icons.tsx";
+import type { IconName } from "#components/icons.tsx";
+import { Link } from "#components/link.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { FileRouteTypes } from "#web/entry/routeTree.gen.ts";
 
 type ShowProps = {
 	useShow?: () => boolean;

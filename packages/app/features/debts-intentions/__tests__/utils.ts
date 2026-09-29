@@ -1,11 +1,11 @@
 import type { Locator } from "@playwright/test";
 import assert from "node:assert";
 
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateDebtIntentions } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebtIntentions } from "~tests/frontend/generators/debts";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { GenerateDebtIntentions } from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateDebtIntentions } from "#tests/frontend/generators/debts.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 
 type Fixtures = {
 	mockDebts: (options: {

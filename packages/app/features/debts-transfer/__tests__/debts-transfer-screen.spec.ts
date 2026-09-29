@@ -2,9 +2,9 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
-import { expect } from "~tests/frontend/fixtures";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { test as currenciesPickerTest } from "#app/components/app/__tests__/currencies-picker.utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as originalTest } from "./utils";
 

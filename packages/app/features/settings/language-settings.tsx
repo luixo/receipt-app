@@ -3,15 +3,15 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { entries } from "remeda";
 
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import { changeValidatorLocale } from "~app/utils/i18n";
-import type { Language } from "~app/utils/i18n-data";
-import type { Locale } from "~app/utils/locale";
-import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
-import { LOCALE_STORE_NAME } from "~app/utils/store/locale";
-import { Select } from "~components/select";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import type { Language } from "#app/utils/i18n-data.ts";
+import { changeValidatorLocale } from "#app/utils/i18n.tsx";
+import type { Locale } from "#app/utils/locale.ts";
+import { LANGUAGE_STORE_NAME } from "#app/utils/store/language.ts";
+import { LOCALE_STORE_NAME } from "#app/utils/store/locale.ts";
+import { Select } from "#components/select.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 const LANGUAGE_TEXT: Record<Language, string> = {
 	en: "English",

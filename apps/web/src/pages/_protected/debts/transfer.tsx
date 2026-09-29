@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DebtsTransferScreen } from "~app/features/debts-transfer/debts-transfer-screen";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { DebtsTransferScreen } from "#app/features/debts-transfer/debts-transfer-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 export const Route = createFileRoute("/_protected/debts/transfer")({
 	component: DebtsTransferScreen,

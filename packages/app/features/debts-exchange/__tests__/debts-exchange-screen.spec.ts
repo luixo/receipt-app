@@ -2,11 +2,11 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { expect } from "~tests/frontend/fixtures";
-import type { GenerateDebts } from "~tests/frontend/generators/debts";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { test as debtsGroupFixture } from "#app/components/app/__tests__/debts-group.utils.ts";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
+import type { GenerateDebts } from "#tests/frontend/generators/debts.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as localTest } from "./utils";
 

@@ -2,9 +2,9 @@ import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 import { assert, describe, expect } from "vitest";
 
-import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { PeerId, UserId } from "~db/ids";
-import { createAuthContext } from "~tests/backend/utils/context";
+import { MAX_LIMIT, MAX_OFFSET } from "#app/utils/validation.ts";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertDebt,
@@ -12,17 +12,17 @@ import {
 	insertSyncedDebts,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import type { TestContext } from "~tests/backend/utils/test";
-import { test } from "~tests/backend/utils/test";
-import { CURRENCY_CODES } from "~utils/currency-data";
-import { getRandomAmount } from "~web/handlers/debts/utils.test";
-import { t } from "~web/handlers/trpc";
-import { runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
+import { getRandomAmount } from "#web/handlers/debts/utils.test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./get-by-peer-paged";
 

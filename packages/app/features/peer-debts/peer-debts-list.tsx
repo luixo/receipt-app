@@ -12,32 +12,32 @@ import { fromEntries, isNonNullish, values } from "remeda";
 import {
 	PaginationBlock,
 	PaginationBlockSkeleton,
-} from "~app/components/pagination-block";
-import { SuspendedOverlay } from "~app/components/pagination-overlay";
-import { RemoveButton } from "~app/components/remove-button";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { EvenDebtsDivider } from "~app/features/peer-debts/even-debts-divider";
-import { useCursorPaging } from "~app/hooks/use-cursor-paging";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import { useSubscribeToQueryUpdate } from "~app/hooks/use-subscribe-to-query";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryInput } from "~app/trpc";
-import type { Debt, DebtsByPeerPage } from "~app/trpc-types";
-import type { CurrencyCode } from "~app/utils/currency";
+} from "#app/components/pagination-block.tsx";
+import { SuspendedOverlay } from "#app/components/pagination-overlay.tsx";
+import { RemoveButton } from "#app/components/remove-button.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { EvenDebtsDivider } from "#app/features/peer-debts/even-debts-divider.tsx";
+import { useCursorPaging } from "#app/hooks/use-cursor-paging.ts";
+import { useShowResolvedDebts } from "#app/hooks/use-show-resolved-debts.ts";
+import { useSubscribeToQueryUpdate } from "#app/hooks/use-subscribe-to-query.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Debt, DebtsByPeerPage } from "#app/trpc-types.ts";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
 import type {
 	SearchParamState,
 	SearchParamStateDefaulted,
-} from "~app/utils/navigation";
-import { typeQuery } from "~app/utils/queries";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Divider } from "~components/divider";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { DebtId, PeerId } from "~db/ids";
-import { options as debtsRemoveOptions } from "~mutations/debts/remove";
-import { round } from "~utils/math";
+} from "#app/utils/navigation.tsx";
+import { typeQuery } from "#app/utils/queries.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { DebtId, PeerId } from "#db/ids.ts";
+import { options as debtsRemoveOptions } from "#mutations/debts/remove.ts";
+import { round } from "#utils/math.ts";
 
 import { PeerDebtPreview, PeerDebtPreviewSkeleton } from "./peer-debt-preview";
 

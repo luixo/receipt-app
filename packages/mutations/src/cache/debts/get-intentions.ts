@@ -1,7 +1,7 @@
-import type { DebtIntention } from "~app/trpc-types";
-import type { DebtId } from "~db/ids";
-import type { ItemWithIndex } from "~utils/array";
-import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
+import type { DebtIntention } from "#app/trpc-types.ts";
+import type { DebtId } from "#db/ids.ts";
+import type { ItemWithIndex } from "#utils/array.ts";
+import { addToArray, removeFromArray, replaceInArray } from "#utils/array.ts";
 
 import type {
 	ControllerContext,

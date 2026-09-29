@@ -1,5 +1,5 @@
-import { PageWrapper } from "~app/components/page-wrapper";
-import { DebtsScreen } from "~app/features/debts/debts-screen";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { DebtsScreen } from "#app/features/debts/debts-screen.tsx";
 
 const Wrapper = () => (
 	<PageWrapper>

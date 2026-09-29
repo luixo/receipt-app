@@ -1,7 +1,7 @@
 import {
 	generateConfirmEmailEmail,
 	generateResetPasswordEmail,
-} from "~web/email/utils";
+} from "#web/email/utils.tsx";
 
 import { test } from "./utils";
 

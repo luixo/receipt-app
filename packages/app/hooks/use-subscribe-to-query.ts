@@ -4,7 +4,7 @@ import type { QueryFilters } from "@tanstack/react-query";
 import { matchQuery, useQueryClient } from "@tanstack/react-query";
 import { funnel } from "remeda";
 
-import type { TRPCQueryKey, TRPCTanstackGenericQueryKey } from "~app/trpc";
+import type { TRPCQueryKey, TRPCTanstackGenericQueryKey } from "#app/trpc.ts";
 
 import { useGetMemoizedValue } from "./use-get-memoized-value";
 

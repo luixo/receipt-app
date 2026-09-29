@@ -2,7 +2,7 @@ import React from "react";
 // oxlint-disable-next-line eslint-js/no-restricted-syntax
 import type { View } from "react-native";
 
-import { ScrollContext } from "~components/scroll-view";
+import { ScrollContext } from "#components/scroll-view.tsx";
 
 export type ViewHandle = {
 	scrollIntoView: () => void;

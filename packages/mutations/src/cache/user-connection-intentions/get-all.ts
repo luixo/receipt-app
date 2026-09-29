@@ -2,10 +2,10 @@ import type {
 	InboundIntention,
 	OutboundIntention,
 	UserConnectionIntentions,
-} from "~app/trpc-types";
-import type { UserId } from "~db/ids";
-import type { ItemWithIndex } from "~utils/array";
-import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
+} from "#app/trpc-types.ts";
+import type { UserId } from "#db/ids.ts";
+import type { ItemWithIndex } from "#utils/array.ts";
+import { addToArray, removeFromArray, replaceInArray } from "#utils/array.ts";
 
 import type {
 	ControllerContext,

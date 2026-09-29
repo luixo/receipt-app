@@ -2,13 +2,13 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useLocale } from "~app/hooks/use-locale";
-import { getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { Icon } from "#components/icons.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 type Props = {
 	currencyCode: CurrencyCode;

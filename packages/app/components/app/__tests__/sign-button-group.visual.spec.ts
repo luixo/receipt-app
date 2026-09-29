@@ -1,7 +1,7 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as debtTest } from "~app/features/debt/__tests__/utils";
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { test as debtTest } from "#app/features/debt/__tests__/utils.ts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test as signButtonGroupFixture } from "./sign-button-group.utils";
 

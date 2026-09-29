@@ -2,9 +2,9 @@ import { test } from "@playwright/test";
 import fs from "node:fs/promises";
 import url from "node:url";
 
-import { baseLanguage } from "~app/utils/i18n-data";
-import type { Language, Namespace, Resources } from "~app/utils/i18n-data";
-import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
+import { baseLanguage } from "#app/utils/i18n-data.ts";
+import type { Language, Namespace, Resources } from "#app/utils/i18n-data.ts";
+import { LANGUAGE_STORE_NAME } from "#app/utils/store/language.ts";
 
 type Fixtures = {
 	setLanguageCookie: (language: Language) => Promise<void>;

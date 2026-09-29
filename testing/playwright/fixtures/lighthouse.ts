@@ -5,10 +5,10 @@ import jsProtocol from "devtools-protocol/json/js_protocol.json" with { type: "j
 import lighthouse from "lighthouse";
 import type { CDPSession } from "playwright";
 
-import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
-import { setProxyHeaders } from "~tests/frontend/fixtures/page";
-import type { ExtractFixture } from "~tests/frontend/types";
-import { buildUrl } from "~utils/server/url";
+import type { NavigationOptions, RouteTo } from "#app/utils/navigation.tsx";
+import { setProxyHeaders } from "#tests/frontend/fixtures/page.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
+import { buildUrl } from "#utils/server/url.ts";
 
 import { apiFixtures as baseTest } from "./api";
 

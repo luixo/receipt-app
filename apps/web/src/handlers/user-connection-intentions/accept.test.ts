@@ -2,10 +2,13 @@ import { faker } from "@faker-js/faker";
 import type { Selectable } from "kysely";
 import { describe, expect } from "vitest";
 
-import type { PeerId, UserId } from "~db/ids";
-import type { DB } from "~db/types.gen";
-import { createAuthContext } from "~tests/backend/utils/context";
-import type { InsertedDebt, UserSettingsData } from "~tests/backend/utils/data";
+import type { PeerId, UserId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import type {
+	InsertedDebt,
+	UserSettingsData,
+} from "#tests/backend/utils/data.ts";
 import {
 	assertDatabase,
 	insertConnectedPeers,
@@ -13,15 +16,15 @@ import {
 	insertPeer,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import type { TestContext } from "~tests/backend/utils/test";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./accept";
 

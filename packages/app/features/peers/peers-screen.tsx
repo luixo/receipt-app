@@ -2,14 +2,14 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { AmountBadge } from "~app/components/amount-badge";
-import { PageHeader } from "~app/components/page-header";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
-import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getPathHooks } from "~app/utils/navigation";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
+import { AmountBadge } from "#app/components/amount-badge.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { useConnectionIntentions } from "#app/hooks/use-connection-intentions.ts";
+import { useDefaultLimit } from "#app/hooks/use-default-limit.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
 
 import { Peers } from "./peers";
 

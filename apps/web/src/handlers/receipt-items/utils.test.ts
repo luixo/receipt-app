@@ -4,13 +4,13 @@ import { describe } from "vitest";
 import {
 	MAX_RECEIPT_ITEM_NAME_LENGTH,
 	MIN_RECEIPT_ITEM_NAME_LENGTH,
-} from "~app/utils/validation";
-import type { ReceiptItemId } from "~db/ids";
-import { createAuthContext } from "~tests/backend/utils/context";
-import { insertUserWithSession } from "~tests/backend/utils/data";
-import { expectTRPCError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import type { UnauthorizedContext } from "~web/handlers/context";
+} from "#app/utils/validation.ts";
+import type { ReceiptItemId } from "#db/ids.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import { insertUserWithSession } from "#tests/backend/utils/data.ts";
+import { expectTRPCError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
 
 export const getValidReceiptItem = (receiptId = faker.string.uuid()) => ({
 	receiptId,

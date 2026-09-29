@@ -1,4 +1,4 @@
-import { expect, test } from "~tests/frontend/fixtures";
+import { expect, test } from "#tests/frontend/fixtures.ts";
 
 test("Void user screen Lighthouse audit", async ({ api, runAudit }) => {
 	api.mockUtils.noAuthPage();

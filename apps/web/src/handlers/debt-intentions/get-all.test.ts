@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { createAuthContext } from "~tests/backend/utils/context";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertConnectedPeers,
 	insertDebt,
@@ -9,11 +9,11 @@ import {
 	insertSyncedDebts,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
-import { expectUnauthorizedError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
-import { getRandomCurrencyCode } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/data.ts";
+import { expectUnauthorizedError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { getRandomCurrencyCode } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./get-all";
 

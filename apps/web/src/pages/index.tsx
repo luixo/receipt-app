@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import { HomeScreen } from "~app/features/home/home-screen";
+import { HomeScreen } from "#app/features/home/home-screen.tsx";
 
 export const Route = createFileRoute("/")({
 	beforeLoad: () => {

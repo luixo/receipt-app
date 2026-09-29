@@ -1,4 +1,3 @@
-import baseDefault from "@ra/web/public/locales/en/default.json" with { type: "json" };
 // oxlint-disable vitest/require-top-level-describe
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 // I don't know why
@@ -8,12 +7,17 @@ import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 import { z } from "zod";
 
-import { getValidatorMessageFactory, validatorLocales } from "~app/utils/i18n";
-import { baseLanguage } from "~app/utils/i18n-data";
-import { getDatabase } from "~db/database";
-import { freezeTemporal } from "~tests/utils/temporal-freeze";
-import { transformer } from "~utils/transformer";
-import type { Writeable } from "~utils/types";
+import { baseLanguage } from "#app/utils/i18n-data.ts";
+import {
+	getValidatorMessageFactory,
+	validatorLocales,
+} from "#app/utils/i18n.tsx";
+import { getDatabase } from "#db/database.ts";
+import { freezeTemporal } from "#tests/utils/temporal-freeze.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { Writeable } from "#utils/types.ts";
+
+import baseDefault from "../../apps/web/public/locales/en/default.json" with { type: "json" };
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";

@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { wait } from "~utils/promise";
-import { unauthProcedure } from "~web/handlers/trpc";
+import { wait } from "#utils/promise.ts";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = unauthProcedure
 	.meta({

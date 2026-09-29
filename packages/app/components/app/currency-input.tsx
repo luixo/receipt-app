@@ -4,18 +4,18 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import type { z } from "zod";
 
-import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useLocale } from "~app/hooks/use-locale";
-import { getCurrencyDescription } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import type { currencyCodeSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Input } from "~components/input";
-import { SkeletonInput } from "~components/skeleton-input";
-import { getMutationLoading } from "~components/utils";
-import type { MutationsProp } from "~components/utils";
+import { CurrenciesPicker } from "#app/components/app/currencies-picker.tsx";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { getCurrencyDescription } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import type { currencyCodeSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Input } from "#components/input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { getMutationLoading } from "#components/utils.ts";
+import type { MutationsProp } from "#components/utils.ts";
 
 export const SkeletonCurrencyInput = () => {
 	const { t } = useTranslation("default");

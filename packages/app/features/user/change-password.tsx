@@ -4,13 +4,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { passwordSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { options as userChangePasswordOptions } from "~mutations/user/change-password";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { passwordSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { options as userChangePasswordOptions } from "#mutations/user/change-password.ts";
 
 const formSchema = z
 	.object({

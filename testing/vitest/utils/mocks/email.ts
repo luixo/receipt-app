@@ -1,4 +1,4 @@
-import type { Email, EmailOptions } from "~web/providers/email";
+import type { Email, EmailOptions } from "#web/providers/email.ts";
 
 export type EmailOptionsMock = EmailOptions & {
 	setBroken: (next: boolean) => void;

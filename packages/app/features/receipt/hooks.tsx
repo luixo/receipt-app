@@ -3,35 +3,35 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { EmptyCard } from "~app/components/empty-card";
+import { EmptyCard } from "#app/components/empty-card.tsx";
 import type {
 	Item,
 	Participant,
 	Payer,
-} from "~app/features/receipt-components/state";
-import { useParticipants } from "~app/hooks/use-participants";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryInput } from "~app/trpc";
-import type { Receipt } from "~app/trpc-types";
-import type { CurrencyCode } from "~app/utils/currency";
-import type { EmptyMutateOptions } from "~app/utils/queries";
-import { useTRPC } from "~app/utils/trpc";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view.web";
-import type { PeerId, ReceiptId, ReceiptItemId } from "~db/ids";
-import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-consumers/add";
-import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-consumers/remove";
-import { options as receiptItemConsumersUpdateOptions } from "~mutations/receipt-item-consumers/update";
-import { options as receiptItemPayersAddOptions } from "~mutations/receipt-item-payers/add";
-import { options as receiptItemPayersRemoveOptions } from "~mutations/receipt-item-payers/remove";
-import { options as receiptItemPayersUpdateOptions } from "~mutations/receipt-item-payers/update";
-import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
-import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
-import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
-import { options as receiptParticipantsAddOptions } from "~mutations/receipt-participants/add";
-import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
-import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
-import type { AssignableRole, Role } from "~web/handlers/receipts/utils";
+} from "#app/features/receipt-components/state.ts";
+import { useParticipants } from "#app/hooks/use-participants.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import type { TRPCQueryInput } from "#app/trpc.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { EmptyMutateOptions } from "#app/utils/queries.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.web.tsx";
+import type { PeerId, ReceiptId, ReceiptItemId } from "#db/ids.ts";
+import { options as receiptItemConsumersAddOptions } from "#mutations/receipt-item-consumers/add.ts";
+import { options as receiptItemConsumersRemoveOptions } from "#mutations/receipt-item-consumers/remove.ts";
+import { options as receiptItemConsumersUpdateOptions } from "#mutations/receipt-item-consumers/update.ts";
+import { options as receiptItemPayersAddOptions } from "#mutations/receipt-item-payers/add.ts";
+import { options as receiptItemPayersRemoveOptions } from "#mutations/receipt-item-payers/remove.ts";
+import { options as receiptItemPayersUpdateOptions } from "#mutations/receipt-item-payers/update.ts";
+import { options as receiptItemsAddOptions } from "#mutations/receipt-items/add.ts";
+import { options as receiptItemsRemoveOptions } from "#mutations/receipt-items/remove.ts";
+import { options as receiptItemsUpdateOptions } from "#mutations/receipt-items/update.ts";
+import { options as receiptParticipantsAddOptions } from "#mutations/receipt-participants/add.ts";
+import { options as receiptParticipantsRemoveOptions } from "#mutations/receipt-participants/remove.ts";
+import { options as receiptParticipantsUpdateOptions } from "#mutations/receipt-participants/update.ts";
+import type { AssignableRole, Role } from "#web/handlers/receipts/utils.ts";
 
 const useAddParticipant = (receiptId: ReceiptId) => {
 	const trpc = useTRPC();

@@ -3,11 +3,11 @@ import type React from "react";
 import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import { useTRPC } from "~app/utils/trpc";
-import { AvatarGroup } from "~components/avatar";
-import { Select } from "~components/select";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { useTrpcMutationStates } from "#app/hooks/use-trpc-mutation-state.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { AvatarGroup } from "#components/avatar.tsx";
+import { Select } from "#components/select.tsx";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";

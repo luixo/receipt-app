@@ -2,10 +2,10 @@ import React from "react";
 
 import { tv } from "tailwind-variants";
 
-import { Icon } from "~components/icons";
-import type { Props } from "~components/pagination";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import { Icon } from "#components/icons.tsx";
+import type { Props } from "#components/pagination.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 const pagination = tv({
 	slots: {

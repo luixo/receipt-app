@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 
-import type { ReceiptId, ReceiptItemId } from "~db/ids";
+import type { ReceiptId, ReceiptItemId } from "#db/ids.ts";
 
 export const getConsumersItems = (
 	t: TFunction,

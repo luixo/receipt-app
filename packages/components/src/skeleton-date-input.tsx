@@ -2,9 +2,9 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import type { Input } from "~components/input";
-import { SkeletonInput } from "~components/skeleton-input";
-import { View } from "~components/view";
+import type { Input } from "#components/input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { View } from "#components/view.tsx";
 
 export const SkeletonDateInput: React.FC<
 	{ label?: string } & React.ComponentProps<typeof Input>

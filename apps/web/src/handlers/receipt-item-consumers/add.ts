@@ -2,17 +2,17 @@ import { TRPCError } from "@trpc/server";
 import { unique } from "remeda";
 import { z } from "zod";
 
-import { partSchema } from "~app/utils/validation";
-import type { BatchLoadContextFn } from "~web/handlers/batch";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
+import { partSchema } from "#app/utils/validation.ts";
+import type { BatchLoadContextFn } from "#web/handlers/batch.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 import {
 	peerIdSchema,
 	receiptItemIdSchema,
 	roleSchema,
-} from "~web/handlers/validation";
-import { getDuplicates } from "~web/utils/batch";
+} from "#web/handlers/validation.ts";
+import { getDuplicates } from "#web/utils/batch.ts";
 
 export type ConsumerOutput = { createdAt: Temporal.ZonedDateTime };
 

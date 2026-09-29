@@ -2,15 +2,15 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { useLocale } from "~app/hooks/use-locale";
-import { formatCurrency } from "~app/utils/currency";
-import { Checkbox } from "~components/checkbox";
-import { Icon } from "~components/icons";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { ViewHandle } from "~components/view.base";
-import type { ReceiptItemId } from "~db/ids";
-import { round } from "~utils/math";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { Checkbox } from "#components/checkbox.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewHandle } from "#components/view.base.tsx";
+import { View } from "#components/view.tsx";
+import type { ReceiptItemId } from "#db/ids.ts";
+import { round } from "#utils/math.ts";
 
 import { useReceiptContext } from "./context";
 

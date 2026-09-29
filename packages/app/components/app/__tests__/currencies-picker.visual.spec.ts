@@ -1,6 +1,6 @@
 import { expect, mergeTests } from "@playwright/test";
 
-import { test as addDebtTest } from "~app/features/add-debt/__tests__/utils.ts";
+import { test as addDebtTest } from "#app/features/add-debt/__tests__/utils.ts";
 
 import { test as currenciesPickerTest } from "./currencies-picker.utils";
 

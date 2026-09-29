@@ -4,10 +4,10 @@ import { createIsomorphicFn } from "@tanstack/react-start";
 import { parse } from "cookie";
 import type { BackendModule, ParseKeys, ResourceKey } from "i18next";
 
-import type { I18nContext } from "~app/utils/i18n";
-import type { Language, Namespace } from "~app/utils/i18n-data";
-import { baseLanguage, isLanguage } from "~app/utils/i18n-data";
-import { LANGUAGE_STORE_NAME } from "~app/utils/store/language";
+import type { Language, Namespace } from "#app/utils/i18n-data.ts";
+import { baseLanguage, isLanguage } from "#app/utils/i18n-data.ts";
+import type { I18nContext } from "#app/utils/i18n.tsx";
+import { LANGUAGE_STORE_NAME } from "#app/utils/store/language.ts";
 
 const getCookie = (headers: Headers | undefined) =>
 	headers ? (headers.get("cookie") ?? "") : document.cookie;

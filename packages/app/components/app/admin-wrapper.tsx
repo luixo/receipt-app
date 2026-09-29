@@ -1,10 +1,10 @@
 import React from "react";
 
-import type { LinksContextType } from "~app/contexts/links-context";
-import { LinksContext } from "~app/contexts/links-context";
-import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
-import { QueryProvider } from "~app/providers/query";
-import { TRPCProvider } from "~app/providers/trpc";
+import type { LinksContextType } from "#app/contexts/links-context.ts";
+import { LinksContext } from "#app/contexts/links-context.ts";
+import { SELF_QUERY_CLIENT_KEY } from "#app/contexts/query-clients-context.ts";
+import { QueryProvider } from "#app/providers/query.tsx";
+import { TRPCProvider } from "#app/providers/trpc.tsx";
 
 export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 	children,

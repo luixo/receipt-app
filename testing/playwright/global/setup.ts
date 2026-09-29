@@ -4,17 +4,17 @@ import * as fs from "node:fs/promises";
 import path from "node:path";
 import { entries, isNonNullish } from "remeda";
 
-import type { NodeV8Coverage } from "~coverage/index";
+import type { NodeV8Coverage } from "#coverage/index.ts";
 import {
 	fromNodeV8Coverage,
 	fromPlaywrightCoverage,
 	generateCoverageReport,
 	mergeCoverageMaps,
-} from "~coverage/index";
-import { coverageDir, urlSettings } from "~tests/frontend/consts";
-import { getIgnoredIndex } from "~tests/frontend/fixtures/console";
-import { promisifyServer } from "~utils/server/promise";
-import { baseLogger } from "~web/providers/logger";
+} from "#coverage/index.ts";
+import { coverageDir, urlSettings } from "#tests/frontend/consts.ts";
+import { getIgnoredIndex } from "#tests/frontend/fixtures/console.ts";
+import { promisifyServer } from "#utils/server/promise.ts";
+import { baseLogger } from "#web/providers/logger.ts";
 
 import {
 	appRouter,

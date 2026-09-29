@@ -1,7 +1,7 @@
 import type { Cookie } from "@playwright/test";
 import { test } from "@playwright/test";
 
-import type { StoreValues } from "~app/utils/store-data";
+import type { StoreValues } from "#app/utils/store-data.ts";
 
 type CookieManager = {
 	addCookie: <K extends keyof StoreValues>(

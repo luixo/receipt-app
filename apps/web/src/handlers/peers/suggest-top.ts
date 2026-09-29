@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { limitSchema } from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { getAccessRole } from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema, receiptIdSchema } from "~web/handlers/validation";
+import { limitSchema } from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { getAccessRole } from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema, receiptIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

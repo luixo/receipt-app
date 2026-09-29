@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryOutput } from "#app/trpc.ts";
 
 //User
 export type User = TRPCQueryOutput<"user.get">;

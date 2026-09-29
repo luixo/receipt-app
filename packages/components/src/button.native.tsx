@@ -5,10 +5,10 @@ import React from "react";
 import { button, buttonGroup } from "@heroui/react";
 import { Button as ButtonRaw } from "heroui-native/button";
 
-import { Text } from "~components/text";
-import { TextWrapper } from "~components/text.native";
-import { cn } from "~components/utils";
-import { View } from "~components/view";
+import { TextWrapper } from "#components/text.native.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
+import { View } from "#components/view.tsx";
 
 import type { ButtonGroupProps, ButtonProps } from "./button.base";
 import { FormContext, formHandlersById } from "./form.native";

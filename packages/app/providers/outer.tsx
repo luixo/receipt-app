@@ -1,9 +1,9 @@
 import React from "react";
 
-import { QueryClientsContext } from "~app/contexts/query-clients-context";
-import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
-import { QueryProvider } from "~app/providers/query";
-import type { I18nContext } from "~app/utils/i18n";
+import { QueryClientsContext } from "#app/contexts/query-clients-context.ts";
+import type { QueryClientsRecord } from "#app/contexts/query-clients-context.ts";
+import { QueryProvider } from "#app/providers/query.tsx";
+import type { I18nContext } from "#app/utils/i18n.tsx";
 
 type Props = {
 	getQueryClientsRecord: () => QueryClientsRecord;

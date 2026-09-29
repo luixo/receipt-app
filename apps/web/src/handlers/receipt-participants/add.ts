@@ -1,16 +1,16 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { BatchLoadContextFn } from "~web/handlers/batch";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
+import type { BatchLoadContextFn } from "#web/handlers/batch.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 import {
 	assignableRoleSchema,
 	peerIdSchema,
 	receiptIdSchema,
-} from "~web/handlers/validation";
-import { getDuplicates } from "~web/utils/batch";
+} from "#web/handlers/validation.ts";
+import { getDuplicates } from "#web/utils/batch.ts";
 
 export const addParticipantSchema = z.strictObject({
 	receiptId: receiptIdSchema,

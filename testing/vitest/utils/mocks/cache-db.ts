@@ -1,5 +1,5 @@
-import type { KeysMatching } from "~utils/types";
-import type { CacheDbOptions, CacheInstance } from "~web/providers/cache-db";
+import type { KeysMatching } from "#utils/types.ts";
+import type { CacheDbOptions, CacheInstance } from "#web/providers/cache-db.ts";
 
 // oxlint-disable-next-line typescript/no-explicit-any
 type CacheFunctionKey = KeysMatching<CacheInstance, (...args: any) => any>;

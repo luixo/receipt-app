@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { useTRPC } from "~app/utils/trpc";
+import { useTRPC } from "#app/utils/trpc.ts";
 
 export const useConnectionIntentions = () => {
 	const trpc = useTRPC();

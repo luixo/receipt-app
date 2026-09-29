@@ -2,16 +2,16 @@ import { Jimp, JimpMime } from "jimp";
 import { File } from "node:buffer";
 import { assert, describe, expect } from "vitest";
 
-import { createAuthContext } from "~tests/backend/utils/context";
-import { insertUserWithSession } from "~tests/backend/utils/data";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import { insertUserWithSession } from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "#utils/images.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
 

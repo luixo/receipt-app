@@ -1,4 +1,4 @@
-import { expect } from "~tests/frontend/fixtures";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test } from "./utils";
 

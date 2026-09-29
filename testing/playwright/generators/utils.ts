@@ -1,6 +1,6 @@
 import type { Faker, NumberOrRange } from "@faker-js/faker";
 
-import { CURRENCY_CODES } from "~utils/currency-data";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
 
 export const generateAmount = <T>(
 	faker: Faker,

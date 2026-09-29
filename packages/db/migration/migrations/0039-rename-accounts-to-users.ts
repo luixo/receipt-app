@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "~db/database";
+import type { Database } from "#db/database.ts";
 import {
 	DEBTS,
 	PEERS,
@@ -9,7 +9,7 @@ import {
 	SESSIONS,
 	USERS,
 	USER_SETTINGS,
-} from "~db/migration/consts";
+} from "#db/migration/consts.ts";
 
 const indexes = [
 	USERS.INDEXES.EMAIL,

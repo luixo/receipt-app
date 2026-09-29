@@ -1,5 +1,5 @@
-import { PageWrapper } from "~app/components/page-wrapper";
-import { DebtsExchangeSpecificScreen } from "~app/features/debts-exchange-specific/debts-exchange-specific-screen";
+import { PageWrapper } from "#app/components/page-wrapper.tsx";
+import { DebtsExchangeSpecificScreen } from "#app/features/debts-exchange-specific/debts-exchange-specific-screen.tsx";
 
 const Wrapper = () => (
 	<PageWrapper>

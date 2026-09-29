@@ -1,7 +1,7 @@
 import React from "react";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { getPathHooks } from "~app/utils/navigation";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
 
 import { Peer } from "./peer";
 

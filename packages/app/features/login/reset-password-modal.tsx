@@ -4,15 +4,15 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCMutationResult } from "~app/trpc";
-import { useAppForm } from "~app/utils/forms";
-import { useTRPC } from "~app/utils/trpc";
-import { emailSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Modal } from "~components/modal";
-import { Text } from "~components/text";
-import { options as resetPasswordIntentionsAddOptions } from "~mutations/reset-password-intentions/add";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { TRPCMutationResult } from "#app/trpc.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { emailSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Modal } from "#components/modal.tsx";
+import { Text } from "#components/text.tsx";
+import { options as resetPasswordIntentionsAddOptions } from "#mutations/reset-password-intentions/add.ts";
 
 const formSchema = z.object({ email: emailSchema });
 

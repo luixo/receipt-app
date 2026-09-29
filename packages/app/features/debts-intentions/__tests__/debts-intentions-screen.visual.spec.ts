@@ -1,4 +1,4 @@
-import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { defaultGenerateDebts } from "#tests/frontend/generators/debts.ts";
 
 import { test } from "./utils";
 

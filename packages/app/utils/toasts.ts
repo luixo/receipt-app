@@ -1,7 +1,7 @@
 import Dataloader from "dataloader";
 
-import type { TRPCMutationKey } from "~app/trpc";
-import { addToast, closeToastById } from "~components/toast";
+import type { TRPCMutationKey } from "#app/trpc.ts";
+import { addToast, closeToastById } from "#components/toast.tsx";
 import type {
 	LifecycleContextWithUpdateFns,
 	TRPCMutationOptions,
@@ -9,8 +9,8 @@ import type {
 	ToastObject,
 	ToastOptions,
 	UseContextedMutationOptions,
-} from "~mutations/context";
-import type { ArrayOf, MaybeAddElementToArray } from "~utils/types";
+} from "#mutations/context.ts";
+import type { ArrayOf, MaybeAddElementToArray } from "#utils/types.ts";
 
 const DELAYS = {
 	// Mutation are fired nearly simultaneously

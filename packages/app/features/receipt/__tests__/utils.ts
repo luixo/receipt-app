@@ -1,10 +1,10 @@
-import type { Peer } from "~app/trpc-types";
-import type { PeerId, ReceiptId } from "~db/ids";
-import { test as originalTest } from "~tests/frontend/fixtures";
-import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
-import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
-import type { GeneratePeers } from "~tests/frontend/generators/peers";
-import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
+import type { Peer } from "#app/trpc-types.ts";
+import type { PeerId, ReceiptId } from "#db/ids.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import { defaultGenerateDebtsFromReceipt } from "#tests/frontend/generators/debts.ts";
+import type { GenerateDebtsFromReceipt } from "#tests/frontend/generators/debts.ts";
+import type { GeneratePeers } from "#tests/frontend/generators/peers.ts";
+import { defaultGeneratePeers } from "#tests/frontend/generators/peers.ts";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -12,7 +12,7 @@ import type {
 	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
 	GenerateReceiptPayers,
-} from "~tests/frontend/generators/receipts";
+} from "#tests/frontend/generators/receipts.ts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
@@ -20,7 +20,7 @@ import {
 	defaultGenerateReceiptItemsWithConsumers,
 	defaultGenerateReceiptParticipants,
 	defaultGenerateReceiptPayers,
-} from "~tests/frontend/generators/receipts";
+} from "#tests/frontend/generators/receipts.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<{

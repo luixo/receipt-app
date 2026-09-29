@@ -1,10 +1,10 @@
 import { expect } from "@playwright/test";
 import type { Page as OriginalPage, Page } from "@playwright/test";
 
-import type { NavigationOptions, RouteTo } from "~app/utils/navigation";
-import type { ExtractFixture } from "~tests/frontend/types";
-import { apiCookieNames } from "~utils/mocks";
-import { buildUrl } from "~utils/server/url";
+import type { NavigationOptions, RouteTo } from "#app/utils/navigation.tsx";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
+import { apiCookieNames } from "#utils/mocks.ts";
+import { buildUrl } from "#utils/server/url.ts";
 
 import { apiFixtures as test } from "./api";
 

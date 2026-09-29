@@ -1,9 +1,9 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
-import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
-import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as currenciesPickerTest } from "#app/components/app/__tests__/currencies-picker.utils.ts";
+import { test as currencyInputTest } from "#app/components/app/__tests__/currency-input.utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as localTest } from "./utils";
 

@@ -1,8 +1,8 @@
-import "~utils/temporal-polyfill";
+import "#utils/temporal-polyfill.ts";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import type { TestProject } from "vitest/node";
 
-import { promisifyServer } from "~utils/server/promise";
+import { promisifyServer } from "#utils/server/promise.ts";
 
 import { appRouter, createCaller } from "./databases/router";
 

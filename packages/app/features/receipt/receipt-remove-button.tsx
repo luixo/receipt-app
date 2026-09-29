@@ -3,12 +3,12 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { RemoveButton } from "~app/components/remove-button";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { Receipt } from "~app/trpc-types";
-import { useTRPC } from "~app/utils/trpc";
-import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
+import { RemoveButton } from "#app/components/remove-button.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Receipt } from "#app/trpc-types.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { options as receiptsRemoveOptions } from "#mutations/receipts/remove.ts";
 
 type Props = {
 	receipt: Receipt;

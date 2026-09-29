@@ -3,7 +3,7 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import * as SplashScreen from "expo-splash-screen";
 
-import { useMountEffect } from "~app/hooks/use-mount-effect";
+import { useMountEffect } from "#app/hooks/use-mount-effect.ts";
 
 void SplashScreen.preventAutoHideAsync();
 export const SplashScreenManager: React.FC<{ timeout: number }> = ({

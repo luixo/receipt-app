@@ -3,22 +3,22 @@ import { TRPCError } from "@trpc/server";
 import { fromEntries, mapValues } from "remeda";
 import { describe, expect } from "vitest";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { createAuthContext } from "~tests/backend/utils/context";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertDebt,
 	insertPeer,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { round } from "~utils/math";
-import { t } from "~web/handlers/trpc";
-import { runInBand } from "~web/handlers/utils.test";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { round } from "#utils/math.ts";
+import { t } from "#web/handlers/trpc.ts";
+import { runInBand } from "#web/handlers/utils.test.ts";
 
 import { procedure } from "./get-all-peer";
 

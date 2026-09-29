@@ -5,11 +5,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
 import { CalendarDate } from "@internationalized/date";
 import { useTranslation } from "react-i18next";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormat } from "~app/hooks/use-format";
-import { Input } from "~components/input";
-import type { MutationsProp } from "~components/utils";
-import { getMutationLoading } from "~components/utils";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useFormat } from "#app/hooks/use-format.ts";
+import { Input } from "#components/input.tsx";
+import type { MutationsProp } from "#components/utils.ts";
+import { getMutationLoading } from "#components/utils.ts";
 
 export type Props = {
 	value: Temporal.PlainDate | undefined;

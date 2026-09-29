@@ -1,12 +1,12 @@
 import type { Locator } from "@playwright/test";
 
-import type { Currencies } from "~app/trpc-types";
-import { test as originalTest } from "~tests/frontend/fixtures";
+import type { Currencies } from "#app/trpc-types.ts";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
 import {
 	generateAmount,
 	generateCurrencyCode,
-} from "~tests/frontend/generators/utils";
-import type { ExtractFixture } from "~tests/frontend/types";
+} from "#tests/frontend/generators/utils.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 type Fixtures = {
 	mockBase: () => Promise<

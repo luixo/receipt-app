@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useLocale } from "~app/hooks/use-locale";
-import { useMountEffect } from "~app/hooks/use-mount-effect";
-import { useSsrValue } from "~app/hooks/use-ssr-value";
-import { TIMEZONE_STORE_NAME } from "~app/utils/store/timezone";
-import type { TemporalMapping } from "~utils/temporal";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useMountEffect } from "#app/hooks/use-mount-effect.ts";
+import { useSsrValue } from "#app/hooks/use-ssr-value.ts";
+import { TIMEZONE_STORE_NAME } from "#app/utils/store/timezone.ts";
+import type { TemporalMapping } from "#utils/temporal.ts";
 
 export const useFormat = () => {
 	const [timezone, localTimezone] = useSsrValue(TIMEZONE_STORE_NAME);

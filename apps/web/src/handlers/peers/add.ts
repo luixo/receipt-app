@@ -3,14 +3,14 @@ import type { Insertable } from "kysely";
 import { isNonNullish } from "remeda";
 import { z } from "zod";
 
-import { peerNameSchema } from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import type { DB } from "~db/types.gen";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import { batchFn as addUserConnectionIntentions } from "~web/handlers/user-connection-intentions/add";
-import { emailSchema } from "~web/handlers/validation";
+import { peerNameSchema } from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import type { DB } from "#db/types.gen.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { batchFn as addUserConnectionIntentions } from "#web/handlers/user-connection-intentions/add.ts";
+import { emailSchema } from "#web/handlers/validation.ts";
 
 const addPeerSchema = z.strictObject({
 	name: peerNameSchema,

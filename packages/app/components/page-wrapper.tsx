@@ -1,8 +1,8 @@
 import type React from "react";
 
-import { ScrollView } from "~components/scroll-view";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { ScrollView } from "#components/scroll-view.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 export const PageWrapper: React.FC<{
 	wrapper?: React.FC<React.PropsWithChildren>;

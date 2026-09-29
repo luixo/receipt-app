@@ -1,7 +1,7 @@
-import type { AggregatedDebt, AggregatedDebts } from "~app/trpc-types";
-import type { CurrencyCode } from "~app/utils/currency";
-import type { PeerId } from "~db/ids";
-import { upsertInArray } from "~utils/array";
+import type { AggregatedDebt, AggregatedDebts } from "#app/trpc-types.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import type { PeerId } from "#db/ids.ts";
+import { upsertInArray } from "#utils/array.ts";
 
 import type {
 	ControllerContext,

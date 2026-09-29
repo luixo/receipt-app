@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { authProcedure } from "~web/handlers/trpc";
-import { debtIdSchema } from "~web/handlers/validation";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { debtIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

@@ -2,13 +2,13 @@ import { TRPCClientError } from "@trpc/client";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
 import { describe, expect } from "vitest";
 
-import type { AppRouter } from "~app/trpc";
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { createAuthContext } from "~tests/backend/utils/context";
-import { insertUserWithSession } from "~tests/backend/utils/data";
-import { expectTRPCError } from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+import type { AppRouter } from "#app/trpc.ts";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
+import { insertUserWithSession } from "#tests/backend/utils/data.ts";
+import { expectTRPCError } from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { router } from "./index";
 import { getTestClient, withTestServer } from "./utils.test";

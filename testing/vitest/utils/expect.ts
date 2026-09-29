@@ -4,11 +4,11 @@ import { detailedDiff } from "deep-object-diff";
 import { entries, fromEntries, keys, omitBy } from "remeda";
 import { assert, expect } from "vitest";
 
-import { createContext } from "~tests/backend/utils/context";
-import type { TestContext } from "~tests/backend/utils/test";
-import { test } from "~tests/backend/utils/test";
-import type { UnauthorizedContext } from "~web/handlers/context";
-import { formatErrorMessage } from "~web/handlers/errors";
+import { createContext } from "#tests/backend/utils/context.ts";
+import type { TestContext } from "#tests/backend/utils/test.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import type { UnauthorizedContext } from "#web/handlers/context.ts";
+import { formatErrorMessage } from "#web/handlers/errors.ts";
 
 export const expectLocalTRPCError = (
 	error: Error,

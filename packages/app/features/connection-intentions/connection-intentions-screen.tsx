@@ -3,15 +3,15 @@ import type React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { EmptyCard } from "~app/components/empty-card";
-import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useTRPC } from "~app/utils/trpc";
-import { BackLink } from "~components/back-link";
-import { Text } from "~components/text";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
 
 import {
 	InboundConnectionIntention,

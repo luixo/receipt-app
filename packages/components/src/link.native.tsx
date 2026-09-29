@@ -4,12 +4,12 @@ import { TouchableOpacity } from "react-native";
 import type { RightJoinProps } from "@heroui/react";
 import { keys, omit, pick } from "remeda";
 
-import { NavigationContext } from "~app/contexts/navigation-context";
-import type { LinkOptions, RouteTo } from "~app/utils/navigation";
-import { Button } from "~components/button";
-import { Card } from "~components/card";
-import { Text } from "~components/text";
-import { cn } from "~components/utils";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import type { LinkOptions, RouteTo } from "#app/utils/navigation.tsx";
+import { Button } from "#components/button.tsx";
+import { Card } from "#components/card.tsx";
+import { Text } from "#components/text.tsx";
+import { cn } from "#components/utils.ts";
 
 import type { Props } from "./link";
 

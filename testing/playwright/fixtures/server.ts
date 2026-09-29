@@ -2,7 +2,7 @@ import { test } from "@playwright/test";
 import type { TRPCClient } from "@trpc/client";
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 
-import { transformer } from "~utils/transformer";
+import { transformer } from "#utils/transformer.ts";
 
 import type { appRouter } from "../global/router";
 

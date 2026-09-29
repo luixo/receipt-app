@@ -3,11 +3,11 @@ import React from "react";
 import { Outlet, createFileRoute, redirect } from "@tanstack/react-router";
 import { TRPCClientError } from "@trpc/client";
 
-import { PublicPage } from "~app/components/public-page";
-import type { TRPCError } from "~app/trpc";
-import { Spinner } from "~components/spinner";
-import { captureSentryError } from "~web/utils/sentry";
-import { getLoaderTrpcClient } from "~web/utils/trpc";
+import { PublicPage } from "#app/components/public-page.tsx";
+import type { TRPCError } from "#app/trpc.ts";
+import { Spinner } from "#components/spinner.tsx";
+import { captureSentryError } from "#web/utils/sentry.ts";
+import { getLoaderTrpcClient } from "#web/utils/trpc.ts";
 
 const Wrapper = () => (
 	<PublicPage>

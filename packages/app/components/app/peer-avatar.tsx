@@ -1,8 +1,8 @@
 import type React from "react";
 
-import type { Peer } from "~app/trpc-types";
-import { Avatar } from "~components/avatar";
-import type { PeerId } from "~db/ids";
+import type { Peer } from "#app/trpc-types.ts";
+import { Avatar } from "#components/avatar.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 type PeerAvatarInput = {
 	id: PeerId;

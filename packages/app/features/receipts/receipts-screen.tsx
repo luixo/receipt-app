@@ -2,12 +2,12 @@ import type React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { PageHeader } from "~app/components/page-header";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useDefaultLimit } from "~app/hooks/use-default-limit";
-import { getPathHooks } from "~app/utils/navigation";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { useDefaultLimit } from "#app/hooks/use-default-limit.ts";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
 
 import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";

@@ -8,9 +8,9 @@ import {
 } from "@tanstack/react-form";
 import type { Derived } from "@tanstack/react-store";
 
-import { Form as RawForm } from "~components/form";
-import { Input } from "~components/input";
-import { NumberInput } from "~components/number-input";
+import { Form as RawForm } from "#components/form.tsx";
+import { Input } from "#components/input.tsx";
+import { NumberInput } from "#components/number-input.tsx";
 
 const { useFormContext, fieldContext, formContext } = createFormHookContexts();
 

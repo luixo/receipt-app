@@ -5,7 +5,7 @@ import { createInstrumenter } from "istanbul-lib-instrument";
 import * as fs from "node:fs/promises";
 import { entries, isNonNullish, values } from "remeda";
 
-import { baseLogger } from "~web/providers/logger";
+import { baseLogger } from "#web/providers/logger.ts";
 
 import { toAbsolutePath } from "./paths";
 import type { Position, Span } from "./source-map";

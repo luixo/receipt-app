@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AsyncStorage } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
+import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "#app/trpc.ts";
 
 const isKeyEqual = <
 	T1 extends TRPCQueryKey,

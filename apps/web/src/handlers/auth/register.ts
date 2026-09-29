@@ -1,17 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { AUTH_COOKIE } from "~app/utils/auth";
-import { passwordSchema, peerNameSchema } from "~app/utils/validation";
-import type { PeerId, UserId } from "~db/ids";
-import { generatePasswordData } from "~utils/server/crypto";
+import { AUTH_COOKIE } from "#app/utils/auth.ts";
+import { passwordSchema, peerNameSchema } from "#app/utils/validation.ts";
+import type { PeerId, UserId } from "#db/ids.ts";
+import { generatePasswordData } from "#utils/server/crypto.ts";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,
-} from "~web/handlers/auth/utils";
-import { unauthProcedure } from "~web/handlers/trpc";
-import { emailSchema } from "~web/handlers/validation";
-import { setCookie } from "~web/utils/cookies";
+} from "#web/handlers/auth/utils.ts";
+import { unauthProcedure } from "#web/handlers/trpc.ts";
+import { emailSchema } from "#web/handlers/validation.ts";
+import { setCookie } from "#web/utils/cookies.ts";
 
 export const procedure = unauthProcedure
 	.meta({

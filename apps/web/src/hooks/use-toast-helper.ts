@@ -1,6 +1,6 @@
 import React from "react";
 
-import { closeAllToasts, getToastsAmount } from "~components/toast";
+import { closeAllToasts, getToastsAmount } from "#components/toast.tsx";
 
 declare global {
 	// external interface extension

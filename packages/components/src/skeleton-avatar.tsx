@@ -1,7 +1,7 @@
 import type React from "react";
 
-import { Avatar } from "~components/avatar";
-import { Skeleton } from "~components/skeleton";
+import { Avatar } from "#components/avatar.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
 
 export const SkeletonAvatar: React.FC<
 	Omit<React.ComponentProps<typeof Avatar>, "fallback">

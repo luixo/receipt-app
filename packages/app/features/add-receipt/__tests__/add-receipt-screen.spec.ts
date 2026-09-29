@@ -2,10 +2,10 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
-import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
+import { test as currenciesPickerTest } from "#app/components/app/__tests__/currencies-picker.utils.ts";
+import { test as currencyInputTest } from "#app/components/app/__tests__/currency-input.utils.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as localTest } from "./utils";
 

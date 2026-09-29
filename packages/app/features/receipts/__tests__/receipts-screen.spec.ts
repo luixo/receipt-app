@@ -1,17 +1,17 @@
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { formatCurrency } from "~app/utils/currency";
-import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { expect } from "~tests/frontend/fixtures";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { DEFAULT_LIMIT, LIMITS } from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
 	defaultGenerateReceiptItemsWithConsumers,
-} from "~tests/frontend/generators/receipts";
-import { generateAmount } from "~tests/frontend/generators/utils";
-import { round } from "~utils/math";
+} from "#tests/frontend/generators/receipts.ts";
+import { generateAmount } from "#tests/frontend/generators/utils.ts";
+import { round } from "#utils/math.ts";
 
 import { test } from "./receipts-screen.utils";
 

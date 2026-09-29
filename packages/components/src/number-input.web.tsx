@@ -3,8 +3,8 @@ import React from "react";
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
 import { useIsSSR } from "@react-aria/ssr";
 
-import type { InputHandler, Props as InputProps } from "~components/input";
-import { cn, getErrorState, getMutationLoading } from "~components/utils";
+import type { InputHandler, Props as InputProps } from "#components/input.tsx";
+import { cn, getErrorState, getMutationLoading } from "#components/utils.ts";
 
 export type Props = {
 	ref?: React.RefObject<InputHandler>;

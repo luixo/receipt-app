@@ -2,11 +2,14 @@ import { TRPCError } from "@trpc/server";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import { receiptNameSchema } from "~app/utils/validation";
-import type { DB } from "~db/types.gen";
-import { temporalSchemas } from "~utils/temporal";
-import { authProcedure } from "~web/handlers/trpc";
-import { currencyCodeSchema, receiptIdSchema } from "~web/handlers/validation";
+import { receiptNameSchema } from "#app/utils/validation.ts";
+import type { DB } from "#db/types.gen.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import {
+	currencyCodeSchema,
+	receiptIdSchema,
+} from "#web/handlers/validation.ts";
 
 type ReceiptUpdateObject = Updateable<DB["receipts"]>;
 

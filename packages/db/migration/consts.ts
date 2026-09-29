@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import { isTestEnv } from "~db/migration/utils";
+import { isTestEnv } from "#db/migration/utils.ts";
 
 export const USERS = {
 	INDEXES: {

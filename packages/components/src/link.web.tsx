@@ -5,8 +5,8 @@ import { Link as LinkRaw } from "@heroui/react";
 import type { CreateLinkProps, LinkProps } from "@tanstack/react-router";
 import { createLink } from "@tanstack/react-router";
 
-import { Button } from "~components/button";
-import { Card } from "~components/card";
+import { Button } from "#components/button.tsx";
+import { Card } from "#components/card.tsx";
 
 const RawLink = ({
 	testID,

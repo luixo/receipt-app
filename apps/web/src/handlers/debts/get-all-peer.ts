@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import { unique } from "remeda";
 import z from "zod";
 
-import type { CurrencyCode } from "~app/utils/currency";
-import { queueCallFactory } from "~web/handlers/batch";
-import type { AuthorizedContext } from "~web/handlers/context";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema } from "~web/handlers/validation";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { queueCallFactory } from "#web/handlers/batch.ts";
+import type { AuthorizedContext } from "#web/handlers/context.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema } from "#web/handlers/validation.ts";
 
 const getAllPeerSchema = z.strictObject({
 	peerId: peerIdSchema,

@@ -2,10 +2,10 @@ import { TRPCError } from "@trpc/server";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import { peerNameSchema } from "~app/utils/validation";
-import type { DB } from "~db/types.gen";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema } from "~web/handlers/validation";
+import { peerNameSchema } from "#app/utils/validation.ts";
+import type { DB } from "#db/types.gen.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

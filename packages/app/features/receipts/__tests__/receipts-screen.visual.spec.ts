@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
-import { DEFAULT_LIMIT } from "~app/utils/validation";
-import type { PeerId } from "~db/ids";
-import { expect } from "~tests/frontend/fixtures";
+import { DEFAULT_LIMIT } from "#app/utils/validation.ts";
+import type { PeerId } from "#db/ids.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 import {
 	defaultGenerateDebtsFromReceipt,
 	ourDesynced,
@@ -10,13 +10,13 @@ import {
 	remapDebts,
 	theirNonExistent,
 	theirSynced,
-} from "~tests/frontend/generators/debts";
+} from "#tests/frontend/generators/debts.ts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
 	defaultGenerateReceiptItems,
 	defaultGenerateReceiptParticipants,
-} from "~tests/frontend/generators/receipts";
+} from "#tests/frontend/generators/receipts.ts";
 
 import { test } from "./receipts-screen.utils";
 

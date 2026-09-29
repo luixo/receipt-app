@@ -4,48 +4,48 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 
-import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { SkeletonCurrencyInput } from "~app/components/app/currency-input";
-import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
-import { LoadablePeer } from "~app/components/app/loadable-peer";
-import { SkeletonPeer } from "~app/components/app/peer";
+import { CurrenciesPicker } from "#app/components/app/currencies-picker.tsx";
+import { SkeletonCurrencyInput } from "#app/components/app/currency-input.tsx";
+import { DebtSyncStatus } from "#app/components/app/debt-sync-status.tsx";
+import { LoadablePeer } from "#app/components/app/loadable-peer.tsx";
+import { SkeletonPeer } from "#app/components/app/peer.tsx";
 import {
 	SignButtonGroup,
 	SkeletonSignButtonGroup,
-} from "~app/components/app/sign-button-group";
-import { PageHeader } from "~app/components/page-header";
+} from "#app/components/app/sign-button-group.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
 import {
 	RemoveButton,
 	RemoveButtonSkeleton,
-} from "~app/components/remove-button";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
-import type { CurrencyCode } from "~app/utils/currency";
-import { useAppForm } from "~app/utils/forms";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
+} from "#app/components/remove-button.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useBooleanState } from "#app/hooks/use-boolean-state.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { formatCurrency, getCurrencySymbol } from "#app/utils/currency.ts";
+import type { CurrencyCode } from "#app/utils/currency.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
 import {
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
 	debtNoteSchema,
-} from "~app/utils/validation";
-import { BackLink } from "~components/back-link";
-import { Button } from "~components/button";
-import { DateInput } from "~components/date-input";
-import { Icon } from "~components/icons";
-import { ButtonLink } from "~components/link";
-import { SaveButton } from "~components/save-button";
-import { SkeletonDateInput } from "~components/skeleton-date-input";
-import { SkeletonInput } from "~components/skeleton-input";
-import { SkeletonNumberInput } from "~components/skeleton-number-input";
-import { View } from "~components/view";
-import type { DebtId, PeerId } from "~db/ids";
-import { options as debtsRemoveOptions } from "~mutations/debts/remove";
-import { options as debtsUpdateOptions } from "~mutations/debts/update";
+} from "#app/utils/validation.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Button } from "#components/button.tsx";
+import { DateInput } from "#components/date-input.tsx";
+import { Icon } from "#components/icons.tsx";
+import { ButtonLink } from "#components/link.tsx";
+import { SaveButton } from "#components/save-button.tsx";
+import { SkeletonDateInput } from "#components/skeleton-date-input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { SkeletonNumberInput } from "#components/skeleton-number-input.tsx";
+import { View } from "#components/view.tsx";
+import type { DebtId, PeerId } from "#db/ids.ts";
+import { options as debtsRemoveOptions } from "#mutations/debts/remove.ts";
+import { options as debtsUpdateOptions } from "#mutations/debts/update.ts";
 
 import { DebtControlButtons } from "./debt-control-buttons";
 

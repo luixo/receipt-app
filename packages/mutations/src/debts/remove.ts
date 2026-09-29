@@ -1,5 +1,5 @@
-import type { Debt } from "~app/trpc-types";
-import { round } from "~utils/math";
+import type { Debt } from "#app/trpc-types.ts";
+import { round } from "#utils/math.ts";
 
 import {
 	update as updateDebts,

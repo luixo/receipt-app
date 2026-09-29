@@ -2,9 +2,9 @@ import { Faker, en } from "@faker-js/faker";
 import { test } from "@playwright/test";
 import timekeeper from "timekeeper";
 
-import { addAttachment } from "~tests/frontend/utils/test-info";
-import { setSeed } from "~tests/utils/faker";
-import { freezeTemporal } from "~tests/utils/temporal-freeze";
+import { addAttachment } from "#tests/frontend/utils/test-info.ts";
+import { setSeed } from "#tests/utils/faker.ts";
+import { freezeTemporal } from "#tests/utils/temporal-freeze.ts";
 
 type MockFixtures = {
 	faker: Faker;

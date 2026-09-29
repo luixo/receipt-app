@@ -5,18 +5,18 @@ import { useTranslation } from "react-i18next";
 import { omit } from "remeda";
 import { z } from "zod";
 
-import { PageHeader } from "~app/components/page-header";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { noBatchContext, useTRPC } from "~app/utils/trpc";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { noBatchContext, useTRPC } from "#app/utils/trpc.ts";
 import {
 	emailSchema,
 	passwordSchema,
 	peerNameSchema,
-} from "~app/utils/validation";
-import { Button } from "~components/button";
-import { options as authRegisterOptions } from "~mutations/auth/register";
+} from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { options as authRegisterOptions } from "#mutations/auth/register.ts";
 
 const formSchema = z.object({
 	email: emailSchema,

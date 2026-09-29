@@ -1,4 +1,4 @@
-import type { PeerId, UserId } from "~db/ids";
+import type { PeerId, UserId } from "#db/ids.ts";
 
 import {
 	invalidateSuggest as invalidateSuggestPeers,

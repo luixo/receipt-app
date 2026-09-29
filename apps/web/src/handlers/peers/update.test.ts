@@ -4,20 +4,20 @@ import { describe } from "vitest";
 import {
 	MAX_USERNAME_LENGTH,
 	MIN_USERNAME_LENGTH,
-} from "~app/utils/validation";
-import { createAuthContext } from "~tests/backend/utils/context";
+} from "#app/utils/validation.ts";
+import { createAuthContext } from "#tests/backend/utils/context.ts";
 import {
 	insertPeer,
 	insertUser,
 	insertUserWithSession,
-} from "~tests/backend/utils/data";
+} from "#tests/backend/utils/data.ts";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "~tests/backend/utils/expect";
-import { test } from "~tests/backend/utils/test";
-import { t } from "~web/handlers/trpc";
+} from "#tests/backend/utils/expect.ts";
+import { test } from "#tests/backend/utils/test.ts";
+import { t } from "#web/handlers/trpc.ts";
 
 import { procedure } from "./update";
 

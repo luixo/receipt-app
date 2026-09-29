@@ -1,8 +1,8 @@
 import type React from "react";
 import { Pressable, View as RawView } from "react-native";
 
-import { TextWrapper } from "~components/text.native";
-import { cn } from "~components/utils";
+import { TextWrapper } from "#components/text.native.tsx";
+import { cn } from "#components/utils.ts";
 
 import type { Props } from "./view";
 import { useScrollView } from "./view.base";

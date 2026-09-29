@@ -2,12 +2,12 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { PageHeader } from "~app/components/page-header";
-import { StoreDataContext } from "~app/contexts/store-data-context";
-import { LIMIT_STORE_NAME } from "~app/utils/store/limit";
-import { Divider } from "~components/divider";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { StoreDataContext } from "#app/contexts/store-data-context.ts";
+import { LIMIT_STORE_NAME } from "#app/utils/store/limit.ts";
+import { Divider } from "#components/divider.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 import { ColorModeSettings } from "./color-mode-settings";
 import { LanguageSettings } from "./language-settings";

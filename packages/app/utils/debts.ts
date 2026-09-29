@@ -1,4 +1,4 @@
-import type { Debt, Receipt } from "~app/trpc-types";
+import type { Debt, Receipt } from "#app/trpc-types.ts";
 
 type DebtPartial = Pick<Debt, "amount" | "currencyCode" | "timestamp">;
 

@@ -1,7 +1,7 @@
 import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-import { DESCRIPTION_CLASSNAME, MAX_VISIBLE_TOASTS } from "~utils/toast";
+import { DESCRIPTION_CLASSNAME, MAX_VISIBLE_TOASTS } from "#utils/toast.ts";
 
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 const SKIP_TOAST_TIMEOUT = 5000;

@@ -1,7 +1,7 @@
 import { mergeTests } from "@playwright/test";
 
-import { test as addDebtTest } from "~app/features/add-debt/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as addDebtTest } from "#app/features/add-debt/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as addPeerModalFixture } from "./add-peer-modal.utils";
 import { test as peersSuggestFixture } from "./peers-suggest.utils";

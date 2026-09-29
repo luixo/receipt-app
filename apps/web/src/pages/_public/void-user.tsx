@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { VoidUserScreen } from "~app/features/void-user/void-user-screen";
-import { getTitle } from "~web/utils/i18n";
-import { searchParamsWithDefaults } from "~web/utils/navigation";
+import { VoidUserScreen } from "#app/features/void-user/void-user-screen.tsx";
+import { getTitle } from "#web/utils/i18n.ts";
+import { searchParamsWithDefaults } from "#web/utils/navigation.ts";
 
 export const Route = createFileRoute("/_public/void-user")({
 	component: VoidUserScreen,

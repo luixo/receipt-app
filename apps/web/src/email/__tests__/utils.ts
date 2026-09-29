@@ -1,5 +1,5 @@
-import { test as originalTest } from "~tests/frontend/fixtures";
-import type { ExtractFixture } from "~tests/frontend/types";
+import { test as originalTest } from "#tests/frontend/fixtures.ts";
+import type { ExtractFixture } from "#tests/frontend/types.ts";
 
 type Fixtures = {
 	expectBodyScreenshot: (

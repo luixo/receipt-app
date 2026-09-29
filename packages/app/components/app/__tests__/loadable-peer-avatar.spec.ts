@@ -1,8 +1,8 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
-import { test as receiptTest } from "~app/features/receipt/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as receiptTest } from "#app/features/receipt/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as peerAvatarFixture } from "./peer-avatar.utils";
 

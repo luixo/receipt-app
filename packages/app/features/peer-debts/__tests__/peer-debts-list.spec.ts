@@ -1,7 +1,7 @@
-import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
-import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { localSettings } from "~tests/frontend/consts";
-import { expect } from "~tests/frontend/fixtures";
+import { formatCurrency, getCurrencySymbol } from "#app/utils/currency.ts";
+import { SETTINGS_STORE_NAME } from "#app/utils/store/settings.ts";
+import { localSettings } from "#tests/frontend/consts.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test } from "./even-debts-divider.utils";
 import { debtsWithDividers } from "./peer-debts-list.utils";

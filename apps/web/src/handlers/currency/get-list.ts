@@ -1,5 +1,5 @@
-import { CURRENCY_CODES } from "~utils/currency-data";
-import { authProcedure } from "~web/handlers/trpc";
+import { CURRENCY_CODES } from "#utils/currency-data.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
 
 export const procedure = authProcedure
 	.meta({

@@ -3,27 +3,27 @@ import type React from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Trans, useTranslation } from "react-i18next";
 
-import { HighlightText } from "~app/components/highlight-text";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useFormat } from "~app/hooks/use-format";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import type { ReceiptPageEntry } from "~app/trpc-types";
-import { formatCurrency } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Badge } from "~components/badge";
-import { Checkbox } from "~components/checkbox";
-import { Icon } from "~components/icons";
-import { Link } from "~components/link";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { Tooltip } from "~components/tooltip";
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
-import { View } from "~components/view";
-import type { ReceiptId } from "~db/ids";
-import type { Interval } from "~utils/array";
-import { round } from "~utils/math";
+import { HighlightText } from "#app/components/highlight-text.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useFormat } from "#app/hooks/use-format.ts";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import type { ReceiptPageEntry } from "#app/trpc-types.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Badge } from "#components/badge.tsx";
+import { Checkbox } from "#components/checkbox.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Link } from "#components/link.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { Tooltip } from "#components/tooltip.tsx";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
+import { View } from "#components/view.tsx";
+import type { ReceiptId } from "#db/ids.ts";
+import type { Interval } from "#utils/array.ts";
+import { round } from "#utils/math.ts";
 
 import {
 	ReceiptPreviewSyncIcon,

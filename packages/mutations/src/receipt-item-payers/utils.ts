@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 
-import type { ReceiptItemId } from "~db/ids";
+import type { ReceiptItemId } from "#db/ids.ts";
 
 export const getPayersItems = (t: TFunction, itemIds: ReceiptItemId[]) =>
 	t("toasts.payersGenitive", {

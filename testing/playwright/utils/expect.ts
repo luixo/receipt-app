@@ -1,4 +1,4 @@
-import type { MaybePromise } from "~utils/types";
+import type { MaybePromise } from "#utils/types.ts";
 
 export const expectSubscribe = async <T>(
 	subscribe: (

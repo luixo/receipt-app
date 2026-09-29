@@ -2,21 +2,21 @@ import React from "react";
 
 import { Trans, useTranslation } from "react-i18next";
 
-import { ErrorMessage } from "~app/components/error-message";
-import { RemoveButton } from "~app/components/remove-button";
-import { useLocale } from "~app/hooks/use-locale";
-import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { formatCurrency } from "~app/utils/currency";
-import { useTRPC } from "~app/utils/trpc";
-import { Card } from "~components/card";
-import { Chip } from "~components/chip";
-import { Divider } from "~components/divider";
-import { Icon } from "~components/icons";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { View } from "~components/view";
-import type { ViewHandle } from "~components/view.base";
-import { round } from "~utils/math";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { RemoveButton } from "#app/components/remove-button.tsx";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { useTrpcMutationState } from "#app/hooks/use-trpc-mutation-state.ts";
+import { formatCurrency } from "#app/utils/currency.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Card } from "#components/card.tsx";
+import { Chip } from "#components/chip.tsx";
+import { Divider } from "#components/divider.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import type { ViewHandle } from "#components/view.base.tsx";
+import { View } from "#components/view.tsx";
+import { round } from "#utils/math.ts";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";

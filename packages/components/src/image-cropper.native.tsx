@@ -1,6 +1,6 @@
-import type { Props } from "~components/image-cropper";
-import { Text } from "~components/text";
-import { View } from "~components/view";
+import type { Props } from "#components/image-cropper.tsx";
+import { Text } from "#components/text.tsx";
+import { View } from "#components/view.tsx";
 
 export const getFormData = () => Promise.resolve(new FormData());
 

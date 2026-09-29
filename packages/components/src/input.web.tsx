@@ -2,8 +2,8 @@ import React from "react";
 
 import { Input as InputRaw, Textarea } from "@heroui/input";
 
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.tsx";
 
 import { useMutationErrors, usePasswordVisibility } from "./input.base";
 import type { FieldError, MutationsProp } from "./utils";

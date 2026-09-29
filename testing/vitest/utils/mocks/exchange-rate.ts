@@ -1,5 +1,5 @@
-import type { AddParameters } from "~utils/types";
-import type { ExchangeRateOptions } from "~web/providers/exchange-rate";
+import type { AddParameters } from "#utils/types.ts";
+import type { ExchangeRateOptions } from "#web/providers/exchange-rate.ts";
 
 export type ExchangeRateOptionsMock = ExchangeRateOptions & {
 	broken: boolean;

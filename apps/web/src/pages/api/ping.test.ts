@@ -1,7 +1,7 @@
 import { describe, expect } from "vitest";
 
-import { test } from "~tests/backend/utils/test";
-import { getServerRouteMethod } from "~web/pages/api/utils.test";
+import { test } from "#tests/backend/utils/test.ts";
+import { getServerRouteMethod } from "#web/pages/api/utils.test.ts";
 
 import { Route } from "./ping";
 

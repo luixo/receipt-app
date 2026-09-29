@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 
-import { EmptyCard } from "~app/components/empty-card";
-import { PageHeader } from "~app/components/page-header";
-import { getPathHooks } from "~app/utils/navigation";
-import { Text } from "~components/text";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { Text } from "#components/text.tsx";
 
 import { VoidUser } from "./void-user";
 

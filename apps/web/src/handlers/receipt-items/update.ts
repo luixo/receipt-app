@@ -6,11 +6,11 @@ import {
 	priceSchema,
 	quantitySchema,
 	receiptItemNameSchema,
-} from "~app/utils/validation";
-import type { DB } from "~db/types.gen";
-import { getAccessRole } from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { receiptItemIdSchema } from "~web/handlers/validation";
+} from "#app/utils/validation.ts";
+import type { DB } from "#db/types.gen.ts";
+import { getAccessRole } from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { receiptItemIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

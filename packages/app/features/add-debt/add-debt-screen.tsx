@@ -4,29 +4,29 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { CurrencyInput } from "~app/components/app/currency-input";
-import { PeersSuggest } from "~app/components/app/peers-suggest";
-import { SignButtonGroup } from "~app/components/app/sign-button-group";
-import type { Direction } from "~app/components/app/sign-button-group";
-import { PageHeader } from "~app/components/page-header";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
+import { CurrencyInput } from "#app/components/app/currency-input.tsx";
+import { PeersSuggest } from "#app/components/app/peers-suggest.tsx";
+import { SignButtonGroup } from "#app/components/app/sign-button-group.tsx";
+import type { Direction } from "#app/components/app/sign-button-group.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { EmailVerificationCard } from "#app/features/email-verification/email-verification-card.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
 	debtNoteSchema,
 	peerIdSchema,
-} from "~app/utils/validation";
-import { BackLink } from "~components/back-link";
-import { Button } from "~components/button";
-import { DateInput } from "~components/date-input";
-import { options as debtsAddOptions } from "~mutations/debts/add";
-import { temporalSchemas } from "~utils/temporal";
+} from "#app/utils/validation.ts";
+import { BackLink } from "#components/back-link.tsx";
+import { Button } from "#components/button.tsx";
+import { DateInput } from "#components/date-input.tsx";
+import { options as debtsAddOptions } from "#mutations/debts/add.ts";
+import { temporalSchemas } from "#utils/temporal.ts";
 
 const formSchema = z.object({
 	amount: debtAmountSchema,

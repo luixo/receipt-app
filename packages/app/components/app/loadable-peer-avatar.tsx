@@ -2,11 +2,11 @@ import type React from "react";
 
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { PeerAvatar } from "~app/components/app/peer-avatar";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { useTRPC } from "~app/utils/trpc";
-import { SkeletonAvatar } from "~components/skeleton-avatar";
-import type { PeerId } from "~db/ids";
+import { PeerAvatar } from "#app/components/app/peer-avatar.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { SkeletonAvatar } from "#components/skeleton-avatar.tsx";
+import type { PeerId } from "#db/ids.ts";
 
 type Props = React.ComponentProps<typeof PeerAvatar> & {
 	id: PeerId;

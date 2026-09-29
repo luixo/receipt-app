@@ -1,7 +1,7 @@
 import { parse } from "@babel/parser";
 import { values } from "remeda";
 
-import { baseLogger } from "~web/providers/logger";
+import { baseLogger } from "#web/providers/logger.ts";
 
 import { createSegmentLookup } from "./ranges";
 

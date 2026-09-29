@@ -3,15 +3,15 @@ import React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { OutboundIntention } from "~app/trpc-types";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { Input } from "~components/input";
-import { SkeletonInput } from "~components/skeleton-input";
-import { View } from "~components/view";
-import { options as userConnectionsRemoveOptions } from "~mutations/user-connection-intentions/remove";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { OutboundIntention } from "#app/trpc-types.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { Input } from "#components/input.tsx";
+import { SkeletonInput } from "#components/skeleton-input.tsx";
+import { View } from "#components/view.tsx";
+import { options as userConnectionsRemoveOptions } from "#mutations/user-connection-intentions/remove.ts";
 
 export const SkeletonOutboundConnectionIntention: React.FC = () => {
 	const { t } = useTranslation("peers");

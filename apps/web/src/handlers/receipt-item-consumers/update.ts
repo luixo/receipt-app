@@ -2,11 +2,11 @@ import { TRPCError } from "@trpc/server";
 import type { Updateable } from "kysely";
 import { z } from "zod";
 
-import { partSchema } from "~app/utils/validation";
-import type { DB } from "~db/types.gen";
-import { getAccessRole } from "~web/handlers/receipts/utils";
-import { authProcedure } from "~web/handlers/trpc";
-import { peerIdSchema, receiptItemIdSchema } from "~web/handlers/validation";
+import { partSchema } from "#app/utils/validation.ts";
+import type { DB } from "#db/types.gen.ts";
+import { getAccessRole } from "#web/handlers/receipts/utils.ts";
+import { authProcedure } from "#web/handlers/trpc.ts";
+import { peerIdSchema, receiptItemIdSchema } from "#web/handlers/validation.ts";
 
 export const procedure = authProcedure
 	.meta({

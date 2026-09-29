@@ -4,21 +4,21 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-import { EmptyCard } from "~app/components/empty-card";
-import { ErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
-import { suspendedFallback } from "~app/components/suspense-wrapper";
-import { NavigationContext } from "~app/contexts/navigation-context";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { useAppForm } from "~app/utils/forms";
-import { getPathHooks } from "~app/utils/navigation";
-import { useTRPC } from "~app/utils/trpc";
-import { passwordSchema } from "~app/utils/validation";
-import { Button } from "~components/button";
-import { Input } from "~components/input";
-import { Skeleton } from "~components/skeleton";
-import { Text } from "~components/text";
-import { options as authResetPasswordOptions } from "~mutations/auth/reset-password";
+import { EmptyCard } from "#app/components/empty-card.tsx";
+import { ErrorMessage } from "#app/components/error-message.tsx";
+import { PageHeader } from "#app/components/page-header.tsx";
+import { suspendedFallback } from "#app/components/suspense-wrapper.tsx";
+import { NavigationContext } from "#app/contexts/navigation-context.ts";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import { useAppForm } from "#app/utils/forms.tsx";
+import { getPathHooks } from "#app/utils/navigation.tsx";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { passwordSchema } from "#app/utils/validation.ts";
+import { Button } from "#components/button.tsx";
+import { Input } from "#components/input.tsx";
+import { Skeleton } from "#components/skeleton.tsx";
+import { Text } from "#components/text.tsx";
+import { options as authResetPasswordOptions } from "#mutations/auth/reset-password.ts";
 
 const formSchema = z
 	.object({

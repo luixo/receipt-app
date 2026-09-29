@@ -3,14 +3,14 @@ import React from "react";
 import { skipToken, useMutation } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-import { ConfirmModal } from "~app/components/confirm-modal";
-import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { Debt } from "~app/trpc-types";
-import { useTRPC } from "~app/utils/trpc";
-import { Button } from "~components/button";
-import { Icon } from "~components/icons";
-import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
+import { ConfirmModal } from "#app/components/confirm-modal.tsx";
+import { DebtIntention } from "#app/features/debts-intentions/debt-intention.tsx";
+import { useTrpcMutationOptions } from "#app/hooks/use-trpc-mutation-options.ts";
+import type { Debt } from "#app/trpc-types.ts";
+import { useTRPC } from "#app/utils/trpc.ts";
+import { Button } from "#components/button.tsx";
+import { Icon } from "#components/icons.tsx";
+import { options as acceptDebtIntentionOptions } from "#mutations/debt-intentions/accept.ts";
 
 type Props = {
 	debt: Debt;

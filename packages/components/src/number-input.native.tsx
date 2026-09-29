@@ -1,9 +1,9 @@
 import React from "react";
 
-import { useLocale } from "~app/hooks/use-locale";
-import { Icon } from "~components/icons";
-import { Input } from "~components/input";
-import { View } from "~components/view";
+import { useLocale } from "#app/hooks/use-locale.ts";
+import { Icon } from "#components/icons.tsx";
+import { Input } from "#components/input.tsx";
+import { View } from "#components/view.tsx";
 
 import type { Props } from "./number-input";
 

@@ -1,4 +1,4 @@
-import type { CurrencyCode } from "~app/utils/currency";
+import type { CurrencyCode } from "#app/utils/currency.ts";
 
 const bannedCodes = new Set([
 	// SDR (Special Drawing Right)

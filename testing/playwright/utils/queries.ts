@@ -22,10 +22,10 @@ import type {
 	TRPCMutationKey,
 	TRPCMutationOutput,
 	TRPCQueryKey,
-} from "~app/trpc";
-import type { ApiManager } from "~tests/frontend/fixtures/api";
-import { transformer } from "~utils/transformer";
-import type { DeepPartial } from "~utils/types";
+} from "#app/trpc.ts";
+import type { ApiManager } from "#tests/frontend/fixtures/api.ts";
+import { transformer } from "#utils/transformer.ts";
+import type { DeepPartial } from "#utils/types.ts";
 
 const DEFAULT_SNAPSHOT_TIMEOUT = 5000;
 

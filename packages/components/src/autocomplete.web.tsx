@@ -5,8 +5,8 @@ import {
 } from "@heroui/autocomplete";
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view.web";
+import { cn } from "#components/utils.ts";
+import type { ViewReactNode } from "#components/view.web.tsx";
 
 export type Props = Pick<
 	React.ComponentProps<typeof AutocompleteRaw>,

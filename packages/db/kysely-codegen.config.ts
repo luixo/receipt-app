@@ -1,7 +1,7 @@
 import { defineConfig } from "kysely-codegen";
 import { entries, fromEntries, values } from "remeda";
 
-import type { DB } from "~db/types.gen";
+import type { DB } from "#db/types.gen.ts";
 
 const typeMapping = {
 	date: "Temporal.PlainDate",

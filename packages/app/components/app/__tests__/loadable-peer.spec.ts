@@ -2,8 +2,8 @@ import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test as debtsTest } from "~app/features/debts/__tests__/utils";
-import { expect } from "~tests/frontend/fixtures";
+import { test as debtsTest } from "#app/features/debts/__tests__/utils.ts";
+import { expect } from "#tests/frontend/fixtures.ts";
 
 import { test as loadablePeerFixture } from "./peer.utils";
 
