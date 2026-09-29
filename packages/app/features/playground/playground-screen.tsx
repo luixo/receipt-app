@@ -3,6 +3,7 @@ import React from "react";
 import { useQueries } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
+import { AppVersion } from "~app/components/app-version";
 import { SkeletonPeer } from "~app/components/app/peer";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useColorModes } from "~app/hooks/use-color-modes";
@@ -552,6 +553,7 @@ export const PlaygroundScreen = () => {
 			<Button type="submit" form={formId}>
 				Submit by id
 			</Button>
+			<AppVersion />
 		</>
 	);
 };
