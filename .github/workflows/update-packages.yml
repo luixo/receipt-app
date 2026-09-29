@@ -1,0 +1,98 @@
+name: Update packages
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-packages
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-26.04
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BRANCH: chore/weekly-package-updates
+      TITLE: Weekly package updates
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Find and apply package updates
+        id: updates
+        env:
+          REPORT: ${{ runner.temp }}/package-updates.txt
+          BODY: ${{ runner.temp }}/package-updates.md
+        run: |
+          bunx --yes npm-check-updates --workspaces --packageManager bun --dep prod,dev,optional --format group -u > "$REPORT"
+
+          if git diff --quiet; then
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+            echo "All dependencies are up to date." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "updated=true" >> "$GITHUB_OUTPUT"
+            bun install --lockfile-only
+            {
+              echo '## Suggested package updates'
+              echo
+              echo 'Includes all workspaces and the root catalog. Review major upgrades and patched dependencies before merging.'
+              echo
+              echo '```text'
+              cat "$REPORT"
+              echo '```'
+              echo
+              echo "[Workflow run]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID)"
+            } > "$BODY"
+            cat "$BODY" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Find existing PR by title
+        id: pr
+        run: |
+          prs=$(gh pr list --state open --limit 1000 --json number,title,headRefName)
+          branch=$(jq -r --arg title "$TITLE" \
+            '[.[] | select(.title == $title) | .headRefName][0] // empty' <<< "$prs")
+          if [ -n "$branch" ] && [ "$branch" != "$BRANCH" ]; then
+            echo "An open PR named '$TITLE' uses unexpected branch '$branch'." >&2
+            exit 1
+          fi
+          pr=$(jq -r --arg title "$TITLE" \
+            '[.[] | select(.title == $title) | .number][0] // empty' <<< "$prs")
+          echo "number=$pr" >> "$GITHUB_OUTPUT"
+
+      - name: Publish updates
+        if: steps.updates.outputs.updated == 'true'
+        env:
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+          BODY: ${{ runner.temp }}/package-updates.md
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git switch -c "$BRANCH"
+          git add -u
+          git commit -m 'Chore: update packages'
+
+          # Only replace the branch if it has not changed since we looked it up.
+          previous=$(git ls-remote origin "refs/heads/$BRANCH" | cut -f1)
+          git push --force-with-lease="refs/heads/$BRANCH:$previous" origin "HEAD:refs/heads/$BRANCH"
+
+          if [ -n "$PR_NUMBER" ]; then
+            gh pr edit "$PR_NUMBER" --body-file "$BODY"
+          else
+            gh pr create --base main --head "$BRANCH" --title "$TITLE" --body-file "$BODY"
+          fi
+
+      - name: Close stale PR
+        if: steps.updates.outputs.updated == 'false' && steps.pr.outputs.number != ''
+        env:
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: gh pr close "$PR_NUMBER" --comment 'All dependencies are up to date.'
