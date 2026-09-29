@@ -1,13 +1,19 @@
 {
-	"name": "@ra/app",
+	"name": "receipt-app-app",
 	"version": "0.0.0",
 	"type": "module",
 	"main": "index.ts",
+	"imports": {
+		"#utils/*": "receipt-app-utils/src/*",
+		"#app/*": "./*",
+		"#components/*": "receipt-app-components/src/*",
+		"#db/*": "receipt-app-db/src/*",
+		"#mutations/*": "receipt-app-mutations/src/*",
+		"#tests/frontend/*": "receipt-app-playwright/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"dependencies": {
 		"@heroui/use-infinite-scroll": "^2.2.11",
-		"@ra/components": "workspace:*",
-		"@ra/mutations": "workspace:*",
-		"@ra/utils": "workspace:*",
 		"@react-native-vector-icons/lucide": "^13.1.4",
 		"@tanstack/query-async-storage-persister": "5.80.6",
 		"@tanstack/react-form": "^1.23.7",
@@ -26,6 +32,9 @@
 		"i18next": "catalog:",
 		"react-easy-crop": "^5.4.2",
 		"react-i18next": "catalog:",
+		"receipt-app-components": "workspace:*",
+		"receipt-app-mutations": "workspace:*",
+		"receipt-app-utils": "workspace:*",
 		"tailwindcss": "catalog:",
 		"uniwind": "catalog:",
 		"uuid": "catalog:",
@@ -34,8 +43,8 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "catalog:",
-		"@ra/playwright": "workspace:*",
 		"@react-types/shared": "^3.18.1",
-		"@types/uuid": "catalog:"
+		"@types/uuid": "catalog:",
+		"receipt-app-playwright": "workspace:*"
 	}
 }

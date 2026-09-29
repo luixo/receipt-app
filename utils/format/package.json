@@ -1,5 +1,5 @@
 {
-	"name": "@ra/format",
+	"name": "receipt-app-format",
 	"version": "0.0.0",
 	"type": "module",
 	"main": "config.ts",

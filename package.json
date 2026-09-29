@@ -9,6 +9,21 @@
 		"utils/*"
 	],
 	"type": "module",
+	"imports": {
+		"#app/*": "receipt-app-app/*",
+		"#components/*": "receipt-app-components/src/*",
+		"#coverage/*": "receipt-app-coverage/src/*",
+		"#db/*": "receipt-app-db/src/*",
+		"#db/migration/*": "receipt-app-db/migration/*",
+		"#mobile/*": "receipt-app-mobile/src/*",
+		"#mobile/app/*": "receipt-app-mobile/app/*",
+		"#mutations/*": "receipt-app-mutations/src/*",
+		"#tests/backend/*": "receipt-app-vitest/*",
+		"#tests/frontend/*": "receipt-app-playwright/*",
+		"#tests/utils/*": "receipt-app-test-utils/src/*",
+		"#utils/*": "receipt-app-utils/src/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"scripts": {
 		"backend:test": "vitest --configLoader native",
 		"db:generate-types": "bun run --cwd packages/db db:generate-types",

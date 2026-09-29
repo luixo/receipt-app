@@ -111,7 +111,7 @@ const restrictedImports: ((
 		message: "Please use granular exports from heroui-native",
 	},
 	{
-		from: "~web/handlers/validation",
+		from: "#web/handlers/validation",
 		message:
 			"Do not import from web validation, it includes heavy currency data!",
 		omitTags: ["client-only"],
@@ -199,18 +199,18 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
 		selector: "NewExpression[callee.name='Date']",
 		message:
-			"Using `new Date()` is forbidden, use '~utils/date' `parse` object.",
+			"Using `new Date()` is forbidden, use '#utils/date' `parse` object.",
 	},
 	{
 		selector:
 			"CallExpression[callee.object.name='Date'][callee.property.name='now']",
 		message:
-			"Using `Date.now()` is forbidden, use '~utils/date' `getNow` object.",
+			"Using `Date.now()` is forbidden, use '#utils/date' `getNow` object.",
 	},
 	{
 		selector: "TSTypeReference[typeName.name='Date']",
 		message:
-			"Using `Date` type is forbidden, use '~utils/date' Temporal types.",
+			"Using `Date` type is forbidden, use '#utils/date' Temporal types.",
 	},
 	{
 		selector: "MemberExpression[object.name='React'][property.name='memo']",

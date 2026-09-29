@@ -1,9 +1,13 @@
 {
-	"name": "@ra/lint",
+	"name": "receipt-app-lint",
 	"version": "0.0.0",
 	"type": "module",
 	"sideEffects": false,
 	"main": "config.ts",
+	"imports": {
+		"#utils/*": "receipt-app-utils/src/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"scripts": {
 		"lint": "bun --cwd ../.. oxlint"
 	},

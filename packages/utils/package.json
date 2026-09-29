@@ -1,11 +1,16 @@
 {
-	"name": "@ra/utils",
+	"name": "receipt-app-utils",
 	"version": "0.0.0",
 	"type": "module",
 	"sideEffects": [
 		"src/temporal-polyfill.ts"
 	],
 	"main": "src/index.ts",
+	"imports": {
+		"#app/*": "receipt-app-app/*",
+		"#utils/*": "./src/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"dependencies": {
 		"@js-temporal/polyfill": "0.5.1",
 		"@tanstack/router-core": "catalog:",

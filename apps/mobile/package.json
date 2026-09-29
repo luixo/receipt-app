@@ -1,9 +1,16 @@
 {
-	"name": "@ra/mobile",
+	"name": "receipt-app-mobile",
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
 	"main": "./entry.ts",
+	"imports": {
+		"#utils/*": "receipt-app-utils/src/*",
+		"#app/*": "receipt-app-app/*",
+		"#components/*": "receipt-app-components/src/*",
+		"#mobile/*": "./src/*",
+		"#mobile/app/*": "./app/*"
+	},
 	"scripts": {
 		"css:prepare": "bun generate-colors.ts",
 		"update-ios-version": "bun update-version.ts"
@@ -15,9 +22,6 @@
 		"@formatjs/intl-numberformat": "^9.4.3",
 		"@formatjs/intl-pluralrules": "^6.3.15",
 		"@gorhom/bottom-sheet": "^5.2.14",
-		"@ra/app": "workspace:*",
-		"@ra/components": "workspace:*",
-		"@ra/utils": "workspace:*",
 		"@react-native-async-storage/async-storage": "2.2.0",
 		"@sentry/react-native": "~7.11.0",
 		"@tanstack/react-query": "catalog:",
@@ -46,6 +50,9 @@
 		"react-native-safe-area-context": "~5.7.0",
 		"react-native-screens": "~4.26.0",
 		"react-native-worklets": "0.10.1",
+		"receipt-app-app": "workspace:*",
+		"receipt-app-components": "workspace:*",
+		"receipt-app-utils": "workspace:*",
 		"tailwind-variants": "^3.3.1",
 		"uniwind": "catalog:"
 	},

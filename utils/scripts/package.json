@@ -1,14 +1,18 @@
 {
-	"name": "@ra/scripts",
+	"name": "receipt-app-scripts",
 	"version": "0.0.0",
 	"private": true,
 	"type": "module",
+	"imports": {
+		"#coverage/*": "receipt-app-coverage/src/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"scripts": {
 		"verify-routers": "bun verify-routers.ts",
 		"merge-coverage": "bun merge-coverage.ts"
 	},
 	"devDependencies": {
-		"@ra/coverage": "workspace:*",
-		"diff": "^9.0.0"
+		"diff": "^9.0.0",
+		"receipt-app-coverage": "workspace:*"
 	}
 }

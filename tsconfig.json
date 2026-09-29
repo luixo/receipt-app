@@ -17,19 +17,8 @@
 		"target": "ESNext",
 		"types": ["node", "bun"],
 		"paths": {
-			"~app/*": ["./packages/app/*"],
-			"~components/*": ["./packages/components/src/*"],
-			"~utils/*": ["./packages/utils/src/*"],
-			"~coverage/*": ["./packages/coverage/src/*"],
-			"~db/*": ["./packages/db/src/*"],
-			"~db/migration/*": ["./packages/db/migration/*"],
-			"~mutations/*": ["./packages/mutations/src/*"],
-			"~web/*": ["./apps/web/src/*"],
-			"~mobile/*": ["./apps/mobile/src/*"],
-			"~mobile/app/*": ["./apps/mobile/app/*"],
-			"~tests/backend/*": ["./testing/vitest/*"],
-			"~tests/frontend/*": ["./testing/playwright/*"],
-			"~tests/utils/*": ["./testing/utils/src/*"]
+			"~app/utils/currency": ["./packages/app/utils/currency"],
+			"~db/ids": ["./packages/db/src/ids"]
 		}
 	},
 	"include": ["**/*", ".opencode/**/*", "**/package.json"]

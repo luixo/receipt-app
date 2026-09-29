@@ -1,17 +1,22 @@
 {
-	"name": "@ra/playwright",
+	"name": "receipt-app-playwright",
 	"version": "0.0.0",
 	"type": "module",
+	"imports": {
+		"#utils/*": "receipt-app-utils/src/*",
+		"#app/*": "receipt-app-app/*",
+		"#coverage/*": "receipt-app-coverage/src/*",
+		"#db/*": "receipt-app-db/src/*",
+		"#tests/frontend/*": "./*",
+		"#tests/utils/*": "receipt-app-test-utils/src/*",
+		"#web/*": "receipt-app-web/src/*"
+	},
 	"scripts": {
 		"test": "TZ=UTC bun run --env-file=../../.env,../../.env.local playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
 		"@faker-js/faker": "catalog:",
 		"@playwright/test": "catalog:",
-		"@ra/app": "workspace:*",
-		"@ra/test-utils": "workspace:*",
-		"@ra/utils": "workspace:*",
-		"@ra/web": "workspace:*",
 		"@tanstack/react-query": "catalog:",
 		"@trpc/client": "catalog:",
 		"@trpc/server": "catalog:",
@@ -21,6 +26,10 @@
 		"jimp": "catalog:",
 		"lighthouse": "^13.0.1",
 		"playwright": "catalog:",
+		"receipt-app-app": "workspace:*",
+		"receipt-app-test-utils": "workspace:*",
+		"receipt-app-utils": "workspace:*",
+		"receipt-app-web": "workspace:*",
 		"timekeeper": "catalog:",
 		"uuid": "catalog:",
 		"zod": "catalog:"

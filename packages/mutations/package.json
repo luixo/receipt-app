@@ -1,10 +1,16 @@
 {
-	"name": "@ra/mutations",
+	"name": "receipt-app-mutations",
 	"version": "0.0.0",
 	"type": "module",
 	"sideEffects": false,
 	"main": "src/index.ts",
+	"imports": {
+		"#utils/*": "receipt-app-utils/src/*",
+		"#app/*": "receipt-app-app/*",
+		"#db/*": "receipt-app-db/src/*",
+		"#mutations/*": "./src/*"
+	},
 	"dependencies": {
-		"@ra/utils": "workspace:*"
+		"receipt-app-utils": "workspace:*"
 	}
 }

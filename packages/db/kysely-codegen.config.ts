@@ -23,7 +23,7 @@ const TYPES: Record<
 > = {
 	currencyCode: {
 		expression: "CurrencyCode",
-		importSource: "~app/utils/currency",
+		importSource: "#app/utils/currency",
 		tables: {
 			debts: ["currencyCode"],
 			receipts: ["currencyCode"],
@@ -31,7 +31,7 @@ const TYPES: Record<
 	},
 	userId: {
 		expression: "UserId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			userSettings: ["userId"],
 			users: ["id"],
@@ -50,14 +50,14 @@ const TYPES: Record<
 	},
 	debtId: {
 		expression: "DebtId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			debts: ["id"],
 		},
 	},
 	receiptItemId: {
 		expression: "ReceiptItemId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			receiptItemConsumers: ["itemId"],
 			receiptItems: ["id"],
@@ -66,7 +66,7 @@ const TYPES: Record<
 	},
 	receiptId: {
 		expression: "ReceiptId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			receiptItems: ["receiptId"],
 			receiptParticipants: ["receiptId"],
@@ -82,14 +82,14 @@ const TYPES: Record<
 	},
 	sessionsSessionId: {
 		expression: "SessionId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			sessions: ["sessionId"],
 		},
 	},
 	peerId: {
 		expression: "PeerId",
-		importSource: "~db/ids",
+		importSource: "#db/ids",
 		tables: {
 			debts: ["peerId"],
 			receiptItemConsumers: ["peerId"],
@@ -104,7 +104,7 @@ export default defineConfig({
 	outFile: "packages/db/src/types.gen.ts",
 	singularize: true,
 	customImports: {
-		Temporal: "~utils/date",
+		Temporal: "#utils/date",
 		...fromEntries(
 			values(TYPES)
 				.filter(({ importSource }) => Boolean(importSource))
