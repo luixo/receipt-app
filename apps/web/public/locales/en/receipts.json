@@ -135,6 +135,7 @@
 			"saveButton": "Save"
 		},
 		"removeButton": {
+			"label": "Remove item",
 			"confirmSubtitle": "This will remove item with all participant's parts"
 		},
 		"participants": {
@@ -149,7 +150,8 @@
 			"skeletonAmount": "<skeleton />/<skeleton />",
 			"placeholder": "Consumers",
 			"label": "Choose consumers",
-			"group": "{{consumers, and}}"
+			"group": "{{consumers, and}}",
+			"removeButton": "Remove consumer"
 		}
 	},
 	"empty": {

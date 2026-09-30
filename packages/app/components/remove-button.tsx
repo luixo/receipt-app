@@ -19,6 +19,33 @@ export const SkeletonRemoveButton: React.FC<
 	</Button>
 );
 
+type ComponentProps = {
+	mutation: { isPending: boolean };
+	onRemove: () => void;
+	subtitle?: string;
+	children: (controls: { openModal: () => void }) => React.ReactNode;
+};
+
+export const RemoveComponent: React.FC<ComponentProps> = ({
+	mutation,
+	onRemove,
+	children,
+	subtitle,
+}) => {
+	const { t } = useTranslation("default");
+	return (
+		<ConfirmModal
+			onConfirm={onRemove}
+			isLoading={mutation.isPending}
+			title={t("components.removeButton.title")}
+			subtitle={subtitle}
+			confirmText={t("components.removeButton.confirmText")}
+		>
+			{children}
+		</ConfirmModal>
+	);
+};
+
 type Props = {
 	mutation: { isPending: boolean };
 	onRemove: () => void;
@@ -34,34 +61,26 @@ export const RemoveButton: React.FC<Props> = ({
 	subtitle,
 	noConfirm,
 	...props
-}) => {
-	const { t } = useTranslation("default");
-	return (
-		<ConfirmModal
-			onConfirm={onRemove}
-			isLoading={mutation.isPending}
-			title={t("components.removeButton.title")}
-			subtitle={subtitle}
-			confirmText={t("components.removeButton.confirmText")}
-		>
-			{({ openModal }) => (
-				<Button
-					onPress={noConfirm ? onRemove : openModal}
-					color="danger"
-					testID="remove-button"
-					{...props}
-					isDisabled={props.isDisabled || mutation.isPending}
-					isLoading={props.isLoading || mutation.isPending}
-					startContent={
-						mutation.isPending ? null : <Icon className="size-6" name="trash" />
-					}
-				>
-					{children}
-				</Button>
-			)}
-		</ConfirmModal>
-	);
-};
+}) => (
+	<RemoveComponent onRemove={onRemove} mutation={mutation} subtitle={subtitle}>
+		{({ openModal }) => (
+			<Button
+				onPress={noConfirm ? onRemove : openModal}
+				color="danger"
+				testID="remove-button"
+				isIconOnly={!children}
+				{...props}
+				isDisabled={props.isDisabled || mutation.isPending}
+				isLoading={props.isLoading || mutation.isPending}
+				startContent={
+					mutation.isPending ? null : <Icon className="size-6" name="trash" />
+				}
+			>
+				{children}
+			</Button>
+		)}
+	</RemoveComponent>
+);
 
 export const RemoveButtonSkeleton: React.FC<
 	React.ComponentProps<typeof Button>

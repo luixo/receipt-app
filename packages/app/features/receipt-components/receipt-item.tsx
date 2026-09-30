@@ -3,14 +3,16 @@ import React from "react";
 import { Trans, useTranslation } from "react-i18next";
 
 import { ErrorMessage } from "~app/components/error-message";
-import { RemoveButton } from "~app/components/remove-button";
+import { RemoveComponent } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
+import { Button } from "~components/button";
 import { Card } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
+import { Dropdown } from "~components/dropdown";
 import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -96,13 +98,38 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								) : null}
 							</View>
 							{canEdit ? (
-								<RemoveButton
-									onRemove={() => removeItem(item.id)}
-									mutation={{ isPending: isRemovalPending }}
-									subtitle={t("item.removeButton.confirmSubtitle")}
-									noConfirm={item.consumers.length === 0}
-									isIconOnly
-								/>
+								<Dropdown
+									items={[
+										{
+											key: "remove",
+											children: (
+												<RemoveComponent
+													onRemove={() => removeItem(item.id)}
+													mutation={{ isPending: isRemovalPending }}
+													subtitle={t("item.removeButton.confirmSubtitle")}
+												>
+													{({ openModal }) => (
+														<View
+															className="text-danger flex-row items-center gap-1"
+															onPress={
+																item.consumers.length === 0
+																	? () => removeItem(item.id)
+																	: openModal
+															}
+														>
+															<Icon name="trash" className="m-1 size-4" />
+															<Text>{t("item.removeButton.label")}</Text>
+														</View>
+													)}
+												</RemoveComponent>
+											),
+										},
+									]}
+								>
+									<Button variant="flat" isIconOnly>
+										<Icon name="ellipsis" className="size-4" />
+									</Button>
+								</Dropdown>
 							) : null}
 						</View>
 						<View className="flex-row flex-wrap items-center gap-2">
