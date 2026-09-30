@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
+import z from "zod";
 
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { createAuthContext, createContext } from "~tests/backend/utils/context";
@@ -10,7 +11,8 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
-import { t } from "~web/handlers/trpc";
+import { defineHandlerVersions } from "~web/handlers/context";
+import { t, unauthProcedure } from "~web/handlers/trpc";
 
 import { router } from "./index";
 
@@ -256,6 +258,122 @@ describe("procedures", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const users = await caller.admin.users();
 			expect(users.items).toHaveLength(0);
+		});
+	});
+
+	describe("version migration", () => {
+		const inputSchema = z.object({ baz: z.number() });
+
+		// foo -> bar -> baz
+		const versions = defineHandlerVersions(inputSchema)([
+			[1, z.object({ foo: z.number() }).transform(({ foo }) => ({ bar: foo }))],
+			[2, z.object({ bar: z.number() }).transform(({ bar }) => ({ baz: bar }))],
+		]);
+
+		const createMigrationCaller = t.createCallerFactory(
+			t.router({
+				migration: unauthProcedure
+					.meta({ title: "", description: "", versions })
+					.input(inputSchema)
+					.query(({ input: { baz } }) => ({ message: baz })),
+			}),
+		);
+
+		const overrideInputType = (input: unknown) =>
+			input as z.infer<typeof inputSchema>;
+
+		describe("valid input", () => {
+			test("oldest input is migrated", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "0" } }),
+				);
+				const result = await caller.migration(
+					overrideInputType({ foo: value }),
+				);
+				expect(result).toStrictEqual<typeof result>({ message: value });
+			});
+
+			test("middle version input is migrated", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "1" } }),
+				);
+				const result = await caller.migration(
+					overrideInputType({ bar: value }),
+				);
+				expect(result).toStrictEqual<typeof result>({ message: value });
+			});
+
+			test("latest version input is valid", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "2" } }),
+				);
+				const result = await caller.migration({ baz: value });
+				expect(result).toStrictEqual<typeof result>({ message: value });
+			});
+
+			test("newer-than-latest version input is valid", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "3" } }),
+				);
+				const result = await caller.migration({ baz: value });
+				expect(result).toStrictEqual<typeof result>({ message: value });
+			});
+		});
+
+		describe("invalid input", () => {
+			test("invalid old input is rejected", async ({ ctx }) => {
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "0" } }),
+				);
+				await expectTRPCError(
+					() => caller.migration(overrideInputType({ foo: "invalid number" })),
+					"BAD_REQUEST",
+					"Unable to migrate input to version 1",
+				);
+			});
+
+			test("invalid latest input is rejected", async ({ ctx }) => {
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "2" } }),
+				);
+				await expectTRPCError(
+					() => caller.migration(overrideInputType({ baz: "invalid number" })),
+					"BAD_REQUEST",
+					'Zod error\n\nAt "baz": Invalid input: expected number, received string',
+				);
+			});
+		});
+
+		describe("app version cases", () => {
+			test("no app version provided", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(createContext(ctx));
+				const result = await caller.migration({ baz: value });
+				expect(result).toStrictEqual<typeof result>({ message: value });
+				await expectTRPCError(
+					() => caller.migration(overrideInputType({ baz: "invalid number" })),
+					"BAD_REQUEST",
+					'Zod error\n\nAt "baz": Invalid input: expected number, received string',
+				);
+			});
+
+			test("invalid app version", async ({ ctx }) => {
+				const value = faker.number.int();
+				const caller = createMigrationCaller(
+					createContext(ctx, { reqHeaders: { "x-app-version": "NaN" } }),
+				);
+				const result = await caller.migration({ baz: value });
+				expect(result).toStrictEqual<typeof result>({ message: value });
+				await expectTRPCError(
+					() => caller.migration(overrideInputType({ baz: "invalid number" })),
+					"BAD_REQUEST",
+					'Zod error\n\nAt "baz": Invalid input: expected number, received string',
+				);
+			});
 		});
 	});
 });
