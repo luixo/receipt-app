@@ -138,7 +138,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
 					</View>
 				) : null}
-				{sortedConsumers.length === 0 ? null : (
+				{sortedConsumers.length <= 1 ? null : (
 					<>
 						{sortedConsumers.map((consumer) => {
 							const matchedParticipant = participants.find(
