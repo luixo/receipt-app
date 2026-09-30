@@ -68,7 +68,7 @@ test("Both buttons enabled", async ({
 	});
 });
 
-test("Down button disabled", async ({
+test("Down button enabled at one", async ({
 	mockReceipt,
 	openReceipt,
 	partButtons,
@@ -82,7 +82,7 @@ test("Down button disabled", async ({
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
 	});
 	await openReceipt(receipt);
-	await expectScreenshotWithSchemes("down-disabled.png", {
+	await expectScreenshotWithSchemes("down-enabled-at-one.png", {
 		locator: partButtons,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
