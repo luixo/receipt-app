@@ -57,32 +57,35 @@ test.describe("Language", () => {
 });
 
 test.describe("Color mode", () => {
-	test("auto checkbox toggles manual switch, switch toggles applied theme", async ({
+	test("switch overrides the system and switches back to following it", async ({
 		api,
-		colorModeAutoCheckbox,
-		colorModeSwitch,
+		colorModeButton,
 		html,
 		page,
 		cookieManager,
 	}) => {
 		await api.mockUtils.authPage();
 		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
+		const moonIcon = colorModeButton.filter({
+			has: page.getByTestId("moon-icon"),
+		});
+		const sunIcon = colorModeButton.filter({
+			has: page.getByTestId("sun-icon"),
+		});
+
 		await page.navigate({ to: "/settings" });
-		await expect(colorModeAutoCheckbox).toBeChecked();
-		await expect(colorModeSwitch).toBeDisabled();
+		await page.emulateMedia({ colorScheme: "light" });
+		await expect(moonIcon).toBeVisible();
+		await expect(sunIcon).toBeHidden();
 		await expect(html).toHaveAttribute("data-theme", "light");
 		expect(
 			await cookieManager.getCookie(SELECTED_COLOR_MODE_STORE_NAME),
 		).toBeUndefined();
 
-		await colorModeAutoCheckbox.click();
-		await expect(colorModeAutoCheckbox).not.toBeChecked();
-		await expect(colorModeSwitch).toBeEnabled();
-		await expect(colorModeSwitch).not.toBeChecked();
-		await expect(html).toHaveAttribute("data-theme", "light");
+		await colorModeButton.click();
 
-		await colorModeSwitch.click();
-		await expect(colorModeSwitch).toBeChecked();
+		await expect(moonIcon).toBeHidden();
+		await expect(sunIcon).toBeVisible();
 		await expect(html).toHaveAttribute("data-theme", "dark");
 		expect(
 			await cookieManager.getCookie(SELECTED_COLOR_MODE_STORE_NAME),
@@ -95,18 +98,35 @@ test.describe("Color mode", () => {
 		});
 
 		await page.reload();
-		await expect(colorModeAutoCheckbox).not.toBeChecked();
-		await expect(colorModeSwitch).toBeChecked();
+		await expect(moonIcon).toBeHidden();
+		await expect(sunIcon).toBeVisible();
 		await expect(html).toHaveAttribute("data-theme", "dark");
 
-		await colorModeSwitch.click();
-		await expect(colorModeSwitch).not.toBeChecked();
-		await expect(html).toHaveAttribute("data-theme", "light");
+		await page.emulateMedia({ colorScheme: "dark" });
+		await expect(html).toHaveAttribute("data-theme", "dark");
+		expect(
+			await cookieManager.getCookie(SELECTED_COLOR_MODE_STORE_NAME),
+		).toMatchObject({ value: "dark" });
 
-		await colorModeAutoCheckbox.click();
-		await expect(colorModeAutoCheckbox).toBeChecked();
-		await expect(colorModeSwitch).toBeDisabled();
+		await page.emulateMedia({ colorScheme: "light" });
+		await expect(html).toHaveAttribute("data-theme", "dark");
+
+		await colorModeButton.click();
+		await expect(moonIcon).toBeVisible();
+		await expect(sunIcon).toBeHidden();
 		await expect(html).toHaveAttribute("data-theme", "light");
+		expect(
+			await cookieManager.getCookie(SELECTED_COLOR_MODE_STORE_NAME),
+		).toBeUndefined();
+		await page.emulateMedia({ colorScheme: "dark" });
+		await expect(html).toHaveAttribute("data-theme", "dark");
+		await expect(moonIcon).toBeHidden();
+		await expect(sunIcon).toBeVisible();
+		await colorModeButton.click();
+		await expect(html).toHaveAttribute("data-theme", "light");
+		expect(
+			await cookieManager.getCookie(SELECTED_COLOR_MODE_STORE_NAME),
+		).toMatchObject({ value: "light" });
 	});
 });
 
