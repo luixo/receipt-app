@@ -129,6 +129,16 @@ jobs:
       options: --user pwuser
     steps:
       - uses: actions/checkout@v6
+      # Playwright image doesn't have unzip and oven-sh/bun doesn't provide it in an action
+      # Remove that when https://github.com/oven-sh/setup-bun/issues/55 is solved
+      - name: Install unzip
+        run: |
+          mkdir -p "$RUNNER_TEMP/apt/lists/partial" "$RUNNER_TEMP/apt/cache/archives/partial" "$RUNNER_TEMP/unzip"
+          apt-get update -qq -o Dir::State::lists="$RUNNER_TEMP/apt/lists" -o Dir::Cache::archives="$RUNNER_TEMP/apt/cache/archives"
+          cd "$RUNNER_TEMP/apt"
+          apt-get download unzip -o Dir::State::lists="$RUNNER_TEMP/apt/lists" -o Dir::Cache::archives="$RUNNER_TEMP/apt/cache/archives"
+          dpkg-deb -x unzip_*.deb "$RUNNER_TEMP/unzip"
+          echo "$RUNNER_TEMP/unzip/usr/bin" >> "$GITHUB_PATH"
       - uses: ./.github/actions/setup-env
       - name: Fetch web build
         uses: actions/download-artifact@v8

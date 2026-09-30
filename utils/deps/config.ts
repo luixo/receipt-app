@@ -26,6 +26,8 @@ export const config = defineConfig({
 	],
 	ignore: [
 		".opencode/**/*",
+		// Used by the weekly Bun package-update workflow while Renovate's Bun support evolves: https://github.com/renovatebot/renovate/issues/20065
+		".ncurc.mjs",
 		process.env.CI ? undefined : ".history/**/*",
 	].filter(isNonNullish),
 	treatConfigHintsAsErrors: true,
