@@ -9,3 +9,7 @@
 	--breakpoint-lg: 1024px;
 	--breakpoint-xl: 1240px;
 }
+
+@theme inline {
+	--color-background: var(--background, hsl(var(--heroui-background)));
+}
