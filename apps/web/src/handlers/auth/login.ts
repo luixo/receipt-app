@@ -4,7 +4,10 @@ import { z } from "zod";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema } from "~app/utils/validation";
 import { getHash } from "~utils/server/crypto";
-import { createAuthorizationSession } from "~web/handlers/auth/utils";
+import {
+	createAuthorizationSession,
+	getBotUserId,
+} from "~web/handlers/auth/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
 import { getAvatarUrl } from "~web/handlers/user/utils";
 import { emailSchema } from "~web/handlers/validation";
@@ -14,12 +17,13 @@ export const procedure = unauthProcedure
 	.meta({
 		title: "Log in",
 		description:
-			"Authenticates an account by email and password and starts a new session.",
+			"Authenticates an account by email and password and starts a new session. If Telegram Mini App init data is given, links the resulting bot user id to the new session too.",
 	})
 	.input(
 		z.strictObject({
 			email: emailSchema,
 			password: passwordSchema,
+			initData: z.string().optional(),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -63,9 +67,11 @@ export const procedure = unauthProcedure
 				message: errorMessage,
 			});
 		}
+		const botUserId = input.initData ? getBotUserId(input.initData) : undefined;
 		const { authToken, expirationDate } = await createAuthorizationSession(
 			ctx,
 			result.userId,
+			botUserId,
 		);
 		ctx.logger.debug(
 			`Authentication of account "${input.email.original}" succeed.`,

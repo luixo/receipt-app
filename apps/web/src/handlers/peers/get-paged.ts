@@ -59,7 +59,7 @@ export const procedure = authProcedure
 	.meta({
 		title: "Get peers, paged",
 		description:
-			"Returns a page of peerIds owned by the current  user, excluding the self-peer.",
+			"Returns a page of peerIds owned by the current user, excluding the self-peer.",
 	})
 	.input(inputSchema)
 	.query(queuePeerList);

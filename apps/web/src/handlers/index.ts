@@ -2,6 +2,7 @@ import { t } from "~web/handlers/trpc";
 
 import { router as adminRouter } from "./admin/index";
 import { router as authRouter } from "./auth/index";
+import { router as botRouter } from "./bot/index";
 import { router as currencyRouter } from "./currency/index";
 import { router as debtIntentionsRouter } from "./debt-intentions/index";
 import { router as debtsRouter } from "./debts/index";
@@ -24,6 +25,7 @@ export const router = t.router({
 	auth: authRouter,
 	resetPasswordIntentions: resetPasswordIntentionsRouter,
 	utils: utilsRouter,
+	bot: botRouter,
 	// Auth
 	user: userRouter,
 	userSettings: userSettingsRouter,

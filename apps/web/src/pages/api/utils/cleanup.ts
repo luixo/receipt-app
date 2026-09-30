@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { router } from "~web/handlers/index";
-import { getServerTrpcClient } from "~web/utils/server/trpc";
+import { getLocalServerTrpcClient } from "~web/utils/server/trpc";
 
 export const Route = createFileRoute("/api/utils/cleanup")({
 	server: {
 		handlers: {
 			POST: async ({ request }) => {
 				try {
-					const client = getServerTrpcClient(router, request);
+					const client = getLocalServerTrpcClient(router, request);
 					const [
 						{ count: removedSessions },
 						{ count: removedResetPasswordIntentions },

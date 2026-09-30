@@ -1,0 +1,20 @@
+{
+	"mutations": {
+		"sessions.linkBot": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock 'sessions.linkBot' error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"initData": "auth_date=1&user=%7B%7D&hash=test"
+					}
+				}
+			}
+		]
+	}
+}

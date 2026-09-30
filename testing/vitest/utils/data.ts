@@ -211,6 +211,7 @@ export const insertConnectedPeers = async (
 type SessionData = {
 	id?: SessionId;
 	expirationTimestamp?: Temporal.ZonedDateTime;
+	botUserId?: string;
 };
 
 export const insertSession = async (
@@ -227,6 +228,7 @@ export const insertSession = async (
 			expirationTimestamp:
 				data.expirationTimestamp ||
 				Temporal.Now.zonedDateTimeISO().add({ years: 1 }),
+			botUserId: data.botUserId,
 		})
 		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();

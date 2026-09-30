@@ -338,6 +338,7 @@ export const config = getLintConfig({
 			"testing/vitest/**",
 			"**/*.test.ts",
 			"utils/scripts/**",
+			"apps/bot/src/**",
 			"apps/web/src/handlers/**",
 			"apps/web/src/pages/api/**",
 			"apps/web/src/utils/server/**",

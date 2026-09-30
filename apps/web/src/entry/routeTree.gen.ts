@@ -22,12 +22,15 @@ import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
 import { Route as ProtectedUserRouteImport } from './../pages/_protected/user'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
+import { Route as ProtectedBotSuccessRouteImport } from './../pages/_protected/bot-success'
+import { Route as ProtectedBotLinkRouteImport } from './../pages/_protected/bot-link'
 import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/peers/index'
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
 import { Route as ApiUtilsCleanupRouteImport } from './../pages/api/utils/cleanup'
 import { Route as ApiTrpcSplatRouteImport } from './../pages/api/trpc/$'
+import { Route as ApiMcpSplatRouteImport } from './../pages/api/mcp/$'
 import { Route as ProtectedReceiptsAddRouteImport } from './../pages/_protected/receipts/add'
 import { Route as ProtectedReceiptsIdRouteImport } from './../pages/_protected/receipts/$id'
 import { Route as ProtectedPeersConnectionsRouteImport } from './../pages/_protected/peers/connections'
@@ -105,6 +108,16 @@ const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedBotSuccessRoute = ProtectedBotSuccessRouteImport.update({
+  id: '/bot-success',
+  path: '/bot-success',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBotLinkRoute = ProtectedBotLinkRouteImport.update({
+  id: '/bot-link',
+  path: '/bot-link',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -133,6 +146,11 @@ const ApiUtilsCleanupRoute = ApiUtilsCleanupRouteImport.update({
 const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   id: '/api/trpc/$',
   path: '/api/trpc/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiMcpSplatRoute = ApiMcpSplatRouteImport.update({
+  id: '/api/mcp/$',
+  path: '/api/mcp/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedReceiptsAddRoute = ProtectedReceiptsAddRouteImport.update({
@@ -210,6 +228,8 @@ const ProtectedDebtsPeerIdExchangeAllRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
+  '/bot-success': typeof ProtectedBotSuccessRoute
   '/settings': typeof ProtectedSettingsRoute
   '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
@@ -229,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/debts/': typeof ProtectedDebtsIndexRoute
@@ -242,6 +263,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
+  '/bot-success': typeof ProtectedBotSuccessRoute
   '/settings': typeof ProtectedSettingsRoute
   '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
@@ -261,6 +284,7 @@ export interface FileRoutesByTo {
   '/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/debts': typeof ProtectedDebtsIndexRoute
@@ -277,6 +301,8 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_protected/admin': typeof ProtectedAdminRoute
+  '/_protected/bot-link': typeof ProtectedBotLinkRoute
+  '/_protected/bot-success': typeof ProtectedBotSuccessRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_protected/user': typeof ProtectedUserRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
@@ -296,6 +322,7 @@ export interface FileRoutesById {
   '/_protected/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/_protected/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/_protected/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/_protected/debts/': typeof ProtectedDebtsIndexRoute
@@ -311,6 +338,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/bot-link'
+    | '/bot-success'
     | '/settings'
     | '/user'
     | '/confirm-email'
@@ -330,6 +359,7 @@ export interface FileRouteTypes {
     | '/peers/connections'
     | '/receipts/$id'
     | '/receipts/add'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/debts/'
@@ -343,6 +373,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/bot-link'
+    | '/bot-success'
     | '/settings'
     | '/user'
     | '/confirm-email'
@@ -362,6 +394,7 @@ export interface FileRouteTypes {
     | '/peers/connections'
     | '/receipts/$id'
     | '/receipts/add'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/debts'
@@ -377,6 +410,8 @@ export interface FileRouteTypes {
     | '/_protected'
     | '/_public'
     | '/_protected/admin'
+    | '/_protected/bot-link'
+    | '/_protected/bot-success'
     | '/_protected/settings'
     | '/_protected/user'
     | '/_public/confirm-email'
@@ -396,6 +431,7 @@ export interface FileRouteTypes {
     | '/_protected/peers/connections'
     | '/_protected/receipts/$id'
     | '/_protected/receipts/add'
+    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/_protected/debts/'
@@ -413,6 +449,7 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   ApiCoverageRoute: typeof ApiCoverageRoute
   ApiPingRoute: typeof ApiPingRoute
+  ApiMcpSplatRoute: typeof ApiMcpSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
 }
@@ -510,6 +547,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/bot-success': {
+      id: '/_protected/bot-success'
+      path: '/bot-success'
+      fullPath: '/bot-success'
+      preLoaderRoute: typeof ProtectedBotSuccessRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/bot-link': {
+      id: '/_protected/bot-link'
+      path: '/bot-link'
+      fullPath: '/bot-link'
+      preLoaderRoute: typeof ProtectedBotLinkRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/admin': {
       id: '/_protected/admin'
       path: '/admin'
@@ -550,6 +601,13 @@ declare module '@tanstack/react-router' {
       path: '/api/trpc/$'
       fullPath: '/api/trpc/$'
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/mcp/$': {
+      id: '/api/mcp/$'
+      path: '/api/mcp/$'
+      fullPath: '/api/mcp/$'
+      preLoaderRoute: typeof ApiMcpSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/receipts/add': {
@@ -648,6 +706,8 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedRouteChildren {
   ProtectedAdminRoute: typeof ProtectedAdminRoute
+  ProtectedBotLinkRoute: typeof ProtectedBotLinkRoute
+  ProtectedBotSuccessRoute: typeof ProtectedBotSuccessRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedUserRoute: typeof ProtectedUserRoute
   ProtectedDebtsIdRoute: typeof ProtectedDebtsIdRoute
@@ -670,6 +730,8 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRoute: ProtectedAdminRoute,
+  ProtectedBotLinkRoute: ProtectedBotLinkRoute,
+  ProtectedBotSuccessRoute: ProtectedBotSuccessRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedUserRoute: ProtectedUserRoute,
   ProtectedDebtsIdRoute: ProtectedDebtsIdRoute,
@@ -723,6 +785,7 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   ApiCoverageRoute: ApiCoverageRoute,
   ApiPingRoute: ApiPingRoute,
+  ApiMcpSplatRoute: ApiMcpSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,
 }
