@@ -66,7 +66,7 @@ test("Clicking up increases the consumer's part", async ({
 	});
 });
 
-test("Down button is disabled when the part is at the minimum", async ({
+test("Down button is enabled when the part is one", async ({
 	mockReceipt,
 	openReceipt,
 	partButtonsDown,
@@ -78,6 +78,6 @@ test("Down button is disabled when the part is at the minimum", async ({
 		generateReceiptItemsWithConsumers: generateReceiptItemsWithConsumers(1),
 	});
 	await openReceipt(receipt);
-	await expect(partButtonsDown.first()).toBeDisabled();
+	await expect(partButtonsDown.first()).toBeEnabled();
 	await expect(partButtonsUp.first()).toBeEnabled();
 });
