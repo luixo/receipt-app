@@ -24,7 +24,7 @@ test("Receipt screen Lighthouse audit", async ({ mockReceipts, runAudit }) => {
 		params: { id: receipt.id },
 	});
 	expect(scores).toStrictEqual({
-		accessibility: 0.71,
+		accessibility: 0.72,
 		"best-practices": 0.96,
 		seo: 0.9,
 		"agentic-browsing": 0.5,

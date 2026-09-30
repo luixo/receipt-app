@@ -113,7 +113,9 @@
 			"label": "Items with no participants",
 			"itemLabel": "{{name}} — {{amount}}"
 		},
-		"quantityPostfix": "x {{quantity}} unit",
+		"crossMark": "x",
+		"quantity": "x {{quantity}} unit",
+		"quantityPostfix": "p/u",
 		"amount": "= {{amount}}",
 		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
@@ -122,16 +124,13 @@
 				"saveButton": "Save item consumer part"
 			},
 			"name": {
-				"label": "Receipt item name",
-				"saveButton": "Save receipt item name"
+				"label": "Receipt item name"
 			},
 			"price": {
-				"label": "Receipt item price",
-				"saveButton": "Save receipt item price"
+				"label": "Receipt item price"
 			},
 			"quantity": {
-				"label": "Receipt item quantity",
-				"saveButton": "Save receipt item quantity"
+				"label": "Receipt item quantity"
 			},
 			"saveButton": "Save"
 		},

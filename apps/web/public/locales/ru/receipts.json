@@ -113,7 +113,9 @@
 			"label": "Позиции без участников",
 			"itemLabel": "{{name}} — {{amount}}"
 		},
-		"quantityPostfix": "x {{quantity}} штук/кг",
+		"crossMark": "x",
+		"quantity": "x {{quantity}} шт/кг",
+		"quantityPostfix": "шт/кг",
 		"amount": "= {{amount}}",
 		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
@@ -122,16 +124,13 @@
 				"saveButton": "Сохранить долю потребителя позиции"
 			},
 			"name": {
-				"label": "Название позиции чека",
-				"saveButton": "Сохранить название позиции чека"
+				"label": "Название позиции чека"
 			},
 			"price": {
-				"label": "Цена позиции чека",
-				"saveButton": "Сохранить цену позиции чека"
+				"label": "Цена позиции чека"
 			},
 			"quantity": {
-				"label": "Количество позиции чека",
-				"saveButton": "Сохранить количество позиции чека"
+				"label": "Количество позиции чека"
 			},
 			"saveButton": "Сохранить"
 		},
