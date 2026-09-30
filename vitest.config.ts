@@ -24,6 +24,7 @@ export default defineConfig({
 				path.resolve(rootPath, "apps/web/src/entry/**/*"),
 				path.resolve(rootPath, "apps/web/src/pages/*"),
 				path.resolve(rootPath, "**/__tests__/**/*"),
+				path.resolve(rootPath, "**/*.typecheck.ts"),
 				path.resolve(rootPath, "apps/web/src/pages/!(api)**/*"),
 				path.resolve(rootPath, "apps/web/src/utils/navigation.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/request.ts"),
