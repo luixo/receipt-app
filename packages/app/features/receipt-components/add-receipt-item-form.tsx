@@ -14,6 +14,7 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { Card } from "~components/card";
 import type { InputHandler } from "~components/input";
 import { emptyInputHandler } from "~components/input.base";
 import { View } from "~components/view";
@@ -66,78 +67,86 @@ export const AddReceiptItemForm: React.FC = () => {
 	const isDisabled = receiptDisabled || isPending;
 
 	return (
-		<form.AppForm>
-			<form.Form className="flex flex-col gap-4">
-				<View className="flex-row gap-4">
-					<form.AppField name="name">
-						{(field) => (
-							<field.TextField
-								value={field.state.value}
-								onValueChange={field.setValue}
-								name={field.name}
-								onBlur={field.handleBlur}
-								label={t("item.form.name.label")}
-								isRequired
-								autoFocus
-								fieldError={
-									field.state.meta.isDirty ? field.state.meta.errors : undefined
-								}
-								mutation={addItemMutationState}
-								ref={nameFieldRef}
-							/>
+		<Card>
+			<form.AppForm>
+				<form.Form className="flex flex-col gap-4">
+					<View className="flex-row gap-4">
+						<form.AppField name="name">
+							{(field) => (
+								<field.TextField
+									value={field.state.value}
+									onValueChange={field.setValue}
+									name={field.name}
+									onBlur={field.handleBlur}
+									label={t("item.form.name.label")}
+									isRequired
+									autoFocus
+									fieldError={
+										field.state.meta.isDirty
+											? field.state.meta.errors
+											: undefined
+									}
+									mutation={addItemMutationState}
+									ref={nameFieldRef}
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="price">
+							{(field) => (
+								<field.NumberField
+									value={field.state.value}
+									onValueChange={field.setValue}
+									name={field.name}
+									onBlur={field.handleBlur}
+									isRequired
+									minValue={0}
+									fractionDigits={priceSchemaDecimal}
+									label={t("item.form.price.label")}
+									fieldError={
+										field.state.meta.isDirty
+											? field.state.meta.errors
+											: undefined
+									}
+									isDisabled={isPending}
+								/>
+							)}
+						</form.AppField>
+						<form.AppField name="quantity">
+							{(field) => (
+								<field.NumberField
+									value={field.state.value}
+									onValueChange={field.setValue}
+									name={field.name}
+									onBlur={field.handleBlur}
+									isRequired
+									minValue={0}
+									fractionDigits={quantitySchemaDecimal}
+									label={t("item.form.quantity.label")}
+									fieldError={
+										field.state.meta.isDirty
+											? field.state.meta.errors
+											: undefined
+									}
+									isDisabled={isDisabled}
+								/>
+							)}
+						</form.AppField>
+					</View>
+					<form.Subscribe selector={(state) => state.canSubmit}>
+						{(canSubmit) => (
+							<Button
+								color="primary"
+								isDisabled={!canSubmit || isDisabled}
+								className="w-full"
+								isLoading={isPending}
+								type="submit"
+							>
+								{t("item.form.saveButton")}
+							</Button>
 						)}
-					</form.AppField>
-					<form.AppField name="price">
-						{(field) => (
-							<field.NumberField
-								value={field.state.value}
-								onValueChange={field.setValue}
-								name={field.name}
-								onBlur={field.handleBlur}
-								isRequired
-								minValue={0}
-								fractionDigits={priceSchemaDecimal}
-								label={t("item.form.price.label")}
-								fieldError={
-									field.state.meta.isDirty ? field.state.meta.errors : undefined
-								}
-								isDisabled={isPending}
-							/>
-						)}
-					</form.AppField>
-					<form.AppField name="quantity">
-						{(field) => (
-							<field.NumberField
-								value={field.state.value}
-								onValueChange={field.setValue}
-								name={field.name}
-								onBlur={field.handleBlur}
-								isRequired
-								minValue={0}
-								fractionDigits={quantitySchemaDecimal}
-								label={t("item.form.quantity.label")}
-								fieldError={
-									field.state.meta.isDirty ? field.state.meta.errors : undefined
-								}
-								isDisabled={isDisabled}
-							/>
-						)}
-					</form.AppField>
-				</View>
-				<form.Subscribe selector={(state) => state.canSubmit}>
-					{(canSubmit) => (
-						<Button
-							color="primary"
-							isDisabled={!canSubmit || isDisabled}
-							className="w-full"
-							isLoading={isPending}
-							type="submit"
-						>
-							{t("item.form.saveButton")}
-						</Button>
-					)}
-				</form.Subscribe>
-			</form.Form>
-		</form.AppForm>
+					</form.Subscribe>
+				</form.Form>
+			</form.AppForm>
+		</Card>
 	);
 };
