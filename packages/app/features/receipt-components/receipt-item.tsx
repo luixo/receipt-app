@@ -126,7 +126,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 										},
 									]}
 								>
-									<Button variant="flat" isIconOnly>
+									<Button variant="light" isIconOnly>
 										<Icon name="ellipsis" className="size-4" />
 									</Button>
 								</Dropdown>

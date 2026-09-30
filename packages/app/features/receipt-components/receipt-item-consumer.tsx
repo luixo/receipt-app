@@ -74,7 +74,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 							},
 						]}
 					>
-						<Button variant="flat" isIconOnly>
+						<Button variant="light" isIconOnly>
 							<Icon name="ellipsis" className="size-4" />
 						</Button>
 					</Dropdown>
