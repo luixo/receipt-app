@@ -37,6 +37,7 @@ export const t = initTRPC
 			};
 		},
 		defaultMeta: {
+			versions: [],
 			title:
 				"This is title stub, please add a `.meta()` to a handler emitting this",
 			description:
@@ -44,8 +45,45 @@ export const t = initTRPC
 		},
 	});
 
-export const unauthProcedure = t.procedure.use(
-	async ({ ctx, type, path, next }) => {
+const versionMiddleware = t.middleware(
+	async ({ meta, next, ctx, getRawInput }) => {
+		/* c8 ignore next */
+		if (meta?.versions) {
+			const appVersionHeader = ctx.reqHeaders.get("x-app-version");
+			const appVersion =
+				appVersionHeader === null ? undefined : Number(appVersionHeader);
+			if (appVersion === undefined || Number.isNaN(appVersion)) {
+				return next();
+			}
+			const appliedVersions = meta.versions.filter(
+				([maxVersion]) => appVersion < maxVersion,
+			);
+			if (appliedVersions.length === 0) {
+				return next();
+			}
+			let nextInput: unknown = await getRawInput();
+			for (const [maxVersion, schema] of appliedVersions) {
+				const result = await schema["~standard"].validate(nextInput);
+				if (result.issues) {
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message: `Unable to migrate input to version ${maxVersion}`,
+						cause: result.issues,
+					});
+				}
+				nextInput = result.value;
+			}
+			return next({ getRawInput: () => Promise.resolve(nextInput) });
+		}
+		/* c8 ignore start */
+		return next();
+		/* c8 ignore stop */
+	},
+);
+
+export const unauthProcedure = t.procedure
+	.use(versionMiddleware)
+	.use(async ({ ctx, type, path, next }) => {
 		const start = performance.now();
 		const result = await next();
 		const duration = performance.now() - start;
@@ -61,8 +99,7 @@ export const unauthProcedure = t.procedure.use(
 		}
 
 		return result;
-	},
-);
+	});
 
 const getAuthToken = (ctx: UnauthorizedContext) =>
 	getCookie(ctx.reqHeaders.get("cookie"), AUTH_COOKIE);
