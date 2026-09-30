@@ -27,6 +27,8 @@ jobs:
           ref: main
 
       - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: package.json
 
       - name: Find and apply package updates
         id: updates

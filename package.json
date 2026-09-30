@@ -44,7 +44,7 @@
 	},
 	"devDependencies": {
 		"@opencode-ai/plugin": "1.18.29",
-		"@types/bun": "^1.4.0",
+		"@types/bun": "^1.4.2",
 		"@types/node": "^26.0.0",
 		"@types/react": "^19.2.11",
 		"@types/react-dom": "^19.2.3",
@@ -62,7 +62,7 @@
 		"format",
 		"lint-staged"
 	],
-	"packageManager": "bun@1.4.0",
+	"packageManager": "bun@1.4.2",
 	"catalog": {
 		"@heroui/react": "2.8.4",
 		"@playwright/test": "1.63.0",
