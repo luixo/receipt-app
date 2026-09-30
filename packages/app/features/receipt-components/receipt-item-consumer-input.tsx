@@ -15,6 +15,7 @@ import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Text } from "~components/text";
 import { View } from "~components/view";
+import { updateSetStateAction } from "~utils/react";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
@@ -32,7 +33,8 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	isDisabled: isExternalDisabled,
 }) => {
 	const { t } = useTranslation("receipts");
-	const { updateItemConsumerPart } = useActionsHooksContext();
+	const { updateItemConsumerPart, removeItemConsumer } =
+		useActionsHooksContext();
 	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
 	const [isEditing, { setTrue: setEditing, setFalse: unsetEditing }] =
@@ -44,6 +46,12 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 			trpc.receiptItemConsumers.update.mutationKey(),
 			(vars) => vars.peerId === consumer.peerId && vars.itemId === item.id,
 		);
+
+	const removeMutationState =
+		useTrpcMutationState<"receiptItemConsumers.remove">(
+			trpc.receiptItemConsumers.remove.mutationKey(),
+			(vars) => vars.peerId === consumer.peerId && vars.itemId === item.id,
+		);
 	const isDisabled = isExternalDisabled || receiptDisabled;
 	const {
 		onSuccess,
@@ -52,18 +60,22 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		updateElement,
 		eagerToSubmitState,
 	} = useAutosave({
-		isUpdatePending: updateMutationState?.status === "pending",
+		isUpdatePending: updateMutationState?.status === "pending" || removeMutationState?.status === "pending",
 	});
 	const form = useAppForm({
 		defaultValues: { value: consumer.part },
-		validators: { onChange: z.object({ value: partSchema }) },
+		validators: { onChange: z.object({ value: partSchema.or(z.literal(0)) }) },
 		onSubmit: ({ value }) => {
 			if (isDisabled || value.value === consumer.part) {
 				return;
 			}
-			updateItemConsumerPart(item.id, consumer.peerId, value.value, {
-				onSuccess,
-			});
+			if (value.value === 0) {
+				removeItemConsumer(item.id, consumer.peerId, { onSuccess });
+			} else {
+				updateItemConsumerPart(item.id, consumer.peerId, value.value, {
+					onSuccess,
+				});
+			}
 		},
 		listeners: {
 			onBlur: () => {
@@ -79,26 +91,25 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 
 	const updateConsumerPart = React.useCallback(
 		(setStateAction: React.SetStateAction<number>) => {
-			form.setFieldValue("value", setStateAction);
-			onSubmit();
+			const nextValue = Math.max(
+				0,
+				updateSetStateAction(setStateAction, form.getFieldValue("value")),
+			);
+			form.setFieldValue("value", nextValue);
+			if (nextValue === 0) {
+				onSubmitImmediate();
+			} else {
+				onSubmit();
+			}
 		},
-		[onSubmit, form],
+		[onSubmit, onSubmitImmediate, form],
 	);
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
-			<form.Subscribe selector={(state) => state.values.value}>
-				{(currentValue) => (
-					<PartButtons
-						updatePart={updateConsumerPart}
-						downDisabled={currentValue <= 1}
-					>
-						{children}
-					</PartButtons>
-				)}
-			</form.Subscribe>
+			<PartButtons updatePart={updateConsumerPart}>{children}</PartButtons>
 		),
-		[updateConsumerPart, form],
+		[updateConsumerPart],
 	);
 
 	const roundParts = useRoundParts();
