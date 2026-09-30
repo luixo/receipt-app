@@ -8,7 +8,7 @@ import { apiCookieNames } from "~utils/mocks";
 import { router as appRouter } from "~web/handlers/index";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
-import { getServerTrpcClient } from "~web/utils/server/trpc";
+import { getLocalServerTrpcClient } from "~web/utils/server/trpc";
 
 import { getLoaderTrpcClient } from "./trpc";
 
@@ -20,7 +20,7 @@ const router = t.router({
 
 describe("Server tRPC client", () => {
 	test("queries run without HTTP", async () => {
-		const client = getServerTrpcClient(
+		const client = getLocalServerTrpcClient(
 			appRouter,
 			new Request("http://example.com/"),
 		);
@@ -29,7 +29,7 @@ describe("Server tRPC client", () => {
 	});
 
 	test("auth errors retain their tRPC code", async () => {
-		const client = getServerTrpcClient(
+		const client = getLocalServerTrpcClient(
 			appRouter,
 			new Request("http://example.com/"),
 		);

@@ -26,3 +26,43 @@ export const generatePasswordData = async (
 	const hash = await getHash(password, salt);
 	return { salt, hash };
 };
+
+// Telegram Mini App identity verification - see
+// https://core.telegram.org/bots/webapps#validating-data-received-via-the-mini-app
+const INIT_DATA_MAX_AGE_SECONDS = 24 * 60 * 60;
+
+export const verifyTelegramInitData = (initData: string, botToken: string) => {
+	const params = new URLSearchParams(initData);
+	const hash = params.get("hash");
+	if (!hash) {
+		return false;
+	}
+	params.delete("hash");
+	const dataCheckString = [...params.entries()]
+		.toSorted(([a], [b]) => a.localeCompare(b))
+		.map(([key, value]) => `${key}=${value}`)
+		.join("\n");
+	const secretKey = crypto
+		.createHmac("sha256", "WebAppData")
+		.update(botToken)
+		.digest();
+	const computedHash = crypto
+		.createHmac("sha256", secretKey)
+		.update(dataCheckString)
+		.digest("hex");
+	const hashBuffer = Buffer.from(hash, "hex");
+	const computedHashBuffer = Buffer.from(computedHash, "hex");
+	if (
+		hashBuffer.length !== computedHashBuffer.length ||
+		!crypto.timingSafeEqual(hashBuffer, computedHashBuffer)
+	) {
+		return false;
+	}
+	const authDate = Number(params.get("auth_date"));
+	const nowSeconds =
+		Temporal.Now.zonedDateTimeISO().toInstant().epochMilliseconds / 1000;
+	if (!authDate || nowSeconds - authDate > INIT_DATA_MAX_AGE_SECONDS) {
+		return false;
+	}
+	return true;
+};

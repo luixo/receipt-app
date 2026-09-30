@@ -8,6 +8,7 @@ import {
 	Outlet,
 	Scripts,
 	createRootRouteWithContext,
+	retainSearchParams,
 } from "@tanstack/react-router";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { getRequestHeaders } from "@tanstack/react-start/server";
@@ -176,6 +177,7 @@ export type ExternalRouterContext = Pick<
 	"initialValues" | "isTest"
 >;
 
+const rootParamsOptions = searchParamsWithDefaults("__root__");
 export const Route = createRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
 	staleTime: Infinity,
@@ -183,7 +185,13 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 		await ctx.context.i18nContext.loadNamespaces("default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
-	...searchParamsWithDefaults("__root__"),
+	...rootParamsOptions,
+	search: {
+		middlewares: [
+			...rootParamsOptions.search.middlewares,
+			retainSearchParams(["debug", "bot"]),
+		],
+	},
 	head: ({ match }) => {
 		const title = getTitle(match.context.i18nContext, "index");
 		return {

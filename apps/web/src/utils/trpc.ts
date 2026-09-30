@@ -11,16 +11,21 @@ import type { GetLinksOptions } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
-const getServerLinksParams = (
-	request: Request,
-	source: GetLinksOptions["source"],
-) => {
-	const url = new URL(request.url);
-	url.pathname = DEFAULT_TRPC_ENDPOINT;
+const getServerLinksParams = ({
+	url,
+	source,
+	headers,
+}: {
+	url: string;
+	source: GetLinksOptions["source"];
+	headers?: Record<string, string>;
+}) => {
+	const urlObject = new URL(url);
+	urlObject.pathname = DEFAULT_TRPC_ENDPOINT;
 	return {
-		url: url.toString(),
-		debug: Boolean(url.searchParams.get("debug")),
-		headers: fromEntries([...request.headers.entries()]),
+		url: urlObject.toString(),
+		debug: Boolean(urlObject.searchParams.get("debug")),
+		headers,
 		source,
 		captureError: captureSentryError,
 	};
@@ -43,13 +48,25 @@ const getClientLinksParams = (
 /* c8 ignore stop */
 
 const getIsomorphicLinkParams = createIsomorphicFn()
-	.server((request: Request | null): GetLinksOptions =>
+	.server((requestRaw: Request | null): GetLinksOptions => {
 		// oxlint-disable-next-line typescript/no-non-null-assertion
-		getServerLinksParams(request!, "ssr-loader"),
-	)
+		const request = requestRaw!;
+		return getServerLinksParams({
+			url: request.url,
+			source: "ssr-loader",
+			headers: fromEntries([...request.headers.entries()]),
+		});
+	})
 	/* c8 ignore start */
 	.client((): GetLinksOptions => getClientLinksParams("csr-loader"));
 /* c8 ignore stop */
+
+export const getServerTrpcClient = <R extends AnyRouter = AppRouter>(
+	opts: Parameters<typeof getServerLinksParams>[0],
+) =>
+	createTRPCClient<R>({
+		links: getLinks(getServerLinksParams(opts)),
+	});
 
 export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 	context: Pick<RouterContext, "queryClient" | "request">,

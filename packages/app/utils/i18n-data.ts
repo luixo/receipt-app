@@ -1,4 +1,5 @@
 import type adminEn from "@ra/web/public/locales/en/admin.json";
+import type botEn from "@ra/web/public/locales/en/bot.json";
 import type debtsEn from "@ra/web/public/locales/en/debts.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
 import type emailEn from "@ra/web/public/locales/en/email.json";
@@ -12,6 +13,7 @@ import type settingsEn from "@ra/web/public/locales/en/settings.json";
 import type userEn from "@ra/web/public/locales/en/user.json";
 import type voidUserEn from "@ra/web/public/locales/en/void-user.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
+import type botRu from "@ra/web/public/locales/ru/bot.json";
 import type debtsRu from "@ra/web/public/locales/ru/debts.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
 import type emailRu from "@ra/web/public/locales/ru/email.json";
@@ -55,6 +57,7 @@ export type Resources = {
 	peers: typeof peersEn;
 	debts: typeof debtsEn;
 	email: typeof emailEn;
+	bot: typeof botEn;
 };
 
 type ValidatedResources = AssertAllEqual<
@@ -74,6 +77,7 @@ type ValidatedResources = AssertAllEqual<
 			peers: typeof peersRu;
 			debts: typeof debtsRu;
 			email: typeof emailRu;
+			bot: typeof botRu;
 		},
 	]
 >;

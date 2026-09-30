@@ -82,6 +82,7 @@ const config = defineConfig(({ mode }) => ({
 		}),
 		tanstackStart({
 			srcDirectory: "./apps/web/src/",
+			client: { entry: "./entry/client.tsx" },
 			server: { entry: "./entry/server.tsx" },
 			router: {
 				entry: "./entry/router.tsx",

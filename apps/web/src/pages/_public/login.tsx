@@ -10,5 +10,9 @@ export const Route = createFileRoute("/_public/login")({
 	},
 	head: ({ match }) => ({
 		meta: [{ title: getTitle(match.context.i18nContext, "login") }],
+		scripts:
+			match.search.bot === "telegram"
+				? [{ src: "https://telegram.org/js/telegram-web-app.js" }]
+				: [],
 	}),
 });

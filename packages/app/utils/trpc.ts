@@ -65,6 +65,8 @@ export type GetLinksOptions = {
 		| "test"
 		// API call from server-side code
 		| "api"
+		// API call from bot
+		| "bot"
 		// Default unset value in context
 		| "unset";
 };
