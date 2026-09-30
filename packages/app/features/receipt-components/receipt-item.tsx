@@ -76,7 +76,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	return (
 		<View ref={ref}>
 			<Card
-				headerClassName="flex flex-col items-start justify-between gap-4"
+				headerClassName="flex flex-col items-start justify-between gap-2"
 				header={
 					<>
 						<View className="flex w-full flex-row justify-between gap-4">
@@ -105,44 +105,41 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								/>
 							) : null}
 						</View>
-						{canEdit ? (
-							<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
-								<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
-								<Icon
-									name="arrow-right"
-									className="size-9 rotate-90 sm:rotate-0"
-								/>
-								<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
-							</View>
-						) : null}
+						<View className="flex-row flex-wrap items-center gap-2">
+							<ReceiptItemPriceInput
+								item={item}
+								isDisabled={isRemovalPending}
+								className="w-full shrink-0 sm:w-36"
+							/>
+							<Text>{t("item.crossMark")}</Text>
+							<ReceiptItemQuantityInput
+								item={item}
+								isDisabled={isRemovalPending}
+								className="w-full shrink-0 sm:w-36"
+							/>
+							<Text>
+								{t("item.amount", {
+									amount: formatCurrency(
+										locale,
+										currencyCode,
+										round(item.quantity * item.price),
+									),
+								})}
+							</Text>
+						</View>
 					</>
 				}
 				bodyClassName="gap-2"
 			>
-				<View className="flex-row flex-wrap items-center gap-2">
-					<ReceiptItemPriceInput
-						item={item}
-						isDisabled={isRemovalPending}
-						className="w-full shrink-0 sm:w-36"
-					/>
-					<ReceiptItemQuantityInput
-						item={item}
-						isDisabled={isRemovalPending}
-						className="w-full shrink-0 sm:w-36"
-					/>
-					<Text>
-						{t("item.amount", {
-							amount: formatCurrency(
-								locale,
-								currencyCode,
-								round(item.quantity * item.price),
-							),
-						})}
-					</Text>
-				</View>
+				{canEdit ? (
+					<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
+						<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
+						<Icon name="arrow-right" className="size-9 rotate-90 sm:rotate-0" />
+						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
+					</View>
+				) : null}
 				{sortedConsumers.length === 0 ? null : (
 					<>
-						<Divider />
 						{sortedConsumers.map((consumer) => {
 							const matchedParticipant = participants.find(
 								(participant) => participant.peerId === consumer.peerId,
