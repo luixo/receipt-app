@@ -135,6 +135,7 @@
 			"saveButton": "Сохранить"
 		},
 		"removeButton": {
+			"label": "Убрать позицию",
 			"confirmSubtitle": "Это удалит позицию со всеми долями участников"
 		},
 		"participants": {
@@ -149,7 +150,8 @@
 			"skeletonAmount": "<skeleton />/<skeleton />",
 			"placeholder": "Потребители",
 			"label": "Выберите потребителей",
-			"group": "{{consumers, and}}"
+			"group": "{{consumers, and}}",
+			"removeButton": "Убрать потребителя"
 		}
 	},
 	"empty": {

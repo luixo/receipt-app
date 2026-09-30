@@ -92,7 +92,6 @@ export const ReceiptScreen = suspendedFallback(
 					aside={
 						isOwner ? (
 							<ReceiptRemoveButton
-								className="self-end"
 								receipt={receipt}
 								setLoading={setDeleteLoading}
 							/>

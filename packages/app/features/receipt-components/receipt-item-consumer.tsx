@@ -4,10 +4,13 @@ import { Trans, useTranslation } from "react-i18next";
 
 import { LoadablePeer } from "~app/components/app/loadable-peer";
 import { SkeletonPeer } from "~app/components/app/peer";
-import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { useTRPC } from "~app/utils/trpc";
+import { Button } from "~components/button";
+import { Dropdown } from "~components/dropdown";
+import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
+import { Text } from "~components/text";
 import { View } from "~components/view";
 
 import { useActionsHooksContext } from "./context";
@@ -28,6 +31,7 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	participant,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { removeItemConsumer } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
@@ -54,13 +58,26 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 					isDisabled={isDisabled}
 				/>
 				{canEdit ? (
-					<RemoveButton
-						className="self-end"
-						onRemove={removeConsumer}
-						mutation={{ isPending }}
-						noConfirm
-						isIconOnly
-					/>
+					<Dropdown
+						items={[
+							{
+								key: "remove",
+								children: (
+									<View
+										className="text-danger flex-row items-center gap-1"
+										onPress={removeConsumer}
+									>
+										<Icon name="trash" className="m-1 size-4" />
+										<Text>{t("item.consumer.removeButton")}</Text>
+									</View>
+								),
+							},
+						]}
+					>
+						<Button variant="flat" isIconOnly>
+							<Icon name="ellipsis" className="size-4" />
+						</Button>
+					</Dropdown>
 				) : null}
 			</View>
 		</View>
