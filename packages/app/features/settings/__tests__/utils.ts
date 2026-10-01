@@ -5,9 +5,7 @@ import { test as originalTest } from "~tests/frontend/fixtures";
 type Fixtures = {
 	languageSelectButton: Locator;
 	limitSelectButton: Locator;
-	colorModeAutoCheckbox: Locator;
-	colorModeAutoLabel: Locator;
-	colorModeSwitch: Locator;
+	colorModeButton: Locator;
 	showResolvedDebtsSwitch: Locator;
 	manualAcceptDebtsSwitch: Locator;
 	manualAcceptDebtsResetButton: Locator;
@@ -21,11 +19,8 @@ export const test = originalTest.extend<Fixtures>({
 	limitSelectButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Items per page" })),
 
-	colorModeAutoCheckbox: ({ page }, use) =>
-		use(page.getByRole("checkbox", { name: "Auto" })),
-
-	colorModeSwitch: ({ page }, use) =>
-		use(page.getByTestId("color-mode-switch")),
+	colorModeButton: ({ page }, use) =>
+		use(page.getByTestId("color-mode-button")),
 
 	showResolvedDebtsSwitch: ({ page }, use) =>
 		use(page.getByTestId("show-resolved-debts-switch")),
