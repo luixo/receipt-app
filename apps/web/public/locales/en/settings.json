@@ -8,8 +8,7 @@
 		}
 	},
 	"colorMode": {
-		"header": "Color mode",
-		"autoCheckbox": "Auto"
+		"header": "Color mode"
 	},
 	"showResolvedDebts": {
 		"header": "Show resolved debts"

@@ -8,8 +8,7 @@
 		}
 	},
 	"colorMode": {
-		"header": "Тема",
-		"autoCheckbox": "Авто"
+		"header": "Тема"
 	},
 	"showResolvedDebts": {
 		"header": "Нулевые долги"

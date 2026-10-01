@@ -4,9 +4,9 @@ import { entries, fromEntries, mapValues } from "remeda";
 import type { z } from "zod";
 
 import {
-	LAST_COLOR_MODE_STORE_NAME,
 	SELECTED_COLOR_MODE_STORE_NAME,
-	lastColorModeSchema,
+	SYSTEM_COLOR_MODE_STORE_NAME,
+	SystemColorModeSchema,
 	selectedColorModeSchema,
 } from "~app/utils/store/color-modes";
 import { LANGUAGE_STORE_NAME, languageSchema } from "~app/utils/store/language";
@@ -39,7 +39,7 @@ export const schemas = {
 	// Local settings for a user
 	[SETTINGS_STORE_NAME]: settingsSchema,
 	// Last color schema used in this client
-	[LAST_COLOR_MODE_STORE_NAME]: lastColorModeSchema,
+	[SYSTEM_COLOR_MODE_STORE_NAME]: SystemColorModeSchema,
 	// Selected color schema used in this client (if any)
 	[SELECTED_COLOR_MODE_STORE_NAME]: selectedColorModeSchema,
 	// Pretend  user

@@ -68,9 +68,9 @@ const getNativeCss = () => {
 const RootDocument: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const {
 		selected: [selectedColorMode],
-		last: [lastColorMode],
+		system: [systemColorMode],
 	} = useColorModes();
-	const colorMode = selectedColorMode || lastColorMode;
+	const colorMode = selectedColorMode || systemColorMode;
 	return (
 		<html lang="en" className={colorMode}>
 			<head>

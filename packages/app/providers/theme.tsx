@@ -12,9 +12,9 @@ export const ThemeProvider: React.FC<
 	const colorScheme = useColorScheme();
 	const {
 		selected: [selectedColorMode],
-		last: [lastColorMode, setLastColorMode],
+		system: [systemColorMode, setSystemColorMode],
 	} = useColorModes();
-	const colorMode = selectedColorMode || lastColorMode;
+	const colorMode = selectedColorMode || systemColorMode;
 	// Should be `useEffectEvent` in next React
 	// oxlint-disable-next-line react-hooks/exhaustive-deps
 	React.useEffect(() => applyColorMode(colorMode), [colorMode]);
@@ -22,7 +22,7 @@ export const ThemeProvider: React.FC<
 		if (colorScheme === "unspecified") {
 			return;
 		}
-		setLastColorMode(colorScheme);
-	}, [colorScheme, setLastColorMode]);
+		setSystemColorMode(colorScheme);
+	}, [colorScheme, setSystemColorMode]);
 	return <>{children}</>;
 };
