@@ -240,14 +240,12 @@ const mapReceipt = (
 				mode: "single" as const,
 				singleItem,
 				multipleItems: mappedItems,
-				items: singleItem ? [singleItem] : [],
 			}
 		: {
 				...shared,
 				mode: "multiple" as const,
 				singleItem,
 				multipleItems: mappedItems,
-				items: mappedItems,
 			};
 };
 

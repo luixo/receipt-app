@@ -209,7 +209,7 @@ describe("receipts.update", () => {
 			)(createAuthContext(ctx, sessionId));
 			const single = await getCaller.procedure({ id });
 			expect(single.mode).toBe("single");
-			expect(single.items.map((item) => item.id)).toStrictEqual([id]);
+			expect(single.singleItem?.id).toBe(id);
 			expect(single.singleItem?.price).toBe(10);
 			expect(single.multipleItems.map((item) => item.id)).toStrictEqual([
 				regularItem.id,
@@ -219,7 +219,7 @@ describe("receipts.update", () => {
 				update: { type: "mode", mode: "multiple" },
 			});
 			const multiple = await getCaller.procedure({ id });
-			expect(multiple.items.map((item) => item.id)).toStrictEqual([
+			expect(multiple.multipleItems.map((item) => item.id)).toStrictEqual([
 				regularItem.id,
 			]);
 			expect(multiple.singleItem?.price).toBe(10);

@@ -10,6 +10,7 @@ import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import type { ReceiptPageEntry } from "~app/trpc-types";
 import { formatCurrency } from "~app/utils/currency";
+import { getReceiptItems } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { Checkbox } from "~components/checkbox";
@@ -131,7 +132,7 @@ export const ReceiptPreview = suspendedFallback<{
 		const isRemoving = lastMutationState?.status === "pending";
 		const locale = useLocale();
 		const isOwner = receipt.selfPeerId === receipt.ownerPeerId;
-		const emptyItems = receipt.items.filter(
+		const emptyItems = getReceiptItems(receipt).filter(
 			(item) => item.consumers.length === 0,
 		);
 		const title = (
@@ -164,7 +165,10 @@ export const ReceiptPreview = suspendedFallback<{
 			</>
 		);
 		const sum = round(
-			receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+			getReceiptItems(receipt).reduce(
+				(acc, item) => acc + item.price * item.quantity,
+				0,
+			),
 		);
 		return (
 			<Link to="/receipts/$id" params={{ id: receipt.id }} color="foreground">
@@ -184,7 +188,7 @@ export const ReceiptPreview = suspendedFallback<{
 							<View>
 								{matchedItems.map(
 									({ id: itemId, highlights: itemHighlights }) => {
-										const matchedItem = receipt.items.find(
+										const matchedItem = getReceiptItems(receipt).find(
 											(item) => item.id === itemId,
 										);
 										if (!matchedItem) {

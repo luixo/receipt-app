@@ -69,21 +69,21 @@ test("Cards ordering doesn't change from what API returned", async ({
 			assert.ok(original[0] && original[1] && original[2]);
 			return {
 				...defaultGenerateReceipt(options),
-				items: [original[2], original[0], original[1]],
+				multipleItems: [original[2], original[0], original[1]],
 			};
 		},
 	});
-	const apiOrder = receipt.items.map((item) => item.name);
+	const apiOrder = receipt.multipleItems.map((item) => item.name);
 	await openReceipt(receipt);
 	await expect(itemCards).toHaveCount(3);
 	const names = await itemCardNames.all();
 	const rendered = await Promise.all(names.map((name) => name.inputValue()));
 	expect(rendered).toEqual(
-		receipt.items
+		receipt.multipleItems
 			.toSorted((a, b) =>
 				Temporal.ZonedDateTime.compare(a.createdAt, b.createdAt),
 			)
 			.map((item) => item.name),
 	);
-	expect(receipt.items.map((item) => item.name)).toEqual(apiOrder);
+	expect(receipt.multipleItems.map((item) => item.name)).toEqual(apiOrder);
 });

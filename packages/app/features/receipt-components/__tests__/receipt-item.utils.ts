@@ -145,7 +145,7 @@ export const test = base.extend<Fixtures>({
 						})),
 					})),
 			});
-			const [item] = result.receipt.items;
+			const [item] = result.receipt.multipleItems;
 			assert.ok(item);
 			if (role !== "owner") {
 				const [ownerPeer] = result.peers;

@@ -191,7 +191,6 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 			peerId: debt.peerId,
 		})),
 	},
-	items: receiptItemsConsumers,
 	participants: receiptParticipants,
 	payers: receiptPayers,
 });

@@ -32,11 +32,11 @@ test("Only unconsumed items appear in source order, with rounded quantity × pri
 			assert.ok(first && consumed && last);
 			return {
 				...defaultGenerateReceipt(options),
-				items: [last, consumed, first],
+				multipleItems: [last, consumed, first],
 			};
 		},
 	});
-	const [last, , first] = receipt.items;
+	const [last, , first] = receipt.multipleItems;
 	assert.ok(first && last);
 	await openReceipt(receipt);
 	await expect(warningSection).toBeVisible();
@@ -76,7 +76,7 @@ test("Selecting a warning scrolls the matching item card into view without consu
 				consumers: index === noConsumerIndex ? [] : item.consumers,
 			})),
 	});
-	const target = receipt.items.at(noConsumerIndex);
+	const target = receipt.multipleItems.at(noConsumerIndex);
 	assert.ok(target);
 	await openReceipt(receipt);
 	await expect(warningRows).toHaveCount(1);

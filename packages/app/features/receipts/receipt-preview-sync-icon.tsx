@@ -4,6 +4,7 @@ import { suspendedFallback } from "~app/components/suspense-wrapper";
 import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import type { Receipt } from "~app/trpc-types";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
+import { getReceiptItems } from "~app/utils/receipt";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { Skeleton } from "~components/skeleton";
@@ -45,10 +46,13 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = suspendedFallback(
 	({ receipt }) => {
 		const { participantsWithDebts, syncableParticipants } =
 			useParticipantsWithDebts(receipt);
-		if (receipt.items.length === 0 || participantsWithDebts.length === 0) {
+		if (
+			getReceiptItems(receipt).length === 0 ||
+			participantsWithDebts.length === 0
+		) {
 			return null;
 		}
-		const hasNonDistributedItems = receipt.items.some(
+		const hasNonDistributedItems = getReceiptItems(receipt).some(
 			(item) => item.consumers.length === 0,
 		);
 		if (hasNonDistributedItems) {

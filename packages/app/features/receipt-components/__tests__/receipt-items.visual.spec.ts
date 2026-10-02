@@ -31,7 +31,7 @@ test("Populated collection masks item card internals", async ({
 			timestampedItems(defaultGenerateReceiptItems(options).slice(0, 3)),
 		generateReceipt: (options) => ({
 			...defaultGenerateReceipt(options),
-			items: options.receiptItemsWithConsumers.toReversed(),
+			multipleItems: options.receiptItemsWithConsumers.toReversed(),
 		}),
 	});
 	await openReceipt(receipt);
