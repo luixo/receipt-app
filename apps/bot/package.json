@@ -15,8 +15,12 @@
 		"@tanstack/ai-openrouter": "^0.20.1",
 		"@tanstack/ai-persistence": "^0.7.1",
 		"@tanstack/pacer": "^0.22.0",
+		"@traversable/zod": "^0.0.57",
+		"@trpc/client": "catalog:",
+		"@trpc/server": "catalog:",
 		"cookie": "catalog:",
 		"grammy": "^1.46.0",
+		"remeda": "^2.25.0",
 		"zod": "catalog:"
 	}
 }
