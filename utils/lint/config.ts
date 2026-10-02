@@ -740,7 +740,7 @@ export default defineConfig({
 			},
 		},
 		{
-			files: ["packages/app/features/playground/playground-screen.tsx"],
+			files: ["packages/app/features/playground/**/*"],
 			rules: {
 				// Maybe remove these later
 				"react/jsx-no-literals": "off",
