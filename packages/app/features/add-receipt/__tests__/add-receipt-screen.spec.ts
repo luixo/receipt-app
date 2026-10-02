@@ -158,7 +158,6 @@ test("'receipts.add' mutation", async ({
 		issued: receiptDate,
 		createdAt: Temporal.Now.zonedDateTimeISO(),
 		participants: [],
-		items: [],
 		payers: [],
 		ownerPeerId: selfPeer.id,
 		selfPeerId: selfPeer.id,

@@ -3,18 +3,9 @@
 		"receipts.get:[{\"id\":\"10b8bf11-82f1-450d-be6f-6dd8988b1001\"}]": {
 			"state": {
 				"data": {
-					"id": "10b8bf11-82f1-450d-be6f-6dd8988b1001",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "decerno quos usitas",
-					"currencyCode": "XOF",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "cf644080-2eac-4d61-998d-df92981ea272",
 							"price": 307.79,
@@ -166,6 +157,17 @@
 							"payers": []
 						}
 					],
+					"id": "10b8bf11-82f1-450d-be6f-6dd8988b1001",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "decerno quos usitas",
+					"currencyCode": "XOF",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -201,18 +203,9 @@
 		"receipts.get:[{\"id\":\"290de887-1828-4856-9cf1-187ecfcd1432\"}]": {
 			"state": {
 				"data": {
-					"id": "290de887-1828-4856-9cf1-187ecfcd1432",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "ver centum avarus",
-					"currencyCode": "STN",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "7f9df0e0-2fb0-4535-ad52-80f5f1229f04",
 							"price": 565.1,
@@ -424,6 +417,17 @@
 							"payers": []
 						}
 					],
+					"id": "290de887-1828-4856-9cf1-187ecfcd1432",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "ver centum avarus",
+					"currencyCode": "STN",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -459,18 +463,9 @@
 		"receipts.get:[{\"id\":\"2edc2690-0d76-4a5b-bbfb-ab2670499131\"}]": {
 			"state": {
 				"data": {
-					"id": "2edc2690-0d76-4a5b-bbfb-ab2670499131",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "perspiciatis auctor patruus",
-					"currencyCode": "GHS",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "40b4c0bc-801a-4df8-930d-bd83170f4012",
 							"price": 557.39,
@@ -592,6 +587,17 @@
 							"payers": []
 						}
 					],
+					"id": "2edc2690-0d76-4a5b-bbfb-ab2670499131",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "perspiciatis auctor patruus",
+					"currencyCode": "GHS",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -627,18 +633,9 @@
 		"receipts.get:[{\"id\":\"629578f9-7dfc-4779-9533-1f8ea84308bf\"}]": {
 			"state": {
 				"data": {
-					"id": "629578f9-7dfc-4779-9533-1f8ea84308bf",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "acsi tactus celo",
-					"currencyCode": "BSD",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "8bb4a67d-d74a-4778-8eb0-b06e9f0be879",
 							"price": 221.56,
@@ -730,6 +727,17 @@
 							"payers": []
 						}
 					],
+					"id": "629578f9-7dfc-4779-9533-1f8ea84308bf",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "acsi tactus celo",
+					"currencyCode": "BSD",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -765,18 +773,9 @@
 		"receipts.get:[{\"id\":\"6e36df85-86d6-4dd6-9a57-37fb3d0f5e18\"}]": {
 			"state": {
 				"data": {
-					"id": "6e36df85-86d6-4dd6-9a57-37fb3d0f5e18",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "cruentus amplus communis",
-					"currencyCode": "CDF",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "9dd72c24-cfb4-4c3f-a1ae-801a8df20a21",
 							"price": 566.45,
@@ -928,6 +927,17 @@
 							"payers": []
 						}
 					],
+					"id": "6e36df85-86d6-4dd6-9a57-37fb3d0f5e18",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cruentus amplus communis",
+					"currencyCode": "CDF",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -963,18 +973,9 @@
 		"receipts.get:[{\"id\":\"809ad475-3bfd-4587-a9b7-7d21c087eb3a\"}]": {
 			"state": {
 				"data": {
-					"id": "809ad475-3bfd-4587-a9b7-7d21c087eb3a",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "stipes adhuc tollo",
-					"currencyCode": "SDG",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "a52c2477-ce5b-44d2-8d3e-b700f946e036",
 							"price": 349.78,
@@ -1066,6 +1067,17 @@
 							"payers": []
 						}
 					],
+					"id": "809ad475-3bfd-4587-a9b7-7d21c087eb3a",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "stipes adhuc tollo",
+					"currencyCode": "SDG",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -1101,18 +1113,9 @@
 		"receipts.get:[{\"id\":\"be5c0af5-4e34-462e-b9ed-1228ce7d0775\"}]": {
 			"state": {
 				"data": {
-					"id": "be5c0af5-4e34-462e-b9ed-1228ce7d0775",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "cunae aranea carmen",
-					"currencyCode": "AFN",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "0ed25d72-00d8-4f41-8739-2d40d834e23e",
 							"price": 449.84,
@@ -1234,6 +1237,17 @@
 							"payers": []
 						}
 					],
+					"id": "be5c0af5-4e34-462e-b9ed-1228ce7d0775",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cunae aranea carmen",
+					"currencyCode": "AFN",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -1269,18 +1283,9 @@
 		"receipts.get:[{\"id\":\"c2a47fc4-b1aa-4326-94cb-eaff40affeca\"}]": {
 			"state": {
 				"data": {
-					"id": "c2a47fc4-b1aa-4326-94cb-eaff40affeca",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "cariosus comminor arguo",
-					"currencyCode": "IDR",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "4353fcfd-2cf4-434d-8813-34cd97824a10",
 							"price": 979.67,
@@ -1522,6 +1527,17 @@
 							"payers": []
 						}
 					],
+					"id": "c2a47fc4-b1aa-4326-94cb-eaff40affeca",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "cariosus comminor arguo",
+					"currencyCode": "IDR",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -1557,18 +1573,9 @@
 		"receipts.get:[{\"id\":\"c58fda4b-fa05-4605-8175-3f151f828fda\"}]": {
 			"state": {
 				"data": {
-					"id": "c58fda4b-fa05-4605-8175-3f151f828fda",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "substantia adulatio ciminatio",
-					"currencyCode": "TRY",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "8f0df177-5803-4490-a7d6-cb77799463a6",
 							"price": 580.41,
@@ -1720,6 +1727,17 @@
 							"payers": []
 						}
 					],
+					"id": "c58fda4b-fa05-4605-8175-3f151f828fda",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "substantia adulatio ciminatio",
+					"currencyCode": "TRY",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",
@@ -1755,18 +1773,9 @@
 		"receipts.get:[{\"id\":\"f06d4ff3-3d3c-440f-a6b5-952b0b471fdd\"}]": {
 			"state": {
 				"data": {
-					"id": "f06d4ff3-3d3c-440f-a6b5-952b0b471fdd",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "comedo solus illum",
-					"currencyCode": "MOP",
-					"issued": "2020-01-01",
-					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "e6bdac77-7512-4b08-a5f6-7792921d4d63",
 							"price": 178.07,
@@ -1888,6 +1897,17 @@
 							"payers": []
 						}
 					],
+					"id": "f06d4ff3-3d3c-440f-a6b5-952b0b471fdd",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "comedo solus illum",
+					"currencyCode": "MOP",
+					"issued": "2020-01-01",
+					"ownerPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"selfPeerId": "8ecf9c84-37ca-41aa-994c-b20d1187d0a9",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "1018ec43-045e-41be-a2ea-5954c3566d68",

@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { formatCurrency } from "~app/utils/currency";
+import { getReceiptItems } from "~app/utils/receipt";
 import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
 import type { PeerId } from "~db/ids";
 import { expect } from "~tests/frontend/fixtures";
@@ -609,7 +610,7 @@ test.describe("Receipt preview", () => {
 
 		for (const receipt of receipts) {
 			const sum = round(
-				receipt.items.reduce(
+				getReceiptItems(receipt).reduce(
 					(acc, item) => acc + item.price * item.quantity,
 					0,
 				),
@@ -664,7 +665,7 @@ test.describe("Receipt preview", () => {
 		const { receipts } = await mockReceipts({ amount: 1 });
 		const [receipt] = receipts;
 		assert.ok(receipt);
-		const [firstItem] = receipt.items;
+		const [firstItem] = getReceiptItems(receipt);
 		assert.ok(firstItem);
 		api.mockFirst("receipts.getPaged", ({ input }) => ({
 			count: 1,

@@ -8,7 +8,7 @@ import { useParticipantsWithDebts } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { Receipt } from "~app/trpc-types";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
-import { getReceiptDebtName } from "~app/utils/receipt";
+import { getReceiptDebtName, getReceiptItems } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
@@ -145,7 +145,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			addMutations.some((mutation) => mutation.isPending) ||
 			updateMutations.some((mutation) => mutation.isPending);
 
-		const emptyItemsAmount = receipt.items.filter(
+		const emptyItemsAmount = getReceiptItems(receipt).filter(
 			(item) => item.consumers.length === 0,
 		).length;
 		const hasDesyncedParticipants = desyncedParticipants.length !== 0;

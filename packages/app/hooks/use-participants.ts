@@ -4,6 +4,7 @@ import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 
 import { useDecimals } from "~app/hooks/use-decimals";
 import type { Receipt, ReceiptParticipant } from "~app/trpc-types";
+import { getReceiptItems } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
 import type { PeerId } from "~db/ids";
@@ -33,7 +34,7 @@ export const useParticipants = (receipt: Omit<Receipt, "name">) => {
 		const participantsSums = getParticipantSums(
 			receipt.id,
 			receipt.ownerPeerId,
-			receipt.items,
+			getReceiptItems(receipt),
 			receipt.participants,
 			receipt.payers,
 			fromUnitToSubunit,

@@ -15,6 +15,7 @@ import type { TRPCQueryInput } from "~app/trpc";
 import type { Receipt } from "~app/trpc-types";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
+import { getReceiptItems } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Text } from "~components/text";
 import type { ViewReactNode } from "~components/view.web";
@@ -403,7 +404,7 @@ export const useGetReceiptContext = (
 		ownerPeerId: receipt.ownerPeerId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,
-		items: receipt.items,
+		items: getReceiptItems(receipt),
 		participants,
 		renderParticipantActions,
 		getPeersSuggestOptions: () => ({

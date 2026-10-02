@@ -171,7 +171,7 @@ describe("receipts.get", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id });
 			expect(result.singleItem).toBeNull();
-			expect(result.items).toStrictEqual([]);
+			expect(result.multipleItems).toStrictEqual([]);
 		});
 		test("returns the receipt-id item with its item payers in single mode", async ({
 			ctx,
@@ -209,7 +209,7 @@ describe("receipts.get", () => {
 				expect(result).toStrictEqual<typeof result>({
 					mode: "multiple",
 					singleItem: result.singleItem,
-					multipleItems: result.items,
+					multipleItems: [],
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -217,7 +217,6 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerPeerId: selfPeerId,
 					selfPeerId,
-					items: [],
 					participants: [],
 					payers: [],
 					debts: { direction: "outcoming", debts: [] },
@@ -242,7 +241,7 @@ describe("receipts.get", () => {
 			expect(result).toStrictEqual<typeof result>({
 				mode: "multiple",
 				singleItem: result.singleItem,
-				multipleItems: result.items,
+				multipleItems: [],
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -250,7 +249,6 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerPeerId: foreignPeerId,
 				selfPeerId: foreignToSelfPeerId,
-				items: [],
 				participants: getParticipants([participant]),
 				payers: [],
 				debts: {
@@ -286,7 +284,7 @@ describe("receipts.get", () => {
 				expect(result).toStrictEqual<typeof result>({
 					mode: "multiple",
 					singleItem: result.singleItem,
-					multipleItems: result.items,
+					multipleItems: [],
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -300,7 +298,6 @@ describe("receipts.get", () => {
 						hasForeign: true,
 						id: foreignDebtId,
 					},
-					items: [],
 					payers: [],
 					participants: getParticipants([participant]),
 				});
@@ -326,7 +323,7 @@ describe("receipts.get", () => {
 				expect(result).toStrictEqual<typeof result>({
 					mode: "multiple",
 					singleItem: result.singleItem,
-					multipleItems: result.items,
+					multipleItems: [],
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -340,7 +337,6 @@ describe("receipts.get", () => {
 						hasForeign: false,
 						id: debtId,
 					},
-					items: [],
 					payers: [],
 					participants: getParticipants([participant]),
 				});
@@ -368,7 +364,7 @@ describe("receipts.get", () => {
 				expect(result).toStrictEqual<typeof result>({
 					mode: "multiple",
 					singleItem: result.singleItem,
-					multipleItems: result.items,
+					multipleItems: [],
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -382,7 +378,6 @@ describe("receipts.get", () => {
 						hasForeign: true,
 						id: debtId,
 					},
-					items: [],
 					payers: [],
 					participants: getParticipants([participant]),
 				});
@@ -426,7 +421,7 @@ describe("receipts.get", () => {
 				expect(result).toStrictEqual<typeof result>({
 					mode: "multiple",
 					singleItem: result.singleItem,
-					multipleItems: result.items,
+					multipleItems: [],
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -443,7 +438,6 @@ describe("receipts.get", () => {
 							}))
 							.toSorted((a, b) => a.id.localeCompare(b.id)),
 					},
-					items: [],
 					participants: [],
 					payers: [],
 				});
@@ -526,7 +520,7 @@ describe("receipts.get", () => {
 			expect(result).toStrictEqual<typeof result>({
 				mode: "multiple",
 				singleItem: result.singleItem,
-				multipleItems: result.items,
+				multipleItems: getItems(receiptItems, consumers, payers),
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -534,7 +528,6 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerPeerId: selfPeerId,
 				selfPeerId,
-				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,
@@ -558,7 +551,7 @@ describe("receipts.get", () => {
 			expect(result).toStrictEqual<typeof result>({
 				mode: "multiple",
 				singleItem: result.singleItem,
-				multipleItems: result.items,
+				multipleItems: [],
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -566,7 +559,6 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerPeerId: selfPeerId,
 				selfPeerId,
-				items: [],
 				participants: [],
 				payers: [],
 				debts: { direction: "outcoming", debts: [] },
@@ -695,7 +687,7 @@ describe("receipts.get", () => {
 			expect(result).toStrictEqual<typeof result>({
 				mode: "multiple",
 				singleItem: result.singleItem,
-				multipleItems: result.items,
+				multipleItems: getItems(receiptItems, consumers, payers),
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -703,7 +695,6 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerPeerId: foreignPeer.id,
 				selfPeerId: foreignToSelfPeer.id,
-				items: getItems(receiptItems, consumers, payers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,

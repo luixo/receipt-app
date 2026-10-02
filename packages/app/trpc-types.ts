@@ -28,7 +28,7 @@ export type Receipt = TRPCQueryOutput<"receipts.get">;
 export type ReceiptParticipant = Receipt["participants"][number];
 export type ReceiptPayer = Receipt["payers"][number];
 export type ReceiptDebts = Receipt["debts"];
-export type ReceiptItem = Receipt["items"][number];
+export type ReceiptItem = Receipt["multipleItems"][number];
 export type ReceiptItemPayer = ReceiptItem["payers"][number];
 export type ReceiptItemConsumer = ReceiptItem["consumers"][number];
 

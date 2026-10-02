@@ -76,19 +76,24 @@ const updateItems =
 				controller,
 				receiptId,
 			)((receipt) => {
-				const nextItems = updater(receipt.items);
-				if (nextItems === receipt.items) {
+				const activeItems =
+					receipt.mode === "single"
+						? receipt.singleItem
+							? [receipt.singleItem]
+							: []
+						: receipt.multipleItems;
+				const nextItems = updater(activeItems);
+				if (nextItems === activeItems) {
 					return receipt;
 				}
-				ref.current = receipt.items;
+				ref.current = activeItems;
 				return receipt.mode === "single"
 					? {
 							...receipt,
-							items: nextItems,
 							singleItem: nextItems[0] ?? null,
 							payers: nextItems[0]?.consumers ?? receipt.payers,
 						}
-					: { ...receipt, items: nextItems, multipleItems: nextItems };
+					: { ...receipt, multipleItems: nextItems };
 			});
 		}).current;
 

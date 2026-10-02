@@ -7,6 +7,7 @@ import { RemoveComponent } from "~app/components/remove-button";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { Receipt } from "~app/trpc-types";
+import { getReceiptItems } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Dropdown } from "~components/dropdown";
@@ -59,7 +60,9 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 								<View
 									className="text-danger flex-row items-center gap-1"
 									onPress={
-										receipt.items.length === 0 ? removeReceipt : openModal
+										getReceiptItems(receipt).length === 0
+											? removeReceipt
+											: openModal
 									}
 								>
 									<Icon name="trash" className="m-1 size-4" />

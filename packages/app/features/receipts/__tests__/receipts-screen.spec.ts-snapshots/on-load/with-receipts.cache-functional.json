@@ -3,18 +3,9 @@
 		"receipts.get:[{\"id\":\"40cc2531-d450-4f29-851b-15757d6b7534\"}]": {
 			"state": {
 				"data": {
-					"id": "40cc2531-d450-4f29-851b-15757d6b7534",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "thesis patruus comparo",
-					"currencyCode": "GEL",
-					"issued": "2020-01-01",
-					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "7ccf9416-ab3f-4f26-8fd4-29b1881b8598",
 							"price": 261.32,
@@ -151,6 +142,17 @@
 							"payers": []
 						}
 					],
+					"id": "40cc2531-d450-4f29-851b-15757d6b7534",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "thesis patruus comparo",
+					"currencyCode": "GEL",
+					"issued": "2020-01-01",
+					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "9767a73b-2bd3-42c3-a8b6-8fe643b53cec",
@@ -201,18 +203,9 @@
 		"receipts.get:[{\"id\":\"6d2615b3-b4ab-4d0a-b236-2eec751eb3d7\"}]": {
 			"state": {
 				"data": {
-					"id": "6d2615b3-b4ab-4d0a-b236-2eec751eb3d7",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "aspernatur architecto aperiam",
-					"currencyCode": "MZN",
-					"issued": "2020-01-01",
-					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "ff36f4b1-51f3-4d59-8c3d-777f6fe06784",
 							"price": 313.91,
@@ -394,6 +387,17 @@
 							"payers": []
 						}
 					],
+					"id": "6d2615b3-b4ab-4d0a-b236-2eec751eb3d7",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "aspernatur architecto aperiam",
+					"currencyCode": "MZN",
+					"issued": "2020-01-01",
+					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "9767a73b-2bd3-42c3-a8b6-8fe643b53cec",
@@ -444,18 +448,9 @@
 		"receipts.get:[{\"id\":\"efa12879-c14e-429a-a101-11cb7be76b61\"}]": {
 			"state": {
 				"data": {
-					"id": "efa12879-c14e-429a-a101-11cb7be76b61",
-					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "consectetur vomica decet",
-					"currencyCode": "MYR",
-					"issued": "2020-01-01",
-					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
-					"debts": {
-						"direction": "outcoming",
-						"debts": []
-					},
-					"items": [
+					"mode": "multiple",
+					"singleItem": null,
+					"multipleItems": [
 						{
 							"id": "91b4c912-2e24-4111-8a3c-3301e881ae94",
 							"price": 829.42,
@@ -727,6 +722,17 @@
 							"payers": []
 						}
 					],
+					"id": "efa12879-c14e-429a-a101-11cb7be76b61",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "consectetur vomica decet",
+					"currencyCode": "MYR",
+					"issued": "2020-01-01",
+					"ownerPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"selfPeerId": "eea0a6c9-ff4c-4533-9c05-4fdd58b05f70",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					},
 					"participants": [
 						{
 							"peerId": "9767a73b-2bd3-42c3-a8b6-8fe643b53cec",

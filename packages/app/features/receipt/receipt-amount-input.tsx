@@ -9,6 +9,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { Receipt } from "~app/trpc-types";
 import { getCurrencySymbol } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
+import { getReceiptItems } from "~app/utils/receipt";
 import { useTRPC } from "~app/utils/trpc";
 import { Text } from "~components/text";
 import { View } from "~components/view";
@@ -51,7 +52,10 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 		isLoading ||
 		receipt.ownerPeerId !== receipt.selfPeerId;
 	const sum = round(
-		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+		getReceiptItems(receipt).reduce(
+			(acc, item) => acc + item.price * item.quantity,
+			0,
+		),
 	);
 
 	return (

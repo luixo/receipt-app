@@ -71,13 +71,11 @@ export const options: UseContextedMutationOptions<
 									mode: "single" as const,
 									singleItem,
 									multipleItems: items,
-									items: [singleItem],
 								}
 							: {
 									mode: "multiple" as const,
 									singleItem,
 									multipleItems: items,
-									items,
 								};
 					controller.add({
 						...modeData,
