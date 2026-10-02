@@ -33,7 +33,7 @@ import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
 import { getBackendModule, getLanguageFromRequest } from "~web/utils/i18n";
 import { HydrationBoundary } from "~web/utils/ssr";
-import { getHostUrl } from "~web/utils/url";
+import { getServerHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
 
@@ -106,7 +106,7 @@ export const getRouter = () => {
 		context: {
 			...externalContext,
 			request,
-			baseUrl: request ? getHostUrl(request.url) : "",
+			baseUrl: request ? getServerHostUrl(request.url) : "",
 			i18nContext,
 			queryClient,
 			nowTimestamp: Temporal.Now.zonedDateTimeISO().toString(),
