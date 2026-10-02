@@ -13,7 +13,6 @@ import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card } from "~components/card";
-import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { Dropdown } from "~components/dropdown";
 import { Icon } from "~components/icons";
