@@ -11,8 +11,8 @@ import { getServerTrpcClient } from "~web/utils/trpc";
 import { adapter } from "./adapter";
 import { SYSTEM_PROMPT } from "./chat";
 import { env } from "./env";
-import { clearChatMcpClient, getChatMcpClient } from "./mcp";
 import { persistenceMiddleware, threadIdFor } from "./persistence";
+import { tools } from "./tools";
 
 const trpcClient = getServerTrpcClient({
 	url: env.WEB_BASE_URL,
@@ -45,7 +45,6 @@ async function* textDeltas(
 ) {
 	let currentMessageId: string | undefined = undefined;
 	for await (const chunk of chunks) {
-		console.log("chunk", chunk);
 		if (chunk.type === EventType.RUN_ERROR) {
 			throw new Error(chunk.message);
 		}
@@ -72,15 +71,13 @@ bot.on("message:text", async (ctx) => {
 		botUserId,
 	});
 	if (!auth) {
-		clearChatMcpClient(botUserId);
 		await ctx.reply("Please authorize first with /start");
 		return;
 	}
 	await ctx.replyWithChatAction("typing");
-	const typing = setInterval(
-		() => ctx.replyWithChatAction("typing").catch(() => {}),
-		4000,
-	);
+	const typing = setInterval(() => {
+		void ctx.replyWithChatAction("typing").catch(() => undefined);
+	}, 4000);
 	const stopTyping = () => clearInterval(typing);
 
 	const threadId = await threadIdFor(ctx.chat.id);
@@ -102,10 +99,8 @@ bot.on("message:text", async (ctx) => {
 					strategy: clearToolResults({ keepRecentToolResults: 6 }),
 				}),
 			],
-			mcp: {
-				clients: [await getChatMcpClient(botUserId, auth.sessionId)],
-				connection: "keep-alive",
-			},
+			tools,
+			context: { sessionId: auth.sessionId },
 			abortController,
 			modelOptions: {
 				reasoning: { effort: "none" },
