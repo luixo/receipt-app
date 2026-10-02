@@ -40,7 +40,7 @@ export const config = defineConfig({
 		".": {
 			entry: configEntry,
 			// Used only inside ignored .opencode/.
-			ignoreDependencies: ["@opencode-ai/plugin"],
+			ignoreDependencies: ["@opencode/plugin"],
 		},
 		"apps/mobile": {
 			entry: ["app/**/*.{ts,tsx}", "app.css", configEntry],
