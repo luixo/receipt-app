@@ -39,7 +39,7 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants, confirmItemRemoval } =
+	const { currencyCode, participants, confirmItemRemoval, mode } =
 		useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
 	const canEdit = useCanEdit();
@@ -97,7 +97,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									</Button>
 								) : null}
 							</View>
-							{canEdit ? (
+							{canEdit && mode === "multiple" ? (
 								<Dropdown
 									items={[
 										{

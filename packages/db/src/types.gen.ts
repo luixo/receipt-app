@@ -13,6 +13,8 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export type Numeric = ColumnType<string, number | string, number | string>;
 
+export type ReceiptMode = "single" | "multiple";
+
 export type ReceiptRole = "editor" | "owner" | "viewer";
 
 export interface Debt {
@@ -79,6 +81,7 @@ export interface Receipt {
   currencyCode: CurrencyCode;
   id: ReceiptId;
   issued: Temporal.PlainDate;
+  mode: Generated<ReceiptMode>;
   name: string;
   ownerUserId: UserId;
   updatedAt: Generated<Temporal.ZonedDateTime>;

@@ -369,6 +369,7 @@ export const useActionHooks = (receipt: Receipt) => ({
 });
 
 export type ReceiptContext = {
+	mode: "single" | "multiple";
 	receiptId: ReceiptId;
 	currencyCode: CurrencyCode;
 	selfPeerId: PeerId;
@@ -396,6 +397,7 @@ export const useGetReceiptContext = (
 	const { t } = useTranslation("receipts");
 	const participants = useParticipants(receipt);
 	return {
+		mode: receipt.mode,
 		receiptId: receipt.id,
 		selfPeerId: receipt.selfPeerId,
 		payers: receipt.payers,

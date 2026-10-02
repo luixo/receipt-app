@@ -1,9 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { describe } from "vitest";
+import { describe, expect } from "vitest";
 
 import type { TRPCMutationInput } from "~app/trpc";
+import type { ReceiptItemId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertConnectedPeers,
 	insertPeer,
 	insertReceipt,
@@ -217,6 +219,26 @@ describe("receiptItems.update", () => {
 	});
 
 	describe("functionality", () => {
+		test("updates the receipt-id item in single mode", async ({ ctx }) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id } = await insertReceipt(ctx, userId);
+			await assertDatabase(ctx)
+				.updateTable("receipts")
+				.set({ mode: "single" })
+				.where("id", "=", id)
+				.execute();
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await caller.procedure({
+				id,
+				update: { type: "price", price: 42 },
+			});
+			const item = await assertDatabase(ctx)
+				.selectFrom("receiptItems")
+				.select("price")
+				.where("id", "=", id as ReceiptItemId)
+				.executeTakeFirstOrThrow();
+			expect(Number(item.price)).toBe(42);
+		});
 		describe("update name", () => {
 			runTests(() => ({ type: "name", name: faker.lorem.words() }));
 		});

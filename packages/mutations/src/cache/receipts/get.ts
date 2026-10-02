@@ -81,7 +81,14 @@ const updateItems =
 					return receipt;
 				}
 				ref.current = receipt.items;
-				return { ...receipt, items: nextItems };
+				return receipt.mode === "single"
+					? {
+							...receipt,
+							items: nextItems,
+							singleItem: nextItems[0] ?? null,
+							payers: nextItems[0]?.consumers ?? receipt.payers,
+						}
+					: { ...receipt, items: nextItems, multipleItems: nextItems };
 			});
 		}).current;
 
@@ -342,6 +349,15 @@ const updatePayers =
 					return receipt;
 				}
 				ref.current = receipt.payers;
+				if (receipt.mode === "single" && receipt.singleItem) {
+					const singleItem = { ...receipt.singleItem, consumers: nextPayers };
+					return {
+						...receipt,
+						payers: nextPayers,
+						singleItem,
+						items: [singleItem],
+					};
+				}
 				return { ...receipt, payers: nextPayers };
 			});
 		}).current;

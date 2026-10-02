@@ -1,5 +1,8 @@
 {
 	"admin.users": {
 		"clientCalls": 1
+	},
+	"userSettings.get": {
+		"clientCalls": 1
 	}
 }

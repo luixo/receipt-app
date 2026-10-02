@@ -1,8 +1,10 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
+import type { ReceiptItemId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertConnectedPeers,
 	insertDebt,
 	insertPeer,
@@ -152,6 +154,43 @@ describe("receipts.get", () => {
 	});
 
 	describe("functionality", () => {
+		test("returns null when a single receipt has no receipt-id item", async ({
+			ctx,
+		}) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id } = await insertReceipt(ctx, userId);
+			await assertDatabase(ctx)
+				.deleteFrom("receiptItems")
+				.where("id", "=", id as ReceiptItemId)
+				.execute();
+			await assertDatabase(ctx)
+				.updateTable("receipts")
+				.set({ mode: "single" })
+				.where("id", "=", id)
+				.execute();
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ id });
+			expect(result.singleItem).toBeNull();
+			expect(result.items).toStrictEqual([]);
+		});
+		test("returns the receipt-id item with its item payers in single mode", async ({
+			ctx,
+		}) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id } = await insertReceipt(ctx, userId);
+			const { id: peerId } = await insertPeer(ctx, userId);
+			await insertReceiptParticipant(ctx, id, peerId);
+			await insertReceiptItemPayer(ctx, id as ReceiptItemId, peerId);
+			await assertDatabase(ctx)
+				.updateTable("receipts")
+				.set({ mode: "single" })
+				.where("id", "=", id)
+				.execute();
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ id });
+			expect(result.mode).toBe("single");
+			expect(result.singleItem?.payers[0]?.peerId).toBe(peerId);
+		});
 		describe("user is an owner", () => {
 			test("empty receipt", async ({ ctx }) => {
 				const {
@@ -168,6 +207,9 @@ describe("receipts.get", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
+					mode: "multiple",
+					singleItem: result.singleItem,
+					multipleItems: result.items,
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -198,6 +240,9 @@ describe("receipts.get", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
+				mode: "multiple",
+				singleItem: result.singleItem,
+				multipleItems: result.items,
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -239,6 +284,9 @@ describe("receipts.get", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
+					mode: "multiple",
+					singleItem: result.singleItem,
+					multipleItems: result.items,
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -276,6 +324,9 @@ describe("receipts.get", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
+					mode: "multiple",
+					singleItem: result.singleItem,
+					multipleItems: result.items,
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -315,6 +366,9 @@ describe("receipts.get", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
+					mode: "multiple",
+					singleItem: result.singleItem,
+					multipleItems: result.items,
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -370,6 +424,9 @@ describe("receipts.get", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
+					mode: "multiple",
+					singleItem: result.singleItem,
+					multipleItems: result.items,
 					id: receipt.id,
 					createdAt: Temporal.Now.zonedDateTimeISO(),
 					name: receipt.name,
@@ -467,6 +524,9 @@ describe("receipts.get", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
+				mode: "multiple",
+				singleItem: result.singleItem,
+				multipleItems: result.items,
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -496,6 +556,9 @@ describe("receipts.get", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
+				mode: "multiple",
+				singleItem: result.singleItem,
+				multipleItems: result.items,
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,
@@ -630,6 +693,9 @@ describe("receipts.get", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
+				mode: "multiple",
+				singleItem: result.singleItem,
+				multipleItems: result.items,
 				id: receipt.id,
 				createdAt: Temporal.Now.zonedDateTimeISO(),
 				name: receipt.name,

@@ -31,6 +31,7 @@
 		"addItemButton": "<icon/><text> Позиция</text>"
 	},
 	"receipt": {
+		"mode": { "single": "Одна позиция", "multiple": "Несколько позиций" },
 		"loading": "Загрузка чека...",
 		"form": {
 			"name": {

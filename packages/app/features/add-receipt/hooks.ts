@@ -454,6 +454,7 @@ export const useAddReceiptContext = (
 	items: ReceiptContext["items"],
 	participants: ReceiptContext["participants"],
 ): ReceiptContext => ({
+	mode: form.mode ?? "multiple",
 	receiptId,
 	selfPeerId,
 	ownerPeerId: selfPeerId,

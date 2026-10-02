@@ -41,7 +41,11 @@ export const procedure = authProcedure
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
 			)
-			.select(["receipts.id as receiptId", "receipts.ownerUserId"])
+			.select([
+				"receipts.id as receiptId",
+				"receipts.ownerUserId",
+				"receipts.mode",
+			])
 			.where("receiptItems.id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -51,7 +55,7 @@ export const procedure = authProcedure
 				message: `Receipt item "${input.id}" is not found.`,
 			});
 		}
-		if (receiptItem.receiptId === input.id) {
+		if (receiptItem.receiptId === input.id && receiptItem.mode !== "single") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Payers receipt item cannot be updated.`,
