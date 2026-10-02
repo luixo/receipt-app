@@ -30,7 +30,6 @@ import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/p
 import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
 import { Route as ApiUtilsCleanupRouteImport } from './../pages/api/utils/cleanup'
 import { Route as ApiTrpcSplatRouteImport } from './../pages/api/trpc/$'
-import { Route as ApiMcpSplatRouteImport } from './../pages/api/mcp/$'
 import { Route as ProtectedReceiptsAddRouteImport } from './../pages/_protected/receipts/add'
 import { Route as ProtectedReceiptsIdRouteImport } from './../pages/_protected/receipts/$id'
 import { Route as ProtectedPeersConnectionsRouteImport } from './../pages/_protected/peers/connections'
@@ -148,11 +147,6 @@ const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
   path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiMcpSplatRoute = ApiMcpSplatRouteImport.update({
-  id: '/api/mcp/$',
-  path: '/api/mcp/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProtectedReceiptsAddRoute = ProtectedReceiptsAddRouteImport.update({
   id: '/receipts/add',
   path: '/receipts/add',
@@ -249,7 +243,6 @@ export interface FileRoutesByFullPath {
   '/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/debts/': typeof ProtectedDebtsIndexRoute
@@ -284,7 +277,6 @@ export interface FileRoutesByTo {
   '/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/debts': typeof ProtectedDebtsIndexRoute
@@ -322,7 +314,6 @@ export interface FileRoutesById {
   '/_protected/peers/connections': typeof ProtectedPeersConnectionsRoute
   '/_protected/receipts/$id': typeof ProtectedReceiptsIdRoute
   '/_protected/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/api/mcp/$': typeof ApiMcpSplatRoute
   '/api/trpc/$': typeof ApiTrpcSplatRoute
   '/api/utils/cleanup': typeof ApiUtilsCleanupRoute
   '/_protected/debts/': typeof ProtectedDebtsIndexRoute
@@ -359,7 +350,6 @@ export interface FileRouteTypes {
     | '/peers/connections'
     | '/receipts/$id'
     | '/receipts/add'
-    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/debts/'
@@ -394,7 +384,6 @@ export interface FileRouteTypes {
     | '/peers/connections'
     | '/receipts/$id'
     | '/receipts/add'
-    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/debts'
@@ -431,7 +420,6 @@ export interface FileRouteTypes {
     | '/_protected/peers/connections'
     | '/_protected/receipts/$id'
     | '/_protected/receipts/add'
-    | '/api/mcp/$'
     | '/api/trpc/$'
     | '/api/utils/cleanup'
     | '/_protected/debts/'
@@ -449,7 +437,6 @@ export interface RootRouteChildren {
   PublicRoute: typeof PublicRouteWithChildren
   ApiCoverageRoute: typeof ApiCoverageRoute
   ApiPingRoute: typeof ApiPingRoute
-  ApiMcpSplatRoute: typeof ApiMcpSplatRoute
   ApiTrpcSplatRoute: typeof ApiTrpcSplatRoute
   ApiUtilsCleanupRoute: typeof ApiUtilsCleanupRoute
 }
@@ -601,13 +588,6 @@ declare module '@tanstack/react-router' {
       path: '/api/trpc/$'
       fullPath: '/api/trpc/$'
       preLoaderRoute: typeof ApiTrpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mcp/$': {
-      id: '/api/mcp/$'
-      path: '/api/mcp/$'
-      fullPath: '/api/mcp/$'
-      preLoaderRoute: typeof ApiMcpSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected/receipts/add': {
@@ -785,7 +765,6 @@ const rootRouteChildren: RootRouteChildren = {
   PublicRoute: PublicRouteWithChildren,
   ApiCoverageRoute: ApiCoverageRoute,
   ApiPingRoute: ApiPingRoute,
-  ApiMcpSplatRoute: ApiMcpSplatRoute,
   ApiTrpcSplatRoute: ApiTrpcSplatRoute,
   ApiUtilsCleanupRoute: ApiUtilsCleanupRoute,
 }

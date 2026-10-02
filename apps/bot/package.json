@@ -10,12 +10,12 @@
 	"dependencies": {
 		"@grammyjs/stream": "^1.1.0",
 		"@t3-oss/env-core": "catalog:",
-		"@tanstack/ai": "^0.58.0",
+		"@tanstack/ai": "^0.63.0",
 		"@tanstack/ai-compaction": "^0.1.11",
-		"@tanstack/ai-mcp": "^0.4.3",
 		"@tanstack/ai-openrouter": "^0.20.1",
 		"@tanstack/ai-persistence": "^0.7.1",
 		"@tanstack/pacer": "^0.22.0",
+		"cookie": "catalog:",
 		"grammy": "^1.46.0",
 		"zod": "catalog:"
 	}
