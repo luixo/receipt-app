@@ -16,7 +16,6 @@ import { Badge } from "~components/badge";
 import { Button, ButtonGroup } from "~components/button";
 import { Card } from "~components/card";
 import { Checkbox } from "~components/checkbox";
-import { Chip } from "~components/chip";
 import { DateInput } from "~components/date-input";
 import { Divider } from "~components/divider";
 import { Form } from "~components/form";
@@ -341,15 +340,6 @@ export const PlaygroundScreen = () => {
 					onValueChange={setSwitchValue}
 				/>
 				<Checkbox />
-			</View>
-			<View className="flex flex-row flex-wrap gap-2">
-				{(["default", "primary", "success", "warning", "danger"] as const).map(
-					(color) => (
-						<Chip key={color} color={color}>
-							{color}
-						</Chip>
-					),
-				)}
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
 				<Peer name="Ivan" description="Serious man" />

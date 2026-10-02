@@ -88,13 +88,13 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									isDisabled={isRemovalPending}
 								/>
 								{notAddedParticipantsIds.length > 1 ? (
-									<Chip
-										color="primary"
-										className="cursor-pointer"
+									<Button
+										variant="faded"
+										size="sm"
 										onPress={onAddEveryItemParticipant}
 									>
 										{t("item.participants.everyone")}
-									</Chip>
+									</Button>
 								) : null}
 							</View>
 							{canEdit ? (
