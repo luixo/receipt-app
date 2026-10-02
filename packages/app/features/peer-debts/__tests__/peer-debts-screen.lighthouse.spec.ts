@@ -12,6 +12,6 @@ test("Peer debts screen Lighthouse audit", async ({ mockDebts, runAudit }) => {
 		accessibility: 0.73,
 		"best-practices": 1,
 		seo: 0.9,
-		"agentic-browsing": 0.46,
+		"agentic-browsing": 0.47,
 	});
 });
