@@ -21,7 +21,11 @@ const updateColumn = "updatedAt";
 // Project inception date
 const defaultCreatedDate = Temporal.ZonedDateTime.from(
 	"2020-12-04T07:10:00.000[GMT]",
-);
+)
+	.toInstant()
+	// On some machine migration fails here with Temporal.ZonedDateTime
+	// There's no **time** to figure this out, this helps
+	.toString() as unknown as Temporal.ZonedDateTime;
 
 const createUpdateFunction = async (db: Database) => {
 	await sql`
