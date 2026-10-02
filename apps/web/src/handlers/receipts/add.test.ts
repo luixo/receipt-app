@@ -6,6 +6,7 @@ import type { z } from "zod";
 import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
@@ -236,6 +237,21 @@ describe("receipts.add", () => {
 	});
 
 	describe("functionality", () => {
+		test("single mode creates the receipt-id item", async ({ ctx }) => {
+			const { sessionId } = await insertUserWithSession(ctx);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				...getValidReceipt(),
+				mode: "single",
+			});
+			const items = await assertDatabase(ctx)
+				.selectFrom("receiptItems")
+				.select(["id", "receiptId"])
+				.where("receiptId", "=", result.id)
+				.execute();
+			expect(items).toHaveLength(1);
+			expect(items[0]?.id).toBe(result.id);
+		});
 		test("empty receipt", async ({ ctx }) => {
 			const { sessionId, userId } = await insertUserWithSession(ctx);
 

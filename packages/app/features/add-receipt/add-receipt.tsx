@@ -25,6 +25,7 @@ import {
 	ReceiptItems,
 	SkeletonAddReceiptItemController,
 } from "~app/features/receipt-components/receipt-items";
+import { ReceiptModeButtons } from "~app/features/receipt-components/receipt-mode-buttons";
 import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
 import type { Payer } from "~app/features/receipt-components/state";
 import { useParticipants } from "~app/hooks/use-participants";
@@ -73,6 +74,9 @@ const ContextedAddReceipt = suspendedFallback<{
 		const formValues = useTypedValues(formStore, defaultFormValues);
 		const receiptId = React.useId();
 		const participants = useParticipants({
+			mode: "multiple",
+			singleItem: null,
+			multipleItems: items,
 			id: receiptId,
 			createdAt: Temporal.Now.zonedDateTimeISO(),
 			issued: formValues.issued,
@@ -100,7 +104,7 @@ const ContextedAddReceipt = suspendedFallback<{
 			<ReceiptContext value={addReceiptContext}>
 				<ActionsHooksContext value={actionsHooks}>
 					<ReceiptParticipants />
-					<ReceiptItems />
+					{formValues.mode === "multiple" ? <ReceiptItems /> : null}
 				</ActionsHooksContext>
 			</ReceiptContext>
 		);
@@ -151,6 +155,7 @@ export const AddReceipt = () => {
 		}).queryKey,
 	)?.items[0]?.currencyCode;
 	const defaultValues = {
+		mode: "multiple" as const,
 		name: "",
 		issued: Temporal.Now.plainDateISO(),
 		currencyCode: optimisticCurrencyCode,
@@ -164,6 +169,7 @@ export const AddReceipt = () => {
 		},
 		onSubmit: ({ value }) => {
 			addReceiptMutation.mutate({
+				mode: value.mode,
 				name: value.name,
 				currencyCode: value.currencyCode,
 				issued: value.issued,
@@ -227,6 +233,17 @@ export const AddReceipt = () => {
 						/>
 					)}
 				</form.AppField>
+				{itemsState[0].length === 0 ? (
+					<form.AppField name="mode">
+						{(field) => (
+							<ReceiptModeButtons
+								mode={field.state.value}
+								onChange={field.setValue}
+								isDisabled={addReceiptMutation.isPending}
+							/>
+						)}
+					</form.AppField>
+				) : null}
 			</form.Form>
 			<ContextedAddReceipt
 				formStore={form.store}

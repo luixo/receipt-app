@@ -2,8 +2,10 @@ import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
 import type { TRPCMutationInput } from "~app/trpc";
+import type { ReceiptItemId } from "~db/ids";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertPeer,
 	insertReceipt,
 	insertReceiptItem,
@@ -22,6 +24,7 @@ import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
+import { procedure as getProcedure } from "./get";
 import { procedure } from "./update";
 import {
 	verifyCurrencyCode,
@@ -154,6 +157,73 @@ describe("receipts.update", () => {
 	});
 
 	describe("functionality", () => {
+		test("switches empty receipts and retains items from the other mode", async ({
+			ctx,
+		}) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id } = await insertReceipt(ctx, userId);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await caller.procedure({ id, update: { type: "mode", mode: "single" } });
+			const single = await assertDatabase(ctx)
+				.selectFrom("receipts")
+				.select("mode")
+				.where("id", "=", id)
+				.executeTakeFirstOrThrow();
+			expect(single.mode).toBe("single");
+			await caller.procedure({ id, update: { type: "mode", mode: "single" } });
+			await caller.procedure({
+				id,
+				update: { type: "mode", mode: "multiple" },
+			});
+			const items = await assertDatabase(ctx)
+				.selectFrom("receiptItems")
+				.select("id")
+				.where("receiptId", "=", id)
+				.execute();
+			expect(items).toHaveLength(1);
+			expect(items[0]?.id).toBe(id);
+			const getCaller = t.createCallerFactory(
+				t.router({ procedure: getProcedure }),
+			)(createAuthContext(ctx, sessionId));
+			const multiple = await getCaller.procedure({ id });
+			expect(multiple.mode).toBe("multiple");
+			expect(multiple.singleItem?.id).toBe(id);
+			expect(multiple.multipleItems).toStrictEqual([]);
+		});
+
+		test("preserves both sets of items when switching modes", async ({
+			ctx,
+		}) => {
+			const { sessionId, userId } = await insertUserWithSession(ctx);
+			const { id } = await insertReceipt(ctx, userId);
+			const regularItem = await insertReceiptItem(ctx, id);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await caller.procedure({ id, update: { type: "mode", mode: "single" } });
+			await assertDatabase(ctx)
+				.updateTable("receiptItems")
+				.set({ price: "10" })
+				.where("id", "=", id as ReceiptItemId)
+				.execute();
+			const getCaller = t.createCallerFactory(
+				t.router({ procedure: getProcedure }),
+			)(createAuthContext(ctx, sessionId));
+			const single = await getCaller.procedure({ id });
+			expect(single.mode).toBe("single");
+			expect(single.items.map((item) => item.id)).toStrictEqual([id]);
+			expect(single.singleItem?.price).toBe(10);
+			expect(single.multipleItems.map((item) => item.id)).toStrictEqual([
+				regularItem.id,
+			]);
+			await caller.procedure({
+				id,
+				update: { type: "mode", mode: "multiple" },
+			});
+			const multiple = await getCaller.procedure({ id });
+			expect(multiple.items.map((item) => item.id)).toStrictEqual([
+				regularItem.id,
+			]);
+			expect(multiple.singleItem?.price).toBe(10);
+		});
 		test("update name", async ({ ctx }) => {
 			await runTest(ctx, () => ({ type: "name", name: faker.lorem.words() }));
 		});

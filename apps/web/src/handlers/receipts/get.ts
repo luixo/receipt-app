@@ -41,6 +41,7 @@ const fetchReceipts = async (
 			"receipts.id",
 			"receipts.createdAt",
 			"receipts.name",
+			"receipts.mode",
 			"receipts.currencyCode",
 			"receipts.ownerUserId",
 			"receipts.issued",
@@ -193,21 +194,36 @@ const mapReceipt = (
 	const { ownerUserId, items, participants, ...receiptRest } = receipt;
 	const payersItem = items.find((item) => item.id === receipt.id);
 	const regularItems = items.filter((item) => item !== payersItem);
-	return {
-		...receiptRest,
-		items: regularItems.map((item) => ({
-			...item,
-			price: Number(item.price),
-			quantity: Number(item.quantity),
-			payers: item.payers.map(({ part, ...consumer }) => ({
-				...consumer,
-				part: Number(part),
-			})),
-			consumers: item.consumers.map(({ part, ...consumer }) => ({
-				...consumer,
-				part: Number(part),
-			})),
+	const mappedItems = regularItems.map((item) => ({
+		...item,
+		price: Number(item.price),
+		quantity: Number(item.quantity),
+		payers: item.payers.map(({ part, ...payer }) => ({
+			...payer,
+			part: Number(part),
 		})),
+		consumers: item.consumers.map(({ part, ...consumer }) => ({
+			...consumer,
+			part: Number(part),
+		})),
+	}));
+	const singleItem = payersItem
+		? {
+				...payersItem,
+				price: Number(payersItem.price),
+				quantity: Number(payersItem.quantity),
+				payers: payersItem.payers.map(({ part, ...payer }) => ({
+					...payer,
+					part: Number(part),
+				})),
+				consumers: payersItem.consumers.map(({ part, ...consumer }) => ({
+					...consumer,
+					part: Number(part),
+				})),
+			}
+		: null;
+	const shared = {
+		...receiptRest,
 		participants,
 		debts: getReceiptDebts(debts, ownerUserId, auth.userId, receipt.selfPeerId),
 		// This can't happen as payers item always exists
@@ -218,6 +234,21 @@ const mapReceipt = (
 				part: Number(payer.part),
 			})) ?? [],
 	};
+	return receipt.mode === "single"
+		? {
+				...shared,
+				mode: "single" as const,
+				singleItem,
+				multipleItems: mappedItems,
+				items: singleItem ? [singleItem] : [],
+			}
+		: {
+				...shared,
+				mode: "multiple" as const,
+				singleItem,
+				multipleItems: mappedItems,
+				items: mappedItems,
+			};
 };
 
 type Receipt = ReturnType<typeof mapReceipt>;

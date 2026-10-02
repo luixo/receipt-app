@@ -30,6 +30,7 @@ import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema } from "~web/handlers/validation";
 
 export const addReceiptSchema = z.strictObject({
+	mode: z.enum(["single", "multiple"]).default("multiple"),
 	name: receiptNameSchema,
 	currencyCode: currencyCodeSchema,
 	participants: z
@@ -436,6 +437,7 @@ export const procedure = authProcedure
 				.values({
 					id: receiptId,
 					name: input.name,
+					mode: input.mode,
 					currencyCode: input.currencyCode,
 					issued: input.issued,
 					ownerUserId: ctx.auth.userId,

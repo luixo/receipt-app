@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { LoadablePeerAvatar } from "~app/components/app/loadable-peer-avatar";
@@ -14,11 +14,14 @@ import {
 	ReceiptItems,
 	ReceiptItemsSkeleton,
 } from "~app/features/receipt-components/receipt-items";
+import { ReceiptModeButtons } from "~app/features/receipt-components/receipt-mode-buttons";
 import {
 	ReceiptParticipants,
 	ReceiptParticipantsPreviewSkeleton,
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { Receipt } from "~app/trpc-types";
 import { getPathHooks } from "~app/utils/navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { BackLink } from "~components/back-link";
@@ -27,6 +30,7 @@ import { Skeleton } from "~components/skeleton";
 import { SkeletonAvatar } from "~components/skeleton-avatar";
 import { SkeletonDateInput } from "~components/skeleton-date-input";
 import { View } from "~components/view";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptAmountInput } from "./receipt-amount-input";
@@ -38,6 +42,34 @@ import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
 
 type HeaderProps = Omit<React.ComponentProps<typeof PageHeader>, "backHref">;
+
+const ReceiptModeInput: React.FC<{ receipt: Receipt }> = ({ receipt }) => {
+	const trpc = useTRPC();
+	const mutation = useMutation(
+		trpc.receipts.update.mutationOptions(
+			useTrpcMutationOptions(receiptsUpdateOptions),
+		),
+	);
+	const isEmpty =
+		receipt.mode === "single"
+			? !receipt.singleItem ||
+				(receipt.singleItem.name === "" &&
+					receipt.singleItem.price === 0 &&
+					receipt.singleItem.quantity === 0)
+			: receipt.multipleItems.length === 0;
+	if (receipt.ownerPeerId !== receipt.selfPeerId || !isEmpty) {
+		return null;
+	}
+	return (
+		<ReceiptModeButtons
+			mode={receipt.mode}
+			isDisabled={mutation.isPending}
+			onChange={(mode) =>
+				mutation.mutate({ id: receipt.id, update: { type: "mode", mode } })
+			}
+		/>
+	);
+};
 
 const Header: React.FC<HeaderProps> = ({ startContent, ...props }) => (
 	<PageHeader
@@ -141,6 +173,7 @@ export const ReceiptScreen = suspendedFallback(
 								<ReceiptParticipants debts={receipt.debts} />
 							</View>
 						</View>
+						<ReceiptModeInput receipt={receipt} />
 						<ReceiptItems />
 					</ActionsHooksContext>
 				</ReceiptContext>

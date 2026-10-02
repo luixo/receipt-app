@@ -59,7 +59,7 @@ const AddReceiptItemController: React.FC = () => {
 };
 
 export const ReceiptItems: React.FC = () => {
-	const { items, emptyReceiptElement } = useReceiptContext();
+	const { items, emptyReceiptElement, mode } = useReceiptContext();
 	const itemsRef = React.useRef<Record<ReceiptItemId, ViewHandle | null>>({});
 	const sortedItems = React.useMemo(
 		() =>
@@ -71,14 +71,14 @@ export const ReceiptItems: React.FC = () => {
 	if (items.length === 0) {
 		return (
 			<>
-				<AddReceiptItemController />
+				{mode === "multiple" ? <AddReceiptItemController /> : null}
 				{emptyReceiptElement}
 			</>
 		);
 	}
 	return (
 		<>
-			<AddReceiptItemController />
+			{mode === "multiple" ? <AddReceiptItemController /> : null}
 			<ReceiptEmptyItems itemsRef={itemsRef} />
 			{sortedItems.map((item) => (
 				<ReceiptItem

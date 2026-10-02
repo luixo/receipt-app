@@ -11,6 +11,7 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
+						"mode": "multiple",
 						"name": "surculus appono itaque",
 						"currencyCode": "USD",
 						"issued": "2020-02-01",

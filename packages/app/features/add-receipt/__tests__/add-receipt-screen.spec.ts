@@ -11,6 +11,25 @@ import { test as localTest } from "./utils";
 
 const test = mergeTests(localTest, currencyInputTest, currenciesPickerTest);
 
+test("switches between single and multiple item modes", async ({
+	page,
+	mockBase,
+}) => {
+	await mockBase();
+	await page.navigate({ to: "/receipts/add" });
+	await expect(
+		page.getByRole("button", { name: "Item", exact: true }),
+	).toBeVisible();
+	await page.getByRole("button", { name: "Single item" }).click();
+	await expect(
+		page.getByRole("button", { name: "Item", exact: true }),
+	).toHaveCount(0);
+	await page.getByRole("button", { name: "Multiple items" }).click();
+	await expect(
+		page.getByRole("button", { name: "Item", exact: true }),
+	).toBeVisible();
+});
+
 test("On load", async ({
 	page,
 	addButton,
@@ -129,6 +148,9 @@ test("'receipts.add' mutation", async ({
 	}
 
 	api.mockFirst("receipts.get", () => ({
+		mode: "multiple",
+		singleItem: null,
+		multipleItems: [],
 		id: receiptId,
 		debts: { direction: "outcoming", debts: [] },
 		name: receiptName,

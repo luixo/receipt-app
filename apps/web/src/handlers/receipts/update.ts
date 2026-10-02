@@ -21,6 +21,10 @@ export const procedure = authProcedure
 			id: receiptIdSchema,
 			update: z.discriminatedUnion("type", [
 				z.strictObject({
+					type: z.literal("mode"),
+					mode: z.enum(["single", "multiple"]),
+				}),
+				z.strictObject({
 					type: z.literal("name"),
 					name: receiptNameSchema,
 				}),
@@ -39,7 +43,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select(["ownerUserId"])
+			.select(["ownerUserId", "mode"])
 			.where("id", "=", input.id)
 			.limit(1)
 			.executeTakeFirst();
@@ -57,6 +61,12 @@ export const procedure = authProcedure
 		}
 		const setObject: ReceiptUpdateObject = {};
 		switch (input.update.type) {
+			case "mode":
+				if (receipt.mode === input.update.mode) {
+					return;
+				}
+				setObject.mode = input.update.mode;
+				break;
 			case "currencyCode":
 				setObject.currencyCode = input.update.currencyCode;
 				break;

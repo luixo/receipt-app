@@ -9,6 +9,14 @@ const applyUpdate =
 	(update: TRPCMutationInput<"receipts.update">["update"]): UpdateFn<Receipt> =>
 	(item) => {
 		switch (update.type) {
+			case "mode":
+				return update.mode === "single"
+					? {
+							...item,
+							mode: "single",
+							items: item.singleItem ? [item.singleItem] : [],
+						}
+					: { ...item, mode: "multiple", items: item.multipleItems };
 			case "name":
 				return { ...item, name: update.name };
 			case "issued":
@@ -25,6 +33,10 @@ const getRevert =
 	(snapshot) =>
 	(receipt) => {
 		switch (update.type) {
+			case "mode":
+				return snapshot.mode === "single"
+					? { ...receipt, mode: "single", items: snapshot.items }
+					: { ...receipt, mode: "multiple", items: snapshot.items };
 			case "name":
 				return { ...receipt, name: snapshot.name };
 			case "issued":

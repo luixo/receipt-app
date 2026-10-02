@@ -7,6 +7,7 @@ import { temporalSchemas } from "~utils/temporal";
 export type { Item, Payer } from "~app/features/receipt-components/state";
 
 export const formSchema = z.object({
+	mode: z.enum(["single", "multiple"]),
 	name: receiptNameSchema,
 	currencyCode: currencyCodeSchema,
 	issued: temporalSchemas.plainDate,

@@ -31,6 +31,7 @@
 		"addItemButton": "<icon/><text> Item</text>"
 	},
 	"receipt": {
+		"mode": { "single": "Single item", "multiple": "Multiple items" },
 		"loading": "Loading receipt...",
 		"form": {
 			"name": {

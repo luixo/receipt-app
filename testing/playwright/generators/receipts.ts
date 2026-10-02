@@ -174,6 +174,9 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptPayers,
 	receiptDebts,
 }) => ({
+	mode: "multiple",
+	singleItem: null,
+	multipleItems: receiptItemsConsumers,
 	id: receiptBase.id,
 	createdAt: Temporal.Now.zonedDateTimeISO(),
 	name: receiptBase.name,

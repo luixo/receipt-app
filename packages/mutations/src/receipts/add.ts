@@ -1,4 +1,4 @@
-import type { PeerId, UserId } from "~db/ids";
+import type { PeerId, ReceiptItemId, UserId } from "~db/ids";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -17,7 +17,70 @@ export const options: UseContextedMutationOptions<
 				},
 				get: (controller) => {
 					const selfPeerId = selfUserId as PeerId;
+					const items =
+						variables.items?.map((item, index) => {
+							const matchedItem = result.items[index];
+							if (!matchedItem) {
+								throw new Error(
+									`Expected to have item index ${index} returned from receipt creation.`,
+								);
+							}
+							return {
+								id: matchedItem.id,
+								createdAt: matchedItem.createdAt,
+								name: item.name,
+								price: item.price,
+								quantity: item.quantity,
+								consumers:
+									item.consumers?.map((consumer) => ({
+										...consumer,
+										createdAt:
+											matchedItem.consumers?.find(
+												(match) => match.peerId === consumer.peerId,
+											)?.createdAt ?? matchedItem.createdAt,
+									})) ?? [],
+								payers:
+									item.payers?.map((payer) => ({
+										...payer,
+										createdAt:
+											matchedItem.payers?.find(
+												(match) => match.peerId === payer.peerId,
+											)?.createdAt ?? matchedItem.createdAt,
+									})) ?? [],
+							};
+						}) ?? [];
+					const singleItem = {
+						id: result.id as ReceiptItemId,
+						createdAt: result.createdAt,
+						name: "",
+						price: 0,
+						quantity: 0,
+						consumers:
+							variables.payers?.map((payer) => ({
+								peerId: payer.peerId,
+								part: payer.part,
+								createdAt:
+									result.payers.find((match) => match.peerId === payer.peerId)
+										?.createdAt ?? result.createdAt,
+							})) ?? [],
+						payers: [],
+					};
+					const modeData =
+						variables.mode === "single"
+							? {
+									mode: "single" as const,
+									singleItem,
+									multipleItems: items,
+									items: [singleItem],
+								}
+							: {
+									mode: "multiple" as const,
+									singleItem,
+									multipleItems: items,
+									items,
+								};
 					controller.add({
+						...modeData,
 						id: result.id,
 						createdAt: result.createdAt,
 						name: variables.name,
@@ -35,55 +98,6 @@ export const options: UseContextedMutationOptions<
 									role: peerId === selfPeerId ? "owner" : role,
 									createdAt: matchedResult.createdAt,
 									peerId,
-								};
-							}) ?? [],
-						items:
-							variables.items?.map((item, index) => {
-								const matchedItem = result.items[index];
-								if (!matchedItem) {
-									throw new Error(
-										`Expected to have item index ${index} returned from receipt creation.`,
-									);
-								}
-								return {
-									id: matchedItem.id,
-									createdAt: matchedItem.createdAt,
-									name: item.name,
-									price: item.price,
-									quantity: item.quantity,
-									consumers:
-										item.consumers?.map((consumer) => {
-											const matchedConsumer = matchedItem.consumers?.find(
-												(lookupConsumer) =>
-													lookupConsumer.peerId === consumer.peerId,
-											);
-											if (!matchedConsumer) {
-												throw new Error(
-													`Expected to have consumer with peer id "${consumer.peerId}" returned from receipt creation.`,
-												);
-											}
-											return {
-												peerId: consumer.peerId,
-												part: consumer.part,
-												createdAt: matchedConsumer.createdAt,
-											};
-										}) ?? [],
-									payers:
-										item.payers?.map((payer) => {
-											const matchedPayer = matchedItem.payers?.find(
-												(lookupPayer) => lookupPayer.peerId === payer.peerId,
-											);
-											if (!matchedPayer) {
-												throw new Error(
-													`Expected to have payer with peer id "${payer.peerId}" returned from receipt creation.`,
-												);
-											}
-											return {
-												peerId: payer.peerId,
-												part: payer.part,
-												createdAt: matchedPayer.createdAt,
-											};
-										}) ?? [],
 								};
 							}) ?? [],
 						payers:
