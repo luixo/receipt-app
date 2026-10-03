@@ -1,0 +1,70 @@
+{
+	"queries": {
+		"debts.get:[[]]": {
+			"state": {
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "pending",
+				"fetchStatus": "idle"
+			},
+			"promise": "<undefined>"
+		},
+		"peers.suggest:[{\"filterIds\":[\"07dd381a-c22f-4e30-a1f6-a48424685a55\"],\"input\":\"\",\"limit\":5,\"options\":{\"receiptId\":\"d8708ee2-cf03-424e-92f3-57c1a0547ec2\",\"type\":\"not-connected-receipt\"}}]": {
+			"state": {
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "pending",
+				"fetchStatus": "idle"
+			},
+			"promise": "<undefined>"
+		},
+		"peers.suggestTop:[{\"filterIds\":[\"07dd381a-c22f-4e30-a1f6-a48424685a55\"],\"limit\":5,\"options\":{\"receiptId\":\"d8708ee2-cf03-424e-92f3-57c1a0547ec2\",\"type\":\"not-connected-receipt\"}}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"d8708ee2-cf03-424e-92f3-57c1a0547ec2\"}]": {
+			"state": {
+				"data": {
+					"participants": {
+						"0": {
+							"peerId": "07dd381a-c22f-4e30-a1f6-a48424685a55",
+							"role": "owner",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptParticipants.add": [
+			{
+				"state": {
+					"data": {
+						"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"receiptId": "d8708ee2-cf03-424e-92f3-57c1a0547ec2",
+						"peerId": "07dd381a-c22f-4e30-a1f6-a48424685a55",
+						"role": "editor"
+					}
+				}
+			}
+		]
+	}
+}
