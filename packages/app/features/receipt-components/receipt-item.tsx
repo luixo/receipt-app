@@ -75,7 +75,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const sortedConsumers = item.consumers.toSorted(SORT_USERS);
 
 	return (
-		<View ref={ref}>
+		<View ref={ref} testID={`receipt-item-${item.id}`}>
 			<Card
 				headerClassName="flex flex-col items-start justify-between gap-2"
 				header={
