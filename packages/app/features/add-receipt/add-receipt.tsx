@@ -167,12 +167,15 @@ export const AddReceipt = () => {
 				name: value.name,
 				currencyCode: value.currencyCode,
 				issued: value.issued,
-				items: itemsState[0].map(({ name, price, quantity, consumers }) => ({
-					name,
-					price,
-					quantity,
-					consumers: consumers.map(({ peerId, part }) => ({ peerId, part })),
-				})),
+				items: itemsState[0].map(
+					({ name, price, quantity, consumers, payers }) => ({
+						name,
+						price,
+						quantity,
+						consumers: consumers.map(({ peerId, part }) => ({ peerId, part })),
+						payers: payers.map(({ peerId, part }) => ({ peerId, part })),
+					}),
+				),
 				participants: participantsState[0].map(({ peerId, role }) => ({
 					peerId,
 					role,
