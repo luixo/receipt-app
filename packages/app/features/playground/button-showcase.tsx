@@ -8,40 +8,29 @@ import { View } from "~components/view";
 import { Group, Section } from "./showcase-section";
 
 const variants = [
-	"flat",
-	"solid",
-	"bordered",
-	"light",
-	"faded",
-	"shadow",
+	"danger",
+	"danger-soft",
 	"ghost",
-] as const;
-const colors = [
-	"default",
+	"outline",
 	"primary",
 	"secondary",
-	"success",
-	"warning",
-	"danger",
+	"tertiary",
 ] as const;
 
 const ButtonExample = () => {
 	const [presses, setPresses] = React.useState(0);
 	return (
 		<Section title="Button">
-			<View className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
-				{colors.flatMap((color) =>
-					variants.map((variant) => (
-						<Button
-							key={`${color}-${variant}`}
-							color={color}
-							variant={variant}
-							onPress={() => setPresses((count) => count + 1)}
-						>
-							{`${color} / ${variant}`}
-						</Button>
-					)),
-				)}
+			<View className="flex flex-row flex-wrap gap-2">
+				{variants.map((variant) => (
+					<Button
+						key={variant}
+						variant={variant}
+						onPress={() => setPresses((count) => count + 1)}
+					>
+						{variant}
+					</Button>
+				))}
 			</View>
 			<View className="flex flex-row flex-wrap gap-2">
 				<Button isDisabled>Disabled</Button>
@@ -53,23 +42,37 @@ const ButtonExample = () => {
 };
 
 const ButtonGroupShowcase = () => (
-	<Section title="ButtonGroup">
-		<Text>Primary / solid</Text>
-		<ButtonGroup color="primary">
+	<Section title="ButtonGroup" className="items-center">
+		<Text>Primary</Text>
+		<ButtonGroup variant="primary">
 			<Button>First</Button>
 			<Button>Second</Button>
 			<Button>Third</Button>
 			<Button>Fourth</Button>
 		</ButtonGroup>
-		<Text>Secondary / bordered</Text>
-		<ButtonGroup variant="bordered" color="secondary">
+		<Text>Outline</Text>
+		<ButtonGroup variant="outline">
 			<Button>First</Button>
 			<Button>Second</Button>
 			<Button>Third</Button>
 			<Button>Fourth</Button>
 		</ButtonGroup>
-		<Text>Danger / flat / disabled</Text>
-		<ButtonGroup variant="flat" color="danger" isDisabled>
+		<Text>Secondary</Text>
+		<ButtonGroup variant="secondary">
+			<Button>First</Button>
+			<Button>Second</Button>
+			<Button>Third</Button>
+			<Button>Fourth</Button>
+		</ButtonGroup>
+		<Text>Ghost</Text>
+		<ButtonGroup variant="ghost">
+			<Button>First</Button>
+			<Button>Second</Button>
+			<Button>Third</Button>
+			<Button>Fourth</Button>
+		</ButtonGroup>
+		<Text>Danger / disabled</Text>
+		<ButtonGroup variant="danger" isDisabled>
 			<Button>First</Button>
 			<Button>Second</Button>
 			<Button>Third</Button>

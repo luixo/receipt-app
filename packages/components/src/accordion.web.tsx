@@ -1,12 +1,9 @@
 import type React from "react";
 
-import {
-	AccordionItem as AccordionItemRaw,
-	Accordion as AccordionRaw,
-} from "@heroui/accordion";
+import { Accordion as AccordionRaw } from "@heroui/react";
 
 export type Props = {
-	children: React.ComponentProps<typeof AccordionRaw>["children"];
+	children?: React.ReactNode;
 };
 
 export const Accordion = (props: Props) => <AccordionRaw {...props} />;
@@ -18,10 +15,16 @@ export type ItemProps = {
 	children: React.ReactNode;
 };
 
-export const AccordionItem = (props: ItemProps) => (
-	<AccordionItemRaw {...props} />
+export const AccordionItem = ({ title, children, textValue }: ItemProps) => (
+	<AccordionRaw.Item id={textValue} aria-label={textValue}>
+		<AccordionRaw.Heading>
+			<AccordionRaw.Trigger className="gap-2">
+				{title}
+				<AccordionRaw.Indicator />
+			</AccordionRaw.Trigger>
+		</AccordionRaw.Heading>
+		<AccordionRaw.Panel>
+			<AccordionRaw.Body>{children}</AccordionRaw.Body>
+		</AccordionRaw.Panel>
+	</AccordionRaw.Item>
 );
-
-// @ts-expect-error see https://github.com/heroui-inc/heroui/issues/729
-// oxlint-disable-next-line typescript/no-unsafe-assignment
-AccordionItem.getCollectionNode = AccordionItemRaw.getCollectionNode;

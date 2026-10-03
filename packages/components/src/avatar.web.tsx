@@ -3,8 +3,7 @@ import React from "react";
 import {
 	AvatarGroup as AvatarGroupRaw,
 	Avatar as AvatarRaw,
-	useAvatarGroupContext,
-} from "@heroui/avatar";
+} from "@heroui/react";
 
 import { BeamAvatar } from "~components/beam-avatar";
 import { cn } from "~components/utils";
@@ -43,7 +42,7 @@ export const useAvatarProps = ({
 	onPress,
 	testID = "user-avatar",
 	...props
-}: Props): React.ComponentProps<typeof AvatarRaw> => {
+}: Props) => {
 	const ref = React.useRef<HTMLSpanElement>(null);
 	const [actualSize, setActualSize] = React.useState(0);
 	React.useEffect(() => {
@@ -63,32 +62,21 @@ export const useAvatarProps = ({
 				dimmed={dimmed}
 			/>
 		),
-		imgProps: image
-			? {
-					alt: image.alt,
-					width: actualSize,
-					height: actualSize,
-				}
-			: undefined,
-		src: image?.url,
-		radius: "full",
-		classNames: {
-			fallback: "size-full",
-			base: cn(
-				// The hover=true is needed to remove default translation of avatars in avatar group
-				"shrink-0 bg-transparent data-[hover=true]:translate-x-0",
-				dimmed ? "grayscale" : undefined,
-				className,
-			),
-		},
+		image,
+		className: cn("shrink-0 bg-transparent", dimmed && "grayscale", className),
 		onClick: onPress,
 		"data-testid": testID,
 	};
 };
 
 export const Avatar: React.FC<Props> = (props) => {
-	const avatarGroupContext = useAvatarGroupContext();
-	return <AvatarRaw {...useAvatarProps({ ...avatarGroupContext, ...props })} />;
+	const { fallback, image, ...root } = useAvatarProps(props);
+	return (
+		<AvatarRaw {...root}>
+			{image ? <AvatarRaw.Image src={image.url} alt={image.alt} /> : null}
+			<AvatarRaw.Fallback className="size-full">{fallback}</AvatarRaw.Fallback>
+		</AvatarRaw>
+	);
 };
 
 export type GroupContext = {

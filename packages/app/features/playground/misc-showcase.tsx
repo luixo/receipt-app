@@ -37,16 +37,28 @@ const AccordionShowcase = () => (
 const BadgeShowcase = () => (
 	<Section title="Badge">
 		<View className="flex flex-row flex-wrap gap-6">
-			{(["warning", "danger"] as const).map((color) => (
-				<Badge
-					key={color}
-					color={color}
-					content={color === "danger" ? 99 : 3}
-					className="flex"
-				>
-					<Avatar hashId={color} />
-				</Badge>
-			))}
+			{(["accent", "default", "success", "warning", "danger"] as const).map(
+				(color, index) => (
+					<Badge
+						key={color}
+						color={color}
+						content={
+							index === 0
+								? ""
+								: index === 1
+									? 3
+									: index === 2
+										? "999+"
+										: index === 3
+											? "foo"
+											: "bar"
+						}
+						className="flex"
+					>
+						<Avatar hashId={color} />
+					</Badge>
+				),
+			)}
 		</View>
 	</Section>
 );

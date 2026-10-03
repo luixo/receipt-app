@@ -1,7 +1,16 @@
 import React from "react";
 
-import { Input as InputRaw, Textarea } from "@heroui/input";
+import {
+	Description,
+	FieldError as FieldErrorRaw,
+	InputGroup,
+	Input as InputRaw,
+	Label,
+	TextArea,
+	TextField,
+} from "@heroui/react";
 
+import { Icon } from "~components/icons";
 import { cn } from "~components/utils";
 import type { ViewReactNode } from "~components/view";
 
@@ -13,31 +22,31 @@ export type InputHandler = {
 	blur: () => void;
 };
 
-export type Props = Pick<
-	React.ComponentProps<typeof InputRaw>,
-	| "value"
-	| "onValueChange"
-	| "className"
-	| "placeholder"
-	| "color"
-	| "isDisabled"
-	| "isReadOnly"
-	| "isRequired"
-	| "defaultValue"
-	| "isClearable"
-	| "name"
-	| "size"
-	| "autoFocus"
-	| "aria-label"
-> & {
+export type Props = {
+	value?: string;
+	variant?: React.ComponentProps<typeof InputRaw>["variant"];
+	onValueChange?: (value: string) => void;
+	className?: string;
+	placeholder?: string;
+	isDisabled?: boolean;
+	isReadOnly?: boolean;
+	isRequired?: boolean;
+	isInvalid?: boolean;
+	defaultValue?: string;
+	isClearable?: boolean;
+	name?: string;
+	autoFocus?: boolean;
+	"aria-label"?: string;
 	autoCapitalize?: "none" | "sentences" | "words" | "characters";
 	onBlur?: () => void;
 	onFocus?: () => void;
 	onPress?: () => void;
+	onClear?: () => void;
 	onKeyPress?: (key: string) => void;
 	errorMessage?: string;
 	ref?: React.RefObject<InputHandler>;
 	label?: string;
+	hideLabel?: boolean;
 	description?: string;
 	startContent?: ViewReactNode;
 	endContent?: ViewReactNode;
@@ -47,13 +56,12 @@ export type Props = Pick<
 	type?: React.ComponentProps<"input">["type"];
 	autoComplete?: "email" | "name" | "new-password" | "username";
 	continuousMutations?: boolean;
-	labelPlacement?: "outside" | "inside" | "outside-left";
-	variant?: "flat" | "bordered";
 	inputClassName?: string;
 	testID?: string;
 };
 
 export const Input: React.FC<Props> = ({
+	variant,
 	fieldError,
 	mutation,
 	multiline,
@@ -63,6 +71,28 @@ export const Input: React.FC<Props> = ({
 	continuousMutations,
 	inputClassName,
 	testID,
+	value,
+	onValueChange,
+	defaultValue,
+	placeholder,
+	name,
+	isRequired,
+	isReadOnly,
+	autoFocus,
+	label,
+	hideLabel,
+	errorMessage,
+	description: descriptionProp,
+	startContent,
+	endContent: endContentProp,
+	className,
+	isClearable,
+	onBlur,
+	onFocus,
+	autoCapitalize,
+	autoComplete,
+	isDisabled: disabledProp,
+	isInvalid,
 	...props
 }) => {
 	const innerRef = React.useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -76,35 +106,77 @@ export const Input: React.FC<Props> = ({
 	);
 	const { endContent, type } = usePasswordVisibility({
 		type: props.type,
-		endContent: props.endContent,
+		endContent: endContentProp,
 	});
-	const { isDisabled, color, description } = useMutationErrors({
-		isDisabled: props.isDisabled,
-		color: props.color,
+	const {
+		isDisabled,
+		className: mutationClassName,
+		description,
+	} = useMutationErrors({
+		isDisabled: disabledProp,
 		mutation,
 		fieldError,
 		continuousMutations,
 	});
-	const Component = (multiline ? Textarea : InputRaw) as typeof InputRaw;
+	const fieldProps = {
+		value,
+		defaultValue,
+		name,
+		isRequired,
+		isReadOnly,
+		isDisabled,
+		isInvalid,
+		className: cn(mutationClassName, className),
+		onChange: onValueChange,
+	};
+	const inputProps: (React.ComponentProps<typeof InputRaw> &
+		React.ComponentProps<typeof TextArea>) & { "data-testid"?: string } = {
+		ref: innerRef as React.Ref<HTMLInputElement> &
+			React.Ref<HTMLTextAreaElement>,
+		variant,
+		placeholder,
+		autoFocus,
+		autoCapitalize,
+		autoComplete,
+		onBlur,
+		onFocus,
+		"aria-label": props["aria-label"],
+		"data-testid": testID,
+		className: inputClassName,
+		onClick: onPress,
+		onKeyDown: (e: React.KeyboardEvent) => onKeyPress?.(e.key),
+		type: type ?? "text",
+	};
+	const hasGroup = Boolean(
+		startContent || endContentProp || isClearable || props.type === "password",
+	);
 	return (
-		<Component
-			ref={innerRef as React.RefObject<HTMLInputElement | null>}
-			{...props}
-			onClick={onPress}
-			onKeyDown={(e) => onKeyPress?.(e.key)}
-			isDisabled={isDisabled}
-			color={color}
-			description={description}
-			classNames={{
-				description: cn(
-					"whitespace-pre",
-					color === "warning" ? "text-warning" : undefined,
-				),
-				input: inputClassName,
-			}}
-			type={type ?? "text"}
-			endContent={endContent}
-			data-testid={testID}
-		/>
+		<TextField {...fieldProps}>
+			{label && !hideLabel ? <Label>{label}</Label> : null}
+			{multiline ? (
+				<TextArea {...inputProps} />
+			) : hasGroup ? (
+				<InputGroup variant={inputProps.variant}>
+					{startContent ? (
+						<InputGroup.Prefix>{startContent}</InputGroup.Prefix>
+					) : null}
+					<InputGroup.Input {...inputProps} />
+					<InputGroup.Suffix className="gap-2">
+						{endContent}
+						{value && isClearable ? (
+							<Icon name="close" onClick={() => onValueChange?.("")} />
+						) : null}
+					</InputGroup.Suffix>
+				</InputGroup>
+			) : (
+				<InputRaw {...inputProps} />
+			)}
+			{descriptionProp || description ? (
+				<Description className="whitespace-pre">
+					{description || descriptionProp}
+				</Description>
+			) : null}
+			{errorMessage ? <FieldErrorRaw>{errorMessage}</FieldErrorRaw> : null}
+		</TextField>
 	);
 };

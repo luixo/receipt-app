@@ -239,7 +239,6 @@ export const AddReceipt = () => {
 				{(canSubmit) => (
 					<Button
 						className="mt-4"
-						color="primary"
 						isDisabled={!canSubmit || addReceiptMutation.isPending}
 						isLoading={addReceiptMutation.isPending}
 						type="submit"

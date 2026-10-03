@@ -156,9 +156,8 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						mutation={updateMutationState}
 						continuousMutations
 						isDisabled={isDisabled}
-						labelPlacement="outside-left"
 						endContent={<Text className="self-center">/ {totalParts}</Text>}
-						variant="bordered"
+						variant="secondary"
 					/>
 				)}
 			</form.AppField>,
@@ -167,7 +166,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 
 	return wrap(
 		<Button
-			variant="light"
+			variant="ghost"
 			onPress={setEditing}
 			isDisabled={isDisabled}
 			isIconOnly

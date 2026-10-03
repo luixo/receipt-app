@@ -1,11 +1,6 @@
 import type React from "react";
 
-import {
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Card as CardRaw,
-} from "@heroui/card";
+import { Card as CardRaw, cardVariants } from "@heroui/react";
 
 import { Divider } from "~components/divider";
 
@@ -20,9 +15,7 @@ export type Props = React.PropsWithChildren<{
 	onPress?: () => void;
 }>;
 
-export const Card: React.FC<
-	Props & { as?: React.ComponentProps<typeof CardRaw>["as"] }
-> = ({
+export const Card: React.FC<Props & { as?: React.ElementType }> = ({
 	className,
 	testID,
 	bodyClassName,
@@ -33,26 +26,40 @@ export const Card: React.FC<
 	children,
 	as,
 	...props
-}) => (
-	<CardRaw
-		data-testid={testID}
-		className={className}
-		as={as}
-		isPressable={Boolean(props.onPress)}
-		{...props}
-	>
-		{header ? (
-			<>
-				<CardHeader className={headerClassName}>{header}</CardHeader>
-				<Divider />
-			</>
-		) : null}
-		<CardBody className={bodyClassName}>{children}</CardBody>
-		{footer ? (
-			<>
-				<Divider />
-				<CardFooter className={footerClassName}>{footer}</CardFooter>
-			</>
-		) : null}
-	</CardRaw>
-);
+}) => {
+	const content = (
+		<>
+			{header ? (
+				<>
+					<CardRaw.Header className={headerClassName}>{header}</CardRaw.Header>
+					<Divider />
+				</>
+			) : null}
+			<CardRaw.Content className={bodyClassName}>{children}</CardRaw.Content>
+			{footer ? (
+				<>
+					<Divider />
+					<CardRaw.Footer className={footerClassName}>{footer}</CardRaw.Footer>
+				</>
+			) : null}
+		</>
+	);
+	if (as) {
+		const Component = as;
+		return (
+			<Component
+				{...props}
+				data-testid={testID}
+				className={cardVariants().base({ className })}
+				onClick={props.onPress}
+			>
+				{content}
+			</Component>
+		);
+	}
+	return (
+		<CardRaw data-testid={testID} className={className} onClick={props.onPress}>
+			{content}
+		</CardRaw>
+	);
+};

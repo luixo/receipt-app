@@ -1,9 +1,10 @@
 import React from "react";
 
-import { NumberInput as NumberInputRaw } from "@heroui/number-input";
+import { Description, Label, NumberField } from "@heroui/react";
 
 import type { InputHandler, Props as InputProps } from "~components/input";
 import { cn, getErrorState, getMutationLoading } from "~components/utils";
+import { View } from "~components/view";
 
 export type Props = {
 	ref?: React.RefObject<InputHandler>;
@@ -15,13 +16,13 @@ export type Props = {
 	minValue?: number;
 	maxValue?: number;
 	isInvalid?: boolean;
-	hideStepper?: boolean;
+	showStepper?: boolean;
 	onKeyPress?: (key: string) => void;
 } & Pick<
 	InputProps,
-	| "labelPlacement"
 	| "onBlur"
 	| "name"
+	| "variant"
 	| "startContent"
 	| "endContent"
 	| "isDisabled"
@@ -29,8 +30,6 @@ export type Props = {
 	| "isRequired"
 	| "className"
 	| "label"
-	| "variant"
-	| "color"
 	| "errorMessage"
 	| "mutation"
 	| "fieldError"
@@ -41,6 +40,7 @@ export type Props = {
 export const NumberInput: React.FC<Props> = ({
 	className,
 	fieldError,
+	variant,
 	mutation,
 	continuousMutations = false,
 	fractionDigits,
@@ -65,23 +65,23 @@ export const NumberInput: React.FC<Props> = ({
 	});
 	const isSSR = typeof window === "undefined";
 	return (
-		<NumberInputRaw
-			ref={innerRef}
-			{...props}
+		<NumberField
+			value={props.value}
+			defaultValue={props.defaultValue}
+			onChange={props.onValueChange}
+			name={props.name}
+			minValue={props.minValue}
+			maxValue={props.maxValue}
+			isRequired={props.isRequired}
+			isReadOnly={props.isReadOnly}
+			aria-label={props["aria-label"]}
 			isDisabled={
 				(continuousMutations ? false : isMutationLoading) || props.isDisabled
 			}
-			color={isWarning ? "warning" : isError ? "danger" : undefined}
-			description={errors.join("\n")}
 			isInvalid={errors.length !== 0 || props.isInvalid}
-			classNames={{
-				base: className,
-				description: cn(
-					"whitespace-pre",
-					isWarning ? "text-warning" : undefined,
-				),
-			}}
+			className={className}
 			step={10 ** -fractionDigits}
+			variant={variant}
 			formatOptions={
 				isSSR
 					? // iPhone make some format options mismatch on hydration
@@ -89,7 +89,36 @@ export const NumberInput: React.FC<Props> = ({
 						{ maximumFractionDigits: 0, ...formatOptions }
 					: { maximumFractionDigits: fractionDigits, ...formatOptions }
 			}
-			onKeyDown={(e) => onKeyPress?.(e.key)}
-		/>
+		>
+			{props.label ? <Label>{props.label}</Label> : null}
+			<NumberField.Group className="flex flex-row">
+				{props.startContent ? (
+					<View className="flex-row items-center px-2 gap-2">
+						{props.startContent}
+					</View>
+				) : null}
+				{props.showStepper ? <NumberField.DecrementButton /> : null}
+				<NumberField.Input
+					ref={innerRef}
+					onBlur={props.onBlur}
+					onKeyDown={(e) => onKeyPress?.(e.key)}
+				/>
+				{props.showStepper ? <NumberField.IncrementButton /> : null}
+				{props.endContent ? (
+					<View className="flex-row items-center px-2 gap-2">{props.endContent}</View>
+				) : null}
+			</NumberField.Group>
+			{errors.length === 0 && !props.errorMessage ? null : (
+				<Description
+					className={cn(
+						"whitespace-pre",
+						isWarning && "text-warning",
+						isError && "text-danger",
+					)}
+				>
+					{errors.join("\n") || props.errorMessage}
+				</Description>
+			)}
+		</NumberField>
 	);
 };

@@ -188,7 +188,6 @@ export const AddDebtScreen = () => {
 						{(canSubmit) => (
 							<Button
 								className="mt-4"
-								color="primary"
 								isDisabled={!canSubmit || addMutation.isPending}
 								isLoading={addMutation.isPending}
 								type="submit"

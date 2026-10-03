@@ -38,11 +38,7 @@ export const ErrorMessage: React.FC<Props> = ({
 			}
 			footerClassName="flex flex-row justify-end"
 			footer={
-				button ? (
-					<Button color="primary" onPress={button.onPress}>
-						{button.text}
-					</Button>
-				) : null
+				button ? <Button onPress={button.onPress}>{button.text}</Button> : null
 			}
 		>
 			<Text className="whitespace-pre-wrap">{message}</Text>

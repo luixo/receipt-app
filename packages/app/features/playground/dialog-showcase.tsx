@@ -73,7 +73,6 @@ const ModalShowcase = () => {
 				header={<Text variant="h3">Modal heading</Text>}
 			>
 				<Text>Modal body</Text>
-				<Button onPress={() => setOpen(false)}>Close</Button>
 			</Modal>
 		</Section>
 	);

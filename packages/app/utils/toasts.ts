@@ -177,9 +177,7 @@ export const getMutationToaster = <
 						description: result.text,
 						timeout: Infinity,
 					});
-					// We always have a toast queue
-					// oxlint-disable-next-line typescript/no-non-null-assertion
-					return { id: toastId!, count: inputs.length };
+					return { id: toastId, count: inputs.length };
 				},
 			),
 			errorDataloader: createDataloader<

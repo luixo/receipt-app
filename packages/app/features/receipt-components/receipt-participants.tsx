@@ -40,7 +40,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
 		<View className="flex flex-col gap-2 xs:flex-row" onPress={switchModal}>
-			<View className="flex flex-row gap-2">
+			<View className="flex flex-row items-center gap-2">
 				<Trans
 					t={t}
 					i18nKey="participants.payedBy"
@@ -62,7 +62,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 				/>
 			</View>
 			{debtParticipants.length === 0 ? null : (
-				<View className="flex flex-row gap-2">
+				<View className="flex flex-row items-center gap-2">
 					<Trans
 						t={t}
 						i18nKey="participants.payedFor"
@@ -83,14 +83,6 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 					/>
 				</View>
 			)}
-			<Button
-				variant="bordered"
-				color="primary"
-				onPress={switchModal}
-				isIconOnly
-			>
-				<Icon name="pencil" className="size-6" />
-			</Button>
 		</View>
 	);
 };
@@ -131,9 +123,6 @@ export const ReceiptParticipantsPreviewSkeleton: React.FC = () => {
 					}}
 				/>
 			</View>
-			<Button variant="bordered" color="primary" isIconOnly isDisabled>
-				<Icon name="pencil" className="size-6" />
-			</Button>
 		</View>
 	);
 };
@@ -173,7 +162,7 @@ export const ReceiptParticipants: React.FC<{
 				label={t("participants.picker.label")}
 				isOpen={isModalOpen}
 				onOpenChange={switchModalOpen}
-				className="mb-24 max-w-xl sm:mb-32"
+				className="max-w-xl"
 				testID="participants-picker"
 				header={
 					<View className="flex-row gap-2">
@@ -213,6 +202,7 @@ export const ReceiptParticipants: React.FC<{
 						isDisabled={receiptDisabled}
 						options={suggestOptions}
 						label={t("participants.picker.addLabel")}
+						variant="secondary"
 					/>
 				) : participants.length === 0 ? (
 					<EmptyCard title={t("participants.empty")} />

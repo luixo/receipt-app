@@ -32,7 +32,7 @@ export const ColorModeSettings: React.FC = () => {
 			<Button
 				testID="color-mode-button"
 				isIconOnly
-				variant="bordered"
+				variant="outline"
 				onPress={switchColorMode}
 			>
 				<Icon

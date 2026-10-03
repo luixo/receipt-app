@@ -7,7 +7,7 @@ import { cn } from "~components/utils";
 export const SkeletonInput: React.FC<
 	Pick<
 		React.ComponentProps<typeof Input>,
-		"multiline" | "startContent" | "label" | "endContent" | "className" | "size"
+		"multiline" | "startContent" | "label" | "endContent" | "className"
 	> & {
 		skeletonClassName?: string;
 	}

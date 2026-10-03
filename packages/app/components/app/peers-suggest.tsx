@@ -269,8 +269,8 @@ export const PeersSuggest: React.FC<Props> = ({
 							avatarProps={{
 								size: "sm",
 								fallback: (
-									<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
-										<Text className="text-default-500 flex text-2xl">+</Text>
+									<View className="bg-surface-tertiary border-default flex size-full items-center justify-center rounded-full border-2">
+										<Text className="text-muted flex text-2xl">+</Text>
 									</View>
 								),
 							}}
@@ -306,11 +306,11 @@ export const PeersSuggest: React.FC<Props> = ({
 					}}
 					selectedKey={selectedPeerIds[0] ?? null}
 					onSelectionChange={onSelectionChange}
-					onClear={() => setValue("")}
+					isClearable
 					endContent={
 						<Button
 							isIconOnly
-							variant="light"
+							variant="outline"
 							radius="full"
 							size="sm"
 							className={value ? undefined : "hidden"}

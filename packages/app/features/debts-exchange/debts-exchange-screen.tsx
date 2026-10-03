@@ -19,7 +19,6 @@ export const DebtsExchangeScreen = () => {
 			/>
 			<PeerDebtsGroup peerId={peerId} />
 			<ButtonLink
-				color="primary"
 				to="/debts/peer/$id/exchange/all"
 				params={{ id: peerId }}
 				title={t("exchange.buttons.exchangeAll")}
@@ -27,7 +26,6 @@ export const DebtsExchangeScreen = () => {
 				{t("exchange.buttons.exchangeAll")}
 			</ButtonLink>
 			<ButtonLink
-				color="primary"
 				to="/debts/peer/$id/exchange/specific"
 				params={{ id: peerId }}
 				isDisabled

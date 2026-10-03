@@ -23,7 +23,7 @@ export const User: React.FC<Props> = ({
 		<View>
 			{typeof name === "string" ? <Text>{name}</Text> : name}
 			{typeof description === "string" ? (
-				<Text className="text-small text-foreground-400">{description}</Text>
+				<Text className="text-muted text-sm">{description}</Text>
 			) : (
 				description
 			)}

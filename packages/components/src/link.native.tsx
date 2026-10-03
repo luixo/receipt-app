@@ -1,7 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 
-import type { RightJoinProps } from "@heroui/react";
 import { keys, omit, pick } from "remeda";
 
 import { NavigationContext } from "~app/contexts/navigation-context";
@@ -12,6 +11,8 @@ import { Text } from "~components/text";
 import { cn } from "~components/utils";
 
 import type { Props } from "./link";
+
+type RightJoinProps<L, R> = Omit<L, keyof R> & R;
 
 type LinkProps = LinkOptions<RouteTo>;
 const allLinkProps: Record<keyof LinkProps, true> = {
@@ -56,7 +57,6 @@ export const Link: React.FC<Props> = ({
 	replace,
 	hash,
 	className,
-	color = "primary",
 }) => {
 	const { useNavigate } = React.use(NavigationContext);
 	const navigate = useNavigate();
@@ -74,15 +74,7 @@ export const Link: React.FC<Props> = ({
 			}}
 		>
 			{typeof children === "string" ? (
-				<Text
-					className={cn(
-						"active:opacity-hover",
-						color === "primary" ? "text-primary" : "text-foreground",
-						className,
-					)}
-				>
-					{children}
-				</Text>
+				<Text className={cn("active:opacity-80", className)}>{children}</Text>
 			) : (
 				children
 			)}

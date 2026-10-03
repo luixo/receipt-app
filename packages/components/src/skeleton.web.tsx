@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Skeleton as SkeletonRaw } from "@heroui/skeleton";
+import { Skeleton as SkeletonRaw } from "@heroui/react";
 
 export type Props = {
 	className?: string;

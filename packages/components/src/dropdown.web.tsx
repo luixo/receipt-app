@@ -1,11 +1,6 @@
 import type React from "react";
 
-import {
-	DropdownItem,
-	DropdownMenu,
-	Dropdown as DropdownRaw,
-	DropdownTrigger,
-} from "@heroui/dropdown";
+import { Dropdown as DropdownRaw } from "@heroui/react";
 
 type ItemProps = React.PropsWithChildren<{
 	key: string;
@@ -18,10 +13,20 @@ export type Props = React.PropsWithChildren<{
 }>;
 
 export const Dropdown: React.FC<Props> = ({ children, items, testID }) => (
-	<DropdownRaw data-testid={testID}>
-		<DropdownTrigger>{children}</DropdownTrigger>
-		<DropdownMenu items={items}>
-			{({ key, ...itemProps }) => <DropdownItem key={key} {...itemProps} />}
-		</DropdownMenu>
+	<DropdownRaw>
+		<DropdownRaw.Trigger data-testid={testID}>{children}</DropdownRaw.Trigger>
+		<DropdownRaw.Popover>
+			<DropdownRaw.Menu items={items}>
+				{({ key, ...itemProps }) => (
+					<DropdownRaw.Item
+						id={key}
+						textValue={
+							typeof itemProps.children === "string" ? itemProps.children : key
+						}
+						{...itemProps}
+					/>
+				)}
+			</DropdownRaw.Menu>
+		</DropdownRaw.Popover>
 	</DropdownRaw>
 );

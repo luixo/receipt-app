@@ -51,7 +51,6 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 
 	return (
 		<Button
-			color="primary"
 			onPress={() => void acceptAllIntentions()}
 			{...props}
 		>

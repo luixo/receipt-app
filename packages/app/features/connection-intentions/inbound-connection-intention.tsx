@@ -26,11 +26,10 @@ export const SkeletonInboundConnectionIntention = () => {
 			<View className="flex flex-row justify-between">
 				<SkeletonInput
 					className="max-w-xs"
-					size="sm"
 					label={t("intentions.form.email.label")}
 					skeletonClassName="w-48"
 				/>
-				<Button color="warning" variant="bordered" isDisabled>
+				<Button variant="outline" className="bg-warning" isDisabled>
 					{t("intentions.form.rejectButton")}
 				</Button>
 			</View>
@@ -101,14 +100,13 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				<Input
 					isReadOnly
 					className="max-w-xs"
-					size="sm"
 					defaultValue={intention.user.email}
 					label={t("intentions.form.email.label")}
 					type="email"
 				/>
 				<Button
-					color="warning"
-					variant="bordered"
+					variant="outline"
+					className="bg-warning"
 					isDisabled={isLoading}
 					onPress={rejectConnection}
 				>

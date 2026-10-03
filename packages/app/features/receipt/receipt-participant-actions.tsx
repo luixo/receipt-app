@@ -57,7 +57,6 @@ const ReceiptParticipantNoDebtAction: React.FC<
 			isLoading={addMutation.isPending}
 			isDisabled={addMutation.isPending}
 			isIconOnly
-			color="primary"
 			onPress={addDebt}
 		>
 			<Icon name="send" className="size-6" />
@@ -135,7 +134,6 @@ const ReceiptParticipantDebtActions = suspendedFallback<
 						isLoading={updateMutation.isPending}
 						isDisabled={updateMutation.isPending}
 						isIconOnly
-						color="primary"
 						onPress={() => updateDebt(participantDebt)}
 					>
 						<Icon name="sync" className="size-6" />

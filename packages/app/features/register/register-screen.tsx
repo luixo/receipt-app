@@ -133,9 +133,9 @@ export const RegisterScreen = () => {
 						{(canSubmit) => (
 							<Button
 								className="mt-4"
-								color="primary"
 								isDisabled={!canSubmit || registerMutation.isPending}
 								isLoading={registerMutation.isPending}
+								fullWidth
 								type="submit"
 							>
 								{t("form.submit")}

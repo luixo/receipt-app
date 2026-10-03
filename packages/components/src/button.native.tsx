@@ -1,8 +1,5 @@
 import React from "react";
 
-// We currently reuse the styles from button / buttonGroup of the web components
-// oxlint-disable-next-line eslint-js/no-restricted-syntax
-import { button, buttonGroup } from "@heroui/react";
 import { Button as ButtonRaw } from "heroui-native/button";
 
 import { Text } from "~components/text";
@@ -15,35 +12,34 @@ import { FormContext, formHandlersById } from "./form.native";
 
 const ButtonGroupProvider = React.createContext<Pick<
 	ButtonProps,
-	| "size"
-	| "color"
-	| "variant"
-	| "radius"
-	| "isDisabled"
-	| "isIconOnly"
-	| "fullWidth"
+	"size" | "variant" | "radius" | "isDisabled" | "isIconOnly" | "fullWidth"
 > | null>(null);
-
-const baseButtonClasses = button.base;
-
-// This is needed for tailwind to find `rounded-s-medimm` -> `rounded-l-medium` change
-// rounded-s and rounded-e are not supported on native yet
-// oxlint-disable-next-line typescript/no-unused-vars
-const classesNeeded = [
-	"rounded-l-none",
-	"rounded-r-none",
-	"rounded-l-small",
-	"rounded-r-small",
-	"rounded-l-medium",
-	"rounded-r-medium",
-	"rounded-l-large",
-	"rounded-r-large",
-];
 
 const ButtonGroupIndexContent = React.createContext<{
 	index: number;
 	total: number;
 }>({ index: 0, total: 0 });
+
+const getButtonClassName = (
+	props: ButtonProps,
+	group: Partial<ButtonProps>,
+	child: { index: number; total: number },
+) => {
+	const radius = props.radius ?? group.radius;
+	return cn(
+		(props.fullWidth ?? group.fullWidth) && "w-full",
+		{
+			"rounded-none": radius === "none",
+			"rounded-sm": radius === "sm",
+			"rounded-md": radius === "md",
+			"rounded-lg": radius === "lg",
+			"rounded-full": radius === "full",
+		},
+		child.total > 0 && child.index > 0 && "rounded-l-none",
+		child.total > 0 && child.index < child.total - 1 && "rounded-r-none",
+		props.className,
+	);
+};
 
 export const Button: React.FC<ButtonProps> = (props) => {
 	const {
@@ -52,7 +48,6 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		type,
 		form,
 		size,
-		color,
 		variant,
 		radius,
 		fullWidth,
@@ -85,45 +80,15 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		return <Component {...props} />;
 	}
 	const isDisabled = isDisabledRaw ?? sureGroupContext.isDisabled;
-	const className = button({
-		variant: variant ?? sureGroupContext.variant,
-		color: color ?? sureGroupContext.color,
-		fullWidth: fullWidth ?? sureGroupContext.fullWidth,
-		radius: radius ?? sureGroupContext.radius ?? "md",
-		isInGroup: Boolean(groupContext),
-		isDisabled,
-		className: rawClassName,
-		// We forcefully want to ignore size properties of a web heroui button
-		size: "undefined" as unknown as undefined,
-		isIconOnly: !children,
-	})
-		.split(" ")
-		.filter((element) => !baseButtonClasses.includes(element))
-		.filter((element) => {
-			if (childContext.total === 0) {
-				return true;
-			}
-			if (childContext.index === 0) {
-				return !element.includes("last:");
-			}
-			if (childContext.index === childContext.total - 1) {
-				return !element.includes("first:");
-			}
-			return !element.includes("last:") && !element.includes("first:");
-		})
-		.map((element) =>
-			element
-				.replace("border-medium", "border-2")
-				.replace("data-[hover=true]", "active")
-				.replace("first:", "")
-				.replace("last:", "")
-				.replace("rounded-s", "rounded-l")
-				.replace("rounded-e", "rounded-r"),
-		)
-		.join(" ");
+	const className = getButtonClassName(
+		{ variant, radius, fullWidth, className: rawClassName },
+		sureGroupContext,
+		childContext,
+	);
 	return (
 		<ButtonRaw
 			size={size ?? sureGroupContext.size}
+			variant={variant ?? sureGroupContext.variant}
 			isDisabled={isDisabled}
 			isIconOnly={isIconOnly ?? sureGroupContext.isIconOnly}
 			onPress={isDisabled ? undefined : onPress}
@@ -131,7 +96,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 			className={className}
 			{...viewProps}
 		>
-			<TextWrapper className={className}>
+			<TextWrapper>
 				{startContent}
 				{isLoading ? spinner : null}
 				{isIconOnly && (isLoading || !children) ? null : typeof children ===
@@ -155,7 +120,6 @@ export const Button: React.FC<ButtonProps> = (props) => {
 
 export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 	size,
-	color,
 	variant,
 	radius,
 	isDisabled,
@@ -169,22 +133,16 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 	const buttonGroupContext = React.useMemo(
 		() => ({
 			size,
-			color,
 			variant,
 			radius,
 			isDisabled,
 			isIconOnly,
 			fullWidth,
 		}),
-		[size, color, variant, radius, isDisabled, isIconOnly, fullWidth],
+		[size, variant, radius, isDisabled, isIconOnly, fullWidth],
 	);
 	return (
-		<View
-			className={buttonGroup({
-				fullWidth,
-				className: cn("flex-row", className),
-			})}
-		>
+		<View className={cn("flex-row", fullWidth && "w-full", className)}>
 			<ButtonGroupProvider value={buttonGroupContext}>
 				{/* oxlint-disable-next-line react/no-react-children */}
 				{React.Children.map(children, (child, index) => (

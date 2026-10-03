@@ -137,7 +137,6 @@ const PeerPublicNameInput = suspendedFallback<PublicNameProps>(
 		if (!showInput) {
 			return (
 				<Button
-					color="primary"
 					isDisabled={updatePeerMutation.isPending || isLoading}
 					onPress={setInput}
 				>
@@ -179,13 +178,12 @@ const PeerPublicNameInput = suspendedFallback<PublicNameProps>(
 								{peer.publicName === undefined ? null : (
 									<Button
 										title={t("peer.publicName.remove.title")}
-										variant="light"
+										variant="danger-soft"
 										isLoading={updatePeerMutation.isPending}
 										onPress={() => {
 											field.setValue(null);
 											void field.form.handleSubmit();
 										}}
-										color="danger"
 										isIconOnly
 									>
 										<Icon name="trash" className="size-6" />

@@ -1,12 +1,12 @@
 import type React from "react";
 
-import { Badge as BadgeRaw } from "@heroui/badge";
+import { Badge as BadgeRaw } from "@heroui/react";
 
 import type { MaybeText } from "~components/text.web";
 import type { ViewReactNode } from "~components/view.web";
 
 export type Props = {
-	color: "warning" | "danger";
+	color: "accent" | "default" | "success" | "warning" | "danger";
 	content?: MaybeText;
 	children: ViewReactNode;
 	isInvisible?: boolean;
@@ -15,16 +15,21 @@ export type Props = {
 };
 
 export const Badge: React.FC<Props> = ({
-	content = "",
+	content,
+	isInvisible,
+	children,
 	testID = "badge",
 	...props
 }) => (
-	<BadgeRaw
-		placement="top-right"
-		size="lg"
-		content={content}
-		isDot={!content}
-		data-testid={testID}
-		{...props}
-	/>
+	<BadgeRaw.Anchor>
+		{children}
+		<BadgeRaw
+			size="sm"
+			className={isInvisible ? "hidden" : undefined}
+			data-testid={testID}
+			{...props}
+		>
+			<BadgeRaw.Label>{content}</BadgeRaw.Label>
+		</BadgeRaw>
+	</BadgeRaw.Anchor>
 );

@@ -45,10 +45,10 @@ const BecomeModal: React.FC<ModalProps> = ({
 			header={<Text variant="h3">{t("pretend.modal.title", { email })}</Text>}
 			bodyClassName="flex-row gap-4 p-4"
 		>
-			<Button color="warning" onPress={becomeUser} className="flex-1">
+			<Button variant="danger-soft" onPress={becomeUser} className="flex-1">
 				{t("pretend.modal.yes")}
 			</Button>
-			<Button color="default" onPress={closeModal} className="flex-1">
+			<Button variant="outline" onPress={closeModal} className="flex-1">
 				{t("pretend.modal.no")}
 			</Button>
 		</Modal>
@@ -127,7 +127,7 @@ const AdminScreenInner = suspendedFallback(
 				{pretendUserUser ? (
 					<>
 						<AdminUserCard {...pretendUserUser} />
-						<Button onPress={resetPretendUser} color="primary">
+						<Button onPress={resetPretendUser}>
 							{t("pretend.resetToSelfButton")}
 						</Button>
 					</>
@@ -141,7 +141,7 @@ const AdminScreenInner = suspendedFallback(
 						<AdminUserCard key={element.user.id} {...element}>
 							<Button
 								onPress={setModalEmailCurried(element.user.email)}
-								color="warning"
+								variant="danger-soft"
 							>
 								{t("pretend.becomeButton")}
 							</Button>

@@ -15,7 +15,7 @@ export const RefreshSettings: React.FC = () => {
 		[queryClient],
 	);
 	return (
-		<Button color="primary" onPress={refetch}>
+		<Button onPress={refetch}>
 			<Icon name="refresh" />
 			<Text>{t("refresh.header")}</Text>
 		</Button>

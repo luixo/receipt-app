@@ -1,9 +1,8 @@
 import type React from "react";
 
-import { User as UserRaw } from "@heroui/user";
-
+import { Avatar } from "~components/avatar";
 import type { Props as AvatarProps } from "~components/avatar";
-import { useAvatarProps } from "~components/avatar.web";
+import { cn } from "~components/utils";
 
 export type Props = {
 	avatarProps?: AvatarProps;
@@ -19,14 +18,25 @@ export const User: React.FC<Props> = ({
 	testID,
 	onPress,
 	...props
-}) => {
-	const avatarProps = useAvatarProps(avatarPropsRaw);
-	return (
-		<UserRaw
-			avatarProps={avatarProps}
-			data-testid={testID}
-			onClick={onPress}
-			{...props}
-		/>
-	);
-};
+}) => (
+	<div
+		data-testid={testID}
+		className={cn("relative flex items-center gap-2", props.className)}
+	>
+		<Avatar {...avatarPropsRaw} />
+		<div>
+			<div>{props.name}</div>
+			{props.description ? (
+				<div className="text-muted">{props.description}</div>
+			) : null}
+		</div>
+		{onPress ? (
+			<button
+				type="button"
+				className="absolute inset-0"
+				onClick={onPress}
+				aria-label={typeof props.name === "string" ? props.name : "Open user"}
+			/>
+		) : null}
+	</div>
+);

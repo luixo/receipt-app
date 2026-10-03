@@ -88,7 +88,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								/>
 								{notAddedParticipantsIds.length > 1 ? (
 									<Button
-										variant="faded"
+										variant="secondary"
 										size="sm"
 										onPress={onAddEveryItemParticipant}
 									>
@@ -125,7 +125,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 										},
 									]}
 								>
-									<Button variant="light" isIconOnly>
+									<Button variant="outline" isIconOnly>
 										<Icon name="ellipsis" className="size-4" />
 									</Button>
 								</Dropdown>
@@ -135,13 +135,13 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 							<ReceiptItemPriceInput
 								item={item}
 								isDisabled={isRemovalPending}
-								className="w-full shrink-0 sm:w-36"
+								className="shrink-0 sm:w-36"
 							/>
 							<Text>{t("item.crossMark")}</Text>
 							<ReceiptItemQuantityInput
 								item={item}
 								isDisabled={isRemovalPending}
-								className="w-full shrink-0 sm:w-36"
+								className="shrink-0 sm:w-36"
 							/>
 							<Text>
 								{t("item.amount", {
@@ -159,9 +159,9 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 			>
 				{canEdit ? (
 					<View className="flex w-full flex-1 flex-col items-center justify-stretch self-end sm:flex-row sm:justify-between sm:gap-4">
-						<ReceiptItemPayers item={item} className="sm:max-w-[40%]" />
+						<ReceiptItemPayers item={item} className="sm:w-[40%]" />
 						<Icon name="arrow-right" className="size-9 rotate-90 sm:rotate-0" />
-						<ReceiptItemConsumers item={item} className="sm:max-w-[40%]" />
+						<ReceiptItemConsumers item={item} className="sm:w-[40%]" />
 					</View>
 				) : null}
 				{sortedConsumers.length <= 1 ? null : (

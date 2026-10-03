@@ -39,11 +39,7 @@ export const CurrenciesGroup = suspendedFallback<Props>(
 			);
 		const locale = useLocale();
 		return (
-			<ButtonGroup
-				color="primary"
-				className="flex-wrap"
-				testID="currencies-group"
-			>
+			<ButtonGroup className="flex-wrap" testID="currencies-group">
 				{nonResolvedDebts.map((debt) => (
 					<Button
 						key={debt.currencyCode}
@@ -68,11 +64,7 @@ export const CurrenciesGroup = suspendedFallback<Props>(
 			</ButtonGroup>
 		);
 	},
-	<ButtonGroup
-		color="primary"
-		className="flex-wrap"
-		testID="currencies-group-skeleton"
-	>
+	<ButtonGroup className="flex-wrap" testID="currencies-group-skeleton">
 		{Array.from({ length: 3 }).map((_, index) => (
 			// oxlint-disable-next-line react/no-array-index-key
 			<Button key={index} variant="ghost">

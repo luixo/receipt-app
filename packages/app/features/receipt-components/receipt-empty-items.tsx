@@ -42,10 +42,11 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 			{emptyItems.map((item) => (
 				<Checkbox
 					key={item.id}
-					color="warning"
+					variant="secondary"
+					className="bg-warning text-warning-foreground"
 					isSelected
 					onValueChange={() => onEmptyItemClick(item.id)}
-					icon={<Icon name="arrow-down" className="text-foreground size-4" />}
+					icon={<Icon name="arrow-down" className="size-4" />}
 				>
 					{t("item.noParticipantsItemsSection.itemLabel", {
 						name: item.name,

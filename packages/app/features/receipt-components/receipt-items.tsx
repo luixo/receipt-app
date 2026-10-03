@@ -17,7 +17,7 @@ import { ReceiptItem, ReceiptItemSkeleton } from "./receipt-item";
 export const SkeletonAddReceiptItemController = () => {
 	const { t } = useTranslation("receipts");
 	return (
-		<Button color="primary" variant="bordered" className="w-full" isDisabled>
+		<Button variant="primary" className="w-full" isDisabled>
 			<Trans
 				t={t}
 				i18nKey="add.addItemButton"
@@ -40,8 +40,7 @@ const AddReceiptItemController: React.FC = () => {
 	}
 	return (
 		<Button
-			color="primary"
-			variant="bordered"
+			variant="primary"
 			onPress={openForm}
 			className="w-full"
 			isDisabled={receiptDisabled}
