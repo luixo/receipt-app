@@ -137,15 +137,19 @@ test("Failed removal restores the participant after optimistic cleanup", async (
 });
 
 test("A nonzero-balance participant requires confirmation; cancel preserves the row", async ({
+	api,
 	mockReceipt,
 	openReceipt,
 	openParticipantsPicker,
 	participantRow,
 	page,
+	awaitCacheKey,
+	snapshotQueries,
 }) => {
 	const { receipt, peers } = await mockReceipt();
 	const [peer] = peers;
 	assert.ok(peer);
+	api.mockFirst("receiptParticipants.remove", undefined);
 	await openReceipt(receipt);
 	await openParticipantsPicker();
 	const row = participantRow(peer.name);
@@ -155,6 +159,19 @@ test("A nonzero-balance participant requires confirmation; cancel preserves the 
 	).toBeVisible();
 	await page.keyboard.press("Escape");
 	await expect(row).toBeVisible();
+	const { nextQueryCache } = await snapshotQueries(async () => {
+		await row.getByTestId("remove-button").click();
+		await page
+			.getByRole("dialog", { name: /Are you sure/ })
+			.getByRole("button", { name: "Yes" })
+			.click();
+		await awaitCacheKey("receiptParticipants.remove", 1);
+	});
+	expect(
+		getMutationsByKey(nextQueryCache, "receiptParticipants.remove")[0]?.state
+			.variables,
+	).toEqual({ receiptId: receipt.id, peerId: peer.id });
+	await expect(row).not.toBeAttached();
 });
 
 test("Missing outgoing debt warns the owner without requesting a nonexistent debt", async ({
