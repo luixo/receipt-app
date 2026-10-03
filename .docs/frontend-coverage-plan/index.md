@@ -1,0 +1,17 @@
+# Frontend coverage handoff
+
+Source: [Actions run 37077211080](https://github.com/luixo/receipt-app/actions/runs/37077211080), `frontend-coverage-report` artifact `sha256:4da2d465fde1d433f9643c92dee2486a695aa39873c7f82547b0f1ecad837b2c`, produced at `5cbbde8`. The planning checkout was `8ea60f7`; remeasure after implementing tests. Raw coverage is **4,544/6,333 statements (71.75%)**, **1,272/2,172 branches (58.56%)**. Those totals include code that does not belong to a frontend metric; [scope.md](scope.md) separates legitimate exclusions from real gaps. The objective is near-complete _reachable frontend behavior_, not artificially 100% raw coverage.
+
+Implementation slices, ordered by impact and with nonoverlapping screenshot ownership:
+
+1. [Receipt detail screen and owner/guest shell](receipt-screen.md): metadata, navigation, edit/delete, loading and error; mask the separately tested participant and item regions.
+2. [Receipt participants](participants.md): preview/picker, participant accordion, role selection, payer parts, and per-peer debt actions. Give each component its own logic and visual specs.
+3. [Receipt item collection](item-collection.md): empty/list/sort states, empty-consumer navigation and add-item form; mask item cards in collection screenshots.
+4. [Receipt item controls](item-controls.md): card composition and individual name, price, quantity, payer, consumer and part controls. Snapshot children independently; mask them in the card snapshot.
+5. [Add-receipt draft builder](add-receipt.md): shared controls in local-draft mode and the complete creation payload. Its screen screenshots own composition, not repeated child visuals.
+6. [Other pages and states](other-pages.md): debt transfer, receipt list, debt intentions, admin, connection intentions, account name and route-only gaps. Extend existing suites before creating duplicate tests.
+7. [Coverage scope and shared logic](scope.md): exclude non-frontend denominators, then test receipt cache and financial arithmetic separately rather than hiding them.
+
+Handoff rules: use co-located `*.spec.ts` and `*.visual.spec.ts`, import fixture-based `test`/`expect`, and give separately implemented children their own clipped light/dark screenshot and interaction specs. Parent snapshots mask child-owned internals using named locators in feature fixture files; leave the parent's layout, controls and spacing visible. Test success, pending, error/rollback, permissions and meaningful empty/loading states where reachable. Assert mutation inputs and cache changes, not just clicks. Mock destination-page queries before navigation, throw `TRPCError` for intentional errors, consume expected toasts, and do not pause SSR-prefetched queries. Read `.docs/fe-test.md` and `.docs/frontend.md`; prebuild with `bun run web:build --mode test` before running targeted `bun run frontend:test`. The scenarios below are behavioral descriptions for implementers, not code recipes.
+
+Planning-only findings requiring a product decision rather than invented passing tests: add-receipt currently discards item-specific `payers` from its final creation payload; draft participant removal does not cascade to that participant's consumers/payers; `ReceiptItem`'s “Consumed by everyone” is not guarded by `canEdit`; a guest participant's receipt-level payer-part control has no owner guard. Record/resolve these separately before writing tests that require different behavior.
