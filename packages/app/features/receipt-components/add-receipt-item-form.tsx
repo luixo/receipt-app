@@ -39,6 +39,11 @@ export const AddReceiptItemForm: React.FC = () => {
 	);
 	const isPending = addItemMutationState?.status === "pending";
 	const nameFieldRef = React.useRef<InputHandler>(emptyInputHandler);
+	React.useEffect(() => {
+		if (addItemMutationState?.status === "success") {
+			nameFieldRef.current.focus();
+		}
+	}, [addItemMutationState?.status]);
 
 	const defaultValues: Partial<Form> = {
 		name: "",
@@ -58,7 +63,6 @@ export const AddReceiptItemForm: React.FC = () => {
 						{ ...(defaultValues as Form), price: 0 },
 						{ keepDefaultValues: true },
 					);
-					nameFieldRef.current.focus();
 				},
 			});
 		},

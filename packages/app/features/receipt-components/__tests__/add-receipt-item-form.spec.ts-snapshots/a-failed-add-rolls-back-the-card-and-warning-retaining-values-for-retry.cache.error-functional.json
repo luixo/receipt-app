@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"f3e25fc5-61da-4240-bce0-1468c2dac4cf\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": "<undefined>"
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.add": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Item creation failed"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

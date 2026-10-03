@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"ab8574ff-3598-42ce-8f98-5804d41ec11d\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"id": "server-item-id",
+							"createdAt": "2019-12-30T00:00:00+00:00[UTC]"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.add": {
+			"0": {
+				"state": {
+					"data": {
+						"id": "server-item-id",
+						"createdAt": "2019-12-30T00:00:00+00:00[UTC]"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}
