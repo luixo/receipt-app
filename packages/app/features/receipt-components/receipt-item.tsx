@@ -86,7 +86,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 									item={item}
 									isDisabled={isRemovalPending}
 								/>
-								{notAddedParticipantsIds.length > 1 ? (
+								{canEdit && notAddedParticipantsIds.length > 1 ? (
 									<Button
 										variant="faded"
 										size="sm"

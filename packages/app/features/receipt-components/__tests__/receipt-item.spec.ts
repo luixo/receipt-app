@@ -62,25 +62,12 @@ test("guest editor keeps inline controls and the two selectors", async ({
 	await expect(itemConsumers(card)).toBeVisible();
 });
 
-test("everyone is currently available to a viewer", async ({
-	api,
-	setupItem,
-	awaitCacheKey,
-}) => {
-	const calls: unknown[] = [];
-	api.mockFirst("receiptItemConsumers.add", ({ input }) => {
-		calls.push(input);
-		return { createdAt: Temporal.Now.zonedDateTimeISO() };
-	});
-	const { card, item, peerIds } = await setupItem({
-		role: "viewer",
-		consumers: 1,
-	});
-	await card.getByRole("button", { name: "Consumed by everyone" }).click();
-	await awaitCacheKey("receiptItemConsumers.add", 2);
-	expect(calls).toEqual(
-		peerIds.slice(1).map((peerId) => ({ itemId: item.id, peerId, part: 1 })),
-	);
+test("everyone action is hidden from a viewer", async ({ setupItem }) => {
+	const { card } = await setupItem({ role: "viewer", consumers: 1 });
+	await expect(card.getByText("Coffee beans")).toBeVisible();
+	await expect(
+		card.getByRole("button", { name: "Consumed by everyone" }),
+	).toHaveCount(0);
 });
 
 test("remove item without consumers from the item menu", async ({
