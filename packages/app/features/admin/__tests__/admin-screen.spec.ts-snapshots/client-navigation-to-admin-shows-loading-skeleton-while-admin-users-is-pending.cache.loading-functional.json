@@ -1,0 +1,37 @@
+{
+	"queries": {
+		"admin.users:[[]]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"user": {
+								"id": "8c5cc0c2-e33d-488d-97be-060ab5223498",
+								"email": "Justine.Schuppe89@hotmail.com",
+								"avatarUrl": "<undefined>"
+							},
+							"peer": {
+								"id": "5228f5c3-5088-4c31-b8bb-a1a6ad5e2672",
+								"name": "Herminia Treutel"
+							}
+						},
+						{
+							"user": {
+								"id": "4aea38d5-8c4c-4725-abb4-3420f2e8aa2c",
+								"email": "Elvera53@gmail.com",
+								"avatarUrl": "<undefined>"
+							},
+							"peer": "<undefined>"
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

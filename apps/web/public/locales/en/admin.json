@@ -2,6 +2,7 @@
 	"pageHeader": "Admin panel",
 	"pretend": {
 		"modal": {
+			"label": "Become user",
 			"title": "Do you want to become \"{{email}}\"?",
 			"yes": "Yes",
 			"no": "No"

@@ -42,6 +42,7 @@ const BecomeModal: React.FC<ModalProps> = ({
 		<Modal
 			isOpen={isModalOpen}
 			onOpenChange={closeModal}
+			label={t("pretend.modal.label")}
 			header={<Text variant="h3">{t("pretend.modal.title", { email })}</Text>}
 			bodyClassName="flex-row gap-4 p-4"
 		>
@@ -66,7 +67,10 @@ const AdminUserCard: React.FC<
 		children?: ViewReactNode;
 	}
 > = ({ peer, user, children }) => (
-	<Card bodyClassName="flex-row items-start justify-between">
+	<Card
+		testID="admin-user-card"
+		bodyClassName="flex-row items-start justify-between"
+	>
 		<Peer
 			id={peer ? peer.id : (user.id as PeerId)}
 			name={peer ? peer.name : user.email}
@@ -123,7 +127,7 @@ const AdminScreenInner = suspendedFallback(
 			? users.items.find((element) => element.user.email === pretendUser.email)
 			: null;
 		return (
-			<View className="flex flex-col items-stretch gap-2">
+			<View testID="admin-cards" className="flex flex-col items-stretch gap-2">
 				{pretendUserUser ? (
 					<>
 						<AdminUserCard {...pretendUserUser} />
@@ -142,6 +146,7 @@ const AdminScreenInner = suspendedFallback(
 							<Button
 								onPress={setModalEmailCurried(element.user.email)}
 								color="warning"
+								testID="become-button"
 							>
 								{t("pretend.becomeButton")}
 							</Button>

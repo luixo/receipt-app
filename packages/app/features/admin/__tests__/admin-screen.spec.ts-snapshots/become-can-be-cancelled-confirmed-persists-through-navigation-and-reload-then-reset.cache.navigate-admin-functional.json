@@ -1,0 +1,17 @@
+{
+	"queries": {
+		"userSettings.get:[[]]": {
+			"state": {
+				"data": {
+					"manualAcceptDebts": false
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
