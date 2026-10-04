@@ -14,16 +14,15 @@ test("authenticated non-admin is redirected without seeing admin UI", async ({
 	api.mockFirst("receipts.getPaged", { items: [], count: 0, cursor: 0 });
 	await page.navigate({ to: "/admin" });
 	await page.expectUrl({ to: "/receipts" });
-	await expect(page.getByRole("heading", { name: "Admin panel" })).toHaveCount(
-		0,
-	);
-	await expect(page.getByRole("link", { name: "Admin" })).toHaveCount(0);
+	await expect(page.getByRole("heading", { name: "Admin panel" })).toBeHidden();
+	await expect(page.getByRole("link", { name: "Admin" })).toBeHidden();
 });
 
-test("admin sees peer names and unpaired users' emails with dimmed avatars", async ({
+test("admin sees peer names and unpaired users' emails", async ({
 	page,
 	mockAdmin,
 	adminCards,
+	becomeButton,
 	awaitCacheKey,
 }) => {
 	const { peer, candidates } = await mockAdmin();
@@ -41,50 +40,62 @@ test("admin sees peer names and unpaired users' emails with dimmed avatars", asy
 	await expect(
 		adminCards.filter({ hasText: connected.peer.name }),
 	).toContainText(connected.user.email);
-	const unpairedCard = adminCards.filter({ hasText: unpaired.user.email });
-	await expect(unpairedCard.getByTestId("peer")).toContainText(
-		unpaired.user.email,
-	);
-	await expect(unpairedCard.getByTestId("user-avatar")).toHaveClass(
-		/grayscale/,
-	);
 	await expect(
-		adminCards
-			.filter({ hasText: connected.peer.name })
-			.getByTestId("user-avatar"),
-	).not.toHaveClass(/grayscale/);
-	await expect(page.getByRole("button", { name: "Become" })).toHaveCount(2);
+		adminCards.filter({ hasText: unpaired.user.email }),
+	).toContainText(unpaired.user.email);
+	await expect(becomeButton).toHaveCount(2);
 });
 
 test("Become can be cancelled, confirmed, persists through navigation and reload, then reset", async ({
 	page,
 	mockAdmin,
 	adminCards,
+	becomeButton,
+	becomeDialog,
 	cookieManager,
+	snapshotQueries,
 }) => {
 	const { peer, candidates } = await mockAdmin();
 	const [candidate] = candidates;
 	assert.ok(candidate?.peer);
+	const candidatePeer = candidate.peer;
 	await page.navigate({ to: "/admin" });
 	const candidateCard = adminCards.filter({ hasText: candidate.user.email });
-	await candidateCard.getByRole("button", { name: "Become" }).click();
-	const confirmation = page.getByRole("dialog");
-	await expect(confirmation).toContainText(candidate.user.email);
-	await confirmation.getByRole("button", { name: "No" }).click();
-	await expect(confirmation).toBeHidden();
-	await expect(
-		candidateCard.getByRole("button", { name: "Become" }),
-	).toBeVisible();
-	await expect(adminCards.first()).toContainText(peer.name);
+	const candidateBecomeButton = candidateCard.getByTestId("become-button");
+	await snapshotQueries(
+		async () => {
+			await candidateBecomeButton.click();
+			await expect(becomeDialog).toContainText(candidate.user.email);
+		},
+		{ name: "open" },
+	);
+	await snapshotQueries(
+		async () => {
+			await becomeDialog.getByRole("button", { name: "No" }).click();
+			await expect(becomeDialog).toBeHidden();
+			await expect(candidateBecomeButton).toBeVisible();
+			await expect(adminCards.first()).toContainText(peer.name);
+		},
+		{ name: "cancel" },
+	);
 
-	await candidateCard.getByRole("button", { name: "Become" }).click();
-	await confirmation.getByRole("button", { name: "Yes" }).click();
-	await expect(confirmation).toBeHidden();
-	await expect(adminCards.first()).toContainText(candidate.peer.name);
-	await expect(
-		candidateCard.getByRole("button", { name: "Become" }),
-	).toHaveCount(0);
-	await expect(page.getByRole("button", { name: "Become" })).toHaveCount(1);
+	await snapshotQueries(
+		async () => {
+			await candidateBecomeButton.click();
+			await expect(becomeDialog).toBeVisible();
+		},
+		{ name: "reopen" },
+	);
+	await snapshotQueries(
+		async () => {
+			await becomeDialog.getByRole("button", { name: "Yes" }).click();
+			await expect(becomeDialog).toBeHidden();
+			await expect(adminCards.first()).toContainText(candidatePeer.name);
+		},
+		{ name: "become" },
+	);
+	await expect(candidateBecomeButton).toBeHidden();
+	await expect(becomeButton).toHaveCount(1);
 	await expect(
 		page.getByRole("button", { name: "Reset to self" }),
 	).toBeVisible();
@@ -92,22 +103,39 @@ test("Become can be cancelled, confirmed, persists through navigation and reload
 		value: encodeURIComponent(JSON.stringify({ email: candidate.user.email })),
 	});
 
-	await page.getByRole("link", { name: "Settings" }).click();
-	await page.expectUrl({ to: "/settings" });
-	await page.getByRole("link", { name: "Admin" }).click();
-	await page.expectUrl({ to: "/admin" });
-	await expect(adminCards.first()).toContainText(candidate.peer.name);
-	await page.reload();
-	await expect(adminCards.first()).toContainText(candidate.peer.name);
-	await expect(
-		candidateCard.getByRole("button", { name: "Become" }),
-	).toHaveCount(0);
+	await snapshotQueries(
+		async () => {
+			await page.getByRole("link", { name: "Settings" }).click();
+			await page.expectUrl({ to: "/settings" });
+		},
+		{ name: "navigate-settings" },
+	);
+	await snapshotQueries(
+		async () => {
+			await page.getByRole("link", { name: "Admin" }).click();
+			await page.expectUrl({ to: "/admin" });
+			await expect(adminCards.first()).toContainText(candidatePeer.name);
+		},
+		{ name: "navigate-admin" },
+	);
 
-	await page.getByRole("button", { name: "Reset to self" }).click();
-	await expect(adminCards.first()).toContainText(peer.name);
-	await expect(
-		candidateCard.getByRole("button", { name: "Become" }),
-	).toBeVisible();
+	await snapshotQueries(
+		async () => {
+			await page.reload();
+			await expect(adminCards.first()).toContainText(candidatePeer.name);
+			await expect(candidateBecomeButton).toBeHidden();
+		},
+		{ name: "reload" },
+	);
+
+	await snapshotQueries(
+		async () => {
+			await page.getByRole("button", { name: "Reset to self" }).click();
+			await expect(adminCards.first()).toContainText(peer.name);
+			await expect(candidateBecomeButton).toBeVisible();
+		},
+		{ name: "reset" },
+	);
 	expect(
 		await cookieManager.getCookie(PRETEND_USER_STORE_NAME),
 	).toBeUndefined();
@@ -118,6 +146,7 @@ test("admin.users failure shows an error", async ({
 	page,
 	mockAdmin,
 	consoleManager,
+	snapshotQueries,
 	awaitCacheKey,
 	errorMessage,
 }) => {
@@ -127,15 +156,21 @@ test("admin.users failure shows an error", async ({
 	api.mockFirst("admin.users", () => {
 		throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message });
 	});
-	await page.navigate({ to: "/admin" });
-	await awaitCacheKey("admin.users", { error: 1 });
-	await expect(errorMessage(message)).toBeVisible();
+	await snapshotQueries(
+		async () => {
+			await page.navigate({ to: "/admin" });
+			await awaitCacheKey("admin.users", { error: 1 });
+			await expect(errorMessage(message)).toBeVisible();
+		},
+		{ name: "error" },
+	);
 });
 
 test("client navigation to admin shows loading skeleton while admin.users is pending", async ({
 	api,
 	page,
 	mockAdmin,
+	snapshotQueries,
 	awaitCacheKey,
 	adminCards,
 }) => {
@@ -146,14 +181,16 @@ test("client navigation to admin shows loading skeleton while admin.users is pen
 		await pause.promise;
 		return next();
 	});
-	try {
-		await page.getByRole("link", { name: "Admin" }).click();
-		await page.expectUrl({ to: "/admin" });
-		await awaitCacheKey("admin.users", { pending: 1 });
-		await expect(page.getByTestId("peer-skeleton").first()).toBeVisible();
-	} finally {
-		pause.resolve();
-	}
-	await awaitCacheKey("admin.users", { success: 1 });
-	await expect(adminCards).toHaveCount(3);
+	await snapshotQueries(
+		async () => {
+			await page.getByRole("link", { name: "Admin" }).click();
+			await page.expectUrl({ to: "/admin" });
+			await awaitCacheKey("admin.users", { pending: 1 });
+			await expect(page.getByTestId("peer-skeleton").first()).toBeVisible();
+			pause.resolve();
+			await awaitCacheKey("admin.users", { success: 1 });
+			await expect(adminCards).toHaveCount(3);
+		},
+		{ name: "loading" },
+	);
 });

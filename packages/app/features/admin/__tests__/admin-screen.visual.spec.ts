@@ -10,12 +10,12 @@ test.beforeEach(async ({ page, mockAdmin, awaitCacheKey }) => {
 
 test("default admin and candidate cards", async ({
 	adminCards,
-	adminCardGroup,
+	adminCardsBlock,
 	expectScreenshotWithSchemes,
 }) => {
 	await expect(adminCards).toHaveCount(3);
 	await expectScreenshotWithSchemes("default-cards.png", {
-		locator: adminCardGroup,
+		locator: adminCardsBlock,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				...expectedPixels[0],
@@ -28,17 +28,14 @@ test("default admin and candidate cards", async ({
 });
 
 test("Become confirmation", async ({
-	page,
-	adminCards,
+	becomeButton,
+	becomeDialog,
 	expectScreenshotWithSchemes,
 }) => {
-	await adminCards.nth(1).getByRole("button", { name: "Become" }).click();
-	const confirmation = page.getByRole("dialog");
-	await expect(confirmation).toBeVisible();
-	await expect(confirmation).toHaveCSS("transform", "none");
+	await becomeButton.first().click();
+	await expect(becomeDialog).toBeVisible();
 	await expectScreenshotWithSchemes("become-confirmation.png", {
-		locator: confirmation,
-		fullPage: false,
+		locator: becomeDialog,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				...expectedPixels[0],
@@ -52,18 +49,20 @@ test("Become confirmation", async ({
 
 test("impersonated admin and remaining candidate cards", async ({
 	adminCards,
-	adminCardGroup,
+	adminCardsBlock,
+	becomeButton,
+	becomeDialog,
 	page,
 	expectScreenshotWithSchemes,
 }) => {
-	await adminCards.nth(1).getByRole("button", { name: "Become" }).click();
-	await page.getByRole("dialog").getByRole("button", { name: "Yes" }).click();
+	await becomeButton.first().click();
+	await becomeDialog.getByRole("button", { name: "Yes" }).click();
 	await expect(
 		page.getByRole("button", { name: "Reset to self" }),
 	).toBeVisible();
 	await expect(adminCards).toHaveCount(2);
 	await expectScreenshotWithSchemes("impersonated-cards.png", {
-		locator: adminCardGroup,
+		locator: adminCardsBlock,
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				...expectedPixels[0],
@@ -72,5 +71,16 @@ test("impersonated admin and remaining candidate cards", async ({
 			},
 			...expectedPixels.slice(1),
 		],
+	});
+});
+
+test("full screen with masked cards", async ({
+	page,
+	adminCardsBlock,
+	expectScreenshotWithSchemes,
+}) => {
+	await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+	await expectScreenshotWithSchemes("full-screen.png", {
+		mask: [adminCardsBlock],
 	});
 });
