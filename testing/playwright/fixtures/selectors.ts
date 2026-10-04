@@ -23,9 +23,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	},
 	modal: async ({ page }, use) => {
 		await use((title) =>
-			page.locator(
-				`section[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`,
-			),
+			page.locator(`[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`),
 		);
 	},
 	modalCross: async ({ page }, use) => {

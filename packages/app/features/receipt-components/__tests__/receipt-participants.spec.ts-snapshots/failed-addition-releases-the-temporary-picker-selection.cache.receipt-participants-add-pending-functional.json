@@ -1,0 +1,43 @@
+{
+	"queries": {
+		"peers.suggest:[{\"filterIds\":[\"1c561050-b8e8-4638-9172-c8337f83a4fc\"],\"input\":\"\",\"limit\":5,\"options\":{\"receiptId\":\"1dc5f3f3-f4a4-4bde-ab99-78ce1e66c430\",\"type\":\"not-connected-receipt\"}}]": {
+			"state": {
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "pending",
+				"fetchStatus": "idle"
+			},
+			"promise": "<undefined>"
+		},
+		"peers.suggestTop:[{\"filterIds\":[\"1c561050-b8e8-4638-9172-c8337f83a4fc\"],\"limit\":5,\"options\":{\"receiptId\":\"1dc5f3f3-f4a4-4bde-ab99-78ce1e66c430\",\"type\":\"not-connected-receipt\"}}]": {
+			"state": {
+				"data": {
+					"items": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"receiptParticipants.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"receiptId": "1dc5f3f3-f4a4-4bde-ab99-78ce1e66c430",
+						"peerId": "1c561050-b8e8-4638-9172-c8337f83a4fc",
+						"role": "editor"
+					}
+				}
+			}
+		]
+	}
+}
