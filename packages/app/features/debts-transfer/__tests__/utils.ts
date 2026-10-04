@@ -36,6 +36,8 @@ type Fixtures = {
 	currencyPickerDialog: Locator;
 	allMaxButton: Locator;
 	amountInput: (currencyCode: CurrencyCode) => Locator;
+	amountRow: (currencyCode: CurrencyCode) => Locator;
+	showResolvedDebtsSwitch: Locator;
 	transferForm: Locator;
 };
 
@@ -114,6 +116,14 @@ export const test = mergedTest.extend<Fixtures>({
 				name: getCurrencySymbol(localSettings.locale, currencyCode),
 			}),
 		),
+
+	amountRow: ({ page }, use) =>
+		use((currencyCode) =>
+			page.getByTestId(`debts-transfer-amount-${currencyCode}`),
+		),
+
+	showResolvedDebtsSwitch: ({ page }, use) =>
+		use(page.getByTestId("show-resolved-debts-switch")),
 
 	transferForm: ({ page }, use) => use(page.getByTestId("debts-transfer-form")),
 });

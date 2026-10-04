@@ -59,6 +59,42 @@ test.describe("Header", () => {
 });
 
 test.describe("Peer selection", () => {
+	test("Selecting and reselecting peers updates URL and removes form without source", async ({
+		mockDebtsTransfer,
+		openDebtsTransferScreen,
+		fromPeerSuggestInput,
+		toPeerSuggestInput,
+		suggestOption,
+		peersSuggest,
+		transferForm,
+		page,
+	}) => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer();
+		await openDebtsTransferScreen();
+		await fromPeerSuggestInput.click();
+		await suggestOption(fromPeer.name).click();
+		await page.expectUrl({
+			to: "/debts/transfer",
+			search: { from: fromPeer.id },
+		});
+		await expect(transferForm).toBeVisible();
+		await toPeerSuggestInput.click();
+		await suggestOption(toPeer.name).click();
+		await page.expectUrl({
+			to: "/debts/transfer",
+			search: { from: fromPeer.id, to: toPeer.id },
+		});
+		await peersSuggest.filter({ hasText: toPeer.name }).click();
+		await page.expectUrl({
+			to: "/debts/transfer",
+			search: { from: fromPeer.id },
+		});
+		await expect(transferForm).toBeVisible();
+		await peersSuggest.filter({ hasText: fromPeer.name }).click();
+		await page.expectUrl({ to: "/debts/transfer", search: {} });
+		await expect(transferForm).not.toBeAttached();
+	});
+
 	test("Pre-selected peers via URL params shows form", async ({
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
@@ -152,6 +188,95 @@ test.describe("Form validation", () => {
 });
 
 test.describe("Currency management", () => {
+	test("Removing the only nonzero currency revalidates a dirty remaining field", async ({
+		api,
+		page,
+		mockDebtsTransfer,
+		openDebtsTransferScreen,
+		addCurrencyButton,
+		currencyButton,
+		amountInput,
+		amountRow,
+		submitButton,
+	}) => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer({
+			generateDebts: () => [],
+		});
+		await openDebtsTransferScreen({
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
+		});
+		api.mockFirst("currency.top", { items: [] });
+		await addCurrencyButton.click();
+		await currencyButton("EUR").click();
+		await addCurrencyButton.click();
+		await currencyButton("USD").click();
+		const dollarInput = amountInput("USD");
+		await dollarInput.fill("5");
+		await dollarInput.press("Tab");
+		await dollarInput.fill("0");
+		await dollarInput.press("Tab");
+		const euroInput = amountInput("EUR");
+		await euroInput.fill("12");
+		await euroInput.press("Tab");
+		await expect(submitButton).toBeEnabled();
+		await amountRow("EUR")
+			.getByRole("button")
+			.filter({ has: page.getByTestId("trash-icon") })
+			.click();
+		await expect(euroInput).not.toBeAttached();
+		await expect(dollarInput).toHaveValue("0");
+		await expect(submitButton).toBeDisabled();
+	});
+
+	test("Peer without debts can add, enter and remove a currency", async ({
+		api,
+		page,
+		mockDebtsTransfer,
+		openDebtsTransferScreen,
+		addCurrencyButton,
+		currencyButton,
+		currenciesPicker,
+		amountInput,
+		amountRow,
+		submitButton,
+		transferForm,
+	}) => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer({
+			generateDebts: () => [],
+		});
+		await openDebtsTransferScreen({
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
+		});
+		await expect(transferForm).toContainText("No debts");
+		await expect(submitButton).toBeDisabled();
+		api.mockFirst("currency.top", { items: [] });
+		await addCurrencyButton.click();
+		await expect(currenciesPicker).toBeVisible();
+		await currencyButton("EUR").click();
+		await expect(currenciesPicker).toBeHidden();
+		const euroInput = amountInput("EUR");
+		await expect(euroInput).toBeVisible();
+		await expect(submitButton).toBeDisabled();
+		await euroInput.fill("12");
+		await euroInput.press("Tab");
+		await expect(submitButton).toBeEnabled();
+		await euroInput.fill("0");
+		await euroInput.press("Tab");
+		await expect(submitButton).toBeDisabled();
+		await euroInput.fill("12");
+		await euroInput.press("Tab");
+		await expect(submitButton).toBeEnabled();
+		await amountRow("EUR")
+			.getByRole("button")
+			.filter({ has: page.getByTestId("trash-icon") })
+			.click();
+		await expect(euroInput).not.toBeAttached();
+		await expect(transferForm).toContainText("No debts");
+		await expect(submitButton).toBeDisabled();
+	});
+
 	test("Add currency button opens modal", async ({
 		api,
 		mockDebtsTransfer,
@@ -193,6 +318,53 @@ test.describe("Currency management", () => {
 });
 
 test.describe("Show resolved debts option", () => {
+	test("Resolved USD is toggled alongside EUR; single Max and sign control update amount", async ({
+		mockDebtsTransfer,
+		openDebtsTransferScreen,
+		showResolvedDebtsSwitch,
+		amountInput,
+		amountRow,
+		submitButton,
+	}) => {
+		const { fromPeer, toPeer } = await mockDebtsTransfer({
+			generateDebts: (opts) => {
+				const [first, second, third] = defaultGenerateDebts({
+					...opts,
+					amount: 3,
+				});
+				assert.ok(first);
+				assert.ok(second);
+				assert.ok(third);
+				return [
+					{ ...first, currencyCode: "USD", amount: 10 },
+					{ ...second, currencyCode: "USD", amount: -10 },
+					{ ...third, currencyCode: "EUR", amount: 25 },
+				];
+			},
+		});
+		await openDebtsTransferScreen({
+			fromPeerId: fromPeer.id,
+			toPeerId: toPeer.id,
+		});
+		await expect(amountInput("USD")).not.toBeAttached();
+		await expect(amountInput("EUR")).toBeVisible();
+		await showResolvedDebtsSwitch.click();
+		await expect(amountInput("USD")).toBeVisible();
+		await expect(submitButton).toBeDisabled();
+		await amountRow("EUR").getByText("Max", { exact: true }).click();
+		await expect(amountInput("EUR")).toHaveValue("+25");
+		await expect(amountInput("USD")).toHaveValue("0");
+		await expect(submitButton).toBeEnabled();
+		await amountInput("EUR").fill("-12");
+		await amountInput("EUR").press("Tab");
+		await expect(amountInput("EUR")).toHaveValue("-12");
+		await amountRow("EUR").getByTestId("debts-transfer-sign").click();
+		await expect(amountInput("EUR")).toHaveValue("+12");
+		await showResolvedDebtsSwitch.click();
+		await expect(amountInput("USD")).not.toBeAttached();
+		await expect(submitButton).toBeEnabled();
+	});
+
 	test("Shows option when there are resolved debts", async ({
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
