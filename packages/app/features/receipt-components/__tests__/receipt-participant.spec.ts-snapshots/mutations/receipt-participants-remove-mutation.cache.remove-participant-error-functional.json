@@ -1,0 +1,49 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"2eb8e4b6-702b-4d55-a4b5-b72ccc1cbcda\"}]": {
+			"state": {
+				"data": {
+					"participants": {
+						"0": {
+							"peerId": "4a7806e1-ad78-46f1-8f2d-d85bd7d0145c",
+							"createdAt": "2019-12-27T09:44:39.956+00:00[UTC]"
+						},
+						"1": {
+							"peerId": "df30cbe3-e9af-4ce6-b2fe-b33f250f5a58",
+							"createdAt": "2019-12-30T16:32:38.976+00:00[UTC]"
+						},
+						"2": {
+							"peerId": "b453843f-197e-451a-a38a-ba8eb238ef99",
+							"createdAt": "2019-12-30T10:44:52.526+00:00[UTC]"
+						},
+						"3": {
+							"peerId": "e73d80e6-b2cb-4bd0-8820-cde4b3e43a1e",
+							"role": "editor",
+							"createdAt": "2019-12-30T15:34:38.63+00:00[UTC]"
+						},
+						"4": {
+							"peerId": "fc6e693c-fe68-433a-a842-7a9c6dee61a0",
+							"role": "owner",
+							"createdAt": "2019-12-27T06:59:59.137+00:00[UTC]"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptParticipants.remove": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptParticipants.remove\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

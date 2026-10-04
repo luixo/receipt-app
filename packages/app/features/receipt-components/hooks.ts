@@ -7,7 +7,7 @@ const useSelfRole = () => {
 	}
 	return (
 		participants.find((participant) => participant.peerId === selfPeerId)
-			?.role ?? "owner"
+			?.role ?? "viewer"
 	);
 };
 

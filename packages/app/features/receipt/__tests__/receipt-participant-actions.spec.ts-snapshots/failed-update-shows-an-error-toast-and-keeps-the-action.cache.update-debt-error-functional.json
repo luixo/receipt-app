@@ -1,0 +1,33 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"c670f609-bea1-418a-8621-c7965d1e6f61\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Update rejected"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "c670f609-bea1-418a-8621-c7965d1e6f61",
+						"update": {
+							"amount": 14565.47,
+							"currencyCode": "NPR",
+							"timestamp": "2020-01-01",
+							"receiptId": "0095d661-db56-4d48-8493-e79622137d03"
+						}
+					}
+				}
+			}
+		]
+	}
+}

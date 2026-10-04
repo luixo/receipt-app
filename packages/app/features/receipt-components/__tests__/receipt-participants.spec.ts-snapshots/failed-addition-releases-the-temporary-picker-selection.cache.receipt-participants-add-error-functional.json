@@ -1,0 +1,16 @@
+{
+	"mutations": {
+		"receiptParticipants.add": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptParticipants.add\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

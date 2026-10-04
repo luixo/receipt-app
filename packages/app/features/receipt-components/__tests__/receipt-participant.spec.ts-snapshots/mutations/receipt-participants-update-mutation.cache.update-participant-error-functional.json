@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"8fd8d7a6-92b2-4476-a4a2-20f1aada1060\"}]": {
+			"state": {
+				"data": {
+					"participants": {
+						"0": {
+							"role": "editor"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptParticipants.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptParticipants.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

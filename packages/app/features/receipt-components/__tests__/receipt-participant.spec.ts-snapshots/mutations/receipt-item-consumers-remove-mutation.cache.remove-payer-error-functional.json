@@ -1,0 +1,32 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"250df852-6e92-42e1-a06e-269f6b457da1\"}]": {
+			"state": {
+				"data": {
+					"payers": {
+						"0": {
+							"peerId": "108ba19e-6266-496a-9e3f-250c7955e103",
+							"part": 1,
+							"createdAt": "2019-12-27T04:12:28.489+00:00[UTC]"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.remove": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItemConsumers.remove\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

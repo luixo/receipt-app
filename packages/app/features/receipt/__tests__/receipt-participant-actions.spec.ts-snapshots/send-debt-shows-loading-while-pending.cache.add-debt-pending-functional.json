@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"currencyCode": "OMR",
+						"peerId": "488406c4-5e7d-44e7-aff6-b38dd4e86e17",
+						"amount": 21824.77,
+						"timestamp": "2020-01-01",
+						"note": "Receipt \"censura absque amiculum\"",
+						"receiptId": "61511662-f125-4021-a6a8-2b653bb0b8e2"
+					}
+				}
+			}
+		]
+	}
+}

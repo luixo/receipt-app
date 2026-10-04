@@ -23,7 +23,7 @@ type Props = {
 
 export const ReceiptSyncButton = suspendedFallback<Props>(
 	({ receipt, isLoading }) => {
-		const { t } = useTranslation("receipts");
+		const { t } = useTranslation(["receipts", "debts"]);
 		const trpc = useTRPC();
 		const { participantsWithDebts, syncableParticipants } =
 			useParticipantsWithDebts(receipt);

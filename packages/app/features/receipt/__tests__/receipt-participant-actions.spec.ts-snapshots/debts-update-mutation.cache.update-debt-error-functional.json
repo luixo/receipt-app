@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"ae243312-fc80-44e9-929c-a4d5f0254a71\"}]": {
+			"state": {
+				"data": {
+					"amount": 13412.09,
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debts.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

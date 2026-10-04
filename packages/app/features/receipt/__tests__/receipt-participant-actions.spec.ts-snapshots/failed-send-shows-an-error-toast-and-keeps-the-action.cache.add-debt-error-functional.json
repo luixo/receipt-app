@@ -1,0 +1,25 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Send rejected"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"currencyCode": "TMT",
+						"peerId": "06ac0aa5-454f-46d9-8508-0eccf4313ce8",
+						"amount": 36447.19,
+						"timestamp": "2020-01-01",
+						"note": "Receipt \"amiculum decumbo solio\"",
+						"receiptId": "d0aff068-0e6d-44c9-84c5-9e8496c472a3"
+					}
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"currencyCode": "NPR",
+						"peerId": "25808942-7dd6-4ca5-b433-3c499cffa21f",
+						"amount": 33397.15,
+						"timestamp": "2020-01-01",
+						"note": "Receipt \"sum deputo delibero\"",
+						"receiptId": "28887560-d253-49cd-b4a0-5a916c6e166d"
+					}
+				}
+			}
+		]
+	}
+}
