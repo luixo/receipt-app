@@ -66,6 +66,7 @@ Fixture-provided locators available in every spec:
 | Name                  | Selects                                           |
 | --------------------- | ------------------------------------------------- |
 | `loader`              | `[aria-label="Loading"]`                          |
+| `icon(name)`          | icon by its typed name, e.g. `icon("trash")`      |
 | `skeleton`            | active skeleton element                           |
 | `modal(title?)`       | `section[role="dialog"]`                          |
 | `errorMessage(text?)` | `[data-testid="error-message"]`                   |

@@ -754,11 +754,21 @@ export default defineConfig({
 			},
 		})),
 		{
-			files: ["**/*.spec.ts"],
+			files: ["**/*.spec.ts", "**/__tests__/**/*.{ts,tsx}"],
 			rules: {
 				"eslint-js/no-restricted-syntax": [
 					"error",
 					...noRestrictedSyntaxGeneral.map(omit(["omitTags"])),
+					{
+						selector: "Literal[value=/.-icon$/]",
+						message:
+							"Use the `icon` locator instead of an icon test ID literal.",
+					},
+					{
+						selector: "TemplateElement[value.raw=/-icon$/]",
+						message:
+							"Use the `icon` locator instead of an icon test ID template.",
+					},
 				],
 			},
 		},
