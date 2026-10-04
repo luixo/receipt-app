@@ -1,0 +1,8 @@
+{
+	"peers.suggestTop": {
+		"clientCalls": 1
+	},
+	"receiptParticipants.add": {
+		"clientCalls": 1
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"19ed8611-da26-4245-ad63-09791a532239\"}]": {
+			"state": {
+				"data": {
+					"payers": {
+						"0": {
+							"part": 3
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"itemId": "19ed8611-da26-4245-ad63-09791a532239",
+						"peerId": "73833cd8-e5f5-4b91-8f6a-1589150e03de",
+						"update": {
+							"type": "part",
+							"part": 3
+						}
+					}
+				}
+			}
+		]
+	}
+}

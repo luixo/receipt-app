@@ -1,0 +1,35 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"d75bcfc2-d860-40f7-bd00-6863c19c39e8\"}]": {
+			"state": {
+				"data": {
+					"participants": {
+						"0": {
+							"role": "viewer"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptParticipants.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"receiptId": "d75bcfc2-d860-40f7-bd00-6863c19c39e8",
+						"peerId": "24de9585-f3d1-4217-8c1c-e44c83fa87eb",
+						"update": {
+							"type": "role",
+							"role": "viewer"
+						}
+					}
+				}
+			}
+		]
+	}
+}

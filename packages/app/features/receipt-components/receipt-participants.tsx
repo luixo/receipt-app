@@ -39,7 +39,11 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 			: payerParticipants;
 	const debtParticipants = participants.filter(({ debt }) => debt.total !== 0);
 	return (
-		<View className="flex flex-col gap-2 xs:flex-row" onPress={switchModal}>
+		<View
+			className="flex flex-col gap-2 xs:flex-row"
+			onPress={switchModal}
+			testID="participants-preview"
+		>
 			<View className="flex flex-row gap-2">
 				<Trans
 					t={t}
@@ -190,12 +194,14 @@ export const ReceiptParticipants: React.FC<{
 								<ReceiptParticipant
 									key={participant.peerId}
 									participant={participant}
-									outcomingDebtId={
+									debtId={
 										debts?.direction === "outcoming"
 											? debts.debts.find(
 													({ peerId }) => participant.peerId === peerId,
 												)?.id
-											: undefined
+											: debts?.hasMine && participant.peerId === selfPeerId
+												? debts.id
+												: undefined
 									}
 								/>
 							))}
