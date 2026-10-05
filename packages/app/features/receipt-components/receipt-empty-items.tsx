@@ -37,7 +37,7 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 		return;
 	}
 	return (
-		<View className="gap-2">
+		<View className="gap-2" testID="receipt-empty-items">
 			<Text variant="h4">{t("item.noParticipantsItemsSection.label")}</Text>
 			{emptyItems.map((item) => (
 				<Checkbox

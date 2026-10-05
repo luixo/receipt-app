@@ -69,7 +69,7 @@ export const ReceiptScreen = suspendedFallback(
 		const actionsHooks = useActionHooks(receipt);
 		const getReceiptContext = useGetReceiptContext(
 			receipt,
-			deleteLoading,
+			disabled,
 			(participant) =>
 				isOwner && receipt.selfPeerId !== participant.peerId ? (
 					<ReceiptParticipantActions

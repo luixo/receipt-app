@@ -12,7 +12,6 @@ import { View } from "~components/view";
 import type { AssignableRole, Role } from "~web/handlers/receipts/utils";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
-import { useIsOwner } from "./hooks";
 import type { Participant } from "./state";
 
 const ROLES: Record<AssignableRole, true> = { editor: true, viewer: true };
@@ -26,7 +25,6 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("receipts");
 	const { receiptId, receiptDisabled } = useReceiptContext();
-	const isOwner = useIsOwner();
 	const { updateParticipantRole } = useActionsHooksContext();
 	const trpc = useTRPC();
 	const removeParticipantMutationState =
@@ -63,7 +61,6 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			placeholder=""
 			isDisabled={
 				receiptDisabled ||
-				!isOwner ||
 				participant.role === "owner" ||
 				removeParticipantMutationState?.status === "pending"
 			}

@@ -1,0 +1,39 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"495cd7fd-39fd-4c51-9675-69331f8c54fc\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"id": "d0e89bb1-15cc-4ae3-a619-66af8123606a",
+							"name": "Handcrafted Wooden Table",
+							"price": 34.53,
+							"quantity": 2,
+							"createdAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
+							"consumers": [],
+							"payers": []
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"name": "Handcrafted Wooden Table",
+						"price": 34.53,
+						"quantity": 2,
+						"receiptId": "495cd7fd-39fd-4c51-9675-69331f8c54fc"
+					}
+				}
+			}
+		]
+	}
+}
