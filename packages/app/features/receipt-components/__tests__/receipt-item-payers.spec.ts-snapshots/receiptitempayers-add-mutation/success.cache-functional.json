@@ -1,0 +1,41 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"1e02d351-2a8e-424b-a806-17e4d68f59a7\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"payers": {
+								"0": {
+									"peerId": "6b66c3cf-df5d-4fb5-a546-83f3b9cffbd8",
+									"part": 1,
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								}
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemPayers.add": [
+			{
+				"state": {
+					"data": {
+						"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"itemId": "31695be8-53d8-4d31-a8dd-08569d09ad08",
+						"peerId": "6b66c3cf-df5d-4fb5-a546-83f3b9cffbd8",
+						"part": 1
+					}
+				}
+			}
+		]
+	}
+}

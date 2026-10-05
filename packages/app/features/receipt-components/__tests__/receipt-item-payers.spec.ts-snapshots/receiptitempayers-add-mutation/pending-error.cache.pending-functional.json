@@ -1,0 +1,38 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"c98e8b4e-e902-48ae-8e81-fc6436defdc8\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"payers": {
+								"0": {
+									"peerId": "6e4d70bb-381f-4520-9a55-4d949f038fa1",
+									"part": 1,
+									"createdAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]"
+								}
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemPayers.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"itemId": "f715e926-fd52-4f95-93c1-955c3da34808",
+						"peerId": "6e4d70bb-381f-4520-9a55-4d949f038fa1",
+						"part": 1
+					}
+				}
+			}
+		]
+	}
+}

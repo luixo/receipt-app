@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"a79e8b9c-7f28-45f0-82eb-fe61a355a4cf\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"quantity": 1.9
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "c8dc8342-de8c-408d-8c09-57f252814678",
+						"update": {
+							"type": "quantity",
+							"quantity": 1.9
+						}
+					}
+				}
+			}
+		]
+	}
+}

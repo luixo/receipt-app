@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"d05da205-dc5e-4279-9007-35d9d0ce0ca6\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"name": "Ergonomic Rubber Shoes"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "3f33442b-eee5-45f9-87b2-f8867645ba69",
+						"update": {
+							"type": "name",
+							"name": "Ergonomic Rubber Shoes"
+						}
+					}
+				}
+			}
+		]
+	}
+}
