@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"55e5402a-ebb2-4075-a65a-4695e297ea50\"}]": {
+		"debts.get:[{\"id\":\"5d222d15-f4d7-4830-ade5-faee7cb656c5\"}]": {
 			"state": {
 				"data": {
-					"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
+					"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 					"amount": 26839.85,
 					"currencyCode": "THB",
 					"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
@@ -13,6 +13,32 @@
 					"their": {
 						"timestamp": "2020-01-01",
 						"amount": 26839.85,
+						"currencyCode": "THB",
+						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"8d11b3e4-f381-4dfb-8421-3cb519d7a0e1\"}]": {
+			"state": {
+				"data": {
+					"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
+					"amount": 21938.87,
+					"currencyCode": "THB",
+					"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
+					"timestamp": "2020-01-01",
+					"note": "Receipt \"alienus vesica aqua\"",
+					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"their": {
+						"timestamp": "2020-01-01",
+						"amount": 21938.87,
 						"currencyCode": "THB",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
 					},
@@ -42,43 +68,17 @@
 				"dataUpdateCount": 2
 			}
 		},
-		"debts.get:[{\"id\":\"f1bc38ce-0937-4118-9ef5-21fabbd44c55\"}]": {
-			"state": {
-				"data": {
-					"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
-					"amount": 21938.87,
-					"currencyCode": "THB",
-					"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
-					"timestamp": "2020-01-01",
-					"note": "Receipt \"alienus vesica aqua\"",
-					"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"their": {
-						"timestamp": "2020-01-01",
-						"amount": 21938.87,
-						"currencyCode": "THB",
-						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]"
-					},
-					"receiptId": "68daea53-ad02-49da-9d2e-d19cc48bdc8b"
-				},
-				"dataUpdateCount": 1,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
 		"receipts.get:[{\"id\":\"68daea53-ad02-49da-9d2e-d19cc48bdc8b\"}]": {
 			"state": {
 				"data": {
 					"debts": {
 						"debts": {
 							"2": {
-								"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
+								"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 								"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5"
 							},
 							"3": {
-								"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
+								"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
 								"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe"
 							}
 						}
@@ -93,7 +93,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "55e5402a-ebb2-4075-a65a-4695e297ea50",
+						"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": true
 					},
@@ -113,7 +113,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "f1bc38ce-0937-4118-9ef5-21fabbd44c55",
+						"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": true
 					},

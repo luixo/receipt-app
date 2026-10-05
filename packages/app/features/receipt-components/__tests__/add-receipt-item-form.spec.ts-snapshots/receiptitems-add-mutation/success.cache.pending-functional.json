@@ -1,0 +1,39 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"4d1ae3b9-3484-41d7-8867-9010928c5539\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"id": "b9e00da1-bc12-4308-b1f8-e253cd5ab3af",
+							"name": "Tasty Steel Pants",
+							"price": 93.97,
+							"quantity": 8,
+							"createdAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]",
+							"consumers": [],
+							"payers": []
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"name": "Tasty Steel Pants",
+						"price": 93.97,
+						"quantity": 8,
+						"receiptId": "4d1ae3b9-3484-41d7-8867-9010928c5539"
+					}
+				}
+			}
+		]
+	}
+}

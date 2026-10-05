@@ -119,6 +119,7 @@
 		"amount": "= {{amount}}",
 		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
+			"label": "Add receipt item",
 			"consumer": {
 				"label": "Item consumer part",
 				"saveButton": "Save item consumer part"

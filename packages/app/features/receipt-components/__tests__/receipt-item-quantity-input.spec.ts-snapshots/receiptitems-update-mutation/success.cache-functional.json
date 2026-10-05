@@ -5,7 +5,7 @@
 				"data": {
 					"items": {
 						"0": {
-							"quantity": 1.9
+							"quantity": 1.8
 						}
 					}
 				},
@@ -24,7 +24,7 @@
 						"id": "c8dc8342-de8c-408d-8c09-57f252814678",
 						"update": {
 							"type": "quantity",
-							"quantity": 1.9
+							"quantity": 1.8
 						}
 					}
 				}

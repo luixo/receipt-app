@@ -7,7 +7,7 @@
 						"0": {
 							"consumers": {
 								"1": {
-									"part": 3
+									"part": 5
 								}
 							}
 						}
@@ -29,7 +29,7 @@
 						"peerId": "231277e5-f12e-4c9c-b66e-bc3d559ec209",
 						"update": {
 							"type": "part",
-							"part": 3
+							"part": 5
 						}
 					}
 				}

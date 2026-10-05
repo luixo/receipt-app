@@ -2,7 +2,10 @@ import React from "react";
 
 import type { ViewReactNode } from "~components/view";
 
-export type Props = Pick<React.ComponentProps<"form">, "className" | "id"> & {
+export type Props = Pick<
+	React.ComponentProps<"form">,
+	"className" | "id" | "aria-label"
+> & {
 	onSubmit?: () => void;
 	testID?: string;
 	children: ViewReactNode;
@@ -13,6 +16,7 @@ export const Form: React.FC<Props> = ({
 	onSubmit: onSubmitRaw,
 	id,
 	testID,
+	"aria-label": ariaLabel,
 	children,
 }) => {
 	const onSubmit = React.useCallback<React.SubmitEventHandler<HTMLFormElement>>(
@@ -28,6 +32,7 @@ export const Form: React.FC<Props> = ({
 			onSubmit={onSubmit}
 			id={id}
 			data-testid={testID}
+			aria-label={ariaLabel}
 		>
 			{children}
 		</form>

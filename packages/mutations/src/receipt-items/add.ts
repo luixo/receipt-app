@@ -1,4 +1,5 @@
 import type { ReceiptItemId } from "~db/ids";
+import { getRandomUUID } from "~utils/crypto";
 
 import {
 	update as updateReceipts,
@@ -13,7 +14,7 @@ export const options: UseContextedMutationOptions<
 > = {
 	mutationKey: "receiptItems.add",
 	onMutate: (controllerContext) => async (variables) => {
-		const temporaryId = `temp-${Math.random()}`;
+		const temporaryId = await getRandomUUID();
 		const revertResult = await updateRevertReceipts(controllerContext, {
 			get: (controller) =>
 				controller.addItem(variables.receiptId, {
