@@ -1,0 +1,36 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"b4028679-c39a-4314-a993-273edbd1336d\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"id": "cb4c39d3-2b8b-4988-9400-0170bd1b0da0",
+							"price": 10.25,
+							"quantity": 3,
+							"name": "Refined Wooden Keyboard",
+							"createdAt": "2019-12-06T23:15:14.315+00:00[UTC]",
+							"consumers": [],
+							"payers": []
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.remove": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItems.remove\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,32 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"c98e8b4e-e902-48ae-8e81-fc6436defdc8\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"payers": {
+								"0": "<undefined>"
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemPayers.add": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItemPayers.add\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}
