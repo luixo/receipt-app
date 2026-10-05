@@ -584,6 +584,7 @@ test.describe("Selection and removal", () => {
 test.describe("Receipt preview", () => {
 	test("Preview shows name, sum and owner key", async ({
 		page,
+		icon,
 		mockReceipts,
 		openReceiptsScreen,
 		receiptPreviewNamed,
@@ -624,7 +625,7 @@ test.describe("Receipt preview", () => {
 				page.getByText(formatCurrency("en-US", receipt.currencyCode, sum)),
 			).toBeVisible();
 		}
-		await expect(page.getByTestId("key-icon")).toHaveCount(2);
+		await expect(icon("key")).toHaveCount(2);
 		const firstReceiptLink = receiptPreviewNamed(firstReceipt.name);
 		await firstReceiptLink.click();
 		await page.expectUrl({
@@ -658,6 +659,7 @@ test.describe("Receipt preview", () => {
 
 	test("Receipt with matched items shows info tooltip", async ({
 		page,
+		icon,
 		api,
 		mockReceipts,
 		openReceiptsScreen,
@@ -697,7 +699,7 @@ test.describe("Receipt preview", () => {
 			},
 		});
 
-		const infoIcon = page.getByTestId("info-icon");
+		const infoIcon = icon("info");
 		await expect(infoIcon).toBeVisible();
 		await page.mouse.click(0, 0);
 		await infoIcon.hover();

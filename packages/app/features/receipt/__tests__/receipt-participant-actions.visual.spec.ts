@@ -78,6 +78,7 @@ test("Zero-balance peer action", async ({
 	openReceipt,
 	openParticipantsPicker,
 	participantRow,
+	icon,
 	expectScreenshotWithSchemes,
 	awaitCacheKey,
 	skip,
@@ -97,7 +98,7 @@ test("Zero-balance peer action", async ({
 	await participantRow(peer.name).getByTestId("user-avatar").click();
 	await awaitCacheKey("receipts.get");
 	await expectScreenshotWithSchemes("zero-debt.png", {
-		locator: participantRow(peer.name).getByTestId("receipt-zero-icon"),
+		locator: participantRow(peer.name).locator(icon("zero")),
 		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 			{
 				...expectedPixels[0],

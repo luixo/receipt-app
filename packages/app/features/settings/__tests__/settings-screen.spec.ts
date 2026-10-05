@@ -62,15 +62,16 @@ test.describe("Color mode", () => {
 		colorModeButton,
 		html,
 		page,
+		icon,
 		cookieManager,
 	}) => {
 		await api.mockUtils.authPage();
 		api.mockFirst("userSettings.get", { manualAcceptDebts: false });
 		const moonIcon = colorModeButton.filter({
-			has: page.getByTestId("moon-icon"),
+			has: icon("moon"),
 		});
 		const sunIcon = colorModeButton.filter({
-			has: page.getByTestId("sun-icon"),
+			has: icon("sun"),
 		});
 
 		await page.navigate({ to: "/settings" });

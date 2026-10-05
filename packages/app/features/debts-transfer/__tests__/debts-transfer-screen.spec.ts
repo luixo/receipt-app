@@ -190,7 +190,7 @@ test.describe("Form validation", () => {
 test.describe("Currency management", () => {
 	test("Removing the only nonzero currency revalidates a dirty remaining field", async ({
 		api,
-		page,
+		icon,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		addCurrencyButton,
@@ -222,7 +222,7 @@ test.describe("Currency management", () => {
 		await expect(submitButton).toBeEnabled();
 		await amountRow("EUR")
 			.getByRole("button")
-			.filter({ has: page.getByTestId("trash-icon") })
+			.filter({ has: icon("trash") })
 			.click();
 		await expect(euroInput).not.toBeAttached();
 		await expect(dollarInput).toHaveValue("0");
@@ -231,7 +231,7 @@ test.describe("Currency management", () => {
 
 	test("Peer without debts can add, enter and remove a currency", async ({
 		api,
-		page,
+		icon,
 		mockDebtsTransfer,
 		openDebtsTransferScreen,
 		addCurrencyButton,
@@ -270,7 +270,7 @@ test.describe("Currency management", () => {
 		await expect(submitButton).toBeEnabled();
 		await amountRow("EUR")
 			.getByRole("button")
-			.filter({ has: page.getByTestId("trash-icon") })
+			.filter({ has: icon("trash") })
 			.click();
 		await expect(euroInput).not.toBeAttached();
 		await expect(transferForm).toContainText("No debts");
