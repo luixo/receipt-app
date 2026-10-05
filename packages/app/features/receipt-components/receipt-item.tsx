@@ -39,7 +39,8 @@ type Props = {
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const { t } = useTranslation("receipts");
-	const { currencyCode, participants } = useReceiptContext();
+	const { currencyCode, participants, confirmItemRemoval } =
+		useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
@@ -111,9 +112,10 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 														<View
 															className="text-danger flex-row items-center gap-1"
 															onPress={
-																item.consumers.length === 0
-																	? () => removeItem(item.id)
-																	: openModal
+																confirmItemRemoval &&
+																item.consumers.length !== 0
+																	? openModal
+																	: () => removeItem(item.id)
 															}
 														>
 															<Icon name="trash" className="m-1 size-4" />

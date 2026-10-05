@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"5d222d15-f4d7-4830-ade5-faee7cb656c5\"}]": {
+		"debts.get:[{\"id\":\"2a4f5c78-e379-4759-9d81-b26a97cff2e4\"}]": {
 			"state": {
 				"data": {
-					"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
+					"id": "2a4f5c78-e379-4759-9d81-b26a97cff2e4",
 					"amount": 26839.85,
 					"currencyCode": "THB",
 					"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5",
@@ -26,10 +26,10 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"8d11b3e4-f381-4dfb-8421-3cb519d7a0e1\"}]": {
+		"debts.get:[{\"id\":\"5d222d15-f4d7-4830-ade5-faee7cb656c5\"}]": {
 			"state": {
 				"data": {
-					"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
+					"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 					"amount": 21938.87,
 					"currencyCode": "THB",
 					"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe",
@@ -74,11 +74,11 @@
 					"debts": {
 						"debts": {
 							"2": {
-								"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
+								"id": "2a4f5c78-e379-4759-9d81-b26a97cff2e4",
 								"peerId": "6864b95f-5cea-4bd8-a1c0-ff77283a54e5"
 							},
 							"3": {
-								"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
+								"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 								"peerId": "ebdcd7f1-302d-4081-a2f4-65f01b85f5fe"
 							}
 						}
@@ -93,7 +93,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
+						"id": "2a4f5c78-e379-4759-9d81-b26a97cff2e4",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": true
 					},
@@ -113,7 +113,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "8d11b3e4-f381-4dfb-8421-3cb519d7a0e1",
+						"id": "5d222d15-f4d7-4830-ade5-faee7cb656c5",
 						"updatedAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"reverseAccepted": true
 					},
