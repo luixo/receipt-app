@@ -1,0 +1,66 @@
+{
+	"mutations": {
+		"receipts.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"name": "capio crepusculum eius",
+						"currencyCode": "VND",
+						"issued": "2020-02-01",
+						"items": [
+							{
+								"name": "Awesome Silk Sausages",
+								"price": 21,
+								"quantity": 5,
+								"consumers": [
+									{
+										"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+										"part": 1
+									},
+									{
+										"peerId": "40a0c570-b310-4d72-b399-9ce831e4006c",
+										"part": 2
+									}
+								],
+								"payers": []
+							},
+							{
+								"name": "Modern Concrete Mouse",
+								"price": 76.8,
+								"quantity": 21,
+								"consumers": [],
+								"payers": []
+							},
+							{
+								"name": "Licensed Cotton Gloves",
+								"price": 8.54,
+								"quantity": 2,
+								"consumers": [],
+								"payers": []
+							}
+						],
+						"participants": [
+							{
+								"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+								"role": "viewer"
+							},
+							{
+								"peerId": "40a0c570-b310-4d72-b399-9ce831e4006c",
+								"role": "editor"
+							}
+						],
+						"payers": [
+							{
+								"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+								"part": 2
+							}
+						]
+					}
+				}
+			}
+		]
+	}
+}

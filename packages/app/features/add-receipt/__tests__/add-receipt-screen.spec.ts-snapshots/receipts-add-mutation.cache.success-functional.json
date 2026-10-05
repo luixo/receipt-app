@@ -1,13 +1,13 @@
 {
 	"queries": {
-		"receipts.get:[{\"id\":\"bd0d48e0-70f7-4448-a351-30c2044c3814\"}]": {
+		"receipts.get:[{\"id\":\"fcb2810e-50ac-42bd-bb4a-bf294def9861\"}]": {
 			"state": {
 				"data": {
-					"id": "bd0d48e0-70f7-4448-a351-30c2044c3814",
+					"id": "fcb2810e-50ac-42bd-bb4a-bf294def9861",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "surculus appono itaque",
+					"name": "eos validus allatus",
 					"issued": "2020-02-01",
-					"currencyCode": "USD",
+					"currencyCode": "NGN",
 					"participants": [],
 					"items": [],
 					"payers": [],
@@ -32,7 +32,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "bd0d48e0-70f7-4448-a351-30c2044c3814",
+						"id": "fcb2810e-50ac-42bd-bb4a-bf294def9861",
 						"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 						"participants": [],
 						"items": [],
