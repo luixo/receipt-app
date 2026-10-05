@@ -1,4 +1,4 @@
-import type { Locator } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import assert from "node:assert";
 
 import { test as base } from "~app/features/receipt/__tests__/utils";
@@ -23,6 +23,14 @@ type MockResult = {
 	peerNames: string[];
 };
 
+export const getItemCards = (page: Page) => page.getByTestId("receipt-item");
+export const getItemNameInput = (scope: Locator | Page) =>
+	scope.getByRole("textbox", { name: "Receipt item name" });
+export const getItemPriceInput = (scope: Locator | Page) =>
+	scope.getByRole("textbox", { name: "Receipt item price" });
+export const getItemQuantityInput = (scope: Locator | Page) =>
+	scope.getByRole("textbox", { name: "Receipt item quantity" });
+
 type Fixtures = {
 	mockItem: (options?: SetupOptions) => Promise<MockResult>;
 	card: Locator;
@@ -38,23 +46,20 @@ type Fixtures = {
 };
 
 export const test = base.extend<Fixtures>({
-	card: ({ page }, use) => use(page.getByTestId("receipt-item")),
-	itemName: ({ card }, use) =>
-		use(card.getByRole("textbox", { name: "Receipt item name" })),
-	itemPrice: ({ card }, use) =>
-		use(card.getByRole("textbox", { name: "Receipt item price" })),
+	card: ({ page }, use) => use(getItemCards(page)),
+	itemName: ({ card }, use) => use(getItemNameInput(card)),
+	itemPrice: ({ card }, use) => use(getItemPriceInput(card)),
 	itemPriceField: ({ card, page }, use) =>
 		use(
 			card.getByRole("group").filter({
-				has: page.getByRole("textbox", { name: "Receipt item price" }),
+				has: getItemPriceInput(page),
 			}),
 		),
-	itemQuantity: ({ card }, use) =>
-		use(card.getByRole("textbox", { name: "Receipt item quantity" })),
+	itemQuantity: ({ card }, use) => use(getItemQuantityInput(card)),
 	itemQuantityField: ({ card, page }, use) =>
 		use(
 			card.getByRole("group").filter({
-				has: page.getByRole("textbox", { name: "Receipt item quantity" }),
+				has: getItemQuantityInput(page),
 			}),
 		),
 	itemPayers: ({ card }, use) =>

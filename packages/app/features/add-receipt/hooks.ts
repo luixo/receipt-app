@@ -32,7 +32,7 @@ const useAddItem = (setItems: SetItems) =>
 				(prevItems) => [
 					...prevItems,
 					{
-						id: `temp-${Math.random()}`,
+						id: `new-item-${prevItems.length}`,
 						name,
 						price,
 						quantity,

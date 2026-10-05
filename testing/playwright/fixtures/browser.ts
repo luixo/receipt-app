@@ -1,4 +1,4 @@
-import type { Cookie } from "@playwright/test";
+import type { Cookie, Locator } from "@playwright/test";
 import { test } from "@playwright/test";
 
 import type { StoreValues } from "~app/utils/store-data";
@@ -15,9 +15,20 @@ type CookieManager = {
 
 type BrowserFixtures = {
 	cookieManager: CookieManager;
+	getScrollPosition: (locator: Locator) => Promise<number>;
 };
 
 export const browserFixtures = test.extend<BrowserFixtures>({
+	getScrollPosition: ({}, use) =>
+		use((locator) =>
+			locator.evaluate((element) => {
+				let parent = element.parentElement;
+				while (parent && parent.scrollHeight <= parent.clientHeight) {
+					parent = parent.parentElement;
+				}
+				return parent?.scrollTop ?? 0;
+			}),
+		),
 	cookieManager: async ({ page, baseURL }, use) => {
 		const browserContext = page.context();
 		await use({

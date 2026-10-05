@@ -6,6 +6,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { Text } from "~components/text";
+import { View } from "~components/view";
 import type { ViewHandle } from "~components/view.base";
 import type { ReceiptItemId } from "~db/ids";
 
@@ -70,14 +71,14 @@ export const ReceiptItems: React.FC = () => {
 	);
 	if (items.length === 0) {
 		return (
-			<>
+			<View className="gap-4" testID="receipt-items">
 				<AddReceiptItemController />
-				{emptyReceiptElement}
-			</>
+				<>{emptyReceiptElement}</>
+			</View>
 		);
 	}
 	return (
-		<>
+		<View className="gap-4" testID="receipt-items">
 			<AddReceiptItemController />
 			<ReceiptEmptyItems itemsRef={itemsRef} />
 			{sortedItems.map((item) => (
@@ -89,7 +90,7 @@ export const ReceiptItems: React.FC = () => {
 					}}
 				/>
 			))}
-		</>
+		</View>
 	);
 };
 

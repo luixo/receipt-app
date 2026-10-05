@@ -58,7 +58,8 @@ export const AddReceiptItemForm: React.FC = () => {
 						{ ...(defaultValues as Form), price: 0 },
 						{ keepDefaultValues: true },
 					);
-					nameFieldRef.current.focus();
+					// There's a race condition between a field becoming enabled again and this focus
+					setTimeout(() => nameFieldRef.current.focus(), 0);
 				},
 			});
 		},
@@ -69,7 +70,10 @@ export const AddReceiptItemForm: React.FC = () => {
 	return (
 		<Card>
 			<form.AppForm>
-				<form.Form className="flex flex-col gap-4">
+				<form.Form
+					className="flex flex-col gap-4"
+					aria-label={t("item.form.label")}
+				>
 					<View className="flex-row gap-4">
 						<form.AppField name="name">
 							{(field) => (
