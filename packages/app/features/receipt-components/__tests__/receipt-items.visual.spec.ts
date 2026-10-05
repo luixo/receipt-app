@@ -25,7 +25,6 @@ test("Populated collection masks item card internals", async ({
 	itemsCollection,
 	itemCards,
 	expectScreenshotWithSchemes,
-	page,
 }) => {
 	const { receipt } = await mockReceipt({
 		generateReceiptItems: (options) =>
@@ -36,7 +35,6 @@ test("Populated collection masks item card internals", async ({
 		}),
 	});
 	await openReceipt(receipt);
-	await itemsCollection.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("populated-collection.png", {
 		locator: itemsCollection,
 		mask: [itemCards],
