@@ -1,4 +1,5 @@
 import type { Locator } from "@playwright/test";
+import { TRPCError } from "@trpc/server";
 
 import {
 	getItemCards,
@@ -6,8 +7,9 @@ import {
 	getItemPriceInput,
 	getItemQuantityInput,
 } from "~app/features/receipt-components/__tests__/receipt-item.utils";
+import type { TRPCMutationInput } from "~app/trpc";
 import type { Currencies, Peer } from "~app/trpc-types";
-import { test as originalTest } from "~tests/frontend/fixtures";
+import { expect, test as originalTest } from "~tests/frontend/fixtures";
 import { defaultGeneratePeers } from "~tests/frontend/generators/peers";
 import {
 	generateAmount,
@@ -49,9 +51,105 @@ type Fixtures = {
 		quantity?: number;
 	}) => Promise<void>;
 	selectParticipant: (name: string) => Promise<void>;
+	submitDraft: () => Promise<TRPCMutationInput<"receipts.add">>;
+	assertDraftOnly: () => void;
+	awaitDraftAutosaves: () => Promise<void>;
+	removeDraftConsumer: (
+		mode: "zero part" | "deselection",
+		name: string,
+	) => Promise<void>;
+	mockDraft: () => Promise<Awaited<ReturnType<Fixtures["mockBase"]>>>;
 };
 
 export const test = originalTest.extend<Fixtures>({
+	removeDraftConsumer: ({ page, itemCards }, use) =>
+		use(async (mode, name) => {
+			const card = itemCards.first();
+			if (mode === "zero part") {
+				await card.getByRole("button", { name: "1 / 2" }).first().click();
+				const input = card.getByRole("textbox", { name: "Item consumer part" });
+				await input.fill("0");
+				await input.press("Tab");
+				await expect(card.getByRole("button", { name: "1 / 2" })).toHaveCount(
+					0,
+				);
+			} else {
+				await card.getByRole("button", { name: "Choose consumers" }).click();
+				await page
+					.getByRole("option", { includeHidden: true })
+					.filter({ visible: true, hasText: name })
+					.click();
+				await page.keyboard.press("Tab");
+			}
+		}),
+	awaitDraftAutosaves: ({ icon }, use) =>
+		use(async () => {
+			for (const check of await icon("check").all()) {
+				await expect(check).toHaveCSS("opacity", "0");
+			}
+		}),
+	mockDraft: (
+		{
+			mockBase,
+			page,
+			nameInput,
+			addItemButton,
+			fillForm,
+			saveItemButton,
+			selectParticipant,
+			participantsPicker,
+		},
+		use,
+	) =>
+		use(async () => {
+			const base = await mockBase();
+			await page.navigate({ to: "/receipts/add" });
+			await nameInput.fill("Draft receipt");
+			await addItemButton.click();
+			await fillForm({ name: "Draft item", price: 12, quantity: 2 });
+			await saveItemButton.click();
+			await page.getByRole("button", { name: "Add participants" }).click();
+			for (const peer of base.peers.slice(0, 2)) {
+				await selectParticipant(peer.name);
+			}
+			await participantsPicker.getByRole("button", { name: "Close" }).click();
+			return base;
+		}),
+	assertDraftOnly: ({ api }, use) =>
+		use(() => {
+			expect(
+				api
+					.getActions()
+					.filter(([, key]) =>
+						/^(?:receiptItems|receiptParticipants|receiptPayers|receiptItemConsumers|receiptItemPayers)\./.test(
+							key,
+						),
+					),
+			).toEqual([]);
+		}),
+	submitDraft: (
+		{ api, addButton, nameInput, verifyToastTexts, assertDraftOnly },
+		use,
+	) =>
+		use(async () => {
+			const captured =
+				Promise.withResolvers<TRPCMutationInput<"receipts.add">>();
+			const unmock = api.mockFirst("receipts.add", ({ input }) => {
+				captured.resolve(input);
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: "Keep draft for assertions",
+				});
+			});
+			await addButton.click();
+			const input = await captured.promise;
+			await verifyToastTexts(
+				`Error adding "${await nameInput.inputValue()}": Keep draft for assertions`,
+			);
+			unmock();
+			assertDraftOnly();
+			return input;
+		}),
 	mockBase: ({ api, faker }, use) =>
 		use(async () => {
 			const auth = await api.mockUtils.authPage();

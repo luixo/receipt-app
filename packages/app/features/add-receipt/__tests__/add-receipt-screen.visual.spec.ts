@@ -1,5 +1,6 @@
 import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
@@ -9,6 +10,32 @@ import { generateCurrencyCode } from "~tests/frontend/generators/utils";
 import { test as localTest } from "./utils";
 
 const test = mergeTests(localTest, currencyInputTest, currenciesPickerTest);
+
+test("Missing top currency requires a choice", async ({
+	mockBase,
+	api,
+	page,
+	nameInput,
+	pickCurrencyButton,
+	addButton,
+	addItemButton,
+	expectScreenshotWithSchemes,
+	skip,
+}, testInfo) => {
+	skip(testInfo, "only-biggest");
+	await mockBase();
+	api.mockFirst("currency.top", { items: [] });
+	await page.navigate({ to: "/receipts/add" });
+	await nameInput.fill("Draft receipt");
+	await expect(pickCurrencyButton).toBeVisible();
+	await expect(addButton).toBeDisabled();
+	await expectScreenshotWithSchemes("missing-currency.png", {
+		mask: [
+			addItemButton,
+			page.getByRole("button", { name: "Add participants" }),
+		],
+	});
+});
 
 test("Form", async ({
 	mockBase,
@@ -154,6 +181,7 @@ test.describe("Draft form", () => {
 		participantsPicker,
 		participantSuggestion,
 		expectScreenshotWithSchemes,
+		awaitDraftAutosaves,
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-biggest");
@@ -178,6 +206,7 @@ test.describe("Draft form", () => {
 			).toHaveValue("1");
 		}
 		await expect(participantSuggestion.getByRole("combobox")).toBeVisible();
+		await awaitDraftAutosaves();
 		await expectScreenshotWithSchemes("draft-participant-picker.png", {
 			locator: participantsPicker,
 			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
@@ -202,6 +231,7 @@ test.describe("Draft form", () => {
 		participantRows,
 		participantsPicker,
 		expectScreenshotWithSchemes,
+		awaitDraftAutosaves,
 		skip,
 	}, testInfo) => {
 		skip(testInfo, "only-biggest");
@@ -233,7 +263,27 @@ test.describe("Draft form", () => {
 		await part.fill("2");
 		await part.press("Tab");
 		await expect(card.getByRole("button", { name: "2 / 3" })).toBeVisible();
+		await awaitDraftAutosaves();
 		await expectScreenshotWithSchemes("draft-item-shares.png", {
+			locator: card,
+			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
+				{
+					...expectedPixels[0],
+					rgb: colorMode === "light" ? "#fafafa" : "#000000",
+				},
+				...expectedPixels.slice(1),
+			],
+		});
+		const payer = card.getByRole("button", { name: "Choose a payer" });
+		const [peer] = peers;
+		assert.ok(peer);
+		await payer.click();
+		await page
+			.getByRole("option", { includeHidden: true })
+			.filter({ visible: true, hasText: peer.name })
+			.click();
+		await expect(payer).toContainText(peer.name);
+		await expectScreenshotWithSchemes("draft-item-payer-override.png", {
 			locator: card,
 			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
 				{

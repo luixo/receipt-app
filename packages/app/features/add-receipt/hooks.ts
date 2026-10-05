@@ -321,6 +321,7 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 const useRemoveParticipant = (
 	setParticipants: SetParticipants,
 	setItems: SetItems,
+	setPayers: SetPayers,
 ) =>
 	React.useCallback<ActionsHooks["removeParticipant"]>(
 		(peerId, options) => {
@@ -342,8 +343,12 @@ const useRemoveParticipant = (
 					})),
 				undefined,
 			);
+			setPayers(
+				(payers) => payers.filter((payer) => payer.peerId !== peerId),
+				undefined,
+			);
 		},
-		[setParticipants, setItems],
+		[setParticipants, setItems, setPayers],
 	);
 
 const useUpdateParticipant = (setParticipants: SetParticipants) =>
@@ -438,7 +443,11 @@ export const useActionsHooks = (
 		removeItemPayer: useRemoveItemPayer(setItems),
 		updateItemPayerPart: useUpdateItemPayerPart(setItems),
 		addParticipant: useAddParticipant(setParticipants),
-		removeParticipant: useRemoveParticipant(setParticipants, setItems),
+		removeParticipant: useRemoveParticipant(
+			setParticipants,
+			setItems,
+			setPayers,
+		),
 		updateParticipantRole: useUpdateParticipantRole(setParticipants),
 		addPayer: useAddPayer(setPayers),
 		removePayer: useRemovePayer(setPayers),

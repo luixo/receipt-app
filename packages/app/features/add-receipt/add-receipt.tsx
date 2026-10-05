@@ -212,6 +212,7 @@ export const AddReceipt = () => {
 				<form.AppField name="currencyCode">
 					{(field) => (
 						<CurrencyInput
+							autoSelectFallback={false}
 							mutation={addReceiptMutation}
 							topQueryOptions={{ type: "receipts" }}
 							value={field.state.value}
