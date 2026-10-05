@@ -55,6 +55,7 @@ type Props = {
 	>["topQueryOptions"];
 	value: CurrencyCode | undefined;
 	onValueChange: (currencyCode: CurrencyCode) => void;
+	autoSelectFallback?: boolean;
 };
 
 export const CurrencyInput: React.FC<Props> = ({
@@ -62,6 +63,7 @@ export const CurrencyInput: React.FC<Props> = ({
 	topQueryOptions,
 	value,
 	onValueChange,
+	autoSelectFallback = true,
 }) => {
 	const locale = useLocale();
 	const { t } = useTranslation("default");
@@ -92,13 +94,14 @@ export const CurrencyInput: React.FC<Props> = ({
 					)
 					.find(Boolean);
 				const nextSelectedCurrencyCode =
-					matchedTopCurrencyCode || currencyCodes[0];
+					matchedTopCurrencyCode ||
+					(autoSelectFallback ? currencyCodes[0] : undefined);
 				if (nextSelectedCurrencyCode) {
 					onCurrencyChange(nextSelectedCurrencyCode);
 				}
 			}
 		},
-		[onCurrencyChange, value],
+		[onCurrencyChange, value, autoSelectFallback],
 	);
 	useAutoLoadCurrency(topQueryOptions, onLoad);
 

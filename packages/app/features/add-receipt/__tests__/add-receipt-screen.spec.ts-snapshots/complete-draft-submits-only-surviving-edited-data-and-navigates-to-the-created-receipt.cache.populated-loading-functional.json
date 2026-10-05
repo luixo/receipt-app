@@ -7,8 +7,8 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"name": "capio crepusculum eius",
-						"currencyCode": "VND",
+						"name": "crepusculum eius verto",
+						"currencyCode": "DOP",
 						"issued": "2020-02-01",
 						"items": [
 							{
@@ -30,13 +30,6 @@
 							{
 								"name": "Modern Concrete Mouse",
 								"price": 76.8,
-								"quantity": 21,
-								"consumers": [],
-								"payers": []
-							},
-							{
-								"name": "Licensed Cotton Gloves",
-								"price": 8.54,
 								"quantity": 2,
 								"consumers": [],
 								"payers": []

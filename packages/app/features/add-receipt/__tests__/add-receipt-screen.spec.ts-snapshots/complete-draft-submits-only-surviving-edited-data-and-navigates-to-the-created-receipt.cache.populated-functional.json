@@ -5,9 +5,9 @@
 				"data": {
 					"id": "9403cb9d-9259-4327-b28e-72958dcc38d5",
 					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-					"name": "capio crepusculum eius",
+					"name": "crepusculum eius verto",
 					"issued": "2020-02-01",
-					"currencyCode": "VND",
+					"currencyCode": "DOP",
 					"participants": [
 						{
 							"role": "viewer",
@@ -46,15 +46,6 @@
 							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 							"name": "Modern Concrete Mouse",
 							"price": 76.8,
-							"quantity": 21,
-							"consumers": [],
-							"payers": []
-						},
-						{
-							"id": "e4572da0-a177-448a-99e4-9a13aaef92c2",
-							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-							"name": "Licensed Cotton Gloves",
-							"price": 8.54,
 							"quantity": 2,
 							"consumers": [],
 							"payers": []
@@ -108,12 +99,6 @@
 							},
 							{
 								"id": "bcfd1f07-89a7-41b3-967b-388e245f3310",
-								"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
-								"consumers": [],
-								"payers": []
-							},
-							{
-								"id": "e4572da0-a177-448a-99e4-9a13aaef92c2",
 								"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
 								"consumers": [],
 								"payers": []
