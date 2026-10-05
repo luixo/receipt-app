@@ -49,9 +49,9 @@
 		"@types/react": "^19.2.11",
 		"@types/react-dom": "^19.2.3",
 		"lint-staged": "^17.4.1",
-		"pre-commit": "^1.2.2",
+		"pre-commit": "^2.0.0",
 		"typescript": "^7.0.2",
-		"vitest": "^4.1.11"
+		"vitest": "^5.0.3"
 	},
 	"overrides": {
 		"cosmiconfig": "^10"
@@ -64,7 +64,7 @@
 	],
 	"packageManager": "bun@1.4.2",
 	"catalog": {
-		"@heroui/react": "2.8.4",
+		"@heroui/react": "3.2.6",
 		"@playwright/test": "1.63.0",
 		"@tanstack/react-query": "5.80.6",
 		"@tanstack/react-router": "1.170.16",
@@ -76,18 +76,18 @@
 		"@trpc/react-query": "11.9.0",
 		"@trpc/server": "11.9.0",
 		"@trpc/tanstack-react-query": "11.9.0",
-		"cookie": "1.0.2",
+		"cookie": "2.0.1",
 		"dataloader": "2.2.2",
 		"expo-router": "~57.0.23",
 		"heroui-native": "1.0.9",
-		"i18next": "25.8.0",
+		"i18next": "26.4.2",
 		"image-size": "2.0.2",
 		"jimp": "1.6.1",
 		"playwright": "1.63.0",
 		"kysely": "^0.29.5",
 		"react": "19.2.3",
 		"react-dom": "19.2.3",
-		"react-i18next": "16.5.4",
+		"react-i18next": "17.0.15",
 		"tailwindcss": "4.3.3",
 		"tailwind-merge": "3.4.0",
 		"@faker-js/faker": "^10.6.0",
