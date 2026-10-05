@@ -138,16 +138,7 @@ const procedures: ProcedureInfo[] = entries(appRouter._def.procedures).map(
 );
 // oxlint-enable no-underscore-dangle
 
-const clientFor = (sessionId: SessionId) =>
-	getUntypedClient(
-		getServerTrpcClient({
-			url: env.WEB_BASE_URL,
-			source: "bot",
-			headers: { Cookie: serialize(AUTH_COOKIE, sessionId) },
-		}),
-	);
-
-export const listApiProcedures = toolDefinition({
+const listApiProcedures = toolDefinition({
 	name: "list-api-procedures",
 	description:
 		"List all tRPC API procedures, including their path, type, auth level, forbiddance, description and input schema. Optionally filter by router name.",
@@ -175,12 +166,18 @@ const procedureTools = procedures
 			description: procedure.description,
 			inputSchema: procedure.input,
 		}).server<ToolContext>(async (input, { context, abortSignal }) => {
-			const client = clientFor(context.sessionId);
-			const options = { signal: abortSignal };
-			const result =
-				procedure.type === "mutation"
-					? await client.mutation(procedure.path, input, options)
-					: await client.query(procedure.path, input, options);
+			const client = getUntypedClient(
+				getServerTrpcClient({
+					url: env.WEB_BASE_URL,
+					source: "bot",
+					headers: { Cookie: serialize(AUTH_COOKIE, context.sessionId) },
+				}),
+			);
+			console.log("going to..", procedure.path);
+			const result = await client[procedure.type](procedure.path, input, {
+				signal: abortSignal,
+			});
+			console.log("result", result);
 			return transformer.serialize(result).json;
 		}),
 	);
