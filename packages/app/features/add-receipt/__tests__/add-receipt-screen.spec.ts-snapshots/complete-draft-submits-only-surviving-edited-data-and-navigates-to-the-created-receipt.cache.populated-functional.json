@@ -1,0 +1,142 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"9403cb9d-9259-4327-b28e-72958dcc38d5\"}]": {
+			"state": {
+				"data": {
+					"id": "9403cb9d-9259-4327-b28e-72958dcc38d5",
+					"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+					"name": "capio crepusculum eius",
+					"issued": "2020-02-01",
+					"currencyCode": "VND",
+					"participants": [
+						{
+							"role": "viewer",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d"
+						},
+						{
+							"role": "editor",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"peerId": "40a0c570-b310-4d72-b399-9ce831e4006c"
+						}
+					],
+					"items": [
+						{
+							"id": "dcf1ab4d-f2f2-4c86-8c6a-6702eff2654e",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"name": "Awesome Silk Sausages",
+							"price": 21,
+							"quantity": 5,
+							"consumers": [
+								{
+									"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+									"part": 1,
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								},
+								{
+									"peerId": "40a0c570-b310-4d72-b399-9ce831e4006c",
+									"part": 2,
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								}
+							],
+							"payers": []
+						},
+						{
+							"id": "bcfd1f07-89a7-41b3-967b-388e245f3310",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"name": "Modern Concrete Mouse",
+							"price": 76.8,
+							"quantity": 21,
+							"consumers": [],
+							"payers": []
+						},
+						{
+							"id": "e4572da0-a177-448a-99e4-9a13aaef92c2",
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"name": "Licensed Cotton Gloves",
+							"price": 8.54,
+							"quantity": 2,
+							"consumers": [],
+							"payers": []
+						}
+					],
+					"payers": [
+						{
+							"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+							"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+							"part": 2
+						}
+					],
+					"ownerPeerId": "eb0f533d-2a70-4b4b-a6aa-21850317b0c3",
+					"selfPeerId": "eb0f533d-2a70-4b4b-a6aa-21850317b0c3",
+					"debts": {
+						"direction": "outcoming",
+						"debts": []
+					}
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"receipts.add": {
+			"0": {
+				"state": {
+					"data": {
+						"id": "9403cb9d-9259-4327-b28e-72958dcc38d5",
+						"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+						"items": [
+							{
+								"id": "dcf1ab4d-f2f2-4c86-8c6a-6702eff2654e",
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+								"consumers": [
+									{
+										"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+										"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+									},
+									{
+										"peerId": "40a0c570-b310-4d72-b399-9ce831e4006c",
+										"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+									}
+								],
+								"payers": []
+							},
+							{
+								"id": "bcfd1f07-89a7-41b3-967b-388e245f3310",
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+								"consumers": [],
+								"payers": []
+							},
+							{
+								"id": "e4572da0-a177-448a-99e4-9a13aaef92c2",
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]",
+								"consumers": [],
+								"payers": []
+							}
+						],
+						"participants": [
+							{
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+							},
+							{
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+							}
+						],
+						"payers": [
+							{
+								"peerId": "d020f366-a012-4490-be22-87dfa7d77a4d",
+								"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+							}
+						]
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

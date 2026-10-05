@@ -460,6 +460,7 @@ export const useAddReceiptContext = (
 	payers,
 	currencyCode: form.currencyCode ?? "???",
 	receiptDisabled: false,
+	confirmItemRemoval: false,
 	items,
 	participants,
 	renderParticipantActions: () => null,

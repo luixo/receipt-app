@@ -375,6 +375,7 @@ export type ReceiptContext = {
 	ownerPeerId: PeerId;
 
 	receiptDisabled: boolean;
+	confirmItemRemoval: boolean;
 
 	items: Item[];
 	participants: Participant[];
@@ -401,6 +402,7 @@ export const useGetReceiptContext = (
 		ownerPeerId: receipt.ownerPeerId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,
+		confirmItemRemoval: true,
 		items: receipt.items,
 		participants,
 		renderParticipantActions,
