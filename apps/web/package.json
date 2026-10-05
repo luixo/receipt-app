@@ -19,7 +19,7 @@
 		"@ra/utils": "workspace:*",
 		"@react-email/components": "^1.0.12",
 		"@sentry/tanstackstart-react": "^10.62.0",
-		"@t3-oss/env-core": "^0.13.11",
+		"@t3-oss/env-core": "catalog:",
 		"@tanstack/devtools-vite": "^0.8.5",
 		"@tanstack/react-devtools": "^0.10.9",
 		"@tanstack/react-form-devtools": "^0.2.33",

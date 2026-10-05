@@ -49,7 +49,7 @@ export const createServerContext = (req: Request): UnauthorizedContext => {
 };
 /* c8 ignore stop */
 
-export const getServerTrpcClient = <R extends AnyRouter = AppRouter>(
+export const getLocalServerTrpcClient = <R extends AnyRouter = AppRouter>(
 	router: R,
 	req: Request,
 ) =>

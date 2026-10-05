@@ -9,10 +9,13 @@ import { NavigationContext } from "~app/contexts/navigation-context";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
+import { getTelegramInitData } from "~app/utils/telegram";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import { emailSchema, passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { Card } from "~components/card";
 import { Input } from "~components/input";
+import { Text } from "~components/text";
 import { options as authLoginOptions } from "~mutations/auth/login";
 
 import { ResetPasswordModal } from "./reset-password-modal";
@@ -21,12 +24,23 @@ const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
 export const LoginScreen = () => {
-	const { usePush, useSearchParams } = React.use(NavigationContext);
-	const { redirect: redirectUrl } = useSearchParams("__root__");
+	const { useNavigate, useSearchParams } = React.use(NavigationContext);
+	const { bot } = useSearchParams("__root__");
+	const isTelegramLogin = bot === "telegram";
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
-	const push = usePush();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
+
+	// `undefined` on both the server and the initial client render (`window`
+	// isn't available during SSR) - populated from the effect below once
+	// mounted, to avoid a hydration mismatch.
+	const [initData, setInitData] = React.useState<string | undefined>();
+	React.useEffect(() => {
+		if (isTelegramLogin) {
+			getTelegramInitData().then(setInitData);
+		}
+	}, [isTelegramLogin]);
 
 	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
 		useBooleanState();
@@ -35,8 +49,10 @@ export const LoginScreen = () => {
 		trpc.auth.login.mutationOptions(
 			useTrpcMutationOptions(authLoginOptions, {
 				onSuccess: () => {
+					if (isTelegramLogin) {
+						navigate({ to: "/bot-success" });
+					}
 					void queryClient.resetQueries();
-					push(redirectUrl);
 				},
 				trpc: { context: noBatchContext },
 			}),
@@ -51,12 +67,18 @@ export const LoginScreen = () => {
 			onChange: formSchema,
 			onSubmit: formSchema,
 		},
-		onSubmit: ({ value }) => loginMutation.mutate(value),
+		onSubmit: ({ value }) =>
+			loginMutation.mutate(initData ? { ...value, initData } : value),
 	});
 
 	return (
 		<>
 			<PageHeader>{t("header")}</PageHeader>
+			{isTelegramLogin ? (
+				<Card className="bg-primary-50">
+					<Text>{t("telegramAlert")}</Text>
+				</Card>
+			) : null}
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">
 					<form.AppField name="email">

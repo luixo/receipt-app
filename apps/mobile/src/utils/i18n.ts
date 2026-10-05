@@ -1,4 +1,5 @@
 import adminEn from "@ra/web/public/locales/en/admin.json";
+import botEn from "@ra/web/public/locales/en/bot.json";
 import debtsEn from "@ra/web/public/locales/en/debts.json";
 import defaultEn from "@ra/web/public/locales/en/default.json";
 import emailEn from "@ra/web/public/locales/en/email.json";
@@ -11,6 +12,7 @@ import settingsEn from "@ra/web/public/locales/en/settings.json";
 import userEn from "@ra/web/public/locales/en/user.json";
 import voidUserEn from "@ra/web/public/locales/en/void-user.json";
 import adminRu from "@ra/web/public/locales/ru/admin.json";
+import botRu from "@ra/web/public/locales/ru/bot.json";
 import debtsRu from "@ra/web/public/locales/ru/debts.json";
 import defaultRu from "@ra/web/public/locales/ru/default.json";
 import emailRu from "@ra/web/public/locales/ru/email.json";
@@ -39,6 +41,7 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		peers: peersEn,
 		debts: debtsEn,
 		email: emailEn,
+		bot: botEn,
 	},
 	ru: {
 		default: defaultRu,
@@ -53,5 +56,6 @@ export const resources: Record<Language, Record<Namespace, object>> = {
 		peers: peersRu,
 		debts: debtsRu,
 		email: emailRu,
+		bot: botRu,
 	},
 };

@@ -113,6 +113,7 @@ export const searchParamsMapping = {
 	__root__: z.object({
 		debug: z.coerce.boolean().default(false).catch(false),
 		redirect: z.string().default("").catch(""),
+		bot: z.literal("telegram").optional().catch(undefined),
 	}),
 	"/_public/void-user": z.object({
 		token: voidUserTokenSchema.optional().catch(undefined),

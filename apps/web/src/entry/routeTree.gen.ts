@@ -22,6 +22,8 @@ import { Route as PublicLoginRouteImport } from './../pages/_public/login'
 import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
 import { Route as ProtectedUserRouteImport } from './../pages/_protected/user'
 import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
+import { Route as ProtectedBotSuccessRouteImport } from './../pages/_protected/bot-success'
+import { Route as ProtectedBotLinkRouteImport } from './../pages/_protected/bot-link'
 import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
 import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
 import { Route as ProtectedPeersIndexRouteImport } from './../pages/_protected/peers/index'
@@ -103,6 +105,16 @@ const ProtectedUserRoute = ProtectedUserRouteImport.update({
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBotSuccessRoute = ProtectedBotSuccessRouteImport.update({
+  id: '/bot-success',
+  path: '/bot-success',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedBotLinkRoute = ProtectedBotLinkRouteImport.update({
+  id: '/bot-link',
+  path: '/bot-link',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
@@ -210,6 +222,8 @@ const ProtectedDebtsPeerIdExchangeAllRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
+  '/bot-success': typeof ProtectedBotSuccessRoute
   '/settings': typeof ProtectedSettingsRoute
   '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
@@ -242,6 +256,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof ProtectedAdminRoute
+  '/bot-link': typeof ProtectedBotLinkRoute
+  '/bot-success': typeof ProtectedBotSuccessRoute
   '/settings': typeof ProtectedSettingsRoute
   '/user': typeof ProtectedUserRoute
   '/confirm-email': typeof PublicConfirmEmailRoute
@@ -277,6 +293,8 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_protected/admin': typeof ProtectedAdminRoute
+  '/_protected/bot-link': typeof ProtectedBotLinkRoute
+  '/_protected/bot-success': typeof ProtectedBotSuccessRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_protected/user': typeof ProtectedUserRoute
   '/_public/confirm-email': typeof PublicConfirmEmailRoute
@@ -311,6 +329,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/bot-link'
+    | '/bot-success'
     | '/settings'
     | '/user'
     | '/confirm-email'
@@ -343,6 +363,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/bot-link'
+    | '/bot-success'
     | '/settings'
     | '/user'
     | '/confirm-email'
@@ -377,6 +399,8 @@ export interface FileRouteTypes {
     | '/_protected'
     | '/_public'
     | '/_protected/admin'
+    | '/_protected/bot-link'
+    | '/_protected/bot-success'
     | '/_protected/settings'
     | '/_protected/user'
     | '/_public/confirm-email'
@@ -508,6 +532,20 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/bot-success': {
+      id: '/_protected/bot-success'
+      path: '/bot-success'
+      fullPath: '/bot-success'
+      preLoaderRoute: typeof ProtectedBotSuccessRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/bot-link': {
+      id: '/_protected/bot-link'
+      path: '/bot-link'
+      fullPath: '/bot-link'
+      preLoaderRoute: typeof ProtectedBotLinkRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin': {
@@ -648,6 +686,8 @@ declare module '@tanstack/react-router' {
 
 interface ProtectedRouteChildren {
   ProtectedAdminRoute: typeof ProtectedAdminRoute
+  ProtectedBotLinkRoute: typeof ProtectedBotLinkRoute
+  ProtectedBotSuccessRoute: typeof ProtectedBotSuccessRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedUserRoute: typeof ProtectedUserRoute
   ProtectedDebtsIdRoute: typeof ProtectedDebtsIdRoute
@@ -670,6 +710,8 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRoute: ProtectedAdminRoute,
+  ProtectedBotLinkRoute: ProtectedBotLinkRoute,
+  ProtectedBotSuccessRoute: ProtectedBotSuccessRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedUserRoute: ProtectedUserRoute,
   ProtectedDebtsIdRoute: ProtectedDebtsIdRoute,

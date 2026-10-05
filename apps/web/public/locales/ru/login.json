@@ -1,5 +1,6 @@
 {
 	"header": "Вход",
+	"telegramAlert": "Вы входите в аккаунт, чтобы привязать бота в Telegram.",
 	"form": {
 		"email": {
 			"label": "Email"
