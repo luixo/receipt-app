@@ -1,0 +1,36 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"5306be2a-caf3-463e-a255-b3508e422525\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"consumers": {
+								"0": {
+									"peerId": "7e2af1dd-7cfd-4c4d-968e-1bd6d89c56c8",
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								},
+								"1": "<undefined>"
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.add": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItemConsumers.add\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

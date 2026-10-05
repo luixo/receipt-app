@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"68394722-c5ad-441e-82b0-29958807ffb4\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"consumers": {
+								"1": {
+									"part": 1
+								}
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItemConsumers.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

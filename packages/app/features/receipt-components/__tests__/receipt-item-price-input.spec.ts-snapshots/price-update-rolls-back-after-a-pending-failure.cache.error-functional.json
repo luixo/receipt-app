@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"17af9e55-6cdc-4760-83da-17f85417c267\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"price": 11.72
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItems.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}
