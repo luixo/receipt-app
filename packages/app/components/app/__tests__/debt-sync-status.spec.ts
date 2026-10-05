@@ -15,7 +15,7 @@ import { test as debtSyncStatusFixture } from "./debt-sync-status.utils";
 const test = mergeTests(debtTest, debtSyncStatusFixture);
 
 test("No their debt - shows an out-of-sync push status", async ({
-	page,
+	icon,
 	mockDebt,
 	openDebtScreen,
 	debtSyncStatus,
@@ -32,12 +32,12 @@ test("No their debt - shows an out-of-sync push status", async ({
 	await expect(debtSyncStatus).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("unsync-icon"),
+			has: icon("unsync"),
 		}),
 	).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("outcoming-icon"),
+			has: icon("outcoming"),
 		}),
 	).toBeVisible();
 
@@ -45,7 +45,7 @@ test("No their debt - shows an out-of-sync push status", async ({
 });
 
 test("Their debt in sync - shows an in-sync status", async ({
-	page,
+	icon,
 	mockDebt,
 	openDebtScreen,
 	debtSyncStatus,
@@ -62,17 +62,17 @@ test("Their debt in sync - shows an in-sync status", async ({
 	await expect(debtSyncStatus).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("sync-icon"),
+			has: icon("sync"),
 		}),
 	).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("incoming-icon"),
+			has: icon("incoming"),
 		}),
 	).not.toBeAttached();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("outcoming-icon"),
+			has: icon("outcoming"),
 		}),
 	).not.toBeAttached();
 
@@ -80,7 +80,7 @@ test("Their debt in sync - shows an in-sync status", async ({
 });
 
 test("Desynced, their update is more recent - shows an incoming icon", async ({
-	page,
+	icon,
 	mockDebt,
 	openDebtScreen,
 	debtSyncStatus,
@@ -97,12 +97,12 @@ test("Desynced, their update is more recent - shows an incoming icon", async ({
 	await expect(debtSyncStatus).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("unsync-icon"),
+			has: icon("unsync"),
 		}),
 	).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("incoming-icon"),
+			has: icon("incoming"),
 		}),
 	).toBeVisible();
 
@@ -110,7 +110,7 @@ test("Desynced, their update is more recent - shows an incoming icon", async ({
 });
 
 test("Desynced, our update is more recent - shows an outgoing icon", async ({
-	page,
+	icon,
 	mockDebt,
 	openDebtScreen,
 	debtSyncStatus,
@@ -135,12 +135,12 @@ test("Desynced, our update is more recent - shows an outgoing icon", async ({
 	await expect(debtSyncStatus).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("unsync-icon"),
+			has: icon("unsync"),
 		}),
 	).toBeVisible();
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("outcoming-icon"),
+			has: icon("outcoming"),
 		}),
 	).toBeVisible();
 
@@ -148,7 +148,7 @@ test("Desynced, our update is more recent - shows an outgoing icon", async ({
 });
 
 test("Desynced with tied updates - defaults to outgoing", async ({
-	page,
+	icon,
 	mockDebt,
 	openDebtScreen,
 	debtSyncStatus,
@@ -171,7 +171,7 @@ test("Desynced with tied updates - defaults to outgoing", async ({
 	await openDebtScreen(debt.id);
 	await expect(
 		debtSyncStatus.filter({
-			has: page.getByTestId("outcoming-icon"),
+			has: icon("outcoming"),
 		}),
 	).toBeVisible();
 	await expectTooltip(debtSyncStatus, "Out of sync, we intend to sync");
