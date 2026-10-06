@@ -1,6 +1,6 @@
 import type { Faker } from "@faker-js/faker";
 import { mergeTests } from "@playwright/test";
-import type { BrowserContext } from "@playwright/test";
+import type { BrowserContext, Request } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
@@ -84,7 +84,7 @@ export type ApiManager = {
 		handler: NonNullable<Handlers[K]>[number],
 	) => () => void;
 	createPause: () => PromiseWithResolvers<void>;
-	getActions: () => Action[];
+	getActions: () => Promise<Action[]>;
 	clearActions: () => void;
 };
 
@@ -106,6 +106,7 @@ type Controller = {
 	paused: PromiseWithResolvers<void>[];
 	calls: Map<TRPCKey, number>;
 	actions: Action[];
+	actionLocks: Map<Request | http.IncomingMessage, PromiseWithResolvers<void>>;
 	signal: AbortSignal;
 };
 
@@ -121,6 +122,21 @@ class NoHandlerError extends Error {
 type CallType = "server" | "client";
 
 const API_PREFIX = "/api/trpc/";
+
+const lockActions = (
+	controller: Controller,
+	request: Request | http.IncomingMessage,
+) => {
+	controller.actionLocks.set(request, Promise.withResolvers<void>());
+};
+
+const unlockActions = (
+	controller: Controller,
+	request: Request | http.IncomingMessage,
+) => {
+	controller.actionLocks.get(request)?.resolve();
+	controller.actionLocks.delete(request);
+};
 
 const getHandlersResponse = <K extends TRPCKey>(
 	key: K,
@@ -221,32 +237,40 @@ const handleRequest = async (
 	url: URL,
 	method: string,
 	getBody: () => Promise<string | undefined>,
+	releaseActions: () => void,
 ): Promise<MaybeArray<JSONRPC2.ResultResponse | JSONRPC2.ErrorResponse>> => {
-	const rawBody =
-		method === "GET"
-			? (url.searchParams.get("input") ?? undefined)
-			: await getBody();
-	const cleanPathname = url.pathname.replace(API_PREFIX, "");
-	if (isBatch) {
-		const inputs = JSON.parse(decodeURIComponent(rawBody || "{}")) as Record<
-			number,
-			TransformerResult
-		>;
-		const names = cleanPathname.split(",") as TRPCKey[];
-		return Promise.all(
-			names
-				.map((name, index) => ({ name, input: inputs[index] }))
-				.map(({ name, input }) =>
-					handleCall(controller, headers, type, name, input),
-				),
-		);
+	try {
+		const rawBody =
+			method === "GET"
+				? (url.searchParams.get("input") ?? undefined)
+				: await getBody();
+		const cleanPathname = url.pathname.replace(API_PREFIX, "");
+		if (isBatch) {
+			const inputs = JSON.parse(decodeURIComponent(rawBody || "{}")) as Record<
+				number,
+				TransformerResult
+			>;
+			const names = cleanPathname.split(",") as TRPCKey[];
+			// oxlint-disable-next-line typescript/return-await
+			return Promise.all(
+				names
+					.map((name, index) => ({ name, input: inputs[index] }))
+					.map(({ name, input }) =>
+						handleCall(controller, headers, type, name, input),
+					),
+			);
+		}
+		const input =
+			rawBody === undefined
+				? undefined
+				: (JSON.parse(decodeURIComponent(rawBody)) as TransformerResult);
+		const name = cleanPathname as TRPCKey;
+		// oxlint-disable-next-line typescript/return-await
+		return handleCall(controller, headers, type, name, input);
+	} finally {
+		// handleCall records actions synchronously; don't wait for paused handlers.
+		releaseActions();
 	}
-	const input =
-		rawBody === undefined
-			? undefined
-			: (JSON.parse(decodeURIComponent(rawBody)) as TransformerResult);
-	const name = cleanPathname as TRPCKey;
-	return handleCall(controller, headers, type, name, input);
 };
 
 const startManagerServer = () => {
@@ -294,6 +318,7 @@ const startManagerServer = () => {
 					// oxlint-disable-next-line eslint-js/no-throw-literal, typescript/only-throw-error
 					throw CLEANUP_MARK;
 				}
+				lockActions(controller, req);
 				const response = await handleRequest(
 					controller,
 					headers,
@@ -302,6 +327,7 @@ const startManagerServer = () => {
 					url,
 					req.method || "GET",
 					() => jsonPromise,
+					() => unlockActions(controller, req),
 				);
 				if (!res.headersSent) {
 					res.setHeaders(headers);
@@ -328,6 +354,7 @@ const startManagerServer = () => {
 			const abortController = new AbortController();
 			const controller: Controller = {
 				actions: [],
+				actionLocks: new Map(),
 				handlers: {},
 				paused: [],
 				calls: new Map(),
@@ -338,6 +365,9 @@ const startManagerServer = () => {
 				controller,
 				cleanup: () => {
 					abortController.abort();
+					for (const request of controller.actionLocks.keys()) {
+						unlockActions(controller, request);
+					}
 					for (const controllerPromise of controller.paused) {
 						controllerPromise.reject(CLEANUP_MARK);
 					}
@@ -354,6 +384,16 @@ const createApiManager = async (
 ): Promise<ApiManager & { cleanup: CleanupFn }> => {
 	const controllerId = v4();
 	const { controller, cleanup } = createController(controllerId);
+	const onRequest = (request: Request) => {
+		if (new URL(request.url()).pathname.startsWith(API_PREFIX)) {
+			lockActions(controller, request);
+		}
+	};
+	const onRequestDone = (request: Request) =>
+		unlockActions(controller, request);
+	context.on("request", onRequest);
+	context.on("requestfailed", onRequestDone);
+	context.on("requestfinished", onRequestDone);
 	await context.route(`${API_PREFIX}**/*`, async (route) => {
 		const request = route.request();
 		const headers = new Headers();
@@ -375,6 +415,7 @@ const createApiManager = async (
 					}
 					return Promise.resolve(request.postData() ?? undefined);
 				},
+				() => unlockActions(controller, request),
 			);
 			await route.fulfill({
 				json: response,
@@ -418,12 +459,24 @@ const createApiManager = async (
 			controller.paused.push(promise);
 			return promise;
 		},
-		getActions: () => controller.actions,
+		getActions: async () => {
+			while (controller.actionLocks.size !== 0) {
+				await Promise.all(
+					[...controller.actionLocks.values()].map((lock) => lock.promise),
+				);
+			}
+			return controller.actions;
+		},
 		clearActions: () => {
 			controller.actions = [];
 		},
 		getConnection: () => ({ url: managerUrl, controllerId }),
-		cleanup,
+		cleanup: () => {
+			context.off("request", onRequest);
+			context.off("requestfailed", onRequestDone);
+			context.off("requestfinished", onRequestDone);
+			return cleanup();
+		},
 	};
 };
 
