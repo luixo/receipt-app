@@ -163,8 +163,12 @@ const procedureTools = procedures
 	.map((procedure) =>
 		toolDefinition({
 			name: procedure.path.replaceAll(".", "_"),
-			description: procedure.description,
+			description:
+				procedure.type === "mutation"
+					? `MUTATION: ${procedure.description} Ask the user for explicit confirmation before calling this tool.`
+					: procedure.description,
 			inputSchema: procedure.input,
+			metadata: { type: procedure.type },
 		}).server<ToolContext>(async (input, { context, abortSignal }) => {
 			const client = getUntypedClient(
 				getServerTrpcClient({
