@@ -32,7 +32,7 @@ const useAddItem = (setItems: SetItems) =>
 				(prevItems) => [
 					...prevItems,
 					{
-						id: `temp-${Math.random()}`,
+						id: `new-item-${prevItems.length}`,
 						name,
 						price,
 						quantity,
@@ -318,17 +318,32 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 		[setParticipants],
 	);
 
-const useRemoveParticipant = (setParticipants: SetParticipants) =>
+const useRemoveParticipant = (
+	setParticipants: SetParticipants,
+	setItems: SetItems,
+) =>
 	React.useCallback<ActionsHooks["removeParticipant"]>(
-		(peerId, options) =>
+		(peerId, options) => {
 			setParticipants(
 				(prevParticipants) =>
 					prevParticipants.filter(
 						(participant) => participant.peerId !== peerId,
 					),
 				options,
-			),
-		[setParticipants],
+			);
+			setItems(
+				(items) =>
+					items.map((item) => ({
+						...item,
+						consumers: item.consumers.filter(
+							(consumer) => consumer.peerId !== peerId,
+						),
+						payers: item.payers.filter((payer) => payer.peerId !== peerId),
+					})),
+				undefined,
+			);
+		},
+		[setParticipants, setItems],
 	);
 
 const useUpdateParticipant = (setParticipants: SetParticipants) =>
@@ -423,7 +438,7 @@ export const useActionsHooks = (
 		removeItemPayer: useRemoveItemPayer(setItems),
 		updateItemPayerPart: useUpdateItemPayerPart(setItems),
 		addParticipant: useAddParticipant(setParticipants),
-		removeParticipant: useRemoveParticipant(setParticipants),
+		removeParticipant: useRemoveParticipant(setParticipants, setItems),
 		updateParticipantRole: useUpdateParticipantRole(setParticipants),
 		addPayer: useAddPayer(setPayers),
 		removePayer: useRemovePayer(setPayers),

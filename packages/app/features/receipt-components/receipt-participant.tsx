@@ -98,16 +98,15 @@ const getParticipantError = (
 
 const RenderParticipantError = suspendedFallback<{
 	participant: Participant;
-	outcomingDebtId: DebtId | undefined;
+	debtId: DebtId | undefined;
 	children: (error: ReturnType<typeof getParticipantError>) => React.ReactNode;
 }>(
-	({ children, participant, outcomingDebtId }) => {
+	({ children, participant, debtId }) => {
 		const trpc = useTRPC();
 		const { data: debt } = useQuery(
-			trpc.debts.get.queryOptions(
-				outcomingDebtId ? { id: outcomingDebtId } : skipToken,
-				{ enabled: Boolean(outcomingDebtId) },
-			),
+			trpc.debts.get.queryOptions(debtId ? { id: debtId } : skipToken, {
+				enabled: Boolean(debtId),
+			}),
 		);
 		const isOwner = useIsOwner();
 		const { data: peer } = isOwner
@@ -132,12 +131,12 @@ const RenderParticipantError = suspendedFallback<{
 
 type Props = {
 	participant: Participant;
-	outcomingDebtId?: DebtId;
+	debtId?: DebtId;
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({
 	participant,
-	outcomingDebtId,
+	debtId,
 }) => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
@@ -236,190 +235,201 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	);
 
 	return (
-		<Accordion>
-			<AccordionItem
-				key="parts"
-				textValue={t("participant.title", { peerId: participant.peerId })}
-				title={
-					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
-						<View className="flex flex-row items-center gap-1">
-							{currentPart ? (
-								<Icon name="money" className="text-secondary size-6" />
-							) : null}
-							<LoadablePeer
-								className={
-									disabled && !currentPart ? "opacity-disabled" : undefined
-								}
-								id={participant.peerId}
-								foreign={!isOwner}
-							/>
-						</View>
-						<View className="flex-row items-center justify-between gap-4 self-stretch">
-							<RenderParticipantError
-								participant={participant}
-								outcomingDebtId={outcomingDebtId}
-							>
-								{(error) => (
-									<Tooltip content={error?.content} isDisabled={!error}>
-										<View className="flex flex-col items-end">
-											<Text className={error?.className}>
-												{formatCurrency(
-													locale,
-													currencyCode,
-													round(participant.debt.total),
-												)}
-											</Text>
-											{participant.payment.total === 0 ? null : (
-												<Text>
-													{t("participant.payedShort", {
-														amount: formatCurrency(
-															locale,
-															currencyCode,
-															round(participant.payment.total),
-														),
-													})}
-												</Text>
-											)}
-										</View>
-									</Tooltip>
-								)}
-							</RenderParticipantError>
-							<View className="flex-row items-center gap-2">
-								{isOwner ? (
-									<RemoveButton
-										onRemove={removeReceiptParticipant}
-										mutation={{ isPending }}
-										subtitle={t("participants.remove.confirmSubtitle")}
-										noConfirm={participant.balance === 0}
-										isIconOnly
-									/>
+		<View testID="participant-row">
+			<Accordion>
+				<AccordionItem
+					key="parts"
+					textValue={t("participant.title", { peerId: participant.peerId })}
+					title={
+						<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
+							<View className="flex flex-row items-center gap-1">
+								{currentPart ? (
+									<Icon name="money" className="text-secondary size-6" />
 								) : null}
+								<LoadablePeer
+									className={
+										disabled && !currentPart ? "opacity-disabled" : undefined
+									}
+									id={participant.peerId}
+									foreign={!isOwner}
+								/>
+							</View>
+							<View className="flex-row items-center justify-between gap-4 self-stretch">
+								<RenderParticipantError
+									participant={participant}
+									debtId={debtId}
+								>
+									{(error) => (
+										<Tooltip content={error?.content} isDisabled={!error}>
+											<View className="flex flex-col items-end">
+												<Text
+													className={error?.className}
+													testID={
+														error ? "participant-debt-warning" : undefined
+													}
+												>
+													{formatCurrency(
+														locale,
+														currencyCode,
+														round(participant.debt.total),
+													)}
+												</Text>
+												{participant.payment.total === 0 ? null : (
+													<Text>
+														{t("participant.payedShort", {
+															amount: formatCurrency(
+																locale,
+																currencyCode,
+																round(participant.payment.total),
+															),
+														})}
+													</Text>
+												)}
+											</View>
+										</Tooltip>
+									)}
+								</RenderParticipantError>
+								<View className="flex-row items-center gap-2">
+									{isOwner ? (
+										<RemoveButton
+											onRemove={removeReceiptParticipant}
+											mutation={{ isPending }}
+											subtitle={t("participants.remove.confirmSubtitle")}
+											noConfirm={participant.balance === 0}
+											isIconOnly
+										/>
+									) : null}
+								</View>
 							</View>
 						</View>
-					</View>
-				}
-			>
-				<View className="flex gap-3">
-					<View className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-						<View className="flex flex-row items-center gap-2">
-							<form.Subscribe selector={(state) => state.values.value}>
-								{(currentValue) =>
-									currentValue === 0 ? (
-										<>
-											<Button onPress={onAddPayer}>
-												{t("participant.form.addPayerButton")}
-											</Button>
-											<View className="absolute -top-0.5 -right-0.5">
-												{updateElement}
-											</View>
-										</>
-									) : (
-										<>
-											<Text>{t("participant.payedInfix")}</Text>
-											<PartButtons
-												updatePart={onPartUpdate}
-												downDisabled={currentValue <= 0}
-											>
-												<form.AppField name="value">
-													{(field) => (
-														<field.NumberField
-															ref={inputRef}
-															value={field.state.value}
-															onValueChange={field.setValue}
-															name={field.name}
-															onBlur={field.handleBlur}
-															fieldError={
-																field.state.meta.isDirty
-																	? field.state.meta.errors
-																	: undefined
-															}
-															onKeyPress={onKeyDownBlur}
-															className="w-28"
-															aria-label={t("participant.form.payerPart.label")}
-															mutation={[
-																addPayerMutationState,
-																removePayerMutationState,
-																updatePayerMutationState,
-															]}
-															continuousMutations
-															labelPlacement="outside-left"
-															fractionDigits={partSchemaDecimal}
-															hideStepper
-															endContent={
-																<View className="flex flex-row items-center gap-1">
-																	<Text className="shrink-0 self-center">
-																		{t("participant.form.payerPart.postfix", {
-																			parts: totalPayParts,
-																		})}
-																	</Text>
-																	<View className="absolute -top-1 -right-2">
-																		{updateElement}
+					}
+				>
+					<View className="flex gap-3">
+						<View className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+							<View className="flex flex-row items-center gap-2">
+								<form.Subscribe selector={(state) => state.values.value}>
+									{(currentValue) =>
+										currentValue === 0 ? (
+											<>
+												<Button onPress={onAddPayer}>
+													{t("participant.form.addPayerButton")}
+												</Button>
+												<View className="absolute -top-0.5 -right-0.5">
+													{updateElement}
+												</View>
+											</>
+										) : (
+											<>
+												<Text>{t("participant.payedInfix")}</Text>
+												<PartButtons
+													updatePart={onPartUpdate}
+													downDisabled={currentValue <= 0}
+												>
+													<form.AppField name="value">
+														{(field) => (
+															<field.NumberField
+																ref={inputRef}
+																value={field.state.value}
+																onValueChange={field.setValue}
+																name={field.name}
+																onBlur={field.handleBlur}
+																fieldError={
+																	field.state.meta.isDirty
+																		? field.state.meta.errors
+																		: undefined
+																}
+																onKeyPress={onKeyDownBlur}
+																className="w-28"
+																aria-label={t(
+																	"participant.form.payerPart.label",
+																)}
+																mutation={[
+																	addPayerMutationState,
+																	removePayerMutationState,
+																	updatePayerMutationState,
+																]}
+																continuousMutations
+																labelPlacement="outside-left"
+																fractionDigits={partSchemaDecimal}
+																hideStepper
+																endContent={
+																	<View className="flex flex-row items-center gap-1">
+																		<Text className="shrink-0 self-center">
+																			{t("participant.form.payerPart.postfix", {
+																				parts: totalPayParts,
+																			})}
+																		</Text>
+																		<View className="absolute -top-1 -right-2">
+																			{updateElement}
+																		</View>
 																	</View>
-																</View>
-															}
-															variant="bordered"
-														/>
-													)}
-												</form.AppField>
-											</PartButtons>
-										</>
-									)
-								}
-							</form.Subscribe>
+																}
+																variant="bordered"
+															/>
+														)}
+													</form.AppField>
+												</PartButtons>
+											</>
+										)
+									}
+								</form.Subscribe>
+							</View>
+							<View className="flex flex-row items-center gap-2 self-end">
+								{renderParticipantActions(participant)}
+								<ReceiptParticipantRoleInput participant={participant} />
+							</View>
 						</View>
-						<View className="flex flex-row items-center gap-2 self-end">
-							{renderParticipantActions(participant)}
-							<ReceiptParticipantRoleInput participant={participant} />
-						</View>
-					</View>
-					{currentPart && items.length !== 0 ? <Divider /> : null}
-					<View className="flex flex-col gap-3">
-						{currentPart && items.length !== 0 ? (
-							<Text className="text-secondary">
-								{t("participant.payerPart", {
-									amount: formatCurrency(
-										locale,
-										currencyCode,
-										participant.payment.total,
-									),
-								})}
-							</Text>
-						) : null}
-						<View>
-							{currentPart && participant.debt.items.length > 1 ? (
+						{currentPart && items.length !== 0 ? <Divider /> : null}
+						<View className="flex flex-col gap-3">
+							{currentPart && items.length !== 0 ? (
 								<Text className="text-secondary">
-									{t("participant.consumerPart", {
+									{t("participant.payerPart", {
 										amount: formatCurrency(
 											locale,
 											currencyCode,
-											participant.debt.total,
+											participant.payment.total,
 										),
 									})}
 								</Text>
 							) : null}
-							{participant.debt.items.map((item) => {
-								const matchedItem = items.find(({ id }) => id === item.itemId);
-								if (!matchedItem) {
-									return null;
-								}
-								return (
-									<Text key={matchedItem.id}>
-										{t("participant.partDescription", {
-											item: matchedItem.name,
+							<View>
+								{currentPart && participant.debt.items.length > 1 ? (
+									<Text className="text-secondary">
+										{t("participant.consumerPart", {
 											amount: formatCurrency(
 												locale,
 												currencyCode,
-												round(item.sum),
+												participant.debt.total,
 											),
-											extraSymbol: item.shortage === 0 ? "" : "+",
 										})}
 									</Text>
-								);
-							})}
+								) : null}
+								{participant.debt.items.map((item) => {
+									const matchedItem = items.find(
+										({ id }) => id === item.itemId,
+									);
+									if (!matchedItem) {
+										return null;
+									}
+									return (
+										<Text key={matchedItem.id}>
+											{t("participant.partDescription", {
+												item: matchedItem.name,
+												amount: formatCurrency(
+													locale,
+													currencyCode,
+													round(item.sum),
+												),
+												extraSymbol: item.shortage === 0 ? "" : "+",
+											})}
+										</Text>
+									);
+								})}
+							</View>
 						</View>
 					</View>
-				</View>
-			</AccordionItem>
-		</Accordion>
+				</AccordionItem>
+			</Accordion>
+		</View>
 	);
 };

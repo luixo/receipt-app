@@ -10,6 +10,7 @@ import { getLinks } from "~app/utils/trpc";
 import type { GetLinksOptions } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
+import { getServerHostUrl } from "~web/utils/url";
 
 const getServerLinksParams = ({
 	url,
@@ -21,6 +22,7 @@ const getServerLinksParams = ({
 	headers?: Record<string, string>;
 }) => {
 	const urlObject = new URL(url);
+	urlObject.host = new URL(getServerHostUrl(url)).host;
 	urlObject.pathname = DEFAULT_TRPC_ENDPOINT;
 	return {
 		url: urlObject.toString(),

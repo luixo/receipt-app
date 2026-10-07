@@ -1,0 +1,18 @@
+{
+	"mutations": {
+		"receiptItemConsumers.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"itemId": "d3331686-a2c9-426f-8104-ecafa811c5e5",
+						"peerId": "ed623d42-1d75-46a4-b011-b11db6ba42c6",
+						"part": 1
+					}
+				}
+			}
+		]
+	}
+}

@@ -27,7 +27,7 @@ type Props = {
 const ReceiptParticipantNoDebtAction: React.FC<
 	Omit<Props, "outcomingDebtId">
 > = ({ receipt, participant }) => {
-	const { t } = useTranslation("receipts");
+	const { t } = useTranslation(["receipts", "debts"]);
 	const trpc = useTRPC();
 	const addMutation = useMutation(
 		trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
@@ -71,7 +71,7 @@ const ReceiptParticipantDebtActions = suspendedFallback<
 	}
 >(
 	({ receipt, participant, outcomingDebtId }) => {
-		const { t } = useTranslation("receipts");
+		const { t } = useTranslation(["receipts", "debts"]);
 		const trpc = useTRPC();
 		const { data: participantDebt } = useSuspenseQuery(
 			trpc.debts.get.queryOptions({ id: outcomingDebtId }),
@@ -154,7 +154,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 }) => (
 	<>
 		{participant.balance === 0 ? (
-			<Icon name="zero" testID="receipt-zero-icon" className="size-9" />
+			<Icon name="zero" className="size-9" />
 		) : outcomingDebtId ? (
 			<ReceiptParticipantDebtActions
 				receipt={receipt}

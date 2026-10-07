@@ -196,6 +196,7 @@ const DebtsListForm = suspendedFallback<{
 		const removeExtraCurrencyCode = React.useCallback(
 			(currencyCode: CurrencyCode) => {
 				form.deleteField(transformCurrencyCode(currencyCode));
+				void form.validate("change");
 				setExtraCurrencyCodes((codes) =>
 					codes.filter((code) => code !== currencyCode),
 				);
@@ -242,7 +243,10 @@ const DebtsListForm = suspendedFallback<{
 													currencyCode,
 												);
 												return (
-													<View className="flex items-center gap-2 sm:flex-row">
+													<View
+														testID={`debts-transfer-amount-${currencyCode}`}
+														className="flex items-center gap-2 sm:flex-row"
+													>
 														<Text className="flex-2">{currencySymbol}</Text>
 														<field.NumberField
 															value={field.state.value}
@@ -267,6 +271,7 @@ const DebtsListForm = suspendedFallback<{
 															}
 															startContent={
 																<View
+																	testID="debts-transfer-sign"
 																	onPress={
 																		field.state.value
 																			? () =>
@@ -318,7 +323,9 @@ const DebtsListForm = suspendedFallback<{
 								{t("transfer.form.addCurrencyButton")}
 							</Button>
 						</View>
-						<form.Subscribe selector={(state) => state.canSubmit}>
+						<form.Subscribe
+							selector={(state) => state.canSubmit && state.isValid}
+						>
 							{(canSubmit) => (
 								<Button
 									color={mutationError ? "danger" : "primary"}

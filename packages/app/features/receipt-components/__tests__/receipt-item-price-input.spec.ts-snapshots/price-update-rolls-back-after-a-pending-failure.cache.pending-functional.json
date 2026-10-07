@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"17af9e55-6cdc-4760-83da-17f85417c267\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"price": 24.07
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "6049922c-850a-4fb8-be26-124e2df558da",
+						"update": {
+							"type": "price",
+							"price": 24.07
+						}
+					}
+				}
+			}
+		]
+	}
+}

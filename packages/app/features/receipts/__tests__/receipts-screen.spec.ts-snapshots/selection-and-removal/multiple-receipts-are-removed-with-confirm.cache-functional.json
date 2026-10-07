@@ -12,6 +12,16 @@
 		},
 		"receipts.getPaged:[{\"cursor\":0,\"filters\":{},\"limit\":10,\"orderBy\":\"date-desc\"}]": {
 			"state": {
+				"data": {
+					"count": 1,
+					"items": {
+						"0": {
+							"id": "e5e68648-798a-4501-ad49-cd2925637ee2"
+						},
+						"1": "<undefined>",
+						"2": "<undefined>"
+					}
+				},
 				"dataUpdateCount": 1
 			}
 		}

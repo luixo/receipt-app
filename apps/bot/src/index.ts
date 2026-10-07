@@ -45,6 +45,7 @@ async function* textDeltas(
 ) {
 	let currentMessageId: string | undefined = undefined;
 	for await (const chunk of chunks) {
+		console.log("the chunk", chunk.type);
 		if (chunk.type === EventType.RUN_ERROR) {
 			throw new Error(chunk.message);
 		}
@@ -67,9 +68,11 @@ bot.on("message:text", async (ctx) => {
 	const abortController = new AbortController();
 	const chatId = ctx.chat.id;
 	const botUserId = toBotUserId(ctx.from.id);
+	console.log("going to 0.");
 	const auth = await trpcClient.bot.getAuthorization.query({
 		botUserId,
 	});
+	console.log("result of", auth);
 	if (!auth) {
 		await ctx.reply("Please authorize first with /start");
 		return;

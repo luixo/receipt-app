@@ -1,0 +1,33 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"2bacf286-039a-4e60-8acf-614d14d39b56\"}]": {
+			"state": {
+				"data": {
+					"amount": 34242.94,
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "2bacf286-039a-4e60-8acf-614d14d39b56",
+						"update": {
+							"amount": 34242.94,
+							"currencyCode": "GIP",
+							"timestamp": "2020-01-01",
+							"receiptId": "09fd5291-de9f-46c5-a84a-b00b62d5c9b1"
+						}
+					}
+				}
+			}
+		]
+	}
+}

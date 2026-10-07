@@ -1,0 +1,64 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"bfbaf55e-a93f-45f2-8edf-2e59a1beef4d\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"consumers": {
+								"0": {
+									"peerId": "3c4a4516-406a-4688-8b14-511b84b666b0"
+								},
+								"1": {
+									"peerId": "495b4cb8-6da3-4ad3-9a98-1dd6a4fc8850",
+									"part": 1,
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								},
+								"2": {
+									"peerId": "a668396e-5957-4680-bf8e-068cc950eba9",
+									"part": 1,
+									"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+								}
+							}
+						}
+					}
+				},
+				"dataUpdateCount": 4
+			}
+		}
+	},
+	"mutations": {
+		"receiptItemConsumers.add": [
+			{
+				"state": {
+					"data": {
+						"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"itemId": "37d30c56-e425-4865-8eae-8a3c7772c984",
+						"peerId": "495b4cb8-6da3-4ad3-9a98-1dd6a4fc8850",
+						"part": 1
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"createdAt": "2020-01-01T00:00:00+00:00[UTC]"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"itemId": "37d30c56-e425-4865-8eae-8a3c7772c984",
+						"peerId": "3c4a4516-406a-4688-8b14-511b84b666b0",
+						"part": 1
+					}
+				}
+			}
+		]
+	}
+}

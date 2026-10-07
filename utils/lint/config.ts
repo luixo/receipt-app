@@ -674,6 +674,7 @@ export default defineConfig({
 				// Playwright tests don't need vitest rules
 				"vitest/consistent-test-filename": "off",
 				"vitest/valid-expect": "off",
+				"vitest/prefer-each": "off",
 			},
 		},
 		{
@@ -744,7 +745,7 @@ export default defineConfig({
 			},
 		},
 		{
-			files: ["packages/app/features/playground/playground-screen.tsx"],
+			files: ["packages/app/features/playground/**/*"],
 			rules: {
 				// Maybe remove these later
 				"react/jsx-no-literals": "off",
@@ -757,11 +758,21 @@ export default defineConfig({
 			},
 		})),
 		{
-			files: ["**/*.spec.ts"],
+			files: ["**/*.spec.ts", "**/__tests__/**/*.{ts,tsx}"],
 			rules: {
 				"eslint-js/no-restricted-syntax": [
 					"error",
 					...noRestrictedSyntaxGeneral.map(omit(["omitTags"])),
+					{
+						selector: "Literal[value=/.-icon$/]",
+						message:
+							"Use the `icon` locator instead of an icon test ID literal.",
+					},
+					{
+						selector: "TemplateElement[value.raw=/-icon$/]",
+						message:
+							"Use the `icon` locator instead of an icon test ID template.",
+					},
 				],
 			},
 		},

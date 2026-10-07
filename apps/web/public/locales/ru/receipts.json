@@ -119,6 +119,7 @@
 		"amount": "= {{amount}}",
 		"skeletonAmount": "<skeleton />x<skeleton />=<skeleton />",
 		"form": {
+			"label": "Добавить позицию чека",
 			"consumer": {
 				"label": "Доля потребителя позиции",
 				"saveButton": "Сохранить долю потребителя позиции"

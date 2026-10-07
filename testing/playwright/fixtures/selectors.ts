@@ -1,8 +1,11 @@
 import type { Locator } from "@playwright/test";
 import { test } from "@playwright/test";
 
+import type { IconName } from "~components/icons.web";
+
 type SelectorsFixtures = {
 	html: Locator;
+	icon: (name: IconName) => Locator;
 	loader: Locator;
 	skeleton: Locator;
 	withLoader: (locator: Locator) => Locator;
@@ -18,14 +21,14 @@ type SelectorsFixtures = {
 
 export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	html: ({ page }, use) => use(page.locator("html")),
+	icon: async ({ page }, use) =>
+		use((name) => page.getByTestId(`${name}-icon`)),
 	withLoader: async ({ loader }, use) => {
 		await use((locator) => locator.filter({ has: loader }));
 	},
 	modal: async ({ page }, use) => {
 		await use((title) =>
-			page.locator(
-				`section[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`,
-			),
+			page.locator(`[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`),
 		);
 	},
 	modalCross: async ({ page }, use) => {

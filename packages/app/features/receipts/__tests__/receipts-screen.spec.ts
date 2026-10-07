@@ -439,7 +439,7 @@ test.describe("Selection and removal", () => {
 		await expect(removeReceiptsButton).toBeDisabled();
 	});
 
-	test.fixme("Single receipt is removed without confirm", async ({
+	test("Single receipt is removed without confirm", async ({
 		api,
 		mockReceipts,
 		openReceiptsScreen,
@@ -460,8 +460,12 @@ test.describe("Selection and removal", () => {
 		await expect(removeReceiptsButton).toBeEnabled();
 
 		const pause = api.createPause();
-		api.mockFirst("receipts.remove", async () => {
+		api.mockFirst("receipts.remove", async ({ input }) => {
 			await pause.promise;
+			const index = receipts.findIndex(({ id }) => id === input.id);
+			if (index !== -1) {
+				receipts.splice(index, 1);
+			}
 		});
 
 		await snapshotQueries(
@@ -484,7 +488,7 @@ test.describe("Selection and removal", () => {
 		}
 	});
 
-	test.fixme("Multiple receipts are removed with confirm", async ({
+	test("Multiple receipts are removed with confirm", async ({
 		api,
 		mockReceipts,
 		openReceiptsScreen,
@@ -505,8 +509,6 @@ test.describe("Selection and removal", () => {
 		await receiptCheckbox.nth(0).click();
 		await receiptCheckbox.nth(1).click();
 
-		api.mockFirst("receipts.remove", undefined);
-
 		await removeReceiptsButton.click();
 		await expect(modal()).toBeVisible();
 		await expect(modal().getByText("Are you sure?")).toBeVisible();
@@ -518,9 +520,12 @@ test.describe("Selection and removal", () => {
 		await expect(receiptPreviewNamed(firstReceipt.name)).toBeVisible();
 
 		const pause = api.createPause();
-		api.mockFirst("receipts.remove", async ({ next }) => {
+		api.mockFirst("receipts.remove", async ({ input }) => {
 			await pause.promise;
-			return next();
+			const index = receipts.findIndex(({ id }) => id === input.id);
+			if (index !== -1) {
+				receipts.splice(index, 1);
+			}
 		});
 		await snapshotQueries(
 			async () => {
@@ -579,6 +584,7 @@ test.describe("Selection and removal", () => {
 test.describe("Receipt preview", () => {
 	test("Preview shows name, sum and owner key", async ({
 		page,
+		icon,
 		mockReceipts,
 		openReceiptsScreen,
 		receiptPreviewNamed,
@@ -619,7 +625,7 @@ test.describe("Receipt preview", () => {
 				page.getByText(formatCurrency("en-US", receipt.currencyCode, sum)),
 			).toBeVisible();
 		}
-		await expect(page.getByTestId("key-icon")).toHaveCount(2);
+		await expect(icon("key")).toHaveCount(2);
 		const firstReceiptLink = receiptPreviewNamed(firstReceipt.name);
 		await firstReceiptLink.click();
 		await page.expectUrl({
@@ -653,6 +659,7 @@ test.describe("Receipt preview", () => {
 
 	test("Receipt with matched items shows info tooltip", async ({
 		page,
+		icon,
 		api,
 		mockReceipts,
 		openReceiptsScreen,
@@ -692,7 +699,7 @@ test.describe("Receipt preview", () => {
 			},
 		});
 
-		const infoIcon = page.getByTestId("info-icon");
+		const infoIcon = icon("info");
 		await expect(infoIcon).toBeVisible();
 		await page.mouse.click(0, 0);
 		await infoIcon.hover();

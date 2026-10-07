@@ -77,10 +77,26 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 	);
 };
 
+declare global {
+	// external interface extension
+	// oxlint-disable-next-line typescript/consistent-type-definitions
+	interface Window {
+		randomUUID: () => `${string}-${string}-${string}-${string}-${string}`;
+	}
+}
+
 export const pageFixtures = test.extend<{ page: RoutedPage }>({
-	page: async ({ page, javaScriptEnabled, api, baseURL }, use, testInfo) => {
+	page: async (
+		{ page, javaScriptEnabled, api, baseURL, faker },
+		use,
+		testInfo,
+	) => {
 		const routedPage = page;
 		await page.emulateMedia({ colorScheme: "light" });
+		await page.exposeFunction("randomUUID", () => faker.string.uuid());
+		await page.addInitScript(() => {
+			crypto.randomUUID = () => window.randomUUID();
+		});
 
 		const pageAfterEach = async () => {
 			if (javaScriptEnabled) {

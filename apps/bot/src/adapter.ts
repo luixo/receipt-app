@@ -3,6 +3,6 @@ import { createOpenRouterText } from "@tanstack/ai-openrouter";
 import { env } from "./env";
 
 export const adapter = createOpenRouterText(
-	"anthropic/claude-sonnet-4",
+	"openai/gpt-6-luna",
 	env.OPENROUTER_API_KEY,
 );

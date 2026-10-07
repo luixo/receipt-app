@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"4d1ae3b9-3484-41d7-8867-9010928c5539\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"id": "2bfedf53-7d68-4096-be2d-9ac03f1bcdea",
+							"createdAt": "2019-12-30T00:00:00+00:00[UTC]"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.add": {
+			"0": {
+				"state": {
+					"data": {
+						"id": "2bfedf53-7d68-4096-be2d-9ac03f1bcdea",
+						"createdAt": "2019-12-30T00:00:00+00:00[UTC]"
+					},
+					"status": "success"
+				}
+			}
+		}
+	}
+}

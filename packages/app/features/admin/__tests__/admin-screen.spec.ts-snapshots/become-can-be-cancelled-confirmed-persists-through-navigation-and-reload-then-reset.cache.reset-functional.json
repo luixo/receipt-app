@@ -1,0 +1,37 @@
+{
+	"queries": {
+		"admin.users:[[]]": {
+			"state": {
+				"data": {
+					"items": [
+						{
+							"user": {
+								"id": "5979be98-f51e-41eb-b310-e26ad024c944",
+								"email": "Stephania70@yahoo.com",
+								"avatarUrl": "<undefined>"
+							},
+							"peer": {
+								"id": "6d701e9f-4267-434f-9286-0fc26ef89f04",
+								"name": "Dale Brown"
+							}
+						},
+						{
+							"user": {
+								"id": "b75eaf5c-a520-4fd2-8fd1-87f742bf2b9b",
+								"email": "Alexandrine_Rippin73@yahoo.com",
+								"avatarUrl": "<undefined>"
+							},
+							"peer": "<undefined>"
+						}
+					]
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

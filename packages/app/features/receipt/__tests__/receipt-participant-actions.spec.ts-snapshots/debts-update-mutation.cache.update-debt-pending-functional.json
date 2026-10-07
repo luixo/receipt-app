@@ -1,0 +1,33 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"ae243312-fc80-44e9-929c-a4d5f0254a71\"}]": {
+			"state": {
+				"data": {
+					"amount": 13411.09,
+					"updatedAt": "2019-12-31T16:00:00-08:00[America/Los_Angeles]"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "ae243312-fc80-44e9-929c-a4d5f0254a71",
+						"update": {
+							"amount": 13411.09,
+							"currencyCode": "CDF",
+							"timestamp": "2020-01-01",
+							"receiptId": "71d79af1-4afa-4c50-b35d-0d5790420192"
+						}
+					}
+				}
+			}
+		]
+	}
+}

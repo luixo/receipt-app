@@ -1,0 +1,30 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"d05da205-dc5e-4279-9007-35d9d0ce0ca6\"}]": {
+			"state": {
+				"data": {
+					"items": {
+						"0": {
+							"name": "Sleek Ceramic Table"
+						}
+					}
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptItems.update": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptItems.update\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}
