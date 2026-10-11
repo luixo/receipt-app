@@ -15,7 +15,7 @@
 		"resolveJsonModule": true,
 		"skipLibCheck": true,
 		"target": "ESNext",
-		"types": ["node", "bun"],
+		"types": ["node", "bun-types"],
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],

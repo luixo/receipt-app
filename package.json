@@ -28,7 +28,7 @@
 		"native:run:android": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:android",
 		"native:run:ios": "bun run --cwd apps/mobile css:prepare && bun --cwd apps/mobile expo run:ios",
 		"native:update-ios-version": "bun run --cwd apps/mobile update-ios-version",
-		"typecheck": "tsc --noEmit",
+		"typecheck": "bun check",
 		"verify-routers": "bun run --cwd utils/scripts verify-routers",
 		"frontend:merge-coverage": "bun run --cwd utils/scripts merge-coverage",
 		"web:build": "bun run --cwd apps/web build",
@@ -44,10 +44,10 @@
 	},
 	"devDependencies": {
 		"@opencode/plugin": "^2.0.22",
-		"@types/bun": "^1.4.2",
 		"@types/node": "^26.0.0",
 		"@types/react": "^19.2.11",
 		"@types/react-dom": "^19.2.3",
+		"bun-types": "^1.4.3",
 		"lint-staged": "^17.4.1",
 		"pre-commit": "^1.2.2",
 		"typescript": "^7.0.2",
@@ -62,7 +62,7 @@
 		"format",
 		"lint-staged"
 	],
-	"packageManager": "bun@1.4.2",
+	"packageManager": "bun@1.4.3",
 	"catalog": {
 		"@heroui/react": "2.8.4",
 		"@playwright/test": "1.63.0",
