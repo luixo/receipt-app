@@ -13,14 +13,8 @@ test("Card on  user page", async ({
 	await expect(emailVerificationCard).toBeVisible();
 	await expectScreenshotWithSchemes("user-page.png", {
 		locator: emailVerificationCard,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [8, 8],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 8,
 	});
 });
 
@@ -47,14 +41,8 @@ test("Loading", async ({
 	await awaitCacheKey("user.resendEmail", { pending: 1 });
 	await expectScreenshotWithSchemes("loading.png", {
 		locator: emailVerificationCard,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [8, 8],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 8,
 	});
 	resendPause.resolve();
 });
@@ -77,13 +65,7 @@ test("Success", async ({
 	await awaitCacheKey("user.resendEmail");
 	await expectScreenshotWithSchemes("success.png", {
 		locator: emailVerificationCard,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [8, 8],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 8,
 	});
 });

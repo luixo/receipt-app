@@ -24,13 +24,7 @@ test("Recently used peers dropdown", async ({
 	await expect(page.getByText("Recently used")).toBeVisible();
 	await expectScreenshotWithSchemes("recent.png", {
 		locator: suggestListbox,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });
 
@@ -56,12 +50,6 @@ test("Add peer suggestion for a search", async ({
 	await expect(suggestOption(`Add peer "${name}"`)).toBeVisible();
 	await expectScreenshotWithSchemes("search.png", {
 		locator: suggestListbox,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });

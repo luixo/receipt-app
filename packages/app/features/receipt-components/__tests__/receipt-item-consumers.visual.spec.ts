@@ -12,13 +12,7 @@ test("selected consumers", async ({
 	await card.scrollIntoViewIfNeeded();
 	await itemConsumers.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("consumers.png", {
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 		locator: itemConsumers,
 	});
 });
