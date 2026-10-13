@@ -102,9 +102,8 @@ export const Debts = suspendedFallback<Props>(
 									button: (
 										<ButtonLink
 											to="/debts/add"
-											color="primary"
 											title={t("list.buttons.add")}
-											variant="bordered"
+											variant="outline"
 											isIconOnly
 											className="mx-2"
 										>

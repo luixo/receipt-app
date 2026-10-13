@@ -21,7 +21,7 @@ export const usePasswordVisibility = ({
 			<View className="flex-row gap-2">
 				{endContent}
 				{type === "password" ? (
-					<Button variant="light" isIconOnly onPress={switchVisible}>
+					<Button variant="ghost" isIconOnly onPress={switchVisible}>
 						<Icon name={visible ? "eye-off" : "eye"} className="size-6" />
 					</Button>
 				) : null}
@@ -33,7 +33,6 @@ export const usePasswordVisibility = ({
 
 export const useMutationErrors = ({
 	isDisabled,
-	color,
 	mutation,
 	fieldError,
 	description,
@@ -41,7 +40,6 @@ export const useMutationErrors = ({
 }: Pick<
 	Props,
 	| "isDisabled"
-	| "color"
 	| "mutation"
 	| "fieldError"
 	| "description"
@@ -54,8 +52,8 @@ export const useMutationErrors = ({
 	});
 	return {
 		isDisabled: continuousMutations ? false : isMutationLoading || isDisabled,
-		color: isWarning ? "warning" : isError ? "danger" : color,
 		description: errors.join("\n") || description,
+		className: isWarning ? "bg-warning" : isError ? "bg-danger" : undefined,
 	};
 };
 

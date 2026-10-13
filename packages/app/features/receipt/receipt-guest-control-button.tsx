@@ -23,8 +23,7 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	const commonProps = {
 		children: <Icon name="money" className="size-6" />,
 		title: t("receipt.controlButton.incomingDebt"),
-		variant: "bordered",
-		color: "primary",
+		variant: "outline",
 		isIconOnly: true,
 	} as const;
 	return receipt.debts.hasMine ? (

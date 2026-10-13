@@ -18,19 +18,34 @@ const StatusButton: React.FC<{ type: "synced" | "desynced" | "unsynced" }> = ({
 	switch (type) {
 		case "synced":
 			return (
-				<Button variant="light" isDisabled isIconOnly color="success">
+				<Button
+					variant="outline"
+					isDisabled
+					isIconOnly
+					className="bg-success text-success-foreground"
+				>
 					<Icon name="sync" className="size-6" />
 				</Button>
 			);
 		case "unsynced":
 			return (
-				<Button variant="light" isDisabled isIconOnly color="warning">
+				<Button
+					variant="outline"
+					isDisabled
+					isIconOnly
+					className="bg-warning text-warning-foreground"
+				>
 					<Icon name="unsync" className="size-6" />
 				</Button>
 			);
 		case "desynced":
 			return (
-				<Button variant="light" isDisabled isIconOnly color="danger">
+				<Button
+					variant="outline"
+					isDisabled
+					isIconOnly
+					className="bg-danger text-danger-foreground"
+				>
 					<Icon name="unsync" className="size-6" />
 				</Button>
 			);

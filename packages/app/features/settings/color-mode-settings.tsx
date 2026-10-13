@@ -25,7 +25,7 @@ export const ColorModeSettings: React.FC = () => {
 			<Button
 				testID="color-mode-button"
 				isIconOnly
-				variant="bordered"
+				variant="outline"
 				onPress={() => {
 					if (!selectedColorMode || selectedColorMode === systemColorMode) {
 						setSelectedColorMode(systemColorMode === "dark" ? "light" : "dark");

@@ -306,11 +306,11 @@ export const PeersSuggest: React.FC<Props> = ({
 					}}
 					selectedKey={selectedPeerIds[0] ?? null}
 					onSelectionChange={onSelectionChange}
-					onClear={() => setValue("")}
+					isClearable
 					endContent={
 						<Button
 							isIconOnly
-							variant="light"
+							variant="outline"
 							radius="full"
 							size="sm"
 							className={value ? undefined : "hidden"}

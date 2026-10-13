@@ -77,7 +77,7 @@ function PaginationBlockShape<T>({
 										selectedStatus === "selected-full" ? [] : selection.items,
 									)
 								}
-								color="secondary"
+								variant="secondary"
 							/>
 						</View>
 					) : null}

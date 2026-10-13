@@ -40,9 +40,7 @@ const ConfirmEmail: React.FC<{
 				<>
 					<Text variant="h3">{confirmMutation.data.email}</Text>
 					<Text variant="h4">{t("confirm.success.header")}</Text>
-					<ButtonLink to="/" color="primary">
-						{t("confirm.success.home")}
-					</ButtonLink>
+					<ButtonLink to="/">{t("confirm.success.home")}</ButtonLink>
 				</>
 			);
 	}

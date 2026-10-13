@@ -65,7 +65,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					value={field.state.value}
 					onValueChange={field.setValue}
 					name={field.name}
-
+					variant="secondary"
 					onBlur={() => {
 						field.handleBlur();
 						if (!isDisabled && updateMutationState?.status !== "pending") {
@@ -80,7 +80,6 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
 					className={cn("shrink-0 basis-40", className)}
-					labelPlacement="outside-left"
 					endContent={
 						<View className="flex-row gap-2">
 							{updateMutationState?.status === "pending" ? (

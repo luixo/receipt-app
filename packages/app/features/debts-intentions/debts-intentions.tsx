@@ -99,7 +99,7 @@ export const DebtIntentions: React.FC = suspendedFallback(
 		const { t } = useTranslation("debts");
 		return (
 			<View className="flex gap-8">
-				<Button color="primary">{t("intentions.acceptAllButton")}</Button>
+				<Button>{t("intentions.acceptAllButton")}</Button>
 				{Array.from({ length: 2 }).map((_, index) => (
 					// oxlint-disable-next-line react/no-array-index-key
 					<AggregatedIntentionGroup key={index} amount={index + 2} />

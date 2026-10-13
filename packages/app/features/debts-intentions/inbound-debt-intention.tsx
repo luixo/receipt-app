@@ -18,13 +18,10 @@ export const SkeletonInboundDebtIntention = () => {
 	const { t } = useTranslation("debts");
 	return (
 		<SkeletonDebtIntention>
-			<ButtonGroup className="self-end" color="primary">
+			<ButtonGroup className="self-end">
 				<Button isDisabled>{t("intentions.buttons.accept")}</Button>
-				<Button variant="bordered" isDisabled>
+				<Button variant="outline" isDisabled>
 					{t("intentions.buttons.acceptAndEdit")}
-				</Button>
-				<Button isDisabled variant="bordered">
-					{t("intentions.buttons.reject")}
 				</Button>
 			</ButtonGroup>
 		</SkeletonDebtIntention>
@@ -69,7 +66,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const { isPending } = acceptMutation;
 	return (
 		<DebtIntention intention={intention} testID="inbound-debt-intention">
-			<ButtonGroup className="self-end" color="primary">
+			<ButtonGroup className="self-end">
 				<Button
 					isDisabled={isPending}
 					isLoading={isPending}
@@ -85,7 +82,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					{t("intentions.buttons.accept")}
 				</Button>
 				<Button
-					variant="bordered"
+					variant="outline"
 					isDisabled={isPending}
 					isLoading={isPending}
 					onPress={() => acceptSyncIntention(true)}
@@ -99,7 +96,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 				>
 					{t("intentions.buttons.acceptAndEdit")}
 				</Button>
-				<Button isDisabled variant="bordered">
+				<Button isDisabled variant="outline">
 					{t("intentions.buttons.reject")}
 				</Button>
 			</ButtonGroup>

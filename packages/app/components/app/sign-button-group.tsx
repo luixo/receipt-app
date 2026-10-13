@@ -2,32 +2,22 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 
-import { Button } from "~components/button";
+import { Button, ButtonGroup } from "~components/button";
 import { Spinner } from "~components/spinner";
-import { View } from "~components/view";
 
 export type Direction = "+" | "-";
 
 export const SkeletonSignButtonGroup = () => {
 	const { t } = useTranslation("default");
 	return (
-		<View className="flex-row" testID="sign-button-group">
-			<Button
-				className="flex-1 flex-row rounded-r-none"
-				color="success"
-				isDisabled
-			>
+		<ButtonGroup className="flex-row" testID="sign-button-group">
+			<Button className="bg-success text-success-foreground flex-1" isDisabled>
 				{t("components.signButtonGroup.positive")}
 			</Button>
-			<Button
-				variant="bordered"
-				className="flex-1 flex-row rounded-l-none"
-				color="danger"
-				isDisabled
-			>
+			<Button className="bg-danger text-danger-foreground flex-1" isDisabled>
 				{t("components.signButtonGroup.negative")}
 			</Button>
-		</View>
+		</ButtonGroup>
 	);
 };
 
@@ -48,13 +38,12 @@ export const SignButtonGroup: React.FC<Props> = ({
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
-		<View className="flex-row" testID="sign-button-group">
+		<ButtonGroup className="flex-row" testID="sign-button-group">
 			<Button
 				testID="sign-button-positive"
 				onPress={setPositive}
-				variant={direction === "-" ? "bordered" : undefined}
-				className="flex-1 flex-row rounded-r-none"
-				color="success"
+				variant={direction === "-" ? "outline" : "ghost"}
+				className="bg-success text-success-foreground flex-1"
 				isDisabled={disabled || isLoading}
 			>
 				{isLoading ? (
@@ -66,9 +55,8 @@ export const SignButtonGroup: React.FC<Props> = ({
 			<Button
 				testID="sign-button-negative"
 				onPress={setNegative}
-				variant={direction === "+" ? "bordered" : undefined}
-				className="flex-1 flex-row rounded-l-none"
-				color="danger"
+				variant={direction === "+" ? "outline" : "ghost"}
+				className="bg-danger text-danger-foreground flex-1"
 				isDisabled={disabled || isLoading}
 			>
 				{isLoading ? (
@@ -77,6 +65,6 @@ export const SignButtonGroup: React.FC<Props> = ({
 					t("components.signButtonGroup.negative")
 				)}
 			</Button>
-		</View>
+		</ButtonGroup>
 	);
 };

@@ -94,9 +94,8 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 					endContent={
 						<Button
 							title={t("peer.connection.cancel.title")}
-							variant="light"
+							variant="danger-soft"
 							isLoading={cancelRequestMutation.isPending}
-							color="danger"
 							isIconOnly
 							onPress={() => cancelRequest(outboundConnectionIntention.user.id)}
 						>
@@ -109,11 +108,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 
 		if (!inputShown) {
 			return (
-				<Button
-					color="primary"
-					onPress={() => setInputShown(true)}
-					isDisabled={isLoading}
-				>
+				<Button onPress={() => setInputShown(true)} isDisabled={isLoading}>
 					{t("peer.connection.connect")}
 				</Button>
 			);
@@ -140,7 +135,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 									peer.connectedUser ? (
 										<Button
 											title={t("peer.connection.unlink.title")}
-											variant="light"
+											variant="outline"
 											isLoading={unlinkMutation.isPending}
 											isIconOnly
 											onPress={unlinkPeer}
@@ -150,7 +145,7 @@ export const PeerConnectionInput: React.FC<Props> = suspendedFallback(
 									) : (
 										<Button
 											title={t("peer.connection.link.title")}
-											variant="light"
+											variant="outline"
 											isLoading={connectPeerMutation.isPending}
 											isDisabled={!canSubmit}
 											onPress={() => {

@@ -74,7 +74,7 @@ export const AddReceiptItemForm: React.FC = () => {
 					className="flex flex-col gap-4"
 					aria-label={t("item.form.label")}
 				>
-					<View className="flex-row gap-4">
+					<View className="flex-col gap-2">
 						<form.AppField name="name">
 							{(field) => (
 								<field.TextField
@@ -90,6 +90,7 @@ export const AddReceiptItemForm: React.FC = () => {
 											? field.state.meta.errors
 											: undefined
 									}
+									variant="secondary"
 									mutation={addItemMutationState}
 									ref={nameFieldRef}
 								/>
@@ -111,6 +112,7 @@ export const AddReceiptItemForm: React.FC = () => {
 											? field.state.meta.errors
 											: undefined
 									}
+									variant="secondary"
 									isDisabled={isPending}
 								/>
 							)}
@@ -126,6 +128,7 @@ export const AddReceiptItemForm: React.FC = () => {
 									minValue={0}
 									fractionDigits={quantitySchemaDecimal}
 									label={t("item.form.quantity.label")}
+									variant="secondary"
 									fieldError={
 										field.state.meta.isDirty
 											? field.state.meta.errors
@@ -139,7 +142,6 @@ export const AddReceiptItemForm: React.FC = () => {
 					<form.Subscribe selector={(state) => state.canSubmit}>
 						{(canSubmit) => (
 							<Button
-								color="primary"
 								isDisabled={!canSubmit || isDisabled}
 								className="w-full"
 								isLoading={isPending}

@@ -1,17 +1,15 @@
-import {
-	AutocompleteItem,
-	Autocomplete as AutocompleteRaw,
-	AutocompleteSection,
-} from "@heroui/autocomplete";
-import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
+import React from "react";
 
-import { cn } from "~components/utils";
-import type { ViewReactNode } from "~components/view.web";
+import { ComboBox, Header, Label, ListBox } from "@heroui/react";
 
-export type Props = Pick<
-	React.ComponentProps<typeof AutocompleteRaw>,
-	"inputValue" | "onInputChange" | "placeholder" | "isDisabled"
-> & {
+import { Input } from "~components/input";
+import type { ViewReactNode } from "~components/view";
+
+export type Props = {
+	inputValue?: string;
+	onInputChange?: (value: string) => void;
+	placeholder?: string;
+	isDisabled?: boolean;
 	children: {
 		key: string;
 		title?: string;
@@ -27,67 +25,103 @@ export type Props = Pick<
 	selectedKey: string | null;
 	onSelectionChange: (nextKey: string | null) => void;
 	emptyContent: string;
-	onClear?: () => void;
+	isClearable?: boolean;
 	scroll?: {
 		loadMore: () => void;
 		hasMore: boolean;
 		isDisabled?: boolean;
 	};
+	variant?: React.ComponentProps<typeof ComboBox>["variant"];
 };
+
 export const Autocomplete: React.FC<Props> = ({
 	children,
 	emptyContent,
-	onClear,
+	isClearable,
 	onSelectionChange,
 	scroll,
-	...rest
+	selectedKey,
+	inputValue,
+	onInputChange,
+	isDisabled,
+	label,
+	placeholder,
+	endContent,
+	variant,
 }) => {
-	const [, scrollRef] = useInfiniteScroll(
-		scroll
-			? {
-					hasMore: scroll.hasMore,
-					isEnabled: !scroll.isDisabled,
-					onLoadMore: scroll.loadMore,
-					shouldUseLoader: false,
-				}
-			: {},
-	);
+	const listRef = React.useRef<HTMLDivElement>(null);
+	const onScroll = () => {
+		const list = listRef.current;
+		if (
+			scroll &&
+			!scroll.isDisabled &&
+			scroll.hasMore &&
+			list &&
+			list.scrollTop + list.clientHeight >= list.scrollHeight - 80
+		) {
+			scroll.loadMore();
+		}
+	};
 	return (
-		<AutocompleteRaw
-			labelPlacement="outside"
-			variant="bordered"
-			listboxProps={{
-				classNames: { list: "m-0" },
-				emptyContent,
-			}}
-			clearButtonProps={
-				onClear
-					? {
-							onPress: onClear,
-						}
-					: undefined
-			}
-			items={[]}
-			onSelectionChange={(nextSelection) =>
+		<ComboBox
+			value={selectedKey}
+			onChange={(nextSelection) =>
 				onSelectionChange(
 					nextSelection === null ? null : nextSelection.toString(),
 				)
 			}
-			scrollRef={scrollRef}
-			{...rest}
+			inputValue={inputValue}
+			onInputChange={onInputChange}
+			isDisabled={isDisabled}
+			variant={variant}
+			className="w-full"
 		>
-			{children.map(({ items, key, ...section }) => (
-				<AutocompleteSection key={key} {...section}>
-					{items.map(({ key: itemKey, className, ...item }) => (
-						<AutocompleteItem
-							key={itemKey}
-							{...item}
-							classNames={{ title: "flex" }}
-							className={cn("p-1", className)}
-						/>
-					))}
-				</AutocompleteSection>
-			))}
-		</AutocompleteRaw>
+			{label ? <Label>{label}</Label> : null}
+			<Input
+				className="w-full"
+				placeholder={placeholder}
+				isClearable={isClearable}
+				endContent={
+					<>
+						{endContent}
+						<ComboBox.Trigger className="relative translate-0 self-center" />
+					</>
+				}
+				variant={variant}
+			/>
+			<ComboBox.Popover>
+				<div
+					ref={listRef}
+					onScroll={onScroll}
+					className="max-h-64 overflow-y-auto"
+				>
+					<ListBox renderEmptyState={() => emptyContent}>
+						{children.map(({ items, key, title }) => (
+							<ListBox.Section key={key} id={key}>
+								{title ? <Header>{title}</Header> : null}
+								{items.map(
+									({
+										key: itemKey,
+										className,
+										textValue,
+										children: content,
+									}) => (
+										<ListBox.Item
+											key={itemKey}
+											id={itemKey}
+											textValue={textValue}
+											className={className}
+										>
+											{content ?? textValue}
+											<ListBox.ItemIndicator />
+										</ListBox.Item>
+									),
+								)}
+							</ListBox.Section>
+						))}
+					</ListBox>
+				</div>
+			</ComboBox.Popover>
+		</ComboBox>
 	);
 };

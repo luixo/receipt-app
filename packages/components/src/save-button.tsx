@@ -10,7 +10,7 @@ export type Props = React.ComponentProps<typeof Button> & {
 };
 
 export const SaveButton: React.FC<Props> = (props) => (
-	<Button variant="light" isIconOnly color="success" {...props}>
+	<Button variant="ghost" isIconOnly className="text-success" {...props}>
 		<Icon name="check" className="size-6" />
 	</Button>
 );

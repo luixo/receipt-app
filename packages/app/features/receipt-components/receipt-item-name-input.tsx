@@ -61,6 +61,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				<field.TextField
 					value={field.state.value}
 					onValueChange={field.setValue}
+					variant="secondary"
 					name={field.name}
 					onBlur={() => {
 						field.handleBlur();

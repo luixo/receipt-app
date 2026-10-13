@@ -12,11 +12,20 @@ const badge = tv({
 	},
 	variants: {
 		color: {
+			default: {
+				badge: "bg-default text-default-foreground",
+			},
+			success: {
+				badge: "bg-success text-success-foreground",
+			},
 			danger: {
 				badge: "bg-danger text-danger-foreground",
 			},
 			warning: {
 				badge: "bg-warning text-warning-foreground",
+			},
+			accent: {
+				badge: "bg-accent text-accent-foreground",
 			},
 		},
 		chars: {

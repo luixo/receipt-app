@@ -60,7 +60,6 @@ export const ReceiptNameInput: React.FC<Props> = ({
 					}
 					aria-label={t("receipt.form.name.label")}
 					mutation={updateReceiptMutation}
-					labelPlacement="outside-left"
 					className="basis-36"
 					isDisabled={isLoading}
 					isReadOnly={receipt.ownerPeerId !== receipt.selfPeerId}

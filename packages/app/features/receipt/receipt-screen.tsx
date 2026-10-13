@@ -133,7 +133,7 @@ export const ReceiptScreen = suspendedFallback(
 									)}
 								</View>
 							</View>
-							<View className="flex flex-col justify-center gap-2 sm:flex-row">
+							<View className="flex flex-col items-center justify-center gap-2 sm:flex-row">
 								<ReceiptAmountInput
 									receipt={receipt}
 									isLoading={deleteLoading}

@@ -201,8 +201,8 @@ export const UserAvatarInput: React.FC<Props> = ({ children }) => {
 						</form.Subscribe>
 						<View className="gap-4">
 							<Button
-								color="warning"
-								variant="bordered"
+								variant="outline"
+								className="bg-warning"
 								isDisabled={
 									updateAvatarMutation.isPending ||
 									removeAvatarMutation.isPending
@@ -222,8 +222,7 @@ export const UserAvatarInput: React.FC<Props> = ({ children }) => {
 							>
 								{({ openModal }) => (
 									<OnlyAvatarButton
-										color="danger"
-										variant="bordered"
+										variant="danger-soft"
 										isLoading={removeAvatarMutation.isPending}
 										isDisabled={
 											updateAvatarMutation.isPending ||
@@ -241,8 +240,8 @@ export const UserAvatarInput: React.FC<Props> = ({ children }) => {
 								{(selectedAvatar) => (
 									<>
 										<Button
-											color="warning"
-											variant="bordered"
+											variant="outline"
+											className="bg-warning"
 											isDisabled={
 												updateAvatarMutation.isPending ||
 												removeAvatarMutation.isPending ||
@@ -255,8 +254,8 @@ export const UserAvatarInput: React.FC<Props> = ({ children }) => {
 											<Icon name="sync" className="size-6" />
 										</Button>
 										<Button
-											color="success"
-											variant="bordered"
+											variant="outline"
+											className="bg-success text-success-foreground"
 											isLoading={updateAvatarMutation.isPending}
 											isDisabled={
 												updateAvatarMutation.isPending ||

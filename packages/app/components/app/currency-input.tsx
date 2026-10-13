@@ -117,7 +117,6 @@ export const CurrencyInput: React.FC<Props> = ({
 				/>
 			) : (
 				<Button
-					color="primary"
 					onPress={openModal}
 					isDisabled={getMutationLoading(mutation)}
 					className="self-end"

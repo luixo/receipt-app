@@ -14,7 +14,7 @@ export const RefreshSettings: React.FC = () => {
 		void queryClient.invalidateQueries({ refetchType: "all" });
 	}, [queryClient]);
 	return (
-		<Button color="primary" onPress={refetch}>
+		<Button onPress={refetch}>
 			<Icon name="refresh" />
 			<Text>{t("refresh.header")}</Text>
 		</Button>

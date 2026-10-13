@@ -62,7 +62,7 @@ export const FilterButton: React.FC<Props> = ({
 
 	return (
 		<>
-			<Button color="primary" isIconOnly onPress={switchFilterModal}>
+			<Button isIconOnly onPress={switchFilterModal}>
 				<Icon name="filter" className="size-6" />
 			</Button>
 			<Modal
@@ -71,7 +71,7 @@ export const FilterButton: React.FC<Props> = ({
 				bodyClassName="items-center"
 			>
 				<Button
-					variant="light"
+					variant="outline"
 					onPress={sortSelectOnPress}
 					startContent={<Icon name={sortIconName} className="size-6" />}
 				>
