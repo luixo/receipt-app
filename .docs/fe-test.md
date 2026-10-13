@@ -32,6 +32,7 @@ Every test uses the `api` fixture (auto-injected). All tRPC calls are intercepte
 - `api.mockFirst(key, handler)` — pushes a handler to the top of the stack (highest priority). Handlers can be a plain value, an async function, or throw `TRPCError` to simulate errors.
 - `api.mockLast(key, handler)` — pushes a handler to the bottom (baseline/default).
 - `api.createPause()` — returns `PromiseWithResolvers<void>`; `await pause.promise` inside a handler suspends the call; `pause.resolve()` / `pause.reject()` resumes it. Use to test loading states.
+- `await api.getActions()` — waits for observed API requests to log their actions, including every call in a batch. It does not wait for paused mock handlers or requests still queued inside the app.
 - Always throw `TRPCError` in mock handlers, never plain `Error`.
 - Mock handler calls the destination page (if navigation is going on), not just the current one.
 - Intentional errors (e.g., testing mutation failure UI) might trip `autoVerifyNoConsoleMessages`. Use `consoleManager.ignore(message)` to suppress expected errors.
