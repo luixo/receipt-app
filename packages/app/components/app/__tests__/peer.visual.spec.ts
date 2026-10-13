@@ -36,10 +36,7 @@ test("No connected  user", async ({
 	await expectScreenshotWithSchemes("no- user.png", {
 		locator: peer.filter({ hasText: firstPeer.name }),
 		mask: [peerAvatar],
-		mapExpectedPixels: ({ expectedPixels }) => [
-			{ ...expectedPixels[0], rgb: "#ff00ff" },
-			...expectedPixels.slice(1),
-		],
+		shift: [40, 0],
 	});
 });
 
@@ -76,10 +73,7 @@ test("Connected  user", async ({
 	await expectScreenshotWithSchemes("connected- user.png", {
 		locator: peer.filter({ hasText: firstPeer.name }),
 		mask: [peerAvatar],
-		mapExpectedPixels: ({ expectedPixels }) => [
-			{ ...expectedPixels[0], rgb: "#ff00ff" },
-			...expectedPixels.slice(1),
-		],
+		shift: [40, 0],
 	});
 });
 

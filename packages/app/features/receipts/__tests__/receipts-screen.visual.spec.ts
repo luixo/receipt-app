@@ -140,13 +140,8 @@ test("Filter modal", async ({
 	await expect(modal()).toBeVisible();
 	await expectScreenshotWithSchemes("filter-modal.png", {
 		locator: modal(),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
 
@@ -172,13 +167,8 @@ test("Remove confirm modal", async ({
 	await expect(modal()).toBeVisible();
 	await expectScreenshotWithSchemes("remove-confirm.png", {
 		locator: modal(),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
 

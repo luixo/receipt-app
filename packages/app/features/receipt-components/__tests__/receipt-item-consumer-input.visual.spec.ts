@@ -12,13 +12,7 @@ test("consumer ratio", async ({
 	await card.scrollIntoViewIfNeeded();
 	await itemPart(1, 2).first().scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("ratio.png", {
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 		locator: itemPart(1, 2).first(),
 	});
 });

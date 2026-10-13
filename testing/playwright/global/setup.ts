@@ -1,5 +1,6 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
+import { randomUUID } from "node:crypto";
 import * as fs from "node:fs/promises";
 import path from "node:path";
 import { entries, isNonNullish } from "remeda";
@@ -120,6 +121,7 @@ const globalSetup = async () => {
 	const url = await httpServer.listen(0);
 	process.env.MANAGER_PORT = url.port;
 	process.env.PLAYWRIGHT = "true";
+	process.env.PLAYWRIGHT_RUN_ID = randomUUID();
 	return async () => {
 		handleErrors();
 		await handleCoverage();

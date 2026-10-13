@@ -83,19 +83,19 @@ Fixture-provided locators available in every spec:
 - `expectScreenshotWithSchemes(name, opts)` — takes a screenshot in both light and dark mode, joins them side-by-side, and compares to a named snapshot. No visible toasts are allowed before calling. Masks the sticky menu by default. Pass `locator` to clip to a specific element.
 - When using a locator, always use a named locator fixture defined in `utils.ts` (e.g. `avatarForm`) rather than inline expressions like `page.locator("form").first()`. This keeps visual tests readable and lets fixture names serve as stable contracts.
 - Visual snapshots live in `*-snapshots/` directories next to the spec.
-- When clipping to an element with rounded corners or shadows (e.g., a `Card`), the (0,0) pixel hits an antialiased blend that varies by renderer and never matches exactly. Use `mapExpectedPixels` to probe a solid interior pixel instead:
-  ```ts
-  expectScreenshotWithSchemes("card", {
-  	locator: cardLocator,
-  	mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-  		{
-  			...expectedPixels[0],
-  			rgb: colorMode === "light" ? "#d8e9fd" : "#001125",
-  		},
-  		...expectedPixels.slice(1),
-  	],
-  });
-  ```
+- When clipping to an element with rounded corners or shadows (e.g., a `Card`), use `pixelsPreset` and `shift` to probe a solid pixel. Presets are string literals: `"surface"` is HeroUI's `content1` (`#ffffff` / `#18181b`), `"input"` is `#f4f4f5` / `#27272a`, and `"paper"` is white in both themes. Omit the preset for the page background (`#ffffff` / `#000000`).
+
+```ts
+expectScreenshotWithSchemes("card", {
+	locator: cardLocator,
+	pixelsPreset: "surface",
+	shift: 8,
+});
+```
+
+`shift: 8` probes `[8, 8]`; a tuple such as `[8, 60]` selects an explicit coordinate. A callback receives the clip's bounding box, e.g. `shift: ({ height }) => [0, height - 1]` probes the last pixel of the first column. Only the theme probe shifts; sticky-menu mask checks remain unchanged. Do not use the email canvas (`#eaebed`) or masked regions as theme probes. `"warning"`, `"warning-subtle"`, and `"danger"` cover the corresponding input backgrounds; warning uses the subtle shade without hover on touch Safari.
+
+If a theme probe times out, the error samples the last captured screenshot at `[0,0]` through `[19,19]` (or the available diagonal for smaller images). It reports the first run of at least three identical pixels, with a matching preset suggestion for that theme or the novel RGB color. These are diagnostics only; the failed assertion is never bypassed.
 
 ## Faker and time
 

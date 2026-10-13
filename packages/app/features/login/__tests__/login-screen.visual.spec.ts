@@ -92,25 +92,15 @@ test("Forgot password modal", async ({
 
 	await expectScreenshotWithSchemes("modal/open.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 	await resetEmailField.fill(faker.internet.email());
 	await expect(resetSubmitButton).toHaveText("Send email with a reset link");
 	await expectScreenshotWithSchemes("modal/filled.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -147,13 +137,8 @@ test("'resetPasswordIntentions.add' mutation", async ({
 
 	await expectScreenshotWithSchemes("modal/error.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 
 	const resetPause = api.createPause();
@@ -166,13 +151,8 @@ test("'resetPasswordIntentions.add' mutation", async ({
 
 	await expectScreenshotWithSchemes("modal/loading.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 
 	resetPause.resolve();
@@ -181,13 +161,8 @@ test("'resetPasswordIntentions.add' mutation", async ({
 
 	await expectScreenshotWithSchemes("modal/success.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -207,12 +182,7 @@ test("Reset form errors in fields", async ({
 
 	await expectScreenshotWithSchemes("modal/fill-errors.png", {
 		locator: resetModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });

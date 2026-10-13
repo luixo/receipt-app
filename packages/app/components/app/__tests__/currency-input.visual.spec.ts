@@ -20,13 +20,8 @@ test("Selected currency input", async ({
 	await expect(currencyInput).toBeVisible();
 	await expectScreenshotWithSchemes("selected.png", {
 		locator: page.locator('[data-slot="base"]', { has: currencyInput }),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				location: [10, 10],
-				rgb: colorMode === "light" ? "#f4f4f5" : "#27272a",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "input",
+		shift: 10,
 	});
 });
 

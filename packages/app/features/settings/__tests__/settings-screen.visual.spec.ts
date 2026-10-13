@@ -57,12 +57,7 @@ test("Manual accept debts mutation error state", async ({
 	);
 	await expectScreenshotWithSchemes("manual-accept-debts-error.png", {
 		locator: errorMessage(),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
