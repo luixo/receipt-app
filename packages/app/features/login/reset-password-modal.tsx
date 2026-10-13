@@ -54,7 +54,6 @@ const ResetPasswordModalForm: React.FC<{
 				<form.Subscribe selector={(state) => state.canSubmit}>
 					{(canSubmit) => (
 						<Button
-							color="primary"
 							isDisabled={!canSubmit || mutation.isPending}
 							isLoading={mutation.isPending}
 							type="submit"

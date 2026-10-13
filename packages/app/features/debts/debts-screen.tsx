@@ -28,18 +28,16 @@ export const DebtsScreen = () => {
 					<>
 						<ButtonLink
 							to="/debts/transfer"
-							color="primary"
 							title={t("list.buttons.transfer")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="transfer" className="size-6" />
 						</ButtonLink>
 						<ButtonLink
 							to="/debts/add"
-							color="primary"
 							title={t("list.buttons.add")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="add" className="size-6" />
@@ -49,9 +47,8 @@ export const DebtsScreen = () => {
 								<ButtonLink
 									key="intentions"
 									to="/debts/intentions"
-									color="primary"
 									title={t("list.buttons.intentions")}
-									variant="bordered"
+									variant="outline"
 									isDisabled={amount === 0}
 									isIconOnly
 								>

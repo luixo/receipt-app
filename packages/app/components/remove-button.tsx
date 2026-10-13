@@ -10,8 +10,8 @@ export const SkeletonRemoveButton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
 	<Button
-		color="danger"
 		{...props}
+		variant="danger"
 		startContent={<Icon className="size-6" name="trash" />}
 		isIconOnly={!children}
 	>
@@ -66,9 +66,9 @@ export const RemoveButton: React.FC<Props> = ({
 		{({ openModal }) => (
 			<Button
 				onPress={noConfirm ? onRemove : openModal}
-				color="danger"
 				testID="remove-button"
 				isIconOnly={!children}
+				variant="danger"
 				{...props}
 				isDisabled={props.isDisabled || mutation.isPending}
 				isLoading={props.isLoading || mutation.isPending}
@@ -86,7 +86,7 @@ export const RemoveButtonSkeleton: React.FC<
 	React.ComponentProps<typeof Button>
 > = ({ children, ...props }) => (
 	<Button
-		color="danger"
+		variant="danger"
 		{...props}
 		isDisabled
 		startContent={<Icon name="trash" className="size-6" />}

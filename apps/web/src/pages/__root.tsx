@@ -27,7 +27,6 @@ import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useToastHelper } from "~web/hooks/use-toast-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
-import { NavigationProvider } from "~web/providers/client/navigation";
 import { getTitle } from "~web/utils/i18n";
 import {
 	navigationContext,
@@ -144,10 +143,10 @@ const RootComponent = () => {
 			appVersion={import.meta.env.VITE_COMMIT_SHA ?? "unknown"}
 		>
 			<RootDocument>
-				<NavigationProvider>
+				<div className="h-full">
 					<Outlet />
 					<GlobalHooksComponent />
-				</NavigationProvider>
+				</div>
 			</RootDocument>
 		</InnerProvider>
 	);

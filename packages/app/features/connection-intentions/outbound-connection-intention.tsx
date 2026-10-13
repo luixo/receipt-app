@@ -21,7 +21,7 @@ export const SkeletonOutboundConnectionIntention: React.FC = () => {
 			endContent={
 				<Button
 					title={t("intentions.unlinkPeerButton")}
-					variant="light"
+					variant="outline"
 					isIconOnly
 					isDisabled
 				>
@@ -60,7 +60,7 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				endContent={
 					<Button
 						title={t("intentions.unlinkPeerButton")}
-						variant="light"
+						variant="outline"
 						isLoading={removeConnectionMutation.isPending}
 						isIconOnly
 						onPress={removeConnection}

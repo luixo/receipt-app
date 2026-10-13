@@ -134,7 +134,7 @@ export const UserScreen = () => {
 				<Button
 					isDisabled={logoutMutation.isPending}
 					onPress={logout}
-					color="warning"
+					variant="danger-soft"
 					isLoading={logoutMutation.isPending}
 				>
 					{t("logoutButton")}

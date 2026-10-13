@@ -23,9 +23,10 @@ const input = tv({
 	slots: {
 		outer: "min-w-[320px]",
 		base: "",
-		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
+		input:
+			"flex-1 border-transparent bg-transparent p-0 text-base leading-[20px] shadow-none",
 		wrapper:
-			"bg-field border-field-border justify-center rounded-2xl border-2 px-3",
+			"bg-field border-field-border h-12 justify-center rounded-2xl border-2 px-3 py-2",
 		innerWrapper: "flex-row items-center justify-center",
 		sideContent: "max-h-6 flex-row items-center justify-center gap-2",
 		label: "text-normal",
@@ -33,11 +34,11 @@ const input = tv({
 	},
 	variants: {
 		variant: {
-			bordered: {
-				wrapper: "border-default-200",
+			primary: {
+				wrapper: "bg-default",
 			},
-			flat: {
-				wrapper: "shadow-field",
+			secondary: {
+				wrapper: "bg-input-group",
 			},
 		},
 		labelPlacement: {
@@ -60,63 +61,6 @@ const input = tv({
 			},
 			false: {},
 		},
-		size: {
-			sm: {
-				wrapper: "h-10 py-1.5",
-				input: "text-sm leading-[18px]",
-			},
-			md: {
-				wrapper: "h-12 py-2",
-				input: "text-base leading-[20px]",
-			},
-			lg: {
-				wrapper: "h-15 py-2.5",
-				label: "text-lg",
-				input: "text-xl leading-[24px]",
-			},
-		},
-		color: {
-			default: {
-				input: "group-data-[has-value=true]:text-default-foreground",
-			},
-			primary: {
-				wrapper:
-					"bg-primary-100 border-primary-100 active:bg-primary-50 focus:bg-primary-50",
-				input: "text-primary placeholder:text-primary",
-				label: "text-primary",
-				description: "text-primary",
-			},
-			secondary: {
-				wrapper:
-					"bg-secondary-100 border-secondary-100 active:bg-secondary-50 focus:bg-secondary-50",
-				input: "text-secondary placeholder:text-secondary",
-				label: "text-secondary",
-				description: "text-secondary",
-			},
-			success: {
-				wrapper: "bg-success-100 border-success-100",
-				input:
-					"text-success-600 dark:text-success placeholder:text-success-600 dark:placeholder:text-success",
-				label: "text-success-600 dark:text-success",
-				description: "text-success-600 dark:text-success",
-			},
-			warning: {
-				wrapper:
-					"bg-warning-100 border-warning-100 active:bg-warning-50 focus:bg-warning-50",
-				input:
-					"text-warning-600 dark:text-warning placeholder:text-warning-600 dark:placeholder:text-warning",
-				label: "text-warning-600 dark:text-warning",
-				description: "text-warning-600 dark:text-warning",
-			},
-			danger: {
-				wrapper:
-					"bg-danger-100 border-danger-100 active:bg-danger-50 focus:bg-danger-50",
-				input:
-					"text-danger dark:text-danger-500 placeholder:text-danger dark:placeholder:text-danger-500",
-				label: "text-danger dark:text-danger-500",
-				description: "text-danger dark:text-danger-500",
-			},
-		},
 		multiline: {
 			true: {
 				input: "min-h-24",
@@ -125,131 +69,9 @@ const input = tv({
 		},
 	},
 	defaultVariants: {
-		size: "md",
-		color: "default",
+		variant: "primary",
 		multiline: false,
-		labelPlacement: "inside",
-		variant: "flat",
 	},
-	compoundVariants: [
-		{
-			size: "sm",
-			labelPlacement: "inside",
-			class: {
-				wrapper: "h-8",
-			},
-		},
-		{
-			size: "md",
-			labelPlacement: "inside",
-			class: {
-				wrapper: "h-10",
-			},
-		},
-		{
-			size: "lg",
-			labelPlacement: "inside",
-			class: {
-				wrapper: "h-12",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "default",
-			class: {
-				wrapper: "border-default-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "primary",
-			class: {
-				wrapper: "border-primary-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "secondary",
-			class: {
-				wrapper: "border-secondary-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "success",
-			class: {
-				wrapper: "border-success-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "warning",
-			class: {
-				wrapper: "border-warning-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "bordered",
-			color: "danger",
-			class: {
-				wrapper: "border-danger-400",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "default",
-			class: {
-				wrapper: "bg-default-200 border-default-200",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "primary",
-			class: {
-				wrapper: "bg-primary-200 border-primary-200",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "secondary",
-			class: {
-				wrapper: "bg-secondary-200 border-secondary-200",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "success",
-			class: {
-				wrapper: "bg-success-200 border-success-200",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "warning",
-			class: {
-				wrapper: "bg-warning-200 border-warning-200",
-			},
-		},
-		{
-			isFocus: true,
-			variant: "flat",
-			color: "danger",
-			class: {
-				wrapper: "bg-danger-200 border-danger-200",
-			},
-		},
-	],
 });
 
 const keyboardTypeMapping: Partial<
@@ -306,7 +128,6 @@ const InnerInput = ({
 	onValueChange,
 	className,
 	placeholder,
-	color,
 	isDisabled,
 	isReadOnly,
 	label,
@@ -320,10 +141,8 @@ const InnerInput = ({
 	type,
 	isClearable,
 	autoComplete,
-	labelPlacement = "inside",
 	onBlur,
 	onFocus,
-	size,
 	autoFocus,
 	autoCapitalize,
 	onPress,
@@ -337,19 +156,11 @@ const InnerInput = ({
 	const [focus, setFocus] = React.useState(autoFocus ?? false);
 	const isInvalid = Boolean(errorMessage);
 	const slots = input({
-		color,
-		labelPlacement,
-		size,
 		isFocus: focus,
 		isInvalid,
 		multiline,
 		variant,
 	});
-	const labelElement = label ? (
-		<Label>
-			<Text className={slots.label()}>{label}</Text>
-		</Label>
-	) : null;
 	const shouldRenderClearable = isClearable && Platform.OS !== "ios";
 	return (
 		<View onPress={onPress} className={slots.outer({ className })}>
@@ -359,10 +170,13 @@ const InnerInput = ({
 				isInvalid={isInvalid}
 				className={slots.base()}
 			>
-				{labelPlacement === "inside" ? null : labelElement}
+				{label ? (
+					<Label>
+						<Text className={slots.label()}>{label}</Text>
+					</Label>
+				) : null}
 				<View className="flex-1 shrink-0">
 					<View className={slots.wrapper()}>
-						{labelPlacement === "inside" ? labelElement : null}
 						<View className={slots.innerWrapper()}>
 							{startContent ? (
 								<View className={slots.sideContent({ className: "pr-1.5" })}>
@@ -394,6 +208,7 @@ const InnerInput = ({
 								autoComplete={autoComplete}
 								autoFocus={autoFocus}
 								autoCapitalize={autoCapitalize}
+								variant={variant}
 								{...(type ? keyboardTypeMapping[type] : {})}
 							/>
 							{endContent || shouldRenderClearable ? (
@@ -450,7 +265,6 @@ export const Input: React.FC<Props> = ({
 	});
 	const mutationErrorProps = useMutationErrors({
 		isDisabled: props.isDisabled,
-		color: props.color,
 		description: props.description,
 		mutation,
 		fieldError,

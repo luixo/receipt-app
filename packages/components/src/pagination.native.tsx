@@ -41,7 +41,7 @@ const getRange = (start: number, end: number) => {
 };
 
 const usePagination = ({
-	page = 1,
+	page,
 	total,
 	siblings = 1,
 	boundaries = 1,

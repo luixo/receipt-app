@@ -83,7 +83,6 @@ export const AddPeerForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 				<form.Subscribe selector={(state) => state.canSubmit}>
 					{(canSubmit) => (
 						<Button
-							color="primary"
 							isDisabled={!canSubmit || addPeerMutation.isPending}
 							isLoading={addPeerMutation.isPending}
 							type="submit"

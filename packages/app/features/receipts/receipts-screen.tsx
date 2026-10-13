@@ -29,10 +29,9 @@ export const ReceiptsScreen = () => {
 					<>
 						<FilterButton filtersState={filtersState} sortState={sortState} />
 						<ButtonLink
-							color="primary"
 							to="/receipts/add"
 							title={t("list.addButton")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="add" className="size-6" />

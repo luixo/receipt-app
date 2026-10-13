@@ -47,8 +47,7 @@ const Header: React.FC<HeaderProps> = ({ peerId }) => {
 					<View className="flex flex-row gap-2">
 						<Button
 							isIconOnly
-							variant="bordered"
-							color="secondary"
+							variant="secondary"
 							onPress={openEditModal}
 							aria-label="Edit peer"
 						>
@@ -57,19 +56,17 @@ const Header: React.FC<HeaderProps> = ({ peerId }) => {
 						<ButtonLink
 							to="/debts/transfer"
 							search={{ from: peerId }}
-							color="primary"
 							title={t("peer.buttons.transfer")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="transfer" className="size-6" />
 						</ButtonLink>
 						<ButtonLink
-							color="primary"
 							to="/debts/add"
 							search={{ peerId }}
 							title={t("peer.buttons.add")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="add" className="size-6" />
@@ -106,10 +103,9 @@ const PeerDebtsGroupWithButtons = suspendedFallback<{
 				<PeerDebtsGroup peerId={peerId} />
 				{nonResolvedDebts.length === 0 ? null : (
 					<ButtonLink
-						color="primary"
 						to="/debts/peer/$id/exchange"
 						params={{ id: peerId }}
-						variant="bordered"
+						variant="outline"
 						isIconOnly
 					>
 						<Icon name="exchange" />

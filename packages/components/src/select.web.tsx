@@ -1,9 +1,9 @@
 import type React from "react";
 
-import { SelectItem, Select as SelectRaw } from "@heroui/select";
-import { isNonNullish } from "remeda";
+import { ListBox, Select as SelectRaw } from "@heroui/react";
 
 import type { MaybeText } from "./text.web";
+import { cn } from "./utils";
 import type { ViewReactNode } from "./view.web";
 
 export type Props<T extends object, K extends string> = {
@@ -22,6 +22,7 @@ export type Props<T extends object, K extends string> = {
 	getTextValue?: (item: T) => string;
 	disallowEmptySelection?: boolean;
 	testID?: string;
+	variant?: React.ComponentProps<typeof SelectRaw>["variant"];
 };
 
 // Generic component has to be a function
@@ -34,30 +35,66 @@ export function Select<T extends object, K extends string>({
 	onSelectionChange,
 	label,
 	testID,
-	...props
+	items,
+	selectedKeys,
+	disabledKeys,
+	selectionMode,
+	placeholder,
+	className,
+	isDisabled,
+	disallowEmptySelection,
+	variant,
 }: Props<T, K>) {
 	return (
-		<SelectRaw<T>
-			{...props}
+		<SelectRaw
+			value={
+				selectionMode === "multiple"
+					? (selectedKeys ?? [])
+					: (selectedKeys?.[0] ?? null)
+			}
+			selectionMode={selectionMode ?? "single"}
+			disabledKeys={disabledKeys}
+			placeholder={placeholder}
+			className={cn("min-h-10 min-w-32", className)}
+			isDisabled={isDisabled}
 			data-testid={testID}
 			aria-label={label}
-			renderValue={(values) =>
-				renderValue(values.map((value) => value.data).filter(isNonNullish))
-			}
-			onSelectionChange={(keys) => {
-				onSelectionChange(
-					keys === "all" ? props.items.map(getKey) : (Array.from(keys) as K[]),
-				);
+			onChange={(keys) => {
+				const nextKeys = (
+					Array.isArray(keys) ? keys : keys === null ? [] : [keys]
+				) as K[];
+				if (disallowEmptySelection && nextKeys.length === 0) {
+					return;
+				}
+				onSelectionChange(nextKeys);
 			}}
+			variant={variant}
 		>
-			{(item) => (
-				<SelectItem
-					key={getKey(item)}
-					textValue={getTextValue ? getTextValue(item) : getKey(item)}
-				>
-					{children(item)}
-				</SelectItem>
-			)}
+			<SelectRaw.Trigger className="flex-1 items-center px-2 py-1">
+				<SelectRaw.Value className="overflow-hidden">
+					{({ isPlaceholder, defaultChildren }) =>
+						isPlaceholder
+							? defaultChildren
+							: renderValue(
+									items.filter((item) => selectedKeys?.includes(getKey(item))),
+								)
+					}
+				</SelectRaw.Value>
+				<SelectRaw.Indicator />
+			</SelectRaw.Trigger>
+			<SelectRaw.Popover>
+				<ListBox items={items}>
+					{(item: T) => (
+						<ListBox.Item
+							id={getKey(item)}
+							textValue={getTextValue?.(item) ?? getKey(item)}
+						>
+							{children(item)}
+							<ListBox.ItemIndicator />
+						</ListBox.Item>
+					)}
+				</ListBox>
+			</SelectRaw.Popover>
 		</SelectRaw>
 	);
 }

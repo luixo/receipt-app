@@ -21,8 +21,7 @@ export const PartButtons: React.FC<Props> = ({
 	<View className="flex-row items-center gap-2" testID="part-buttons">
 		<Button
 			testID="part-buttons-down"
-			variant="ghost"
-			color="primary"
+			variant="outline"
 			onPress={() => updatePart((prev) => prev - 1)}
 			isDisabled={downDisabled}
 			isIconOnly
@@ -32,8 +31,7 @@ export const PartButtons: React.FC<Props> = ({
 		{children}
 		<Button
 			testID="part-buttons-up"
-			variant="ghost"
-			color="primary"
+			variant="outline"
 			onPress={() => updatePart((prev) => prev + 1)}
 			isDisabled={upDisabled}
 			isIconOnly

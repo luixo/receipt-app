@@ -88,8 +88,7 @@ export const DebtIntention: React.FC<Props> = ({
 					<ButtonLink
 						to="/receipts/$id"
 						params={{ id: intention.receiptId }}
-						variant="bordered"
-						color="primary"
+						variant="outline"
 						isIconOnly
 						size="sm"
 					>

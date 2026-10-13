@@ -104,7 +104,6 @@ const ChangePasswordForm: React.FC = () => {
 				<form.Subscribe selector={(state) => state.canSubmit}>
 					{(canSubmit) => (
 						<Button
-							color="primary"
 							isDisabled={!canSubmit || changePasswordMutation.isPending}
 							isLoading={changePasswordMutation.isPending}
 							type="submit"
@@ -125,7 +124,7 @@ export const ChangePasswordScreen = () => {
 
 	if (!changePasswordShown) {
 		return (
-			<Button color="primary" onPress={showChangePassword}>
+			<Button onPress={showChangePassword}>
 				{t("changePassword.showFormButton")}
 			</Button>
 		);

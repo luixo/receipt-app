@@ -80,6 +80,7 @@ export const ReceiptItemPayers: React.FC<Props> = ({ item, className }) => {
 					addItemPayer(item.id, id, 1);
 				}
 			}}
+			variant="secondary"
 			renderValue={(selectedParticipants) => {
 				if (selectedParticipants.length === 1) {
 					// oxlint-disable-next-line typescript/no-non-null-assertion
