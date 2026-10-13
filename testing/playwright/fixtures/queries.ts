@@ -40,7 +40,7 @@ type QueriesFixtures = {
 		options?: Partial<SnapshotQueryCacheOptions>,
 	) => Promise<{
 		result: T;
-		actions: ReturnType<ApiManager["getActions"]>;
+		actions: Awaited<ReturnType<ApiManager["getActions"]>>;
 		prevQueryCache: Awaited<ReturnType<typeof getDehydratedCache>>;
 		nextQueryCache: Awaited<ReturnType<typeof getDehydratedCache>>;
 		diff: object;
@@ -115,7 +115,7 @@ export const queriesFixtures = test.extend<
 					timeout,
 				});
 				const diff = getDiff(prevQueryCache, nextQueryCache);
-				const actions = api.getActions();
+				const actions = await api.getActions();
 				if (!skipCache) {
 					expect
 						.soft(
@@ -177,7 +177,7 @@ export const queriesFixtures = test.extend<
 						keysLists: emptyKeysLists,
 					}),
 				);
-				const actions = api.getActions();
+				const actions = await api.getActions();
 				await addAttachment(
 					testInfo,
 					"actions",
