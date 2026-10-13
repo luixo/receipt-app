@@ -17,12 +17,7 @@ test("Row", async ({
 	await awaitCacheKey("debtIntentions.getAll");
 	await expectScreenshotWithSchemes("inbound-row.png", {
 		locator: inboundDebtIntentionRow,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [8, 8],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 8,
 	});
 });

@@ -35,13 +35,8 @@ test("Peer query error", async ({
 	await expect(peerError).toBeVisible();
 	await expectScreenshotWithSchemes("error.png", {
 		locator: peerError,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#fbfbfb" : expectedPixels[0].rgb,
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 5,
 	});
 });
 

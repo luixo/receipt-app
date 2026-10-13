@@ -8,3 +8,6 @@
 
 # Node.js
 **/node_modules/
+
+# Temporary files (needed for Playwright screenshots in Docker)
+.tmp

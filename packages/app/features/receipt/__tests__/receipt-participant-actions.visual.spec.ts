@@ -29,13 +29,7 @@ test("Missing debt send action", async ({
 		locator: participantRow(peer.name).getByRole("button", {
 			name: "Send debt to a peer",
 		}),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });
 
@@ -63,13 +57,7 @@ test("Mismatched debt update action", async ({
 		locator: participantRow(peer.name).getByRole("button", {
 			name: "Update debt for a peer",
 		}),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });
 
@@ -99,12 +87,6 @@ test("Zero-balance peer action", async ({
 	await awaitCacheKey("receipts.get");
 	await expectScreenshotWithSchemes("zero-debt.png", {
 		locator: participantRow(peer.name).locator(icon("zero")),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });

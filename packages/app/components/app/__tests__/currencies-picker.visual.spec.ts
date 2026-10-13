@@ -22,12 +22,7 @@ test("Currency modal open", async ({
 	await expectScreenshotWithSchemes("modal.png", {
 		locator: currenciesPicker,
 		fullPage: true,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });

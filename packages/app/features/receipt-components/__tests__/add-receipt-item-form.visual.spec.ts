@@ -27,19 +27,6 @@ test("Pristine, validation, valid, pending and failed form", async ({
 	const name = faker.commerce.productName();
 	const price = faker.number.float({ min: 1, max: 100, multipleOf: 0.01 });
 	const quantity = faker.number.int({ min: 2, max: 10 });
-	const screenshotOptions: NonNullable<
-		Parameters<typeof expectScreenshotWithSchemes>[1]
-	> = {
-		locator: addItemForm,
-		timeout: 15_000,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: { light: "#ffffff", dark: "#18181b" }[colorMode] as `#${string}`,
-				location: [8, 60],
-			},
-			...expectedPixels.slice(1),
-		],
-	};
 	api.mockFirst("receiptItems.add", async () => {
 		await pause.promise;
 		throw new TRPCError({ code: "BAD_REQUEST", message: mockErrorMessage });
@@ -49,7 +36,11 @@ test("Pristine, validation, valid, pending and failed form", async ({
 	await itemName.fill(faker.string.alpha(1));
 	await itemName.press("Tab");
 	await addItemForm.scrollIntoViewIfNeeded();
-	await expectScreenshotWithSchemes("validation.png", screenshotOptions);
+	await expectScreenshotWithSchemes("validation.png", {
+		locator: addItemForm,
+		pixelsPreset: "surface",
+		shift: 1,
+	});
 	await itemName.fill(name);
 	await itemPrice.fill(String(price));
 	await itemPrice.press("Tab");
@@ -57,14 +48,23 @@ test("Pristine, validation, valid, pending and failed form", async ({
 	await itemQuantity.press("Tab");
 	await expect(saveItemButton).toBeEnabled();
 	await addItemForm.scrollIntoViewIfNeeded();
-	await expectScreenshotWithSchemes("valid.png", screenshotOptions);
+	await expectScreenshotWithSchemes("valid.png", {
+		locator: addItemForm,
+		pixelsPreset: "surface",
+	});
 	await saveItemButton.click();
 	await expect(warningRow(name)).toBeChecked();
 	await addItemForm.scrollIntoViewIfNeeded();
-	await expectScreenshotWithSchemes("pending.png", screenshotOptions);
+	await expectScreenshotWithSchemes("pending.png", {
+		locator: addItemForm,
+		pixelsPreset: "surface",
+	});
 	pause.resolve();
 	await awaitCacheKey("receiptItems.add", { error: 1 });
 	await verifyToastTexts(`Error adding item "${name}": ${mockErrorMessage}`);
 	await addItemForm.scrollIntoViewIfNeeded();
-	await expectScreenshotWithSchemes("failed.png", screenshotOptions);
+	await expectScreenshotWithSchemes("failed.png", {
+		locator: addItemForm,
+		pixelsPreset: "surface",
+	});
 });

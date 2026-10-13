@@ -12,13 +12,7 @@ test("default payer", async ({
 	await card.scrollIntoViewIfNeeded();
 	await itemPayers.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("payer.png", {
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 		locator: itemPayers,
 	});
 });

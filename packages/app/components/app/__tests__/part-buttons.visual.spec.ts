@@ -57,14 +57,7 @@ test("Both buttons enabled", async ({
 	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("enabled.png", {
 		locator: partButtons,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				// PartButtons sits inside a receipt item Card, whose background isn't the page background.
-				rgb: colorMode === "light" ? expectedPixels[0].rgb : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });
 
@@ -84,13 +77,6 @@ test("Down button enabled at one", async ({
 	await openReceipt(receipt);
 	await expectScreenshotWithSchemes("down-enabled-at-one.png", {
 		locator: partButtons,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				// PartButtons sits inside a receipt item Card, whose background isn't the page background.
-				rgb: colorMode === "light" ? expectedPixels[0].rgb : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });

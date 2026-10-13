@@ -11,13 +11,7 @@ test("editable name", async ({
 	await openReceipt(receipt);
 	await card.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("name.png", {
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#f4f4f5" : "#27272a",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "input",
 		locator: itemName,
 	});
 });

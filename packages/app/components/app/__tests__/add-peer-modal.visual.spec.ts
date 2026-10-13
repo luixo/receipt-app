@@ -25,13 +25,8 @@ test("Empty peer form", async ({
 	await expect(addPeerModal).toBeVisible();
 	await expectScreenshotWithSchemes("empty.png", {
 		locator: addPeerModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -57,12 +52,7 @@ test("Pre-filled peer form", async ({
 	await expect(addPeerNameInput).toHaveValue(name);
 	await expectScreenshotWithSchemes("pre-filled.png", {
 		locator: addPeerModal,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });

@@ -27,13 +27,7 @@ test("Role control normal, open and owner-row disabled", async ({
 	await expect(role).toBeEnabled();
 	await expectScreenshotWithSchemes("role.png", {
 		locator: role,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 	await role.click();
 	await expectScreenshotWithSchemes("role-open.png", {
@@ -41,13 +35,7 @@ test("Role control normal, open and owner-row disabled", async ({
 			role,
 			modal().last().getByRole("listbox", { includeHidden: true }),
 		],
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 	await page.keyboard.press("Escape");
 	const owner = participantRows.first();
@@ -56,12 +44,6 @@ test("Role control normal, open and owner-row disabled", async ({
 	await expect(disabledRole).toHaveAttribute("data-disabled", "true");
 	await expectScreenshotWithSchemes("owner-role-disabled.png", {
 		locator: disabledRole,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });

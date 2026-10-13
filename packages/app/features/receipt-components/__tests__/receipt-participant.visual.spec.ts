@@ -40,35 +40,17 @@ test("Collapsed, expanded, and dimmed participant rows", async ({
 	await expect(row).toBeVisible();
 	await expectScreenshotWithSchemes("dimmed-row.png", {
 		locator: row,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 	const otherRow = participantRow(secondPeer.name);
 	await expectScreenshotWithSchemes("collapsed-row.png", {
 		locator: otherRow,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 	await otherRow.getByTestId("user-avatar").click();
 	await expectScreenshotWithSchemes("expanded-row.png", {
 		locator: otherRow,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });
 
@@ -131,13 +113,8 @@ test("Guest sees no warnings for other participants", async ({
 	await awaitCacheKey("receipts.get");
 	await expectScreenshotWithSchemes("guest-other-participants.png", {
 		locator: participantsPicker,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -165,12 +142,6 @@ test("Payer part shows the total-parts denominator", async ({
 	).toBeVisible();
 	await expectScreenshotWithSchemes("payer-total-parts.png", {
 		locator: participantRows.first(),
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
 	});
 });

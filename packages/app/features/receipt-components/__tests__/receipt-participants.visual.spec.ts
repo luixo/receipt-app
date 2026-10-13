@@ -23,13 +23,8 @@ test("Empty owner preview and picker", async ({
 	await expect(participantsPicker).toBeVisible();
 	await expectScreenshotWithSchemes("empty-owner-picker.png", {
 		locator: participantsPicker,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -54,13 +49,8 @@ test("Populated owner picker masks participant rows", async ({
 	await expectScreenshotWithSchemes("owner-picker.png", {
 		locator: participantsPicker,
 		mask: [participantRows],
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
 
@@ -100,12 +90,7 @@ test("Empty guest picker", async ({
 	await expect(participantsPicker).toBeVisible();
 	await expectScreenshotWithSchemes("empty-guest-picker.png", {
 		locator: participantsPicker,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });

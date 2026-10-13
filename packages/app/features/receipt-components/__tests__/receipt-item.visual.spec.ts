@@ -16,14 +16,8 @@ test("card composition", async ({
 	await openReceipt(receipt);
 	await card.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("card.png", {
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				location: [10, 5],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: [10, 5],
 		locator: card,
 		noStickyMenuMask: true,
 		mask: [

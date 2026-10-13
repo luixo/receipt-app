@@ -18,7 +18,7 @@ export const test = originalTest.extend<Fixtures>({
 			await expectScreenshotWithSchemes(name, {
 				fullPage: true,
 				noStickyMenuMask: true,
-				mapExpectedPixels: () => [{ rgb: "#eaebed", location: [0, 0] }],
+				pixelsPreset: "email",
 				...opts,
 			});
 		}),

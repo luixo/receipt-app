@@ -16,14 +16,8 @@ test("default admin and candidate cards", async ({
 	await expect(adminCards).toHaveCount(3);
 	await expectScreenshotWithSchemes("default-cards.png", {
 		locator: adminCardsBlock,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
 
@@ -36,14 +30,8 @@ test("Become confirmation", async ({
 	await expect(becomeDialog).toBeVisible();
 	await expectScreenshotWithSchemes("become-confirmation.png", {
 		locator: becomeDialog,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
 
@@ -63,14 +51,8 @@ test("impersonated admin and remaining candidate cards", async ({
 	await expect(adminCards).toHaveCount(2);
 	await expectScreenshotWithSchemes("impersonated-cards.png", {
 		locator: adminCardsBlock,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [16, 16],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 16,
 	});
 });
 

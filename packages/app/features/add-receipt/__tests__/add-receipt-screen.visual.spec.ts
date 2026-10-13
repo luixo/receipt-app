@@ -49,13 +49,7 @@ test("Errors in form", async ({
 	await nameInput.fill(faker.string.alpha(1));
 	await expectScreenshotWithSchemes("fill-name-error.png", {
 		locator: nameInputWrapper,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				...expectedPixels[0],
-				rgb: colorMode === "light" ? "#d8e9fd" : "#001125",
-			},
-			...expectedPixels.slice(1),
-		],
+		shift: ({ height }) => [0, height - 1],
 	});
 });
 
@@ -135,13 +129,8 @@ test.describe("Draft form", () => {
 		});
 		await expectScreenshotWithSchemes("draft-item-builder.png", {
 			locator: addItemForm,
-			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-				{
-					rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-					location: [8, 60],
-				},
-				...expectedPixels.slice(1),
-			],
+			pixelsPreset: "surface",
+			shift: [8, 60],
 		});
 	});
 
@@ -180,13 +169,8 @@ test.describe("Draft form", () => {
 		await expect(participantSuggestion.getByRole("combobox")).toBeVisible();
 		await expectScreenshotWithSchemes("draft-participant-picker.png", {
 			locator: participantsPicker,
-			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-				{
-					...expectedPixels[0],
-					rgb: colorMode === "light" ? "#ffffff" : "#1e1e21",
-				},
-				...expectedPixels.slice(1),
-			],
+			pixelsPreset: "surface",
+			shift: 1,
 		});
 	});
 
@@ -235,13 +219,8 @@ test.describe("Draft form", () => {
 		await expect(card.getByRole("button", { name: "2 / 3" })).toBeVisible();
 		await expectScreenshotWithSchemes("draft-item-shares.png", {
 			locator: card,
-			mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-				{
-					...expectedPixels[0],
-					rgb: colorMode === "light" ? "#fafafa" : "#000000",
-				},
-				...expectedPixels.slice(1),
-			],
+			pixelsPreset: "surface",
+			shift: 5,
 		});
 	});
 });

@@ -71,12 +71,7 @@ test("Remove confirmation dialog", async ({
 	await expect(removePeerDialog).toBeVisible();
 	await expectScreenshotWithSchemes("remove-confirmation-dialog.png", {
 		locator: removePeerDialog,
-		mapExpectedPixels: ({ expectedPixels, colorMode }) => [
-			{
-				rgb: colorMode === "light" ? "#ffffff" : "#18181b",
-				location: [1, 1],
-			},
-			...expectedPixels.slice(1),
-		],
+		pixelsPreset: "surface",
+		shift: 1,
 	});
 });
