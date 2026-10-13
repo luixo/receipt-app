@@ -185,7 +185,7 @@ export const getDehydratedCache = async ({
 type KeyCalls = { clientCalls?: number; serverCalls?: number };
 
 export const remapActions = (
-	actions: ReturnType<ApiManager["getActions"]>,
+	actions: Awaited<ReturnType<ApiManager["getActions"]>>,
 	keysLists: KeysLists,
 ) =>
 	fromEntries(
