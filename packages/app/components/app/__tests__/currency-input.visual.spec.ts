@@ -11,6 +11,7 @@ test("Selected currency input", async ({
 	page,
 	mockBase,
 	currencyInput,
+	currencyInputWrapper,
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
@@ -19,7 +20,7 @@ test("Selected currency input", async ({
 	await page.navigate({ to: "/debts/add" });
 	await expect(currencyInput).toBeVisible();
 	await expectScreenshotWithSchemes("selected.png", {
-		locator: page.locator('[data-slot="base"]', { has: currencyInput }),
+		locator: currencyInputWrapper,
 		pixelsPreset: "input",
 		shift: 10,
 	});

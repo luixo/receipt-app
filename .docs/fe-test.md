@@ -62,6 +62,8 @@ Don't pause an SSR-prefetched query — the SSR stream hangs until server kills 
 
 ## Shared locators
 
+Prefer semantic locators (`getByRole`, `getByLabel`, `getByText`). When selecting a non-semantic UI unit, expose an explicit `testID` and use `getByTestId`. Never select by `data-slot` or XPath; both are lint errors, including in shared fixtures.
+
 Fixture-provided locators available in every spec:
 
 | Name                  | Selects                                           |

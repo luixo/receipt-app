@@ -168,8 +168,9 @@ test.describe("Zod validation", () => {
 
 		await expect(
 			page
-				.locator('[data-slot="base"]', { has: password })
-				.locator('[data-slot="description"]'),
-		).toHaveText("Минимальная длина для пароля — 6");
+				.getByTestId("input-wrapper")
+				.filter({ has: password })
+				.getByText("Минимальная длина для пароля — 6", { exact: true }),
+		).toBeVisible();
 	});
 });
