@@ -13,6 +13,10 @@ export type InputHandler = {
 	blur: () => void;
 };
 
+export const InputWrapper: React.FC<React.ComponentProps<"div">> = (props) => (
+	<div {...props} data-testid="input-wrapper" />
+);
+
 export type Props = Pick<
 	React.ComponentProps<typeof InputRaw>,
 	| "value"
@@ -88,6 +92,7 @@ export const Input: React.FC<Props> = ({
 	const Component = (multiline ? Textarea : InputRaw) as typeof InputRaw;
 	return (
 		<Component
+			as={InputWrapper}
 			ref={innerRef as React.RefObject<HTMLInputElement | null>}
 			{...props}
 			onClick={onPress}

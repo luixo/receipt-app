@@ -28,12 +28,15 @@ test("Lists top currencies", async ({
 	await currencyInput.click();
 	await expect(currenciesPicker).toBeVisible();
 	await expect(currencyButton()).toHaveCount(CURRENCY_CODES.length);
+	await expect(divider).toBeVisible();
 
-	const topCurrenciesTexts = await currencyButton()
-		.and(divider.locator("xpath=preceding-sibling::*"))
-		.allTextContents();
 	const restCurrenciesTexts = await currencyButton()
-		.and(divider.locator("xpath=following-sibling::*"))
+		.and(currenciesPicker.locator('[data-testid="divider"] ~ button'))
+		.allTextContents();
+	const topCurrenciesTexts = await currencyButton()
+		.and(
+			currenciesPicker.locator('button:not([data-testid="divider"] ~ button)'),
+		)
 		.allTextContents();
 
 	const topCurrencyCodes = topCurrencies.map(

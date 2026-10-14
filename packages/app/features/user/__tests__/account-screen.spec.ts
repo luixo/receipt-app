@@ -60,7 +60,8 @@ test.describe("Avatar", () => {
 				(el) => (el as HTMLInputElement).value,
 			);
 
-			await changeSlider(zoomSlider, 0.6, "height");
+			await changeSlider(zoomSlider, 0.6);
+			await expect(zoomSlider).toHaveValue("3.4");
 
 			const newValue = await zoomSlider.evaluate(
 				(el) => (el as HTMLInputElement).value,

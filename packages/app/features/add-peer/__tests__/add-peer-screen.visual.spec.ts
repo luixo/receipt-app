@@ -27,7 +27,9 @@ test.describe("Errors in form", () => {
 		page,
 		api,
 		nameInput,
+		nameInputWrapper,
 		emailInput,
+		emailInputWrapper,
 		awaitCacheKey,
 		expectScreenshotWithSchemes,
 		skip,
@@ -43,13 +45,13 @@ test.describe("Errors in form", () => {
 		await nameInput.fill("");
 		await nameInput.press("Tab");
 		await expectScreenshotWithSchemes("name-error.png", {
-			locator: page.locator('[data-slot="base"]', { has: nameInput }),
+			locator: nameInputWrapper,
 		});
 
 		await emailInput.fill("not-an-email");
 		await emailInput.press("Tab");
 		await expectScreenshotWithSchemes("email-error.png", {
-			locator: page.locator('[data-slot="base"]', { has: emailInput }),
+			locator: emailInputWrapper,
 		});
 	});
 });
