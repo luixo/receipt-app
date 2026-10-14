@@ -6,6 +6,13 @@ on:
     branches:
       - main
 
+env:
+  REPORT_SCOPE: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref == 'refs/heads/main' && 'main' || format('run-{0}', github.run_id) }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   replace-pr-number:
     name: Replace PR number in a message
@@ -91,6 +98,7 @@ jobs:
     runs-on: ubuntu-26.04
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
+      report-url: ${{ steps.publish.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -114,6 +122,18 @@ jobs:
           COVERAGE=$(bun -e 'console.log(Object.entries(require("./testing/vitest/coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
           echo "Coverage is $COVERAGE"
           echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+      - name: Publish backend coverage report
+        id: publish
+        if: ${{ !cancelled() && hashFiles('testing/vitest/coverage/index.html') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          preCommands: |
+            : "${CLOUDFLARE_ACCOUNT_ID:?Missing repository variable CLOUDFLARE_ACCOUNT_ID}"
+            : "${CLOUDFLARE_API_TOKEN:?Missing repository secret CLOUDFLARE_API_TOKEN}"
+          command: deploy --config .github/reports/wrangler.json --name receipt-ci-backend-${{ env.REPORT_SCOPE }} --assets testing/vitest/coverage
 
   frontend-test:
     name: Frontend tests
@@ -170,6 +190,8 @@ jobs:
     if: ${{ !cancelled() }}
     needs: frontend-test
     runs-on: ubuntu-26.04
+    outputs:
+      report-url: ${{ steps.publish.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -188,6 +210,18 @@ jobs:
           path: playwright-report
           retention-days: 30
           if-no-files-found: error
+      - name: Publish Playwright report
+        id: publish
+        if: ${{ !cancelled() && hashFiles('playwright-report/index.html') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          preCommands: |
+            : "${CLOUDFLARE_ACCOUNT_ID:?Missing repository variable CLOUDFLARE_ACCOUNT_ID}"
+            : "${CLOUDFLARE_API_TOKEN:?Missing repository secret CLOUDFLARE_API_TOKEN}"
+          command: deploy --config .github/reports/wrangler.json --name receipt-ci-playwright-${{ env.REPORT_SCOPE }} --assets playwright-report
 
   merge-frontend-coverage:
     name: Merge frontend coverage
@@ -195,6 +229,7 @@ jobs:
     runs-on: ubuntu-26.04
     outputs:
       coverage: ${{ steps.coverage-percent.outputs.coverage }}
+      report-url: ${{ steps.publish.outputs.deployment-url }}
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup-env
@@ -225,6 +260,48 @@ jobs:
           COVERAGE=$(bun -e 'console.log(Object.entries(require("./testing/playwright/coverage/report/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
           echo "Coverage is $COVERAGE"
           echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+      - name: Publish frontend coverage report
+        id: publish
+        if: ${{ !cancelled() && hashFiles('testing/playwright/coverage/report/index.html') != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4"
+          preCommands: |
+            : "${CLOUDFLARE_ACCOUNT_ID:?Missing repository variable CLOUDFLARE_ACCOUNT_ID}"
+            : "${CLOUDFLARE_API_TOKEN:?Missing repository secret CLOUDFLARE_API_TOKEN}"
+          command: deploy --config .github/reports/wrangler.json --name receipt-ci-frontend-${{ env.REPORT_SCOPE }} --assets testing/playwright/coverage/report
+
+  update-report-links:
+    name: Update PR report links
+    if: ${{ !cancelled() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    needs:
+      - backend-test
+      - merge-frontend-reports
+      - merge-frontend-coverage
+      - replace-pr-number
+      - update-badges
+    runs-on: ubuntu-26.04
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Upsert report links in PR description
+        uses: step-security/update-pr-description@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          regex: '(?:\r?\n){0,2}<!-- ci-reports:start -->[\s\S]*?<!-- ci-reports:end -->(?:\r?\n)?'
+          content: |
+
+
+            <!-- ci-reports:start -->
+            ### CI reports
+            [Workflow run ${{ github.run_id }} (attempt ${{ github.run_attempt }})](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            - Playwright: ${{ needs.merge-frontend-reports.outputs.report-url != '' && format('[Report]({0})', needs.merge-frontend-reports.outputs.report-url) || 'Not published for this run' }}
+            - Backend coverage: ${{ needs.backend-test.outputs.report-url != '' && format('[Report]({0})', needs.backend-test.outputs.report-url) || 'Not published for this run' }}
+            - Frontend coverage: ${{ needs.merge-frontend-coverage.outputs.report-url != '' && format('[Report]({0})', needs.merge-frontend-coverage.outputs.report-url) || 'Not published for this run' }}
+            <!-- ci-reports:end -->
 
   update-badges:
     name: Badges
