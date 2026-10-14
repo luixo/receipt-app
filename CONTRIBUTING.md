@@ -68,7 +68,7 @@ On completion, tests provide coverage report in `testing/playwright/coverage` di
 To run tests locally you need to install Playwright browsers:
 
 ```sh
-npx playwright install
+bunx playwright install
 ```
 
 ### Prebuild app locally
