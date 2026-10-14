@@ -9,7 +9,7 @@ type FormFixtures = {
 export const formFixtures = test.extend<FormFixtures>({
 	fillPeer: ({ page }, use) =>
 		use(async (peer) => {
-			await page.getByRole("combobox", { name: "Select a peer" }).click();
+			await page.getByRole("textbox", { name: "Select a peer" }).click();
 			await page
 				.getByRole("option")
 				.filter({ has: page.getByText(peer.name, { exact: true }) })

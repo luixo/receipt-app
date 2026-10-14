@@ -185,7 +185,7 @@ test.describe("Sorting and filters", () => {
 			},
 			{ name: "owned-by-me" },
 		);
-		await page.keyboard.press("Escape");
+		await modal().getByRole("button", { name: "Close" }).click();
 		await expect(modal()).toBeHidden();
 		assert.ok(ownReceipts.length !== 0);
 		for (const receipt of ownReceipts) {
@@ -211,7 +211,7 @@ test.describe("Sorting and filters", () => {
 			},
 			{ name: "owned-not-by-me" },
 		);
-		await page.keyboard.press("Escape");
+		await modal().getByRole("button", { name: "Close" }).click();
 		await expect(modal()).toBeHidden();
 		await expect(receiptPreviewNamed(foreignReceipt.name)).toBeVisible();
 		for (const receipt of ownReceipts) {
@@ -296,7 +296,7 @@ test.describe("Sorting and filters", () => {
 		});
 		await expect(emptyCard("You have no receipts")).toBeVisible();
 		await emptyCard("You have no receipts")
-			.getByRole("button", { name: "Add receipt" })
+			.getByRole("link", { name: "Add receipt" })
 			.click();
 		await page.expectUrl({ to: "/receipts/add" });
 	});
@@ -342,7 +342,7 @@ test.describe("Pagination", () => {
 		await snapshotQueries(
 			async () => {
 				await paginationBlock
-					.getByRole("button", { name: "pagination item 2" })
+					.getByRole("button", { name: "2", exact: true })
 					.click();
 				await awaitCacheKey("receipts.getPaged", {
 					input: secondPageInput,
@@ -426,15 +426,19 @@ test.describe("Selection and removal", () => {
 		const { receipts } = await mockReceipts();
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await paginationBlock.getByRole("checkbox").click();
+		await paginationBlock.locator('[data-slot="checkbox-content"]').click();
 		for (const [index] of receipts.entries()) {
-			await expect(receiptCheckbox.nth(index)).toBeChecked();
+			await expect(
+				receiptCheckbox.nth(index).getByRole("checkbox"),
+			).toBeChecked();
 		}
 		await expect(removeReceiptsButton).toBeEnabled();
 
-		await paginationBlock.getByRole("checkbox").click();
+		await paginationBlock.locator('[data-slot="checkbox-content"]').click();
 		for (const [index] of receipts.entries()) {
-			await expect(receiptCheckbox.nth(index)).not.toBeChecked();
+			await expect(
+				receiptCheckbox.nth(index).getByRole("checkbox"),
+			).not.toBeChecked();
 		}
 		await expect(removeReceiptsButton).toBeDisabled();
 	});
@@ -456,7 +460,10 @@ test.describe("Selection and removal", () => {
 		assert.ok(firstReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox.first().click();
+		await receiptCheckbox
+			.first()
+			.locator('[data-slot="checkbox-content"]')
+			.click();
 		await expect(removeReceiptsButton).toBeEnabled();
 
 		const pause = api.createPause();
@@ -473,7 +480,9 @@ test.describe("Selection and removal", () => {
 				await removeReceiptsButton.click();
 				await expect(modal()).toBeHidden();
 				await awaitCacheKey("receipts.remove", { pending: 1 });
-				await expect(receiptCheckbox.first()).toBeDisabled();
+				await expect(
+					receiptCheckbox.first().getByRole("checkbox"),
+				).toBeDisabled();
 				await expect(removeReceiptsButton).toBeDisabled();
 				await verifyToastTexts("Removing receipt..");
 				pause.resolve();
@@ -506,8 +515,14 @@ test.describe("Selection and removal", () => {
 		assert.ok(secondReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox.nth(0).click();
-		await receiptCheckbox.nth(1).click();
+		await receiptCheckbox
+			.nth(0)
+			.locator('[data-slot="checkbox-content"]')
+			.click();
+		await receiptCheckbox
+			.nth(1)
+			.locator('[data-slot="checkbox-content"]')
+			.click();
 
 		await removeReceiptsButton.click();
 		await expect(modal()).toBeVisible();
@@ -559,7 +574,10 @@ test.describe("Selection and removal", () => {
 		assert.ok(firstReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox.first().click();
+		await receiptCheckbox
+			.first()
+			.locator('[data-slot="checkbox-content"]')
+			.click();
 
 		const mockErrorMessage = `Mock "receipts.remove" error`;
 		api.mockFirst("receipts.remove", () => {

@@ -23,13 +23,10 @@ export const Badge: React.FC<Props> = ({
 }) => (
 	<BadgeRaw.Anchor>
 		{children}
-		<BadgeRaw
-			size="sm"
-			className={isInvisible ? "hidden" : undefined}
-			data-testid={testID}
-			{...props}
-		>
-			<BadgeRaw.Label>{content}</BadgeRaw.Label>
-		</BadgeRaw>
+		{!isInvisible && (
+			<BadgeRaw size="sm" data-testid={testID} {...props}>
+				<BadgeRaw.Label>{content}</BadgeRaw.Label>
+			</BadgeRaw>
+		)}
 	</BadgeRaw.Anchor>
 );

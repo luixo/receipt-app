@@ -20,7 +20,10 @@ export const closeAllToasts = (options: { disableAnimation?: boolean }) => {
 	toast.clear();
 };
 export const closeToastById = (id: string) => toast.close(id);
-export const getToastsAmount = () => toast.getQueue().visibleToasts.length;
+export const getToastsAmount = () =>
+	document.querySelectorAll(
+		'[data-slot="toast"]:not([data-hidden="true"]):not([data-exiting="true"])',
+	).length;
 
 export type AddProps = {
 	title: string;

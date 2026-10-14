@@ -167,7 +167,7 @@ test("Loading state shows spinner on page change", async ({
 	await snapshotQueries(
 		async () => {
 			await paginationBlock
-				.getByRole("button", { name: "pagination item 2" })
+				.getByRole("button", { name: "2", exact: true })
 				.click();
 			await awaitCacheKey("debts.getPeersPaged", {
 				input: secondPageInput,
@@ -192,7 +192,7 @@ test.describe("Header aside", () => {
 
 		api.mockFirst("currency.top", () => ({ items: [] }));
 		api.mockFirst("peers.suggestTop", () => ({ items: [] }));
-		await page.getByRole("button", { name: "Add debt" }).click();
+		await page.getByRole("link", { name: "Add debt" }).click();
 		await page.expectUrl({ to: "/debts/add" });
 	});
 

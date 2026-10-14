@@ -23,8 +23,8 @@ export const Switch: React.FC<Props> = ({
 	children,
 	...props
 }) => (
-	<SwitchRaw {...props} onChange={onValueChange} data-testid={testID}>
-		<SwitchRaw.Content>
+	<SwitchRaw {...props} onChange={onValueChange}>
+		<SwitchRaw.Content data-testid={testID}>
 			<SwitchRaw.Control>
 				<SwitchRaw.Thumb className={thumbClassName}>
 					{thumbIcon ? <SwitchRaw.Icon>{thumbIcon}</SwitchRaw.Icon> : null}

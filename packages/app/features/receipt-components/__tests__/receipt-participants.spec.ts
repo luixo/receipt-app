@@ -48,13 +48,10 @@ test("Owner picker adds self as an editor, filters selected peers and releases f
 	});
 	await openReceipt(receipt);
 	await page.getByRole("button", { name: "Add participants" }).click();
-	const input = participantSuggestion.getByRole("combobox");
+	const input = participantSuggestion.getByRole("textbox");
 	await input.click();
 	await expect(participantsPicker).toBeVisible();
-	const self = page
-		.getByRole("option", { includeHidden: true })
-		.filter({ visible: true })
-		.first();
+	const self = page.getByRole("listbox").getByRole("option").first();
 	await snapshotQueries(
 		async () => {
 			await self.click();
@@ -131,11 +128,8 @@ test("Failed addition releases the temporary picker selection", async ({
 	});
 	await openReceipt(receipt);
 	await page.getByRole("button", { name: "Add participants" }).click();
-	await participantSuggestion.getByRole("combobox").click();
-	const self = page
-		.getByRole("option", { includeHidden: true })
-		.filter({ visible: true })
-		.first();
+	await participantSuggestion.getByRole("textbox").click();
+	const self = page.getByRole("listbox").getByRole("option").first();
 	await snapshotQueries(
 		async () => {
 			await self.click();
@@ -155,11 +149,8 @@ test("Failed addition releases the temporary picker selection", async ({
 			name: "receipt-participants-add-error",
 		},
 	);
-	await participantSuggestion.getByRole("combobox").click();
+	await participantSuggestion.getByRole("textbox").click();
 	await expect(
-		page
-			.getByRole("option", { includeHidden: true })
-			.filter({ visible: true })
-			.first(),
+		page.getByRole("listbox").getByRole("option").first(),
 	).toBeVisible();
 });

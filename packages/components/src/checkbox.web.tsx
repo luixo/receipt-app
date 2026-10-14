@@ -18,6 +18,7 @@ export const Checkbox: React.FC<Props> = ({
 	children,
 	icon,
 	onValueChange,
+	isSelected,
 	testID = "checkbox",
 	isDisabled,
 	isIndeterminate,
@@ -26,6 +27,7 @@ export const Checkbox: React.FC<Props> = ({
 }) => (
 	<CheckboxRaw
 		onChange={onValueChange}
+		isSelected={isSelected}
 		data-testid={testID}
 		isDisabled={isDisabled}
 		isIndeterminate={isIndeterminate}

@@ -51,7 +51,6 @@ test("Multiple groups with different directions", async ({
 	mockDebts,
 	debtsGroup,
 	cookieManager,
-	consoleManager,
 }) => {
 	const AMOUNT = 20;
 	const {
@@ -61,10 +60,6 @@ test("Multiple groups with different directions", async ({
 	});
 	await cookieManager.addCookie(LIMIT_STORE_NAME, AMOUNT + 1);
 	assert.ok(firstPeer);
-	// TODO: fix this ignored message
-	consoleManager.ignore(
-		'Select: Keys "21" passed to "selectedKeys" are not present in the collection.',
-	);
 	await openPeerDebtsScreen(firstPeer.id, { awaitDebts: AMOUNT });
 	await expectScreenshotWithSchemes("multiple.png", {
 		locator: debtsGroup,

@@ -94,9 +94,11 @@ export const test = mergedTest.extend<Fixtures>({
 			}
 		}),
 
-	fromPeerSuggestInput: ({ page }, use) => use(page.getByLabel("From")),
+	fromPeerSuggestInput: ({ page }, use) =>
+		use(page.getByRole("textbox", { name: "From" })),
 
-	toPeerSuggestInput: ({ page }, use) => use(page.getByLabel("To")),
+	toPeerSuggestInput: ({ page }, use) =>
+		use(page.getByRole("textbox", { name: "To" })),
 
 	submitButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Transfer debt(s)" })),

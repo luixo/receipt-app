@@ -64,6 +64,7 @@ export const Autocomplete: React.FC<Props> = ({
 	};
 	return (
 		<ComboBox
+			defaultFilter={() => true}
 			value={selectedKey}
 			onChange={(nextSelection) =>
 				onSelectionChange(

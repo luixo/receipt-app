@@ -259,7 +259,6 @@ test.describe("Draft form", () => {
 		saveItemButton,
 		itemCards,
 		warningSection,
-		icon,
 		modal,
 	}) => {
 		await mockBase();
@@ -277,11 +276,7 @@ test.describe("Draft form", () => {
 			price: faker.number.int({ min: 5, max: 30 }),
 		});
 		await saveItemButton.click();
-		await itemCards
-			.first()
-			.getByRole("button")
-			.filter({ has: icon("ellipsis") })
-			.click();
+		await itemCards.first().locator('[data-slot="dropdown-trigger"]').click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(1);
 		await expect(warningSection).toContainText(secondName);

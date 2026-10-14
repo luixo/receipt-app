@@ -52,6 +52,8 @@ test.describe("Errors in form", () => {
 		await noteInput.press("Tab");
 		await expectScreenshotWithSchemes("note-error.png", {
 			locator: noteInputWrapper,
+			pixelsPreset: "surface",
+			shift: 30,
 		});
 	});
 });

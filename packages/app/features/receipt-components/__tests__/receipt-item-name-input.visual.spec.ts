@@ -11,7 +11,7 @@ test("editable name", async ({
 	await openReceipt(receipt);
 	await card.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("name.png", {
-		pixelsPreset: "input",
+		pixelsPreset: "surface",
 		locator: itemName,
 	});
 });
