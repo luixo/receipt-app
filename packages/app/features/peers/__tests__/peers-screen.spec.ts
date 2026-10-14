@@ -61,7 +61,7 @@ test("Empty state add button navigates to add peer screen", async ({
 	await page.navigate({ to: "/peers" });
 
 	await emptyCard("You have no peers")
-		.getByRole("button", { name: "Add peer" })
+		.getByRole("link", { name: "Add peer" })
 		.click();
 	await page.expectUrl({ to: "/peers/add" });
 });
@@ -91,7 +91,7 @@ test("Pagination", async ({
 	await snapshotQueries(
 		async () => {
 			await paginationBlock
-				.getByRole("button", { name: "pagination item 2" })
+				.getByRole("button", { name: "2", exact: true })
 				.click();
 			await awaitCacheKey("peers.getPaged", {
 				input: secondPageInput,

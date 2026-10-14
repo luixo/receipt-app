@@ -70,8 +70,8 @@ export const test = base.extend<Fixtures>({
 		use((part, total) =>
 			card.getByRole("button", { name: `${part} / ${total}` }),
 		),
-	itemMenu: ({ card, icon }, use) =>
-		use(card.getByRole("button").filter({ has: icon("ellipsis") })),
+	itemMenu: ({ card }, use) =>
+		use(card.locator('[data-slot="dropdown-trigger"]')),
 	mockItem: ({ api, mockReceipt }, use) =>
 		use(async ({ consumers = 2, payers = 0, role = "owner" } = {}) => {
 			let ownerPeerId: string | undefined = undefined;

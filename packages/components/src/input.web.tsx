@@ -140,7 +140,7 @@ export const Input: React.FC<Props> = ({
 		autoComplete,
 		onBlur,
 		onFocus,
-		"aria-label": props["aria-label"],
+		"aria-label": props["aria-label"] ?? (hideLabel ? label : undefined),
 		"data-testid": testID,
 		className: inputClassName,
 		onClick: onPress,
@@ -154,7 +154,13 @@ export const Input: React.FC<Props> = ({
 		<TextField {...fieldProps} data-testid="input-wrapper">
 			{label && !hideLabel ? <Label>{label}</Label> : null}
 			{multiline ? (
-				<TextArea {...inputProps} />
+				<div className="flex items-start gap-2">
+					<TextArea
+						{...inputProps}
+						className={cn(inputProps.className, "flex-1")}
+					/>
+					{endContent}
+				</div>
 			) : hasGroup ? (
 				<InputGroup variant={inputProps.variant}>
 					{startContent ? (

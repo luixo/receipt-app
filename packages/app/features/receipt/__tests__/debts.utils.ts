@@ -25,19 +25,19 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	updateDebtButton: ({ page }, use) =>
-		use(page.locator("button[title='Update debt for a peer']")),
+		use(page.getByRole("button", { name: "Update debt for a peer" })),
 
 	sendDebtButton: ({ page }, use) =>
-		use(page.locator("button[title='Send debt to a peer']")),
+		use(page.getByRole("button", { name: "Send debt to a peer" })),
 
 	propagateDebtsButton: ({ page }, use) =>
-		use(page.locator("button[title='Propagate debts']")),
+		use(page.getByRole("button", { name: "Propagate debts" })),
 
 	updateDebtsButton: ({ page }, use) =>
-		use(page.locator("button[title='Update debts']")),
+		use(page.getByRole("button", { name: "Update debts" })),
 
 	syncedDebtsButton: ({ page }, use) =>
-		use(page.locator("button[title='Synced']")),
+		use(page.getByRole("button", { name: "Synced" })),
 
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
 		use(async (receipt) => {

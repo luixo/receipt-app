@@ -37,6 +37,13 @@ export const Button: React.FC<ButtonProps> = ({
 		return (
 			<Component
 				{...props}
+				{...(props.isDisabled ? { href: undefined } : {})}
+				role={props.isDisabled && as === "a" ? "link" : undefined}
+				aria-disabled={props.isDisabled || undefined}
+				tabIndex={props.isDisabled ? -1 : undefined}
+				aria-label={
+					props["aria-label"] ?? (props.isIconOnly ? props.title : undefined)
+				}
 				onClick={onPress}
 				data-testid={testID}
 				className={cn(
@@ -52,6 +59,10 @@ export const Button: React.FC<ButtonProps> = ({
 	return (
 		<ButtonRaw
 			{...props}
+			slot={null}
+			aria-label={
+				props["aria-label"] ?? (props.isIconOnly ? props.title : undefined)
+			}
 			variant={variant}
 			isPending={isLoading}
 			onPress={onPress}

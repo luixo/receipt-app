@@ -11,8 +11,8 @@ test("Role control normal, open and owner-row disabled", async ({
 	participantRow,
 	participantRows,
 	participantRole,
+	participantRoleOptions,
 	page,
-	modal,
 	expectScreenshotWithSchemes,
 	skip,
 }, testInfo) => {
@@ -31,10 +31,7 @@ test("Role control normal, open and owner-row disabled", async ({
 	});
 	await role.click();
 	await expectScreenshotWithSchemes("role-open.png", {
-		locator: [
-			role,
-			modal().last().getByRole("listbox", { includeHidden: true }),
-		],
+		locator: [role, participantRoleOptions],
 		pixelsPreset: "surface",
 	});
 	await page.keyboard.press("Escape");

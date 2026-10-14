@@ -53,8 +53,8 @@ test("Only unconsumed items appear in source order, with rounded quantity × pri
 test("Selecting a warning scrolls the matching item card into view without consuming it", async ({
 	mockReceipt,
 	openReceipt,
-	warningRow,
 	warningRows,
+	warningSection,
 	itemCards,
 	itemCardNames,
 	getScrollPosition,
@@ -80,13 +80,12 @@ test("Selecting a warning scrolls the matching item card into view without consu
 	assert.ok(target);
 	await openReceipt(receipt);
 	await expect(warningRows).toHaveCount(1);
-	const row = warningRow(target.name);
 	const card = itemCards.nth(noConsumerIndex);
 	await expect(itemCardNames.nth(noConsumerIndex)).toHaveValue(target.name);
 	const scrollPosition = () => getScrollPosition(card);
 	const before = await scrollPosition();
 	await snapshotQueries(async () => {
-		await row.click();
+		await warningSection.locator('[data-slot="checkbox-content"]').click();
 		await expect.poll(scrollPosition).toBeGreaterThan(before);
 		await expect(card).toBeInViewport();
 	});

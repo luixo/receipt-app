@@ -46,12 +46,16 @@ test.describe("Errors in form", () => {
 		await nameInput.press("Tab");
 		await expectScreenshotWithSchemes("name-error.png", {
 			locator: nameInputWrapper,
+			pixelsPreset: "surface",
+			shift: 30,
 		});
 
 		await emailInput.fill("not-an-email");
 		await emailInput.press("Tab");
 		await expectScreenshotWithSchemes("email-error.png", {
 			locator: emailInputWrapper,
+			pixelsPreset: "surface",
+			shift: 30,
 		});
 	});
 });

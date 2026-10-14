@@ -39,7 +39,7 @@ test("Pristine, validation, valid, pending and failed form", async ({
 	await expectScreenshotWithSchemes("validation.png", {
 		locator: addItemForm,
 		pixelsPreset: "surface",
-		shift: 1,
+		shift: [200, 100],
 	});
 	await itemName.fill(name);
 	await itemPrice.fill(String(price));
@@ -66,5 +66,6 @@ test("Pristine, validation, valid, pending and failed form", async ({
 	await expectScreenshotWithSchemes("failed.png", {
 		locator: addItemForm,
 		pixelsPreset: "surface",
+		shift: [200, 100],
 	});
 });

@@ -8,5 +8,5 @@ export type Props = {
 };
 
 export const Skeleton: React.FC<Props> = ({ className, testID }) => (
-	<SkeletonRaw className={className} data-testid={testID} />
+	<SkeletonRaw className={className} data-testid={testID ?? "skeleton"} />
 );

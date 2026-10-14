@@ -77,13 +77,14 @@ const getPixelColor = (
 type BoundingBox = NonNullable<PageScreenshotOptions["clip"]>;
 type ExpectedPixel = { rgb: `#${string}`; location: [number, number] };
 
-type PixelsPreset = "surface" | "input" | "email";
+type PixelsPreset = "surface" | "input" | "email" | "avatar";
 
 const pixelsPresetColors = {
 	// HeroUI names this pair content1.
-	surface: { light: "#ffffff", dark: "#18181b" },
-	input: { light: "#f4f4f5", dark: "#27272a" },
+	surface: { light: "#ffffff", dark: "#181819" },
+	input: { light: "#e9e9e9", dark: "#232323" },
 	email: { light: "#eaebed", dark: "#eaebed" },
+	avatar: { light: "#f5f5f6", dark: "#060606" },
 } satisfies Record<PixelsPreset, Record<ColorMode, `#${string}`>>;
 
 type PixelShift =
