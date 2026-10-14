@@ -129,6 +129,25 @@ const getSelector = (input: string | RegExp) =>
 		: `'${input}'`;
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
+		selector:
+			// oxlint-disable-next-line eslint-js/no-restricted-syntax -- The rule must name the forbidden attribute.
+			"Literal[value=/data-slot/], TemplateElement[value.raw=/data-slot/], JSXAttribute[name.name='data-slot']",
+		message:
+			// oxlint-disable-next-line eslint-js/no-restricted-syntax -- The diagnostic must name the forbidden attribute.
+			"Do not use data-slot; use semantic locators such as getByRole or explicit test IDs (getByTestId).",
+	},
+	{
+		selector:
+			"Literal[value=/xpath[ ]*=/], TemplateElement[value.raw=/xpath[ ]*=/]",
+		message:
+			"Do not use XPath selectors; use semantic locators such as getByRole or explicit test IDs (getByTestId).",
+	},
+	{
+		selector: String.raw`CallExpression[callee.property.name=/^(locator|\$|\$\$|waitForSelector)$/] > Literal[value=/^[ ]*[(]*[.]?\u002F\u002F|^[ ]*[.][.](?:\u002F|$)/], CallExpression[callee.property.name=/^(locator|\$|\$\$|waitForSelector)$/] > TemplateLiteral > TemplateElement[value.raw=/^[ ]*[(]*[.]?\u002F\u002F|^[ ]*[.][.](?:\u002F|$)/]`,
+		message:
+			"Do not use XPath selectors; use semantic locators such as getByRole or explicit test IDs (getByTestId).",
+	},
+	{
 		selector: "JSXAttribute[name.name='data-testid']",
 		message: "Use testID from react-native instead",
 		omitTags: ["web-only"],

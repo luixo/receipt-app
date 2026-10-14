@@ -21,9 +21,11 @@ type Fixtures = {
 	>;
 	addButton: Locator;
 	amountInput: Locator;
+	amountInputWrapper: Locator;
 	currencyInput: Locator;
 	dateInput: Locator;
 	noteInput: Locator;
+	noteInputWrapper: Locator;
 	fillValidForm: (peer: Peer) => Promise<void>;
 };
 
@@ -51,6 +53,8 @@ export const test = originalTest.extend<Fixtures>({
 
 	amountInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Amount" })),
+	amountInputWrapper: ({ page, amountInput }, use) =>
+		use(page.getByTestId("input-wrapper").filter({ has: amountInput })),
 
 	currencyInput: ({ page }, use) => use(page.locator('input[name="currency"]')),
 
@@ -59,6 +63,8 @@ export const test = originalTest.extend<Fixtures>({
 
 	noteInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Debt note" })),
+	noteInputWrapper: ({ page, noteInput }, use) =>
+		use(page.getByTestId("input-wrapper").filter({ has: noteInput })),
 
 	fillValidForm: ({ amountInput, noteInput, fillPeer }, use) =>
 		use(async (peer: Peer) => {

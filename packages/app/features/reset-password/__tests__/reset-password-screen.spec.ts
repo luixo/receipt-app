@@ -199,14 +199,18 @@ test.describe("form", () => {
 		await fillInvalidFields();
 		await expect(
 			page
-				.locator('[data-slot="base"]', { has: fields.password })
-				.locator('[data-slot="description"]'),
-		).toHaveText("Minimal length for password is 6");
+				.getByTestId("input-wrapper")
+				.filter({ has: fields.password })
+				.getByText("Minimal length for password is 6", { exact: true }),
+		).toBeVisible();
 		await expect(
 			page
-				.locator('[data-slot="base"]', { has: fields.passwordRetype })
-				.locator('[data-slot="description"]'),
-		).toHaveText("Minimal length for password is 6\nPasswords don't match");
+				.getByTestId("input-wrapper")
+				.filter({ has: fields.passwordRetype })
+				.getByText("Minimal length for password is 6 Passwords don't match", {
+					exact: true,
+				}),
+		).toBeVisible();
 		await expect(resetPasswordButton).toBeDisabled();
 	});
 });

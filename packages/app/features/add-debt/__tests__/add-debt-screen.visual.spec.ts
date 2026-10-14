@@ -29,7 +29,9 @@ test.describe("Errors in form", () => {
 		page,
 		mockBase,
 		amountInput,
+		amountInputWrapper,
 		noteInput,
+		noteInputWrapper,
 		expectScreenshotWithSchemes,
 		skip,
 	}, testInfo) => {
@@ -41,7 +43,7 @@ test.describe("Errors in form", () => {
 		await amountInput.fill("0");
 		await amountInput.press("Tab");
 		await expectScreenshotWithSchemes("amount-error.png", {
-			locator: page.locator('[data-slot="base"]', { has: amountInput }),
+			locator: amountInputWrapper,
 		});
 
 		// fill then clear: isDirty stays true so the error renders; Tab blurs the field
@@ -49,7 +51,7 @@ test.describe("Errors in form", () => {
 		await noteInput.fill("");
 		await noteInput.press("Tab");
 		await expectScreenshotWithSchemes("note-error.png", {
-			locator: page.locator('[data-slot="base"]', { has: noteInput }),
+			locator: noteInputWrapper,
 		});
 	});
 });

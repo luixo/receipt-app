@@ -3,6 +3,7 @@ import React from "react";
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
 
 import type { InputHandler, Props as InputProps } from "~components/input";
+import { InputWrapper } from "~components/input.web";
 import { cn, getErrorState, getMutationLoading } from "~components/utils";
 
 export type Props = {
@@ -66,6 +67,7 @@ export const NumberInput: React.FC<Props> = ({
 	const isSSR = typeof window === "undefined";
 	return (
 		<NumberInputRaw
+			as={InputWrapper}
 			ref={innerRef}
 			{...props}
 			isDisabled={

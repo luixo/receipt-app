@@ -82,7 +82,7 @@ export const test = originalTest.extend<Fixtures>({
 	nameInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Receipt name*" })),
 	nameInputWrapper: ({ page, nameInput }, use) =>
-		use(page.locator('[data-slot="base"]', { has: nameInput })),
+		use(page.getByTestId("input-wrapper").filter({ has: nameInput })),
 	dateInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Issued on" })),
 	addItemButton: ({ page }, use) =>
