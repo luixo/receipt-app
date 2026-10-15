@@ -4,6 +4,10 @@
 ![Backend coverage badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/luixo/878178ea4ba8d28122cc72204df909e7/raw/backend_coverage_main.json)
 ![Frontend coverage badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/luixo/878178ea4ba8d28122cc72204df909e7/raw/frontend_coverage_main.json)
 
+[![Playwright report](https://img.shields.io/badge/Report-playwright-green)](https://receipt-ci-playwright-main.receipt-d65.workers.dev/)
+[![Backend coverage report](https://img.shields.io/badge/Report-backend_coverage-green)](https://receipt-ci-backend-main.receipt-d65.workers.dev/)
+[![Frontend coverage report](https://img.shields.io/badge/Report-frontend_coverage-green)](https://receipt-ci-frontend-main.receipt-d65.workers.dev/)
+
 ## What is this?
 
 This is a pet project to help manage receipts and debts between multiple parties - in a nerdy way that popular apps do not provide.
