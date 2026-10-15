@@ -35,9 +35,7 @@ export const VoidUser: React.FC<Props> = ({ token }) => {
 				<Text variant="h4" className="text-success">
 					{t("success.message")}
 				</Text>
-				<ButtonLink color="primary" to="/login">
-					{t("success.toLogin")}
-				</ButtonLink>
+				<ButtonLink to="/login">{t("success.toLogin")}</ButtonLink>
 			</>
 		);
 	}
@@ -51,17 +49,12 @@ export const VoidUser: React.FC<Props> = ({ token }) => {
 					onPress={voidUser}
 					isDisabled={isPending}
 					isLoading={isPending}
-					color="danger"
+					variant="danger"
 					type="submit"
 				>
 					{t("confirmation.yes")}
 				</Button>
-				<ButtonLink
-					className="flex-1"
-					to="/login"
-					color="primary"
-					isDisabled={isPending}
-				>
+				<ButtonLink className="flex-1" to="/login" isDisabled={isPending}>
 					{t("confirmation.no")}
 				</ButtonLink>
 			</View>

@@ -277,7 +277,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 							<Button
 								isDisabled={!canSubmit || mutationPending}
 								isLoading={mutationPending}
-								color={mutationError ? "danger" : "primary"}
+								variant={mutationError ? "danger" : undefined}
 								type="submit"
 							>
 								{mutationError
@@ -316,9 +316,7 @@ export const PlannedDebts: React.FC<Props> = suspendedFallback(
 						</View>
 					</View>
 				))}
-				<Button isDisabled color="primary">
-					{t("exchange.sendButton")}
-				</Button>
+				<Button isDisabled>{t("exchange.sendButton")}</Button>
 			</View>
 		);
 	},

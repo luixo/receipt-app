@@ -48,7 +48,6 @@ export const EmailVerificationCard = suspendedFallback(
 					</Text>
 				) : (
 					<Button
-						color="primary"
 						onPress={resendEmail}
 						isDisabled={resendEmailMutation.isPending}
 						isLoading={resendEmailMutation.isPending}

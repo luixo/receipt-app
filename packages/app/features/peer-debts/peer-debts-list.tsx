@@ -381,8 +381,7 @@ export const PeerDebtsList = suspendedFallback<{
 					{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
 						<View className="flex items-center">
 							<Button
-								variant="bordered"
-								color="primary"
+								variant="outline"
 								onPress={() => setShowResolvedDebts(true)}
 							>
 								{t("peer.showResolved")}

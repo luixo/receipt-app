@@ -53,9 +53,7 @@ test("Pagination loading state", async ({
 		await pause.promise;
 		return next();
 	});
-	await paginationBlock
-		.getByRole("button", { name: "pagination item 2" })
-		.click();
+	await paginationBlock.getByRole("button", { name: "2", exact: true }).click();
 	await awaitCacheKey("debts.getByPeerPaged", {
 		input: {
 			cursor: 10,

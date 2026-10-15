@@ -67,6 +67,7 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 				modalOpen={isModalOpen}
 				switchModalOpen={switchModalOpen}
 				topQueryOptions={{ type: "receipts" }}
+				selectedCurrencyCode={receipt.currencyCode}
 			/>
 		</View>
 	);

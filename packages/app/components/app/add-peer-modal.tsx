@@ -26,7 +26,7 @@ export const AddPeerModal: React.FC<Props> = ({
 			label={t("components.addPeerModal.label")}
 			isOpen={isOpen}
 			onOpenChange={onOpenChange}
-			className="mb-24 max-w-xl sm:mb-32"
+			className="max-w-xl"
 			header={
 				<Text className="text-xl">{t("components.addPeerModal.title")}</Text>
 			}

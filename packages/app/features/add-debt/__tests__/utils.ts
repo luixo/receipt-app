@@ -49,7 +49,7 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 
 	addButton: ({ page }, use) =>
-		use(page.locator("button[type=submit]", { hasText: "Add debt" })),
+		use(page.getByRole("button", { name: /Add debt/ })),
 
 	amountInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Amount" })),

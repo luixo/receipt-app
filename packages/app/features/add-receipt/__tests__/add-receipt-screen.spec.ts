@@ -259,7 +259,6 @@ test.describe("Draft form", () => {
 		saveItemButton,
 		itemCards,
 		warningSection,
-		icon,
 		modal,
 	}) => {
 		await mockBase();
@@ -277,11 +276,7 @@ test.describe("Draft form", () => {
 			price: faker.number.int({ min: 5, max: 30 }),
 		});
 		await saveItemButton.click();
-		await itemCards
-			.first()
-			.getByRole("button")
-			.filter({ has: icon("ellipsis") })
-			.click();
+		await itemCards.first().getByTestId("receipt-item-menu").click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(1);
 		await expect(warningSection).toContainText(secondName);
@@ -449,13 +444,13 @@ test.describe("Draft form", () => {
 		const { peer: self } = await mockBase();
 		await page.navigate({ to: "/receipts/add" });
 		await page.getByRole("button", { name: "Add participants" }).click();
-		await participantSuggestion.getByRole("combobox").click();
+		await participantSuggestion.getByRole("textbox").click();
 		await page
 			.getByRole("option", { includeHidden: true })
 			.filter({ visible: true })
 			.first()
 			.click();
-		await participantSuggestion.getByRole("combobox").press("Escape");
+		await participantSuggestion.getByRole("textbox").press("Escape");
 		await expect(participantRows).toHaveCount(1);
 		await participantRow(self.name).getByTestId("user-avatar").click();
 		await expect(
@@ -518,7 +513,6 @@ test.describe("Draft form", () => {
 		selectParticipant,
 		participantRow,
 		participantsPicker,
-		icon,
 		modal,
 	}) => {
 		const {
@@ -541,10 +535,7 @@ test.describe("Draft form", () => {
 		const card = itemCards.first();
 		await card.getByRole("button", { name: "Consumed by everyone" }).click();
 		await expect(warningSection).not.toBeAttached();
-		await card
-			.getByRole("button")
-			.filter({ has: icon("ellipsis") })
-			.click();
+		await card.getByTestId("receipt-item-menu").click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(0);
 		await expect(modal("Remove modal")).toBeHidden();

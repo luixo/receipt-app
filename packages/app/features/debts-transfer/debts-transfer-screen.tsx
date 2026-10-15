@@ -228,7 +228,7 @@ const DebtsListForm = suspendedFallback<{
 										nonResolvedDebts.length ? null : (
 											<ShowResolvedDebtsOption />
 										)}
-										<Button color="secondary" onPress={setAllMax}>
+										<Button variant="secondary" onPress={setAllMax}>
 											{t("transfer.form.allMax")}
 										</Button>
 									</View>
@@ -260,15 +260,15 @@ const DebtsListForm = suspendedFallback<{
 																	? field.state.meta.errors
 																	: undefined
 															}
-															className="flex-6"
-															aria-label={currencySymbol}
-															color={
+															className={cn(
+																"flex-6",
 																field.state.value
 																	? field.state.value > 0
-																		? "success"
-																		: "danger"
-																	: "default"
-															}
+																		? "border-success"
+																		: "border-danger"
+																	: undefined,
+															)}
+															aria-label={currencySymbol}
 															startContent={
 																<View
 																	testID="debts-transfer-sign"
@@ -296,7 +296,7 @@ const DebtsListForm = suspendedFallback<{
 																		onPress={() =>
 																			removeExtraCurrencyCode(currencyCode)
 																		}
-																		color="danger"
+																		variant="danger"
 																		isIconOnly
 																	>
 																		<Icon className="size-6" name="trash" />
@@ -317,7 +317,7 @@ const DebtsListForm = suspendedFallback<{
 							)}
 							<Button
 								className="self-start"
-								color="secondary"
+								variant="secondary"
 								onPress={openCurrencyModal}
 							>
 								{t("transfer.form.addCurrencyButton")}
@@ -328,7 +328,7 @@ const DebtsListForm = suspendedFallback<{
 						>
 							{(canSubmit) => (
 								<Button
-									color={mutationError ? "danger" : "primary"}
+									variant={mutationError ? "danger" : undefined}
 									isDisabled={
 										!canSubmit || mutationPending || fromPeerId === toPeerId
 									}
@@ -358,7 +358,7 @@ const DebtsListForm = suspendedFallback<{
 		return (
 			<View className="flex flex-col gap-4">
 				<View className="flex gap-2">
-					<Button color="secondary" className="self-end">
+					<Button variant="secondary" className="self-end">
 						{t("transfer.form.allMax")}
 					</Button>
 					{Array.from({ length: 3 }).map((_, index) => (
@@ -378,9 +378,7 @@ const DebtsListForm = suspendedFallback<{
 						</View>
 					))}
 				</View>
-				<Button color="primary" isDisabled>
-					{t("transfer.form.submit")}
-				</Button>
+				<Button isDisabled>{t("transfer.form.submit")}</Button>
 			</View>
 		);
 	},

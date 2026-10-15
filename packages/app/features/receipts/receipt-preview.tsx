@@ -68,7 +68,7 @@ const ReceiptPreviewShape: React.FC<
 						<Icon
 							name="info"
 							className={cn(
-								"text-primary size-6 cursor-pointer self-center opacity-75",
+								"text-accent size-6 cursor-pointer self-center opacity-75",
 								infoTooltip ? undefined : "hidden",
 							)}
 						/>
@@ -95,7 +95,7 @@ export const ReceiptPreviewSkeleton = () => (
 				<Skeleton className="h-4 w-14 rounded-sm" />
 			</View>
 		}
-		checkbox={<Checkbox isDisabled color="secondary" />}
+		checkbox={<Checkbox isDisabled variant="secondary" />}
 		sum={<Skeleton className="h-5 w-16 rounded-sm" />}
 		icon={skeletonReceiptPreviewSyncIcon}
 	/>
@@ -144,7 +144,7 @@ export const ReceiptPreview = suspendedFallback<{
 						<Badge
 							color="warning"
 							isInvisible={emptyItems.length === 0}
-							className="translate-x-full"
+							className="translate-x-1/2 scale-75"
 						>
 							{filterQuery ? (
 								<HighlightText intervals={highlights}>
@@ -155,9 +155,9 @@ export const ReceiptPreview = suspendedFallback<{
 							)}
 						</Badge>
 					</Tooltip>
-					{isOwner ? <Icon name="key" className="text-primary size-3" /> : null}
+					{isOwner ? <Icon name="key" className="text-accent size-3" /> : null}
 				</View>
-				<Text className="text-default-400 text-xs">
+				<Text className="text-muted text-xs">
 					{formatPlainDate(receipt.issued)}
 				</Text>
 			</>
@@ -166,16 +166,20 @@ export const ReceiptPreview = suspendedFallback<{
 			receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
 		);
 		return (
-			<Link to="/receipts/$id" params={{ id: receipt.id }} color="foreground">
+			<Link
+				to="/receipts/$id"
+				params={{ id: receipt.id }}
+				className="text-foreground"
+			>
 				<ReceiptPreviewShape
-					className={isSelected ? "bg-secondary/20" : undefined}
+					className={isSelected ? "bg-accent/20" : undefined}
 					title={title}
 					checkbox={
 						<Checkbox
 							isSelected={isSelected}
 							onValueChange={isRemoving ? undefined : onValueChange}
 							isDisabled={isRemoving}
-							color="secondary"
+							variant="secondary"
 						/>
 					}
 					infoTooltip={

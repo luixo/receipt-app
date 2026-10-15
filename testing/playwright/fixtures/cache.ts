@@ -164,6 +164,7 @@ export const cacheFixtures = test.extend<CacheFixtures>({
 					// oxlint-disable-next-line typescript/no-unnecessary-type-assertion
 					const typedKey = key as TRPCKey;
 
+					await page.waitForFunction(() => Boolean(window.queryClient));
 					cacheEventEmitter.on(typedKey, listener);
 					unsubscribeId = await page.evaluate(
 						([keyInner, typeInner, inputInner]) => {

@@ -30,11 +30,9 @@ test("On load", async ({
 		async () => {
 			await page.navigate({ to: "/debts/peer/$id", params: { id: peer.id } });
 			await expect(
-				page.getByRole("button", { name: "Transfer debts" }),
+				page.getByRole("link", { name: "Transfer debts" }),
 			).toBeVisible();
-			await expect(
-				page.getByRole("button", { name: "Add debt" }),
-			).toBeVisible();
+			await expect(page.getByRole("link", { name: "Add debt" })).toBeVisible();
 			await expect(debtPreview).toHaveCount(debts.length);
 			await expect(debtAmount.first()).toHaveText(
 				formatCurrency(
@@ -52,7 +50,7 @@ test("Transfer link preserves the peer", async ({ page, api, mockDebts }) => {
 	const { debtPeer } = await mockDebts();
 	api.mockFirst("peers.suggestTop", { items: [] });
 	await page.navigate({ to: "/debts/peer/$id", params: { id: debtPeer.id } });
-	await page.getByRole("button", { name: "Transfer debts" }).click();
+	await page.getByRole("link", { name: "Transfer debts" }).click();
 	await page.expectUrl({
 		to: "/debts/transfer",
 		search: { from: debtPeer.id },
@@ -64,7 +62,7 @@ test("Add link preserves the peer", async ({ page, api, mockDebts }) => {
 	api.mockFirst("currency.top", { items: [] });
 	api.mockFirst("peers.suggestTop", { items: [] });
 	await page.navigate({ to: "/debts/peer/$id", params: { id: debtPeer.id } });
-	await page.getByRole("button", { name: "Add debt" }).click();
+	await page.getByRole("link", { name: "Add debt" }).click();
 	await page.expectUrl({ to: "/debts/add", search: { peerId: debtPeer.id } });
 });
 
@@ -182,7 +180,7 @@ test("'debts.remove' mutation", async ({
 	} = await mockDebts();
 	assert.ok(firstDebt);
 	await page.navigate({ to: "/debts/peer/$id", params: { id: debtPeer.id } });
-	await debtCheckbox.nth(0).check();
+	await debtCheckbox.nth(0).getByTestId("checkbox-content").click();
 	await expect(removeDebtsButton).toBeEnabled();
 	const mockErrorMessage = `Mock "debts.remove" error`;
 	const removePause = api.createPause();
@@ -269,7 +267,7 @@ test("Pagination loads the next page", async ({
 	await snapshotQueries(
 		async () => {
 			await paginationBlock
-				.getByRole("button", { name: "pagination item 2" })
+				.getByRole("button", { name: "2", exact: true })
 				.click();
 			await awaitCacheKey("debts.getByPeerPaged", {
 				input: {

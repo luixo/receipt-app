@@ -153,7 +153,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 		const button =
 			hasDesyncedParticipants || hasNonCreatedParticipants ? (
 				<Button
-					variant="ghost"
+					variant="outline"
 					title={
 						hasDesyncedParticipants
 							? t("receipt.syncButton.update")
@@ -162,7 +162,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 					isLoading={isPropagating}
 					isDisabled={isPropagating || emptyItemsAmount !== 0 || isLoading}
 					onPress={propagateDebts}
-					color="primary"
+					className="text-accent"
 					isIconOnly
 				>
 					{hasDesyncedParticipants ? (
@@ -173,10 +173,9 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 				</Button>
 			) : (
 				<Button
-					variant="flat"
+					variant="outline"
 					title={t("receipt.syncButton.synced")}
 					isDisabled
-					color={emptyItemsAmount === 0 ? "success" : "warning"}
 					isIconOnly
 				>
 					{emptyItemsAmount === 0 ? (
@@ -202,7 +201,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 			</Tooltip>
 		);
 	},
-	<Button variant="flat" isDisabled color="success" isIconOnly>
+	<Button variant="outline" isDisabled isIconOnly>
 		<Icon name="sync" className="size-6" />
 	</Button>,
 );

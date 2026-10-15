@@ -6,7 +6,7 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { localSettings } from "~tests/frontend/consts";
 
 export type Fixtures = {
-	currencyButton: (currencyCode?: string) => Locator;
+	currencyButton: (currencyCode?: CurrencyCode) => Locator;
 	currenciesPicker: Locator;
 	expectCurrency: (
 		locator: Locator,
@@ -17,13 +17,13 @@ export type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	currencyButton: ({ page }, use) =>
-		use((currencyCode) => {
-			const testIdLocator = "[data-testid='currency-button']";
-			const locator = currencyCode
-				? `${testIdLocator}[title="${currencyCode}"]`
-				: testIdLocator;
-			return page.locator(locator);
-		}),
+		use((currencyCode) =>
+			currencyCode
+				? page.getByTestId("currency-button").filter({
+						hasText: getCurrencyDescription(localSettings.locale, currencyCode),
+					})
+				: page.getByTestId("currency-button"),
+		),
 	currenciesPicker: ({ page }, use) =>
 		use(page.getByTestId("currencies-picker")),
 	expectCurrency: async ({}, use) => {

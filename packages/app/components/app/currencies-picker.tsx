@@ -22,7 +22,7 @@ const widths = ["w-20", "w-20", "w-20", "w-32", "w-32", "w-48"];
 const SkeletonCurrencyButton = () => {
 	const id = React.useId();
 	return (
-		<Button variant="flat" color="primary">
+		<Button variant="primary">
 			<Skeleton
 				className={`h-4 ${rotate(widths, getIndexByString(id))[0]} rounded-md`}
 			/>
@@ -98,8 +98,7 @@ const CurrenciesPickerLoader = suspendedFallback<LoaderProps>(
 						) : null}
 						<Button
 							onPress={() => onChange(code)}
-							variant="flat"
-							color={code === selectedCurrencyCode ? "success" : "primary"}
+							variant={code === selectedCurrencyCode ? "secondary" : "primary"}
 							title={code}
 							testID="currency-button"
 						>
@@ -142,7 +141,8 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			label={t("components.currenciesPicker.label")}
 			isOpen={modalOpen}
 			onOpenChange={switchModalOpen}
-			className="mb-24 max-w-xl sm:mb-32"
+			className="max-w-xl"
+			bodyClassName="flex flex-col"
 			testID="currencies-picker"
 			header={
 				<Text className="text-2xl font-medium">

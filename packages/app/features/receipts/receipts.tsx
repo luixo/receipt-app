@@ -150,10 +150,9 @@ export const Receipts = suspendedFallback<Props>(
 							text: <Text variant="h3" />,
 							icon: (
 								<ButtonLink
-									color="primary"
 									to="/receipts/add"
 									title={t("list.addButton")}
-									variant="bordered"
+									variant="outline"
 									className="mx-2"
 									isIconOnly
 								>

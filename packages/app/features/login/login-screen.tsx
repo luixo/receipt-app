@@ -92,7 +92,7 @@ export const LoginScreen = () => {
 						{(canSubmit) => (
 							<Button
 								className="mt-4"
-								color="primary"
+								fullWidth
 								isDisabled={!canSubmit || loginMutation.isPending}
 								isLoading={loginMutation.isPending}
 								type="submit"
@@ -104,7 +104,7 @@ export const LoginScreen = () => {
 				</form.Form>
 			</form.AppForm>
 			<Button
-				color="primary"
+				fullWidth
 				isDisabled={loginMutation.isPending}
 				onPress={openModal}
 			>

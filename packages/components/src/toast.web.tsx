@@ -1,41 +1,29 @@
-import {
-	ToastProvider as ToastProviderRaw,
-	addToast as addToastRaw,
-	closeAll,
-	getToastQueue,
-} from "@heroui/toast";
+import { Toast, toast } from "@heroui/react";
 
-import {
-	DESCRIPTION_CLASSNAME,
-	MAX_VISIBLE_TOASTS,
-	TOAST_TIMEOUT,
-} from "~utils/toast";
+import { MAX_VISIBLE_TOASTS, TOAST_TIMEOUT } from "~utils/toast";
 
 export type ToastProviderProps = React.PropsWithChildren;
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ children }) => (
 	<>
-		<ToastProviderRaw
-			maxVisibleToasts={MAX_VISIBLE_TOASTS}
-			toastProps={{
-				shouldShowTimeoutProgress: true,
-				classNames: {
-					description: DESCRIPTION_CLASSNAME,
-				},
-				disableAnimation: import.meta.env.MODE === "test",
-			}}
-		/>
+		<Toast.Provider maxVisibleToasts={MAX_VISIBLE_TOASTS} />
 		{children}
 	</>
 );
 
-export const closeAllToasts = ({
-	disableAnimation,
-}: {
-	disableAnimation?: boolean;
-}) => closeAll({ disableAnimation });
-export const closeToastById = (id: string) => getToastQueue().close(id);
-export const getToastsAmount = () => getToastQueue().visibleToasts.length;
+// FIXME: v3 has no animation toggle when clearing the queue.
+export const closeAllToasts = (options: { disableAnimation?: boolean }) => {
+	if (options.disableAnimation) {
+		toast.clear();
+		return;
+	}
+	toast.clear();
+};
+export const closeToastById = (id: string) => toast.close(id);
+export const getToastsAmount = () =>
+	document.querySelectorAll(
+		'[role="alertdialog"]:not([data-hidden="true"]):not([data-exiting="true"])',
+	).length;
 
 export type AddProps = {
 	title: string;
@@ -50,9 +38,10 @@ export const addToast = ({
 	timeout = TOAST_TIMEOUT,
 	color = "default",
 }: AddProps) =>
-	addToastRaw({
-		title,
-		description,
-		timeout,
-		color,
+	toast(title, {
+		description: description ? (
+			<span data-testid="toast-description">{description}</span>
+		) : undefined,
+		timeout: timeout === Infinity ? 0 : timeout,
+		variant: color,
 	});

@@ -22,7 +22,7 @@ export const Autocomplete: React.FC<Props> = ({
 	endContent,
 	isDisabled,
 	emptyContent,
-	onClear,
+	isClearable,
 	children,
 	scroll,
 }) => {
@@ -55,10 +55,9 @@ export const Autocomplete: React.FC<Props> = ({
 						popoverRef.current?.open();
 					}}
 					label={label}
-					labelPlacement="outside"
 					placeholder={placeholder}
 					endContent={endContent}
-					isClearable={Boolean(onClear)}
+					isClearable={isClearable}
 					onPress={() => popoverRef.current?.open()}
 					onFocus={() => popoverRef.current?.open()}
 					onBlur={() => popoverRef.current?.close()}
@@ -72,15 +71,13 @@ export const Autocomplete: React.FC<Props> = ({
 						className="w-full gap-1 p-2"
 						width="trigger"
 					>
-						<ScrollView className="max-h-[200px]" onScroll={onScroll}>
+						<ScrollView className="max-h-50" onScroll={onScroll}>
 							{children.length === 0
 								? emptyContent
 								: children.map(({ key, title, items }) => (
 										<View key={key} className="flex-1 flex-col gap-1">
 											{title ? (
-												<Text className="text-tiny text-foreground-500">
-													{title}
-												</Text>
+												<Text className="text-muted text-xs">{title}</Text>
 											) : null}
 											{items.map(
 												({

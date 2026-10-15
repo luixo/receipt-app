@@ -25,6 +25,7 @@ test("Recently used peers dropdown", async ({
 	await expectScreenshotWithSchemes("recent.png", {
 		locator: suggestListbox,
 		pixelsPreset: "surface",
+		shift: [200, 8],
 	});
 });
 
@@ -51,5 +52,6 @@ test("Add peer suggestion for a search", async ({
 	await expectScreenshotWithSchemes("search.png", {
 		locator: suggestListbox,
 		pixelsPreset: "surface",
+		shift: [200, 8],
 	});
 });

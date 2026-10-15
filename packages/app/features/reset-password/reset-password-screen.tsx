@@ -122,7 +122,6 @@ const ResetPassword: React.FC<Props> = ({ token }) => {
 						{(canSubmit) => (
 							<Button
 								className="mt-4"
-								color="primary"
 								isDisabled={!canSubmit || changePasswordMutation.isPending}
 								isLoading={changePasswordMutation.isPending}
 								type="submit"

@@ -241,14 +241,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					key="parts"
 					textValue={t("participant.title", { peerId: participant.peerId })}
 					title={
-						<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
+						<View className="flex-1 flex-col items-start justify-between gap-2 sm:flex-row">
 							<View className="flex flex-row items-center gap-1">
 								{currentPart ? (
-									<Icon name="money" className="text-secondary size-6" />
+									<Icon name="money" className="text-accent size-6" />
 								) : null}
 								<LoadablePeer
 									className={
-										disabled && !currentPart ? "opacity-disabled" : undefined
+										disabled && !currentPart ? "opacity-50" : undefined
 									}
 									id={participant.peerId}
 									foreign={!isOwner}
@@ -349,9 +349,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 																	updatePayerMutationState,
 																]}
 																continuousMutations
-																labelPlacement="outside-left"
 																fractionDigits={partSchemaDecimal}
-																hideStepper
 																endContent={
 																	<View className="flex flex-row items-center gap-1">
 																		<Text className="shrink-0 self-center">
@@ -364,7 +362,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 																		</View>
 																	</View>
 																}
-																variant="bordered"
+																variant="secondary"
 															/>
 														)}
 													</form.AppField>
@@ -382,7 +380,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						{currentPart && items.length !== 0 ? <Divider /> : null}
 						<View className="flex flex-col gap-3">
 							{currentPart && items.length !== 0 ? (
-								<Text className="text-secondary">
+								<Text className="text-accent">
 									{t("participant.payerPart", {
 										amount: formatCurrency(
 											locale,
@@ -394,7 +392,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							) : null}
 							<View>
 								{currentPart && participant.debt.items.length > 1 ? (
-									<Text className="text-secondary">
+									<Text className="text-accent">
 										{t("participant.consumerPart", {
 											amount: formatCurrency(
 												locale,

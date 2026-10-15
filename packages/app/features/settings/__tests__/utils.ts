@@ -14,7 +14,7 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	languageSelectButton: ({ page }, use) =>
-		use(page.getByTestId("language-select")),
+		use(page.getByTestId("language-select").getByRole("button")),
 
 	limitSelectButton: ({ page }, use) =>
 		use(page.getByRole("button", { name: "Items per page" })),

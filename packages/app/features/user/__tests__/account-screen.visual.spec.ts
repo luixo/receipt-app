@@ -51,6 +51,7 @@ test("Avatar upload mutation loading state", async ({
 	await expect(saveAvatarButton).toBeDisabled();
 	await expectScreenshotWithSchemes("avatar-upload-loading.png", {
 		locator: avatarForm,
+		pixelsPreset: "avatar",
 	});
 	pause.resolve();
 });
@@ -74,6 +75,8 @@ test("Password form with errors", async ({
 	await passwordRetypeField.blur();
 	await expectScreenshotWithSchemes("password-form-errors.png", {
 		locator: passwordForm,
+		pixelsPreset: "surface",
+		shift: [200, 40],
 	});
 });
 

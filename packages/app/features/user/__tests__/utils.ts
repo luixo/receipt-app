@@ -95,5 +95,11 @@ export const test = originalTest.extend<Fixtures>({
 		use(page.getByRole("textbox", { name: "Retype new password" })),
 
 	submitPasswordButton: ({ page }, use) =>
-		use(page.locator("button[type=submit]", { hasText: "Change password" })),
+		use(
+			page
+				.locator("form", {
+					has: page.getByRole("textbox", { name: "Current password" }),
+				})
+				.getByRole("button", { name: /Change password/ }),
+		),
 });

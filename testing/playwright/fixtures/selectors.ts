@@ -28,7 +28,9 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	},
 	modal: async ({ page }, use) => {
 		await use((title) =>
-			page.locator(`[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`),
+			page.locator(
+				`section[role="dialog"]${title ? `[aria-label="${title}"]` : ""}`,
+			),
 		);
 	},
 	modalCross: async ({ page }, use) => {
@@ -48,12 +50,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 		});
 	},
 	loader: ({ page }, use) => use(page.locator('[aria-label="Loading"]')),
-	skeleton: ({ page }, use) =>
-		use(
-			page.locator(
-				String.raw`.data-\[loaded\=true\]\:before\:opacity-0.data-\[loaded\=true\]\:before\:-z-10.data-\[loaded\=true\]\:before\:animate-none`,
-			),
-		),
+	skeleton: ({ page }, use) => use(page.getByTestId("skeleton")),
 	emptyCard: async ({ page }, use) => {
 		await use((message) => {
 			const emptyCard = page.getByTestId("empty-card");

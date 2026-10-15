@@ -67,6 +67,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				<field.NumberField
 					value={field.state.value}
 					onValueChange={field.setValue}
+					variant="secondary"
 					name={field.name}
 					onBlur={() => {
 						field.handleBlur();
@@ -80,16 +81,15 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					fractionDigits={priceSchemaDecimal}
 					aria-label={t("item.form.price.label")}
 					className={cn("shrink-0 basis-40", className)}
-					labelPlacement="outside-left"
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
 					endContent={
-						<View className="flex-row gap-2">
+						<>
 							{updateMutationState?.status === "pending" ? (
 								<Spinner size="sm" />
 							) : null}
 							<Text>{getCurrencySymbol(locale, currencyCode)}</Text>
-						</View>
+						</>
 					}
 				/>
 			)}

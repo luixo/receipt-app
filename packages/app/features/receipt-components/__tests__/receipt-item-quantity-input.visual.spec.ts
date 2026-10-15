@@ -11,7 +11,7 @@ test("editable quantity", async ({
 	await openReceipt(receipt);
 	await card.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("quantity.png", {
-		pixelsPreset: "input",
+		pixelsPreset: "surface",
 		locator: itemQuantityField,
 	});
 });

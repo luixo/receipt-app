@@ -107,7 +107,6 @@ const DebtCurrencyInput = suspendedFallback<{
 		return (
 			<>
 				<Button
-					variant="light"
 					onPress={openModal}
 					isDisabled={isLoading}
 					isLoading={updateReceiptMutation.isPending}
@@ -194,7 +193,7 @@ const DebtAmountInput = suspendedFallback<{
 								)}
 							</View>
 						}
-						variant="bordered"
+						variant="secondary"
 					/>
 				)}
 			</form.AppField>
@@ -205,9 +204,9 @@ const DebtAmountInput = suspendedFallback<{
 		return (
 			<SkeletonNumberInput
 				label={t("debt.form.amount.label")}
-				variant="bordered"
+				variant="secondary"
 				endContent={
-					<Button variant="light" isIconOnly>
+					<Button variant="outline" isIconOnly>
 						USD
 					</Button>
 				}
@@ -450,8 +449,8 @@ const DebtHeader = suspendedFallback<{ debtId: DebtId }>(
 							<ButtonLink
 								to="/receipts/$id"
 								params={{ id: debt.receiptId }}
-								variant="bordered"
-								color="success"
+								variant="outline"
+								className="bg-success text-success-foreground"
 								isIconOnly
 							>
 								<Icon name="receipt" className="size-6" />

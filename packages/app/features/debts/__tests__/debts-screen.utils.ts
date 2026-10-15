@@ -50,5 +50,5 @@ export const test = debtsTest.extend<Fixtures>({
 		use(page.getByTestId("peer-debts-preview")),
 
 	debtIntentionsButton: ({ page }, use) =>
-		use(page.getByRole("button", { name: "Intentions" })),
+		use(page.getByRole("link", { name: "Intentions" })),
 });

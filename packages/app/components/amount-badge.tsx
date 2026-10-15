@@ -12,11 +12,8 @@ export const AmountBadge = suspendedFallback<{
 }>(
 	({ children, useAmount }) => {
 		const amount = useAmount();
-		if (amount === 0) {
-			return <>{renderChildren(children, amount)}</>;
-		}
 		return (
-			<Badge content={amount} color="danger">
+			<Badge content={amount} color="danger" isInvisible={amount === 0}>
 				{renderChildren(children, amount)}
 			</Badge>
 		);

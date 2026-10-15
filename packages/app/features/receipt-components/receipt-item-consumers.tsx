@@ -128,6 +128,7 @@ export const ReceiptItemConsumers: React.FC<Props> = ({ item, className }) => {
 			}}
 			items={participants.toSorted(SORT_USERS)}
 			getKey={({ peerId }) => peerId}
+			variant="secondary"
 		>
 			{({ peerId }) => <LoadablePeer id={peerId} foreign={!isOwner} />}
 		</Select>
