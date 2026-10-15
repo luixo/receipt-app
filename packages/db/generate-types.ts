@@ -1,4 +1,9 @@
-import { defineConfig } from "kysely-codegen";
+import {
+	AliasDeclarationNode,
+	Cli,
+	TypeScriptSerializer,
+} from "kysely-codegen";
+import type { IdentifierNode } from "kysely-codegen";
 import { entries, fromEntries, values } from "remeda";
 
 import type { DB } from "~db/types.gen";
@@ -34,6 +39,7 @@ const TYPES: Record<
 		importSource: "~db/ids",
 		tables: {
 			userSettings: ["userId"],
+			sessions: ["userId"],
 			users: ["id"],
 			debts: ["ownerUserId"],
 			receipts: ["ownerUserId"],
@@ -100,27 +106,48 @@ const TYPES: Record<
 	},
 };
 
-export default defineConfig({
-	outFile: "packages/db/src/types.gen.ts",
-	singularize: true,
-	customImports: {
-		Temporal: "~utils/date",
-		...fromEntries(
-			values(TYPES)
-				.filter(({ importSource }) => Boolean(importSource))
-				.map(({ expression, importSource }) => [expression, importSource]),
+const mapping: Partial<Record<string, string>> = {
+	Receiptrole: "ReceiptRole",
+};
+const remapName = (name: string) => mapping[name] ?? name;
+
+class TypeSerializer extends TypeScriptSerializer {
+	public override serializeAliasDeclaration(node: AliasDeclarationNode) {
+		return super.serializeAliasDeclaration(
+			new AliasDeclarationNode(remapName(node.id.name), node.body),
+		);
+	}
+
+	public override serializeIdentifier(node: IdentifierNode) {
+		return remapName(super.serializeIdentifier(node));
+	}
+}
+
+const serializer = new TypeSerializer({ singularize: true });
+
+await new Cli().run({
+	argv: process.argv.slice(2),
+	config: {
+		camelCase: true,
+		outFile: "src/types.gen.ts",
+		serializer: { serializeFile: serializer.serializeFile.bind(serializer) },
+		customImports: fromEntries(
+			values(TYPES).flatMap(({ expression, importSource }) =>
+				importSource ? [[expression, importSource] as const] : [],
+			),
 		),
-	},
-	overrides: {
-		columns: fromEntries(
-			values(TYPES).flatMap(({ expression, tables }) =>
-				entries(tables).flatMap(([tableName, columnNames]) =>
-					columnNames.map(
-						(columnName) => [`${tableName}.${columnName}`, expression] as const,
+		overrides: {
+			columns: fromEntries(
+				values(TYPES).flatMap(({ expression, tables }) =>
+					entries(tables).flatMap(([tableName, columnNames]) =>
+						columnNames.map(
+							(columnName) =>
+								[`${tableName}.${columnName}`, expression] as const,
+						),
 					),
 				),
 			),
-		),
+		},
+		typeMapping,
 	},
-	typeMapping,
 });
