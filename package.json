@@ -11,6 +11,7 @@
 	"type": "module",
 	"scripts": {
 		"backend:test": "vitest --configLoader native",
+		"ci:cleanup-reports": "bun run --cwd utils/scripts cleanup-ci-reports",
 		"db:generate-types": "bun run --cwd packages/db db:generate-types",
 		"db:migrate": "bun run --cwd packages/db db:migrate",
 		"dev": "EXPO_PUBLIC_API_BASE_URL=http://localhost:3000 bun run --parallel native:dev web:dev",
