@@ -426,7 +426,7 @@ test.describe("Selection and removal", () => {
 		const { receipts } = await mockReceipts();
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await paginationBlock.locator('[data-slot="checkbox-content"]').click();
+		await paginationBlock.getByTestId("checkbox-content").click();
 		for (const [index] of receipts.entries()) {
 			await expect(
 				receiptCheckbox.nth(index).getByRole("checkbox"),
@@ -434,7 +434,7 @@ test.describe("Selection and removal", () => {
 		}
 		await expect(removeReceiptsButton).toBeEnabled();
 
-		await paginationBlock.locator('[data-slot="checkbox-content"]').click();
+		await paginationBlock.getByTestId("checkbox-content").click();
 		for (const [index] of receipts.entries()) {
 			await expect(
 				receiptCheckbox.nth(index).getByRole("checkbox"),
@@ -460,10 +460,7 @@ test.describe("Selection and removal", () => {
 		assert.ok(firstReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox
-			.first()
-			.locator('[data-slot="checkbox-content"]')
-			.click();
+		await receiptCheckbox.first().getByTestId("checkbox-content").click();
 		await expect(removeReceiptsButton).toBeEnabled();
 
 		const pause = api.createPause();
@@ -515,14 +512,8 @@ test.describe("Selection and removal", () => {
 		assert.ok(secondReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox
-			.nth(0)
-			.locator('[data-slot="checkbox-content"]')
-			.click();
-		await receiptCheckbox
-			.nth(1)
-			.locator('[data-slot="checkbox-content"]')
-			.click();
+		await receiptCheckbox.nth(0).getByTestId("checkbox-content").click();
+		await receiptCheckbox.nth(1).getByTestId("checkbox-content").click();
 
 		await removeReceiptsButton.click();
 		await expect(modal()).toBeVisible();
@@ -574,10 +565,7 @@ test.describe("Selection and removal", () => {
 		assert.ok(firstReceipt);
 		await openReceiptsScreen({ awaitReceipts: receipts.length });
 
-		await receiptCheckbox
-			.first()
-			.locator('[data-slot="checkbox-content"]')
-			.click();
+		await receiptCheckbox.first().getByTestId("checkbox-content").click();
 
 		const mockErrorMessage = `Mock "receipts.remove" error`;
 		api.mockFirst("receipts.remove", () => {

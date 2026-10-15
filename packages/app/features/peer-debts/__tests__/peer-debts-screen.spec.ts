@@ -180,7 +180,7 @@ test("'debts.remove' mutation", async ({
 	} = await mockDebts();
 	assert.ok(firstDebt);
 	await page.navigate({ to: "/debts/peer/$id", params: { id: debtPeer.id } });
-	await debtCheckbox.nth(0).locator('[data-slot="checkbox-content"]').click();
+	await debtCheckbox.nth(0).getByTestId("checkbox-content").click();
 	await expect(removeDebtsButton).toBeEnabled();
 	const mockErrorMessage = `Mock "debts.remove" error`;
 	const removePause = api.createPause();

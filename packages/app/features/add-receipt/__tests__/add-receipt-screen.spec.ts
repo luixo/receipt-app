@@ -276,7 +276,7 @@ test.describe("Draft form", () => {
 			price: faker.number.int({ min: 5, max: 30 }),
 		});
 		await saveItemButton.click();
-		await itemCards.first().locator('[data-slot="dropdown-trigger"]').click();
+		await itemCards.first().getByTestId("receipt-item-menu").click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(1);
 		await expect(warningSection).toContainText(secondName);
@@ -535,7 +535,7 @@ test.describe("Draft form", () => {
 		const card = itemCards.first();
 		await card.getByRole("button", { name: "Consumed by everyone" }).click();
 		await expect(warningSection).not.toBeAttached();
-		await card.locator('[data-slot="dropdown-trigger"]').click();
+		await card.getByTestId("receipt-item-menu").click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(0);
 		await expect(modal("Remove modal")).toBeHidden();

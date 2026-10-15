@@ -34,7 +34,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 
 				await expect(async () => {
 					const actualTexts = await toast
-						.locator('[data-slot="toast-description"]')
+						.getByTestId("toast-description")
 						.allInnerTexts();
 					const sortedActualTexts = actualTexts.toSorted((a, b) =>
 						a.localeCompare(b),

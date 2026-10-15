@@ -208,7 +208,7 @@ test.describe("form", () => {
 				.getByTestId("input-wrapper")
 				.filter({ has: fields.passwordRetype })
 				.getByText("Minimal length for password is 6 Passwords don't match", {
-					 exact: true,
+					exact: true,
 				}),
 		).toBeVisible();
 		await expect(resetPasswordButton).toBeDisabled();
