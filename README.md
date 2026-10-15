@@ -10,7 +10,7 @@ This is a pet project to help manage receipts and debts between multiple parties
 
 ## How do I use it?
 
-Check out the [web version](https://receipt.luixo.ru). It currently lacks onboarding, but it lacks user base as well.
+Check out the [web version](https://receipt.luixo.me). It currently lacks onboarding, but it lacks user base as well.
 
 Mobile version will be released some day.
 
