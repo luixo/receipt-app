@@ -33,7 +33,7 @@ export const Checkbox: React.FC<Props> = ({
 		isIndeterminate={isIndeterminate}
 		variant={variant}
 	>
-		<CheckboxRaw.Content>
+		<CheckboxRaw.Content data-testid="checkbox-content">
 			<CheckboxRaw.Control {...props}>
 				<CheckboxRaw.Indicator>
 					{icon

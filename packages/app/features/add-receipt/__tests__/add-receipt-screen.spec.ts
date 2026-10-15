@@ -276,7 +276,7 @@ test.describe("Draft form", () => {
 			price: faker.number.int({ min: 5, max: 30 }),
 		});
 		await saveItemButton.click();
-		await itemCards.first().locator('[data-slot="dropdown-trigger"]').click();
+		await itemCards.first().getByTestId("receipt-item-menu").click();
 		await page.getByText("Remove item").click();
 		await expect(itemCards).toHaveCount(1);
 		await expect(warningSection).toContainText(secondName);

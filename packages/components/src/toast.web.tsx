@@ -22,7 +22,7 @@ export const closeAllToasts = (options: { disableAnimation?: boolean }) => {
 export const closeToastById = (id: string) => toast.close(id);
 export const getToastsAmount = () =>
 	document.querySelectorAll(
-		'[data-slot="toast"]:not([data-hidden="true"]):not([data-exiting="true"])',
+		'[role="alertdialog"]:not([data-hidden="true"]):not([data-exiting="true"])',
 	).length;
 
 export type AddProps = {
@@ -39,7 +39,9 @@ export const addToast = ({
 	color = "default",
 }: AddProps) =>
 	toast(title, {
-		description,
+		description: description ? (
+			<span data-testid="toast-description">{description}</span>
+		) : undefined,
 		timeout: timeout === Infinity ? 0 : timeout,
 		variant: color,
 	});

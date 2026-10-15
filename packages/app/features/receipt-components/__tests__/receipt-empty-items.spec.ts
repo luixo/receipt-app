@@ -85,7 +85,7 @@ test("Selecting a warning scrolls the matching item card into view without consu
 	const scrollPosition = () => getScrollPosition(card);
 	const before = await scrollPosition();
 	await snapshotQueries(async () => {
-		await warningSection.locator('[data-slot="checkbox-content"]').click();
+		await warningSection.getByTestId("checkbox-content").click();
 		await expect.poll(scrollPosition).toBeGreaterThan(before);
 		await expect(card).toBeInViewport();
 	});

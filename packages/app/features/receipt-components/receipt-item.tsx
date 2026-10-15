@@ -99,6 +99,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 							</View>
 							{canEdit ? (
 								<Dropdown
+									testID="receipt-item-menu"
 									items={[
 										{
 											key: "remove",
