@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { clsx } from "clsx";
 import type { ClassValue } from "clsx";
 import { isNonNullish } from "remeda";
 import { twMerge } from "tailwind-merge";

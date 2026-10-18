@@ -12,7 +12,7 @@ import type {
 } from "~app/utils/navigation";
 import type { TreeRouter } from "~web/entry/router";
 
-export type NavigationContext = {
+export type NavigationContextType = {
 	useNavigate: () => <K extends RouteTo>(
 		options: Omit<NavigateOptions<TreeRouter, "/", K>, "from" | "href">,
 	) => void;
@@ -29,7 +29,7 @@ export type NavigationContext = {
 };
 const noop = doNothing();
 
-export const NavigationContext = React.createContext<NavigationContext>({
+export const NavigationContext = React.createContext<NavigationContextType>({
 	useNavigate: () => noop,
 	useParams: () => ({}),
 	usePush: () => noop,

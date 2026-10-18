@@ -3,6 +3,7 @@ import type React from "react";
 import { AppVersionContext } from "~app/contexts/app-version-context";
 import { LinksContext } from "~app/contexts/links-context";
 import type { LinksContextType } from "~app/contexts/links-context";
+import type { NavigationContextType } from "~app/contexts/navigation-context";
 import { NavigationContext } from "~app/contexts/navigation-context";
 import { StoreContext } from "~app/contexts/store-context";
 import type { StoreContextType } from "~app/contexts/store-context";
@@ -18,7 +19,7 @@ type Props = {
 	storeContext: StoreContextType;
 	storage: PersisterProps["storage"];
 	linksContext: LinksContextType;
-	navigationContext: NavigationContext;
+	navigationContext: NavigationContextType;
 	applyColorMode: React.ComponentProps<typeof ThemeProvider>["applyColorMode"];
 	DevToolsProvider: React.ComponentType<React.PropsWithChildren>;
 	ToastProvider: React.ComponentType<React.PropsWithChildren>;

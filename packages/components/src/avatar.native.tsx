@@ -46,6 +46,7 @@ export const Avatar: React.FC<Props> = ({
 			return;
 		}
 		setActualSize(Math.max(ref.current.offsetHeight, ref.current.offsetWidth));
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies
 	}, [contextSize]);
 	const imageElement = image ? (
 		<Image
@@ -112,6 +113,7 @@ export const AvatarGroup: React.FC<GroupProps> = ({
 					<Avatar
 						fallback={
 							<View>
+								{/* oxlint-disable-next-line react/jsx-no-literals */}
 								<Text>+{childrenCount - max}</Text>
 							</View>
 						}

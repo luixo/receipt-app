@@ -12,7 +12,7 @@ import type { ValidateNavigateOptions } from "@tanstack/router-core";
 import { mapValues, omitBy } from "remeda";
 import { z } from "zod";
 
-import type { NavigationContext } from "~app/contexts/navigation-context";
+import type { NavigationContextType } from "~app/contexts/navigation-context";
 import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
 import { searchParamsMapping } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
@@ -24,7 +24,7 @@ declare module "@react-types/shared" {
 	}
 }
 
-export const navigationContext: NavigationContext = {
+export const navigationContext: NavigationContextType = {
 	useNavigate: () => {
 		const navigate = useRawNavigate();
 		return (options) => {

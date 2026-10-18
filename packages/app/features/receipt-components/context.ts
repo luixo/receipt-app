@@ -5,10 +5,10 @@ import type {
 	useActionHooks,
 } from "~app/features/receipt/hooks";
 
-export type ActionsHooksContext = ReturnType<typeof useActionHooks>;
+export type ActionsHooksContextType = ReturnType<typeof useActionHooks>;
 
 export const ActionsHooksContext = React.createContext<
-	ActionsHooksContext | undefined
+	ActionsHooksContextType | undefined
 >(undefined);
 
 export const useActionsHooksContext = () => {

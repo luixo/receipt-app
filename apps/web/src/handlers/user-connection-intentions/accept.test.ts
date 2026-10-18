@@ -36,6 +36,69 @@ const revertDebt = (debt: InsertedDebt, otherUser: UserWithPeer) => ({
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
+const runAcceptDebtsTest = async (
+	ctx: TestContext,
+	settings: {
+		self?: UserSettingsData;
+		foreign?: UserSettingsData;
+	},
+	afterTest?: (data: {
+		selfDebt: InsertedDebt;
+		foreignDebt: InsertedDebt;
+		selfUser: UserWithPeer;
+		foreignUser: UserWithPeer;
+		debts: Selectable<DB["debts"]>[];
+	}) => void,
+) => {
+	const { sessionId, userId: selfUserId } = await insertUserWithSession(ctx, {
+		user: { settings: settings.self },
+	});
+	const { id: selfToForeignPeerId } = await insertPeer(ctx, selfUserId);
+	const { id: extraSelfForeignPeerId } = await insertPeer(ctx, selfUserId);
+
+	const { id: foreignUserId } = await insertUser(ctx, {
+		settings: settings.foreign,
+	});
+	const { id: foreignToSelfPeerId } = await insertPeer(ctx, foreignUserId, {
+		connectedUserId: selfUserId,
+	});
+	const { id: extraForeignForeignPeerId } = await insertPeer(
+		ctx,
+		foreignUserId,
+	);
+
+	const selfDebt = await insertDebt(ctx, selfUserId, selfToForeignPeerId);
+	const foreignDebt = await insertDebt(ctx, foreignUserId, foreignToSelfPeerId);
+
+	// Verify non-related debts don't get accepted
+	await insertDebt(ctx, selfUserId, extraSelfForeignPeerId);
+	await insertDebt(ctx, foreignUserId, extraForeignForeignPeerId);
+
+	const caller = createCaller(createAuthContext(ctx, sessionId));
+	await expectDatabaseDiffSnapshot(ctx, () =>
+		caller.procedure({
+			peerId: selfToForeignPeerId,
+			userId: foreignUserId,
+		}),
+	);
+	const database = assertDatabase(ctx);
+	const debts = await database.selectFrom("debts").selectAll().execute();
+
+	afterTest?.({
+		selfDebt,
+		foreignDebt,
+		selfUser: {
+			id: selfUserId,
+			foreignPeerId: selfToForeignPeerId,
+		},
+		foreignUser: {
+			id: foreignUserId,
+			foreignPeerId: foreignToSelfPeerId,
+		},
+		debts,
+	});
+};
+
 describe("userConnectionIntentions.accept", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
@@ -249,81 +312,6 @@ describe("userConnectionIntentions.accept", () => {
 		});
 
 		describe("auto-accepted debts", () => {
-			const runAcceptDebtsTest = async (
-				ctx: TestContext,
-				settings: {
-					self?: UserSettingsData;
-					foreign?: UserSettingsData;
-				},
-				afterTest?: (data: {
-					selfDebt: InsertedDebt;
-					foreignDebt: InsertedDebt;
-					selfUser: UserWithPeer;
-					foreignUser: UserWithPeer;
-					debts: Selectable<DB["debts"]>[];
-				}) => void,
-			) => {
-				const { sessionId, userId: selfUserId } = await insertUserWithSession(
-					ctx,
-					{
-						user: { settings: settings.self },
-					},
-				);
-				const { id: selfToForeignPeerId } = await insertPeer(ctx, selfUserId);
-				const { id: extraSelfForeignPeerId } = await insertPeer(
-					ctx,
-					selfUserId,
-				);
-
-				const { id: foreignUserId } = await insertUser(ctx, {
-					settings: settings.foreign,
-				});
-				const { id: foreignToSelfPeerId } = await insertPeer(
-					ctx,
-					foreignUserId,
-					{ connectedUserId: selfUserId },
-				);
-				const { id: extraForeignForeignPeerId } = await insertPeer(
-					ctx,
-					foreignUserId,
-				);
-
-				const selfDebt = await insertDebt(ctx, selfUserId, selfToForeignPeerId);
-				const foreignDebt = await insertDebt(
-					ctx,
-					foreignUserId,
-					foreignToSelfPeerId,
-				);
-
-				// Verify non-related debts don't get accepted
-				await insertDebt(ctx, selfUserId, extraSelfForeignPeerId);
-				await insertDebt(ctx, foreignUserId, extraForeignForeignPeerId);
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({
-						peerId: selfToForeignPeerId,
-						userId: foreignUserId,
-					}),
-				);
-				const database = assertDatabase(ctx);
-				const debts = await database.selectFrom("debts").selectAll().execute();
-
-				afterTest?.({
-					selfDebt,
-					foreignDebt,
-					selfUser: {
-						id: selfUserId,
-						foreignPeerId: selfToForeignPeerId,
-					},
-					foreignUser: {
-						id: foreignUserId,
-						foreignPeerId: foreignToSelfPeerId,
-					},
-					debts,
-				});
-			};
-
 			test("none are auto-accepted", async ({ ctx }) => {
 				await runAcceptDebtsTest(ctx, {
 					self: { manualAcceptDebts: true },

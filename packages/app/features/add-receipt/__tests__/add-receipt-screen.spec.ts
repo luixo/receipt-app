@@ -288,6 +288,117 @@ test.describe("Draft form", () => {
 		await expect(warningSection).not.toContainText(firstName);
 		await expect(modal("Remove modal")).toBeHidden();
 	});
+
+	test("Adding self explicitly shows one editor row", async ({
+		mockBase,
+		page,
+		participantSuggestion,
+		participantRow,
+		participantRows,
+	}) => {
+		const { peer: self } = await mockBase();
+		await page.navigate({ to: "/receipts/add" });
+		await page.getByRole("button", { name: "Add participants" }).click();
+		await participantSuggestion.getByRole("combobox").click();
+		await page
+			.getByRole("option", { includeHidden: true })
+			.filter({ visible: true })
+			.first()
+			.click();
+		await participantSuggestion.getByRole("combobox").press("Escape");
+		await expect(participantRows).toHaveCount(1);
+		await participantRow(self.name).getByTestId("user-avatar").click();
+		await expect(
+			participantRow(self.name).getByRole("button", { name: "Pick role" }),
+		).toContainText("Editor");
+	});
+
+	test("Suggested peers are selected once and previewed", async ({
+		mockBase,
+		page,
+		selectParticipant,
+		participantRows,
+		participantsPicker,
+		participantsPreview,
+	}) => {
+		const { peers } = await mockBase();
+		await page.navigate({ to: "/receipts/add" });
+		await page.getByRole("button", { name: "Add participants" }).click();
+		for (const peer of peers) {
+			await selectParticipant(peer.name);
+		}
+		await expect(participantRows).toHaveCount(peers.length);
+		await participantsPicker.getByRole("button", { name: "Close" }).click();
+		await expect(participantsPicker).toBeHidden();
+		await expect(participantsPreview).toBeVisible();
+	});
+
+	test("Removing a zero-balance peer is immediate and permits re-adding", async ({
+		mockBase,
+		page,
+		selectParticipant,
+		participantRows,
+		participantRow,
+		modal,
+	}) => {
+		const {
+			peers: [firstPeer],
+		} = await mockBase();
+		assert.ok(firstPeer);
+		await page.navigate({ to: "/receipts/add" });
+		await page.getByRole("button", { name: "Add participants" }).click();
+		await selectParticipant(firstPeer.name);
+		await participantRow(firstPeer.name).getByTestId("user-avatar").click();
+		await participantRow(firstPeer.name).getByTestId("remove-button").click();
+		await expect(participantRows).toHaveCount(0);
+		await expect(modal("Remove modal")).toBeHidden();
+		await selectParticipant(firstPeer.name);
+		await expect(participantRows).toHaveCount(1);
+	});
+
+	test("A consumed draft item is removed without confirmation", async ({
+		mockBase,
+		page,
+		faker,
+		addItemButton,
+		fillForm,
+		saveItemButton,
+		itemCards,
+		warningSection,
+		selectParticipant,
+		participantRow,
+		participantsPicker,
+		icon,
+		modal,
+	}) => {
+		const {
+			peers: [firstPeer, secondPeer],
+		} = await mockBase();
+		assert.ok(firstPeer);
+		assert.ok(secondPeer);
+		await page.navigate({ to: "/receipts/add" });
+		await addItemButton.click();
+		await fillForm({
+			name: faker.commerce.productName(),
+			price: faker.number.int({ min: 2, max: 30 }),
+		});
+		await saveItemButton.click();
+		await page.getByRole("button", { name: "Add participants" }).click();
+		await selectParticipant(firstPeer.name);
+		await selectParticipant(secondPeer.name);
+		await participantRow(firstPeer.name).getByTestId("user-avatar").click();
+		await participantsPicker.getByRole("button", { name: "Close" }).click();
+		const card = itemCards.first();
+		await card.getByRole("button", { name: "Consumed by everyone" }).click();
+		await expect(warningSection).not.toBeAttached();
+		await card
+			.getByRole("button")
+			.filter({ has: icon("ellipsis") })
+			.click();
+		await page.getByText("Remove item").click();
+		await expect(itemCards).toHaveCount(0);
+		await expect(modal("Remove modal")).toBeHidden();
+	});
 });
 
 test("Complete draft submits only surviving edited data and navigates to the created receipt", async ({
@@ -436,117 +547,4 @@ test("Complete draft submits only surviving edited data and navigates to the cre
 			blacklistKeys: ["peers.get", "peers.suggestTop"],
 		},
 	);
-});
-
-test.describe("Draft form", () => {
-	test("Adding self explicitly shows one editor row", async ({
-		mockBase,
-		page,
-		participantSuggestion,
-		participantRow,
-		participantRows,
-	}) => {
-		const { peer: self } = await mockBase();
-		await page.navigate({ to: "/receipts/add" });
-		await page.getByRole("button", { name: "Add participants" }).click();
-		await participantSuggestion.getByRole("combobox").click();
-		await page
-			.getByRole("option", { includeHidden: true })
-			.filter({ visible: true })
-			.first()
-			.click();
-		await participantSuggestion.getByRole("combobox").press("Escape");
-		await expect(participantRows).toHaveCount(1);
-		await participantRow(self.name).getByTestId("user-avatar").click();
-		await expect(
-			participantRow(self.name).getByRole("button", { name: "Pick role" }),
-		).toContainText("Editor");
-	});
-
-	test("Suggested peers are selected once and previewed", async ({
-		mockBase,
-		page,
-		selectParticipant,
-		participantRows,
-		participantsPicker,
-		participantsPreview,
-	}) => {
-		const { peers } = await mockBase();
-		await page.navigate({ to: "/receipts/add" });
-		await page.getByRole("button", { name: "Add participants" }).click();
-		for (const peer of peers) {
-			await selectParticipant(peer.name);
-		}
-		await expect(participantRows).toHaveCount(peers.length);
-		await participantsPicker.getByRole("button", { name: "Close" }).click();
-		await expect(participantsPicker).toBeHidden();
-		await expect(participantsPreview).toBeVisible();
-	});
-
-	test("Removing a zero-balance peer is immediate and permits re-adding", async ({
-		mockBase,
-		page,
-		selectParticipant,
-		participantRows,
-		participantRow,
-		modal,
-	}) => {
-		const {
-			peers: [firstPeer],
-		} = await mockBase();
-		assert.ok(firstPeer);
-		await page.navigate({ to: "/receipts/add" });
-		await page.getByRole("button", { name: "Add participants" }).click();
-		await selectParticipant(firstPeer.name);
-		await participantRow(firstPeer.name).getByTestId("user-avatar").click();
-		await participantRow(firstPeer.name).getByTestId("remove-button").click();
-		await expect(participantRows).toHaveCount(0);
-		await expect(modal("Remove modal")).toBeHidden();
-		await selectParticipant(firstPeer.name);
-		await expect(participantRows).toHaveCount(1);
-	});
-
-	test("A consumed draft item is removed without confirmation", async ({
-		mockBase,
-		page,
-		faker,
-		addItemButton,
-		fillForm,
-		saveItemButton,
-		itemCards,
-		warningSection,
-		selectParticipant,
-		participantRow,
-		participantsPicker,
-		icon,
-		modal,
-	}) => {
-		const {
-			peers: [firstPeer, secondPeer],
-		} = await mockBase();
-		assert.ok(firstPeer);
-		assert.ok(secondPeer);
-		await page.navigate({ to: "/receipts/add" });
-		await addItemButton.click();
-		await fillForm({
-			name: faker.commerce.productName(),
-			price: faker.number.int({ min: 2, max: 30 }),
-		});
-		await saveItemButton.click();
-		await page.getByRole("button", { name: "Add participants" }).click();
-		await selectParticipant(firstPeer.name);
-		await selectParticipant(secondPeer.name);
-		await participantRow(firstPeer.name).getByTestId("user-avatar").click();
-		await participantsPicker.getByRole("button", { name: "Close" }).click();
-		const card = itemCards.first();
-		await card.getByRole("button", { name: "Consumed by everyone" }).click();
-		await expect(warningSection).not.toBeAttached();
-		await card
-			.getByRole("button")
-			.filter({ has: icon("ellipsis") })
-			.click();
-		await page.getByText("Remove item").click();
-		await expect(itemCards).toHaveCount(0);
-		await expect(modal("Remove modal")).toBeHidden();
-	});
 });

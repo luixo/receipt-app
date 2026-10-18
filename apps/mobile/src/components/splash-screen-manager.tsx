@@ -31,6 +31,8 @@ export const SplashScreenManager: React.FC<{ timeout: number }> = ({
 			SplashScreen.hide();
 			return;
 		}
+		// This will not trigger a cascade, I promise
+		// oxlint-disable-next-line react/set-state-in-effect
 		setHasPending(getSomePending());
 		return queryClient
 			.getQueryCache()

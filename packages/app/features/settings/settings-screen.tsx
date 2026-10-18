@@ -39,6 +39,7 @@ export const SettingsScreen = () => {
 			</View>
 			<View className="flex gap-2">
 				<Text>{t("defaultLimit.header")}</Text>
+				{/* oxlint-disable-next-line react/invariant */}
 				<LimitOption limit={defaultLimit} onChange={onLimitChange} />
 			</View>
 			<Divider />

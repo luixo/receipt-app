@@ -51,6 +51,8 @@ export const useAvatarProps = ({
 			return;
 		}
 		setActualSize(Math.max(ref.current.offsetHeight, ref.current.offsetWidth));
+		// We calculate actual size depending on the prop
+		// oxlint-disable-next-line react/exhaustive-effect-dependencies
 	}, [props.size]);
 	return {
 		...props,

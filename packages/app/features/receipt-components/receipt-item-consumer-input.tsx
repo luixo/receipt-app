@@ -124,7 +124,10 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 			{(currentValue) => (
 				<>
 					<Text>
-						{Number.isNaN(currentValue) ? "-" : currentValue} / {totalParts}
+						{t("item.form.consumer.value", {
+							part: Number.isNaN(currentValue) ? "-" : currentValue,
+							totalParts,
+						})}
 					</Text>
 					<View className="absolute top-1 right-1">{updateElement}</View>
 				</>
@@ -157,7 +160,14 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						continuousMutations
 						isDisabled={isDisabled}
 						labelPlacement="outside-left"
-						endContent={<Text className="self-center">/ {totalParts}</Text>}
+						endContent={
+							<Text className="self-center">
+								{t("item.form.consumer.value", {
+									part: "",
+									totalParts,
+								})}
+							</Text>
+						}
 						variant="bordered"
 					/>
 				)}

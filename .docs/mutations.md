@@ -51,11 +51,11 @@ Concurrent mutations with the same `mutationKey` fired within a tick window are 
 When importing from a mutation file, rename `options` to `<router><Procedure>Options`. When importing `update`/`updateRevert`/`invalidate*` from a cache file, rename with a `<Router>` prefix:
 
 ```ts
-import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import {
 	update as updateReceipts,
 	updateRevert as updateRevertReceipts,
 } from "~mutations/cache/receipts";
+import { options as receiptsAddOptions } from "~mutations/receipts/add";
 ```
 
 ## Usage in components

@@ -39,7 +39,7 @@ export const ErrorComponent: ErrorRouteComponent = ({
 const SuspenseWrapper: React.FC<
 	React.PropsWithChildren<{
 		fallback: React.ReactNode;
-		errorComponent?: ErrorComponent;
+		errorComponent?: (props: ErrorComponentProps) => React.ReactNode;
 	}>
 > = ({ children, fallback, errorComponent }) => {
 	const { captureError } = React.use(LinksContext);
@@ -62,15 +62,13 @@ const SuspenseWrapper: React.FC<
 	);
 };
 
-type ErrorComponent = (props: ErrorComponentProps) => React.ReactNode;
-
-// oxlint-disable-next-line react/display-name
 export const suspendedFallback =
 	<P extends object = Record<string, never>>(
 		Component: React.ComponentType<P>,
 		Fallback: React.ReactNode | React.FC<P>,
-		errorComponent?: ErrorComponent,
+		errorComponent?: (props: ErrorComponentProps) => React.ReactNode,
 	): React.FC<P> =>
+	// oxlint-disable-next-line react/display-name
 	(props) => (
 		<SuspenseWrapper
 			fallback={

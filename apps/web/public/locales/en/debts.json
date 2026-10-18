@@ -28,7 +28,8 @@
 		"form": {
 			"amount": {
 				"label": "Debt amount",
-				"saveButton": "Save debt amount"
+				"saveButton": "Save debt amount",
+				"suffix": "USD"
 			},
 			"note": {
 				"label": "Debt note",

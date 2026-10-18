@@ -18,13 +18,6 @@ export const ColorModeSettings: React.FC = () => {
 			removeSelectedColorMode,
 		],
 	} = useColorModes();
-	const switchColorMode = React.useEffectEvent(() => {
-		if (!selectedColorMode || selectedColorMode === systemColorMode) {
-			setSelectedColorMode(systemColorMode === "dark" ? "light" : "dark");
-		} else {
-			removeSelectedColorMode();
-		}
-	});
 	const colorMode = selectedColorMode ?? systemColorMode;
 	return (
 		<View className="flex-row items-center gap-4">
@@ -33,7 +26,13 @@ export const ColorModeSettings: React.FC = () => {
 				testID="color-mode-button"
 				isIconOnly
 				variant="bordered"
-				onPress={switchColorMode}
+				onPress={() => {
+					if (!selectedColorMode || selectedColorMode === systemColorMode) {
+						setSelectedColorMode(systemColorMode === "dark" ? "light" : "dark");
+					} else {
+						removeSelectedColorMode();
+					}
+				}}
 			>
 				<Icon
 					name={colorMode === "light" ? "moon" : "sun"}

@@ -26,8 +26,13 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
 	const { setItem, deleteItem, getInitialItems } = React.use(StoreContext);
 	const initialItems = getInitialItems();
-	const [mounted, setMounted] = React.useState(false);
-	React.useEffect(() => setMounted(true), []);
+	const mounted = React.useSyncExternalStore(
+		() => () => {
+			/* empty */
+		},
+		() => true,
+		() => false,
+	);
 	const [ssrState, setSsrState] = React.useState<StoreValues>(() =>
 		resolveState(initialItems),
 	);

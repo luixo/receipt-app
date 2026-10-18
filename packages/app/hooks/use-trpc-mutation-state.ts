@@ -39,6 +39,7 @@ export const useTrpcMutationStates = <Key extends TRPCMutationKey>(
 export const useTrpcMutationState = <Key extends TRPCMutationKey>(
 	...args: Parameters<typeof useTrpcMutationStates<Key>>
 ) => {
+	// oxlint-disable-next-line react/todo
 	const states = useTrpcMutationStates(...args);
 	return states.at(-1);
 };
