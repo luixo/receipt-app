@@ -1,19 +1,11 @@
-import { defineConfig } from "oxfmt";
+import { getFormatConfig } from "@luixo/configs";
 
-export const config = defineConfig({
-	semi: true,
-	useTabs: true,
-	tabWidth: 2,
-	singleQuote: false,
-	printWidth: 80,
-	sortPackageJson: true,
-	sortTailwindcss: {
+export const config = getFormatConfig({
+	tailwind: {
 		stylesheet: "./packages/app/global.css",
 		functions: ["tv", "cn"],
 	},
-	sortImports: {
-		newlinesBetween: false,
-		order: "asc",
+	imports: {
 		customGroups: [
 			{ groupName: "react", elementNamePattern: ["react", "react-native"] },
 			{ groupName: "tilde", elementNamePattern: ["~*", "~*/**"] },
@@ -33,7 +25,6 @@ export const config = defineConfig({
 		],
 	},
 	ignorePatterns: [
-		".history",
 		"**/*-snapshots/**/*.json",
 		"**/*.gen.ts",
 		"**/uniwind-types.d.ts",

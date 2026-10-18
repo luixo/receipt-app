@@ -55,28 +55,30 @@ export const Switch: React.FC<Props> = ({
 				isReadOnly
 					? "disable-all"
 					: {
-							backgroundColor: wrapperStyle.backgroundColor
-								? {
-										value: [
-											wrapperStyle.backgroundColor as string,
-											wrapperStyle.backgroundColor as string,
-										],
-									}
-								: undefined,
+							backgroundColor:
+								wrapperStyle.backgroundColor === undefined
+									? undefined
+									: {
+											value: [
+												wrapperStyle.backgroundColor as string,
+												wrapperStyle.backgroundColor as string,
+											],
+										},
 						}
 			}
 		>
 			<SwitchRaw.Thumb
 				className={slots.thumb({ className: thumbClassName })}
 				animation={{
-					backgroundColor: thumbStyle.backgroundColor
-						? {
-								value: [
-									thumbStyle.backgroundColor as string,
-									thumbStyle.backgroundColor as string,
-								],
-							}
-						: undefined,
+					backgroundColor:
+						thumbStyle.backgroundColor === undefined
+							? undefined
+							: {
+									value: [
+										thumbStyle.backgroundColor as string,
+										thumbStyle.backgroundColor as string,
+									],
+								},
 				}}
 			>
 				{thumbIcon}

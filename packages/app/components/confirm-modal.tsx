@@ -57,6 +57,7 @@ export const ConfirmModal: React.FC<Props> = ({
 				header={
 					<>
 						<Text variant="h3">{confirmText}</Text>
+						{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 						{subtitle ? (
 							typeof subtitle === "string" ? (
 								<Text variant="h4" className="text-warning mt-2">

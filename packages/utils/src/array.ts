@@ -46,7 +46,7 @@ export const upsertInArray = <T>(
 	const matchedIndex = array.findIndex(predicate);
 	return replace(
 		array,
-		updater(array[matchedIndex] || defaultValue),
+		updater((array[matchedIndex] ?? undefined) || defaultValue),
 		matchedIndex === -1 ? Infinity : matchedIndex,
 		ref,
 	);

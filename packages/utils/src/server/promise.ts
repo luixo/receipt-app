@@ -14,7 +14,7 @@ export const promisifyServer = <
 		promisifyEvent<URL>((listener, errorListener) => {
 			server.listen(port, () => {
 				const address = server.address();
-				if (!address || typeof address === "string") {
+				if (address === null || typeof address === "string") {
 					errorListener(new Error("Expected an internet server address"));
 				} else {
 					listener(

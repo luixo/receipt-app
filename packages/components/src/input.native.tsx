@@ -25,10 +25,10 @@ const input = tv({
 		base: "",
 		input: "flex-1 border-transparent bg-transparent p-0 shadow-none",
 		wrapper:
-			"bg-field border-field-border justify-center rounded-2xl border-2 px-3",
+			"bg-content1 border-content1 justify-center rounded-2xl border-2 px-3",
 		innerWrapper: "flex-row items-center justify-center",
 		sideContent: "max-h-6 flex-row items-center justify-center gap-2",
-		label: "text-normal",
+		label: "text-base",
 		description: "",
 	},
 	variants: {
@@ -37,7 +37,7 @@ const input = tv({
 				wrapper: "border-default-200",
 			},
 			flat: {
-				wrapper: "shadow-field",
+				wrapper: "shadow-content1",
 			},
 		},
 		labelPlacement: {
@@ -46,7 +46,7 @@ const input = tv({
 				base: "flex-row",
 			},
 			inside: {
-				label: "text-muted text-sm",
+				label: "text-content2 text-sm",
 			},
 		},
 		isFocus: {
@@ -394,7 +394,7 @@ const InnerInput = ({
 								autoComplete={autoComplete}
 								autoFocus={autoFocus}
 								autoCapitalize={autoCapitalize}
-								{...(type ? keyboardTypeMapping[type] : {})}
+								{...(type === undefined ? {} : keyboardTypeMapping[type])}
 							/>
 							{endContent || shouldRenderClearable ? (
 								<View className={slots.sideContent({ className: "pl-1.5" })}>

@@ -8,10 +8,9 @@ import { ProtectedPage } from "~app/components/protected-page";
 import type { TRPCError } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { Spinner } from "~components/spinner";
+import { getOptions } from "~web/utils/cookies";
 import { captureSentryError } from "~web/utils/sentry";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
-
-import { getOptions } from "../utils/cookies";
 
 const Wrapper = () => (
 	<ProtectedPage>

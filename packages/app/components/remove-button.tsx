@@ -13,6 +13,7 @@ export const SkeletonRemoveButton: React.FC<
 		color="danger"
 		{...props}
 		startContent={<Icon className="size-6" name="trash" />}
+		// oxlint-disable-next-line typescript/strict-boolean-expressions
 		isIconOnly={!children}
 	>
 		{children}

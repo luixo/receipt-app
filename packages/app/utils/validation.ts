@@ -111,7 +111,7 @@ const createNumberSchema = ({
 			params: { i18nKey: "validation.greaterThanZero", target: name },
 		});
 	}
-	if (max) {
+	if (max !== undefined) {
 		schema = schema.refine(
 			(value) => value <= (typeof max === "number" ? max : max.value),
 			{

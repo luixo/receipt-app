@@ -30,9 +30,7 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 		});
 	}, [queryClientKey, setQueryClients]);
 	const queryClient = React.useMemo(
-		() =>
-			(queryClientKey && queryClients[queryClientKey]) ||
-			queryClients[SELF_QUERY_CLIENT_KEY],
+		() => queryClients[queryClientKey] || queryClients[SELF_QUERY_CLIENT_KEY],
 		[queryClientKey, queryClients],
 	);
 	return (

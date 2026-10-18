@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"cleanup-ci-reports": "bun cleanup-ci-reports.ts",
-		"verify-routers": "bun verify-routers.ts",
-		"merge-coverage": "bun merge-coverage.ts"
+		"merge-coverage": "bun merge-coverage.ts",
+		"verify-routers": "bun verify-routers.ts"
 	},
 	"devDependencies": {
 		"@ra/coverage": "workspace:*",

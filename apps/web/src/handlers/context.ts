@@ -77,10 +77,7 @@ export type ValidateHandlerVersions<
 		: never;
 
 export const defineHandlerVersions =
-	<Latest extends StandardSchemaV1>(
-		// oxlint-disable-next-line no-unused-vars
-		_latestSchema: Latest,
-	) =>
+	<Latest extends StandardSchemaV1>(_latestSchema: Latest) =>
 	<const Versions extends readonly HandlerVersion[]>(
 		versions: Versions & ValidateHandlerVersions<Latest, Versions>,
 	) =>

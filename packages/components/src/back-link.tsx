@@ -1,5 +1,3 @@
-import type React from "react";
-
 import { Icon } from "~components/icons";
 import { Link } from "~components/link";
 

@@ -17,7 +17,7 @@ export const textVariants = tv({
 			h4: "text-xl font-semibold tracking-tight",
 			p: "text-base font-normal",
 			blockquote: "border-l-2 pl-3 text-base font-normal italic",
-			code: "relative rounded font-mono text-sm font-semibold",
+			code: "relative rounded-sm font-mono text-sm font-semibold",
 		},
 	},
 	defaultVariants: {

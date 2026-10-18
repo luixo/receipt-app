@@ -43,7 +43,7 @@ export const config = defineConfig({
 			ignoreDependencies: ["@opencode/plugin"],
 		},
 		"apps/mobile": {
-			entry: ["app/**/*.{ts,tsx}", "app.css", configEntry],
+			entry: ["app/**/*.{ts,tsx}", "src/app.css", configEntry],
 			ignoreDependencies: [
 				// Font files referenced through a template string in app.config.ts.
 				"@expo-google-fonts/inter",
@@ -52,8 +52,8 @@ export const config = defineConfig({
 			],
 			ignoreIssues: {
 				// Imports from app.css are not resolved for some reason
-				"heroui.ts": ["exports"],
-				"heroui-override.ts": ["exports"],
+				"src/heroui.ts": ["exports"],
+				"src/heroui-override.ts": ["exports"],
 			},
 		},
 		"apps/web": {
@@ -101,7 +101,13 @@ export const config = defineConfig({
 		},
 		"utils/lint": {
 			// Loaded by specifier in config.ts
-			ignoreDependencies: ["oxlint-plugin-eslint"],
+			ignoreDependencies: [
+				"oxlint-plugin-eslint",
+				"@tanstack/eslint-plugin-router",
+				"eslint-plugin-better-tailwindcss",
+				"eslint-plugin-package-json",
+				"eslint-plugin-playwright",
+			],
 		},
 	},
 });

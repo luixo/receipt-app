@@ -80,7 +80,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		onPressRaw?.();
 	}, [onPressRaw, formContext, type, form]);
 	const spinner = <View className="size-4 rounded-full bg-red-500" />;
-	if (as) {
+	if (as !== undefined) {
 		const Component = as;
 		return <Component {...props} />;
 	}
@@ -95,6 +95,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 		className: rawClassName,
 		// We forcefully want to ignore size properties of a web heroui button
 		size: "undefined" as unknown as undefined,
+		// oxlint-disable-next-line typescript/strict-boolean-expressions
 		isIconOnly: !children,
 	})
 		.split(" ")
@@ -134,6 +135,7 @@ export const Button: React.FC<ButtonProps> = (props) => {
 			<TextWrapper className={className}>
 				{startContent}
 				{isLoading ? spinner : null}
+				{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 				{isIconOnly && (isLoading || !children) ? null : typeof children ===
 						"string" ||
 				  // The only way to find that out

@@ -23,7 +23,7 @@ export const Badge: React.FC<Props> = ({
 		placement="top-right"
 		size="lg"
 		content={content}
-		isDot={!content}
+		isDot={content === ""}
 		data-testid={testID}
 		{...props}
 	/>

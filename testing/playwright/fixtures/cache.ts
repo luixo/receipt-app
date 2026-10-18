@@ -45,7 +45,7 @@ const queryTypes = {
 const getAmountElement = (
 	element?: number | Partial<RangeCacheAmount>,
 ): RangeCacheAmount => {
-	if (!element) {
+	if (element === undefined) {
 		return { min: 0, max: Infinity };
 	}
 	if (typeof element === "number") {

@@ -83,9 +83,12 @@ export const expectDatabaseDiffSnapshot = async <T>(
 				),
 			]),
 	);
+	// We're managing hints ourselves
 	if (snapshotName) {
+		// oxlint-disable-next-line vitest/prefer-snapshot-hint
 		expect(diff).toMatchSnapshot(snapshotName);
 	} else {
+		// oxlint-disable-next-line vitest/prefer-snapshot-hint
 		expect(diff).toMatchSnapshot();
 	}
 	return result;

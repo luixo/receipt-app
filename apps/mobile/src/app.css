@@ -10,8 +10,8 @@
 /* Remove this and @heroui/theme patch when https://github.com/uni-stack/uniwind/issues/305 is resolved */
 @plugin "./heroui-override.ts";
 
-@source "../../packages/components";
-@source "../../packages/app";
+@source "../../../packages/components";
+@source "../../../packages/app";
 
 @layer theme {
 	:root {

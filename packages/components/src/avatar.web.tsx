@@ -57,6 +57,7 @@ export const useAvatarProps = ({
 	return {
 		...props,
 		ref,
+		// oxlint-disable-next-line typescript/strict-boolean-expressions
 		fallback: fallback || (
 			<BeamAvatar
 				size={actualSize}

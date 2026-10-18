@@ -15,12 +15,12 @@ export type Props = {
 };
 
 export const User: React.FC<Props> = ({
-	avatarProps: avatarPropsRaw = {},
+	avatarProps: avatarPropsRaw,
 	testID,
 	onPress,
 	...props
 }) => {
-	const avatarProps = useAvatarProps(avatarPropsRaw);
+	const avatarProps = useAvatarProps(avatarPropsRaw ?? {});
 	return (
 		<UserRaw
 			avatarProps={avatarProps}

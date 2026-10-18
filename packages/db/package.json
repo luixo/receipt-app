@@ -4,8 +4,8 @@
 	"type": "module",
 	"sideEffects": false,
 	"scripts": {
-		"db:migrate": "bun --bun --env-file=../../.env,../../.env.local kysely migrate latest",
-		"db:generate-types": "bun --env-file=../../.env,../../.env.local generate-types.ts"
+		"db:generate-types": "bun --env-file=../../.env,../../.env.local generate-types.ts",
+		"db:migrate": "bun --bun --env-file=../../.env,../../.env.local kysely migrate latest"
 	},
 	"dependencies": {
 		"@ra/utils": "workspace:*",

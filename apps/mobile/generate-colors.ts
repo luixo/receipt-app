@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import { entries } from "remeda";
 
-import { dark, light } from "./heroui-override";
+import { dark, light } from "./src/heroui-override";
 
 type CSSTree = { name: string; content: CSSTree[] } | string;
 
@@ -37,4 +37,4 @@ const lines: CSSTree = {
 		},
 	],
 };
-await fs.writeFile("./variables.css", `${generateTree(lines)}\n`, "utf8");
+await fs.writeFile("./src/variables.css", `${generateTree(lines)}\n`, "utf8");
