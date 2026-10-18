@@ -10,10 +10,9 @@ import { Text } from "~components/text";
 export const RefreshSettings: React.FC = () => {
 	const { t } = useTranslation("settings");
 	const queryClient = useQueryClient();
-	const refetch = React.useCallback(
-		() => void queryClient.invalidateQueries({ refetchType: "all" }),
-		[queryClient],
-	);
+	const refetch = React.useCallback(() => {
+		void queryClient.invalidateQueries({ refetchType: "all" });
+	}, [queryClient]);
 	return (
 		<Button color="primary" onPress={refetch}>
 			<Icon name="refresh" />

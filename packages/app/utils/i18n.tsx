@@ -10,7 +10,7 @@ import type {
 } from "i18next";
 import { I18nextProvider } from "react-i18next";
 import { capitalize, clone, keys, unique } from "remeda";
-import z from "zod";
+import { z } from "zod";
 
 import type { TRPCError } from "~app/trpc";
 import { promisifyEvent } from "~utils/promise";

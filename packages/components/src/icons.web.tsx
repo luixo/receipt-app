@@ -110,16 +110,11 @@ export type Props = Pick<
 	testID?: string;
 };
 
-export const Icon = ({
-	name,
-	className,
-	testID = `${name}-icon`,
-	...props
-}: Props) => {
+export const Icon = ({ name, className, testID, ...props }: Props) => {
 	const Component = mapping[name];
 	return (
 		<Component
-			data-testid={testID}
+			data-testid={testID ?? `${name}-icon`}
 			className={cn(
 				"shrink-0",
 				props.onClick ? "cursor-pointer" : undefined,

@@ -1,5 +1,5 @@
 import { keys } from "remeda";
-import z from "zod";
+import { z } from "zod";
 
 import { languages } from "~app/utils/i18n-data";
 import type { Language } from "~app/utils/i18n-data";

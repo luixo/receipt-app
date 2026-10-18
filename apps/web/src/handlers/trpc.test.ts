@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
-import z from "zod";
+import { z } from "zod";
 
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { createAuthContext, createContext } from "~tests/backend/utils/context";

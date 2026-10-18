@@ -389,6 +389,13 @@ const overriddenRules = {
 		},
 	],
 	"vitest/consistent-test-it": ["error", { fn: "test" }],
+	"react/function-component-definition": [
+		"error",
+		{
+			namedComponents: "arrow-function",
+			unnamedComponents: "arrow-function",
+		},
+	],
 } satisfies DummyRuleMap;
 
 const disabledRules = {
@@ -521,8 +528,6 @@ const disabledRules = {
 	"react/react-in-jsx-scope": "off",
 	// No problem with that
 	"react/jsx-max-depth": "off",
-	// This will probably be split amongst many rules later, for now it's a mess
-	"react/react-compiler": "off",
 	// We definitely want to use these features
 	"oxc/no-async-await": "off",
 	"oxc/no-rest-spread-properties": "off",
@@ -558,9 +563,17 @@ const disabledRules = {
 	"eslint/no-warning-comments": "off",
 	// I didn't find the case when it helped
 	"eslint/no-await-in-loop": "off",
+	// This is very outdated
+	"one-var": "off",
+	// We don't need to load anything as cjs
+	"node/no-top-level-await": "off",
+	// If we supress the rule - we know what we are doing
+	"react/rule-suppression": "off",
+	// Unfortunately, it's a group of rules and we can't turn it off one-by-one
+	"react/hooks": "off",
 } satisfies DummyRuleMap;
 
-export default defineConfig({
+export const config = defineConfig({
 	options: {
 		typeAware: true,
 		reportUnusedDisableDirectives: "error",

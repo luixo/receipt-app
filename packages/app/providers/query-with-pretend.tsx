@@ -13,6 +13,7 @@ export const QueryProviderWithPretend: React.FC<React.PropsWithChildren> = ({
 		[PRETEND_USER_STORE_NAME]: [pretendUser],
 	} = React.use(StoreDataContext);
 	return (
+		// oxlint-disable-next-line react/invariant
 		<QueryProvider queryClientKey={pretendUser.email || SELF_QUERY_CLIENT_KEY}>
 			<TRPCProvider>{children}</TRPCProvider>
 		</QueryProvider>

@@ -28,7 +28,8 @@
 		"form": {
 			"amount": {
 				"label": "Сумма",
-				"saveButton": "Сохранить сумму"
+				"saveButton": "Сохранить сумму",
+				"suffix": "RUB"
 			},
 			"note": {
 				"label": "Примечание",

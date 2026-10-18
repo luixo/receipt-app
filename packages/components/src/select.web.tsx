@@ -25,7 +25,7 @@ export type Props<T extends object, K extends string> = {
 };
 
 // Generic component has to be a function
-// oxlint-disable-next-line func-style
+// oxlint-disable-next-line func-style react/function-component-definition
 export function Select<T extends object, K extends string>({
 	children,
 	getKey,

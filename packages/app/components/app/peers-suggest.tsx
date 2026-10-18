@@ -20,7 +20,6 @@ import { Autocomplete } from "~components/autocomplete";
 import { Button } from "~components/button";
 import { Icon } from "~components/icons";
 import { SkeletonInput } from "~components/skeleton-input";
-import { Text } from "~components/text";
 import { View } from "~components/view";
 import type { PeerId } from "~db/ids";
 
@@ -268,9 +267,10 @@ export const PeersSuggest: React.FC<Props> = ({
 							}
 							avatarProps={{
 								size: "sm",
+								className: "border-surface border",
 								fallback: (
-									<View className="bg-content3 border-default flex size-full items-center justify-center rounded-full border-2">
-										<Text className="text-default-500 flex text-2xl">+</Text>
+									<View className="size-full items-center justify-center">
+										<Icon name="plus" className="size-4" />
 									</View>
 								),
 							}}

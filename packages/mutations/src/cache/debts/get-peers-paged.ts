@@ -74,7 +74,7 @@ export const getController = ({ queryClient, trpc }: ControllerContext) => {
 					trpc.debts.getAllPeer.queryKey({ peerId }),
 				);
 				updatePeer(controller, allDebts, peerId);
-			});
+			}, 0);
 		},
 		invalidate: () => {
 			void queryClient.invalidateQueries(

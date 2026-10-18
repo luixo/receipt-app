@@ -50,7 +50,7 @@ export const ReceiptSyncButton = suspendedFallback<Props>(
 						participant,
 					): participant is Extract<
 						typeof participant,
-						{ debt: NonNullable<unknown> }
+						{ debt: NonNullable<object> }
 					> => Boolean(participant.debt),
 				),
 			[ourDebtsParticipants],

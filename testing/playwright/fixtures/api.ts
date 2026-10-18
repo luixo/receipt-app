@@ -298,7 +298,7 @@ const startManagerServer = () => {
 					);
 				}
 				if (controller.signal.aborted) {
-					// oxlint-disable-next-line eslint-js/no-throw-literal, typescript/only-throw-error
+					// oxlint-disable-next-line typescript/only-throw-error
 					throw CLEANUP_MARK;
 				}
 				const response = await handleRequest(

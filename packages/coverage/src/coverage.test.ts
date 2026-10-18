@@ -164,6 +164,11 @@ const { result } = await session.post("Profiler.takePreciseCoverage");
 process.stdout.write(JSON.stringify(result.find((script) => script.url === url).functions));
 `;
 
+const getSampleCoverage = (coverageMap: istanbulCoverage.CoverageMap) => {
+	expect(coverageMap.files()).toStrictEqual([samplePath]);
+	return coverageMap.fileCoverageFor(samplePath).data;
+};
+
 describe("coverage canonicalization", () => {
 	let tmpDir = "";
 
@@ -235,11 +240,6 @@ describe("coverage canonicalization", () => {
 			JSON.parse(stdout) as Profiler.FunctionCoverage[],
 		);
 		return projector.toCoverageMap();
-	};
-
-	const getSampleCoverage = (coverageMap: istanbulCoverage.CoverageMap) => {
-		expect(coverageMap.files()).toStrictEqual([samplePath]);
-		return coverageMap.fileCoverageFor(samplePath).data;
 	};
 
 	test("node coverage (unminified ESM)", async () => {

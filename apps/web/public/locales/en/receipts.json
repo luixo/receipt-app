@@ -122,6 +122,7 @@
 			"label": "Add receipt item",
 			"consumer": {
 				"label": "Item consumer part",
+				"value": "{{part}} / {{totalParts}}",
 				"saveButton": "Save item consumer part"
 			},
 			"name": {

@@ -166,6 +166,7 @@ export const cacheFixtures = test.extend<CacheFixtures>({
 
 					cacheEventEmitter.on(typedKey, listener);
 					unsubscribeId = await page.evaluate(
+						/* oxlint-disable unicorn/consistent-function-scoping */
 						([keyInner, typeInner, inputInner]) => {
 							// oxlint-disable-next-line typescript/no-unnecessary-condition
 							window.querySubscriptions ??= {};
@@ -249,6 +250,7 @@ export const cacheFixtures = test.extend<CacheFixtures>({
 							return id;
 						},
 						[key, type, input] as const,
+						/* oxlint-enable unicorn/consistent-function-scoping */
 					);
 					return async () => {
 						cacheEventEmitter.off(typedKey, listener);

@@ -27,7 +27,7 @@ type ShapeProps<T> = {
 };
 
 // Generic component has to be a function
-// oxlint-disable-next-line func-style
+// oxlint-disable-next-line func-style react/function-component-definition
 function PaginationBlockShape<T>({
 	limit,
 	totalCount,
@@ -136,7 +136,7 @@ type Props<T> = Omit<ShapeProps<T>, "onLimitChange" | "onPageChange"> & {
 };
 
 // Generic component has to be a function
-// oxlint-disable-next-line func-style
+// oxlint-disable-next-line func-style react/function-component-definition
 export function PaginationBlock<T>({
 	totalCount,
 	setLimit,

@@ -105,6 +105,7 @@ export const Checkbox: React.FC<Props> = ({
 					}}
 				>
 					{icon ??
+						// oxlint-disable-next-line react/jsx-no-literals
 						(isIndeterminate ? <Text className="leading-0">-</Text> : null)}
 				</CheckboxRaw.Indicator>
 			</CheckboxRaw>

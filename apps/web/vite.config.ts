@@ -14,7 +14,7 @@ import { analyzer } from "vite-bundle-analyzer";
 import { cjsInterop } from "vite-plugin-cjs-interop";
 import commonjs from "vite-plugin-commonjs";
 import vitePluginInspect from "vite-plugin-inspect";
-import reactNativeWeb from "vite-plugin-react-native-web";
+import vitePluginReactNativeWeb from "vite-plugin-react-native-web";
 
 // oxlint-disable-next-line typescript/strict-void-return
 const execFile = promisify(execFileRaw);
@@ -74,7 +74,7 @@ const config = defineConfig(({ mode }) => ({
 	plugins: [
 		devtools(),
 		vitePluginInspect(),
-		reactNativeWeb(),
+		vitePluginReactNativeWeb(),
 		tailwindcss(),
 		uniwind({
 			cssEntryFile: path.join(rootDir, "apps/web/src/app.css"),

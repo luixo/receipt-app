@@ -40,6 +40,7 @@ const SeparatedDebts: React.FC<{ children: React.ReactNode[] }> = ({
 				<React.Fragment
 					key={typeof child === "object" && "key" in child ? child.key : null}
 				>
+					{/* oxlint-disable-next-line react/jsx-no-literals */}
 					{index === 0 ? null : <Text>•</Text>}
 					{child}
 				</React.Fragment>

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
-import z from "zod";
+import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { SkeletonCurrencyInput } from "~app/components/app/currency-input";
@@ -208,7 +208,7 @@ const DebtAmountInput = suspendedFallback<{
 				variant="bordered"
 				endContent={
 					<Button variant="light" isIconOnly>
-						USD
+						{t("debt.form.amount.suffix")}
 					</Button>
 				}
 			/>

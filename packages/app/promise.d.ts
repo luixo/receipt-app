@@ -1,5 +1,5 @@
 // One can't extend interface with a type
-// oxlint-disable-next-line typescript/consistent-type-definitions, no-redeclare
+// oxlint-disable-next-line typescript/consistent-type-definitions no-redeclare
 interface Promise<T> {
 	/**
 	 * Attaches a callback for only the rejection of the Promise.

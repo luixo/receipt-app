@@ -13,7 +13,7 @@ import {
 } from "expo-router";
 import { fromEntries, mapValues } from "remeda";
 
-import type { NavigationContext } from "~app/contexts/navigation-context";
+import type { NavigationContextType } from "~app/contexts/navigation-context";
 import type { OutputRouteSearchParams, RouteId } from "~app/utils/navigation";
 import { searchParamsMapping } from "~app/utils/navigation";
 import { updateSetStateAction } from "~utils/react";
@@ -54,7 +54,7 @@ const deserializeSearchParams = (
 const serializeSearchParams = (params: Record<string, unknown>) =>
 	defaultStringifySearch(params);
 
-export const navigationContext: NavigationContext = {
+export const navigationContext: NavigationContextType = {
 	useNavigate: () => {
 		const router = useRouter();
 		return (options) => {

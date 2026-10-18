@@ -35,6 +35,7 @@ export const LanguageSettings: React.FC = () => {
 			if (nextLanguage === currentLanguage) {
 				return;
 			}
+			// oxlint-disable-next-line react/invariant
 			setLanguage(nextLanguage);
 			setLocale(LANGUAGE_TO_LOCALE_MAP[nextLanguage]);
 			await i18n.changeLanguage(nextLanguage);
@@ -55,8 +56,10 @@ export const LanguageSettings: React.FC = () => {
 				placeholder={t("languages.dropdown.placeholder")}
 				renderValue={(values) => values.map((value) => value.text).join(", ")}
 				selectedKeys={[currentLanguage]}
-				// oxlint-disable-next-line typescript/no-non-null-assertion
-				onSelectionChange={(key) => void onChange(key[0]!)}
+				onSelectionChange={(key) => {
+					// oxlint-disable-next-line typescript/no-non-null-assertion
+					void onChange(key[0]!);
+				}}
 				getKey={({ language }) => language}
 			>
 				{({ language, text }) => (
