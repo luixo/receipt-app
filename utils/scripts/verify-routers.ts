@@ -105,7 +105,6 @@ if (!lineDiffs.every((line) => !line.added && !line.removed)) {
 		"web",
 		"native",
 	);
-	console.error("Routes diff between web and native versions");
 	console.error(diff);
-	process.exit(1);
+	throw new Error("Routes diff between web and native versions");
 }

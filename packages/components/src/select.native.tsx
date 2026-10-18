@@ -9,11 +9,12 @@ import { cn } from "~components/utils";
 
 import type { Props } from "./select";
 
+const EMPTY_SELECTED_KEYS: never[] = [];
 export const Select = <T extends object, K extends string>({
 	placeholder,
 	selectionMode,
 	items,
-	selectedKeys = [],
+	selectedKeys = EMPTY_SELECTED_KEYS,
 	disabledKeys,
 	renderValue,
 	onSelectionChange,

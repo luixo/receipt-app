@@ -13,8 +13,6 @@ export type EmptyMutateOptions = {
 	onSettled?: () => void;
 };
 
-// This is needed for generic infer
-// oxlint-disable-next-line typescript/no-unused-vars
 export const typeQuery = <K extends TRPCQueryKey>(query: Query, _key: K) =>
 	query as unknown as Query<
 		TRPCQueryOutput<K>,

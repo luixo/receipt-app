@@ -80,6 +80,7 @@ export const Avatar: React.FC<Props> = ({
 				</AvatarRaw.Image>
 			) : null}
 			<AvatarRaw.Fallback className={cn(dimmed ? "grayscale" : undefined)}>
+				{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 				{fallback || (
 					<BeamAvatar
 						components={avatarComponents}

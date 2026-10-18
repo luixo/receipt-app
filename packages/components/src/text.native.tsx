@@ -25,7 +25,7 @@ export const Text = ({
 	const shouldTruncate = finalClassName.includes("truncate");
 	return (
 		<RawText
-			className={cn(finalClassName, shouldTruncate ? "shrink-1" : undefined)}
+			className={cn(finalClassName, shouldTruncate ? "shrink" : undefined)}
 			role={ROLE[variant]}
 			aria-level={ARIA_LEVEL[variant]}
 			testID={testID}

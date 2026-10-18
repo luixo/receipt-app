@@ -14,8 +14,6 @@ describe("database", () => {
 		expect(loggedMessages).toHaveLength(1);
 		assert(loggedMessages[0]);
 		expect(loggedMessages[0]).toHaveLength(1);
-		assert(loggedMessages[0][0]);
-		expect(loggedMessages[0][0]).toHaveProperty("duration");
 		type MessageType = { duration: number; sql: string; error: Error };
 		const typedMessage = loggedMessages[0][0] as MessageType;
 		expect(typedMessage.duration).toBeTypeOf("number");

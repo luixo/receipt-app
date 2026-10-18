@@ -39,6 +39,7 @@ const ReceiptPreviewShape: React.FC<
 		infoTooltip?: React.ReactNode;
 	} & React.ComponentProps<typeof View>
 > = ({ title, checkbox, sum, icon, className, infoTooltip, ...props }) => {
+	const hasInfoTooltip = Boolean(infoTooltip);
 	const checkboxComponent = (
 		<View className="flex min-w-8 shrink-0 items-center justify-center">
 			{checkbox}
@@ -61,7 +62,7 @@ const ReceiptPreviewShape: React.FC<
 					<View className="min-w-0 truncate overflow-hidden p-2">{title}</View>
 					<Tooltip
 						content={infoTooltip}
-						isDisabled={!infoTooltip}
+						isDisabled={!hasInfoTooltip}
 						className="box-content flex p-2"
 						skipMobile
 					>
@@ -69,7 +70,7 @@ const ReceiptPreviewShape: React.FC<
 							name="info"
 							className={cn(
 								"text-primary size-6 cursor-pointer self-center opacity-75",
-								infoTooltip ? undefined : "hidden",
+								{ hidden: !hasInfoTooltip },
 							)}
 						/>
 					</Tooltip>

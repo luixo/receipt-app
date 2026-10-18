@@ -349,6 +349,7 @@
       "name": "@ra/format",
       "version": "0.0.0",
       "devDependencies": {
+        "@luixo/configs": "catalog:",
         "oxfmt": "^0.73.0",
       },
     },
@@ -356,6 +357,7 @@
       "name": "@ra/lint",
       "version": "0.0.0",
       "devDependencies": {
+        "@luixo/configs": "catalog:",
         "@tanstack/eslint-plugin-router": "^1.162.0",
         "eslint-plugin-better-tailwindcss": "^4.9.1",
         "eslint-plugin-package-json": "^1.10.1",
@@ -398,6 +400,7 @@
     "@faker-js/faker": "^10.6.0",
     "@heroui/react": "2.8.4",
     "@heroui/theme": "2.4.22",
+    "@luixo/configs": "0.2.0",
     "@playwright/test": "1.63.0",
     "@react-native-vector-icons/lucide": "13.1.4",
     "@tanstack/react-query": "5.80.6",
@@ -1165,6 +1168,8 @@
     "@json-render/core": ["@json-render/core@0.19.0", "", { "dependencies": { "zod": "^4.3.6" } }, "sha512-vvcyZ+10EDZKbEyB1J2kXOGfDaiZR2LurZGSqi2r5STHyKr+Te85DWaBxTwRGgM7U1LtIvNx85BzzjElRKoAIg=="],
 
     "@kwsites/file-exists": ["@kwsites/file-exists@1.1.1", "", { "dependencies": { "debug": "^4.1.1" } }, "sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw=="],
+
+    "@luixo/configs": ["@luixo/configs@0.2.0", "", { "peerDependencies": { "oxfmt": "^0.73.0", "oxlint": "^1.88.0" } }, "sha512-nsAEFL0RuPYBlaD5XgG/FAZDrAjkmwR/Tpffj3Y+8Pm16uhqU1fzBKouUv6YXhc1QKhA6vkyCcXhHwff9p/Rlg=="],
 
     "@msgpackr-extract/msgpackr-extract-darwin-arm64": ["@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ=="],
 

@@ -2,9 +2,8 @@ import { test } from "@playwright/test";
 import type { TRPCClient } from "@trpc/client";
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 
+import type { appRouter } from "~tests/frontend/global/router";
 import { transformer } from "~utils/transformer";
-
-import type { appRouter } from "../global/router";
 
 type ServerWorkerFixture = {
 	serverClient: TRPCClient<typeof appRouter>;

@@ -33,8 +33,7 @@ import { navigationContext } from "~mobile/utils/navigation";
 import { captureSentryError } from "~mobile/utils/sentry";
 import { storage } from "~mobile/utils/storage";
 import { storeContext } from "~mobile/utils/store";
-
-import "../app.css";
+import "~mobile/app.css";
 
 const ComponentSettingsProvider: React.FC<React.PropsWithChildren> = ({
 	children,

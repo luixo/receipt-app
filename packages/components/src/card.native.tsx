@@ -31,6 +31,7 @@ export const Card: React.FC<Props> = ({
 	const slots = toast();
 	const card = (
 		<CardRaw className={slots.wrapper({ className })} testID={testID}>
+			{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 			{header ? (
 				<>
 					<CardRaw.Header
@@ -44,6 +45,7 @@ export const Card: React.FC<Props> = ({
 			<CardRaw.Body className={slots.body({ className: bodyClassName })}>
 				{children}
 			</CardRaw.Body>
+			{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 			{footer ? (
 				<>
 					<Divider />

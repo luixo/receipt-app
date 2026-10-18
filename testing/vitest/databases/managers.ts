@@ -19,8 +19,6 @@ const templateDatabaseManagerFactory = () => {
 	};
 	return {
 		waitForDatabase: <T>(listener: TemplateDatabaseListener<T>) =>
-			// This is where we actually need new Promise
-			// oxlint-disable-next-line promise/avoid-new
 			new Promise<T>((resolve) => {
 				const promisifiedListener = async () => {
 					const result = await listener();
@@ -90,8 +88,6 @@ export const databaseManagerFactory = (
 		},
 		release,
 		waitForDatabase: () =>
-			// This is where we actually need new Promise
-			// oxlint-disable-next-line promise/avoid-new
 			new Promise<DatabaseInstance>((resolve) => {
 				listeners.push(resolve);
 			}),

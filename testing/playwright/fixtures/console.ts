@@ -36,7 +36,7 @@ export const getIgnoredIndex = (
 	const ignoredIndex = patterns.findIndex(({ pattern: ignoredElement }) =>
 		typeof ignoredElement === "string"
 			? trimmedMessage.includes(ignoredElement)
-			: trimmedMessage.match(ignoredElement),
+			: ignoredElement.test(trimmedMessage),
 	);
 	return ignoredIndex;
 };

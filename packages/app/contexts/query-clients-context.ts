@@ -6,10 +6,9 @@ import { getQueryClientConfig } from "~app/utils/trpc";
 
 export const getQueryClient = () => new QueryClient(getQueryClientConfig());
 
-export type QueryClientsRecord = Record<
-	typeof SELF_QUERY_CLIENT_KEY | string,
-	QueryClient
->;
+export type QueryClientsRecord = {
+	[SELF_QUERY_CLIENT_KEY]: QueryClient;
+} & Partial<Record<string, QueryClient>>;
 
 export const SELF_QUERY_CLIENT_KEY = Symbol("self-client-id");
 

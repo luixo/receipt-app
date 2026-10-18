@@ -36,6 +36,7 @@ const SeparatedDebts: React.FC<{ children: React.ReactNode[] }> = ({
 }) => (
 	<>
 		{children.map((child, index) =>
+			// oxlint-disable-next-line typescript/strict-boolean-expressions
 			child ? (
 				<React.Fragment
 					key={typeof child === "object" && "key" in child ? child.key : null}

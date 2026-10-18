@@ -68,8 +68,8 @@ const toast = tv({
 		color: {
 			default: {
 				wrapper: "bg-overlay border-overlay",
-				icon: "text-overlay-foreground",
-				title: "text-overlay-foreground",
+				icon: "text-content2-foreground",
+				title: "text-content2-foreground",
 				description: "text-default-500",
 			},
 			success: {

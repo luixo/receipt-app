@@ -1,11 +1,7 @@
-import tanstackRouterPlugin from "@tanstack/eslint-plugin-router";
-import tailwindPlugin from "eslint-plugin-better-tailwindcss";
-import { configs as packageJsonConfigs } from "eslint-plugin-package-json";
-import playwrightPlugin from "eslint-plugin-playwright";
+import { getLintConfig } from "@luixo/configs";
 import htmlTags from "html-tags";
-import type { DummyRule, DummyRuleMap } from "oxlint";
-import { defineConfig } from "oxlint";
-import { fromEntries, keys, omit } from "remeda";
+import type { DummyRule } from "oxlint";
+import { omit } from "remeda";
 
 type RestrictedTag =
 	// These can be used in server environment
@@ -174,9 +170,7 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 					? `Prefer renaming '${actual.toString()}' to '${importValue.expected}'`
 					: importValue.message;
 			const importSelector = getSelector(actual);
-			const actualExpression = actual
-				? `ImportSpecifier[local.name=${importSelector}]`
-				: undefined;
+			const actualExpression = `ImportSpecifier[local.name=${importSelector}]`;
 			return [
 				{
 					selector: `ImportDeclaration[source.value=${valueSelector}]${actualExpression ? ` > ${actualExpression}` : ""}`,
@@ -192,10 +186,6 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		});
 	}),
 	{
-		selector: "ExportAllDeclaration",
-		message: "Do not use barrel export, prefer named export",
-	},
-	{
 		selector: "NewExpression[callee.name='Date']",
 		message:
 			"Using `new Date()` is forbidden, use '~utils/date' `parse` object.",
@@ -210,10 +200,6 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 		selector: "TSTypeReference[typeName.name='Date']",
 		message:
 			"Using `Date` type is forbidden, use '~utils/date' Temporal types.",
-	},
-	{
-		selector: "MemberExpression[object.name='React'][property.name='memo']",
-		message: "No need to use `React.memo`, we have a react compiler turned on",
 	},
 	{
 		selector: "MemberExpression[object.name='page'][property.name='goto']",
@@ -261,419 +247,185 @@ const restrictedSyntaxRules: [string[], RestrictedTag[]][] = [
 	],
 ];
 
-const overriddenRules = {
-	// We assign `ref.current` a lot
-	"no-param-reassign": [
-		"error",
-		{ props: true, ignorePropertyModificationsForRegex: ["ref$", "Ref$"] },
-	],
-	// We enjoy sorting imports
-	"sort-imports": ["error", { ignoreDeclarationSort: true }],
-	// 'warn' recommended
-	"no-console": "error",
-	// 'warn' recommended
-	"no-alert": "error",
-	// `void foo` is a mark of deliberately floating promise
-	"no-void": ["error", { allowAsStatement: true }],
-	"no-restricted-properties": [
-		"error",
-		{
-			object: "Object",
-			property: "keys",
-			message:
-				"Use strongly typed function `keys` from `remeda` package instead.",
-		},
-		{
-			object: "Object",
-			property: "values",
-			message:
-				"Use strongly typed function `values` from `remeda` package instead.",
-		},
-		{
-			object: "Object",
-			property: "entries",
-			message:
-				"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
-		},
-		{
-			object: "Object",
-			property: "fromEntries",
-			message:
-				"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
-		},
-	],
-
-	"no-restricted-globals": [
-		"error",
-		{
-			name: "window",
-			message:
-				"Move this code to `web` package or create a context for this action",
-		},
-		{
-			name: "document",
-			message:
-				"Move this code to `web` package or create a context for this action",
-		},
-	],
-
-	// We don't want `next` to trigger this rule
-	"node/callback-return": ["error", ["callback", "cb"]],
-
-	// Allow expressions for stuff like `<>{children}</>`
-	"react/jsx-no-useless-fragment": ["error", { allowExpressions: true }],
-	// We forbid all HTML elements for react-native
-	"react/forbid-elements": [
-		"error",
-		{
-			forbid: htmlTags.map((tag) => ({
-				element: tag,
-				message:
-					"Move this code to `web` package and provide native alternative",
-			})),
-		},
-	],
-	// 'warn' recommended, also additionalHooks
-	"react/exhaustive-deps": [
-		"error",
-		{
-			additionalHooks: "(useWindowSizeChange)",
-		},
-	],
-	"react/jsx-fragments": ["error", "syntax"],
-
-	// These 2 are off by default
-	"typescript/switch-exhaustiveness-check": [
-		"error",
-		{ considerDefaultExhaustiveForUnions: true },
-	],
-	"typescript/consistent-type-imports": "error",
-	// We want to allow `Amount ${amount}` to be used
-	"typescript/restrict-template-expressions": ["error", { allowNumber: true }],
-	// Default option is `interface`
-	"typescript/consistent-type-definitions": ["error", "type"],
-	// Allowing `while(true)`
-	"typescript/no-unnecessary-condition": [
-		"error",
-		{ allowConstantLoopConditions: true },
-	],
-	// We want to pass `() => Promise<void>` to a prop / arg expecting `() => void`
-	"typescript/no-misused-promises": [
-		"error",
-		{
-			checksVoidReturn: {
-				arguments: false,
-				attributes: false,
-			},
-		},
-	],
-	// We need to use React
-	"no-unused-vars": ["error", { varsIgnorePattern: "React" }],
-	// We want to trigger on deprecated code
-	"typescript/no-deprecated": "error",
-	// This catches floating promises instead of typescript/promise-function-async
-	"typescript/no-floating-promises": "error",
-	// We use autoFocus on custom components hence we should ignore them (or better list every component it might be passed to)
-	"jsx-a11y/no-autofocus": ["error", { ignoreNonDOM: true }],
-	"unicorn/explicit-length-check": ["error", { "non-zero": "not-equal" }],
-	"unicorn/switch-case-braces": ["error", "avoid"],
-	// This number was figured out experimentally
-	"unicorn/max-nested-calls": ["error", { max: 5 }],
-	"react/jsx-no-literals": [
-		"error",
-		{
-			noAttributeStrings: true,
-			noStrings: true,
-			ignoreProps: true,
-			allowedStrings: ["&nbsp;"],
-		},
-	],
-	"vitest/consistent-test-it": ["error", { fn: "test" }],
-	"react/function-component-definition": [
-		"error",
-		{
-			namedComponents: "arrow-function",
-			unnamedComponents: "arrow-function",
-		},
-	],
-} satisfies DummyRuleMap;
-
-const disabledRules = {
-	// We see no evil in nested ternaries
-	"no-nested-ternary": "off",
-	"unicorn/no-nested-ternary": "off",
-	// We see no evil in continue
-	"no-continue": "off",
-	// This is guarded by typescript
-	"consistent-return": "off",
-	// Typescript version is typescript/switch-exhaustiveness-check
-	"default-case": "off",
-	// We extensively spread props: `<Foo {...props} />`
-	"react/jsx-props-no-spreading": "off",
-	// Maintained by oxfmt (sortTailwindcss)
-	"better-tailwindcss/enforce-consistent-class-order": "off",
-	// `(object | undefined) || number` is assumed incorrect by this rule
-	// it should be `(object | undefined) ?? number`
-	"typescript/prefer-nullish-coalescing": "off",
-	// Rule emits false positives on `const fn = <T>(value: T) => {...}`
-	// see https://github.com/typescript-eslint/typescript-eslint/issues/9667
-	"typescript/no-unnecessary-type-parameters": "off",
-	// We enjoy confusing fellow developers with void expressions
-	// Mainly used for:
-	// - returning `void` from a function, assigning that to a value and validating value is undefined
-	// - shorthanding functions returns that don't matter (because they're void)
-	"typescript/no-confusing-void-expression": "off",
-	// That's a weird thing to forbid
-	"typescript/no-dynamic-delete": "off",
-	// We use a few `void` types around
-	"typescript/no-invalid-void-type": "off",
-	// We have typescript strict enough to have implicit boundary types
-	"typescript/explicit-module-boundary-types": "off",
-	// This is replaced by typescript/no-floating-promises
-	"typescript/promise-function-async": "off",
-	// We don't need readonly parameter types
-	"typescript/prefer-readonly-parameter-types": "off",
-	// Typescript guards us good enough
-	"typescript/explicit-function-return-type": "off",
-	// I'll spend half my life changing those
-	"typescript/strict-boolean-expressions": "off",
-	// We use type assertions heavily (but with caution)
-	"typescript/no-unsafe-type-assertion": "off",
-	// This doesn't fit with us spreading options to the routes
-	"@tanstack/router/create-route-property-order": "off",
-	// These conflict with vitest/prefer-strict-boolean-matchers
-	"vitest/prefer-to-be-falsy": "off",
-	"vitest/prefer-to-be-truthy": "off",
-	// This conflict with vitest/prefer-called-times
-	"vitest/prefer-called-once": "off",
-	// We don't need timeouts for every test
-	"vitest/require-test-timeout": "off",
-	// We don't need to know amount of assertions in every test
-	"vitest/prefer-expect-assertions": "off",
-	// No idea why it triggers on every expect
-	"vitest/no-standalone-expect": "off",
-	// This one is not ready for fixtures
-	"vitest/prefer-importing-vitest-globals": "off",
-	"vitest/no-importing-vitest-globals": "off",
-	// This one does a bad job calculating what a hook is
-	"vitest/require-hook": "off",
-	// There are so many valid cases for conditionals in tests
-	"vitest/no-conditional-in-test": "off",
-	// This one conflicts with other similar rules
-	"vitest/prefer-to-be": "off",
-	// We want to run as many expects as needed
-	"vitest/max-expects": "off",
-	// We need before/after hooks
-	"vitest/no-hooks": "off",
-	// It's used only once and it false positives
-	"vitest/prefer-snapshot-hint": "off",
-	// We'll do titles ourselves
-	"vitest/prefer-lowercase-title": "off",
-	// Oxfmt lowercases hex numbers
-	"unicorn/number-literal-case": "off",
-	// Turn back on in case we introduce LTR layout
-	"better-tailwindcss/enforce-logical-properties": "off",
-	// This doesn't work out good with formatter
-	"better-tailwindcss/enforce-consistent-line-wrapping": "off",
-	// This creates more problem that solves
-	"unicorn/prefer-spread": "off",
-	// There are too many false positives
-	"unicorn/no-useless-undefined": "off",
-	// There are false positives on `z.foo().catch()`
-	"unicorn/prefer-top-level-await": "off",
-	// There's no particular reason not to use `window`
-	"unicorn/prefer-global-this": "off",
-	// We've got typescript for that
-	"unicorn/no-array-callback-reference": "off",
-	// No way we're not using reduce
-	"unicorn/no-array-reduce": "off",
-	// We're going to be using null literals
-	"unicorn/no-null": "off",
-	// There are false positives on `z.foo().catch()`
-	"promise/prefer-await-to-then": "off",
-	// There are no good usecases for that, all callbacks are valid
-	"promise/prefer-await-to-callbacks": "off",
-	// No idea why do we need that
-	"import/unambiguous": "off",
-	// When we don't assign import module a variable, we mean that
-	"import/no-unassigned-import": "off",
-	// There are a lot of proper usecases of namespace imports
-	"import/no-namespace": "off",
-	// We'll care about that ourselves
-	"import/max-dependencies": "off",
-	"import/no-relative-parent-imports": "off",
-	// We prefer named exports
-	"import/prefer-default-export": "off",
-	"import/no-named-export": "off",
-	// We export inline
-	"import/exports-last": "off",
-	"import/group-exports": "off",
-	// These all should be addressed by React Compiler
-	"react-perf/jsx-no-new-function-as-prop": "off",
-	"react-perf/jsx-no-new-object-as-prop": "off",
-	"react-perf/jsx-no-jsx-as-prop": "off",
-	"react-perf/jsx-no-new-array-as-prop": "off",
-	"react/no-object-type-as-default-prop": "off",
-	// We'll manage these
-	"react/jsx-handler-names": "off",
-	// There's a forbid syntax rule for that
-	"react/forbid-component-props": "off",
-	// They say fast refresh won't work with these errors. Ok.
-	"react/only-export-components": "off",
-	// No need for that
-	"react/jsx-filename-extension": "off",
-	// I guess we're going to decide how many components file can hold
-	"react/no-multi-comp": "off",
-	// Compilers know how to manage this
-	"react/react-in-jsx-scope": "off",
-	// No problem with that
-	"react/jsx-max-depth": "off",
-	// We definitely want to use these features
-	"oxc/no-async-await": "off",
-	"oxc/no-rest-spread-properties": "off",
-	"oxc/no-optional-chaining": "off",
-	// This is not particulary good, but on out scale it doesn't matter
-	"oxc/no-accumulating-spread": "off",
-	"oxc/no-map-spread": "off",
-	// This is too much at the moment
-	"eslint/sort-keys": "off",
-	// We use a lot of sensible magic numbers
-	"eslint/no-magic-numbers": "off",
-	// It took more time to fight it than to turn it off
-	"eslint/id-length": "off",
-	// We love ternaries
-	"eslint/no-ternary": "off",
-	// No need to control that
-	"eslint/max-lines-per-function": "off",
-	"eslint/max-lines": "off",
-	"eslint/max-statements": "off",
-	"eslint/max-params": "off",
-	// ...
-	"eslint/no-undefined": "off",
-	// We don't care that much
-	"eslint/capitalized-comments": "off",
-	"eslint/no-inline-comments": "off",
-	// False positives for type imports
-	"eslint/no-duplicate-imports": "off",
-	// Controlled by `typescript/require-await`
-	"eslint/require-await": "off",
-	// We don't do much regexping
-	"eslint/require-unicode-regexp": "off",
-	// TODO: fix this one
-	"eslint/no-warning-comments": "off",
-	// I didn't find the case when it helped
-	"eslint/no-await-in-loop": "off",
-	// This is very outdated
-	"one-var": "off",
-	// We don't need to load anything as cjs
-	"node/no-top-level-await": "off",
-	// If we supress the rule - we know what we are doing
-	"react/rule-suppression": "off",
-	// Unfortunately, it's a group of rules and we can't turn it off one-by-one
-	"react/hooks": "off",
-} satisfies DummyRuleMap;
-
-export const config = defineConfig({
-	options: {
-		typeAware: true,
-		reportUnusedDisableDirectives: "error",
-		denyWarnings: true,
+export const config = getLintConfig({
+	tailwind: {
+		entryPoint: "apps/web/src/app.css",
 	},
-	plugins: [
-		"eslint",
-		"typescript",
-		"unicorn",
-		"oxc",
-		"import",
-		"vitest",
-		"jsx-a11y",
-		"react",
-		"react-perf",
-		"promise",
-		"node",
-	],
-	categories: {
-		correctness: "error",
-		suspicious: "error",
-		pedantic: "error",
-		perf: "error",
-		style: "error",
-		restriction: "error",
-		nursery: "error",
+	tanstackRouter: {
+		routes: ["apps/web/src/pages/**"],
 	},
-	jsPlugins: [
-		{ name: "eslint-js", specifier: "oxlint-plugin-eslint" },
-		{
-			name: "better-tailwindcss",
-			specifier: "eslint-plugin-better-tailwindcss",
-		},
-		{ name: "@tanstack/router", specifier: "@tanstack/eslint-plugin-router" },
-		{ name: "playwright", specifier: "eslint-plugin-playwright" },
-		{ name: "package-json", specifier: "eslint-plugin-package-json" },
-	],
+	packageJson: true,
+	playwright: {
+		files: ["testing/playwright/**/*", "**/__tests__/**"],
+		assertFunctionNames: [
+			"expectScreenshotWithSchemes",
+			"expectBodyScreenshot",
+			"snapshotQueries",
+			"expectUrl",
+			"page.expectUrl",
+		],
+	},
+	jsPlugins: [{ name: "eslint-js", specifier: "oxlint-plugin-eslint" }],
 	env: {
-		browser: true,
-		es2017: true,
 		node: true,
 	},
-	settings: {
-		"better-tailwindcss": {
-			entryPoint: "apps/web/src/app.css",
-			callees: ["tv", "cn"],
-		},
-		react: {
-			version: "19.2.0",
-		},
+	ignorePatterns: [
+		"**/.output/",
+		"**/.expo/",
+		"testing/*/coverage/",
+		"**/playwright-report/",
+		"**/test-results/",
+		"**/uniwind-types.d.ts",
+		"apps/mobile/ios",
+		"apps/mobile/android",
+	],
+	restricted: {
+		globals: [
+			{
+				name: "window",
+				message:
+					"Move this code to `web` package or create a context for this action",
+			},
+			{
+				name: "document",
+				message:
+					"Move this code to `web` package or create a context for this action",
+			},
+		],
+		properties: [
+			{
+				object: "Object",
+				property: "keys",
+				message:
+					"Use strongly typed function `keys` from `remeda` package instead.",
+			},
+			{
+				object: "Object",
+				property: "values",
+				message:
+					"Use strongly typed function `values` from `remeda` package instead.",
+			},
+			{
+				object: "Object",
+				property: "entries",
+				message:
+					"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
+			},
+			{
+				object: "Object",
+				property: "fromEntries",
+				message:
+					"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
+			},
+		],
+	},
+	react: {
+		allowedStrings: ["&nbsp;"],
+		additionalHooks: ["useWindowSizeChange"],
+		banMemo: true,
+	},
+	i18n: {
+		ignore: ["packages/app/features/playground/**/*"],
+	},
+	vitest: {
+		files: ["testing/vitest/**", "**/*.test.ts"],
+	},
+	serverSide: {
+		files: [
+			"**/__tests__/**",
+			"testing/utils/**",
+			"testing/playwright/**",
+			"testing/vitest/**",
+			"**/*.test.ts",
+			"utils/scripts/**",
+			"apps/web/src/handlers/**",
+			"apps/web/src/pages/api/**",
+			"apps/web/src/utils/server/**",
+			"apps/web/src/entry/server.tsx",
+			"apps/mobile/update-version.ts",
+			"apps/mobile/generate-colors.ts",
+			"packages/db/migration/**",
+			"packages/utils/src/server/**",
+			"packages/coverage/**",
+			".opencode/**",
+		],
+		allowConsole: ["**/scripts/**/*"],
+		allowProcess: [
+			"**/*.config.ts",
+			"testing/**/*",
+			"apps/mobile/**/*",
+			"utils/**",
+		],
+	},
+	import: {
+		allowDefault: [
+			"apps/web/src/pages/**",
+			"apps/mobile/app/**",
+			"apps/web/src/entry/server.tsx",
+			"apps/mobile/src/heroui-override.ts",
+			"apps/mobile/src/heroui.ts",
+			"packages/app/heroui.ts",
+			"testing/vitest/global.setup.ts",
+			"testing/playwright/server-reporter.ts",
+			"testing/playwright/global/**",
+		],
+		banBarrel: true,
 	},
 	rules: {
-		...fromEntries(
-			keys(tailwindPlugin.rules).map((key) => [
-				`better-tailwindcss/${key}`,
-				"error",
-			]),
-		),
-		...tanstackRouterPlugin.configs["flat/recommended"][0]?.rules,
-		...packageJsonConfigs.recommended.rules,
-		...overriddenRules,
-		...disabledRules,
+		// Unfortunately, this rule fails on spreading function result
+		"@tanstack/router/create-route-property-order": "off",
+		// Migrate later, we don't have RTL right now
+		"better-tailwindcss/enforce-logical-properties": "off",
+		// There are too many magic numbers in the project
+		"eslint/no-magic-numbers": "off",
+		// That's too many keys to sort right now
+		"eslint/sort-keys": "off",
+		// We don't really need this unicode-specific stuff in regexps
+		"eslint/require-unicode-regexp": "off",
+		// If we call await on top-level - that's intended
+		"node/no-top-level-await": "off",
+		// If we supress the rule - we know what we are doing
+		"react/rule-suppression": "off",
+		// Unfortunately, it's a group of rules and we can't turn it off one-by-one
+		"react/hooks": "off",
+		// There's a false positive in `z.foo().catch(...)`
+		"unicorn/prefer-top-level-await": "off",
+
+		// We assign `ref.current` a lot
+		"no-param-reassign": [
+			"error",
+			{ props: true, ignorePropertyModificationsForRegex: ["ref$", "Ref$"] },
+		],
+		// We use autoFocus on custom components hence we should ignore them (or better list every component it might be passed to)
+		"jsx-a11y/no-autofocus": ["error", { ignoreNonDOM: true }],
+		// We don't want `next` to trigger this rule
+		"node/callback-return": ["error", ["callback", "cb"]],
+		// We forbid all HTML elements for react-native
+		"react/forbid-elements": [
+			"error",
+			{
+				forbid: htmlTags.map((tag) => ({
+					element: tag,
+					message:
+						"Move this code to `web` package and provide native alternative",
+				})),
+			},
+		],
 	},
 	overrides: [
 		{
-			files: ["testing/playwright/**/*", "**/__tests__/**"],
-			rules: {
-				...playwrightPlugin.configs["flat/recommended"].rules,
-				"playwright/expect-expect": [
-					"error",
-					{
-						assertFunctionNames: [
-							"expectScreenshotWithSchemes",
-							"expectBodyScreenshot",
-							"snapshotQueries",
-							"expectUrl",
-							"page.expectUrl",
-						],
-					},
-				],
-			},
-		},
-		{
-			files: ["**/scripts/**/*"],
-			rules: {
-				"no-console": "off",
-				// There's no need to limit us to throwing Errors in node.js env
-				"unicorn/no-process-exit": "off",
-			},
-		},
-		{
 			files: ["apps/web/src/email/**/*"],
 			rules: {
+				// Email uses react-email which uses a different set of classes (for now)
 				"better-tailwindcss/no-unknown-classes": "off",
 			},
 		},
 		{
 			files: ["apps/web/**/*", "testing/**/*", "**/*.web.ts", "**/*.web.tsx"],
 			rules: {
+				// We use tags in these elements
 				"react/forbid-elements": "off",
+				// We use `document` and `window` in these files
 				"no-restricted-globals": "off",
 			},
 		},
@@ -685,98 +437,10 @@ export const config = defineConfig({
 			},
 		},
 		{
-			files: ["packages/db/src/models/*"],
+			files: ["packages/mutations/src/**"],
 			rules: {
-				// DB types are generated via interfaces
-				"typescript/consistent-type-definitions": "off",
-			},
-		},
-		{
-			files: ["testing/vitest/**", "*.test.ts"],
-			rules: {
-				"vitest/valid-title": ["error", { allowArguments: true }],
-			},
-		},
-		{
-			files: ["**/*.spec.ts", "testing/playwright/**"],
-			rules: {
-				// Playwright tests don't need vitest rules
-				"vitest/consistent-test-filename": "off",
-				"vitest/valid-expect": "off",
-				"vitest/prefer-each": "off",
-			},
-		},
-		{
-			files: ["**/__tests__/**", "testing/playwright/**", "testing/vitest/**"],
-			rules: {
-				// We use `use` function in Playwright tests which clashes with this rule
-				"react/rules-of-hooks": "off",
-			},
-		},
-		{
-			files: [
-				"**/__tests__/**",
-				"testing/utils/**",
-				"testing/playwright/**",
-				"testing/vitest/**",
-				"**/*.test.ts",
-				"**/config.ts",
-				"**/*.config.ts",
-				"utils/scripts/**",
-				"apps/web/src/handlers/**",
-				"apps/web/src/pages/api/**",
-				"apps/web/src/utils/server/**",
-				"apps/web/src/entry/server.tsx",
-				"apps/mobile/update-version.ts",
-				"apps/mobile/generate-colors.ts",
-				"packages/db/migration/**",
-				"packages/utils/src/server/**",
-				"packages/coverage/**",
-				".opencode/**",
-			],
-			rules: {
-				// These are packages that allow server-side code
-				"import/no-nodejs-modules": "off",
-			},
-		},
-		{
-			files: ["apps/web/src/pages/**"],
-			rules: {
-				// We use routes in function components that are defined before the component
-				"no-use-before-define": "off",
-			},
-		},
-		{
-			files: [
-				"apps/web/src/pages/**",
-				"apps/mobile/app/**",
-				"**/config.ts",
-				"**/*.config.ts",
-				"**/*.config.js",
-				"**/*.setup.ts",
-				"apps/web/src/entry/server.tsx",
-				"apps/mobile/heroui-override.ts",
-				"apps/mobile/heroui.ts",
-				"packages/app/heroui.ts",
-				"testing/playwright/server-reporter.ts",
-				"testing/playwright/global/**",
-			],
-			rules: {
-				// We have to export default exports in pages
-				"import/no-default-export": "off",
-			},
-		},
-		{
-			files: ["**/*.config.ts", "testing/**/*", "apps/mobile/**/*", "utils/**"],
-			rules: {
-				"node/no-process-env": "off",
-			},
-		},
-		{
-			files: ["packages/app/features/playground/**/*"],
-			rules: {
-				// Maybe remove these later
-				"react/jsx-no-literals": "off",
+				// We just use them there, maybe migrate some day
+				"import/no-relative-parent-imports": "off",
 			},
 		},
 		...restrictedSyntaxRules.map(([files, tags]) => ({
@@ -804,20 +468,5 @@ export const config = defineConfig({
 				],
 			},
 		},
-	],
-	ignorePatterns: [
-		".history/",
-		"**/.output/",
-		"**/.vercel/",
-		"**/.tanstack/",
-		"**/.nitro/",
-		"**/.expo/",
-		"testing/*/coverage/",
-		"**/playwright-report/",
-		"**/test-results/",
-		"**/*.gen.ts",
-		"**/uniwind-types.d.ts",
-		"apps/mobile/ios",
-		"apps/mobile/android",
 	],
 });

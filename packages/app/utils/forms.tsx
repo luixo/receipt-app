@@ -54,7 +54,6 @@ export const useTypedValues = <Form, DefaultValues extends Partial<Form>>(
 		// oxlint-enable typescript/no-explicit-any
 	>["store"],
 	// This is only needed for types
-	// oxlint-disable-next-line typescript/no-unused-vars
 	_defaultValues: DefaultValues,
 ) => {
 	const formValues = useStore(formStore, (store) => store.values);

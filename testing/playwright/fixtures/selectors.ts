@@ -41,7 +41,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	errorMessage: async ({ page }, use) => {
 		await use((message) => {
 			const errorMessage = page.getByTestId("error-message");
-			if (message) {
+			if (message !== undefined) {
 				return errorMessage.filter({ has: page.getByText(message) });
 			}
 			return errorMessage;
@@ -57,7 +57,7 @@ export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	emptyCard: async ({ page }, use) => {
 		await use((message) => {
 			const emptyCard = page.getByTestId("empty-card");
-			if (message) {
+			if (message !== undefined) {
 				return emptyCard.filter({ has: page.getByText(message) });
 			}
 			return emptyCard;

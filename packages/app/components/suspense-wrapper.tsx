@@ -68,7 +68,6 @@ export const suspendedFallback =
 		Fallback: React.ReactNode | React.FC<P>,
 		errorComponent?: (props: ErrorComponentProps) => React.ReactNode,
 	): React.FC<P> =>
-	// oxlint-disable-next-line react/display-name
 	(props) => (
 		<SuspenseWrapper
 			fallback={

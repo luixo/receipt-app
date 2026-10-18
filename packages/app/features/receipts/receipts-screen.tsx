@@ -1,5 +1,3 @@
-import type React from "react";
-
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";

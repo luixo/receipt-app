@@ -88,6 +88,7 @@ const serializeData = (input: unknown): unknown => {
 	return input;
 };
 const hydrateData = (input: unknown): unknown =>
+	// oxlint-disable-next-line typescript/strict-boolean-expressions
 	input
 		? serializeData(
 				transformer.deserialize(

@@ -14,7 +14,7 @@ const config = withUniwindConfig(
 	// @ts-expect-error Types slightly diverge here
 	defaultConfig satisfies Parameters<typeof withUniwindConfig>[0],
 	{
-		cssEntryFile: "./app.css",
+		cssEntryFile: "./src/app.css",
 		dtsFile: path.join(projectRoot, "../../packages/app/uniwind-types.d.ts"),
 	},
 );

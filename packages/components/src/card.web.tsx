@@ -41,6 +41,7 @@ export const Card: React.FC<
 		isPressable={Boolean(props.onPress)}
 		{...props}
 	>
+		{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 		{header ? (
 			<>
 				<CardHeader className={headerClassName}>{header}</CardHeader>
@@ -48,6 +49,7 @@ export const Card: React.FC<
 			</>
 		) : null}
 		<CardBody className={bodyClassName}>{children}</CardBody>
+		{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 		{footer ? (
 			<>
 				<Divider />

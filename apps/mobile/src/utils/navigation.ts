@@ -66,9 +66,10 @@ export const navigationContext: NavigationContextType = {
 				options.params === true || typeof options.params === "function"
 					? undefined
 					: (options.params as object);
-			const hashParams = options.hash
-				? { "#": options.hash as string }
-				: undefined;
+			const hashParams =
+				options.hash === undefined
+					? undefined
+					: { "#": options.hash as string };
 			const method = options.replace ? router.replace : router.push;
 			method({
 				pathname: webToNative(options.to || "/"),
