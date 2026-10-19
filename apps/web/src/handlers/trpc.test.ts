@@ -12,7 +12,7 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
 import { defineHandlerVersions } from "~web/handlers/context";
-import { t, unauthProcedure } from "~web/handlers/trpc";
+import { authProcedure, t, unauthProcedure } from "~web/handlers/trpc";
 
 import { router } from "./index";
 
@@ -143,15 +143,19 @@ describe("procedures", () => {
 			});
 
 			const context = createAuthContext(ctx, sessionId);
-			const caller = createCaller(context);
-			await expectDatabaseDiffSnapshot(ctx, () => caller.user.get());
-			const responseHeaders = [...context.resHeaders.entries()];
-			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
-				[
-					"set-cookie",
-					`authToken=${sessionId}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
-				],
-			]);
+			const caller = t.createCallerFactory(
+				t.router({ procedure: authProcedure.query(() => true) }),
+			)(context);
+			await expectDatabaseDiffSnapshot(ctx, async () => {
+				await caller.procedure();
+				const responseHeaders = [...context.resHeaders.entries()];
+				expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+					[
+						"set-cookie",
+						`authToken=${sessionId}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
+					],
+				]);
+			});
 		});
 
 		describe("pretend peer", () => {

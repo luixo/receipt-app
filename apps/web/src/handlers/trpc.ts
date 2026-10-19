@@ -222,7 +222,7 @@ const queueSession = queueCallFactory<
 				};
 			})
 			.filter(isNonNullish);
-		void ctx.database.transaction().execute(async (tx) => {
+		await ctx.database.transaction().execute(async (tx) => {
 			await Promise.all(
 				updateableSessions.map(
 					async ({ authToken, nextExpirationTimestamp }) => {
