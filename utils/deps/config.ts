@@ -1,5 +1,4 @@
-import { defineConfig } from "knip/config";
-import { isNonNullish } from "remeda";
+import { getKnipConfig } from "@luixo/configs";
 
 const playwrightTestEntry = "**/*.spec.ts";
 const configEntry = "**/*.config.ts";
@@ -7,48 +6,32 @@ const configEntry = "**/*.config.ts";
 // Like Expo routes, this intentionally won't catch orphaned platform files.
 const platformEntries = ["**/*.{native,web}.{ts,tsx}"];
 
-export const config = defineConfig({
-	include: [
-		"files",
-		"dependencies",
-		"unlisted",
-		"unresolved",
-		"exports",
-		"nsExports",
-		"types",
-		"nsTypes",
-		"enumMembers",
-		"namespaceMembers",
-		"duplicates",
-		"catalog",
-		"catalogReferences",
-		"cycles",
-	],
+export const config = getKnipConfig({
+	options: {
+		opencode: true,
+		vitest: true,
+		reactNative: true,
+		eslint: true,
+		workspaces: true,
+	},
 	ignore: [
-		".opencode/**/*",
 		// Used by the weekly Bun package-update workflow while Renovate's Bun support evolves: https://github.com/renovatebot/renovate/issues/20065
 		".ncurc.mjs",
 		// Typecheck files are needed for typecheck only
 		"**/*.typecheck.ts",
-		process.env.CI ? undefined : ".history/**/*",
-	].filter(isNonNullish),
-	treatConfigHintsAsErrors: true,
-	treatTagHintsAsErrors: true,
+	],
 	// Cross-workspace imports use ~app/*, ~utils/*, etc. instead of @ra/*.
 	ignoreDependencies: ["@ra/.+"],
 	workspaces: {
 		".": {
-			entry: configEntry,
 			// Used only inside ignored .opencode/.
 			ignoreDependencies: ["@opencode/plugin"],
 		},
 		"apps/mobile": {
-			entry: ["app/**/*.{ts,tsx}", "src/app.css", configEntry],
+			entry: ["app/**/*.{ts,tsx}", "src/app.css"],
 			ignoreDependencies: [
 				// Font files referenced through a template string in app.config.ts.
 				"@expo-google-fonts/inter",
-				// Root native:doctor script.
-				"expo-doctor",
 			],
 			ignoreIssues: {
 				// Imports from app.css are not resolved for some reason
@@ -64,7 +47,6 @@ export const config = defineConfig({
 				"src/entry/routeTree.gen.ts",
 				"**/*.test.ts",
 				playwrightTestEntry,
-				configEntry,
 			],
 		},
 		"packages/app": {
@@ -85,8 +67,6 @@ export const config = defineConfig({
 		"packages/db": {
 			// Migration files are used in the migration
 			entry: [configEntry, "migration/migrations/[0-9][0-9][0-9][0-9]-*.ts"],
-			// Some generated types may not be used in the project and that's ok
-			ignoreIssues: { "src/types.gen.ts": ["types"] },
 		},
 		"packages/mutations": {
 			ignoreIssues: {
@@ -94,15 +74,9 @@ export const config = defineConfig({
 				"src/cache/**/get*.ts": ["nsExports"],
 			},
 		},
-		"testing/vitest": {
-			entry: [],
-			// Loaded by Vitest coverage
-			ignoreDependencies: ["@vitest/coverage-v8"],
-		},
 		"utils/lint": {
 			// Loaded by specifier in config.ts
 			ignoreDependencies: [
-				"oxlint-plugin-eslint",
 				"@tanstack/eslint-plugin-router",
 				"eslint-plugin-better-tailwindcss",
 				"eslint-plugin-package-json",
