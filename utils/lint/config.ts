@@ -1,4 +1,4 @@
-import { getLintConfig } from "@luixo/configs";
+import { getLintConfig } from "@oxiul/configs";
 import htmlTags from "html-tags";
 import type { DummyRule } from "oxlint";
 import { omit } from "remeda";

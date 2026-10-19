@@ -8,7 +8,7 @@
 		"lint": "bun --cwd ../.. oxlint"
 	},
 	"devDependencies": {
-		"@luixo/configs": "catalog:",
+		"@oxiul/configs": "catalog:",
 		"@tanstack/eslint-plugin-router": "^1.162.0",
 		"eslint-plugin-better-tailwindcss": "^4.9.1",
 		"eslint-plugin-package-json": "^1.10.1",
