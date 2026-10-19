@@ -7,7 +7,7 @@
 		"knip": "bun --cwd ../.. knip"
 	},
 	"devDependencies": {
-		"@luixo/configs": "catalog:",
+		"@oxiul/configs": "catalog:",
 		"knip": "^6.38.0"
 	}
 }

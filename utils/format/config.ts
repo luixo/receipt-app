@@ -1,4 +1,4 @@
-import { getFormatConfig } from "@luixo/configs";
+import { getFormatConfig } from "@oxiul/configs";
 
 export const config = getFormatConfig({
 	tailwind: {

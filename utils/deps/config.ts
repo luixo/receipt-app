@@ -1,4 +1,4 @@
-import { getKnipConfig } from "@luixo/configs";
+import { getKnipConfig } from "@oxiul/configs";
 
 const playwrightTestEntry = "**/*.spec.ts";
 const configEntry = "**/*.config.ts";

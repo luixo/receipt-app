@@ -11,7 +11,7 @@
         "remeda": "^2.25.0",
       },
       "devDependencies": {
-        "@luixo/configs": "catalog:",
+        "@oxiul/configs": "catalog:",
         "@opencode/plugin": "^2.0.22",
         "@types/node": "^26.0.0",
         "@types/react": "^19.2.11",
@@ -341,7 +341,7 @@
       "name": "@ra/deps",
       "version": "0.0.0",
       "devDependencies": {
-        "@luixo/configs": "catalog:",
+        "@oxiul/configs": "catalog:",
         "knip": "^6.38.0",
       },
     },
@@ -349,7 +349,7 @@
       "name": "@ra/format",
       "version": "0.0.0",
       "devDependencies": {
-        "@luixo/configs": "catalog:",
+        "@oxiul/configs": "catalog:",
         "oxfmt": "^0.73.0",
       },
     },
@@ -357,7 +357,7 @@
       "name": "@ra/lint",
       "version": "0.0.0",
       "devDependencies": {
-        "@luixo/configs": "catalog:",
+        "@oxiul/configs": "catalog:",
         "@tanstack/eslint-plugin-router": "^1.162.0",
         "eslint-plugin-better-tailwindcss": "^4.9.1",
         "eslint-plugin-package-json": "^1.10.1",
@@ -379,7 +379,7 @@
   },
   "trustedDependencies": [
     "esbuild",
-    "@luixo/configs",
+    "@oxiul/configs",
   ],
   "patchedDependencies": {
     "react-native-color-matrix-image-filters@8.0.2": "patches/react-native-color-matrix-image-filters-npm-8.0.2.patch",
@@ -400,7 +400,7 @@
     "@faker-js/faker": "^10.6.0",
     "@heroui/react": "2.8.4",
     "@heroui/theme": "2.4.22",
-    "@luixo/configs": "0.3.2",
+    "@oxiul/configs": "0.3.2",
     "@playwright/test": "1.63.0",
     "@react-native-vector-icons/lucide": "13.1.4",
     "@tanstack/react-query": "5.80.6",
@@ -1169,7 +1169,7 @@
 
     "@kwsites/file-exists": ["@kwsites/file-exists@1.1.1", "", { "dependencies": { "debug": "^4.1.1" } }, "sha512-m9/5YGR18lIwxSFDwfE3oA7bWuq9kdau6ugN4H2rJeyhFQZcG9AgSHkQtSD15a8WvTgfz9aikZMrKPHvbpqFiw=="],
 
-    "@luixo/configs": ["@luixo/configs@0.3.2", "", { "dependencies": { "cosmiconfig": "^10.0.1", "listr2": "^11.4.0", "oxlint-plugin-eslint": "^1.88.0", "zod": "^4.6.7" }, "peerDependencies": { "knip": "^6.42.0", "oxfmt": "^0.73.0", "oxlint": "^1.88.0" } }, "sha512-Wh3O5PnZ5hYRz7NyB7wZRrR/O00yd63wJ+RO8ka764LkdW6MDRSj0I38kKB22Kv1Zeua7n2qIxjcRmA3wpQ+ww=="],
+    "@oxiul/configs": ["@oxiul/configs@0.3.2", "", { "dependencies": { "cosmiconfig": "^10.0.1", "listr2": "^11.4.0", "oxlint-plugin-eslint": "^1.88.0", "zod": "^4.6.7" }, "peerDependencies": { "knip": "^6.42.0", "oxfmt": "^0.73.0", "oxlint": "^1.88.0" } }, "sha512-Wh3O5PnZ5hYRz7NyB7wZRrR/O00yd63wJ+RO8ka764LkdW6MDRSj0I38kKB22Kv1Zeua7n2qIxjcRmA3wpQ+ww=="],
 
     "@msgpackr-extract/msgpackr-extract-darwin-arm64": ["@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ=="],
 
@@ -4841,7 +4841,7 @@
 
     "@json-render/core/zod": ["zod@4.4.3", "", {}, "sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ=="],
 
-    "@luixo/configs/zod": ["zod@4.6.7", "", {}, "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="],
+    "@oxiul/configs/zod": ["zod@4.6.7", "", {}, "sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg=="],
 
     "@npmcli/agent/http-proxy-agent": ["http-proxy-agent@7.0.2", "", { "dependencies": { "agent-base": "^7.1.0", "debug": "^4.3.4" } }, "sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig=="],
 

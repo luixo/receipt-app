@@ -1,4 +1,4 @@
-import type { Config } from "@luixo/configs";
+import type { Config } from "@oxiul/configs";
 
 const config: Config = {
 	preCommitCommands: [
