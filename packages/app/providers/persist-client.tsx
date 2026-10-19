@@ -37,7 +37,7 @@ export const PersisterProvider: React.FC<Props> = ({ storage, children }) => {
 		() => ({
 			persister: createAsyncStoragePersister({ storage }),
 			maxAge: Temporal.Duration.from({ months: 1 }).total({
-				unit: "seconds",
+				unit: "milliseconds",
 				relativeTo: Temporal.Now.plainDateISO(),
 			}),
 			dehydrateOptions: {

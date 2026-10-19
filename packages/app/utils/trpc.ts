@@ -140,7 +140,7 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 		queries: {
 			retry: false,
 			retryOnMount: true,
-			staleTime: Temporal.Duration.from({ minutes: 1 }).total("seconds"),
+			staleTime: Temporal.Duration.from({ minutes: 1 }).total("milliseconds"),
 			refetchOnWindowFocus: !import.meta.env.DEV,
 		},
 	},
