@@ -400,6 +400,37 @@ describe("receipts.getPaged", () => {
 			});
 
 			describe("lookup filter", () => {
+				test.for(["milk(", "a[b", "a.b"])(
+					"treats regex punctuation literally: %s",
+					async (name, { ctx }) => {
+						const { sessionId, userId } = await insertUserWithSession(ctx);
+						const otherUser = await insertUser(ctx);
+						// Verify unrelated data doesn't affect the result
+						await insertReceipt(ctx, otherUser.id, { name });
+						const receipt = await insertReceipt(ctx, userId, { name });
+						const item = await insertReceiptItem(ctx, receipt.id, { name });
+						const caller = createCaller(createAuthContext(ctx, sessionId));
+						const result = await caller.procedure({
+							limit: 3,
+							cursor: 0,
+							orderBy: "date-desc",
+							filters: { query: name },
+						});
+						expect(result).toStrictEqual<typeof result>({
+							count: 1,
+							cursor: 0,
+							items: [
+								{
+									id: receipt.id,
+									highlights: [[0, name.length]],
+									matchedItems: [
+										{ id: item.id, highlights: [[0, name.length]] },
+									],
+								},
+							],
+						});
+					},
+				);
 				describe("name match", () => {
 					test("full match", async ({ ctx }) => {
 						await runFunctionalTest(ctx, {
