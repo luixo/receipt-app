@@ -75,7 +75,8 @@ const getTrigramHighlight = ({
 			}
 			const filterQueryTrigrams = Array.from(trigramsForString(query))
 				.map((trigram) => trigram.trim())
-				.filter((trigram) => trigram.length >= 3);
+				.filter((trigram) => trigram.length >= 3)
+				.map((trigram) => RegExp.escape(trigram));
 			/* c8 ignore start */
 			if (filterQueryTrigrams.length === 0) {
 				return [];
