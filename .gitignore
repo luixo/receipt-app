@@ -11,3 +11,4 @@
 
 # Temporary files (needed for Playwright screenshots in Docker)
 .tmp
+/.worktrees/
