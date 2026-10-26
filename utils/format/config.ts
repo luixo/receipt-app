@@ -25,6 +25,9 @@ export const config = getFormatConfig({
 		],
 	},
 	ignorePatterns: [
+		// These files must match the workflow generator byte-for-byte.
+		".github/workflows/*.yml",
+		".github/actions/**/*.yml",
 		"**/*-snapshots/**/*.json",
 		"**/*.gen.ts",
 		"**/uniwind-types.d.ts",
