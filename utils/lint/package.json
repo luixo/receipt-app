@@ -5,7 +5,7 @@
 	"sideEffects": false,
 	"main": "config.ts",
 	"scripts": {
-		"lint": "bun --cwd ../.. oxlint"
+		"lint": "bun --cwd ../.. lint --no-script"
 	},
 	"devDependencies": {
 		"@oxiul/configs": "catalog:",

@@ -91,9 +91,8 @@ export const searchParamsWithDefaults = <
 		validateSearch: schema,
 		search: {
 			middlewares: [
-				// Apparently, the type inference is different in linter and typescript compiler
 				// Any is needed because we don't use search middleware functions
-				// oxlint-disable-next-line typescript/no-unnecessary-type-assertion typescript/no-explicit-any
+				// oxlint-disable-next-line typescript/no-explicit-any
 				stripSearchParams(defaultValues) as SearchMiddleware<any>,
 			],
 		},

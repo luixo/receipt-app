@@ -54,6 +54,8 @@ jobs:
       - uses: ./.github/actions/setup-env
       - name: Run linter
         run: bun run lint
+      - name: Verify syntax restrictions
+        run: bun test utils/lint/config.test.ts
 
   deps:
     name: Dependencies

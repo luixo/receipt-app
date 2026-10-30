@@ -3,6 +3,10 @@
 Run `bun run lint` to lint; `bun run lint:fix` to auto-fix.
 Run `bun run format` to format.
 
+Linting requires Bun canary (`bun upgrade --canary`); the stable Bun release does not yet include `bun lint`.
+CI reads `bun@canary` from `package.json`. The syntax restrictions run natively in Bun; the other custom ESLint plugins remain enabled.
+Run `bun test utils/lint/config.test.ts` to verify restricted import and export selectors.
+
 ## Replacements for banned APIs
 
 When the linter flags a banned API, use these alternatives:

@@ -1,7 +1,7 @@
 import { getLintConfig } from "@oxiul/configs";
 import htmlTags from "html-tags";
 import type { DummyRule } from "oxlint";
-import { omit } from "remeda";
+import { mapKeys, omit } from "remeda";
 
 type RestrictedTag =
 	// These can be used in server environment
@@ -31,7 +31,7 @@ const restrictedImports: ((
 })[] = [
 	{
 		// see https://eslint.org/docs/latest/extend/selectors#known-issues
-		from: String.raw`~mutations\u002F.*`,
+		from: /^~mutations\/.*/,
 		imports: [
 			{
 				actual: "options",
@@ -40,7 +40,7 @@ const restrictedImports: ((
 		],
 	},
 	{
-		from: String.raw`~mutations\u002Fcache\u002F.*`,
+		from: /^~mutations\/cache\/.*/,
 		imports: [
 			{
 				actual: "update",
@@ -123,6 +123,8 @@ const getSelector = (input: string | RegExp) =>
 	input instanceof RegExp
 		? `/${input.source.replaceAll("/", String.raw`u002F`)}/`
 		: `'${input}'`;
+const getNativeRuleName = (name: string) =>
+	name === "eslint-js/no-restricted-syntax" ? "no-restricted-syntax" : name;
 const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
 		selector:
@@ -170,15 +172,14 @@ const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 					? `Prefer renaming '${actual.toString()}' to '${importValue.expected}'`
 					: importValue.message;
 			const importSelector = getSelector(actual);
-			const actualExpression = `ImportSpecifier[local.name=${importSelector}]`;
 			return [
 				{
-					selector: `ImportDeclaration[source.value=${valueSelector}]${actualExpression ? ` > ${actualExpression}` : ""}`,
+					selector: `ImportDeclaration[source.value=${valueSelector}] > ImportSpecifier[local.name=${importSelector}]`,
 					message,
 					omitTags,
 				},
 				{
-					selector: `ExportNamedDeclaration[source.value=${valueSelector}]${actualExpression ? ` > ${actualExpression}` : ""}`,
+					selector: `ExportNamedDeclaration[source.value=${valueSelector}] > ExportSpecifier[exported.name=${importSelector}]`,
 					message,
 					omitTags,
 				},
@@ -265,7 +266,6 @@ export const config = getLintConfig({
 			"page.expectUrl",
 		],
 	},
-	jsPlugins: [{ name: "eslint-js", specifier: "oxlint-plugin-eslint" }],
 	env: {
 		node: true,
 	},
@@ -469,4 +469,17 @@ export const config = getLintConfig({
 			},
 		},
 	],
-});
+}).then((baseConfig) => ({
+	...baseConfig,
+	// @oxiul/configs still uses the plugin name while merging syntax restrictions.
+	jsPlugins: baseConfig.jsPlugins?.filter((plugin) =>
+		typeof plugin === "string"
+			? plugin !== "oxlint-plugin-eslint"
+			: plugin.name !== "eslint-js",
+	),
+	rules: mapKeys(baseConfig.rules ?? {}, getNativeRuleName),
+	overrides: baseConfig.overrides?.map((override) => ({
+		...override,
+		rules: mapKeys(override.rules ?? {}, getNativeRuleName),
+	})),
+}));
