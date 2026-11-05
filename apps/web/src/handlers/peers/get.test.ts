@@ -136,7 +136,7 @@ describe("peers.get", () => {
 				const {
 					id: foreignUserId,
 					email: foreignEmail,
-					avatarUrl: foreignAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 				// Verify other peers do not interfere
 				await insertPeer(ctx, userId);
@@ -151,7 +151,7 @@ describe("peers.get", () => {
 					connectedUser: {
 						id: foreignUserId,
 						email: foreignEmail,
-						avatarUrl: foreignAvatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${foreignUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					},
 					name,
 					publicName,
@@ -162,7 +162,7 @@ describe("peers.get", () => {
 				const { sessionId, userId } = await insertUserWithSession(ctx);
 				const { id: foreignUserId, email: foreignEmail } = await insertUser(
 					ctx,
-					{ avatarUrl: null },
+					{ avatarTimestamp: null },
 				);
 				// Verify other peers do not interfere
 				await insertPeer(ctx, userId);

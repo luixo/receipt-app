@@ -261,7 +261,7 @@ describe("receiptParticipants.add", () => {
 			const { id: anotherReceiptId } = await insertReceipt(ctx, userId);
 			const peer = await insertPeer(ctx, userId);
 			const { id: foreignUserId } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 			const [foreignPeer, { id: foreignToSelfPeerId }] =
 				await insertConnectedPeers(ctx, [userId, foreignUserId]);

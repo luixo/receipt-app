@@ -6,6 +6,7 @@ import { passwordSchema } from "~app/utils/validation";
 import { getHash } from "~utils/server/crypto";
 import { createAuthorizationSession } from "~web/handlers/auth/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 import { emailSchema } from "~web/handlers/validation";
 import { setCookie } from "~web/utils/cookies";
 
@@ -38,7 +39,7 @@ export const procedure = unauthProcedure
 				"users.role",
 				"peers.name",
 				"users.confirmationToken",
-				"users.avatarUrl",
+				"users.avatarTimestamp",
 			])
 			.limit(1)
 			.executeTakeFirst();
@@ -74,7 +75,7 @@ export const procedure = unauthProcedure
 			user: {
 				id: result.userId,
 				verified: !result.confirmationToken,
-				avatarUrl: result.avatarUrl || undefined,
+				avatarUrl: getAvatarUrl(result.userId, result.avatarTimestamp),
 				role: result.role ?? undefined,
 			},
 			peer: {

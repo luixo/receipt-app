@@ -513,7 +513,7 @@ describe("receipts.get", () => {
 		test("foreign receipt", async ({ ctx }) => {
 			const { sessionId, userId } = await insertUserWithSession(ctx);
 			const { id: connectedUserId } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 			const { id: foreignUserId, peerId: foreignSelfPeerId } =
 				await insertUser(ctx);

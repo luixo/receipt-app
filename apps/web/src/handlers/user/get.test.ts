@@ -21,7 +21,7 @@ describe("user.get", () => {
 				sessionId,
 				userId,
 				name,
-				user: { avatarUrl, email },
+				user: { avatarTimestamp, email },
 			} = await insertUserWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
@@ -32,7 +32,7 @@ describe("user.get", () => {
 					id: userId,
 					email,
 					verified: true,
-					avatarUrl,
+					avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${userId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					role: undefined,
 				},
 				peer: { name },
@@ -46,7 +46,7 @@ describe("user.get", () => {
 				name,
 				user: { email },
 			} = await insertUserWithSession(ctx, {
-				user: { confirmation: {}, avatarUrl: null },
+				user: { confirmation: {}, avatarTimestamp: null },
 			});
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
@@ -69,7 +69,7 @@ describe("user.get", () => {
 				sessionId,
 				userId,
 				name,
-				user: { avatarUrl, email },
+				user: { avatarTimestamp, email },
 			} = await insertUserWithSession(ctx, { user: { role: "role" } });
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
@@ -80,7 +80,7 @@ describe("user.get", () => {
 					id: userId,
 					email,
 					verified: true,
-					avatarUrl,
+					avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${userId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					role: "role",
 				},
 				peer: { name },

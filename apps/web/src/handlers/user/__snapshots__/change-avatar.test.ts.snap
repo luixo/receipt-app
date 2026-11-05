@@ -5,8 +5,20 @@ exports[`user.changeAvatar > functionality > avatar changes to a given image 1`]
   "updated": {
     "users": {
       "id:09ca8fd7-b571-45a3-9a2f-0aec2f32c47a": {
-        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/09ca8fd7-b571-45a3-9a2f-0aec2f32c47a.png?lastModified=1577836800000",
+        "avatarTimestamp": "2020-01-01 00:00:00+00",
         "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`user.changeAvatar > functionality > avatar changes to null > already removed 1`] = `
+{
+  "updated": {
+    "users": {
+      "id:111fae5d-5adc-4a50-a691-b9235e73cda8": {
+        "updatedAt": "2020-01-01 00:02:00+00",
       },
     },
   },
@@ -18,7 +30,20 @@ exports[`user.changeAvatar > functionality > avatar changes to null 1`] = `
   "updated": {
     "users": {
       "id:111fae5d-5adc-4a50-a691-b9235e73cda8": {
-        "avatarUrl": null,
+        "avatarTimestamp": null,
+        "updatedAt": "2020-01-01 00:01:00+00",
+      },
+    },
+  },
+}
+`;
+
+exports[`user.changeAvatar > functionality > uploads an avatar when none exists 1`] = `
+{
+  "updated": {
+    "users": {
+      "id:33921477-4ea6-4f01-85e5-73473f8c2a32": {
+        "avatarTimestamp": "2020-01-01 00:00:00+00",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
     },

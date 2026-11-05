@@ -22,7 +22,10 @@ const getUserShape = (
 	user: {
 		id: user.id,
 		email: user.email,
-		avatarUrl: user.avatarUrl,
+		avatarUrl:
+			user.avatarTimestamp === null
+				? undefined
+				: `https://fake-endpoint.org/test-bucket/avatars/${user.id}.png?lastModified=${user.avatarTimestamp.epochMilliseconds}`,
 	},
 	peer: peer ? { id: peer.id, name: peer.name } : undefined,
 });
@@ -37,9 +40,9 @@ describe("admin.users", () => {
 			const { userId, sessionId } = await insertUserWithSession(ctx, {
 				user: { role: "admin" },
 			});
-			const foreignUser = await insertUser(ctx, { avatarUrl: null });
+			const foreignUser = await insertUser(ctx, { avatarTimestamp: null });
 			const anotherForeignUser = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 			const connectedUser = await insertUser(ctx);
 			const [foreignPeer] = await insertConnectedPeers(ctx, [

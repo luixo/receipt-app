@@ -16,7 +16,7 @@ export const getValidReceiptItem = (receiptId = faker.string.uuid()) => ({
 	receiptId,
 	name: faker.lorem.words(),
 	price: Number(faker.finance.amount()),
-	quantity: faker.number.int({ max: 100 }),
+	quantity: faker.number.int({ min: 1, max: 100 }),
 });
 
 export const verifyName = <T>(

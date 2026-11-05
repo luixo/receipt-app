@@ -12,8 +12,10 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
 import { t } from "~web/handlers/trpc";
+import { env } from "~web/utils/env";
 
-import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
+import { procedure } from "./change-avatar";
+import { S3_AVATAR_PREFIX } from "./utils";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -188,6 +190,11 @@ describe("user.changeAvatar", () => {
 			);
 			expect(result).toStrictEqual<typeof result>(undefined);
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(0);
+			await expectDatabaseDiffSnapshot(
+				ctx,
+				() => caller.procedure(getFormData()),
+				"already removed",
+			);
 		});
 
 		test("avatar changes to a given image", async ({ ctx }) => {
@@ -205,11 +212,9 @@ describe("user.changeAvatar", () => {
 				),
 			);
 			const key = [S3_AVATAR_PREFIX, `${userId}.png`].join("/");
-			const url = `${[
-				ctx.s3Options.mock.endpoint,
-				ctx.s3Options.mock.bucket,
-				key,
-			].join("/")}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
+			const url = `${[env.S3_ENDPOINT, env.S3_BUCKET, key].join(
+				"/",
+			)}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
 			expect(result).toStrictEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
 			const [message] = ctx.s3Options.mock.getMessages();
@@ -220,6 +225,24 @@ describe("user.changeAvatar", () => {
 				key,
 				objectLength: message.objectLength,
 			});
+		});
+
+		test("uploads an avatar when none exists", async ({ ctx }) => {
+			// Verify unrelated data doesn't affect the result
+			await insertUserWithSession(ctx);
+			const { sessionId, user } = await insertUserWithSession(ctx, {
+				user: { avatarTimestamp: null },
+			});
+			expect(user.avatarTimestamp).toBeNull();
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await expectDatabaseDiffSnapshot(ctx, async () =>
+				caller.procedure(
+					await generateFormWithImage(
+						MAX_AVATAR_SIDE_SIZE,
+						MAX_AVATAR_SIDE_SIZE,
+					),
+				),
+			);
 		});
 	});
 });

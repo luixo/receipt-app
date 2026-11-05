@@ -98,7 +98,7 @@ describe("auth.login", () => {
 		test("login successful", async ({ ctx }) => {
 			const {
 				userId,
-				user: { email, password, avatarUrl },
+				user: { email, password, avatarTimestamp },
 				name,
 			} = await insertUserWithSession(ctx);
 			const context = createContext(ctx);
@@ -107,7 +107,12 @@ describe("auth.login", () => {
 				caller.procedure({ email, password }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				user: { id: userId, verified: true, avatarUrl, role: undefined },
+				user: {
+					id: userId,
+					verified: true,
+					avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${userId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
+					role: undefined,
+				},
 				peer: { name },
 			});
 			const responseHeaders = [...context.resHeaders.entries()];
@@ -135,7 +140,7 @@ describe("auth.login", () => {
 				user: { email, password },
 				name,
 			} = await insertUserWithSession(ctx, {
-				user: { confirmation: {}, avatarUrl: null },
+				user: { confirmation: {}, avatarTimestamp: null },
 			});
 			const context = createContext(ctx);
 			const caller = createCaller(context);

@@ -257,7 +257,7 @@ describe("userConnectionIntentions.add", () => {
 				const {
 					email: otherEmail,
 					id: otherUserId,
-					avatarUrl: otherAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 
 				const { id: peerId, name: peerName } = await insertPeer(ctx, userId);
@@ -279,7 +279,7 @@ describe("userConnectionIntentions.add", () => {
 					user: {
 						id: otherUserId,
 						email: otherEmail,
-						avatarUrl: otherAvatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${otherUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					},
 					connected: false,
 					peer: { name: peerName },
@@ -296,7 +296,7 @@ describe("userConnectionIntentions.add", () => {
 				const {
 					id: otherUserId,
 					email: otherEmail,
-					avatarUrl: otherAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 
 				await insertPeer(ctx, otherUserId, {
@@ -313,7 +313,7 @@ describe("userConnectionIntentions.add", () => {
 					user: {
 						id: otherUserId,
 						email: otherEmail,
-						avatarUrl: otherAvatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${otherUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					},
 					connected: true,
 					peer: { name: peerName },
@@ -323,7 +323,7 @@ describe("userConnectionIntentions.add", () => {
 			test("avatar url does not exist", async ({ ctx }) => {
 				const { sessionId, userId } = await insertUserWithSession(ctx);
 				const { id: otherUserId, email: otherEmail } = await insertUser(ctx, {
-					avatarUrl: null,
+					avatarTimestamp: null,
 				});
 
 				await insertPeer(ctx, otherUserId, {
@@ -352,7 +352,7 @@ describe("userConnectionIntentions.add", () => {
 				const {
 					email: otherEmail,
 					id: otherUserId,
-					avatarUrl: otherAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 
 				const { id: peerId, name: peerName } = await insertPeer(ctx, userId);
@@ -365,7 +365,7 @@ describe("userConnectionIntentions.add", () => {
 					user: {
 						id: otherUserId,
 						email: otherEmail,
-						avatarUrl: otherAvatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${otherUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					},
 					connected: false,
 					peer: { name: peerName },
@@ -375,7 +375,7 @@ describe("userConnectionIntentions.add", () => {
 			test("avatar url does not exist", async ({ ctx }) => {
 				const { sessionId, userId } = await insertUserWithSession(ctx);
 				const { email: otherEmail, id: otherUserId } = await insertUser(ctx, {
-					avatarUrl: null,
+					avatarTimestamp: null,
 				});
 
 				const { id: peerId, name: peerName } = await insertPeer(ctx, userId);
@@ -398,7 +398,7 @@ describe("userConnectionIntentions.add", () => {
 			const { sessionId, userId } = await insertUserWithSession(ctx);
 
 			const { id: otherUserId, email: otherEmail } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 
 			await insertPeer(ctx, otherUserId, { connectedUserId: userId });
@@ -406,7 +406,7 @@ describe("userConnectionIntentions.add", () => {
 			const { id: peerId, name: peerName } = await insertPeer(ctx, userId);
 
 			const { email: anotherEmail, id: anotherUserId } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 
 			const { id: anotherPeerId, name: anotherPeerName } = await insertPeer(

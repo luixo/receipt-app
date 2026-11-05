@@ -1,4 +1,5 @@
 import { adminProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 
 export const procedure = adminProcedure
 	.meta({
@@ -22,7 +23,7 @@ export const procedure = adminProcedure
 				"peers.id as peerId",
 				"peers.name",
 				"users.id as userId",
-				"users.avatarUrl",
+				"users.avatarTimestamp",
 				"users.email",
 			])
 			.execute();
@@ -31,7 +32,7 @@ export const procedure = adminProcedure
 				user: {
 					email: element.email,
 					id: element.userId,
-					avatarUrl: element.avatarUrl ?? undefined,
+					avatarUrl: getAvatarUrl(element.userId, element.avatarTimestamp),
 				},
 				peer:
 					element.peerId && element.name

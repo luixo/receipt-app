@@ -6,6 +6,7 @@ import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 import { emailSchema, peerIdSchema } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
@@ -66,7 +67,7 @@ const getTargetUsers = async (
 		)
 		.select([
 			"users.id",
-			"users.avatarUrl",
+			"users.avatarTimestamp",
 			"users.email",
 			"peers.name as peerName",
 			"reciprocalPeers.id as reciprocalPeerId",
@@ -232,7 +233,7 @@ const getIntentionsOrErrors = (
 				targetUser: {
 					id: targetUser.id,
 					email: targetUser.email,
-					avatarUrl: targetUser.avatarUrl,
+					avatarTimestamp: targetUser.avatarTimestamp,
 				},
 				asPeer: {
 					id: intention.peerId,
@@ -248,7 +249,7 @@ const getIntentionsOrErrors = (
 			targetUser: {
 				id: targetUser.id,
 				email: targetUser.email,
-				avatarUrl: targetUser.avatarUrl,
+				avatarTimestamp: targetUser.avatarTimestamp,
 			},
 			asPeer: {
 				id: intention.peerId,
@@ -408,7 +409,10 @@ export const batchFn: BatchLoadContextFn<
 			user: {
 				id: intentionOrError.targetUser.id,
 				email: intentionOrError.targetUser.email,
-				avatarUrl: intentionOrError.targetUser.avatarUrl || undefined,
+				avatarUrl: getAvatarUrl(
+					intentionOrError.targetUser.id,
+					intentionOrError.targetUser.avatarTimestamp,
+				),
 			},
 			connected: Boolean(matchedViceVersaIntention),
 			peer: {

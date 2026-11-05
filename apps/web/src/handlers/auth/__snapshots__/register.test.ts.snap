@@ -26,7 +26,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
     },
     "users": {
       "id:de5ea241-44ca-47ef-a736-a5ac82459079": {
-        "avatarUrl": null,
+        "avatarTimestamp": null,
         "confirmationToken": "f0bc24b0-e797-4768-a3e0-1abbfff5172c",
         "confirmationTokenTimestamp": "2020-01-01 00:00:00+00",
         "createdAt": "2020-01-01 00:00:00+00",
@@ -222,7 +222,7 @@ exports[`auth.register > functionality > register successful 1`] = `
     },
     "users": {
       "id:cd711995-3c83-40a3-945e-c6a067b3eb09": {
-        "avatarUrl": null,
+        "avatarTimestamp": null,
         "confirmationToken": null,
         "confirmationTokenTimestamp": null,
         "createdAt": "2020-01-01 00:00:00+00",
