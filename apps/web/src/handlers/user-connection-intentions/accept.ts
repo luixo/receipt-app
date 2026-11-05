@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { acceptNewIntentions } from "~web/handlers/debt-intentions/accept";
 import { authProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 import { peerIdSchema, userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
@@ -65,7 +66,7 @@ export const procedure = authProcedure
 			.select([
 				"users.id",
 				"users.email",
-				"users.avatarUrl",
+				"users.avatarTimestamp",
 				"userSettings.manualAcceptDebts",
 			])
 			.where("users.id", "in", [input.userId, ctx.auth.userId])
@@ -173,6 +174,6 @@ export const procedure = authProcedure
 		return {
 			email: targetUser.email,
 			id: targetUser.id,
-			avatarUrl: targetUser.avatarUrl || undefined,
+			avatarUrl: getAvatarUrl(targetUser.id, targetUser.avatarTimestamp),
 		};
 	});

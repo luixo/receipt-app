@@ -173,7 +173,7 @@ describe("peers.getForeign", () => {
 				const {
 					id: connectedUserId,
 					email: connectedEmail,
-					avatarUrl: connectedAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 				const { sessionId, userId } = await insertUserWithSession(ctx);
 				const { id: foreignUserId } = await insertUser(ctx);
@@ -208,7 +208,7 @@ describe("peers.getForeign", () => {
 					connectedUser: {
 						id: connectedUserId,
 						email: connectedEmail,
-						avatarUrl: connectedAvatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${connectedUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 					},
 					name,
 					publicName,
@@ -235,7 +235,7 @@ describe("peers.getForeign", () => {
 					connectedUser: {
 						id: userId,
 						email: user.email,
-						avatarUrl: user.avatarUrl,
+						avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${userId}.png?lastModified=${user.avatarTimestamp?.epochMilliseconds}`,
 					},
 					name,
 					publicName: undefined,
@@ -248,7 +248,7 @@ describe("peers.getForeign", () => {
 					id: foreignUserId,
 					email: foreignEmail,
 					peerId: foreignUserPeerId,
-				} = await insertUser(ctx, { avatarUrl: null });
+				} = await insertUser(ctx, { avatarTimestamp: null });
 
 				const [
 					{ id: foreignPeerId, name, publicName },

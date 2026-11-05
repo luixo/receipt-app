@@ -253,7 +253,7 @@ describe("userConnectionIntentions.accept", () => {
 			const {
 				id: foreignUserId,
 				email: foreignEmail,
-				avatarUrl: foreignAvatarUrl,
+				avatarTimestamp,
 			} = await insertUser(ctx);
 			const { id: outerUserId } = await insertUser(ctx);
 			const { id: selfToForeignPeerId } = await insertPeer(ctx, userId);
@@ -283,17 +283,15 @@ describe("userConnectionIntentions.accept", () => {
 			expect(result).toStrictEqual<typeof result>({
 				id: foreignUserId,
 				email: foreignEmail,
-				avatarUrl: foreignAvatarUrl,
+				avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${foreignUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 			});
 		});
 
 		test("empty avatar url is returned", async ({ ctx }) => {
 			const { sessionId, userId } = await insertUserWithSession(ctx);
-			const {
-				id: foreignUserId,
-				email: foreignEmail,
-				avatarUrl: foreignAvatarUrl,
-			} = await insertUser(ctx, { avatarUrl: null });
+			const { id: foreignUserId, email: foreignEmail } = await insertUser(ctx, {
+				avatarTimestamp: null,
+			});
 			const { id: selfToForeignPeerId } = await insertPeer(ctx, userId);
 			await insertPeer(ctx, foreignUserId, {
 				connectedUserId: userId,
@@ -307,7 +305,7 @@ describe("userConnectionIntentions.accept", () => {
 			expect(result).toStrictEqual<typeof result>({
 				id: foreignUserId,
 				email: foreignEmail,
-				avatarUrl: foreignAvatarUrl,
+				avatarUrl: undefined,
 			});
 		});
 

@@ -4,9 +4,8 @@ import { imageSize } from "image-size";
 import { avatarFormSchema } from "~app/utils/validation";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
 import { authProcedure } from "~web/handlers/trpc";
+import { S3_AVATAR_PREFIX, getAvatarUrl } from "~web/handlers/user/utils";
 import { getS3Client } from "~web/providers/s3";
-
-export const S3_AVATAR_PREFIX = "avatars";
 
 const ALLOWED_FORMATS = new Set(["png", "jpg"]);
 
@@ -59,7 +58,7 @@ export const procedure = authProcedure
 		if (!input.avatar) {
 			await database
 				.updateTable("users")
-				.set({ avatarUrl: null })
+				.set({ avatarTimestamp: null })
 				.where("users.id", "=", ctx.auth.userId)
 				.executeTakeFirst();
 			return;
@@ -70,13 +69,11 @@ export const procedure = authProcedure
 		);
 		const avatarKey = [S3_AVATAR_PREFIX, `${ctx.auth.userId}.png`].join("/");
 		await s3Client.putObject(avatarKey, validatedImage);
-		const url = `${[s3Client.endpoint, s3Client.bucket, avatarKey].join(
-			"/",
-		)}?lastModified=${Temporal.Now.instant().epochMilliseconds}`;
+		const avatarTimestamp = Temporal.Now.zonedDateTimeISO();
 		await database
 			.updateTable("users")
-			.set({ avatarUrl: url })
+			.set({ avatarTimestamp })
 			.where("users.id", "=", ctx.auth.userId)
 			.executeTakeFirst();
-		return { url };
+		return { url: getAvatarUrl(ctx.auth.userId, avatarTimestamp) };
 	});

@@ -23,8 +23,6 @@ export const getS3Options = (): S3OptionsMock => {
 				messages.push({ key, objectLength: object.length });
 				return Promise.resolve();
 			},
-			bucket: "test-bucket",
-			endpoint: "https://fake-endpoint.org",
 			getMessages: () => messages,
 		},
 	};

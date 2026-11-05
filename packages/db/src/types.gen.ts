@@ -100,7 +100,7 @@ export interface Session {
 }
 
 export interface User {
-  avatarUrl: string | null;
+  avatarTimestamp: Temporal.ZonedDateTime | null;
   confirmationToken: string | null;
   confirmationTokenTimestamp: Temporal.ZonedDateTime | null;
   createdAt: Generated<Temporal.ZonedDateTime>;

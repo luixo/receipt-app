@@ -5,6 +5,7 @@ import type { PeerId, UserId } from "~db/ids";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 import { peerIdSchema } from "~web/handlers/validation";
 
 const fetchPeers = async (
@@ -26,7 +27,7 @@ const fetchPeers = async (
 			"peers.name",
 			"peers.publicName",
 			"users.id as userId",
-			"users.avatarUrl",
+			"users.avatarTimestamp",
 			"users.email",
 			"reciprocalPeers.id as reciprocalPeerId",
 		])
@@ -44,7 +45,7 @@ const mapPeer = (peer: Awaited<ReturnType<typeof fetchPeers>>[number]) => ({
 			: ({
 					id: peer.userId,
 					email: peer.email,
-					avatarUrl: peer.avatarUrl || undefined,
+					avatarUrl: getAvatarUrl(peer.userId, peer.avatarTimestamp),
 				} as {
 					id: UserId;
 					email: string;

@@ -132,7 +132,7 @@ describe("peers.getPaged", () => {
 				userId,
 				firstUser.id,
 			]);
-			const secondUser = await insertUser(ctx, { avatarUrl: null });
+			const secondUser = await insertUser(ctx, { avatarTimestamp: null });
 			const [connectedPublicNamedPeer] = await insertConnectedPeers(ctx, [
 				{ userId, publicName: "Bob" },
 				secondUser.id,

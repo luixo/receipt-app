@@ -9,8 +9,6 @@ export type S3Options = {
 
 type S3Client = {
 	putObject: (key: string, object: Buffer) => Promise<void>;
-	bucket: string;
-	endpoint: string;
 };
 
 let s3Client: S3Client | undefined = undefined;
@@ -43,8 +41,6 @@ export const getS3Client = (ctx: UnauthorizedContext): S3Client => {
 			});
 			await client.send(command);
 		},
-		bucket: S3_BUCKET,
-		endpoint: S3_ENDPOINT,
 	};
 	return s3Client;
 };

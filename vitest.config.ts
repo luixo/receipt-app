@@ -40,6 +40,8 @@ export default defineConfig({
 		projects: ["apps/*/vitest.config.ts", "packages/*/vitest.config.ts"],
 		pool: "vmThreads",
 		env: {
+			S3_ENDPOINT: "https://fake-endpoint.org",
+			S3_BUCKET: "test-bucket",
 			// This regulates timezone with which expected dates are creates in tests
 			TZ: "UTC",
 		},

@@ -5,11 +5,11 @@ exports[`userConnectionIntentions.accept > functionality > auto-accepted debts >
   "added": {
     "debts": {
       "id:7d12f3b3-df37-437f-b3c7-ea2b605dc97f|ownerUserId:abe3f702-b036-4293-972b-f7c1a164d9cd": {
-        "amount": "-572.3600",
+        "amount": "82.5700",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "BDT",
+        "currencyCode": "XCD",
         "id": "7d12f3b3-df37-437f-b3c7-ea2b605dc97f",
-        "note": "Capillus voluptate caelum adamo vorax cibus callide amplexus celer conventus.",
+        "note": "Mollitia vinum capillus voluptate.",
         "ownerUserId": "abe3f702-b036-4293-972b-f7c1a164d9cd",
         "peerId": "9de5bd27-b8d8-46a6-a55c-a05f98926c07",
         "receiptId": null,
@@ -17,11 +17,11 @@ exports[`userConnectionIntentions.accept > functionality > auto-accepted debts >
         "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:ff41c2ae-f6cd-42ef-a4b6-84eb43292461|ownerUserId:6cd26971-98bb-4120-808c-36555ab43ede": {
-        "amount": "-334.6900",
+        "amount": "-984.3000",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "BOB",
+        "currencyCode": "DJF",
         "id": "ff41c2ae-f6cd-42ef-a4b6-84eb43292461",
-        "note": "Sint speculum tepesco vomica soleo adflicto colligo.",
+        "note": "Callide amplexus celer conventus annus.",
         "ownerUserId": "6cd26971-98bb-4120-808c-36555ab43ede",
         "peerId": "5bfaa329-134b-441e-a055-d9918cb8660f",
         "receiptId": null,
@@ -46,11 +46,11 @@ exports[`userConnectionIntentions.accept > functionality > auto-accepted debts >
   "added": {
     "debts": {
       "id:13990d75-a4bc-4362-b25e-584a75f1647d|ownerUserId:f0f4b79f-f569-41d9-95e6-8539b0e7f7da": {
-        "amount": "158.6900",
+        "amount": "-343.5000",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "CZK",
+        "currencyCode": "AMD",
         "id": "13990d75-a4bc-4362-b25e-584a75f1647d",
-        "note": "Et ulterius denuncio vereor omnis.",
+        "note": "Varietas articulus considero et.",
         "ownerUserId": "f0f4b79f-f569-41d9-95e6-8539b0e7f7da",
         "peerId": "e484109b-1e5b-42ae-aad1-0e0eddffa2be",
         "receiptId": null,

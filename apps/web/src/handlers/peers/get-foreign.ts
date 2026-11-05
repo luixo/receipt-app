@@ -6,6 +6,7 @@ import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { getParticipantsReceipts } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 import { peerIdSchema } from "~web/handlers/validation";
 
 // We allow  user fetch foreign peers
@@ -45,7 +46,7 @@ const fetchPeers = async (ctx: AuthorizedContext, ids: PeerId[]) =>
 			"peersMine.publicName as minePublicName",
 			"users.id as userId",
 			"users.email",
-			"users.avatarUrl",
+			"users.avatarTimestamp",
 			"peersTheir.id as theirId",
 			"peersTheir.name as theirName",
 			"peersTheir.publicName as theirPublicName",
@@ -57,7 +58,7 @@ const fetchPeers = async (ctx: AuthorizedContext, ids: PeerId[]) =>
 			"peersMine.publicName",
 			"users.id",
 			"users.email",
-			"users.avatarUrl",
+			"users.avatarTimestamp",
 			"peersTheir.id",
 			"peersTheir.name",
 			"peersTheir.publicName",
@@ -83,7 +84,7 @@ const mapPeer = (peer: Awaited<ReturnType<typeof fetchPeers>>[number]) => {
 			connectedUser: {
 				id: peer.userId,
 				email: peer.email,
-				avatarUrl: peer.avatarUrl || undefined,
+				avatarUrl: getAvatarUrl(peer.userId, peer.avatarTimestamp),
 			} as
 				| {
 						id: UserId;

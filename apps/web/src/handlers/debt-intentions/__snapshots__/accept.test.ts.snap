@@ -5,11 +5,11 @@ exports[`debtIntentions.accept > functionality > debt did not exist on our  user
   "added": {
     "debts": {
       "id:a720dafa-99fe-4b9b-bb62-92e1d2d10948|ownerUserId:ca436da1-7e15-4442-8763-fbbba2a806e6": {
-        "amount": "-450.1100",
+        "amount": "196.6600",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "CRC",
+        "currencyCode": "GYD",
         "id": "a720dafa-99fe-4b9b-bb62-92e1d2d10948",
-        "note": "Deprecator repellat attonbitus soleo somnus talio aer auxilium contigo.",
+        "note": "Defaeco tenuis deprecator repellat attonbitus soleo.",
         "ownerUserId": "ca436da1-7e15-4442-8763-fbbba2a806e6",
         "peerId": "8d4d58ed-67b0-4ea8-b40b-619ff4769d8f",
         "receiptId": "a0133a29-6e50-4610-9740-a6b9421bda82",
@@ -26,8 +26,8 @@ exports[`debtIntentions.accept > functionality > debt existed on our  user befor
   "updated": {
     "debts": {
       "id:8afae919-a24e-4ea2-912b-c7056d2173b1|ownerUserId:947e74fa-8e48-4733-8ba4-c4474afc99ab": {
-        "amount": "129.3200",
-        "currencyCode": "XOF",
+        "amount": "21.4500",
+        "currencyCode": "MGA",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
@@ -41,8 +41,8 @@ exports[`debtIntentions.accept > functionality > debt existed on our  user befor
   "updated": {
     "debts": {
       "id:f740eadf-c639-4879-9cc5-ebfe5e73b22f|ownerUserId:ba3e5908-7197-4a4a-9450-3e85d53be5aa": {
-        "amount": "-307.1100",
-        "currencyCode": "PGK",
+        "amount": "-881.5600",
+        "currencyCode": "SDG",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -56,11 +56,11 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
   "added": {
     "debts": {
       "id:53ea6480-fb35-4af8-aa39-7512c00f7942|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
-        "amount": "-891.4400",
+        "amount": "-227.6500",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "BSD",
+        "currencyCode": "CZK",
         "id": "53ea6480-fb35-4af8-aa39-7512c00f7942",
-        "note": "Coepi arx capillus odit natus altus cohors.",
+        "note": "Viduo audeo amplus aperte carpo vallum exercitationem coepi arx.",
         "ownerUserId": "23e84239-9142-44d8-8eef-6c8da9fd21fa",
         "peerId": "e15ca8d8-3098-4115-8e61-1969d3882c2f",
         "receiptId": null,
@@ -72,14 +72,14 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
   "updated": {
     "debts": {
       "id:4cf9dbb9-533b-45e6-b9ab-af9c177fe39a|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
-        "amount": "590.0500",
-        "currencyCode": "PLN",
+        "amount": "551.5600",
+        "currencyCode": "TOP",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:02:00+00",
       },
       "id:683719a8-df12-46a8-8295-4701aca86cf9|ownerUserId:23e84239-9142-44d8-8eef-6c8da9fd21fa": {
-        "amount": "-642.6300",
-        "currencyCode": "HNL",
+        "amount": "-508.7100",
+        "currencyCode": "TWD",
         "timestamp": "2020-04-01",
         "updatedAt": "2020-01-01 00:01:00+00",
       },
@@ -93,11 +93,11 @@ exports[`debtIntentions.accept > input verification > mixed success and fail 1`]
   "added": {
     "debts": {
       "id:62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb|ownerUserId:1d263b1a-801e-44e4-a018-32c2cbc9f60e": {
-        "amount": "-981.5400",
+        "amount": "-366.7700",
         "createdAt": "2020-01-01 00:00:00+00",
-        "currencyCode": "BAM",
+        "currencyCode": "SBD",
         "id": "62b0c6d3-e86a-4bf4-a3a0-fb68601eeaeb",
-        "note": "Cresco temperantia asporto.",
+        "note": "Aggero cresco temperantia asporto vesica suadeo atrox calculus aer cogo.",
         "ownerUserId": "1d263b1a-801e-44e4-a018-32c2cbc9f60e",
         "peerId": "c7cab743-27b6-49ee-a52a-d0a9e3dfa5b3",
         "receiptId": "e6ada951-0179-4108-b2be-222cbc95533e",

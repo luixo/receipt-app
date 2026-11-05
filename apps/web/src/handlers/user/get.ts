@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import { authProcedure } from "~web/handlers/trpc";
+import { getAvatarUrl } from "~web/handlers/user/utils";
 
 export const procedure = authProcedure
 	.meta({
@@ -10,7 +11,7 @@ export const procedure = authProcedure
 	})
 	.query(async ({ ctx }) => {
 		const { database } = ctx;
-		const { confirmationToken, id, name, avatarUrl, email, role } =
+		const { confirmationToken, id, name, avatarTimestamp, email, role } =
 			await database
 				.selectFrom("users")
 				.innerJoin("peers", (jb) => jb.onRef("peers.id", "=", "users.id"))
@@ -18,7 +19,7 @@ export const procedure = authProcedure
 					"users.id",
 					"peers.name",
 					"users.confirmationToken",
-					"users.avatarUrl",
+					"users.avatarTimestamp",
 					"users.email",
 					"users.role",
 				])
@@ -37,7 +38,7 @@ export const procedure = authProcedure
 				id,
 				email,
 				verified: !confirmationToken,
-				avatarUrl: avatarUrl || undefined,
+				avatarUrl: getAvatarUrl(id, avatarTimestamp),
 				role: role ?? undefined,
 			},
 			peer: { name },

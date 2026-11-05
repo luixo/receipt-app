@@ -210,7 +210,7 @@ describe("peers.add", () => {
 				const {
 					id: otherUserId,
 					email: otherEmail,
-					avatarUrl: otherAvatarUrl,
+					avatarTimestamp,
 				} = await insertUser(ctx);
 				// Self  user
 				const { sessionId, userId } = await insertUserWithSession(ctx);
@@ -234,7 +234,7 @@ describe("peers.add", () => {
 						user: {
 							id: otherUserId,
 							email: otherEmail,
-							avatarUrl: otherAvatarUrl,
+							avatarUrl: `https://fake-endpoint.org/test-bucket/avatars/${otherUserId}.png?lastModified=${avatarTimestamp?.epochMilliseconds}`,
 						},
 						peer: { name: asName },
 					},
@@ -245,7 +245,7 @@ describe("peers.add", () => {
 			test("doesn't have a vice versa intention", async ({ ctx }) => {
 				// Foreign  user
 				const { email: otherEmail, id: otherUserId } = await insertUser(ctx, {
-					avatarUrl: null,
+					avatarTimestamp: null,
 				});
 				// Self  user
 				const { sessionId } = await insertUserWithSession(ctx);
@@ -280,12 +280,12 @@ describe("peers.add", () => {
 
 			// Direct intention foreign  user
 			const { email: anotherEmail, id: anotherUserId } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 
 			// Vice versa intention foreign  user
 			const { id: otherUserId, email: otherEmail } = await insertUser(ctx, {
-				avatarUrl: null,
+				avatarTimestamp: null,
 			});
 			// Foreign  user's intention to connect to self  user
 			await insertPeer(ctx, otherUserId, {

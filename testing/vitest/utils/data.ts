@@ -69,7 +69,7 @@ export const insertPeer = async (
 type UserData = {
 	id?: UserId;
 	email?: string;
-	avatarUrl?: string | null;
+	avatarTimestamp?: Temporal.ZonedDateTime | null;
 	password?: string;
 	confirmation?: {
 		token?: string;
@@ -92,7 +92,7 @@ export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 		email,
 		confirmationToken,
 		confirmationTokenTimestamp,
-		avatarUrl,
+		avatarTimestamp,
 	} = await database
 		.insertInto("users")
 		.values({
@@ -106,10 +106,13 @@ export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 			confirmationTokenTimestamp: data.confirmation
 				? data.confirmation.timestamp || Temporal.Now.zonedDateTimeISO()
 				: undefined,
-			avatarUrl:
-				data.avatarUrl === null
-					? data.avatarUrl
-					: data.avatarUrl || faker.image.avatar(),
+			avatarTimestamp:
+				data.avatarTimestamp === null
+					? null
+					: (data.avatarTimestamp ??
+						Temporal.ZonedDateTime.from(
+							`${faker.date.past().toISOString()}[UTC]`,
+						)),
 			role: data.role,
 		})
 		.returning([
@@ -117,7 +120,7 @@ export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 			"email",
 			"confirmationToken",
 			"confirmationTokenTimestamp",
-			"avatarUrl",
+			"avatarTimestamp",
 		])
 		.executeTakeFirstOrThrow();
 	if (data.settings) {
@@ -143,7 +146,7 @@ export const insertUser = async (ctx: TestContext, data: UserData = {}) => {
 		confirmationTokenTimestamp,
 		peerId,
 		name,
-		avatarUrl: avatarUrl || undefined,
+		avatarTimestamp,
 	};
 };
 
