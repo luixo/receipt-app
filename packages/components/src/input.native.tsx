@@ -38,7 +38,7 @@ const input = tv({
 				wrapper: "bg-default",
 			},
 			secondary: {
-				wrapper: "bg-input-group",
+				wrapper: "bg-surface-secondary",
 			},
 		},
 		labelPlacement: {
@@ -47,7 +47,7 @@ const input = tv({
 				base: "flex-row",
 			},
 			inside: {
-				label: "text-content2 text-sm",
+				label: "text-muted text-sm",
 			},
 		},
 		isFocus: {

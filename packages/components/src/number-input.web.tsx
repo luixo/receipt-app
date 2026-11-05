@@ -94,7 +94,7 @@ export const NumberInput: React.FC<Props> = ({
 			{props.label ? <Label>{props.label}</Label> : null}
 			<NumberField.Group className="flex flex-row">
 				{props.startContent ? (
-					<View className="flex-row items-center px-2 gap-2">
+					<View className="flex-row items-center gap-2 px-2">
 						{props.startContent}
 					</View>
 				) : null}
@@ -106,7 +106,9 @@ export const NumberInput: React.FC<Props> = ({
 				/>
 				{props.showStepper ? <NumberField.IncrementButton /> : null}
 				{props.endContent ? (
-					<View className="flex-row items-center px-2 gap-2">{props.endContent}</View>
+					<View className="flex-row items-center gap-2 px-2">
+						{props.endContent}
+					</View>
 				) : null}
 			</NumberField.Group>
 			{errors.length === 0 && !props.errorMessage ? null : (

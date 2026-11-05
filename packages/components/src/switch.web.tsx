@@ -27,6 +27,7 @@ export const Switch: React.FC<Props> = ({
 		<SwitchRaw.Content data-testid={testID}>
 			<SwitchRaw.Control>
 				<SwitchRaw.Thumb className={thumbClassName}>
+					{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 					{thumbIcon ? <SwitchRaw.Icon>{thumbIcon}</SwitchRaw.Icon> : null}
 				</SwitchRaw.Thumb>
 			</SwitchRaw.Control>

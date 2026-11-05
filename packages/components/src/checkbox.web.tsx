@@ -36,6 +36,7 @@ export const Checkbox: React.FC<Props> = ({
 		<CheckboxRaw.Content data-testid="checkbox-content">
 			<CheckboxRaw.Control {...props}>
 				<CheckboxRaw.Indicator>
+					{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 					{icon
 						? (state) => (typeof icon === "function" ? icon(state) : icon)
 						: undefined}

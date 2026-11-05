@@ -11,6 +11,14 @@ import { cn } from "~components/utils";
 
 import type { ButtonGroupProps, ButtonProps } from "./button.base";
 
+const radiusClasses = {
+	none: "rounded-none",
+	sm: "rounded-sm",
+	md: "rounded-md",
+	lg: "rounded-lg",
+	full: "rounded-full",
+};
+
 export const Button: React.FC<ButtonProps> = ({
 	testID,
 	variant,
@@ -32,7 +40,7 @@ export const Button: React.FC<ButtonProps> = ({
 			{endContent}
 		</>
 	);
-	if (as) {
+	if (as !== undefined) {
 		const Component = as;
 		return (
 			<Component
@@ -48,7 +56,7 @@ export const Button: React.FC<ButtonProps> = ({
 				data-testid={testID}
 				className={cn(
 					buttonVariants({ variant, size: props.size }),
-					radius && `rounded-${radius}`,
+					radius && radiusClasses[radius],
 					className,
 				)}
 			>
@@ -66,7 +74,7 @@ export const Button: React.FC<ButtonProps> = ({
 			variant={variant}
 			isPending={isLoading}
 			onPress={onPress}
-			className={cn(radius && `rounded-${radius}`, className)}
+			className={cn(radius && radiusClasses[radius], className)}
 			data-testid={testID}
 		>
 			{content}
@@ -85,7 +93,7 @@ export const ButtonGroup: React.FC<ButtonGroupProps> = ({
 	<ButtonGroupRaw
 		{...props}
 		className={cn(
-			radius && `rounded-${radius}`,
+			radius && radiusClasses[radius],
 			isIconOnly && "[&>button]:aspect-square",
 			className,
 		)}

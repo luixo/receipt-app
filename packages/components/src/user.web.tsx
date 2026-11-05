@@ -26,6 +26,7 @@ export const User: React.FC<Props> = ({
 		<Avatar {...avatarPropsRaw} />
 		<div>
 			<div>{props.name}</div>
+			{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 			{props.description ? (
 				<div className="text-muted">{props.description}</div>
 			) : null}

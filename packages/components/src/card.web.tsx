@@ -29,6 +29,7 @@ export const Card: React.FC<Props & { as?: React.ElementType }> = ({
 }) => {
 	const content = (
 		<>
+			{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 			{header ? (
 				<>
 					<CardRaw.Header className={headerClassName}>{header}</CardRaw.Header>
@@ -36,6 +37,7 @@ export const Card: React.FC<Props & { as?: React.ElementType }> = ({
 				</>
 			) : null}
 			<CardRaw.Content className={bodyClassName}>{children}</CardRaw.Content>
+			{/* oxlint-disable-next-line typescript/strict-boolean-expressions */}
 			{footer ? (
 				<>
 					<Divider />
@@ -44,7 +46,7 @@ export const Card: React.FC<Props & { as?: React.ElementType }> = ({
 			) : null}
 		</>
 	);
-	if (as) {
+	if (as !== undefined) {
 		const Component = as;
 		return (
 			<Component

@@ -155,14 +155,11 @@ export const Input: React.FC<Props> = ({
 			{label && !hideLabel ? <Label>{label}</Label> : null}
 			{multiline ? (
 				<div className="flex items-start gap-2">
-					<TextArea
-						{...inputProps}
-						className={cn(inputProps.className, "flex-1")}
-					/>
+					<TextArea {...inputProps} className={cn(inputClassName, "flex-1")} />
 					{endContent}
 				</div>
 			) : hasGroup ? (
-				<InputGroup variant={inputProps.variant}>
+				<InputGroup variant={variant}>
 					{startContent ? (
 						<InputGroup.Prefix>{startContent}</InputGroup.Prefix>
 					) : null}

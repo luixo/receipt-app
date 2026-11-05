@@ -63,7 +63,7 @@ export const Pagination: React.FC<Props> = ({
 						isDisabled={isDisabled || (!loop && page <= 1)}
 						onPress={() => onChange?.(page <= 1 ? total : page - 1)}
 					>
-						‹
+						{/* oxlint-disable-next-line react/jsx-no-literals */}‹
 					</PaginationRaw.Previous>
 				) : null}
 				{pages.map((item, index) =>
@@ -105,7 +105,7 @@ export const Pagination: React.FC<Props> = ({
 						isDisabled={isDisabled || (!loop && page >= total)}
 						onPress={() => onChange?.(page >= total ? 1 : page + 1)}
 					>
-						›
+						{/* oxlint-disable-next-line react/jsx-no-literals */}›
 					</PaginationRaw.Next>
 				) : null}
 			</PaginationRaw.Content>

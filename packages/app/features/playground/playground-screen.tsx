@@ -28,13 +28,13 @@ const ThemeSwitcher = () => {
 			removeSelectedColorMode,
 		],
 	} = useColorModes();
-	const switchColorMode = React.useEffectEvent(() => {
+	const switchColorMode = () => {
 		if (!selectedColorMode || selectedColorMode === systemColorMode) {
 			setSelectedColorMode(systemColorMode === "dark" ? "light" : "dark");
 		} else {
 			removeSelectedColorMode();
 		}
-	});
+	};
 	const colorMode = selectedColorMode ?? systemColorMode;
 	return (
 		<View className="sticky top-0 z-10 -m-2 h-0">

@@ -36,8 +36,10 @@ export const Checkbox: React.FC<Props> = ({
 		>
 			<CheckboxRaw.Indicator>
 				{(props) => {
+					// oxlint-disable-next-line typescript/strict-boolean-expressions
 					if (!icon) {
 						return isIndeterminate ? (
+							// oxlint-disable-next-line react/jsx-no-literals
 							<Text className="leading-0">-</Text>
 						) : null;
 					}
