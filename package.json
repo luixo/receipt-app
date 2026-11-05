@@ -11,6 +11,8 @@
 	"type": "module",
 	"scripts": {
 		"backend:test": "vitest --configLoader native",
+		"bot:dev": "bun run --cwd apps/bot dev",
+		"bot:start": "bun run --cwd apps/bot start",
 		"ci:cleanup-reports": "bun run --cwd utils/scripts cleanup-ci-reports",
 		"db:generate-types": "bun run --cwd packages/db db:generate-types",
 		"db:migrate": "bun run --cwd packages/db db:migrate",
@@ -37,9 +39,7 @@
 		"web:start": "bun run --cwd apps/web start",
 		"web:start:node": "bun run --cwd apps/web start:node",
 		"workflows": "oxiul workflows --verify",
-		"workflows:generate": "oxiul workflows --generate",
-		"bot:dev": "bun run --cwd apps/bot dev",
-		"bot:start": "bun run --cwd apps/bot start"
+		"workflows:generate": "oxiul workflows --generate"
 	},
 	"dependencies": {
 		"react": "catalog:",

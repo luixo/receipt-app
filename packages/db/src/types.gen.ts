@@ -93,6 +93,7 @@ export interface ResetPasswordIntention {
 }
 
 export interface Session {
+  botUserId: string | null;
   createdAt: Generated<Temporal.ZonedDateTime>;
   expirationTimestamp: Temporal.ZonedDateTime;
   sessionId: SessionId;
