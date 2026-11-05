@@ -71,7 +71,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 				},
 			]}
 		>
-			<Button variant="flat" isIconOnly>
+			<Button variant="outline" isIconOnly>
 				<Icon name="ellipsis" className="size-4" />
 			</Button>
 		</Dropdown>

@@ -10,7 +10,7 @@ import type { Props } from "./card";
 
 const toast = tv({
 	slots: {
-		wrapper: "outline-content3 p-0 outline-1",
+		wrapper: "outline-surface-tertiary p-0 outline-1",
 		body: "p-3",
 		header: "p-3",
 		footer: "p-3",

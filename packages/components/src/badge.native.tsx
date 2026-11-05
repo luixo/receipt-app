@@ -8,15 +8,24 @@ const badge = tv({
 	slots: {
 		base: "relative self-start",
 		badge:
-			"text-small absolute top-0 right-0 z-10 box-border min-h-6 min-w-6 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-background font-medium",
+			"border-background absolute top-0 right-0 z-10 box-border min-h-6 min-w-6 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 text-sm font-medium",
 	},
 	variants: {
 		color: {
+			default: {
+				badge: "bg-default text-default-foreground",
+			},
+			success: {
+				badge: "bg-success text-success-foreground",
+			},
 			danger: {
 				badge: "bg-danger text-danger-foreground",
 			},
 			warning: {
 				badge: "bg-warning text-warning-foreground",
+			},
+			accent: {
+				badge: "bg-accent text-accent-foreground",
 			},
 		},
 		chars: {

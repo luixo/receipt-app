@@ -42,7 +42,6 @@ export const ReceiptDateInput: React.FC<Props> = ({
 			value={receipt.issued}
 			onValueChange={saveDate}
 			mutation={updateReceiptMutation}
-			labelPlacement="outside-left"
 			isDisabled={receipt.ownerPeerId !== receipt.selfPeerId || isDisabled}
 		/>
 	);

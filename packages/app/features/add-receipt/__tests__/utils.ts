@@ -73,11 +73,7 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 
 	addButton: ({ page }, use) =>
-		use(
-			page.locator("button[type=submit]", {
-				hasText: "Add receipt",
-			}),
-		),
+		use(page.getByRole("button", { name: /Add receipt/ })),
 
 	nameInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Receipt name*" })),
@@ -122,9 +118,10 @@ export const test = originalTest.extend<Fixtures>({
 				.getByRole("button", { name: "Show suggestions" })
 				.click();
 			await page
-				.getByRole("option", { includeHidden: true })
-				.filter({ hasText: name, visible: true })
+				.getByRole("listbox")
+				.getByRole("option")
+				.filter({ hasText: name })
 				.click();
-			await participantSuggestion.getByRole("combobox").press("Escape");
+			await participantSuggestion.getByRole("textbox").press("Escape");
 		}),
 });

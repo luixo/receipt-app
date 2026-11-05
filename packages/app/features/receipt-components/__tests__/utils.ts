@@ -9,6 +9,7 @@ type Fixtures = {
 	participantRows: Locator;
 	participantRow: (name: string) => Locator;
 	participantRole: (name: string) => Locator;
+	participantRoleOptions: Locator;
 	participantPayerPart: (name: string) => Locator;
 	participantSuggestion: Locator;
 	openParticipantsPicker: () => Promise<void>;
@@ -29,6 +30,8 @@ export const test = base.extend<Fixtures>({
 		use((name) =>
 			participantRow(name).getByRole("button", { name: "Pick role" }),
 		),
+	participantRoleOptions: ({ page }, use) =>
+		use(page.getByRole("listbox").last()),
 	participantPayerPart: ({ participantRow }, use) =>
 		use((name) =>
 			participantRow(name).getByRole("textbox", { name: "Item payer part" }),

@@ -20,7 +20,7 @@ export const View: React.FC<Props> = ({
 			<Component
 				ref={useScrollView(ref)}
 				className={cn(
-					onPress ? "active:opacity-hover active:scale-95" : undefined,
+					onPress ? "active:scale-95 active:opacity-80" : undefined,
 					className,
 				)}
 				onPress={onPress}

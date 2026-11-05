@@ -68,10 +68,9 @@ export const Peers: React.FC<Props> = suspendedFallback(
 							text: <Text variant="h3" />,
 							icon: (
 								<ButtonLink
-									color="primary"
 									to="/peers/add"
 									title={t("list.addPeer.button")}
-									variant="bordered"
+									variant="outline"
 									className="mx-2"
 									isIconOnly
 								>

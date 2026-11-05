@@ -12,7 +12,7 @@ export const Overlay: React.FC<Props> = ({ children, overlay, ...props }) => (
 		{children}
 		{overlay ? (
 			<View
-				className="rounded-medium bg-content4 absolute z-10 items-center justify-center opacity-30"
+				className="bg-surface-tertiary absolute z-10 items-center justify-center rounded-md opacity-30"
 				style={{ inset: -10 }}
 			>
 				{overlay}

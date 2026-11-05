@@ -1,7 +1,7 @@
 import type { Locator } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 
-import { DESCRIPTION_CLASSNAME, MAX_VISIBLE_TOASTS } from "~utils/toast";
+import { MAX_VISIBLE_TOASTS } from "~utils/toast";
 
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 const SKIP_TOAST_TIMEOUT = 5000;
@@ -34,7 +34,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 
 				await expect(async () => {
 					const actualTexts = await toast
-						.locator(`.${DESCRIPTION_CLASSNAME}`)
+						.getByTestId("toast-description")
 						.allInnerTexts();
 					const sortedActualTexts = actualTexts.toSorted((a, b) =>
 						a.localeCompare(b),

@@ -30,10 +30,7 @@ const AutocompleteShowcase = () => {
 				onInputChange={setInputValue}
 				selectedKey={selectedKey}
 				onSelectionChange={setSelectedKey}
-				onClear={() => {
-					setInputValue("");
-					setSelectedKey(null);
-				}}
+				isClearable
 			>
 				{[
 					{
@@ -59,23 +56,26 @@ const CheckboxShowcase = () => {
 	return (
 		<Section title="Checkbox">
 			<View className="flex flex-row flex-wrap gap-3">
-				{(["default", "primary", "success", "warning", "danger"] as const).map(
-					(color) => (
-						<Checkbox
-							key={color}
-							color={color}
-							isSelected={Boolean(selected[color])}
-							onValueChange={(value) =>
-								setSelected((previous) => ({ ...previous, [color]: value }))
-							}
-						>
-							{color}
-						</Checkbox>
-					),
-				)}
+				{(["primary", "secondary"] as const).map((variant) => (
+					<Checkbox
+						key={variant}
+						variant={variant}
+						isSelected={Boolean(selected[variant])}
+						onValueChange={(value) =>
+							setSelected((previous) => ({ ...previous, [variant]: value }))
+						}
+					>
+						{variant}
+					</Checkbox>
+				))}
 				<Checkbox isIndeterminate>Indeterminate</Checkbox>
 				<Checkbox isDisabled>Disabled</Checkbox>
-				<Checkbox icon={<Icon name="check" className="size-4" />}>
+				<Checkbox
+					// oxlint-disable-next-line react/no-unstable-nested-components
+					icon={({ isSelected }) => (
+						<Icon name={isSelected ? "moon" : "sun"} className="size-3" />
+					)}
+				>
 					Custom icon
 				</Checkbox>
 			</View>
@@ -87,7 +87,8 @@ const DateInputShowcase = () => {
 	const [date, setDate] = React.useState<Temporal.PlainDate | undefined>();
 	return (
 		<Section title="DateInput">
-			<DateInput value={date} onValueChange={setDate} />
+			<DateInput value={date} onValueChange={setDate} variant="primary" />
+			<DateInput value={date} onValueChange={setDate} variant="secondary" />
 			<Text>Selected: {date?.toString() ?? "none"}</Text>
 		</Section>
 	);
@@ -125,36 +126,27 @@ const InputShowcase = () => {
 	const [values, setValues] = React.useState<Record<string, string>>({});
 	return (
 		<Section title="Input">
-			{(["bordered", "flat"] as const).map((variant) =>
-				(
-					[
-						"default",
-						"primary",
-						"secondary",
-						"success",
-						"warning",
-						"danger",
-					] as const
-				).map((color) => {
-					const key = `${variant}-${color}`;
-					return (
-						<Input
-							key={key}
-							label={`${color} / ${variant}`}
-							variant={variant}
-							color={color}
-							placeholder="Type here"
-							value={values[key] ?? ""}
-							isClearable
-							onValueChange={(value) =>
-								setValues((previous) => ({ ...previous, [key]: value }))
-							}
-						/>
-					);
-				}),
-			)}
+			{(["primary", "secondary"] as const).map((variant) => (
+				<Input
+					key={variant}
+					label={variant}
+					variant={variant}
+					placeholder="Type here"
+					value={values[variant] ?? ""}
+					isClearable
+					onValueChange={(value) =>
+						setValues((previous) => ({ ...previous, [variant]: value }))
+					}
+				/>
+			))}
 			<Input label="Disabled" isDisabled />
 			<Input label="With description" description="Example description" />
+			<Input label="Password type" type="password" />
+			<Input
+				label="With start and end content"
+				startContent={<Icon name="admin" className="size-6" />}
+				endContent={<Icon name="login" className="size-6" />}
+			/>
 		</Section>
 	);
 };

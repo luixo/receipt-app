@@ -25,9 +25,8 @@ export const PeersScreen = () => {
 					<>
 						<ButtonLink
 							to="/peers/add"
-							color="primary"
 							title={t("list.addPeer.button")}
-							variant="bordered"
+							variant="outline"
 							isIconOnly
 						>
 							<Icon name="add" className="size-6" />
@@ -36,9 +35,8 @@ export const PeersScreen = () => {
 							<ButtonLink
 								key="connections"
 								to="/peers/connections"
-								color="primary"
 								title={t("list.connections.title")}
-								variant="bordered"
+								variant="outline"
 								isIconOnly
 							>
 								<Icon name="link" className="size-6" />

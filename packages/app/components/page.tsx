@@ -50,15 +50,15 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 		<Link
 			key={pathname}
 			to={pathname}
-			className="flex flex-1 flex-col items-center justify-center"
-			color={selected ? "primary" : "foreground"}
+			className={cn(
+				"flex flex-1 flex-col items-center justify-center",
+				selected ? undefined : "text-foreground",
+			)}
 		>
 			<AmountBadge useAmount={useBadgeAmount}>
 				<Icon name={iconName} className="size-6" />
 			</AmountBadge>
-			<Text className={cn("text-sm/8", selected ? "text-primary" : undefined)}>
-				{text}
-			</Text>
+			<Text className="text-sm/8">{text}</Text>
 		</Link>
 	</WithShow>
 );
@@ -81,7 +81,7 @@ export const Page: React.FC<Props> = ({ children, elements }) => {
 		<>
 			<PageWrapper wrapper={Wrapper}>{children}</PageWrapper>
 			<View
-				className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
+				className="bg-surface fixed bottom-0 left-0 z-20 w-full flex-row border-t p-2 shadow-lg"
 				testID="sticky-menu"
 			>
 				<View className="mx-auto max-w-screen-sm flex-1 flex-row">

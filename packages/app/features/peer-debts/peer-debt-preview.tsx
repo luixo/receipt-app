@@ -57,7 +57,7 @@ export const PeerDebtPreviewSkeleton = () => (
 	<PeerDebtPreviewShape
 		startContent={
 			<View className="size-6 shrink-0">
-				<Checkbox isDisabled color="secondary" />
+				<Checkbox isDisabled variant="secondary" />
 			</View>
 		}
 		amount={<Skeleton className="h-6 w-16 rounded-sm" />}
@@ -103,10 +103,9 @@ export const PeerDebtPreview = suspendedFallback<{
 				to="/debts/$id"
 				params={{ id: debt.id }}
 				className={cn(
-					"overflow-hidden py-2 first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
-					isSelected ? "bg-secondary/20" : "",
+					"text-foreground overflow-hidden py-2 first-of-type:rounded-t-2xl last-of-type:rounded-b-2xl",
+					isSelected ? "bg-accent/20" : "",
 				)}
-				color="foreground"
 			>
 				<PeerDebtPreviewShape
 					startContent={
@@ -115,7 +114,7 @@ export const PeerDebtPreview = suspendedFallback<{
 								isSelected={isSelected}
 								onValueChange={isRemoving ? undefined : onValueChange}
 								isDisabled={isRemoving}
-								color="secondary"
+								variant="secondary"
 							/>
 						</View>
 					}

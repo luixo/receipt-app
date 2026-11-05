@@ -1,14 +1,14 @@
 import type React from "react";
 
-import { Spinner as SpinnerRaw } from "@heroui/spinner";
+import { Spinner as SpinnerRaw } from "@heroui/react";
 
 export type Props = {
-	size?: React.ComponentProps<typeof SpinnerRaw>["size"] | "xs";
+	size?: "xs" | "sm" | "md" | "lg";
 };
 
 export const Spinner: React.FC<Props> = ({ size }) => (
 	<SpinnerRaw
 		size={size === "xs" ? "sm" : size}
-		classNames={size === "xs" ? { wrapper: "size-3" } : undefined}
+		className={size === "xs" ? "size-3" : undefined}
 	/>
 );

@@ -13,7 +13,7 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	addButton: ({ page }, use) =>
-		use(page.locator("button[type=submit]", { hasText: "Add peer" })),
+		use(page.getByRole("button", { name: /Add peer/ })),
 
 	nameInput: ({ page }, use) =>
 		use(page.getByRole("textbox", { name: "Peer name" })),

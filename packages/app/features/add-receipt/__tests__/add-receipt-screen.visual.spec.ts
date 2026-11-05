@@ -49,7 +49,8 @@ test("Errors in form", async ({
 	await nameInput.fill(faker.string.alpha(1));
 	await expectScreenshotWithSchemes("fill-name-error.png", {
 		locator: nameInputWrapper,
-		shift: ({ height }) => [0, height - 1],
+		pixelsPreset: "surface",
+		shift: 30,
 	});
 });
 
@@ -130,7 +131,7 @@ test.describe("Draft form", () => {
 		await expectScreenshotWithSchemes("draft-item-builder.png", {
 			locator: addItemForm,
 			pixelsPreset: "surface",
-			shift: [8, 60],
+			shift: [200, 8],
 		});
 	});
 
@@ -166,7 +167,7 @@ test.describe("Draft form", () => {
 				}),
 			).toHaveValue("1");
 		}
-		await expect(participantSuggestion.getByRole("combobox")).toBeVisible();
+		await expect(participantSuggestion.getByRole("textbox")).toBeVisible();
 		await expectScreenshotWithSchemes("draft-participant-picker.png", {
 			locator: participantsPicker,
 			pixelsPreset: "surface",

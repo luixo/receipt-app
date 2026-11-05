@@ -10,19 +10,19 @@ import { View } from "~components/view";
 const pagination = tv({
 	slots: {
 		base: "overflow-x-scroll p-2.5",
-		wrapper: "rounded-medium flex flex-row gap-1",
-		item: "border-default text-foreground rounded-medium box-border flex h-10 min-w-10 items-center justify-center truncate border-2 bg-transparent shadow-xs",
+		wrapper: "flex flex-row gap-1 rounded-md",
+		item: "border-default text-foreground box-border flex h-10 min-w-10 items-center justify-center truncate rounded-md border-2 bg-transparent shadow-xs",
 	},
 	variants: {
 		isDisabled: {
 			true: {
-				item: "text-default-300 pointer-events-none",
+				item: "text-muted pointer-events-none",
 			},
 			false: {},
 		},
 		isSelected: {
 			true: {
-				item: "light:text-primary-foreground bg-primary border-primary",
+				item: "text-accent-foreground bg-accent border-accent",
 			},
 			false: {},
 		},
@@ -41,7 +41,7 @@ const getRange = (start: number, end: number) => {
 };
 
 const usePagination = ({
-	page = 1,
+	page,
 	total,
 	siblings = 1,
 	boundaries = 1,

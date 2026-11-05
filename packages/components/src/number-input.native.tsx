@@ -15,7 +15,7 @@ export const NumberInput: React.FC<Props> = ({
 	onValueChange,
 	minValue,
 	maxValue,
-	hideStepper,
+	showStepper,
 	onKeyPress,
 	endContent,
 	isDisabled,
@@ -98,7 +98,7 @@ export const NumberInput: React.FC<Props> = ({
 			isDisabled={isDisabled}
 			isReadOnly={isReadOnly}
 			endContent={
-				endContent || !hideStepper || isDisabled || isReadOnly ? (
+				endContent || showStepper || isDisabled || isReadOnly ? (
 					<>
 						{endContent}
 						<View className="flex gap-2">

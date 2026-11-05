@@ -3,7 +3,6 @@
 	"version": "0.0.0",
 	"type": "module",
 	"dependencies": {
-		"@heroui/theme": "catalog:",
 		"@ra/components": "workspace:*",
 		"@ra/mutations": "workspace:*",
 		"@ra/utils": "workspace:*",

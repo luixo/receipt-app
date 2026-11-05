@@ -30,10 +30,10 @@ export const test = peersTest.extend<Fixtures>({
 	headerAside: ({ page }, use) => use(page.getByTestId("header-aside")),
 
 	addPeerButton: ({ headerAside }, use) =>
-		use(headerAside.getByRole("button", { name: "Add peer" })),
+		use(headerAside.getByRole("link", { name: "Add peer" })),
 
 	connectionsButton: ({ page }, use) =>
-		use(page.getByRole("button", { name: "Connection intentions" })),
+		use(page.getByRole("link", { name: "Connection intentions" })),
 
 	connectionsBadge: ({ headerAside }, use) =>
 		use(headerAside.getByTestId("badge")),

@@ -11,7 +11,8 @@ export type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	peersSuggest: ({ page }, use) => use(page.getByTestId("peers-suggest")),
 	suggestListbox: ({ page }, use) => use(page.getByRole("listbox")),
-	suggestInput: ({ page }, use) => use((label) => page.getByLabel(label)),
+	suggestInput: ({ page }, use) =>
+		use((label) => page.getByRole("textbox", { name: label })),
 	suggestOption: ({ page }, use) =>
 		use((name) => page.getByRole("option").filter({ hasText: name })),
 });

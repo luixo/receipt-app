@@ -31,7 +31,7 @@ export const test = receiptsTest.extend<Fixtures>({
 		use(headerAside.getByRole("button").filter({ has: icon("filter") })),
 
 	addReceiptButton: ({ headerAside }, use) =>
-		use(headerAside.getByRole("button", { name: "Add receipt" })),
+		use(headerAside.getByRole("link", { name: "Add receipt" })),
 
 	receiptPreview: ({ page }, use) => use(page.getByTestId("receipt-preview")),
 

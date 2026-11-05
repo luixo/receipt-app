@@ -11,7 +11,7 @@ test("editable price", async ({
 	await openReceipt(receipt);
 	await card.scrollIntoViewIfNeeded();
 	await expectScreenshotWithSchemes("price.png", {
-		pixelsPreset: "input",
+		pixelsPreset: "surface",
 		locator: itemPriceField,
 	});
 });

@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Slider as SliderRaw } from "@heroui/slider";
+import { Slider as SliderRaw } from "@heroui/react";
 
 export type Props = Pick<
 	React.ComponentProps<typeof SliderRaw>,
@@ -14,6 +14,13 @@ export const Slider: React.FC<Props> = ({ label, onChange, ...props }) => (
 	<SliderRaw
 		{...props}
 		aria-label={label}
-		onChange={onChange as (nextValue: number | number[]) => void}
-	/>
+		onChange={(value) =>
+			onChange?.(Array.isArray(value) ? (value[0] ?? 0) : value)
+		}
+	>
+		<SliderRaw.Track>
+			<SliderRaw.Fill />
+			<SliderRaw.Thumb />
+		</SliderRaw.Track>
+	</SliderRaw>
 );
