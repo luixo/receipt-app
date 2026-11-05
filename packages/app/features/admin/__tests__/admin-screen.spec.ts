@@ -54,6 +54,7 @@ test("Become can be cancelled, confirmed, persists through navigation and reload
 	becomeDialog,
 	cookieManager,
 	snapshotQueries,
+	awaitCacheKey,
 }) => {
 	const { peer, candidates } = await mockAdmin();
 	const [candidate] = candidates;
@@ -107,6 +108,7 @@ test("Become can be cancelled, confirmed, persists through navigation and reload
 		async () => {
 			await page.getByRole("link", { name: "Settings" }).click();
 			await page.expectUrl({ to: "/settings" });
+			await awaitCacheKey("userSettings.get");
 		},
 		{ name: "navigate-settings" },
 	);
