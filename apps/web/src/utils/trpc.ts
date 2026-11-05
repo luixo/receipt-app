@@ -17,7 +17,9 @@ const getServerLinksParams = (
 	source: GetLinksOptions["source"],
 ) => {
 	const url = new URL(request.url);
-	url.host = new URL(getServerHostUrl(request.url)).host;
+	const serverUrl = new URL(getServerHostUrl(request));
+	url.protocol = serverUrl.protocol;
+	url.host = serverUrl.host;
 	url.pathname = DEFAULT_TRPC_ENDPOINT;
 	return {
 		url: url.toString(),

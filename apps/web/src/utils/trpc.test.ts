@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { TRPCClientError } from "@trpc/client";
 import { fromEntries, pick } from "remeda";
-import { describe, expect } from "vitest";
+import { describe, expect, vi } from "vitest";
 
 import { test } from "~tests/backend/utils/test";
 import { apiCookieNames } from "~utils/mocks";
@@ -43,6 +43,41 @@ describe("Server tRPC client", () => {
 });
 
 describe("Loader tRPC client", () => {
+	test("uses HTTPS directly behind a TLS-terminating proxy", async () => {
+		const fetch = vi
+			.spyOn(globalThis, "fetch")
+			.mockResolvedValue(
+				Response.json({ result: { data: { json: { message: "PONG" } } } }),
+			);
+		try {
+			const queryClient = new QueryClient();
+			const client = getLoaderTrpcClient({
+				queryClient,
+				request: new Request("http://receipt.luixo.me/receipts", {
+					headers: {
+						"x-forwarded-proto": "https",
+						cookie: "authToken=test-session",
+					},
+				}),
+			});
+			await queryClient.fetchQuery(
+				client.utils.ping.queryOptions({ timeout: 0 }),
+			);
+			expect(fetch).toHaveBeenCalledWith(
+				expect.stringMatching(/^https:\/\/receipt\.luixo\.me\//),
+				expect.objectContaining({
+					headers: {
+						cookie: "authToken=test-session",
+						"x-forwarded-proto": "https",
+						"x-source": "ssr-loader",
+					},
+				}),
+			);
+		} finally {
+			fetch.mockRestore();
+		}
+	});
+
 	test("Queries run locally", async ({ ctx }) => {
 		await withTestServer(ctx, appRouter, async ({ url }) => {
 			const queryClient = new QueryClient();

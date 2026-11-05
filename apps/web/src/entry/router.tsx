@@ -106,7 +106,7 @@ export const getRouter = () => {
 		context: {
 			...externalContext,
 			request,
-			baseUrl: request ? getServerHostUrl(request.url) : "",
+			baseUrl: request ? getServerHostUrl(request) : "",
 			i18nContext,
 			queryClient,
 			nowTimestamp: Temporal.Now.zonedDateTimeISO().toString(),
